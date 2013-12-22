@@ -5,4 +5,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
     set_flash_message(:notice, :success, :kind => "Github") if is_navigational_format?
   end
+
+  private
+
+  def after_omniauth_failure_path_for(scope)
+    root_path
+  end
 end
