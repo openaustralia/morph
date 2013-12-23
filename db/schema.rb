@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131223033729) do
+ActiveRecord::Schema.define(version: 20131223053748) do
 
   create_table "scrapers", force: true do |t|
     t.string   "name",        null: false
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20131223033729) do
     t.integer  "owner_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "full_name"
   end
 
   create_table "users", force: true do |t|

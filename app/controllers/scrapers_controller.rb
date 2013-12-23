@@ -19,7 +19,8 @@ class ScrapersController < ApplicationController
     repo = client.repository("#{current_user.to_param}/#{params[:scraper][:name]}")
 
     # Populate a new scraper with information from the repo
-    @scraper = Scraper.new(name: repo.name, description: repo.description, github_id: repo.id, owner_id: current_user.id)
+    @scraper = Scraper.new(name: repo.name, full_name: repo.full_name,
+      description: repo.description, github_id: repo.id, owner_id: current_user.id)
     if @scraper.save
       flash[:notice] = "Scraper #{@scraper.name} added"
       redirect_to current_user
