@@ -16,8 +16,9 @@
 
 - if @rows
   %h2 Data
+  %p (First 10 rows)
   .table-responsive
-    %table.table.table-striped.table-bordered.table-condensed
+    %table.table.table-striped.table-bordered.table-condensed.scraper-data
       %tr
         - @rows.first.each_key do |field|
           %th= field
