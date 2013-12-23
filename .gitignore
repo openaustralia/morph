@@ -16,4 +16,4 @@
 /tmp
 
 /.env
-/db/repos
+/db/scrapers
