@@ -34,7 +34,7 @@
               %li= link_to "Link 3", "/path3"
               %li
                 - if user_signed_in?
-                  = link_to current_user.name, "#"
+                  = link_to current_user.name, current_user
                 - else
                   = link_to "Sign in with GitHub", user_omniauth_authorize_path(:github)
               %li

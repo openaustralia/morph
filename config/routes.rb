@@ -8,6 +8,8 @@ ScrapingPlatform::Application.routes.draw do
 
   root 'static#index'
 
+  get '/:id' => 'users#show', as: :user
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
