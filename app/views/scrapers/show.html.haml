@@ -4,6 +4,8 @@
 
 %p There will be a table with the data, a big button to run the scraper and stuff like that.
 
+= link_to "Go to GitHub", @scraper.github_url
+
 - if @scraper.owned_by?(current_user)
   %h2 Here be dragons!
 
