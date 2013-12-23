@@ -1,3 +1,17 @@
 %h1 Add scraper
 
 %p This is where you will be able to pick a repository from your GitHub to add as a scraper
+
+%p
+  For the time being scrapers are restricted to using Ruby. They need to have a file in the root
+  directory called "scraper.rb" and they should create an sqlite database in the current working
+  directory. Other than that you can pretty much do whatever you want.
+  
+%ul
+  - @repos.each do |repo|
+    %li
+      %strong
+        = repo.name
+      &mdash;
+      = repo.description
+
