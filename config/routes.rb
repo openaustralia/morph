@@ -8,7 +8,9 @@ ScrapingPlatform::Application.routes.draw do
 
   root 'static#index'
 
-  get '/:id' => 'users#show', as: :user
+  resources :scrapers, path: '/', only: :new
+  # TODO: Don't allow a user to be called "new". Chances are GitHub enforces this anyway.
+  resources :users, path: "/", only: :show
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

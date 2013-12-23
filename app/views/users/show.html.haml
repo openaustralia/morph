@@ -2,3 +2,6 @@
 %h2= @user.nickname
 
 %p This is where information about this user is going to go. It will include things like the scrapers they have, their gravatar, and if the user is you the ability to add a new scraper.
+
+- if @user == current_user
+  = link_to "Add scraper", new_scraper_path
