@@ -39,7 +39,7 @@ class ScrapersController < ApplicationController
     if @scraper.owned_by?(current_user)
       flash[:notice] = "Scraper #{@scraper.name} deleted"
       @scraper.destroy
-      @scraper.destroy_repo
+      @scraper.destroy_repo_and_data
       redirect_to current_user
     else
       flash[:alert] = "Can't delete someone else's scraper!"

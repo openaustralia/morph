@@ -14,9 +14,9 @@ class Scraper < ActiveRecord::Base
     gritty.clone({:verbose => true, :progress => true}, git_url, repo_path)
   end
 
-  def destroy_repo
-    puts "Destroying git repo #{repo_path}"
+  def destroy_repo_and_data
     FileUtils::rm_rf repo_path
+    FileUtils::rm_rf data_path
   end
 
   def repo_path
