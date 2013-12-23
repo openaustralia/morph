@@ -22,4 +22,16 @@ class Scraper < ActiveRecord::Base
   def repo_path
     "db/repos/#{full_name}"
   end
+
+  def go
+    # TODO If already cloned then just do a pull
+    clone_repo
+    # TODO Super important high priority: Put this in a docker container
+    # TODO Actually run the scraper
+    # TODO Run this in the background
+    # TODO Capture output to console
+    command = "cd #{repo_path}; BUNDLE_GEMFILE=Gemfile rvm . do bundle exec ruby scraper.rb"
+    puts "About to run command: #{command}"
+    system(command)
+  end
 end

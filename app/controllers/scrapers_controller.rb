@@ -50,9 +50,7 @@ class ScrapersController < ApplicationController
   def run
     scraper = Scraper.find(params[:id])
     if scraper.owned_by?(current_user)
-      # TODO Actually run the scraper
-      # TODO If already cloned then just do a pull
-      scraper.clone_repo
+      scraper.go
       flash[:notice] = "This will have run the scraper. But not yet."
     else
       flash[:alert] = "Can't run someone else's scraper!"
