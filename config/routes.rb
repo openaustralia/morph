@@ -8,7 +8,7 @@ ScrapingPlatform::Application.routes.draw do
 
   root 'static#index'
 
-  resources :scrapers, path: '/', only: :new
+  resources :scrapers, path: '/', only: [:new, :create]
   # TODO: Don't allow a user to be called "new". Chances are GitHub enforces this anyway.
   resources :users, path: "/", only: :show
 

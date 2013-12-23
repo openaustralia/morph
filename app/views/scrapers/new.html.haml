@@ -6,7 +6,12 @@
   For the time being scrapers are restricted to using Ruby. They need to have a file in the root
   directory called "scraper.rb" and they should create an sqlite database in the current working
   directory. Other than that you can pretty much do whatever you want.
-  
+
+= semantic_form_for @scraper do |f|
+  = f.inputs do
+    = f.input :github_id, as: :select, collection: @repos.map{|r| [r.name, r.id]}, label: "GitHub Repository", include_blank: false
+  = f.actions
+
 %ul
   - @repos.each do |repo|
     %li
