@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131223010048) do
+ActiveRecord::Schema.define(version: 20131223025340) do
 
   create_table "users", force: true do |t|
     t.integer  "sign_in_count",      default: 0, null: false
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20131223010048) do
     t.string   "uid"
     t.string   "name"
     t.string   "nickname"
+    t.string   "access_token"
   end
 
 end

@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
     unless user
       user = User.create(nickname: auth.info.nickname, name:auth.info.name,
-        provider:auth.provider, uid:auth.uid)
+        provider:auth.provider, uid:auth.uid, access_token: auth.credentials.token)
     end
     user
   end
