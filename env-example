@@ -5,3 +5,9 @@
 
 GITHUB_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
 GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# If this is Linux then your docker daemon is likely running locally on a socket. In that case the DOCKER_URL
+# does not need to be set (comment the line below out).
+# If this is OS X, then your docker daemon will be running inside a VM with a tunneled port (see instructions
+# in the README for how to set this up)
+DOCKER_URL=http://localhost:4243

@@ -26,6 +26,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     addressable (2.3.5)
+    archive-tar-minitar (0.5.2)
     arel (4.0.1)
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
@@ -44,10 +45,15 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
+    docker-api (1.7.5)
+      archive-tar-minitar
+      excon (>= 0.28)
+      json
     dotenv (0.9.0)
     dotenv-rails (0.9.0)
       dotenv (= 0.9.0)
     erubis (2.7.0)
+    excon (0.31.0)
     execjs (2.0.2)
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
@@ -175,6 +181,7 @@ PLATFORMS
 DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
+  docker-api
   dotenv-rails
   formtastic-bootstrap
   friendly_id

@@ -16,6 +16,7 @@ gem 'friendly_id'
 gem "octokit"
 gem "formtastic-bootstrap"
 gem "grit"
+gem 'docker-api', :require => 'docker'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
