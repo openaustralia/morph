@@ -9,7 +9,7 @@
   - @user.scrapers.each do |scraper|
     %li
       %strong
-        = scraper.name
+        = link_to scraper.name, scraper
       &mdash;
       = scraper.description
 

@@ -10,7 +10,9 @@ ScrapingPlatform::Application.routes.draw do
 
   resources :scrapers, path: '/', only: [:new, :create]
   # TODO: Don't allow a user to be called "new". Chances are GitHub enforces this anyway.
-  resources :users, path: "/", only: :show
+  resources :users, path: "/", only: :show do
+    resources :scrapers, path: "/", only: :show
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
