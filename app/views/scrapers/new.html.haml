@@ -7,17 +7,11 @@
   directory called "scraper.rb" and they should create an sqlite database in the current working
   directory. Other than that you can pretty much do whatever you want.
 
+-# TODO Don't show repos that we've already added
+
 = semantic_form_for @scraper do |f|
   = f.inputs do
     = f.input :name, as: :select, collection: @repos.map{|r| r.name}, label: "GitHub Repository", include_blank: false
   = f.actions do
     = f.action :submit, label: "Add Scraper"
-
-%ul
-  - @repos.each do |repo|
-    %li
-      %strong
-        = repo.name
-      &mdash;
-      = repo.description
 
