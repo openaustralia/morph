@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
   def self.find_for_github_oauth(auth, signed_in_resource=nil)
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
     unless user
-      user = User.create(name:auth.extra.raw_info.name, provider:auth.provider, uid:auth.uid)
+      user = User.create(nickname: auth.info.nickname, name:auth.info.name,
+        provider:auth.provider, uid:auth.uid)
     end
     user
   end

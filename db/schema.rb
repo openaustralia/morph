@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131222033622) do
+ActiveRecord::Schema.define(version: 20131223010048) do
 
   create_table "users", force: true do |t|
     t.integer  "sign_in_count",      default: 0, null: false
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20131222033622) do
     t.string   "provider"
     t.string   "uid"
     t.string   "name"
+    t.string   "nickname"
   end
 
 end
