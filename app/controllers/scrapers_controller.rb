@@ -44,4 +44,15 @@ class ScrapersController < ApplicationController
       redirect_to @scraper
     end
   end
+
+  def run
+    scraper = Scraper.find(params[:id])
+    if scraper.owned_by?(current_user)
+      # TODO Actually run the scraper
+      flash[:notice] = "This will have run the scraper. But not yet."
+    else
+      flash[:alert] = "Can't run someone else's scraper!"
+    end
+    redirect_to scraper
+  end
 end

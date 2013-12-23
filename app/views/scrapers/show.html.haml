@@ -12,7 +12,9 @@
 = link_to "Go to GitHub", @scraper.github_url
 
 - if @scraper.owned_by?(current_user)
+  = button_to "Run it!", run_scraper_path(@scraper), class: "btn btn-info"
+
   %h2 Here be dragons!
 
-  = button_to "Delete scraper", @scraper, {method: :delete, class: "btn", confirm: "Delete #{@scraper.full_name}?"}
+  = button_to "Delete scraper", @scraper, {method: :delete, class: "btn btn-danger", confirm: "Delete #{@scraper.full_name}?"}
   %p This can't be undone
