@@ -14,7 +14,20 @@
 - if @scraper.owned_by?(current_user)
   = button_to "Run it!", run_scraper_path(@scraper), class: "btn btn-info"
 
+- if @rows
+  %h2 Data
+  .table-responsive
+    %table.table.table-striped.table-bordered.table-condensed
+      %tr
+        - @rows.first.each_key do |field|
+          %th= field
+      - @rows.each do |row|
+        %tr
+          - row.each_value do |v|
+            %td= v
+
+- if @scraper.owned_by?(current_user)
   %h2 Here be dragons!
 
   = button_to "Delete scraper", @scraper, {method: :delete, class: "btn btn-danger", confirm: "Delete #{@scraper.full_name}?"}
-  %p This can't be undone
+  %p This can't be undone  
