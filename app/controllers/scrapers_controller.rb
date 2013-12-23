@@ -20,7 +20,8 @@ class ScrapersController < ApplicationController
 
     # Populate a new scraper with information from the repo
     @scraper = Scraper.new(name: repo.name, full_name: repo.full_name,
-      description: repo.description, github_id: repo.id, owner_id: current_user.id, github_url: repo.rels[:html].href)
+      description: repo.description, github_id: repo.id, owner_id: current_user.id,
+      github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
     if @scraper.save
       flash[:notice] = "Scraper #{@scraper.name} added"
       redirect_to current_user
@@ -38,6 +39,7 @@ class ScrapersController < ApplicationController
     if @scraper.owned_by?(current_user)
       flash[:notice] = "Scraper #{@scraper.name} deleted"
       @scraper.destroy
+      @scraper.destroy_repo
       redirect_to current_user
     else
       flash[:alert] = "Can't delete someone else's scraper!"
@@ -49,6 +51,8 @@ class ScrapersController < ApplicationController
     scraper = Scraper.find(params[:id])
     if scraper.owned_by?(current_user)
       # TODO Actually run the scraper
+      # TODO If already cloned then just do a pull
+      scraper.clone_repo
       flash[:notice] = "This will have run the scraper. But not yet."
     else
       flash[:alert] = "Can't run someone else's scraper!"

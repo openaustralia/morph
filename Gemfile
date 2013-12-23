@@ -15,6 +15,7 @@ gem "omniauth-github"
 gem 'friendly_id'
 gem "octokit"
 gem "formtastic-bootstrap"
+gem "grit"
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
