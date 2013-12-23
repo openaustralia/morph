@@ -3,6 +3,7 @@ class CreateScrapers < ActiveRecord::Migration
     create_table :scrapers do |t|
       t.string :name
       t.string :description
+      t.integer :github_id
       t.integer :owner_id
 
       t.timestamps
