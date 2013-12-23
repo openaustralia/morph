@@ -49,6 +49,8 @@ GEM
     execjs (2.0.2)
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
+    friendly_id (5.0.2)
+      activerecord (~> 4.0.0)
     haml (4.0.4)
       tilt
     haml-rails (0.5.3)
@@ -158,6 +160,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   dotenv-rails
+  friendly_id
   haml-rails
   jbuilder (~> 1.2)
   jquery-rails
