@@ -2,13 +2,14 @@
 
 %p This page will become the landing page for the scraping platform. Yes!
 
-%h2 All Users
-
-%ul
-  - User.all.each do |user|
-    %li= link_to user.name, user
-%h2 All Scrapers
-
-%ul
-  - Scraper.all.each do |scraper|
-    %li= link_to scraper.full_name, scraper
+.row
+  .span6
+    %h2 All Users
+    %ul
+      - User.all.each do |user|
+        %li= link_to user.name, user
+  .span6
+    %h2 All Scrapers
+    %ul
+      - Scraper.all.each do |scraper|
+        %li= link_to scraper.full_name, scraper
