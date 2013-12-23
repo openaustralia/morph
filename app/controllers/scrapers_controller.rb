@@ -6,5 +6,6 @@ class ScrapersController < ApplicationController
     client = Octokit::Client.new :access_token => current_user.access_token
     @repos = client.repositories
     puts @repos.first.to_yaml
+    @scraper = Scraper.new
   end
 end
