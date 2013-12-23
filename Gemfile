@@ -13,6 +13,7 @@ gem "twitter-bootstrap-rails"
 gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
+gem "octokit"
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
