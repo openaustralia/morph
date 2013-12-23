@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   extend FriendlyId
   friendly_id :nickname, use: :finders
 
+  has_many :scrapers, foreign_key: :owner_id
+
   def self.find_for_github_oauth(auth, signed_in_resource=nil)
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
     unless user

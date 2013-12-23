@@ -3,5 +3,15 @@
 
 %p This is where information about this user is going to go. It will include things like the scrapers they have, their gravatar, and if the user is you the ability to add a new scraper.
 
+%h3 Scrapers
+
+%ul
+  - @user.scrapers.each do |scraper|
+    %li
+      %strong
+        = scraper.name
+      &mdash;
+      = scraper.description
+
 - if @user == current_user
   = link_to "Add scraper", new_scraper_path
