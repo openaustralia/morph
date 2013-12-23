@@ -12,6 +12,7 @@ ScrapingPlatform::Application.routes.draw do
   resources :scrapers, path: '/', only: [:new, :create]
   resources :users, path: "/", only: :show
   get "/*id", to: "scrapers#show", as: :scraper
+  delete "/*id", to: "scrapers#destroy"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

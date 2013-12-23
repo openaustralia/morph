@@ -33,4 +33,15 @@ class ScrapersController < ApplicationController
     @scraper = Scraper.find(params[:id])
   end
 
+  def destroy
+    @scraper = Scraper.find(params[:id])
+    if @scraper.owned_by?(current_user)
+      flash[:notice] = "Scraper #{@scraper.name} deleted"
+      @scraper.destroy
+      redirect_to current_user
+    else
+      flash[:alert] = "Can't delete someone else's scraper!"
+      redirect_to @scraper
+    end
+  end
 end

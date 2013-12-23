@@ -3,3 +3,9 @@
 %p This is where all the information for this scraper and the resulting data will be shown
 
 %p There will be a table with the data, a big button to run the scraper and stuff like that.
+
+- if @scraper.owned_by?(current_user)
+  %h2 Here be dragons!
+
+  = button_to "Delete scraper", @scraper, {method: :delete, class: "btn", confirm: "Delete #{@scraper.full_name}?"}
+  %p This can't be undone
