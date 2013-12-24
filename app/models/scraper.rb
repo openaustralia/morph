@@ -27,17 +27,37 @@ class Scraper < ActiveRecord::Base
     "db/scrapers/data/#{full_name}"
   end
 
+  def self.docker_image_name
+    "scraper"
+  end
+
+  def self.build_docker_image!
+    # TODO On Linux we'll have access to the "docker" command line which can show standard out which
+    # would be very helpful. As far as I can tell this is not currently possible with the docker api gem.
+
+    # TODO Move these Docker setup bits to an initializer
+    Docker.validate_version!
+    # Set read timeout to a silly 30 minutes (we'll need a bit of time to build an image)
+    Docker.options[:read_timeout] = 1800
+
+    puts "Building docker image (this is likely to take a while)..."
+    image = Docker::Image.build_from_dir("lib/build_docker_image") {|c| puts c}
+    image.tag(repo: docker_image_name, force: true)
+  end
+
   def go
     # TODO If already cloned then just do a pull
     clone_repo
     FileUtils.mkdir_p data_path
-    # TODO Super important high priority: Put this in a docker container
-    # TODO Actually run the scraper
+    c = Docker::Container.create("Cmd" => ['/bin/bash','-l','-c','ruby /repo/scraper.rb'], "Image" => Scraper.docker_image_name)
+    # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
     # TODO Run this in the background
     # TODO Capture output to console
-    # TODO Don't use the Gemfile in the repo
-    command = "cd #{data_path}; BUNDLE_GEMFILE=#{Rails.root}/#{repo_path}/Gemfile rvm #{Rails.root}/#{repo_path} do ruby #{Rails.root}/#{repo_path}/scraper.rb"
-    puts "About to run command: #{command}"
-    system(command)
+    c.start("Binds" => [
+      "/vagrant/db/scrapers/repos/mlandauer/scraper-blue-mountains:/repo",
+      "/vagrant/db/scrapers/data/mlandauer/scraper-blue-mountains:/data"
+    ])
+    puts "Running docker container..."
+    p c.attach(stream: true, stdout: true, stderr: true, logs: true) {|s,c| puts c}
   end
 end
