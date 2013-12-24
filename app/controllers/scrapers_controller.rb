@@ -46,6 +46,7 @@ class ScrapersController < ApplicationController
     if @scraper.owned_by?(current_user)
       flash[:notice] = "Scraper #{@scraper.name} deleted"
       @scraper.destroy
+      # TODO Make this done by default after calling Scraper#destroy
       @scraper.destroy_repo_and_data
       redirect_to current_user
     else
