@@ -99,6 +99,7 @@ Vagrant::Config.run do |config|
   end
 
   config.ssh.forward_agent = true
+  config.vm.forward_port 4243, 4243
 end
 
 # Providers were added on Vagrant >= 1.1.0
