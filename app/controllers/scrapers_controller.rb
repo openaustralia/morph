@@ -24,7 +24,7 @@ class ScrapersController < ApplicationController
       github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
     if @scraper.save
       flash[:notice] = "Scraper #{@scraper.name} added"
-      redirect_to current_user
+      redirect_to @scraper
     else
       render :new
     end
