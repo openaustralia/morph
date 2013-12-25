@@ -28,6 +28,8 @@
             %span.icon-bar
           = link_to "ScrapingPlatform", root_path, class: "brand"
           .container.nav-collapse
+            %ul.nav
+              %li= link_to "Add scraper", new_scraper_path
             %ul.nav.pull-right
               %li
                 - if user_signed_in?
