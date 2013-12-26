@@ -63,7 +63,11 @@ class ScrapersController < ApplicationController
   def data
     scraper = Scraper.find(params[:id])
     # TODO Ensure that the sql query is read only
-    rows = scraper.sql_query_safe(params[:query])
-    render :json => rows
+    begin
+      rows = scraper.sql_query(params[:query])
+      render :json => rows
+    rescue SQLite3::Exception => e
+      render :json => {error: e.to_s}
+    end
   end
 end
