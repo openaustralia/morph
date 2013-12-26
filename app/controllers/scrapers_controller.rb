@@ -62,12 +62,27 @@ class ScrapersController < ApplicationController
 
   def data
     scraper = Scraper.find(params[:id])
+    query = params[:query] || "select * from swdata"
     # TODO Ensure that the sql query is read only
     begin
-      rows = scraper.sql_query(params[:query])
-      render :json => rows
+      rows = scraper.sql_query(query)
+      respond_to do |format|
+        format.json { render :json => rows}
+        format.csv do
+          csv_string = CSV.generate do |csv|
+            csv << rows.first.keys
+            rows.each do |row|
+              csv << row.values
+            end
+          end
+          send_data csv_string, :filename => "#{scraper.name}.csv"
+        end
+      end
     rescue SQLite3::Exception => e
-      render :json => {error: e.to_s}
+      respond_to do |format|
+        format.json { render :json => {error: e.to_s} }
+        format.csv { send_data "error: #{e}", :filename => "#{scraper.name}.csv" }
+      end
     end
   end
 end
