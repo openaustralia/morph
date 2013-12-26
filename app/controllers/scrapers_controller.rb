@@ -59,4 +59,11 @@ class ScrapersController < ApplicationController
     end
     redirect_to scraper
   end
+
+  def data
+    scraper = Scraper.find(params[:id])
+    # TODO Ensure that the sql query is read only
+    rows = scraper.sql_query(params[:query])
+    render :json => rows
+  end
 end
