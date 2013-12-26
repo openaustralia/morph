@@ -8,10 +8,15 @@ class Scraper < ActiveRecord::Base
     owner == user
   end
 
-  def clone_repo
-    puts "Cloning git repo #{git_url}"
+  def synchronise_repo
     gritty = Grit::Git.new(repo_path)
-    gritty.clone({:verbose => true, :progress => true}, git_url, repo_path)
+    if gritty.exist?
+      puts "Pulling git repo #{repo_path}..."
+      gritty.pull({:verbose => true, :progress => true})
+    else
+      puts "Cloning git repo #{git_url}..."
+      gritty.clone({:verbose => true, :progress => true}, git_url, repo_path)
+    end
   end
 
   def destroy_repo_and_data
@@ -46,8 +51,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def go
-    # TODO If already cloned then just do a pull
-    clone_repo
+    synchronise_repo
     FileUtils.mkdir_p data_path
     c = Docker::Container.create("Cmd" => ['/bin/bash','-l','-c','ruby /repo/scraper.rb'], "Image" => Scraper.docker_image_name)
     # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
