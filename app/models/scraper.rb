@@ -51,11 +51,12 @@ class Scraper < ActiveRecord::Base
     FileUtils.mkdir_p data_path
     c = Docker::Container.create("Cmd" => ['/bin/bash','-l','-c','ruby /repo/scraper.rb'], "Image" => Scraper.docker_image_name)
     # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
+    local_root_path = "/vagrant"
     # TODO Run this in the background
     # TODO Capture output to console
     c.start("Binds" => [
-      "/vagrant/db/scrapers/repos/mlandauer/scraper-blue-mountains:/repo",
-      "/vagrant/db/scrapers/data/mlandauer/scraper-blue-mountains:/data"
+      "#{local_root_path}/#{repo_path}:/repo",
+      "#{local_root_path}/#{data_path}:/data"
     ])
     puts "Running docker container..."
     p c.attach(stream: true, stdout: true, stderr: true, logs: true) {|s,c| puts c}
