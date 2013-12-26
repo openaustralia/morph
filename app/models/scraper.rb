@@ -51,8 +51,10 @@ class Scraper < ActiveRecord::Base
   end
 
   def go
+    update_attribute(:last_run_at, Time.now)
     synchronise_repo
     FileUtils.mkdir_p data_path
+
     c = Docker::Container.create("Cmd" => ['/bin/bash','-l','-c','ruby /repo/scraper.rb'], "Image" => Scraper.docker_image_name)
     # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
     local_root_path = "/vagrant"
@@ -64,7 +66,6 @@ class Scraper < ActiveRecord::Base
     ])
     puts "Running docker container..."
     p c.attach(stream: true, stdout: true, stderr: true, logs: true) {|s,c| puts c}
-    update_attribute(:last_run_at, Time.now)
   end
 
   def sqlite_db_path
