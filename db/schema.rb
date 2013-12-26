@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131226225050) do
+ActiveRecord::Schema.define(version: 20131226230814) do
 
   create_table "runs", force: true do |t|
     t.integer  "scraper_id"
@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(version: 20131226225050) do
     t.string   "full_name"
     t.string   "github_url"
     t.string   "git_url"
-    t.datetime "last_run_at"
   end
 
   create_table "users", force: true do |t|

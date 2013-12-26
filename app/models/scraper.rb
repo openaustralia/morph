@@ -51,9 +51,17 @@ class Scraper < ActiveRecord::Base
     image.tag(repo: docker_image_name, force: true)
   end
 
+  # TODO Should only return the time of the last completed run
+  def last_run
+    runs.order(started_at: :desc).first
+  end
+
+  def last_run_at
+    last_run.started_at
+  end
+
   def go
     run = runs.create(started_at: Time.now)
-    update_attribute(:last_run_at, Time.now)
     synchronise_repo
     FileUtils.mkdir_p data_path
 
