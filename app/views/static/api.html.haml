@@ -9,15 +9,16 @@
 
 %dl
   %dt <em>[scraper]</em>
-  %dd The full name of the scraper as seen in the url (e.g. mlandauer/scraper-blue-mountains)
+  %dd The full name of the scraper as seen in the url (e.g. #{@scraper.full_name})
   %dt <em>[sql]</em>
   %dd
-    The SQL query to perform on the SQLite database that is the output of the scraper (e.g. "select * from swdata limit 10"). Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
+    The SQL query to perform on the SQLite database that is the output of the scraper (e.g. "#{@query}").
+    Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
 
 %p
   For example, to retrieve data from the
-  = link_to "mlandauer/scraper-blue-mountains scraper", "http://127.0.0.1:3000/mlandauer/scraper-blue-mountains"  
-  with the SQL query "select * from swdata limit 10"
+  = link_to "#{@scraper.full_name} scraper", @scraper
+  with the SQL query "#{@query}"
 
 %pre
-  %code= link_to "http://127.0.0.1:3000/mlandauer/scraper-blue-mountains/data.json?query=select+*+from+swdata+limit+10", "http://127.0.0.1:3000/mlandauer/scraper-blue-mountains/data.json?query=select+*+from+swdata+limit+10"
+  %code= link_to scraper_data_url(@scraper, query: @query, format: :json), scraper_data_url(@scraper, query: @query, format: :json)
