@@ -32,7 +32,7 @@ class ScrapersController < ApplicationController
 
   def show
     @scraper = Scraper.find(params[:id])
-    @rows = @scraper.sql_query("select * from swdata limit 10")
+    @rows = @scraper.sql_query_safe("select * from swdata limit 10")
   end
 
   def destroy
@@ -63,7 +63,7 @@ class ScrapersController < ApplicationController
   def data
     scraper = Scraper.find(params[:id])
     # TODO Ensure that the sql query is read only
-    rows = scraper.sql_query(params[:query])
+    rows = scraper.sql_query_safe(params[:query])
     render :json => rows
   end
 end
