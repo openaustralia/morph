@@ -5,9 +5,11 @@
 
 %h4= @scraper.description
 
-%p This is where all the information for this scraper and the resulting data will be shown
-
-%p There will be a table with the data, a big button to run the scraper and stuff like that.
+- if @scraper.last_run_at
+  %p
+    Last run
+    = time_ago_in_words(@scraper.last_run_at)
+    ago
 
 = link_to "Go to GitHub", @scraper.github_url
 

@@ -64,6 +64,7 @@ class Scraper < ActiveRecord::Base
     ])
     puts "Running docker container..."
     p c.attach(stream: true, stdout: true, stderr: true, logs: true) {|s,c| puts c}
+    update_attribute(:last_run_at, Time.now)
   end
 
   def sqlite_db_path
