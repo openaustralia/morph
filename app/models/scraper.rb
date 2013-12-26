@@ -52,6 +52,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def go
+    run = runs.create(started_at: Time.now)
     update_attribute(:last_run_at, Time.now)
     synchronise_repo
     FileUtils.mkdir_p data_path
@@ -67,6 +68,7 @@ class Scraper < ActiveRecord::Base
     ])
     puts "Running docker container..."
     p c.attach(stream: true, stdout: true, stderr: true, logs: true) {|s,c| puts c}
+    run.update_attribute(:finished_at, Time.now)
   end
 
   def sqlite_db_path
