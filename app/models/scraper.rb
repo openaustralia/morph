@@ -1,5 +1,6 @@
 class Scraper < ActiveRecord::Base
   belongs_to :owner, class_name: User
+  has_many :runs
 
   extend FriendlyId
   friendly_id :full_name, use: :finders

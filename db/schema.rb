@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131226202502) do
+ActiveRecord::Schema.define(version: 20131226225050) do
+
+  create_table "runs", force: true do |t|
+    t.integer  "scraper_id"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "scrapers", force: true do |t|
     t.string   "name",        null: false
