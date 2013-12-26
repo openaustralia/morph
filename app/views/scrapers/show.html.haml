@@ -18,7 +18,8 @@
   %h2 Data
   %ul
     %li= link_to "Download table (as CSV)", scraper_data_path(@scraper, :format => :csv)
-    %li= link_to "Download SQLite database", scraper_data_path(@scraper, :format => :sqlite) 
+    %li= link_to "Download SQLite database", scraper_data_path(@scraper, :format => :sqlite)
+    %li= link_to "Use the API", api_path
   %p (First 10 rows)
   .table-responsive
     %table.table.table-striped.table-bordered.table-condensed.scraper-data
