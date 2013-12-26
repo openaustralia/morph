@@ -19,9 +19,10 @@
   %p (First 10 rows)
   .table-responsive
     %table.table.table-striped.table-bordered.table-condensed.scraper-data
-      %tr
-        - @rows.first.each_key do |field|
-          %th= field
+      - unless @rows.empty?
+        %tr
+          - @rows.first.each_key do |field|
+            %th= field
       - @rows.each do |row|
         %tr
           - row.each_value do |v|
