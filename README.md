@@ -1,12 +1,11 @@
 ## A scraping platform
 
-* A Heroku for Scrapers
-* All code is stored in GitHub
-* Code collaboration through GitHub
+* A [Heroku](https://www.heroku.com/) for [Scrapers](https://en.wikipedia.org/wiki/Web_scraping)
+* All code and collaboration through [GitHub](https://github.com/)
 * Simple API to grab data
 * Schedule scrapers or run manually
-* Process isolation via Docker
-* Trivial to move scrapers from ScraperWiki (Classic)
+* Process isolation via [Docker](http://www.docker.io/)
+* Trivial to move scrapers from [ScraperWiki Classic](https://classic.scraperwiki.com/)
 
 ### FAQ
 What's it called? No idea.
