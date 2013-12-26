@@ -32,13 +32,7 @@ class ScrapersController < ApplicationController
 
   def show
     @scraper = Scraper.find(params[:id])
-    # Open a db connection
-    begin
-      db = SQLite3::Database.new("db/scrapers/data/mlandauer/scraper-blue-mountains/scraperwiki.sqlite",
-        results_as_hash: true, type_translation: true)
-      @rows = db.execute("select * from swdata limit 10")
-    rescue SQLite3::CantOpenException, SQLite3::SQLException
-    end
+    @rows = @scraper.sql_query("select * from swdata limit 10")
   end
 
   def destroy
