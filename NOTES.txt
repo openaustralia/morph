@@ -1,42 +1,28 @@
 Transcribed random & disorganised notes taken while on a camping trip when I should have been thinking about other things:
+(now organised a bit and edited to remove things already done)
 
-Login with Github
-See your repos on Github (with sync repos button)
-  with description
-  with newest at top
-
-Add repos that you want as scraper
-  don't display any by default that don't have a scraper.rb file or whatever it is depending on naming convention
-
-Each scraper has a url that matches github url
-
-After adding repos add github post hook to notify scraper of new version
+When adding a new scraper
+  See your repos on Github (with sync repos button)
+  Don't display scrapers by default that don't have a scraper.rb file or whatever it is depending on naming convention
+  After adding repos add github post hook to notify scraper of new version (maybe include option to run scraper when pushed to github?)
 
 On scraper page
-  Show description & (README if available)
+  Show README if available
   Sync button for description and version update
   Last updated date for the code last updated
-
-All the ease of github for code collaboration and a way of running your scraper that couldn't be easier
-
-On scraper page
-  Run button
-    See that scraper is running
+  See if scraper is currently running
   See when scraper was last run
-  Was it succesfull?
-    Were there errors?
-
-  Email alerts for your scrapers
-    or a set of scrapers with particular tags
-    find out if any of them break
+  Was the last run succesfull?
+  Were there errors?
   Fork the repo on github
-  Basic link to repo on github
+  Show a picture from github of scraper owner
+    + who else contributed to it
+    + which other scraper it was forked from
+  Download as CSV
+  Download as SQLite
+  Show CPU time remaining?
 
-API page
-  Simple select call
-  Same as scraperwiki
-
-Keep track of
+Statistics to keep track of for each scraper
   Number of runs
   cpu time last run
   user time last run
@@ -44,62 +30,29 @@ Keep track of
   Total user time
   No pages scraped (urls)
 
-On scraper page
-  Show table with some of the most recent scraped data
-  Show a picture from github of the user who scraper this is
-    + who else contributed to it
-    Who else forked from
+Email alerts
+  find out if scrapers break
+  for your scrapers
+  or a set of scrapers with particular tags
 
-On scraper page
-  Download as CSV
-  Download as SQLite
+Limits on creating and running scrapers
+  For free a certain amount of CPU time per month
+  Each individual run has a limit too
+    so that you don't suck up all your use
+  Pay for private scrapers
+  Pay for usage over a certain amount
 
-Who can create scrapers?
-For free a certain amount of CPU time per month
-Each individual run has a limit too
-  so that you don't suck up all your use
-
-Pay for private repos
-
-Pay for usage over a certain amount
-
-A heroku for scrapers
-  beautifully integrated with GitHub for code collaboration
-
-Http proxy so that we can track whose scrapers are accessing which sites
-
-Firewall to stop outgoing connections except for 80 & 443
-
-Stop all outgoing connections to internal network
+Security
+  Http proxy so that we can track whose scrapers are accessing which sites
+  Firewall to stop outgoing connections except for 80 & 443
+  Disallow scraping of domains with robots.txt set
+  Stop all outgoing connections to internal network
 
 Fork a scraper in one step:
   1. Forks on github
   2. Connects scraper to platform
   3. Redirect to new scraper page
 
-1. Create a scraper on Github
-2. Hook it up to platform
-3. Run it automatically or manually
-4. Export the data, as CSV, sqlite or get it through API
-
-Tool to find elements in webpage
-  Pick things that are the same
-  Show all that match
-  Add and remove elements
-  repeat
-  Like interactive matte pulling
-
-User page (url like github)
-  Shows scraper for that user
-    (public)
-  when you're logged in that page allows you to add new scraper
-  Probably should be able to add a scraper from any page (like github)
-
-When you're logged in you can run a scraper manually for a scraper that is yours
-Show CPU time remaining on scraper page?
-Design all pages up front
-  using bootstrap
-  for all functionality but just comment out the bits we're not using yet
-
-Model the overall shape of the page after github
-
+Some possible copy
+  All the ease of github for code collaboration and a way of running your scraper that couldn't be easier
+  A heroku for scrapers, beautifully integrated with GitHub for code collaboration
