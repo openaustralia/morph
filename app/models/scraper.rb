@@ -55,7 +55,7 @@ class Scraper < ActiveRecord::Base
     # TODO Run this in the background
     # TODO Capture output to console
     c.start("Binds" => [
-      "#{local_root_path}/#{repo_path}:/repo",
+      "#{local_root_path}/#{repo_path}:/repo:ro",
       "#{local_root_path}/#{data_path}:/data"
     ])
     puts "Running docker container..."
