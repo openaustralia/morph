@@ -7,6 +7,7 @@ ScrapingPlatform::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   root 'static#index'
+  get "/api", to: "static#api"
 
   # TODO: Don't allow a user to be called "new". Chances are GitHub enforces this anyway.
   resources :scrapers, path: '/', only: [:new, :create]

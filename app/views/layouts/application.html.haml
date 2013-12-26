@@ -30,6 +30,7 @@
           .container.nav-collapse
             %ul.nav
               %li= link_to "Add scraper", new_scraper_path
+              %li= link_to "API", api_path
             %ul.nav.pull-right
               %li
                 - if user_signed_in?
