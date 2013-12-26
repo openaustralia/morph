@@ -62,12 +62,15 @@ class Scraper < ActiveRecord::Base
     p c.attach(stream: true, stdout: true, stderr: true, logs: true) {|s,c| puts c}
   end
 
+  def sql_query(query)
+    db = SQLite3::Database.new("#{data_path}/scraperwiki.sqlite",
+      results_as_hash: true, type_translation: true)
+    db.execute(query)
+  end
+
   def sql_query_safe(query)
-    # Open a db connection
     begin
-      db = SQLite3::Database.new("#{data_path}/scraperwiki.sqlite",
-        results_as_hash: true, type_translation: true)
-      db.execute(query)
+      sql_query(query)
     rescue SQLite3::CantOpenException, SQLite3::SQLException
       nil
     end
