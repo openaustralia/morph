@@ -16,10 +16,14 @@ class Scraper < ActiveRecord::Base
     gritty = Grit::Git.new(repo_path)
     if gritty.exist?
       puts "Pulling git repo #{repo_path}..."
-      gritty.pull({:verbose => true, :progress => true})
+      # TODO Fix this. Using grit seems to do a pull but not update the working directory
+      # So falling back to shelling out to the git command
+      #gritty = Grit::Repo.new(repo_path).git
+      #puts gritty.pull({:raise => true}, "origin", "master")
+      system("cd #{repo_path}; git pull")
     else
       puts "Cloning git repo #{git_url}..."
-      gritty.clone({:verbose => true, :progress => true}, git_url, repo_path)
+      puts gritty.clone({:verbose => true, :progress => true, :raise => true}, git_url, repo_path)
     end
   end
 
