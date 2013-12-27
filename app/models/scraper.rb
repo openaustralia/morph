@@ -60,7 +60,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def last_run_at
-    last_run.started_at
+    last_run.started_at if last_run
   end
 
   def go
