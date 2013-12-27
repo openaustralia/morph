@@ -58,6 +58,10 @@ class Scraper < ActiveRecord::Base
     image.tag(repo: docker_image_name, force: true)
   end
 
+  def running?
+    runs.order(started_at: :desc).first.finished_at.nil?
+  end
+
   # Only return the last *completed* run
   def last_run
     runs.where("finished_at NOT NULL").order(started_at: :desc).first
