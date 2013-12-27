@@ -23,7 +23,8 @@
       = time_ago_in_words(@scraper.last_run_at)
       ago with status code #{@scraper.last_run_status_code}. See any console output below.
 - else
-  %p This scraper has not yet been run
+  .alert.alert-info
+    This scraper has not yet been run
 
 = link_to "Go to GitHub", @scraper.github_url
 

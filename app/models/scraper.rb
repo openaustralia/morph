@@ -59,7 +59,15 @@ class Scraper < ActiveRecord::Base
   end
 
   def running?
-    runs.order(started_at: :desc).first.finished_at.nil?
+    if last_run
+      last_run.finished_at.nil?
+    else
+      false
+    end
+  end
+
+  def last_run
+    runs.order(started_at: :desc).first
   end
 
   # Only return the last *completed* run
