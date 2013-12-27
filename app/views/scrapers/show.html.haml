@@ -5,32 +5,38 @@
 
 %h4= @scraper.description
 
-= link_to "Go to GitHub", @scraper.github_url
-
+-# Show the big picture status of this scraper here
 - if @scraper.running?
-  %p
+  .alert.alert-info
     The scraper is <strong>running</strong>. It was started
     = time_ago_in_words(@scraper.started_at)
     ago. (For the time being you will need to refresh this page to update this</quiet>)
+- elsif @scraper.last_run
+  - if @scraper.last_run_successful?
+    .alert.alert-success
+      Last run completed successfully
+      = time_ago_in_words(@scraper.last_run_at)
+      ago
+  - else
+    .alert.alert-danger
+      Last run failed
+      = time_ago_in_words(@scraper.last_run_at)
+      ago with status code #{@scraper.last_run_status_code}. See any console output below.
+- else
+  %p This scraper has not yet been run
+
+= link_to "Go to GitHub", @scraper.github_url
 
 - if @scraper.owned_by?(current_user)
   = button_to "Run it!", run_scraper_path(@scraper), class: (@scraper.running? ? "btn btn-info disabled" : "btn btn-info")
 
-- if @scraper.last_run
-  %h2 Last Run
-  %p
-    = time_ago_in_words(@scraper.last_run_at)
-    ago
-  - unless @scraper.last_run_successful?
-    .alert.alert-danger
-      Failed with status code: #{@scraper.last_run_status_code}
-  - unless @scraper.last_run.log_lines.empty?
-    %h3 Console output
-    %p Hint: Keep this to a minimum during normal use (so that things remain readable)
-    %pre
-      - @scraper.last_run.log_lines.order(:number).each do |line|
-        -# TODO Highlight stderr differently
-        %span{:class => line.stream}= line.text
+- if @scraper.last_run && !@scraper.last_run.log_lines.empty?
+  %h3 Console output
+  %p Hint: Keep this to a minimum during normal use (so that things remain readable)
+  %pre
+    - @scraper.last_run.log_lines.order(:number).each do |line|
+      -# TODO Highlight stderr differently
+      %span{:class => line.stream}= line.text
 
 - if @rows
   %h2 Data
