@@ -78,7 +78,14 @@ class Scraper < ActiveRecord::Base
       "#{local_root_path}/#{data_path}:/data"
     ])
     puts "Running docker container..."
-    p c.attach(stream: true, stdout: true, stderr: true, logs: true) {|s,c| puts c}
+    log_line_number = 0
+    c.attach(logs: true) do |s,c|
+      run.log_lines.create(stream: s, text: c, number: log_line_number)
+      log_line_number += 1
+    end
+    # Scraper should already have finished now. We're just using this to return the scraper status code
+    #p c.wait
+    # TODO Clean up stopped container
     run.update_attribute(:finished_at, Time.now)
   end
 
