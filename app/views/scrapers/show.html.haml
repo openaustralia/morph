@@ -29,7 +29,14 @@
 = link_to "Go to GitHub", @scraper.github_url
 
 - if @scraper.owned_by?(current_user)
-  = button_to "Run it!", run_scraper_path(@scraper), class: (@scraper.running? ? "btn btn-info disabled" : "btn btn-info")
+  = button_to "Run it now!", run_scraper_path(@scraper), class: (@scraper.running? ? "btn btn-primary btn-large disabled" : "btn btn-primary btn-large")
+
+  %h3 Settings
+  = semantic_form_for @scraper do |f|
+    = f.inputs do
+      = f.input :auto_run, hint: "Automatically run this scraper once per day"
+    = f.actions do
+      = f.action :submit, :label => "Update settings"
 
 - if @scraper.last_run_completed && !@scraper.last_run_completed.log_lines.empty?
   %h3 Console output
@@ -40,7 +47,7 @@
       %span{:class => line.stream}= line.text
 
 - if @rows
-  %h2 Data
+  %h3 Data
   %ul
     %li= link_to "Download table (as CSV)", scraper_data_path(@scraper, :format => :csv)
     %li= link_to "Download SQLite database", scraper_data_path(@scraper, :format => :sqlite)
@@ -58,7 +65,7 @@
             %td= v
 
 - if @scraper.owned_by?(current_user)
-  %h2 Here be dragons!
+  %h3 Here be dragons!
 
   = button_to "Clear database", clear_scraper_path(@scraper), {class: "btn btn-danger", confirm: "All your data will be gone!"}
 

@@ -15,6 +15,9 @@ gem "omniauth-github"
 gem 'friendly_id'
 gem "octokit"
 gem "formtastic-bootstrap"
+# This release candidate of formtastic has a fix for:
+# undefined method `check_box_checked?' for ActionView::Helpers::InstanceTag:Class
+gem "formtastic", "2.3.0.rc2"
 gem "grit"
 gem 'docker-api', :require => 'docker'
 gem 'delayed_job_active_record'

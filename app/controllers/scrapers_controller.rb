@@ -49,6 +49,19 @@ class ScrapersController < ApplicationController
     end
   end
 
+  def update
+    @scraper = Scraper.find(params[:id])
+    if @scraper.owned_by?(current_user)
+      # TODO This is definitely the dumb and long winded way to do things
+      if @scraper.update_attributes(auto_run: params[:scraper][:auto_run])
+        flash[:notice] = "Scraper settings successfully updated"
+      end
+    else
+      flash[:alert] = "Can't update someone else's scraper"
+    end
+    redirect_to @scraper
+  end
+
   def run
     scraper = Scraper.find(params[:id])
     if scraper.owned_by?(current_user)
