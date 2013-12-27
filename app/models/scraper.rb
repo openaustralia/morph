@@ -81,6 +81,30 @@ class Scraper < ActiveRecord::Base
 
   def go
     run = runs.create(started_at: Time.now)
+    self.delay.go2(run)
+  end
+
+  def sqlite_db_path
+    "#{data_path}/scraperwiki.sqlite"
+  end
+
+  def sql_query(query)
+    db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: true)
+    db.execute(query)
+  end
+
+  def sql_query_safe(query)
+    begin
+      sql_query(query)
+    rescue SQLite3::CantOpenException, SQLite3::SQLException
+      nil
+    end
+  end
+
+  private
+
+  # The main section of the scraper running that is run in the background
+  def go2(run)
     synchronise_repo
     FileUtils.mkdir_p data_path
 
@@ -106,21 +130,4 @@ class Scraper < ActiveRecord::Base
     run.update_attributes(status_code: status_code, finished_at: Time.now)
     # TODO Clean up stopped container
   end
-
-  def sqlite_db_path
-    "#{data_path}/scraperwiki.sqlite"
-  end
-
-  def sql_query(query)
-    db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: true)
-    db.execute(query)
-  end
-
-  def sql_query_safe(query)
-    begin
-      sql_query(query)
-    rescue SQLite3::CantOpenException, SQLite3::SQLException
-      nil
-    end
-  end  
 end

@@ -52,7 +52,7 @@ class ScrapersController < ApplicationController
   def run
     scraper = Scraper.find(params[:id])
     if scraper.owned_by?(current_user)
-      scraper.delay.go
+      scraper.go
       flash[:notice] = "Scraper started"
     else
       flash[:alert] = "Can't run someone else's scraper!"
