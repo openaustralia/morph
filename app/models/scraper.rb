@@ -10,6 +10,9 @@ class Scraper < ActiveRecord::Base
   end
 
   def synchronise_repo
+    # Set git timeout to 1 minute
+    # TODO Move this to a configuration
+    Grit::Git.git_timeout = 60
     gritty = Grit::Git.new(repo_path)
     if gritty.exist?
       puts "Pulling git repo #{repo_path}..."
