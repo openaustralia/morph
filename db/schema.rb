@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131226230814) do
+ActiveRecord::Schema.define(version: 20131227005803) do
+
+  create_table "log_lines", force: true do |t|
+    t.integer  "run_id"
+    t.string   "stream"
+    t.integer  "number"
+    t.string   "text"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "runs", force: true do |t|
     t.integer  "scraper_id"
