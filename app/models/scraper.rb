@@ -76,7 +76,9 @@ class Scraper < ActiveRecord::Base
     synchronise_repo
     FileUtils.mkdir_p data_path
 
-    c = Docker::Container.create("Cmd" => ['/bin/bash','-l','-c','ruby /repo/scraper.rb'], "Image" => Scraper.docker_image_name)
+    c = Docker::Container.create("Cmd" => ['/bin/bash','-l','-c','ruby /repo/scraper.rb'],
+      "User" => "scraper",
+      "Image" => Scraper.docker_image_name)
     # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
     local_root_path = "/vagrant"
     # TODO Run this in the background
