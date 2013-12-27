@@ -6,7 +6,12 @@
 %h4= @scraper.description
 
 -# Show the big picture status of this scraper here
-- if @scraper.running?
+- if @scraper.queued?
+  .alert.alert-info
+    The scraper is <strong>queued to run</strong>. It was queued
+    = time_ago_in_words(@scraper.queued_at)
+    ago. (For the time being you will need to refresh this page to update this</quiet>)
+- elsif @scraper.running?
   .alert.alert-info
     The scraper is <strong>running</strong>. It was started
     = time_ago_in_words(@scraper.started_at)
@@ -29,7 +34,7 @@
 = link_to "Go to GitHub", @scraper.github_url
 
 - if @scraper.owned_by?(current_user)
-  = button_to "Run it now!", run_scraper_path(@scraper), class: (@scraper.running? ? "btn btn-primary btn-large disabled" : "btn btn-primary btn-large")
+  = button_to "Run it now!", run_scraper_path(@scraper), class: ((@scraper.queued? || @scraper.running?) ? "btn btn-primary btn-large disabled" : "btn btn-primary btn-large")
 
   %h3 Settings
   = semantic_form_for @scraper do |f|

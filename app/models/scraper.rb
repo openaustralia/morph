@@ -60,23 +60,35 @@ class Scraper < ActiveRecord::Base
 
   def running?
     if last_run
-      last_run.finished_at.nil?
+      last_run.started_at && last_run.finished_at.nil?
+    else
+      false
+    end
+  end
+
+  def queued?
+    if last_run
+      last_run.queued_at && last_run.started_at.nil?
     else
       false
     end
   end
 
   def last_run
-    runs.order(started_at: :desc).first
+    runs.order(queued_at: :desc).first
   end
 
   # Only return the last *completed* run
   def last_run_completed
-    runs.where("finished_at NOT NULL").order(started_at: :desc).first
+    runs.where("finished_at NOT NULL").order(queued_at: :desc).first
   end
 
   def started_at
-    runs.order(started_at: :desc).first.started_at
+    last_run.started_at
+  end
+
+  def queued_at
+    last_run.queued_at
   end
 
   def last_run_at
@@ -91,19 +103,9 @@ class Scraper < ActiveRecord::Base
     last_run_completed.status_code if last_run_completed
   end
 
-  # TODO Fix this (and go_delayed below) to be more clear
   def go
-    run = runs.create(started_at: Time.now)
+    run = runs.create(queued_at: Time.now)
     self.delay.go2(run)
-  end
-
-  # Eek. I'm making myself confused here.
-  # Call this when you only want the scraper to be recorded as starting when the job is actually taken off the queue
-  # TODO Fix this
-  # This should only be called with delay.go_delayed
-  def go_delayed
-    run = runs.create(started_at: Time.now)
-    go2(run)
   end
 
   def clear
@@ -127,10 +129,9 @@ class Scraper < ActiveRecord::Base
     end
   end
 
-  private
-
   # The main section of the scraper running that is run in the background
   def go2(run)
+    run.update_attributes(started_at: Time.now)
     synchronise_repo
     FileUtils.mkdir_p data_path
 
