@@ -91,9 +91,19 @@ class Scraper < ActiveRecord::Base
     last_run_completed.status_code if last_run_completed
   end
 
+  # TODO Fix this (and go_delayed below) to be more clear
   def go
     run = runs.create(started_at: Time.now)
     self.delay.go2(run)
+  end
+
+  # Eek. I'm making myself confused here.
+  # Call this when you only want the scraper to be recorded as starting when the job is actually taken off the queue
+  # TODO Fix this
+  # This should only be called with delay.go_delayed
+  def go_delayed
+    run = runs.create(started_at: Time.now)
+    go2(run)
   end
 
   def clear
