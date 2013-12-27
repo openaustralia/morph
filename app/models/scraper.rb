@@ -67,6 +67,10 @@ class Scraper < ActiveRecord::Base
     runs.where("finished_at NOT NULL").order(started_at: :desc).first
   end
 
+  def started_at
+    runs.order(started_at: :desc).first.started_at
+  end
+
   def last_run_at
     last_run.started_at if last_run
   end
