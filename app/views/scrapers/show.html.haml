@@ -15,6 +15,9 @@
   %p
     = time_ago_in_words(@scraper.last_run_at)
     ago
+  - unless @scraper.last_run_successful?
+    .alert.alert-danger
+      Failed with status code: #{@scraper.last_run_status_code}
   %h3 Console output
   %p Hint: Keep this to a minimum during normal use (so that things remain readable)
   %pre

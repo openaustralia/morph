@@ -63,6 +63,14 @@ class Scraper < ActiveRecord::Base
     last_run.started_at if last_run
   end
 
+  def last_run_successful?
+    last_run_status_code == 0
+  end
+
+  def last_run_status_code
+    last_run.status_code if last_run
+  end
+
   def go
     run = runs.create(started_at: Time.now)
     synchronise_repo
