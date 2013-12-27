@@ -59,6 +59,17 @@ class ScrapersController < ApplicationController
     redirect_to scraper
   end
 
+  # TODO Extract checking of who owns the scraper
+  def clear
+    scraper = Scraper.find(params[:id])
+    if scraper.owned_by?(current_user)
+      scraper.clear
+    else
+      flash[:alert] = "Can't clear someone else's scraper!"
+    end
+    redirect_to scraper    
+  end
+
   def data
     scraper = Scraper.find(params[:id])
     if params[:format] == "sqlite"

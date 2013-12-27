@@ -96,6 +96,10 @@ class Scraper < ActiveRecord::Base
     self.delay.go2(run)
   end
 
+  def clear
+    FileUtils.rm sqlite_db_path
+  end
+
   def sqlite_db_path
     "#{data_path}/scraperwiki.sqlite"
   end

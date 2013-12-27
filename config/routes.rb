@@ -16,7 +16,7 @@ ScrapingPlatform::Application.routes.draw do
   get "/*id", to: "scrapers#show", as: :scraper
   delete "/*id", to: "scrapers#destroy"
   post "/*id/run", to: "scrapers#run", as: :run_scraper
-
+  post "/*id/clear", to: "scrapers#clear", as: :clear_scraper
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
