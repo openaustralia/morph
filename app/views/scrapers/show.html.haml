@@ -5,16 +5,22 @@
 
 %h4= @scraper.description
 
-- if @scraper.last_run_at
-  %p
-    Last run
-    = time_ago_in_words(@scraper.last_run_at)
-    ago
-
 = link_to "Go to GitHub", @scraper.github_url
 
 - if @scraper.owned_by?(current_user)
   = button_to "Run it!", run_scraper_path(@scraper), class: "btn btn-info"
+
+- if @scraper.last_run
+  %h2 Last Run
+  %p
+    = time_ago_in_words(@scraper.last_run_at)
+    ago
+  %h3 Console output
+  %p Hint: Keep this to a minimum during normal use (so that things remain readable)
+  %pre
+    - @scraper.last_run.log_lines.order(:number).each do |line|
+      -# TODO Highlight stderr differently
+      %span{:class => line.stream}= line.text
 
 - if @rows
   %h2 Data
