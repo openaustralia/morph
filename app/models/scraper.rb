@@ -63,7 +63,7 @@ class Scraper < ActiveRecord::Base
   end
 
   # Only return the last *completed* run
-  def last_run
+  def last_run_completed
     runs.where("finished_at NOT NULL").order(started_at: :desc).first
   end
 
@@ -72,7 +72,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def last_run_at
-    last_run.started_at if last_run
+    last_run_completed.started_at if last_run_completed
   end
 
   def last_run_successful?
@@ -80,7 +80,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def last_run_status_code
-    last_run.status_code if last_run
+    last_run_completed.status_code if last_run_completed
   end
 
   def go
