@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131227005803) do
+ActiveRecord::Schema.define(version: 20131227012422) do
 
   create_table "log_lines", force: true do |t|
     t.integer  "run_id"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20131227005803) do
     t.datetime "finished_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "status_code"
   end
 
   create_table "scrapers", force: true do |t|

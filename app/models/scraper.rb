@@ -84,9 +84,9 @@ class Scraper < ActiveRecord::Base
       log_line_number += 1
     end
     # Scraper should already have finished now. We're just using this to return the scraper status code
-    #p c.wait
+    status_code = c.wait["StatusCode"]
+    run.update_attributes(status_code: status_code, finished_at: Time.now)
     # TODO Clean up stopped container
-    run.update_attribute(:finished_at, Time.now)
   end
 
   def sqlite_db_path
