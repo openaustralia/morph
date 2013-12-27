@@ -18,12 +18,13 @@
   - unless @scraper.last_run_successful?
     .alert.alert-danger
       Failed with status code: #{@scraper.last_run_status_code}
-  %h3 Console output
-  %p Hint: Keep this to a minimum during normal use (so that things remain readable)
-  %pre
-    - @scraper.last_run.log_lines.order(:number).each do |line|
-      -# TODO Highlight stderr differently
-      %span{:class => line.stream}= line.text
+  - unless @scraper.last_run.log_lines.empty?
+    %h3 Console output
+    %p Hint: Keep this to a minimum during normal use (so that things remain readable)
+    %pre
+      - @scraper.last_run.log_lines.order(:number).each do |line|
+        -# TODO Highlight stderr differently
+        %span{:class => line.stream}= line.text
 
 - if @rows
   %h2 Data
