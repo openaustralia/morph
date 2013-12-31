@@ -23,3 +23,9 @@ production:
   database: db/production.sqlite3
   pool: 5
   timeout: 5000
+
+vagrant:
+  adapter: sqlite3
+  database: db/vagrant.sqlite3
+  pool: 5
+  timeout: 5000
