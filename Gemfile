@@ -23,6 +23,11 @@ gem 'docker-api', :require => 'docker'
 gem 'delayed_job_active_record'
 gem "foreman"
 
+group :development do
+  gem 'capistrano-rails'
+  gem 'capistrano-rvm'
+end
+
 group :production do
   # Javascript runtime (required for precompiling assets in production)
   gem 'therubyracer'
