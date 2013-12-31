@@ -1,6 +1,7 @@
 ---
 - name: Ensure curl is installed
   apt: pkg=curl
+# TODO Maybe install rvm by installing the package ruby-rvm?
 - name: Ensure rvm installed in deploy user
   shell: curl -sSL https://get.rvm.io | bash -s stable creates=/home/deploy/.rvm
   sudo_user: deploy
@@ -27,4 +28,7 @@
     - libffi-dev
 - name: Ensure ruby-2.0.0-p353 is installed through rvm
   command: /bin/sh -l -c 'rvm install ruby-2.0.0-p353 --autolibs=read-fail' creates=/home/deploy/.rvm/rubies/ruby-2.0.0-p353
+  sudo_user: deploy
+- name: Make ruby-2.0.0-p353 the default
+  command: /bin/sh -l -c 'rvm alias create default ruby-2.0.0-p353'
   sudo_user: deploy
