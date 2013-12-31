@@ -9,8 +9,10 @@
   template: src=default
             dest=/etc/apache2/sites-available/default
   notify: Restart Apache
-- name: Ensure that .env exists (but will need to be filled in by hand)
-  file: path=/var/www/shared/.env owner=deploy group=deploy state=touch
+- name: Ensure that /var/www/shared exists
+  file: path=/var/www/shared owner=deploy group=deploy state=directory
+- name: Ensure that .env exists
+  copy: src=../.env.vagrant dest=/var/www/shared/.env owner=deploy group=deploy
 # TODO This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
 - name: Install foreman
