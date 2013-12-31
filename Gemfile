@@ -23,6 +23,11 @@ gem 'docker-api', :require => 'docker'
 gem 'delayed_job_active_record'
 gem "foreman"
 
+group :production do
+  # Javascript runtime (required for precompiling assets in production)
+  gem 'therubyracer'
+end
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
