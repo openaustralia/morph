@@ -1,7 +1,4 @@
 ---
-# TODO: Move this task somewhere else
-- name: Ensure we have a deploy user
-  user: name=deploy comment="Deploy user"
 - name: Ensure curl is installed
   apt: pkg=curl
 - name: Ensure rvm installed in deploy user
