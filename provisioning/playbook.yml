@@ -3,3 +3,4 @@
   sudo: true
   roles:
     - docker-server
+    - apache-passenger
