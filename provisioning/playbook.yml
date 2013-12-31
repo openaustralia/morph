@@ -1,21 +1,5 @@
 ---
 - hosts: all
   sudo: true
-  tasks:
-    - name: Ensure that we're running Linux kernel 3.8
-      apt: pkg=linux-image-generic-lts-raring update_cache=yes cache_valid_time=3600
-      notify:
-      - reboot the server
-    - name: Ensure that new Linux headers are installed
-      apt: pkg=linux-headers-generic-lts-raring
-    - name: Ensure that we have the Docker repository key
-      apt_key: url=https://get.docker.io/gpg id=A88D21E9
-    - name: Ensure that pycurl is installed (for ansible)
-      apt: pkg=python-pycurl
-    - name: Ensure that we have the docker repository
-      apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
-    - name: Ensure that the docker package is installed
-      apt: pkg=lxc-docker
-  handlers:
-    - name: reboot the server
-      command: /sbin/reboot
+  roles:
+    - docker-server
