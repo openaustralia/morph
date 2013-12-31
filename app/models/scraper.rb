@@ -45,17 +45,18 @@ class Scraper < ActiveRecord::Base
   end
 
   def self.build_docker_image!
+    system("docker build -t=scraper lib/build_docker_image")
     # TODO On Linux we'll have access to the "docker" command line which can show standard out which
     # would be very helpful. As far as I can tell this is not currently possible with the docker api gem.
 
     # TODO Move these Docker setup bits to an initializer
-    Docker.validate_version!
+    #Docker.validate_version!
     # Set read timeout to a silly 30 minutes (we'll need a bit of time to build an image)
-    Docker.options[:read_timeout] = 1800
+    #Docker.options[:read_timeout] = 1800
 
-    puts "Building docker image (this is likely to take a while)..."
-    image = Docker::Image.build_from_dir("lib/build_docker_image") {|c| puts c}
-    image.tag(repo: docker_image_name, force: true)
+    #puts "Building docker image (this is likely to take a while)..."
+    #image = Docker::Image.build_from_dir("lib/build_docker_image") {|c| puts c}
+    #image.tag(repo: docker_image_name, force: true)
   end
 
   def running?
