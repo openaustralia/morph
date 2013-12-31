@@ -3,3 +3,7 @@
   apt: pkg=git
 - name: Ensure that deploy owns /var/www
   file: owner=deploy group=deploy path=/var/www
+- name: Generate the apache config for the app
+  template: src=default
+            dest=/etc/apache2/sites-available/default
+  notify: Restart Apache
