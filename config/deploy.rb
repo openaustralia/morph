@@ -39,3 +39,28 @@ namespace :deploy do
   after :finishing, 'deploy:cleanup'
 
 end
+
+before "deploy:restart", "foreman:restart"
+
+namespace :foreman do
+  desc "Start the application services"
+  task :start do
+    on roles(:app) do
+      sudo "service scraping-platform start"
+    end
+  end
+
+  desc "Stop the application services"
+  task :stop do
+    on roles(:app) do
+      sudo "service scraping-platform stop"
+    end
+  end
+
+  desc "Restart the application services"
+  task :restart do
+    on roles(:app) do
+      sudo "service scraping-platform restart"
+    end
+  end
+end
