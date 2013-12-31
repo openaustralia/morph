@@ -7,3 +7,5 @@
   template: src=default
             dest=/etc/apache2/sites-available/default
   notify: Restart Apache
+- name: Ensure that .env exists (but will need to be filled in by hand)
+  file: path=/var/www/shared/.env owner=deploy group=deploy state=touch
