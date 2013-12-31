@@ -1,3 +1,5 @@
 ---
 - name: Ensure git is installed
   apt: pkg=git
+- name: Ensure that deploy owns /var/www
+  file: owner=deploy group=deploy path=/var/www
