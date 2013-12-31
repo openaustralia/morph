@@ -1,2 +1,4 @@
 - name: Ensure we have a deploy user
   user: name=deploy comment="Deploy user"
+- name: Ensure that mlandauer can ssh as deploy user
+  authorized_key: user=deploy key="{{ lookup('file', '/Users/matthew/.ssh/scraper.pub') }}"
