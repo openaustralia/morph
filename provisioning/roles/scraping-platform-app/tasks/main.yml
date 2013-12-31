@@ -16,7 +16,7 @@
 # TODO This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
 - name: Install foreman
-  gem: name=foreman state=present
+  gem: name=foreman state=present user_install=no
 - name: Ensure Procfile.vagrant copied
   copy: src=../Procfile.vagrant dest=/home/deploy/Procfile.vagrant
 - name: Ensure upstart is setup for the application
