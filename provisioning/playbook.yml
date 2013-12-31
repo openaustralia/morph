@@ -4,3 +4,4 @@
   roles:
     - docker-server
     - apache-passenger
+    - ruby-2.0.0-p353
