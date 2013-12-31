@@ -1,0 +1,1 @@
+worker: rvm . do bundle exec rake jobs:work RAILS_ENV=vagrant
