@@ -104,7 +104,7 @@ class Scraper < ActiveRecord::Base
     last_run_completed.status_code if last_run_completed
   end
 
-  def go
+  def queue!
     run = runs.create(queued_at: Time.now)
     self.delay.go2(run)
   end
