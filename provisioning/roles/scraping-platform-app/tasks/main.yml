@@ -37,3 +37,7 @@
   mysql_db: name=scraping_vagrant
 - name: Copy over database configuration for application
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
+- name: Dependency for following command
+  apt: pkg=python-passlib
+- name: Add basic authentication password
+  htpasswd: path=/var/www/shared/htpasswd name=test password=test owner=root group=www-data mode=0640

@@ -8,5 +8,10 @@
         Order allow,deny
         Allow from all
         Options -MultiViews
+
+        AuthType Basic
+        AuthName "Scraping Platform"
+        AuthUserFile /var/www/shared/htpasswd
+        Require user test
     </Directory>
 </VirtualHost>
