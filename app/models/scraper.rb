@@ -81,7 +81,7 @@ class Scraper < ActiveRecord::Base
 
   # Only return the last *completed* run
   def last_run_completed
-    runs.where("finished_at NOT NULL").order(queued_at: :desc).first
+    runs.where("finished_at IS NOT NULL").order(queued_at: :desc).first
   end
 
   def started_at
