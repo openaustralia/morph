@@ -34,6 +34,6 @@
 - name: Install dependency for following command
   apt: pkg=python-mysqldb
 - name: Create database
-  mysql_db: name=scraping
+  mysql_db: name=scraping_vagrant
 - name: Copy over database configuration for application
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
