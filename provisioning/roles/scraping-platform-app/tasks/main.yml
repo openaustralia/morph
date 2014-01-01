@@ -31,3 +31,7 @@
 # as Docker matures
 - name: Add deploy to the docker group (so it has permissions to do dockery things)
   user: name=deploy groups=docker
+- name: Install dependency for following command
+  apt: pkg=python-mysqldb
+- name: Create database
+  mysql_db: name=scraping
