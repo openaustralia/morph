@@ -5,6 +5,8 @@ class Scraper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :full_name, use: :finders
 
+  delegate :queued_at, :started_at, :finished_at, :status_code, to: :last_run
+
   def owned_by?(user)
     owner == user
   end
@@ -60,15 +62,15 @@ class Scraper < ActiveRecord::Base
   end
 
   def running?
-    last_run && last_run.started_at && last_run.finished_at.nil?
+    has_run? && started_at && finished_at.nil?
   end
 
   def queued?
-    last_run && last_run.queued_at && last_run.started_at.nil?
+    has_run? && queued_at && started_at.nil?
   end
 
   def finished?
-    last_run && last_run.finished_at
+    has_run? && finished_at
   end
 
   def finished_successfully?
@@ -79,20 +81,12 @@ class Scraper < ActiveRecord::Base
     finished? && status_code != 0
   end
 
+  def has_run?
+    !!last_run
+  end
+
   def last_run
     runs.order(queued_at: :desc).first
-  end
-
-  def started_at
-    last_run.started_at
-  end
-
-  def queued_at
-    last_run.queued_at
-  end
-
-  def status_code
-    last_run.status_code
   end
 
   def queue!
