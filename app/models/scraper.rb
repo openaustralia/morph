@@ -106,7 +106,7 @@ class Scraper < ActiveRecord::Base
 
   def queue!
     run = runs.create(queued_at: Time.now)
-    self.delay.go2(run)
+    self.delay.go(run)
   end
 
   def clear
@@ -131,7 +131,7 @@ class Scraper < ActiveRecord::Base
   end
 
   # The main section of the scraper running that is run in the background
-  def go2(run)
+  def go(run)
     run.update_attributes(started_at: Time.now)
     synchronise_repo
     FileUtils.mkdir_p data_path
