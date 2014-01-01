@@ -140,7 +140,12 @@ class Scraper < ActiveRecord::Base
       "User" => "scraper",
       "Image" => Scraper.docker_image_name)
     # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
-    local_root_path = "/vagrant"
+    # HACK to detect vagrant installation in crude way
+    if Rails.root =~ /\/var\/www/
+      local_root_path = Rails.root
+    else
+      local_root_path = "/vagrant"
+    end
     # TODO Run this in the background
     # TODO Capture output to console
     c.start("Binds" => [
