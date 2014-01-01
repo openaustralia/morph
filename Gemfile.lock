@@ -63,7 +63,7 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
-    docker-api (1.7.5)
+    docker-api (1.7.6)
       archive-tar-minitar
       excon (>= 0.28)
       json
@@ -116,6 +116,7 @@ GEM
     minitest (4.7.5)
     multi_json (1.8.2)
     multipart-post (1.2.0)
+    mysql2 (0.3.14)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
@@ -230,6 +231,7 @@ DEPENDENCIES
   haml-rails
   jbuilder (~> 1.2)
   jquery-rails
+  mysql2
   octokit
   omniauth-github
   rails (= 4.0.2)
