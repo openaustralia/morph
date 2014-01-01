@@ -67,6 +67,14 @@ class Scraper < ActiveRecord::Base
     last_run && last_run.queued_at && last_run.started_at.nil?
   end
 
+  def finished_successfully?
+    last_run_completed && last_run_successful?
+  end
+
+  def finished_with_errors?
+    last_run_completed && !last_run_successful?
+  end
+
   def last_run
     runs.order(queued_at: :desc).first
   end

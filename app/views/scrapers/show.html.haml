@@ -16,17 +16,16 @@
     The scraper is <strong>running</strong>. It was started
     = time_ago_in_words(@scraper.started_at)
     ago. (For the time being you will need to refresh this page to update this</quiet>)
-- elsif @scraper.last_run_completed
-  - if @scraper.last_run_successful?
-    .alert.alert-success
-      Last run completed successfully
-      = time_ago_in_words(@scraper.last_run_at)
-      ago
-  - else
-    .alert.alert-danger
-      Last run failed
-      = time_ago_in_words(@scraper.last_run_at)
-      ago with status code #{@scraper.last_run_status_code}. See any console output below.
+- elsif @scraper.finished_successfully?
+  .alert.alert-success
+    Last run completed successfully
+    = time_ago_in_words(@scraper.last_run_at)
+    ago
+- elsif @scraper.finished_with_errors?
+  .alert.alert-danger
+    Last run failed
+    = time_ago_in_words(@scraper.last_run_at)
+    ago with status code #{@scraper.last_run_status_code}. See any console output below.
 - else
   .alert.alert-info
     This scraper has not yet been run
