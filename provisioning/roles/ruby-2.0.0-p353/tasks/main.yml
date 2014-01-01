@@ -26,6 +26,9 @@
     - bison
     - pkg-config
     - libffi-dev
+    - libreadline6-dev
+    - zlib1g-dev
+    - libssl-dev
 - name: Ensure ruby-2.0.0-p353 is installed through rvm
   command: /bin/sh -l -c 'rvm install ruby-2.0.0-p353 --autolibs=read-fail' creates=/home/deploy/.rvm/rubies/ruby-2.0.0-p353
   sudo_user: deploy

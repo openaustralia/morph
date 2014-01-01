@@ -35,6 +35,8 @@
   apt: pkg=python-mysqldb
 - name: Create database
   mysql_db: name=scraping_vagrant
+- name: Create directory /var/www/shared/config
+  file: path=/var/www/shared/config owner=deploy group=deploy state=directory
 - name: Copy over database configuration for application
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
 - name: Dependency for following command
