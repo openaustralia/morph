@@ -10,6 +10,7 @@ RUN echo 'source /usr/local/rvm/scripts/rvm' >> /etc/bash.bashrc
 RUN /bin/bash -l -c 'rvm install ruby-1.9.2-p320'
 RUN mkdir /repo
 RUN adduser --home /data --disabled-login --gecos "Scraper User" scraper
+RUN chmod 666 /data
 
 ADD Gemfile /etc/Gemfile
 RUN /bin/bash -l -c 'bundle install --gemfile /etc/Gemfile'
