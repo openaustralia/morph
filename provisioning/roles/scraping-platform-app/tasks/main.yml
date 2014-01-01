@@ -35,3 +35,5 @@
   apt: pkg=python-mysqldb
 - name: Create database
   mysql_db: name=scraping
+- name: Copy over database configuration for application
+  template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
