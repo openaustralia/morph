@@ -38,9 +38,18 @@ namespace :deploy do
 
   after :finishing, 'deploy:cleanup'
 
+  desc "Build docker images"
+  task :docker do
+    on roles(:app) do
+      within release_path do
+        execute :bundle, "exec rake app:build_docker_image"
+      end
+    end
+  end
 end
 
-before "deploy:restart", "foreman:restart"
+before "deploy:restart", "deploy:docker"
+after "deploy:docker", "foreman:restart"
 
 namespace :foreman do
   desc "Start the application services"
