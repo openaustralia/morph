@@ -67,21 +67,20 @@ class Scraper < ActiveRecord::Base
     last_run && last_run.queued_at && last_run.started_at.nil?
   end
 
+  def finished?
+    last_run && last_run.finished_at
+  end
+
   def finished_successfully?
-    last_run_completed && last_run_successful?
+    finished? && status_code == 0
   end
 
   def finished_with_errors?
-    last_run_completed && !last_run_successful?
+    finished? && status_code != 0
   end
 
   def last_run
     runs.order(queued_at: :desc).first
-  end
-
-  # Only return the last *completed* run
-  def last_run_completed
-    runs.where("finished_at IS NOT NULL").order(queued_at: :desc).first
   end
 
   def started_at
@@ -92,16 +91,8 @@ class Scraper < ActiveRecord::Base
     last_run.queued_at
   end
 
-  def last_run_at
-    last_run_completed.started_at if last_run_completed
-  end
-
-  def last_run_successful?
-    last_run_status_code == 0
-  end
-
-  def last_run_status_code
-    last_run_completed.status_code if last_run_completed
+  def status_code
+    last_run.status_code
   end
 
   def queue!

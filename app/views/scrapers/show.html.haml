@@ -19,13 +19,13 @@
 - elsif @scraper.finished_successfully?
   .alert.alert-success
     Last run completed successfully
-    = time_ago_in_words(@scraper.last_run_at)
+    = time_ago_in_words(@scraper.started_at)
     ago
 - elsif @scraper.finished_with_errors?
   .alert.alert-danger
     Last run failed
-    = time_ago_in_words(@scraper.last_run_at)
-    ago with status code #{@scraper.last_run_status_code}. See any console output below.
+    = time_ago_in_words(@scraper.started_at)
+    ago with status code #{@scraper.status_code}. See any console output below.
 - else
   .alert.alert-info
     This scraper has not yet been run
@@ -43,11 +43,11 @@
     = f.actions do
       = f.action :submit, :label => "Update settings"
 
-- if @scraper.last_run_completed && !@scraper.last_run_completed.log_lines.empty?
+- if @scraper.finished? && !@scraper.last_run.log_lines.empty?
   %h3 Console output
   %p Hint: Keep this to a minimum during normal use (so that things remain readable)
   %pre
-    - @scraper.last_run_completed.log_lines.order(:number).each do |line|
+    - @scraper.last_run.log_lines.order(:number).each do |line|
       -# TODO Highlight stderr differently
       %span{:class => line.stream}= line.text
 
