@@ -36,10 +36,11 @@
 - if @scraper.owned_by?(current_user)
   = button_to "Run it now!", run_scraper_path(@scraper), class: ((@scraper.queued? || @scraper.running?) ? "btn btn-primary btn-large disabled" : "btn btn-primary btn-large")
 
-  %h3 Settings
-  = semantic_form_for @scraper do |f|
-    = f.inputs do
-      = f.input :auto_run, hint: "Automatically run this scraper once per day"
+%h3 Settings
+= semantic_form_for @scraper do |f|
+  = f.inputs do
+    = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !@scraper.owned_by?(current_user)}
+  - if @scraper.owned_by?(current_user)
     = f.actions do
       = f.action :submit, :label => "Update settings"
 
