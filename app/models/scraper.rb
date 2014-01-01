@@ -60,19 +60,11 @@ class Scraper < ActiveRecord::Base
   end
 
   def running?
-    if last_run
-      last_run.started_at && last_run.finished_at.nil?
-    else
-      false
-    end
+    last_run && last_run.started_at && last_run.finished_at.nil?
   end
 
   def queued?
-    if last_run
-      last_run.queued_at && last_run.started_at.nil?
-    else
-      false
-    end
+    last_run && last_run.queued_at && last_run.started_at.nil?
   end
 
   def last_run
