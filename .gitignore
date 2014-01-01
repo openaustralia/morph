@@ -20,3 +20,4 @@
 /db/scrapers
 .vagrant
 vagrant_ansible_inventory_default
+config/database.yml
