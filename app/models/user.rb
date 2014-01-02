@@ -28,4 +28,8 @@ class User < ActiveRecord::Base
         company: user.company,
         email: user.email)
   end
+
+  def gravatar_url
+    "https://www.gravatar.com/avatar/#{gravatar_id}?r=x&s=440"
+  end
 end

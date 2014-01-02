@@ -1,6 +1,6 @@
 .row
   .span3
-    = image_tag "https://www.gravatar.com/avatar/#{@user.gravatar_id}?r=x&s=440"
+    = image_tag @user.gravatar_url
     %h1= @user.name
     %h2= @user.nickname
     %ul
