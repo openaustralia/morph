@@ -12,6 +12,7 @@ role :app, %w{deploy@localhost}
 role :web, %w{deploy@localhost}
 role :db,  %w{deploy@localhost}
 
+# Comment this out if deploying to scraper.oaf.org.au
 set :ssh_options, {
   port: 2222
 }
