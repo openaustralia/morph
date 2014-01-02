@@ -1,17 +1,24 @@
-%h1= @user.name
-%h2= @user.nickname
+.row
+  .span3
+    = image_tag "https://www.gravatar.com/avatar/#{@user.gravatar_id}?r=x&s=440"
+    %h1= @user.name
+    %h2= @user.nickname
+    %ul
+      %li= @user.company
+      %li= link_to @user.blog, @user.blog
 
-%p This is where information about this user is going to go. It will include things like the scrapers they have, their gravatar, and if the user is you the ability to add a new scraper.
+  .span9
+    %p This is where information about this user is going to go. It will include things like the scrapers they have, their gravatar, and if the user is you the ability to add a new scraper.
 
-%h3 Scrapers
+    %h3 Scrapers
 
-%ul
-  - @user.scrapers.each do |scraper|
-    %li
-      %strong
-        = link_to scraper.name, scraper
-      &mdash;
-      = scraper.description
+    %ul
+      - @user.scrapers.each do |scraper|
+        %li
+          %strong
+            = link_to scraper.name, scraper
+          &mdash;
+          = scraper.description
 
-- if @user == current_user
-  = link_to "Add scraper", new_scraper_path, class: "btn"
+    - if @user == current_user
+      = link_to "Add scraper", new_scraper_path, class: "btn"
