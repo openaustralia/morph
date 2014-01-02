@@ -8,17 +8,19 @@
       %li= link_to @user.blog, @user.blog
 
   .span9
-    %p This is where information about this user is going to go. It will include things like the scrapers they have, their gravatar, and if the user is you the ability to add a new scraper.
+    - if @user.scrapers.empty?
+      %h3 Has no scrapers
 
-    %h3 Scrapers
+    - else
+      %h3 Scrapers
 
-    %ul
-      - @user.scrapers.each do |scraper|
-        %li
-          %strong
-            = link_to scraper.name, scraper
-          &mdash;
-          = scraper.description
+      %ul
+        - @user.scrapers.each do |scraper|
+          %li
+            %strong
+              = link_to scraper.name, scraper
+            &mdash;
+            = scraper.description
 
     - if @user == current_user
       = link_to "Add scraper", new_scraper_path, class: "btn"
