@@ -32,4 +32,8 @@ class User < ActiveRecord::Base
   def gravatar_url(size = 440)
     "https://www.gravatar.com/avatar/#{gravatar_id}?r=x&s=#{size}"
   end
+
+  def github_url
+    "https://github.com/#{nickname}"
+  end
 end

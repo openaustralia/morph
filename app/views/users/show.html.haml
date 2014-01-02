@@ -4,10 +4,14 @@
     %h1= @user.name
     %h2= @user.nickname
     %ul
-      %li= @user.company
-      %li= link_to @user.blog, @user.blog
+      - unless @user.company.blank?
+        %li= @user.company
+      - unless @user.blog.blank?
+        %li= link_to @user.blog, @user.blog
 
   .span9
+    %p= link_to "See on GitHub", @user.github_url
+
     - if @user.scrapers.empty?
       %h3 Has no scrapers
 
