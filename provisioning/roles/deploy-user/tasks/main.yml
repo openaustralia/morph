@@ -1,4 +1,6 @@
-- name: Ensure we have a deploy user
-  user: name=deploy comment="Deploy user" shell=/bin/bash
+- name: Ensure we have a deploy group with gid 4243
+  group: name=deploy gid=4243 
+- name: Ensure we have a deploy user with uid 4243
+  user: name=deploy comment="Deploy user" shell=/bin/bash uid=4243 group=deploy
 - name: Ensure that mlandauer can ssh as deploy user
   authorized_key: user=deploy key="{{ lookup('file', '/Users/matthew/.ssh/scraper.pub') }}"
