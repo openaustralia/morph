@@ -6,8 +6,7 @@ class ScrapersController < ApplicationController
     # TODO Move this to an initializer
     Octokit.auto_paginate = true
     client = Octokit::Client.new :access_token => current_user.access_token
-    @repos = client.repositories
-    puts @repos.first.to_yaml
+    @repos = client.repositories(nil, sort: :pushed)
     @scraper = Scraper.new
   end
 
