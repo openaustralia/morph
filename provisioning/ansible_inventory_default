@@ -1,4 +1,0 @@
-# Use this inventory file when you are running the playbook using ansible-playbook.
-# This isn't necessary when you are using Vagrant
-
-default ansible_ssh_host=scraper.oaf.org.au

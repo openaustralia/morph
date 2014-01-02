@@ -94,6 +94,17 @@ Vagrant.configure("2") do |config|
       ansible.playbook = "provisioning/playbook.yml"
       #ansible.verbose = 'vvv'
     end
+
+    server.vm.provider :digital_ocean do |provider, override|
+      override.ssh.private_key_path = '~/.ssh/id_rsa'
+      override.vm.box = 'digital_ocean'
+      override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+
+      provider.image = "Ubuntu 12.04.3 x64"
+      provider.size = "1GB"
+      provider.client_id = ENV['DIGITAL_OCEAN_CLIENT_ID']
+      provider.api_key = ENV['DIGITAL_OCEAN_API_KEY']
+    end
   end
 
   config.vm.define "osx-dev" do |dev|

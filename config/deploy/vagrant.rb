@@ -5,17 +5,17 @@ set :stage, :vagrant
 # Supports bulk-adding hosts to roles, the primary
 # server in each group is considered to be the first
 # unless any hosts have the primary property set.
-#role :app, %w{deploy@scraper.oaf.org.au}
-#role :web, %w{deploy@scraper.oaf.org.au}
-#role :db,  %w{deploy@scraper.oaf.org.au}
-role :app, %w{deploy@localhost}
-role :web, %w{deploy@localhost}
-role :db,  %w{deploy@localhost}
+role :app, %w{deploy@scraper.oaf.org.au}
+role :web, %w{deploy@scraper.oaf.org.au}
+role :db,  %w{deploy@scraper.oaf.org.au}
+#role :app, %w{deploy@localhost}
+#role :web, %w{deploy@localhost}
+#role :db,  %w{deploy@localhost}
 
 # Comment this out if deploying to scraper.oaf.org.au
-set :ssh_options, {
-  port: 2200
-}
+#set :ssh_options, {
+#  port: 2200
+#}
 
 set :rvm_ruby_version, '2.0.0-p353' 
 
