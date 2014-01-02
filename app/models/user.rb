@@ -18,4 +18,14 @@ class User < ActiveRecord::Base
     end
     user
   end
+
+  def refresh_info_from_github!
+    user = Octokit.user(nickname)
+    update_attributes(name:user.name,
+        # image: auth.info.image,
+        gravatar_id: user.gravatar_id,
+        blog: user.blog,
+        company: user.company,
+        email: user.email)
+  end
 end

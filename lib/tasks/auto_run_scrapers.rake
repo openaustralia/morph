@@ -5,4 +5,9 @@ namespace :app do
     scrapers.each {|scraper| scraper.queue!}
     puts "Queued #{scrapers.count} scrapers to run now"
   end
+
+  desc "Refresh info for all users from github"
+  task :refresh_all_users => :environment do
+    User.all.each {|user| user.refresh_info_from_github!}
+  end
 end
