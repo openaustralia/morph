@@ -14,7 +14,7 @@ role :db,  %w{deploy@localhost}
 
 # Comment this out if deploying to scraper.oaf.org.au
 set :ssh_options, {
-  port: 2222
+  port: 2200
 }
 
 set :rvm_ruby_version, '2.0.0-p353' 
