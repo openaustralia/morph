@@ -96,7 +96,7 @@ class ScrapersController < ApplicationController
           format.json { render :json => rows}
           format.csv do
             csv_string = CSV.generate do |csv|
-              csv << rows.first.keys
+              csv << rows.first.keys unless rows.empty?
               rows.each do |row|
                 csv << row.values
               end
