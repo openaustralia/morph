@@ -43,3 +43,7 @@
   apt: pkg=python-passlib
 - name: Add basic authentication password
   htpasswd: path=/var/www/shared/htpasswd name=test password=test owner=root group=www-data mode=0640
+- name: Set timezone in /etc/timezone
+  copy: src=timezone dest=/etc/timezone
+- name: Update timezone
+  command: dpkg-reconfigure --frontend noninteractive tzdata
