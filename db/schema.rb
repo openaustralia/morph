@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140101211334) do
+ActiveRecord::Schema.define(version: 20140102070835) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -74,6 +74,10 @@ ActiveRecord::Schema.define(version: 20140101211334) do
     t.string   "name"
     t.string   "nickname"
     t.string   "access_token"
+    t.string   "gravatar_id"
+    t.string   "blog"
+    t.string   "company"
+    t.string   "email"
   end
 
 end
