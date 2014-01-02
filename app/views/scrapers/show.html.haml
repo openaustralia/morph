@@ -51,7 +51,7 @@
       -# TODO Highlight stderr differently
       %span{:class => line.stream}= line.text
 
-- if @rows
+- if @rows && !@rows.empty?
   %h3 Data
   %ul
     %li= link_to "Download table (as CSV)", scraper_data_path(@scraper, :format => :csv)
@@ -60,10 +60,9 @@
   %p (First 10 rows)
   .table-responsive
     %table.table.table-striped.table-bordered.table-condensed.scraper-data
-      - unless @rows.empty?
-        %tr
-          - @rows.first.each_key do |field|
-            %th= field
+      %tr
+        - @rows.first.each_key do |field|
+          %th= field
       - @rows.each do |row|
         %tr
           - row.each_value do |v|
