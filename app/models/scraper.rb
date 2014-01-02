@@ -107,8 +107,8 @@ class Scraper < ActiveRecord::Base
 
   def sql_query(query)
     db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: true)
-    # If database is busy wait 100ms
-    db.busy_timeout(100)
+    # If database is busy wait 5s
+    db.busy_timeout(5000)
     db.execute(query)
   end
 
