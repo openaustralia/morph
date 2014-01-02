@@ -90,8 +90,11 @@ class Scraper < ActiveRecord::Base
   end
 
   def queue!
-    run = runs.create(queued_at: Time.now)
-    self.delay.go(run)
+    # Guard against more than one of a particular scraper running at the same time
+    if !has_run? || finished?
+      run = runs.create(queued_at: Time.now)
+      self.delay.go(run)
+    end
   end
 
   def clear
