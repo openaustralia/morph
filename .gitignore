@@ -16,6 +16,7 @@
 /tmp
 
 /.env
+/.env.staging
 /.env.vagrant
 /db/scrapers
 .vagrant
