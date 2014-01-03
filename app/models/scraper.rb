@@ -129,24 +129,28 @@ class Scraper < ActiveRecord::Base
     c = Docker::Container.create("Cmd" => ['/bin/bash','-l','-c','ruby /repo/scraper.rb'],
       "User" => "scraper",
       "Image" => Scraper.docker_image_name)
-    # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
-    # HACK to detect vagrant installation in crude way
+      # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
+      # HACK to detect vagrant installation in crude way
     if Rails.root.to_s =~ /\/var\/www/
       local_root_path = Rails.root
     else
       local_root_path = "/vagrant"
     end
-    # TODO Run this in the background
-    # TODO Capture output to console
-    c.start("Binds" => [
-      "#{local_root_path}/#{repo_path}:/repo:ro",
-      "#{local_root_path}/#{data_path}:/data"
-    ])
-    puts "Running docker container..."
-    log_line_number = 0
-    c.attach(logs: true) do |s,c|
-      run.log_lines.create(stream: s, text: c, number: log_line_number)
-      log_line_number += 1
+
+    begin
+      c.start("Binds" => [
+        "#{local_root_path}/#{repo_path}:/repo:ro",
+        "#{local_root_path}/#{data_path}:/data"
+      ])
+      puts "Running docker container..."
+      log_line_number = 0
+      c.attach(logs: true) do |s,c|
+        run.log_lines.create(stream: s, text: c, number: log_line_number)
+        log_line_number += 1
+      end
+    ensure
+      # Kill the scraper process in the container whatever happens
+      c.kill
     end
     # Scraper should already have finished now. We're just using this to return the scraper status code
     status_code = c.wait["StatusCode"]
