@@ -144,11 +144,15 @@ class Scraper < ActiveRecord::Base
       ])
       puts "Running docker container..."
       log_line_number = 0
+      # For attach we're temporarily going to override the read timeout to 1 hour
+      saved_timeout = Docker.options[:read_timeout]
+      Docker.options[:read_timeout] = 3600
       c.attach(logs: true) do |s,c|
         run.log_lines.create(stream: s, text: c, number: log_line_number)
         log_line_number += 1
       end
     ensure
+      Docker.options[:read_timeout] = saved_timeout
       # Kill the scraper process in the container whatever happens
       c.kill
     end
