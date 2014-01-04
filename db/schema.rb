@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140102070835) do
+ActiveRecord::Schema.define(version: 20140104224341) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -49,16 +49,17 @@ ActiveRecord::Schema.define(version: 20140102070835) do
   end
 
   create_table "scrapers", force: true do |t|
-    t.string   "name",                        null: false
+    t.string   "name",                            null: false
     t.string   "description"
-    t.integer  "github_id",                   null: false
-    t.integer  "owner_id",                    null: false
+    t.integer  "github_id",                       null: false
+    t.integer  "owner_id",                        null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "full_name"
     t.string   "github_url"
     t.string   "git_url"
-    t.boolean  "auto_run",    default: false, null: false
+    t.boolean  "auto_run",        default: false, null: false
+    t.string   "scraperwiki_url"
   end
 
   create_table "users", force: true do |t|
