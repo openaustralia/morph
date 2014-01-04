@@ -1,7 +1,8 @@
 module ScrapersHelper
   def radio_description(repo)
-    a = link_to(content_tag(:strong, repo.name), repo.rels[:html].href)
+    a = content_tag(:strong, repo.name)
     a += " &mdash; #{repo.description}".html_safe unless repo.description.blank?
+    a += " (".html_safe + link_to("on GitHub", repo.rels[:html].href) + ")".html_safe
     a
   end
 end
