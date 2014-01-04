@@ -1,0 +1,2 @@
+class ScraperwikiForksController < ApplicationController
+end
