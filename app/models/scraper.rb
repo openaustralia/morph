@@ -154,6 +154,9 @@ class Scraper < ActiveRecord::Base
       p e
       logger.info("Caught error: #{e}")
     ensure
+      # Output some debugging output
+      logger.info("Some information on the container we're about to kill:")
+      logger.info(c.json.to_yaml)
       # Kill the scraper process in the container whatever happens
       c.kill
     end
