@@ -151,7 +151,8 @@ class Scraper < ActiveRecord::Base
         log_line_number += 1
       end
     rescue e
-      console.log("Caught error: #{e}")
+      p e
+      logger.info("Caught error: #{e}")
     ensure
       # Kill the scraper process in the container whatever happens
       c.kill
