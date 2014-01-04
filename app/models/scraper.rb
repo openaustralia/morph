@@ -155,10 +155,15 @@ class Scraper < ActiveRecord::Base
       logger.info("Caught error: #{e}")
     ensure
       # Output some debugging output
-      logger.info("Some information on the container we're about to kill:")
-      logger.info(c.json.to_yaml)
-      # Kill the scraper process in the container whatever happens
-      c.kill
+      puts "Some information on the container we're about to kill:")
+      puts c.json.to_yaml
+      if c.json["State"]["Running"]
+        puts "Killing the container"
+        # Kill the scraper process in the container
+        c.kill
+      else
+        puts "No need to kill the container"
+      end
     end
     # Scraper should already have finished now. We're just using this to return the scraper status code
     status_code = c.wait["StatusCode"]
