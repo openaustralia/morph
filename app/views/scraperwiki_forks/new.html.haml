@@ -1,0 +1,10 @@
+%h1 Fork Scraperwiki scraper
+
+%p This is where you can pick a Scraperwiki scraper, optionally choose a name for it on GitHub and fork away!
+
+= semantic_form_for :scraper, url: scraperwiki_forks_path do |f|
+  = f.inputs do
+    = f.input :scraperwiki_url
+    = f.input :name
+  = f.actions do
+    = f.action :submit, label: "Fork Scraperwiki scraper"

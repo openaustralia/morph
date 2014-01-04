@@ -12,6 +12,9 @@ ScrapingPlatform::Application.routes.draw do
   # TODO: Don't allow a user to be called "new". Chances are GitHub enforces this anyway.
   resources :scrapers, path: '/', only: [:new, :create]
   resources :users, path: "/", only: :show
+  # TODO Not very happy with this URL but this will do for the time being
+  resources "scraperwiki_forks", only: [:new, :create]
+
   get '/*id/data', to: "scrapers#data", as: :scraper_data
   get "/*id", to: "scrapers#show", as: :scraper
   delete "/*id", to: "scrapers#destroy"
