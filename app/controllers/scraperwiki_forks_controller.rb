@@ -11,6 +11,14 @@ class ScraperwikiForksController < ApplicationController
     @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_url: params[:scraper][:scraperwiki_url],
       owner_id: current_user.id)
 
+    # As quickly as possible check if it's possible to create the repository. If it isn't possible then allow
+    # the user to choose another name
+    client = Octokit::Client.new :access_token => current_user.access_token
+    # We need to set auto_init so that we can create a commit later. The API doesn't support
+    # adding a commit to an empty repository
+    repo = client.create_repository(@scraper.name, auto_init: true)
+    #repo = client.repository("#{current_user.to_param}/#{@scraper.name}")
+
     url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{@scraper.scraperwiki_shortname}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
     response = Faraday.get url
     v = JSON.parse(response.body).first
@@ -18,11 +26,8 @@ class ScraperwikiForksController < ApplicationController
     description = v["title"]
     readme_text = v["description"]
 
-    client = Octokit::Client.new :access_token => current_user.access_token
-    # We need to set auto_init so that we can create a commit later. The API doesn't support
-    # adding a commit to an empty repository
-    repo = client.create_repository(@scraper.name, auto_init: true, description: description)
-    #repo = client.repository("#{current_user.to_param}/#{@scraper.name}")
+    # Fill in description
+    repo = client.edit_repository(repo["full_name"], description: description)
 
     # TODO Should we really store full_name in the db?
     @scraper.full_name = "#{current_user.to_param}/#{@scraper.name}"
