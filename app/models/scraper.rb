@@ -158,4 +158,10 @@ class Scraper < ActiveRecord::Base
     run.update_attributes(status_code: status_code, finished_at: Time.now)
     # TODO Clean up stopped container
   end
+
+  def scraperwiki_shortname
+    # scraperwiki_url should be of the form https://classic.scraperwiki.com/scrapers/shortname/
+    m = scraperwiki_url.match(/https:\/\/classic.scraperwiki.com\/scrapers\/(\w+)(\/)?/)
+    m[1] if m
+  end
 end

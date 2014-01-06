@@ -223,6 +223,7 @@ DEPENDENCIES
   devise
   docker-api
   dotenv-rails
+  faraday
   foreman
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap

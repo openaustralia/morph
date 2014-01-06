@@ -23,6 +23,7 @@ gem "grit"
 gem 'docker-api', :require => 'docker'
 gem 'delayed_job_active_record'
 gem "foreman"
+gem "faraday"
 
 group :development do
   gem 'capistrano-rails'
