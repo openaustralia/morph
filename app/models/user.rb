@@ -8,14 +8,12 @@ class User < ActiveRecord::Base
   has_many :scrapers, foreign_key: :owner_id
 
   def self.find_for_github_oauth(auth, signed_in_resource=nil)
-    user = User.where(:provider => auth.provider, :uid => auth.uid).first
-    unless user
-      user = User.create(nickname: auth.info.nickname, name:auth.info.name,
-        provider:auth.provider, uid:auth.uid, access_token: auth.credentials.token,
-        gravatar_id: auth.extra.raw_info.gravatar_id,
-        blog: auth.extra.raw_info.blog,
-        company: auth.extra.raw_info.company, email:auth.info.email)
-    end
+    user = User.find_or_create_by(:provider => auth.provider, :uid => auth.uid)
+    user.update_attributes(nickname: auth.info.nickname, name:auth.info.name,
+      access_token: auth.credentials.token,
+      gravatar_id: auth.extra.raw_info.gravatar_id,
+      blog: auth.extra.raw_info.blog,
+      company: auth.extra.raw_info.company, email:auth.info.email)
     user
   end
 

@@ -228,7 +228,9 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
-  config.omniauth :github, ENV['GITHUB_APP_CLIENT_ID'], ENV['GITHUB_APP_CLIENT_SECRET']
+  # It looks like you need the repo scope (rw on public & private repos) even to create a public repo.
+  # public_repo is not enough to create a public repo.
+  config.omniauth :github, ENV['GITHUB_APP_CLIENT_ID'], ENV['GITHUB_APP_CLIENT_SECRET'], scope: "repo"
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
