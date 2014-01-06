@@ -8,7 +8,8 @@ class ScraperwikiForksController < ApplicationController
 
   # Fork away
   def create
-    @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_url: params[:scraper][:scraperwiki_url])
+    @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_url: params[:scraper][:scraperwiki_url],
+      owner_id: current_user.id)
 
     url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{@scraper.scraperwiki_shortname}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
     response = Faraday.get url
@@ -22,6 +23,13 @@ class ScraperwikiForksController < ApplicationController
     # adding a commit to an empty repository
     repo = client.create_repository(@scraper.name, auto_init: true, description: description)
     #repo = client.repository("#{current_user.to_param}/#{@scraper.name}")
+
+    # TODO Should we really store full_name in the db?
+    @scraper.full_name = "#{current_user.to_param}/#{@scraper.name}"
+    @scraper.description = description
+    @scraper.github_id = repo.id
+    @scraper.github_url = repo.rels[:html].href
+    @scraper.git_url = repo.rels[:git].href
 
     # Commit the code
     tree = client.create_tree(repo["full_name"], [
@@ -42,17 +50,19 @@ class ScraperwikiForksController < ApplicationController
     commit = client.create_commit(repo["full_name"], commit_message, tree.sha)
     client.update_ref(repo["full_name"],"heads/master", commit.sha)
 
-    flash[:notice] = "Forking in action..."
-    redirect_to new_scraperwiki_fork_url
+    @scraper.save!
+    #flash[:notice] = "Forking in action..."
+    redirect_to @scraper
+
+    # TODO Copy across data
+    # TODO Make each background step idempotent so that failures can be retried
+    # TODO Run all this in the background
+
+    # TODO Add repo link
+    # TODO Copy across run interval from scraperwiki
+    # TODO Add require scraperwiki to code (if required)
+    # TODO Handle name on github already taken
     # TODO Check that it's a ruby scraper
     # TODO Add support for non-ruby scrapers
-    # TODO Handle name on github already taken
-    # TODO Copy across data
-    # TODO Add repo link
-    # TODO Add require scraperwiki to code (if required)
-    # TODO Setup scraper here
-    # TODO Copy across run interval from scraperwiki
-    # TODO Run all this in the background
-    # TODO Make each background step idempotent so that failures can be retried
   end
 end
