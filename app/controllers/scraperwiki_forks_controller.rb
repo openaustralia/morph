@@ -16,8 +16,16 @@ class ScraperwikiForksController < ApplicationController
     client = Octokit::Client.new :access_token => current_user.access_token
     # We need to set auto_init so that we can create a commit later. The API doesn't support
     # adding a commit to an empty repository
-    repo = client.create_repository(@scraper.name, auto_init: true)
+    begin
+      repo = client.create_repository(@scraper.name, auto_init: true)
+    rescue Octokit::UnprocessableEntity
+      flash[:alert] = "Name is already taken on GitHub"
+      # TODO Put the error on the :name field
+      render :new
+      return
+    end
     #repo = client.repository("#{current_user.to_param}/#{@scraper.name}")
+
 
     url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{@scraper.scraperwiki_shortname}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
     response = Faraday.get url
@@ -79,7 +87,6 @@ class ScraperwikiForksController < ApplicationController
     # TODO Check that local scraper with that name doesn't already exist
     # TODO Add repo link
     # TODO Copy across run interval from scraperwiki
-    # TODO Handle name on github already taken
     # TODO Check that it's a ruby scraper
     # TODO Add support for non-ruby scrapers
     # TODO Add .gitignore for scraperwiki.sqlite
