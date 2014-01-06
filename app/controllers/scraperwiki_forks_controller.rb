@@ -10,6 +10,8 @@ class ScraperwikiForksController < ApplicationController
   def create
     @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_url: params[:scraper][:scraperwiki_url],
       owner_id: current_user.id)
+    # TODO Should we really store full_name in the db?
+    @scraper.full_name = "#{current_user.to_param}/#{@scraper.name}"
 
     # Should do this with validation
     if Scraper.exists?(name: @scraper.name)
@@ -48,10 +50,7 @@ class ScraperwikiForksController < ApplicationController
 
     # Fill in description
     repo = client.edit_repository(repo["full_name"], description: description)
-
-    # TODO Should we really store full_name in the db?
-    @scraper.full_name = "#{current_user.to_param}/#{@scraper.name}"
-    @scraper.description = description
+    @scraper.update_attributes(description: description)
 
     # Commit the code
     tree = client.create_tree(repo["full_name"], [
@@ -85,7 +84,6 @@ class ScraperwikiForksController < ApplicationController
     commit2 = client.create_commit(repo["full_name"], "Add require 'scraperwiki'", tree2.sha, commit.sha)
     client.update_ref(repo["full_name"],"heads/master", commit2.sha)
 
-    @scraper.save!
     #flash[:notice] = "Forking in action..."
     redirect_to @scraper
 
