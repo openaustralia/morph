@@ -10,7 +10,7 @@ gem 'sqlite3'
 gem 'mysql2'
 
 gem "haml-rails"
-gem "twitter-bootstrap-rails"
+gem "twitter-bootstrap-rails", git: "https://github.com/seyhunak/twitter-bootstrap-rails.git", branch: "bootstrap3"
 gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
