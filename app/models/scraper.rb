@@ -178,6 +178,10 @@ class Scraper < ActiveRecord::Base
     repo = client.edit_repository(full_name, description: description)
     self.update_attributes(description: description)
 
+    gitignore_contents = <<-EOF
+# Ignore output of scraper
+scraperwiki.sqlite
+    EOF
     # Commit the code
     tree = client.create_tree(full_name, [
       {
@@ -192,6 +196,12 @@ class Scraper < ActiveRecord::Base
         :type => "blob",
         :content => readme_text
       },
+      {
+        :path => ".gitignore",
+        :mode => "100644",
+        :type => "blob",
+        :content => gitignore_contents       
+      }
     ])
     commit_message = "Fork of code from ScraperWiki at #{scraperwiki_url}"
     commit = client.create_commit(full_name, commit_message, tree.sha)
@@ -220,6 +230,5 @@ class Scraper < ActiveRecord::Base
     # TODO Copy across run interval from scraperwiki
     # TODO Check that it's a ruby scraper
     # TODO Add support for non-ruby scrapers
-    # TODO Add .gitignore for scraperwiki.sqlite
   end
 end
