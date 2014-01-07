@@ -198,8 +198,7 @@ class Scraper < ActiveRecord::Base
 # Ignore output of scraper
 scraperwiki.sqlite
     EOF
-    # Commit the code
-    tree = client.create_tree(full_name, [
+    blobs =  [
       {
         :path => "scraper.rb",
         :mode => "100644",
@@ -207,18 +206,22 @@ scraperwiki.sqlite
         :content => code
       },
       {
-        :path => "README.md",
-        :mode => "100644",
-        :type => "blob",
-        :content => readme_text
-      },
-      {
         :path => ".gitignore",
         :mode => "100644",
         :type => "blob",
         :content => gitignore_contents       
       }
-    ])
+    ]
+    unless readme_text.blank?
+      blobs += {
+        :path => "README.md",
+        :mode => "100644",
+        :type => "blob",
+        :content => readme_text
+      }
+    end
+    # Commit the code
+    tree = client.create_tree(full_name, blobs)
     commit_message = "Fork of code from ScraperWiki at #{scraperwiki_url}"
     commit = client.create_commit(full_name, commit_message, tree.sha)
     client.update_ref(full_name,"heads/master", commit.sha)
