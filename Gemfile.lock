@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/mikowitz/formtastic-bootstrap.git
+  revision: 63f2aa97428ce2edca06b7e3de3b3a3f80602a22
+  specs:
+    formtastic-bootstrap (3.0.0.rc.2)
+      formtastic (>= 2.2)
+
+GIT
   remote: https://github.com/seyhunak/twitter-bootstrap-rails.git
   revision: 4d0bd4271f7f01d79bbb2b72c04f30a5766db0ef
   branch: bootstrap3
@@ -91,8 +98,6 @@ GEM
       thor (>= 0.13.6)
     formtastic (2.3.0.rc2)
       actionpack (>= 3.0)
-    formtastic-bootstrap (3.0.0.rc.2)
-      formtastic (>= 2.2)
     friendly_id (5.0.2)
       activerecord (~> 4.0.0)
     grit (2.5.0)
@@ -232,7 +237,7 @@ DEPENDENCIES
   faraday
   foreman
   formtastic (= 2.3.0.rc2)
-  formtastic-bootstrap (= 3.0.0.rc2)
+  formtastic-bootstrap!
   friendly_id
   grit
   haml-rails
