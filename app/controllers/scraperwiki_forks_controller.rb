@@ -2,8 +2,7 @@ class ScraperwikiForksController < ApplicationController
   before_filter :authenticate_user!
 
   def new
-    @scraper = Scraper.new(name: "scraper-test",
-      scraperwiki_url: "https://classic.scraperwiki.com/scrapers/city_of_sydney_development_applications/")
+    @scraper = Scraper.new
   end
 
   # Fork away

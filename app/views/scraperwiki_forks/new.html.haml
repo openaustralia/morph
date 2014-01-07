@@ -5,6 +5,10 @@
 .alert.alert-warning
   Note that things are currently restricted to Ruby scrapers
 
+%p
+  = link_to "Browse and Search", "https://classic.scraperwiki.com/browse/"
+  for a scraper on ScraperWiki Classic that you want to fork. Then paste the url of the scraper below.
+
 = semantic_form_for :scraper, url: scraperwiki_forks_path do |f|
   = f.inputs do
     = f.input :scraperwiki_url, hint: "The full URL for the ScraperWiki Classic scraper that you want to fork to here", input_html: {placeholder: "https://classic.scraperwiki.com/scrapers/city_of_sydney_development_applications/", class: "span8"}
