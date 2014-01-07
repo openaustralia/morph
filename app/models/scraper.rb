@@ -239,5 +239,6 @@ scraperwiki.sqlite
     # TODO Copy across run interval from scraperwiki
     # TODO Check that it's a ruby scraper
     # TODO Add support for non-ruby scrapers
+    # TODO Record progress (so that it can be shown in the UI)
   end
 end
