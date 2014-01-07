@@ -2,6 +2,9 @@
 
 %p This is where you can pick a Scraperwiki scraper, optionally choose a name for it on GitHub and fork away!
 
+.alert.alert-warning
+  Note that things are currently restricted to Ruby scrapers
+
 = semantic_form_for :scraper, url: scraperwiki_forks_path do |f|
   = f.inputs do
     = f.input :scraperwiki_url, hint: "The full URL for the ScraperWiki Classic scraper that you want to fork to here", input_html: {placeholder: "https://classic.scraperwiki.com/scrapers/city_of_sydney_development_applications/", class: "span6"}
