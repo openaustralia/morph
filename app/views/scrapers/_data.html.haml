@@ -5,7 +5,7 @@
       = link_to "Download table (as CSV)", scraper_data_path(@scraper, :format => :csv), class: "btn btn-default"
       = link_to "Download SQLite database", scraper_data_path(@scraper, :format => :sqlite), class: "btn btn-default"
       = link_to "Use the API", api_path, class: "btn btn-default"
-  %p (First 10 rows)
+  %p rows 10 / #{@scraper.no_rows} (#{number_to_human_size @scraper.sqlite_db_size})
   .table-responsive
     %table.table.table-striped.table-bordered.table-condensed.scraper-data
       %tr

@@ -122,6 +122,14 @@ class Scraper < ActiveRecord::Base
     end
   end
 
+  def no_rows
+    sql_query_safe("select count(*) from swdata").first.values.first
+  end
+
+  def sqlite_db_size
+    File::Stat.new(sqlite_db_path).size
+  end
+
   # The main section of the scraper running that is run in the background
   def go(run)
     run.update_attributes(started_at: Time.now)
