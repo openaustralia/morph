@@ -91,8 +91,8 @@ GEM
       thor (>= 0.13.6)
     formtastic (2.3.0.rc2)
       actionpack (>= 3.0)
-    formtastic-bootstrap (2.1.3)
-      formtastic (~> 2.2)
+    formtastic-bootstrap (3.0.0.rc.2)
+      formtastic (>= 2.2)
     friendly_id (5.0.2)
       activerecord (~> 4.0.0)
     grit (2.5.0)
@@ -232,7 +232,7 @@ DEPENDENCIES
   faraday
   foreman
   formtastic (= 2.3.0.rc2)
-  formtastic-bootstrap
+  formtastic-bootstrap (= 3.0.0.rc2)
   friendly_id
   grit
   haml-rails
