@@ -1,0 +1,7 @@
+- if @scraper.finished? && !@scraper.last_run.log_lines.empty?
+  %h3 Console output
+  %p Hint: Keep this to a minimum during normal use (so that things remain readable)
+  %pre
+    - @scraper.last_run.log_lines.order(:number).each do |line|
+      -# TODO Highlight stderr differently
+      %span{:class => line.stream}= line.text

@@ -1,0 +1,8 @@
+- if @scraper.owned_by?(current_user)
+  %h3 Here be dragons!
+
+  %p
+    = button_to "Clear database", clear_scraper_path(@scraper), {class: "btn btn-danger", data: {confirm: "All your data will be gone!"}}
+  %p
+    = button_to "Delete scraper", @scraper, {method: :delete, class: "btn btn-danger", data: {confirm: "Delete #{@scraper.full_name}?"}}
+  %p These can't be undone

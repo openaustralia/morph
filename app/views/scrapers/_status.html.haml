@@ -1,0 +1,27 @@
+- if @scraper.queued?
+  .alert.alert-info
+    The scraper is <strong>queued to run</strong>. It was queued
+    = time_ago_in_words(@scraper.queued_at)
+    ago.
+    %span.muted
+      (Refresh page for the latest)
+- elsif @scraper.running?
+  .alert.alert-info
+    The scraper is <strong>running</strong>. It was started
+    = time_ago_in_words(@scraper.started_at)
+    ago.
+    %span.muted
+      (Refresh page for the latest)
+- elsif @scraper.finished_successfully?
+  .alert.alert-success
+    Last run completed successfully
+    = time_ago_in_words(@scraper.finished_at)
+    ago
+- elsif @scraper.finished_with_errors?
+  .alert.alert-danger
+    Last run failed
+    = time_ago_in_words(@scraper.finished_at)
+    ago with status code #{@scraper.status_code}. See any console output below.
+- else
+  .alert.alert-info
+    This scraper has not yet been run

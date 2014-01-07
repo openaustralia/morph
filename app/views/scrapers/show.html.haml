@@ -18,78 +18,13 @@
     (Refresh page for the latest)
 
 - else
-  -# Show the big picture status of this scraper here
-  - if @scraper.queued?
-    .alert.alert-info
-      The scraper is <strong>queued to run</strong>. It was queued
-      = time_ago_in_words(@scraper.queued_at)
-      ago.
-      %span.muted
-        (Refresh page for the latest)
-  - elsif @scraper.running?
-    .alert.alert-info
-      The scraper is <strong>running</strong>. It was started
-      = time_ago_in_words(@scraper.started_at)
-      ago.
-      %span.muted
-        (Refresh page for the latest)
-  - elsif @scraper.finished_successfully?
-    .alert.alert-success
-      Last run completed successfully
-      = time_ago_in_words(@scraper.finished_at)
-      ago
-  - elsif @scraper.finished_with_errors?
-    .alert.alert-danger
-      Last run failed
-      = time_ago_in_words(@scraper.finished_at)
-      ago with status code #{@scraper.status_code}. See any console output below.
-  - else
-    .alert.alert-info
-      This scraper has not yet been run
-
+  = render "status"
   = link_to "Go to GitHub", @scraper.github_url
 
   - if @scraper.owned_by?(current_user)
     %p= button_to "Run it now!", run_scraper_path(@scraper), class: ((@scraper.queued? || @scraper.running?) ? "btn btn-primary btn-large disabled" : "btn btn-primary btn-large"), disabled: (@scraper.queued? || @scraper.running?)
 
-  %h3 Settings
-  = semantic_form_for @scraper do |f|
-    = f.inputs do
-      = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !@scraper.owned_by?(current_user)}
-    - if @scraper.owned_by?(current_user)
-      = f.actions do
-        = f.action :submit, :label => "Update settings"
-
-  - if @scraper.finished? && !@scraper.last_run.log_lines.empty?
-    %h3 Console output
-    %p Hint: Keep this to a minimum during normal use (so that things remain readable)
-    %pre
-      - @scraper.last_run.log_lines.order(:number).each do |line|
-        -# TODO Highlight stderr differently
-        %span{:class => line.stream}= line.text
-
-  - if @rows && !@rows.empty?
-    %h3 Data
-    %ul
-      %li= link_to "Download table (as CSV)", scraper_data_path(@scraper, :format => :csv)
-      %li= link_to "Download SQLite database", scraper_data_path(@scraper, :format => :sqlite)
-      %li= link_to "Use the API", api_path
-    %p (First 10 rows)
-    .table-responsive
-      %table.table.table-striped.table-bordered.table-condensed.scraper-data
-        %tr
-          - @rows.first.each_key do |field|
-            %th= field
-        - @rows.each do |row|
-          %tr
-            - row.each_value do |v|
-              %td= v
-
-  - if @scraper.owned_by?(current_user)
-    %h3 Here be dragons!
-
-    %p
-      = button_to "Clear database", clear_scraper_path(@scraper), {class: "btn btn-danger", data: {confirm: "All your data will be gone!"}}
-    %p
-      = button_to "Delete scraper", @scraper, {method: :delete, class: "btn btn-danger", data: {confirm: "Delete #{@scraper.full_name}?"}}
-    %p These can't be undone  
+  = render "settings"
+  = render "console"
+  = render "data"
+  = render "danger"
