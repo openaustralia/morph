@@ -224,7 +224,7 @@ scraperwiki.sqlite
       }
     ]
     unless readme_text.blank?
-      blobs += {
+      blobs << {
         :path => "README.md",
         :mode => "100644",
         :type => "blob",
