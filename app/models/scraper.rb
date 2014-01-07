@@ -212,12 +212,10 @@ class Scraper < ActiveRecord::Base
 
     # Forking has finished
     update_attributes(forking: false)
-    
+
     # TODO Copy across data
     # TODO Make each background step idempotent so that failures can be retried
-    # TODO Run all this in the background
 
-    # TODO Check that local scraper with that name doesn't already exist
     # TODO Add repo link
     # TODO Copy across run interval from scraperwiki
     # TODO Check that it's a ruby scraper
