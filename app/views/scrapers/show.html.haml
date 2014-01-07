@@ -5,6 +5,11 @@
 
 %h4= @scraper.description
 
+- if @scraper.scraperwiki_url
+  %p
+    Forked from
+    = link_to "ScraperWiki", @scraper.scraperwiki_url
+
 - if @scraper.forking?
   %h2 Forking!
   .progress.progress-striped.active
