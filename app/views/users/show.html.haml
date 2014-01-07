@@ -1,6 +1,6 @@
 .row
-  .span3
-    = image_tag @user.gravatar_url
+  .col-md-3
+    = image_tag @user.gravatar_url, class: "img-responsive"
     %h1= @user.name
     %h2= @user.nickname
     %ul
@@ -9,7 +9,7 @@
       - unless @user.blog.blank?
         %li= link_to @user.blog, @user.blog
 
-  .span9
+  .col-md-9
     %p= link_to "See on GitHub", @user.github_url
 
     - if @user.scrapers.empty?
@@ -28,4 +28,4 @@
               = scraper.description
 
     - if @user == current_user
-      = link_to "Add scraper", new_scraper_path, class: "btn"
+      = link_to "Add scraper", new_scraper_path, class: "btn btn-default"

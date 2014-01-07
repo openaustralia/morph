@@ -47,11 +47,8 @@
                 = link_to "Sign out", destroy_user_session_path
 
     .container
-
-      .row
-        .span12
-          = bootstrap_flash
-          = yield
+      = bootstrap_flash
+      = yield
     
     %footer
       .container
