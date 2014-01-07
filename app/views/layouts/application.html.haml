@@ -19,30 +19,32 @@
 
 
   %body
-    .navbar.navbar-fixed-top
-      .navbar-inner
-        .container
-          %a.btn.btn-navbar(data-target=".nav-collapse" data-toggle="collapse")
+    %nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+      .container
+        .navbar-header
+          %button.navbar-toggle(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1")
+            %span.sr-only Toggle navigation
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          = link_to "ScrapingPlatform", root_path, class: "brand"
-          .container.nav-collapse
-            %ul.nav
-              %li= link_to "Add scraper", new_scraper_path
-              %li= link_to "Fork scraper from Scraperwiki", new_scraperwiki_fork_path
-              %li= link_to "API", api_path
-            %ul.nav.pull-right
-              %li
-                - if user_signed_in?
-                  = link_to current_user do
-                    = image_tag current_user.gravatar_url(140), width: 20
-                    = current_user.nickname
-                - else
-                  = link_to "Sign in with GitHub", user_omniauth_authorize_path(:github)
-              %li
-                - if user_signed_in?
-                  = link_to "Sign out", destroy_user_session_path
+          = link_to "ScrapingPlatform", root_path, class: "navbar-brand"
+        .collapse.navbar-collapse#bs-example-navbar-collapse-1
+          %ul.nav.navbar-nav
+            -# TODO set class to "active" when this is the current page
+            %li= link_to "Add scraper", new_scraper_path
+            %li= link_to "Fork scraper from Scraperwiki", new_scraperwiki_fork_path
+            %li= link_to "API", api_path
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              - if user_signed_in?
+                = link_to current_user do
+                  = image_tag current_user.gravatar_url(140), width: 20
+                  = current_user.nickname
+              - else
+                = link_to "Sign in with GitHub", user_omniauth_authorize_path(:github)
+            %li
+              - if user_signed_in?
+                = link_to "Sign out", destroy_user_session_path
 
     .container
 
