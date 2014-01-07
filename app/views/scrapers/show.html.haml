@@ -6,7 +6,9 @@
 %h4= @scraper.description
 
 - if @scraper.forking?
-  %p This scraper is currently being forked
+  %h2 Forking!
+  .progress.progress-striped.active
+    .bar(style="width: 100%")
   %span.muted
     (Refresh page for the latest)
 
