@@ -11,7 +11,11 @@
     = link_to "ScraperWiki", @scraper.scraperwiki_url
 
 - if @scraper.github_url
-  %p= link_to "Go to GitHub", @scraper.github_url
+  %p
+    = link_to @scraper.github_url do
+      %i.icon-github-sign.icon-large
+      = @scraper.name
+      on GitHub
 
 - if @scraper.forking?
   %h2 Forking!

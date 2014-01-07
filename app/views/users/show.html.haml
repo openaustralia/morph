@@ -8,9 +8,13 @@
         %li= @user.company
       - unless @user.blog.blank?
         %li= link_to @user.blog, @user.blog
+    %p
+      = link_to @user.github_url do
+        %i.icon-github-sign.icon-large
+        = @user.nickname
+        on GitHub
 
   .col-md-9
-    %p= link_to "See on GitHub", @user.github_url
 
     - if @user.scrapers.empty?
       %h3 Has no scrapers
