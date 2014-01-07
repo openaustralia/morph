@@ -210,6 +210,9 @@ class Scraper < ActiveRecord::Base
     commit2 = client.create_commit(full_name, "Add require 'scraperwiki'", tree2.sha, commit.sha)
     client.update_ref(full_name,"heads/master", commit2.sha)
 
+    # Forking has finished
+    update_attributes(forking: false)
+    
     # TODO Copy across data
     # TODO Make each background step idempotent so that failures can be retried
     # TODO Run all this in the background

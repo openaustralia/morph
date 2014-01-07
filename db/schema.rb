@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140104224341) do
+ActiveRecord::Schema.define(version: 20140107000715) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 20140104224341) do
     t.string   "git_url"
     t.boolean  "auto_run",        default: false, null: false
     t.string   "scraperwiki_url"
+    t.boolean  "forking",         default: false, null: false
   end
 
   create_table "users", force: true do |t|

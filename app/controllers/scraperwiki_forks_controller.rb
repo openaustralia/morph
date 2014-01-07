@@ -9,7 +9,7 @@ class ScraperwikiForksController < ApplicationController
   # Fork away
   def create
     @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_url: params[:scraper][:scraperwiki_url],
-      owner_id: current_user.id)
+      owner_id: current_user.id, forking: true)
     # TODO Should we really store full_name in the db?
     @scraper.full_name = "#{current_user.to_param}/#{@scraper.name}"
 
@@ -40,7 +40,7 @@ class ScraperwikiForksController < ApplicationController
 
     #repo = client.repository("#{current_user.to_param}/#{@scraper.name}")
 
-    @scraper.copy_code_and_data_from_scraperwiki!
+    @scraper.delay.copy_code_and_data_from_scraperwiki!
     #flash[:notice] = "Forking in action..."
     redirect_to @scraper
   end
