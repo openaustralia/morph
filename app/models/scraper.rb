@@ -165,7 +165,14 @@ class Scraper < ActiveRecord::Base
     m[1] if m
   end
 
-  def copy_code_and_data_from_scraperwiki!
+  def fork_from_scraperwiki!
+    client = Octokit::Client.new :access_token => owner.access_token
+
+    # We need to set auto_init so that we can create a commit later. The API doesn't support
+    # adding a commit to an empty repository
+    repo = client.create_repository(name, auto_init: true)
+    update_attributes(github_id: repo.id, github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
+
     url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{scraperwiki_shortname}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
     response = Faraday.get url
     v = JSON.parse(response.body).first
@@ -183,7 +190,6 @@ class Scraper < ActiveRecord::Base
     FileUtils.mkdir_p data_path
     File.open(sqlite_db_path, 'wb') {|file| file.write(sqlite_db) }
 
-    client = Octokit::Client.new :access_token => owner.access_token
     # Fill in description
     repo = client.edit_repository(full_name, description: description)
     self.update_attributes(description: description)
