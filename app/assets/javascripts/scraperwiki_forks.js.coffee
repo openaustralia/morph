@@ -5,8 +5,9 @@
 $ ->
   update_name = ->
     value = $("#scraper_scraperwiki_url").val()
-    m = value.match(/https:\/\/classic.scraperwiki.com\/scrapers\/(\w+)(\/)?/)    
-    $("#scraper_name").val(m[1]) if m
+    if value
+      m = value.match(/https:\/\/classic.scraperwiki.com\/scrapers\/(\w+)(\/)?/)    
+      $("#scraper_name").val(m[1]) if m
 
   update_name()
   $("#scraper_scraperwiki_url").change(update_name)
