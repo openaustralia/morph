@@ -173,6 +173,16 @@ class Scraper < ActiveRecord::Base
     description = v["title"]
     readme_text = v["description"]
 
+    # Copy the sqlite database across from Scraperwiki
+    url = "https://classic.scraperwiki.com/scrapers/export_sqlite/#{scraperwiki_shortname}/"
+    response = Faraday.get(url)
+    sqlite_db = response.body
+    if sqlite_db =~ /The dataproxy connection timed out, please retry./
+      raise response.body
+    end
+    FileUtils.mkdir_p data_path
+    File.open(sqlite_db_path, 'wb') {|file| file.write(sqlite_db) }
+
     client = Octokit::Client.new :access_token => owner.access_token
     # Fill in description
     repo = client.edit_repository(full_name, description: description)
@@ -223,7 +233,6 @@ scraperwiki.sqlite
     # Forking has finished
     update_attributes(forking: false)
 
-    # TODO Copy across data
     # TODO Make each background step idempotent so that failures can be retried
 
     # TODO Add repo link
