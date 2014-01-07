@@ -1,6 +1,8 @@
 class Scraper < ActiveRecord::Base
   belongs_to :owner, class_name: User
   has_many :runs
+  validates :scraperwiki_url, format: { with: /\Ahttps:\/\/classic.scraperwiki.com\/scrapers\/(\w+)(\/)?\z/,
+    message: "Should be a valid ScraperWiki scraper url" }, allow_nil: true
 
   extend FriendlyId
   friendly_id :full_name, use: :finders

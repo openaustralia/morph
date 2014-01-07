@@ -24,10 +24,13 @@ class ScraperwikiForksController < ApplicationController
 
     # Should do this with validation
     if !Scraper.exists?(name: @scraper.name) && !exists_on_github
-      @scraper.save!
-      @scraper.delay.fork_from_scraperwiki!
-      #flash[:notice] = "Forking in action..."
-      redirect_to @scraper      
+      if @scraper.save
+        @scraper.delay.fork_from_scraperwiki!
+        #flash[:notice] = "Forking in action..."
+        redirect_to @scraper      
+      else
+        render :new
+      end
     else
       flash[:alert] = "Name is already taken"
       render :new
