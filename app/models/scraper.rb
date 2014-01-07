@@ -176,8 +176,13 @@ class Scraper < ActiveRecord::Base
 
     # We need to set auto_init so that we can create a commit later. The API doesn't support
     # adding a commit to an empty repository
-    repo = client.create_repository(name, auto_init: true)
-    update_attributes(github_id: repo.id, github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
+    begin
+      repo = client.create_repository(name, auto_init: true)
+      update_attributes(github_id: repo.id, github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
+    rescue Octokit::UnprocessableEntity
+      # This means the repo has already been created. We will have gotten here if this background job failed at some
+      # point past here and is rerun. So, let's happily continue
+    end
 
     v = get_scraperwiki_info
     code = v["code"]
