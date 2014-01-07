@@ -10,6 +10,9 @@
     Forked from
     = link_to "ScraperWiki", @scraper.scraperwiki_url
 
+- if @scraper.github_url
+  %p= link_to "Go to GitHub", @scraper.github_url
+
 - if @scraper.forking?
   %h2 Forking!
   .progress.progress-striped.active
@@ -19,12 +22,14 @@
 
 - else
   = render "status"
-  = link_to "Go to GitHub", @scraper.github_url
+  .row
+    .col-md-9
 
-  - if @scraper.owned_by?(current_user)
-    %p= button_to "Run it now!", run_scraper_path(@scraper), class: ((@scraper.queued? || @scraper.running?) ? "btn btn-primary btn-large disabled" : "btn btn-primary btn-large"), disabled: (@scraper.queued? || @scraper.running?)
+      - if @scraper.owned_by?(current_user)
+        %p= button_to "Run it now!", run_scraper_path(@scraper), class: ((@scraper.queued? || @scraper.running?) ? "btn btn-primary btn-large disabled" : "btn btn-primary btn-lg"), disabled: (@scraper.queued? || @scraper.running?)
+    .col-md-3
+      = render "settings"
 
-  = render "settings"
   = render "console"
   = render "data"
   = render "danger"
