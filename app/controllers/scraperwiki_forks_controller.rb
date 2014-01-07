@@ -32,7 +32,7 @@ class ScraperwikiForksController < ApplicationController
         render :new
       end
     else
-      flash[:alert] = "Name is already taken"
+      @scraper.errors.add(:name, "Name is already taken")
       render :new
     end
   end
