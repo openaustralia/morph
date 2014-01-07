@@ -15,7 +15,8 @@ gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
 gem "octokit"
-gem "formtastic-bootstrap", "3.0.0.rc2"
+# There's a bugfix for showing errors here. Hopefully it will get merged soon
+gem "formtastic-bootstrap", git: "https://github.com/mikowitz/formtastic-bootstrap.git"
 # This release candidate of formtastic has a fix for:
 # undefined method `check_box_checked?' for ActionView::Helpers::InstanceTag:Class
 gem "formtastic", "2.3.0.rc2"
