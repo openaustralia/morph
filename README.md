@@ -18,7 +18,7 @@ Ruby 2.0.0, Docker, MySQL, SQLite 3
 
     bundle install
     cp config/database.yml.example config/database.yml
-    cp env-example .env-example
+    cp env-example .env
 
 Edit `config/database.yml` with your database settings
 
