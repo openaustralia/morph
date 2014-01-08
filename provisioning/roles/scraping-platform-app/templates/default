@@ -1,17 +1,4 @@
+# Redirect (301) http://*/foo -> http://morph.io/foo
 <VirtualHost *:80>
-    DocumentRoot "/var/www/current/public"
-
-    RailsEnv vagrant
-    PassengerRuby /home/deploy/.rvm/rubies/ruby-2.0.0-p353/bin/ruby
-
-    <Directory "/var/www/current/public">
-        Order allow,deny
-        Allow from all
-        Options -MultiViews
-
-        AuthType Basic
-        AuthName "Scraping Platform"
-        AuthUserFile /var/www/shared/htpasswd
-        Require user test
-    </Directory>
+    RedirectMatch permanent ^/(.*) http://morph.io/$1
 </VirtualHost>

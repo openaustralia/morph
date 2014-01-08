@@ -5,10 +5,18 @@
   apt: pkg=git
 - name: Ensure that deploy owns /var/www
   file: owner=deploy group=deploy path=/var/www
+# TODO Don't need to restart. reload would be fine.
 - name: Generate the apache config for the app
   template: src=default
             dest=/etc/apache2/sites-available/default
   notify: Restart Apache
+- name: Generate the apache config for morph.io
+  template: src=morph.io
+            dest=/etc/apache2/sites-available/morph.io
+  notify: Restart Apache
+- name: Ensure that morph.io is enabled
+  command: a2ensite morph.io
+  notify: Restart Apache  
 - name: Ensure that /var/www/shared exists
   file: path=/var/www/shared owner=deploy group=deploy state=directory
 - name: Ensure that .env exists
