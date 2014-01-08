@@ -5,7 +5,7 @@
 * Simple API to grab data
 * Schedule scrapers or run manually
 * Process isolation via [Docker](http://www.docker.io/)
-* Trivial to move scrapers from [ScraperWiki Classic](https://classic.scraperwiki.com/)
+* Trivial to move scraper code and data from [ScraperWiki Classic](https://classic.scraperwiki.com/)
 
 ### FAQ
 What's it called? Morph.
