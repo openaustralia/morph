@@ -9,5 +9,5 @@
     - apache-passenger
     - ruby-2.0.0-p353
     - mysql
-    - scraping-platform-app
+    - morph-app
     
