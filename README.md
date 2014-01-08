@@ -1,4 +1,4 @@
-## A scraping platform
+## Morph: A scraping platform
 
 * A [Heroku](https://www.heroku.com/) for [Scrapers](https://en.wikipedia.org/wiki/Web_scraping)
 * All code and collaboration through [GitHub](https://github.com/)
