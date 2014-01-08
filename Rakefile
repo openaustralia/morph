@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-ScrapingPlatform::Application.load_tasks
+Morph::Application.load_tasks

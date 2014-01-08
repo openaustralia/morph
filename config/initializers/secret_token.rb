@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-ScrapingPlatform::Application.config.secret_key_base = '6a65bc4ea813a775a3549313070078f95ace11a9695510a63989e7e6770abd355a9852f739d5e2d4a1f4f33a86a64f9d6475a3b7d31d7e1933c99efb14cb357c'
+Morph::Application.config.secret_key_base = '6a65bc4ea813a775a3549313070078f95ace11a9695510a63989e7e6770abd355a9852f739d5e2d4a1f4f33a86a64f9d6475a3b7d31d7e1933c99efb14cb357c'
