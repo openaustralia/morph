@@ -12,7 +12,7 @@ What's it called? Morph.
 
 ### Copyright & License
 
-Copyright OpenAustralia Foundation Limited 2013. Licensed under the Affero GPL.
+Copyright OpenAustralia Foundation Limited 2013. Licensed under the Affero GPL. See LICENSE file for more details.
 
 ### Authors
 
