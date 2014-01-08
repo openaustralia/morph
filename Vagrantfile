@@ -84,7 +84,7 @@ VBOX_SCRIPT
 Vagrant.configure("2") do |config|
   # Note that this is a configuration for two different VMs
   # server: A deployed server
-  # osx-dev: A VM that has docker on it - used for development on OS X
+  # dev: A VM that has docker on it - used for development on OS X
 
   # Both VMs are based on Ubuntu Precise 64 bit
   config.vm.box = "ubuntu"
@@ -111,7 +111,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define "osx-dev" do |dev|
+  config.vm.define "dev" do |dev|
     dev.ssh.forward_agent = true
     dev.vm.network :forwarded_port, guest: 4243, host: 4243
 

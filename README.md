@@ -37,7 +37,7 @@ Now you'll need to build the Docker container that scrapers run in.
 
 If you're on OS X you'll need to do this from the docker virtual machine, so
 
-    vagrant ssh osx-dev
+    vagrant ssh dev
     docker -H localhost:4243 build -t scraper /source/lib/build_docker_image
 
 On Linux
@@ -61,7 +61,7 @@ We've made it easier by providing a Vagrantfile that sets up a VM, installs dock
 
 First install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads). Then,
 
-    vagrant up osx-dev
+    vagrant up dev
 
 ### Copyright & License
 
