@@ -28,7 +28,7 @@
 - name: Ensure Procfile.vagrant copied
   copy: src=../Procfile.vagrant dest=/home/deploy/Procfile.vagrant
 - name: Ensure upstart is setup for the application
-  command: foreman export upstart /etc/init -u deploy -a scraping-platform -f /home/deploy/Procfile.vagrant --root /var/www/current
+  command: foreman export upstart /etc/init -u deploy -a morph -f /home/deploy/Procfile.vagrant --root /var/www/current
 - name: Create sudoers ready for testing
   template: src=sudoers dest=/etc/sudoers.d/deploy.test owner=root group=root mode=0440
 - name: Test sudoers

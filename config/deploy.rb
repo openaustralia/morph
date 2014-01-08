@@ -55,21 +55,21 @@ namespace :foreman do
   desc "Start the application services"
   task :start do
     on roles(:app) do
-      sudo "service scraping-platform start"
+      sudo "service morph start"
     end
   end
 
   desc "Stop the application services"
   task :stop do
     on roles(:app) do
-      sudo "service scraping-platform stop"
+      sudo "service morph stop"
     end
   end
 
   desc "Restart the application services"
   task :restart do
     on roles(:app) do
-      sudo "service scraping-platform restart"
+      sudo "service morph restart"
     end
   end
 end
