@@ -63,6 +63,21 @@ First install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox
 
     vagrant up dev
 
+### How to contribute
+
+If you find what looks like a bug:
+
+* Check the [GitHub issue tracker](http://github.com/openaustralia/morph/issues/)
+  to see if anyone else has reported issue.
+* If you don't see anything, create an issue with information on how to reproduce it.
+
+If you want to contribute an enhancement or a fix:
+
+* Fork the project on GitHub.
+* Make your changes with tests.
+* Commit the changes without making changes to any files that aren't related to your enhancement or fix.
+* Send a pull request.    
+
 ### Copyright & License
 
 Copyright OpenAustralia Foundation Limited 2013. Licensed under the Affero GPL. See LICENSE file for more details.
