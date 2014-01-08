@@ -11,3 +11,7 @@ GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # If this is OS X, then your docker daemon will be running inside a VM with a tunneled port (see instructions
 # in the README for how to set this up)
 DOCKER_URL=http://localhost:4243
+
+# For deployment to a Digital Ocean
+DIGITAL_OCEAN_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DIGITAL_OCEAN_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
