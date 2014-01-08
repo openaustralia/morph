@@ -112,6 +112,9 @@ Vagrant.configure("2") do |config|
     dev.vm.network :forwarded_port, guest: 4243, host: 4243
 
     dev.vm.synced_folder ".", "/vagrant", owner: 4243, group: 4243
+    # Also creating another directory so that we don't run into permission problems with just using
+    # the source code from the VM
+    dev.vm.synced_folder ".", "/source"
 
     dev.vm.provider :virtualbox do |vb, override|
       override.vm.provision :shell, :inline => $vbox_script

@@ -33,6 +33,17 @@ Note the use of 127.0.0.1 rather than localhost. Use this or it won't work.
 
 Edit `.env` with the details of the application you've just created
 
+Now you'll need to build the Docker container that scrapers run in.
+
+If you're on OS X you'll need to do this from the docker virtual machine, so
+
+    vagrant ssh osx-dev
+    docker -H localhost:4243 build -t scraper /source/lib/build_docker_image
+
+On Linux
+
+    docker build -t scraper lib/build_docker_image
+
 Now you can start the server
 
     bundle exec rake db:setup
