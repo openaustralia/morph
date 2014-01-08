@@ -1,5 +1,5 @@
-set :application, 'scraping-platform'
-set :repo_url, 'git@github.com:mlandauer/scraper-platform.git'
+set :application, 'morph'
+set :repo_url, 'git@github.com:openaustralia/morph.git'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
