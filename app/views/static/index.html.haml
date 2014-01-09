@@ -1,6 +1,41 @@
-%h1 Hello!
 
-%p This page will become the landing page for the scraping platform. Yes!
+.jumbotron
+  %h1
+    Morph
+    %small
+      -# A scraping platform
+      A
+      = link_to "Heroku", "https://www.heroku.com/"
+      for
+      = link_to "Scrapers", "https://en.wikipedia.org/wiki/Web_scraping"
+  %ul.list-unstyled
+    %li
+      All code and collaboration through
+      = link_to "GitHub", "https://github.com/"
+    %li
+      Simple API to grab data
+    %li
+      Schedule scrapers or run manually
+    %li
+      Process isolation via
+      = link_to "Docker", "http://www.docker.io/"
+    %li
+      Trivial to move scraper code and data from
+      = link_to "ScraperWiki Classic", "https://classic.scraperwiki.com/"
+
+%ul.list-inline
+  %li
+    %blockquote
+      %p Allow me to be the first to say amazeballs!
+      %small
+        = image_tag "http://www.gravatar.com/avatar/1d9536edb482e9e1f56b86459abb06c4?s=30"
+        = link_to "Henare Degan", "https://twitter.com/henaredegan"
+  %li
+    %blockquote
+      %p I like it but then I would say that
+      %small
+        = image_tag "http://www.gravatar.com/avatar/30e5eec125c81e549294137a3ddd6c74?s=30"
+        = link_to "Matthew Landauer", "https://twitter.com/matthewlandauer"
 
 .row
   .col-md-6
