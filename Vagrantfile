@@ -91,7 +91,6 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
   config.vm.define "production" do |production|
-    production.vm.network :forwarded_port, guest: 80, host: 8080
     production.vm.synced_folder ".", "/vagrant", disabled: true
 
     production.vm.provision :ansible do |ansible|
