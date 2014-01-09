@@ -130,6 +130,10 @@ class Scraper < ActiveRecord::Base
     File::Stat.new(sqlite_db_path).size
   end
 
+  def docker_container_name
+    owner.to_param + "_" + name
+  end
+
   # The main section of the scraper running that is run in the background
   def go(run)
     run.update_attributes(started_at: Time.now)
@@ -138,9 +142,11 @@ class Scraper < ActiveRecord::Base
 
     Docker.options[:read_timeout] = 3600
 
+    # This will fail if there is another container with the same name
     c = Docker::Container.create("Cmd" => ['/bin/bash','-l','-c','ruby /repo/scraper.rb'],
       "User" => "scraper",
-      "Image" => Scraper.docker_image_name)
+      "Image" => Scraper.docker_image_name,
+      "name" => docker_container_name)
       # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
       # HACK to detect vagrant installation in crude way
     if Rails.root.to_s =~ /\/var\/www/
@@ -166,7 +172,9 @@ class Scraper < ActiveRecord::Base
     # Scraper should already have finished now. We're just using this to return the scraper status code
     status_code = c.wait["StatusCode"]
     run.update_attributes(status_code: status_code, finished_at: Time.now)
-    # TODO Clean up stopped container
+
+    # Clean up after ourselves
+    c.delete
   end
 
   def scraperwiki_shortname
