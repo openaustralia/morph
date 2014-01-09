@@ -90,16 +90,16 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
-  config.vm.define "server" do |server|
-    server.vm.network :forwarded_port, guest: 80, host: 8080
-    server.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.define "production" do |production|
+    production.vm.network :forwarded_port, guest: 80, host: 8080
+    production.vm.synced_folder ".", "/vagrant", disabled: true
 
-    server.vm.provision :ansible do |ansible|
+    production.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/playbook.yml"
       #ansible.verbose = 'vvv'
     end
 
-    server.vm.provider :digital_ocean do |provider, override|
+    production.vm.provider :digital_ocean do |provider, override|
       override.ssh.private_key_path = '~/.ssh/id_rsa'
       override.vm.box = 'digital_ocean'
       override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
