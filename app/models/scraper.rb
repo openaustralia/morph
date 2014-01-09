@@ -103,6 +103,19 @@ class Scraper < ActiveRecord::Base
     FileUtils.rm sqlite_db_path
   end
 
+  def github_url_for_file(file)
+    github_url + "/blob/master/" + file
+  end
+
+  def main_scraper_filename
+    # TODO This will obviously be different for different languages
+    "scraper.rb"
+  end
+
+  def github_url_main_scraper_file
+    github_url_for_file(main_scraper_filename)
+  end
+
   def sqlite_db_path
     "#{data_path}/scraperwiki.sqlite"
   end
