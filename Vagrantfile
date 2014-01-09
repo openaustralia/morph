@@ -110,6 +110,17 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.define "local" do |local|
+    local.vm.network :forwarded_port, guest: 80, host: 8000
+    local.vm.synced_folder ".", "/vagrant", disabled: true
+
+    local.vm.provision :ansible do |ansible|
+      ansible.playbook = "provisioning/playbook.yml"
+      ansible.extra_vars = { server_name: "dev.morph.io", env_file: ".env.local"}
+      #ansible.verbose = 'vvv'
+    end
+  end
+
   config.vm.define "dev" do |dev|
     dev.ssh.forward_agent = true
     dev.vm.network :forwarded_port, guest: 4243, host: 4243

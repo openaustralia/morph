@@ -16,9 +16,9 @@
 /tmp
 
 /.env
-/.env.staging
-/.env.vagrant
+/.env.local
+/.env.production
 /db/scrapers
 .vagrant
-vagrant_ansible_inventory_server
+vagrant_ansible_inventory_local
 config/database.yml

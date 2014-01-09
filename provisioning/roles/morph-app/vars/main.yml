@@ -1,0 +1,2 @@
+server_name: morph.io
+env_file: .env.production

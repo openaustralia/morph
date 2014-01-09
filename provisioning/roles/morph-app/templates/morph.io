@@ -1,8 +1,7 @@
 <VirtualHost *:80>
-    ServerName morph.io
+    ServerName {{ server_name }}
     DocumentRoot "/var/www/current/public"
 
-    RailsEnv vagrant
     PassengerRuby /home/deploy/.rvm/rubies/ruby-2.0.0-p353/bin/ruby
 
     <Directory "/var/www/current/public">

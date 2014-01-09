@@ -20,15 +20,16 @@
 - name: Ensure that /var/www/shared exists
   file: path=/var/www/shared owner=deploy group=deploy state=directory
 - name: Ensure that .env exists
-  copy: src=../.env.staging dest=/var/www/shared/.env owner=deploy group=deploy
+  copy: src=../{{ env_file }} dest=/var/www/shared/.env owner=deploy group=deploy
 # TODO This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
 - name: Install foreman
   gem: name=foreman state=present user_install=no
-- name: Ensure Procfile.vagrant copied
-  copy: src=../Procfile.vagrant dest=/home/deploy/Procfile.vagrant
+- name: Ensure Procfile.production copied
+  copy: src=../Procfile.production dest=/home/deploy/Procfile.production
+# TODO Restart morph service if this changed the /etc/init files
 - name: Ensure upstart is setup for the application
-  command: foreman export upstart /etc/init -u deploy -a morph -f /home/deploy/Procfile.vagrant --root /var/www/current
+  command: foreman export upstart /etc/init -u deploy -a morph -f /home/deploy/Procfile.production --root /var/www/current
 - name: Create sudoers ready for testing
   template: src=sudoers dest=/etc/sudoers.d/deploy.test owner=root group=root mode=0440
 - name: Test sudoers
@@ -42,7 +43,7 @@
 - name: Install dependency for following command
   apt: pkg=python-mysqldb
 - name: Create database
-  mysql_db: name=scraping_vagrant
+  mysql_db: name=morph
 - name: Create directory /var/www/shared/config
   file: path=/var/www/shared/config owner=deploy group=deploy state=directory
 - name: Copy over database configuration for application
