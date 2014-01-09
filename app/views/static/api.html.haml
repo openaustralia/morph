@@ -3,7 +3,7 @@
 %p The API allows you to programatically retrieve data from any public scraper using an SQL query. It's all pretty easy.
 
 %pre
-  %code #{root_url}<em>[scraper]</em>/data.json?query=<em>[sql]</em>
+  %code #{api_root}<em>[scraper]</em>/data.json?query=<em>[sql]</em>
 
 %h2 parameters
 
@@ -21,4 +21,4 @@
   with the SQL query "#{@query}"
 
 %pre
-  %code= link_to scraper_data_url(@scraper, query: @query, format: :json), scraper_data_url(@scraper, query: @query, format: :json)
+  %code= link_to scraper_data_url(@scraper, host: api_host, query: @query, format: :json), scraper_data_url(@scraper, host: api_host, query: @query, format: :json)
