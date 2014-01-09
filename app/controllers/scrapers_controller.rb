@@ -1,5 +1,5 @@
 class ScrapersController < ApplicationController
-  before_filter :authenticate_user!, except: :show
+  before_filter :authenticate_user!, except: [:show, :data]
   
   def new
     # Get the list of repositories
