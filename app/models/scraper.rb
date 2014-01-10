@@ -124,6 +124,16 @@ class Scraper < ActiveRecord::Base
     File.join(data_path, sqlite_db_filename)
   end
 
+  # Remove any files or directories in the data_path that are not the actual database
+  def tidy_data_path
+    # First get all the files in the data directory
+    filenames = Dir.entries(data_path)
+    filenames.delete(".")
+    filenames.delete("..")
+    filenames.delete(sqlite_db_filename)
+    FileUtils.rm_rf filenames.map{|f| File.join(data_path, f)}
+  end
+
   def sql_query(query)
     db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: true)
     # If database is busy wait 5s
@@ -192,6 +202,7 @@ class Scraper < ActiveRecord::Base
 
     # Clean up after ourselves
     c.delete
+    tidy_data_path
   end
 
   def scraperwiki_shortname
