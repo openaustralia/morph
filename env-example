@@ -12,6 +12,9 @@ GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # in the README for how to set this up)
 DOCKER_URL=http://localhost:4243
 
+# Google Analytics (leave commented out to disable)
+#GOOGLE_ANALYTICS_TRACKING_ID=xx-xxxxxxx-xx
+
 # For deployment to a Digital Ocean
 DIGITAL_OCEAN_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DIGITAL_OCEAN_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
