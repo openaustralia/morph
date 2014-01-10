@@ -116,8 +116,12 @@ class Scraper < ActiveRecord::Base
     github_url_for_file(main_scraper_filename)
   end
 
+  def sqlite_db_filename
+    "scraperwiki.sqlite"
+  end
+
   def sqlite_db_path
-    "#{data_path}/scraperwiki.sqlite"
+    File.join(data_path, sqlite_db_filename)
   end
 
   def sql_query(query)
