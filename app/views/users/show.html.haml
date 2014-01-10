@@ -9,7 +9,7 @@
       - unless @user.blog.blank?
         %li= link_to @user.blog, @user.blog
     %p
-      = link_to @user.github_url do
+      = link_to @user.github_url, target: "_blank" do
         %i.icon-github-sign.icon-large
         = @user.nickname
         on GitHub
