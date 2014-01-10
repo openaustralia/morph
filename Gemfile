@@ -30,6 +30,9 @@ gem 'jquery-turbolinks'
 group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
+  gem 'guard'
+  gem 'guard-livereload', require: false
+  gem "rack-livereload"
 end
 
 group :production do

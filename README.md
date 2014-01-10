@@ -64,6 +64,12 @@ First install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox
 
     vagrant up dev
 
+### Guard Livereload
+
+We use Guard and Livereload so that whenever you edit a view in development the web page gets automatically reloaded. It's a massive time saver when you're doing design or lots of work in the view. To make it work run
+
+    bundle exec guard
+
 ### How to contribute
 
 If you find what looks like a bug:
