@@ -43,6 +43,6 @@ class Metric < ActiveRecord::Base
   # The number of times a context switch resulted due to a higher priority process becoming runnable or because the current process exceeded its time slice.
 
   def self.command(other, metric_file)
-    "time -v -o #{metric_file} #{other}"
+    "/usr/bin/time -v -o #{metric_file} #{other}"
   end
 end
