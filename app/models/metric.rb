@@ -45,4 +45,26 @@ class Metric < ActiveRecord::Base
   def self.command(other, metric_file)
     "/usr/bin/time -v -o #{metric_file} #{other}"
   end
+
+  def self.read_from_string(s)
+    params = s.split("\n").inject({}) do |params, line|
+      r = parse_line(line)
+      params.merge({r[0] => r[1]})
+    end
+    Metric.new(params)
+  end
+
+  def self.parse_line(l)
+    field, value = l.split(": ")
+    case field
+    when /Maximum resident set size \(kbytes\)/
+      [:maxrss, value.to_i]
+    when /Minor \(reclaiming a frame\) page faults/
+      [:minrss, value.to_i]
+    when /User time \(seconds\)/
+      [:utime, value.to_f]
+    when /System time \(seconds\)/
+      [:stime, value.to_f]
+    end
+  end
 end
