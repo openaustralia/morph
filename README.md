@@ -67,6 +67,12 @@ We use Guard and Livereload so that whenever you edit a view in development the 
 
     bundle exec guard
 
+### Running tests
+
+If you're running guard (see above) the tests will also automatically run when you change a file. By default it's setup to use [Zeus](https://github.com/burke/zeus) which speeds things up considerably. You'll need to install this with
+
+    gem install zeus
+
 ### How to contribute
 
 If you find what looks like a bug:
