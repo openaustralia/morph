@@ -60,11 +60,24 @@ class Metric < ActiveRecord::Base
     when /Maximum resident set size \(kbytes\)/
       [:maxrss, value.to_i]
     when /Minor \(reclaiming a frame\) page faults/
-      [:minrss, value.to_i]
+      [:minflt, value.to_i]
+    when /Major \(requiring I\/O\) page faults/
+      [:maxflt, value.to_i]
     when /User time \(seconds\)/
       [:utime, value.to_f]
     when /System time \(seconds\)/
       [:stime, value.to_f]
+    when /Elapsed \(wall clock\) time \(h:mm:ss or m:ss\)/
+      # TODO Fix this
+      [:wall_time, 0]
+    when /File system inputs/
+      [:inblock, value.to_i]
+    when /File system outputs/
+      [:oublock, value.to_i]
+    when /Voluntary context switches/
+      [:nvcsw, value.to_i]
+    when /Involuntary context switches/
+      [:nivcsw, value.to_i]
     end
   end
 end

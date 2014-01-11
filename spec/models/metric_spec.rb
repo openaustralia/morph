@@ -30,12 +30,20 @@ Major (requiring I/O) page faults: 0
   end
 
   describe ".parse_line" do
-    it { Metric.parse_line("Maximum resident set size (kbytes): 3808").should == [:maxrss, 3808] }
-    it { Metric.parse_line("    Maximum resident set size (kbytes): 3808").should == [:maxrss, 3808] }
-    it { Metric.parse_line("Minor (reclaiming a frame) page faults: 292").should == [:minrss, 292]}
     it { Metric.parse_line('Command being timed: "ls"').should be_nil}
+    it { Metric.parse_line('Percent of CPU this job got: 0%').should be_nil }
+
+    # TODO Check more variations
+    it { Metric.parse_line('Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00').should == [:wall_time, 0]}
     it { Metric.parse_line('User time (seconds): 1.34').should == [:utime, 1.34]}
     it { Metric.parse_line('System time (seconds): 24.45').should == [:stime, 24.45]}
-    #it { Metric.parse_line('').should == }
+    it { Metric.parse_line("Maximum resident set size (kbytes): 3808").should == [:maxrss, 3808] }
+    it { Metric.parse_line("    Maximum resident set size (kbytes): 3808").should == [:maxrss, 3808] }
+    it { Metric.parse_line('Minor (reclaiming a frame) page faults: 312').should == [:minflt, 312]}
+    it { Metric.parse_line('Major (requiring I/O) page faults: 2').should == [:maxflt, 2]}
+    it { Metric.parse_line('File system inputs: 480').should == [:inblock, 480]}
+    it { Metric.parse_line('File system outputs: 23').should == [:oublock, 23]}
+    it { Metric.parse_line('Voluntary context switches: 43').should == [:nvcsw, 43]}
+    it { Metric.parse_line('Involuntary context switches: 65').should == [:nivcsw, 65]}
   end
 end
