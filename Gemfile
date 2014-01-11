@@ -35,6 +35,10 @@ group :development do
   gem "rack-livereload"
 end
 
+group :development, :test do
+  gem 'rspec-rails', '~> 2.0'
+end
+
 group :production do
   # Javascript runtime (required for precompiling assets in production)
   gem 'therubyracer'
