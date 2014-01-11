@@ -34,6 +34,7 @@ group :development do
   gem 'guard-livereload', require: false
   gem "rack-livereload"
   gem 'guard-rspec', require: false
+  gem 'growl'
 end
 
 group :development, :test do
