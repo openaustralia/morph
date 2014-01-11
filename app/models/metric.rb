@@ -30,7 +30,7 @@ class Metric < ActiveRecord::Base
       r = parse_line(line)
       params.merge(r ? {r[0] => r[1]} : {})
     end
-    Metric.new(params)
+    Metric.create(params)
   end
 
   def self.read_from_file(file)
@@ -45,7 +45,7 @@ class Metric < ActiveRecord::Base
     when /Minor \(reclaiming a frame\) page faults/
       [:minflt, value.to_i]
     when /Major \(requiring I\/O\) page faults/
-      [:maxflt, value.to_i]
+      [:majflt, value.to_i]
     when /User time \(seconds\)/
       [:utime, value.to_f]
     when /System time \(seconds\)/

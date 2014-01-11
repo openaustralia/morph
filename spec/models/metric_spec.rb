@@ -33,6 +33,8 @@ Major (requiring I/O) page faults: 0
       it { @m.maxrss.should == 3808 }
       it { @m.minflt.should == 292 }
       it { @m.majflt.should == 0 }
+      # Should be saved
+      it { @m.id.should_not be_nil}
     end 
   end
 
@@ -63,7 +65,7 @@ Major (requiring I/O) page faults: 0
     it { Metric.parse_line("Maximum resident set size (kbytes): 3808").should == [:maxrss, 3808] }
     it { Metric.parse_line("    Maximum resident set size (kbytes): 3808").should == [:maxrss, 3808] }
     it { Metric.parse_line('Minor (reclaiming a frame) page faults: 312').should == [:minflt, 312]}
-    it { Metric.parse_line('Major (requiring I/O) page faults: 2').should == [:maxflt, 2]}
+    it { Metric.parse_line('Major (requiring I/O) page faults: 2').should == [:majflt, 2]}
     it { Metric.parse_line('File system inputs: 480').should == [:inblock, 480]}
     it { Metric.parse_line('File system outputs: 23').should == [:oublock, 23]}
     it { Metric.parse_line('Voluntary context switches: 43').should == [:nvcsw, 43]}
