@@ -32,8 +32,6 @@ Major (requiring I/O) page faults: 0
   describe ".parse_line" do
     it { Metric.parse_line('Command being timed: "ls"').should be_nil}
     it { Metric.parse_line('Percent of CPU this job got: 0%').should be_nil }
-
-    # TODO Check more variations
     it { Metric.parse_line('Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00').should == [:wall_time, 0]}
     it { Metric.parse_line('Elapsed (wall clock) time (h:mm:ss or m:ss): 2:02.04').should == [:wall_time, 122.04]}
     it { Metric.parse_line('Elapsed (wall clock) time (h:mm:ss or m:ss): 1:02:02.04').should == [:wall_time, 3722.04]}
