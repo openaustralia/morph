@@ -18,9 +18,3 @@ production:
   database: scraping_production
   username: scraping
   password: ** a password goes here **
-
-vagrant:
-  adapter: mysql2
-  database: scraping_vagrant
-  username: scraping
-  password: ** a password goes here **
