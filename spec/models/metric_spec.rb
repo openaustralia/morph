@@ -34,6 +34,22 @@ Major (requiring I/O) page faults: 0
     end 
   end
 
+  describe ".read_from_file" do
+    context "output in a file" do
+      let(:filename) { "#{Rails.root}/tmp/time.output" }
+      let(:text) { "User time (seconds): 1.12\nVoluntary context switches: 42\n" }
+
+      before(:each) { File.open(filename, "w") {|f| f.write(text)} }
+      after(:each) { FileUtils.rm(filename) }
+
+      it "should read from a file" do
+        result = double
+        Metric.should_receive(:read_from_string).and_return(result)
+        Metric.read_from_file(filename).should == result
+      end
+    end
+  end
+
   describe ".parse_line" do
     it { Metric.parse_line('Command being timed: "ls"').should be_nil}
     it { Metric.parse_line('Percent of CPU this job got: 0%').should be_nil }

@@ -33,6 +33,10 @@ class Metric < ActiveRecord::Base
     Metric.new(params)
   end
 
+  def self.read_from_file(file)
+    read_from_string(File.read(file))
+  end
+
   def self.parse_line(l)
     field, value = l.split(": ")
     case field
