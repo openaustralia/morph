@@ -42,7 +42,7 @@ class Metric < ActiveRecord::Base
   # Involuntary context switches: 65
   # The number of times a context switch resulted due to a higher priority process becoming runnable or because the current process exceeded its time slice.
 
-  def self.command(other)
-    "time -v -o time.output #{other}"
+  def self.command(other, metric_file)
+    "time -v -o #{metric_file} #{other}"
   end
 end
