@@ -120,6 +120,14 @@ class Scraper < ActiveRecord::Base
     "scraperwiki.sqlite"
   end
 
+  def time_output_filename
+    "time.output"
+  end
+
+  def time_output_path
+    File.join(data_path, time_output_filename)
+  end
+
   def sqlite_db_path
     File.join(data_path, sqlite_db_filename)
   end
@@ -170,7 +178,8 @@ class Scraper < ActiveRecord::Base
     Docker.options[:read_timeout] = 3600
 
     # This will fail if there is another container with the same name
-    c = Docker::Container.create("Cmd" => ['/bin/bash','-l','-c','ruby /repo/scraper.rb'],
+    command = Metric.command('ruby /repo/scraper.rb', time_output_filename)
+    c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', command],
       "User" => "scraper",
       "Image" => Scraper.docker_image_name,
       "name" => docker_container_name)
@@ -198,10 +207,14 @@ class Scraper < ActiveRecord::Base
     end
     # Scraper should already have finished now. We're just using this to return the scraper status code
     status_code = c.wait["StatusCode"]
-    run.update_attributes(status_code: status_code, finished_at: Time.now)
 
     # Clean up after ourselves
     c.delete
+
+    # Now collect and save the metrics
+    metric = Metric.read_from_file(time_output_path)
+
+    run.update_attributes(status_code: status_code, metric_id: metric.id, finished_at: Time.now)
     tidy_data_path
   end
 

@@ -2,7 +2,7 @@ FROM ubuntu:12.04
 MAINTAINER Matthew Landauer <matthew@oaf.org.au>
 
 RUN apt-get update
-RUN apt-get -y install curl git libxslt-dev libxml2-dev
+RUN apt-get -y install curl git libxslt-dev libxml2-dev time
 
 RUN curl -sSL https://get.rvm.io | bash -s stable
 RUN echo 'source /usr/local/rvm/scripts/rvm' >> /etc/bash.bashrc
