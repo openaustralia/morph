@@ -28,7 +28,7 @@ class Metric < ActiveRecord::Base
   def self.read_from_string(s)
     params = s.split("\n").inject({}) do |params, line|
       r = parse_line(line)
-      params.merge({r[0] => r[1]})
+      params.merge(r ? {r[0] => r[1]} : {})
     end
     Metric.new(params)
   end

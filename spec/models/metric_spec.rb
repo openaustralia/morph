@@ -17,6 +17,7 @@ describe Metric do
         <<-EOF
 Maximum resident set size (kbytes): 3808
 Minor (reclaiming a frame) page faults: 292
+Something to be ignored
 Major (requiring I/O) page faults: 0
         EOF
       }
@@ -24,6 +25,7 @@ Major (requiring I/O) page faults: 0
       before :each do
         Metric.should_receive(:parse_line).with("Maximum resident set size (kbytes): 3808").and_return([:maxrss, 3808])
         Metric.should_receive(:parse_line).with("Minor (reclaiming a frame) page faults: 292").and_return([:minflt, 292])
+        Metric.should_receive(:parse_line).with("Something to be ignored").and_return(nil)
         Metric.should_receive(:parse_line).with("Major (requiring I/O) page faults: 0").and_return([:majflt, 0])
         @m = Metric.read_from_string(string)
       end
