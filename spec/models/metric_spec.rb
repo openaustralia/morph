@@ -35,6 +35,8 @@ Major (requiring I/O) page faults: 0
 
     # TODO Check more variations
     it { Metric.parse_line('Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00').should == [:wall_time, 0]}
+    it { Metric.parse_line('Elapsed (wall clock) time (h:mm:ss or m:ss): 2:02.04').should == [:wall_time, 122.04]}
+    it { Metric.parse_line('Elapsed (wall clock) time (h:mm:ss or m:ss): 1:02:02.04').should == [:wall_time, 3722.04]}
     it { Metric.parse_line('User time (seconds): 1.34').should == [:utime, 1.34]}
     it { Metric.parse_line('System time (seconds): 24.45').should == [:stime, 24.45]}
     it { Metric.parse_line("Maximum resident set size (kbytes): 3808").should == [:maxrss, 3808] }

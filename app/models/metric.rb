@@ -68,8 +68,14 @@ class Metric < ActiveRecord::Base
     when /System time \(seconds\)/
       [:stime, value.to_f]
     when /Elapsed \(wall clock\) time \(h:mm:ss or m:ss\)/
-      # TODO Fix this
-      [:wall_time, 0]
+      n = value.split(":").map{|v| v.to_f}
+      if n.count == 2
+        m, s = n
+        h = 0
+      elsif n.count == 3
+        h, m, s = n
+      end
+      [:wall_time, (h * 60 + m) * 60 + s ]
     when /File system inputs/
       [:inblock, value.to_i]
     when /File system outputs/
