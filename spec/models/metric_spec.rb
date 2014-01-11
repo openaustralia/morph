@@ -19,6 +19,7 @@ Maximum resident set size (kbytes): 3808
 Minor (reclaiming a frame) page faults: 292
 Something to be ignored
 Major (requiring I/O) page faults: 0
+Page size (bytes): 4096
         EOF
       }
 
@@ -27,10 +28,13 @@ Major (requiring I/O) page faults: 0
         Metric.should_receive(:parse_line).with("Minor (reclaiming a frame) page faults: 292").and_return([:minflt, 292])
         Metric.should_receive(:parse_line).with("Something to be ignored").and_return(nil)
         Metric.should_receive(:parse_line).with("Major (requiring I/O) page faults: 0").and_return([:majflt, 0])
+        Metric.should_receive(:parse_line).with("Page size (bytes): 4096").and_return([:page_size, 4096])
         @m = Metric.read_from_string(string)
       end
 
-      it { @m.maxrss.should == 3808 }
+      # There's a bug in GNU time 1.7 which wrongly reports the maximum resident set size on the version of Ubuntu that we're using
+      # See https://groups.google.com/forum/#!topic/gnu.utils.help/u1MOsHL4bhg
+      it { @m.maxrss.should == 952 }
       it { @m.minflt.should == 292 }
       it { @m.majflt.should == 0 }
       # Should be saved
@@ -70,5 +74,6 @@ Major (requiring I/O) page faults: 0
     it { Metric.parse_line('File system outputs: 23').should == [:oublock, 23]}
     it { Metric.parse_line('Voluntary context switches: 43').should == [:nvcsw, 43]}
     it { Metric.parse_line('Involuntary context switches: 65').should == [:nivcsw, 65]}
+    it { Metric.parse_line('Page size (bytes): 4096').should == [:page_size, 4096]}
   end
 end
