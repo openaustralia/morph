@@ -8,9 +8,6 @@
 * Process isolation via [Docker](http://www.docker.io/)
 * Trivial to move scraper code and data from [ScraperWiki Classic](https://classic.scraperwiki.com/)
 
-### FAQ
-What's it called? Morph.
-
 ### Dependencies
 Ruby 2.0.0, Docker, MySQL, SQLite 3
 (On OS X for development also Vagrant & VirtualBox to host a VM with Docker - see below for more)
