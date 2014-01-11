@@ -23,3 +23,4 @@
 vagrant_ansible_inventory_local
 vagrant_ansible_inventory_production
 config/database.yml
+coverage

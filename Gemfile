@@ -41,6 +41,10 @@ group :development, :test do
   gem 'rspec-rails', '~> 2.0'
 end
 
+group :test do
+  gem 'simplecov', :require => false
+end
+
 group :production do
   # Javascript runtime (required for precompiling assets in production)
   gem 'therubyracer'
