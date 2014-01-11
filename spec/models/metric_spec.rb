@@ -12,21 +12,26 @@ describe Metric do
   end
 
   describe ".read_from_string" do
-    it "should read in a correctly formatted output" do
-      time_output = <<-EOF
+    context "correctly formatted output" do
+      let(:string) {
+        <<-EOF
 Maximum resident set size (kbytes): 3808
 Minor (reclaiming a frame) page faults: 292
 Major (requiring I/O) page faults: 0
-      EOF
-      Metric.should_receive(:parse_line).with("Maximum resident set size (kbytes): 3808").and_return([:maxrss, 3808])
-      Metric.should_receive(:parse_line).with("Minor (reclaiming a frame) page faults: 292").and_return([:minflt, 292])
-      Metric.should_receive(:parse_line).with("Major (requiring I/O) page faults: 0").and_return([:majflt, 0])
+        EOF
+      }
 
-      m = Metric.read_from_string(time_output)
-      m.maxrss.should == 3808
-      m.minflt.should == 292
-      m.majflt.should == 0
-    end
+      before :each do
+        Metric.should_receive(:parse_line).with("Maximum resident set size (kbytes): 3808").and_return([:maxrss, 3808])
+        Metric.should_receive(:parse_line).with("Minor (reclaiming a frame) page faults: 292").and_return([:minflt, 292])
+        Metric.should_receive(:parse_line).with("Major (requiring I/O) page faults: 0").and_return([:majflt, 0])
+        @m = Metric.read_from_string(string)
+      end
+
+      it { @m.maxrss.should == 3808 }
+      it { @m.minflt.should == 292 }
+      it { @m.majflt.should == 0 }
+    end 
   end
 
   describe ".parse_line" do
