@@ -10,10 +10,14 @@
       Failed
     = time_ago_in_words(run.finished_at)
     ago
-    (Duration: #{distance_of_time_in_words(run.started_at, run.finished_at, include_seconds: true)})
-    - if run.metric
-      &mdash;
-      CPU time:
-      = run.metric.cpu_time  
-      Max memory used:
-      = number_to_human_size(run.metric.maxrss * 1024)
+    .pull-right
+      - if run.metric
+        real / cpu time:
+        = "%.1f s" % (run.finished_at - run.started_at)
+        \/
+        = "%.1f s" % run.metric.cpu_time
+        max memory:
+        = number_to_human_size(run.metric.maxrss * 1024)
+      - else
+        real time: #{"%.1f s" % (run.finished_at - run.started_at)}
+
