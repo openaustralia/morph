@@ -71,6 +71,7 @@ class Scraper < ActiveRecord::Base
     has_run? && queued_at && started_at.nil?
   end
 
+  # TODO Refactor finished?, finished_successfully?, finished_with_errors? using methods in Run
   def finished?
     has_run? && finished_at
   end

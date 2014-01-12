@@ -1,0 +1,21 @@
+%h3 Finished Runs
+
+-# Only show a limited number of the most recent runs
+%ol
+- @scraper.runs.where("finished_at IS NOT NULL").order(finished_at: :desc).each do |run|
+  %li
+    - if run.finished_successfully?
+      Completed successfully
+    - elsif run.finished_with_errors?
+      Failed
+    - else
+      raise "Unexpected value"
+    = time_ago_in_words(run.finished_at)
+    ago
+    (Duration: #{distance_of_time_in_words(run.started_at, run.finished_at, include_seconds: true)})
+    &mdash;
+    - if run.metric
+      CPU time:
+      = run.metric.cpu_time  
+      Max memory used:
+      = number_to_human_size(run.metric.maxrss * 1024)
