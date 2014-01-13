@@ -124,9 +124,7 @@ class Scraper < ActiveRecord::Base
     files = Dir.entries(directory)
     files.delete(".")
     files.delete("..") 
-    logger.info files
     files.map{|f| File.join(directory, f)}.each do |f|
-      logger.info f
       s = File.lstat(f)
       if s.file?
         r += s.size
