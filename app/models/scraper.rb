@@ -39,6 +39,13 @@ class Scraper < ActiveRecord::Base
     #image.tag(repo: Run.docker_image_name, force: true)
   end
 
+  def readme
+    f = Dir.glob(File.join(repo_path, "README*")).first
+    if f
+      File.read(f)
+    end
+  end
+
   def runnable?
     last_run.nil? || last_run.finished?
   end
