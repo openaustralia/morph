@@ -21,6 +21,10 @@ class Run < ActiveRecord::Base
     "time.output"
   end
 
+  def self.docker_image_name
+    "scraper"
+  end
+
   def time_output_path
     File.join(data_path, Run.time_output_filename)
   end
@@ -37,7 +41,7 @@ class Run < ActiveRecord::Base
     command = Metric.command('ruby /repo/scraper.rb', Run.time_output_filename)
     c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', command],
       "User" => "scraper",
-      "Image" => Scraper.docker_image_name,
+      "Image" => Run.docker_image_name,
       "name" => scraper.docker_container_name)
       # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
       # HACK to detect vagrant installation in crude way

@@ -24,10 +24,6 @@ class Scraper < ActiveRecord::Base
     "db/scrapers/data/#{full_name}"
   end
 
-  def self.docker_image_name
-    "scraper"
-  end
-
   def self.build_docker_image!
     system("docker build -t=scraper lib/build_docker_image")
     # TODO On Linux we'll have access to the "docker" command line which can show standard out which
@@ -40,7 +36,7 @@ class Scraper < ActiveRecord::Base
 
     #puts "Building docker image (this is likely to take a while)..."
     #image = Docker::Image.build_from_dir("lib/build_docker_image") {|c| puts c}
-    #image.tag(repo: docker_image_name, force: true)
+    #image.tag(repo: Run.docker_image_name, force: true)
   end
 
   def runnable?
