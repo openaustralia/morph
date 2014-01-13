@@ -64,15 +64,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def runnable?
-    !queued? && !running?
-  end
-
-  def running?
-    has_run? && started_at && finished_at.nil?
-  end
-
-  def queued?
-    has_run? && queued_at && started_at.nil?
+    last_run.nil? || last_run.finished_at
   end
 
   # TODO Refactor finished?, finished_successfully?, finished_with_errors? using methods in Run
