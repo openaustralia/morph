@@ -32,4 +32,10 @@
               = scraper.description
 
     - if @user == current_user
-      = link_to "Add scraper", new_scraper_path, class: "btn btn-default"
+      %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"
+      %p
+        CPU time used:
+        = "%.1f s" % @user.scrapers.sum(&:cpu_time)
+      %p
+        Disk space used:
+        = number_to_human_size @user.scrapers.sum(&:total_disk_usage)
