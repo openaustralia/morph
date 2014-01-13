@@ -47,10 +47,6 @@ class Scraper < ActiveRecord::Base
     last_run.nil? || last_run.finished_at
   end
 
-  def has_run?
-    !!last_run
-  end
-
   def last_run
     runs.order(queued_at: :desc).first
   end
