@@ -65,19 +65,6 @@ class Scraper < ActiveRecord::Base
     last_run.nil? || last_run.finished_at
   end
 
-  # TODO Refactor finished?, finished_successfully?, finished_with_errors? using methods in Run
-  def finished?
-    has_run? && last_run.finished_at
-  end
-
-  def finished_successfully?
-    finished? && last_run.status_code == 0
-  end
-
-  def finished_with_errors?
-    finished? && last_run.status_code != 0
-  end
-
   def has_run?
     !!last_run
   end
@@ -88,7 +75,7 @@ class Scraper < ActiveRecord::Base
 
   def queue!
     # Guard against more than one of a particular scraper running at the same time
-    if !has_run? || finished?
+    if runnable?
       run = runs.create(queued_at: Time.now)
       self.delay.go(run)
     end
