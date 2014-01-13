@@ -1,0 +1,17 @@
+%li.list-group-item{class: run.finished_successfully? ? "alert-success" : "alert-danger"}
+  - if run.finished_successfully?
+    Completed successfully
+  - else
+    Failed
+  = time_ago_in_words(run.finished_at)
+  ago
+  .pull-right
+    - if run.metric
+      real / cpu time:
+      = "%.1f s" % (run.finished_at - run.started_at)
+      \/
+      = "%.1f s" % run.metric.cpu_time
+      max memory:
+      = number_to_human_size(run.metric.maxrss * 1024)
+    - else
+      real time: #{"%.1f s" % (run.finished_at - run.started_at)}
