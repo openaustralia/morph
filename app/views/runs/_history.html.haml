@@ -1,8 +1,13 @@
 %li.list-group-item{class: run.finished_successfully? ? "alert-success" : "alert-danger"}
+  Ran
+  - if run.git_revision
+    revision
+    = link_to run.git_revision[0..7], "https://github.com/#{run.full_name}/commit/#{run.git_revision}"
+  and
   - if run.finished_successfully?
-    Completed successfully
+    completed successfully
   - else
-    Failed
+    failed
   = time_ago_in_words(run.finished_at)
   ago
   - if run.auto?

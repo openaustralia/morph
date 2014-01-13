@@ -3,7 +3,7 @@ class Run < ActiveRecord::Base
   has_many :log_lines
   belongs_to :metric
 
-  delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo, to: :scraper
+  delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo, :full_name, to: :scraper
 
   def finished?
     !!finished_at
