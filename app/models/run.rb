@@ -35,8 +35,8 @@ class Run < ActiveRecord::Base
 
   # The main section of the scraper running that is run in the background
   def go!
-    update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
     synchronise_repo
+    update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
     FileUtils.mkdir_p data_path
 
     Docker.options[:read_timeout] = 3600
