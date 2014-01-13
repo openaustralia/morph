@@ -1,27 +1,31 @@
 
 .jumbotron
-  %h1
-    Morph
-    %small
-      -# A scraping platform
-      A
-      = link_to "Heroku", "https://www.heroku.com/"
-      for
-      = link_to "Scrapers", "https://en.wikipedia.org/wiki/Web_scraping"
-  %ul.list-unstyled
-    %li
-      All code and collaboration through
-      = link_to "GitHub", "https://github.com/"
-    %li
-      Simple API to grab data
-    %li
-      Schedule scrapers or run manually
-    %li
-      Process isolation via
-      = link_to "Docker", "http://www.docker.io/"
-    %li
-      Trivial to move scraper code and data from
-      = link_to "ScraperWiki Classic", "https://classic.scraperwiki.com/"
+  .row
+    .col-md-4
+      = image_tag "logo.png", size: "300x300"
+    .col-md-8
+      %h1
+        Morph
+        %small
+          -# A scraping platform
+          A
+          = link_to "Heroku", "https://www.heroku.com/"
+          for
+          = link_to "Scrapers", "https://en.wikipedia.org/wiki/Web_scraping"
+      %ul.list-unstyled
+        %li
+          All code and collaboration through
+          = link_to "GitHub", "https://github.com/"
+        %li
+          Simple API to grab data
+        %li
+          Schedule scrapers or run manually
+        %li
+          Process isolation via
+          = link_to "Docker", "http://www.docker.io/"
+        %li
+          Trivial to move scraper code and data from
+          = link_to "ScraperWiki Classic", "https://classic.scraperwiki.com/"
 
 %ul.list-inline
   %li
