@@ -110,10 +110,6 @@ class Scraper < ActiveRecord::Base
     File::Stat.new(sqlite_db_path).size
   end
 
-  def docker_container_name
-    owner.to_param + "_" + name
-  end
-
   def scraperwiki_shortname
     # scraperwiki_url should be of the form https://classic.scraperwiki.com/scrapers/shortname/
     m = scraperwiki_url.match(/https:\/\/classic.scraperwiki.com\/scrapers\/(\w+)(\/)?/)

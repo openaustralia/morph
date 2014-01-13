@@ -3,7 +3,7 @@ class Run < ActiveRecord::Base
   has_many :log_lines
   belongs_to :metric
 
-  delegate :data_path, to: :scraper
+  delegate :data_path, :owner, :name, to: :scraper
 
   def finished?
     !!finished_at
@@ -29,6 +29,10 @@ class Run < ActiveRecord::Base
     File.join(data_path, Run.time_output_filename)
   end
 
+  def docker_container_name
+    owner.to_param + "_" + name
+  end
+
   # The main section of the scraper running that is run in the background
   def go!
     update_attributes(started_at: Time.now)
@@ -42,7 +46,7 @@ class Run < ActiveRecord::Base
     c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', command],
       "User" => "scraper",
       "Image" => Run.docker_image_name,
-      "name" => scraper.docker_container_name)
+      "name" => docker_container_name)
       # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
       # HACK to detect vagrant installation in crude way
     if Rails.root.to_s =~ /\/var\/www/
