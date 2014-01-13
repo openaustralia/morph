@@ -47,9 +47,10 @@ class Scraper < ActiveRecord::Base
     runs.order(queued_at: :desc).first
   end
 
-  def queue!
+  # Set auto to true if this job is being queued automatically (i.e. not directly by a person)
+  def queue!(auto = false)
     # Guard against more than one of a particular scraper running at the same time
-    runs.create(queued_at: Time.now).delay.go! if runnable?
+    runs.create(queued_at: Time.now, auto: auto).delay.go! if runnable?
   end
 
   def clear
