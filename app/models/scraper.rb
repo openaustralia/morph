@@ -118,7 +118,11 @@ class Scraper < ActiveRecord::Base
   end
 
   def sqlite_db_size
-    File::Stat.new(sqlite_db_path).size
+    if File.exists?(sqlite_db_path)
+      File::Stat.new(sqlite_db_path).size
+    else
+      0
+    end
   end
 
   def scraperwiki_shortname
