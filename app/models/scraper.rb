@@ -77,14 +77,6 @@ class Scraper < ActiveRecord::Base
     "scraperwiki.sqlite"
   end
 
-  def time_output_filename
-    "time.output"
-  end
-
-  def time_output_path
-    File.join(data_path, time_output_filename)
-  end
-
   def sqlite_db_path
     File.join(data_path, sqlite_db_filename)
   end

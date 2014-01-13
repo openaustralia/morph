@@ -3,6 +3,8 @@ class Run < ActiveRecord::Base
   has_many :log_lines
   belongs_to :metric
 
+  delegate :data_path, to: :scraper
+
   def finished?
     !!finished_at
   end
@@ -15,16 +17,24 @@ class Run < ActiveRecord::Base
     finished? && status_code != 0
   end
 
+  def self.time_output_filename
+    "time.output"
+  end
+
+  def time_output_path
+    File.join(data_path, Run.time_output_filename)
+  end
+
   # The main section of the scraper running that is run in the background
   def go!
     update_attributes(started_at: Time.now)
     synchronise_repo
-    FileUtils.mkdir_p scraper.data_path
+    FileUtils.mkdir_p data_path
 
     Docker.options[:read_timeout] = 3600
 
     # This will fail if there is another container with the same name
-    command = Metric.command('ruby /repo/scraper.rb', scraper.time_output_filename)
+    command = Metric.command('ruby /repo/scraper.rb', Run.time_output_filename)
     c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', command],
       "User" => "scraper",
       "Image" => Scraper.docker_image_name,
@@ -58,7 +68,7 @@ class Run < ActiveRecord::Base
     c.delete
 
     # Now collect and save the metrics
-    metric = Metric.read_from_file(scraper.time_output_path)
+    metric = Metric.read_from_file(time_output_path)
 
     update_attributes(status_code: status_code, metric_id: metric.id, finished_at: Time.now)
     scraper.tidy_data_path
