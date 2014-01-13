@@ -113,6 +113,11 @@ class Scraper < ActiveRecord::Base
     JSON.parse(response.body).first
   end
 
+  def current_revision_from_repo
+    r = Grit::Repo.new(repo_path)
+    Grit::Head.current(r).commit.id
+  end
+
   def fork_from_scraperwiki!
     client = Octokit::Client.new :access_token => owner.access_token
 

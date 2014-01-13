@@ -3,7 +3,7 @@ class Run < ActiveRecord::Base
   has_many :log_lines
   belongs_to :metric
 
-  delegate :data_path, :repo_path, :owner, :name, :git_url, to: :scraper
+  delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo, to: :scraper
 
   def finished?
     !!finished_at
@@ -35,7 +35,7 @@ class Run < ActiveRecord::Base
 
   # The main section of the scraper running that is run in the background
   def go!
-    update_attributes(started_at: Time.now)
+    update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
     synchronise_repo
     FileUtils.mkdir_p data_path
 
