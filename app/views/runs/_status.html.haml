@@ -1,0 +1,24 @@
+- if run.queued_at && run.started_at.nil?
+  .alert.alert-info
+    The scraper is <strong>queued to run</strong>. It was queued
+    = time_ago_in_words(run.queued_at)
+    ago.
+    %span.muted
+      (Refresh page for the latest)
+- elsif run.started_at && run.finished_at.nil?
+  .alert.alert-info
+    The scraper is <strong>running</strong>. It was started
+    = time_ago_in_words(run.started_at)
+    ago.
+    %span.muted
+      (Refresh page for the latest)
+- elsif run.finished_at && run.status_code == 0
+  .alert.alert-success
+    Last run completed successfully
+    = time_ago_in_words(run.finished_at)
+    ago
+- elsif run.finished_at && run.status_code != 0
+  .alert.alert-danger
+    Last run failed
+    = time_ago_in_words(last_run.finished_at)
+    ago with status code #{run.status_code}. See any console output below.
