@@ -1,5 +1,9 @@
 %li.list-group-item{class: run.finished_successfully? ? "alert-success" : "alert-danger"}
-  Ran
+  - if run.auto?
+    Auto
+  - else
+    Manually
+  ran
   - if run.git_revision
     revision
     = link_to run.git_revision[0..7], "https://github.com/#{run.full_name}/commit/#{run.git_revision}"
@@ -10,10 +14,6 @@
     failed
   = time_ago_in_words(run.finished_at)
   ago
-  - if run.auto?
-    (Auto run)
-  - else
-    (Manually run)
   .pull-right
     - if run.metric
       real / cpu time:
