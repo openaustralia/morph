@@ -1,6 +1,7 @@
 class Scraper < ActiveRecord::Base
   belongs_to :owner, class_name: User
   has_many :runs
+  has_many :metrics, through: :runs
   validates :scraperwiki_url, format: { with: /\Ahttps:\/\/classic.scraperwiki.com\/scrapers\/(\w+)(\/)?\z/,
     message: "Should be a valid ScraperWiki scraper url" }, allow_nil: true
 
@@ -22,6 +23,18 @@ class Scraper < ActiveRecord::Base
 
   def data_path
     "db/scrapers/data/#{full_name}"
+  end
+
+  def utime
+    metrics.sum(:utime)
+  end
+
+  def stime
+    metrics.sum(:stime)
+  end
+
+  def cpu_time
+    utime + stime
   end
 
   def self.build_docker_image!
