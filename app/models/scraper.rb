@@ -117,6 +117,34 @@ class Scraper < ActiveRecord::Base
     sql_query_safe("select count(*) from swdata").first.values.first
   end
 
+  # It seems silly implementing this
+  def Scraper.directory_size(directory)
+    r = 0
+    # Ick
+    files = Dir.entries(directory)
+    files.delete(".")
+    files.delete("..") 
+    logger.info files
+    files.map{|f| File.join(directory, f)}.each do |f|
+      logger.info f
+      s = File.lstat(f)
+      if s.file?
+        r += s.size
+      else
+        r += Scraper.directory_size(f)
+      end
+    end
+    r
+  end
+
+  def total_disk_usage
+    repo_size + sqlite_db_size
+  end
+
+  def repo_size
+    Scraper.directory_size(repo_path)
+  end
+
   def sqlite_db_size
     if File.exists?(sqlite_db_path)
       File::Stat.new(sqlite_db_path).size
