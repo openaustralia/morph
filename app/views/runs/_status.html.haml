@@ -20,5 +20,5 @@
 - elsif run.finished_at && run.status_code != 0
   .alert.alert-danger
     Last run failed
-    = time_ago_in_words(last_run.finished_at)
+    = time_ago_in_words(run.finished_at)
     ago with status code #{run.status_code}. See any console output below.
