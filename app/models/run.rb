@@ -18,7 +18,7 @@ class Run < ActiveRecord::Base
   # The main section of the scraper running that is run in the background
   def go!
     update_attributes(started_at: Time.now)
-    scraper.synchronise_repo
+    synchronise_repo
     FileUtils.mkdir_p scraper.data_path
 
     Docker.options[:read_timeout] = 3600
@@ -64,4 +64,21 @@ class Run < ActiveRecord::Base
     scraper.tidy_data_path
   end
 
+  def synchronise_repo
+    # Set git timeout to 1 minute
+    # TODO Move this to a configuration
+    Grit::Git.git_timeout = 60
+    gritty = Grit::Git.new(scraper.repo_path)
+    if gritty.exist?
+      puts "Pulling git repo #{scraper.repo_path}..."
+      # TODO Fix this. Using grit seems to do a pull but not update the working directory
+      # So falling back to shelling out to the git command
+      #gritty = Grit::Repo.new(repo_path).git
+      #puts gritty.pull({:raise => true}, "origin", "master")
+      system("cd #{scraper.repo_path}; git pull")
+    else
+      puts "Cloning git repo #{scraper.git_url}..."
+      puts gritty.clone({:verbose => true, :progress => true, :raise => true}, scraper.git_url, scraper.repo_path)
+    end
+  end
 end
