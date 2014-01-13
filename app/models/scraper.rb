@@ -42,7 +42,7 @@ class Scraper < ActiveRecord::Base
   def readme
     f = Dir.glob(File.join(repo_path, "README*")).first
     if f
-      File.read(f)
+      GitHub::Markup.render(f, File.read(f)).html_safe
     end
   end
 

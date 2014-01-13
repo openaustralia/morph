@@ -27,6 +27,13 @@ gem "foreman"
 gem "faraday"
 gem 'jquery-turbolinks'
 
+# We're currently only supporting the plain text, markdown and textile
+# markups for the README. If we want more then we need to install some
+# more dependencies. See https://github.com/github/markup
+gem 'github-markup', :require => 'github/markup'
+gem 'redcarpet'
+gem 'RedCloth'
+
 group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rvm'

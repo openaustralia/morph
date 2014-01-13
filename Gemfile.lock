@@ -19,6 +19,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    RedCloth (4.2.9)
     actionmailer (4.0.2)
       actionpack (= 4.0.2)
       mail (~> 2.5.4)
@@ -110,6 +111,7 @@ GEM
       actionpack (>= 3.0)
     friendly_id (5.0.2)
       activerecord (~> 4.0.0)
+    github-markup (1.0.0)
     grit (2.5.0)
       diff-lcs (~> 1.1)
       mime-types (~> 1.15)
@@ -218,6 +220,7 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.1.1)
       json (~> 1.4)
+    redcarpet (2.3.0)
     ref (1.0.5)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
@@ -293,6 +296,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  RedCloth
   capistrano-rails
   capistrano-rvm
   coffee-rails (~> 4.0.0)
@@ -305,6 +309,7 @@ DEPENDENCIES
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap!
   friendly_id
+  github-markup
   grit
   growl
   guard
@@ -319,6 +324,7 @@ DEPENDENCIES
   omniauth-github
   rack-livereload
   rails (= 4.0.2)
+  redcarpet
   rspec-rails (~> 2.0)
   sass-rails (~> 4.0.0)
   sdoc
