@@ -13,10 +13,6 @@ class Run < ActiveRecord::Base
     finished? && status_code == 0
   end
 
-  def finished_with_errors?
-    finished? && status_code != 0
-  end
-
   def self.time_output_filename
     "time.output"
   end
