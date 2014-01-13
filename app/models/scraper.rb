@@ -44,7 +44,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def runnable?
-    last_run.nil? || last_run.finished_at
+    last_run.nil? || last_run.finished?
   end
 
   def last_run
