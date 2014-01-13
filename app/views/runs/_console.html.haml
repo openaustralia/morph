@@ -1,0 +1,6 @@
+- unless run.log_lines.empty?
+  %h3 Console output
+  %p Hint: Keep this to a minimum during normal use (so that things remain readable)
+  %pre
+    - run.log_lines.order(:number).each do |line|
+      %span{:class => line.stream}= line.text
