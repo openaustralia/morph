@@ -106,7 +106,7 @@ class Run < ActiveRecord::Base
     filenames = Dir.entries(data_path)
     filenames.delete(".")
     filenames.delete("..")
-    filenames.delete(scraper.sqlite_db_filename)
+    filenames.delete(Scraper.sqlite_db_filename)
     FileUtils.rm_rf filenames.map{|f| File.join(data_path, f)}
   end
 end
