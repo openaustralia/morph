@@ -1,4 +1,4 @@
-- if @scraper.has_run? && @scraper.last_run.finished_at && !@scraper.last_run.log_lines.empty?
+- if @scraper.last_run && !@scraper.last_run.log_lines.empty?
   %h3 Console output
   %p Hint: Keep this to a minimum during normal use (so that things remain readable)
   %pre
