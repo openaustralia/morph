@@ -75,10 +75,7 @@ class Scraper < ActiveRecord::Base
 
   def queue!
     # Guard against more than one of a particular scraper running at the same time
-    if runnable?
-      run = runs.create(queued_at: Time.now)
-      self.delay.go(run)
-    end
+    runs.create(queued_at: Time.now).delay.go! if runnable?
   end
 
   def clear
@@ -149,55 +146,6 @@ class Scraper < ActiveRecord::Base
 
   def docker_container_name
     owner.to_param + "_" + name
-  end
-
-  # The main section of the scraper running that is run in the background
-  def go(run)
-    run.update_attributes(started_at: Time.now)
-    synchronise_repo
-    FileUtils.mkdir_p data_path
-
-    Docker.options[:read_timeout] = 3600
-
-    # This will fail if there is another container with the same name
-    command = Metric.command('ruby /repo/scraper.rb', time_output_filename)
-    c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', command],
-      "User" => "scraper",
-      "Image" => Scraper.docker_image_name,
-      "name" => docker_container_name)
-      # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
-      # HACK to detect vagrant installation in crude way
-    if Rails.root.to_s =~ /\/var\/www/
-      local_root_path = Rails.root
-    else
-      local_root_path = "/vagrant"
-    end
-
-    begin
-      c.start("Binds" => [
-        "#{local_root_path}/#{repo_path}:/repo:ro",
-        "#{local_root_path}/#{data_path}:/data"
-      ])
-      puts "Running docker container..."
-      log_line_number = 0
-      c.attach(logs: true) do |s,c|
-        run.log_lines.create(stream: s, text: c, number: log_line_number)
-        log_line_number += 1
-      end
-    ensure
-      c.kill if c.json["State"]["Running"]
-    end
-    # Scraper should already have finished now. We're just using this to return the scraper status code
-    status_code = c.wait["StatusCode"]
-
-    # Clean up after ourselves
-    c.delete
-
-    # Now collect and save the metrics
-    metric = Metric.read_from_file(time_output_path)
-
-    run.update_attributes(status_code: status_code, metric_id: metric.id, finished_at: Time.now)
-    tidy_data_path
   end
 
   def scraperwiki_shortname
