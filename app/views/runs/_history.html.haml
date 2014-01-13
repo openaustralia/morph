@@ -5,6 +5,10 @@
     Failed
   = time_ago_in_words(run.finished_at)
   ago
+  - if run.auto?
+    (Auto run)
+  - else
+    (Manually run)
   .pull-right
     - if run.metric
       real / cpu time:
