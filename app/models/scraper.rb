@@ -63,6 +63,10 @@ class Scraper < ActiveRecord::Base
     #image.tag(repo: docker_image_name, force: true)
   end
 
+  def runnable?
+    !queued? && !running?
+  end
+
   def running?
     has_run? && started_at && finished_at.nil?
   end
