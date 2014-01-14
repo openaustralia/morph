@@ -140,7 +140,11 @@ class Scraper < ActiveRecord::Base
   end
 
   def repo_size
-    Scraper.directory_size(repo_path)
+    if File.exists?(repo_path)
+      Scraper.directory_size(repo_path)
+    else
+      0
+    end
   end
 
   def sqlite_db_size
