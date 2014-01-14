@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'scraperwiki'
+gem 'scraperwiki-morph'
 
 # These specific gems and versions are those installed on ScraperWiki "classic" as of 17 Aug 2013
 # Note also that the ruby version is set by .ruby-version in this directory
