@@ -237,7 +237,7 @@ scraperwiki.sqlite
     client.update_ref(full_name,"heads/master", commit.sha)
 
     # Add another commit (but only if necessary) to translate the code so it runs here
-    translated_code = CodeTranslate.scraperwiki_ruby(code)
+    translated_code = CodeTranslate.ruby(code)
     unless translated_code == code
       tree2 = client.create_tree(full_name, [
         {
