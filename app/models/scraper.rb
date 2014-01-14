@@ -236,15 +236,15 @@ scraperwiki.sqlite
     commit = client.create_commit(full_name, commit_message, tree.sha)
     client.update_ref(full_name,"heads/master", commit.sha)
 
-    # Now add an extra commit that adds "require 'scraperwiki'" to the top of the scraper code
-    # but only if it's necessary
-    unless code =~ /require ['"]scraperwiki['"]/
+    # Add another commit (but only if necessary) to translate the code so it runs here
+    translated_code = CodeTranslate.scraperwiki_ruby(code)
+    unless translated_code == code
       tree2 = client.create_tree(full_name, [
         {
           :path => "scraper.rb",
           :mode => "100644",
           :type => "blob",
-          :content => "require 'scraperwiki'\n" + code
+          :content => translated_code
         },
       ], :base_tree => tree.sha)
       commit2 = client.create_commit(full_name, "Add require 'scraperwiki'", tree2.sha, commit.sha)
