@@ -204,10 +204,7 @@ class Scraper < ActiveRecord::Base
     repo = client.edit_repository(full_name, description: description)
     self.update_attributes(description: description)
 
-    gitignore_contents = <<-EOF
-# Ignore output of scraper
-scraperwiki.sqlite
-    EOF
+    gitignore_contents = "# Ignore output of scraper\n#{Scraper.sqlite_db_filename}\n"
     blobs =  [
       {
         :path => "scraper.rb",
