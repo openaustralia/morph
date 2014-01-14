@@ -5,8 +5,8 @@ describe CodeTranslate do
     it "should do a series of translations and return the final result" do
       input, output1, output2, output3 = double, double, double, double
       CodeTranslate.should_receive(:add_require).with(input).and_return(output1)
-      CodeTranslate.should_receive(:switch_to_scraperwiki_morph).with(output1).and_return(output2)
-      CodeTranslate.should_receive(:change_table_in_sqliteexecute_and_select).with(output2).and_return(output3)
+      CodeTranslate.should_receive(:change_table_in_sqliteexecute_and_select).with(output1).and_return(output2)
+      CodeTranslate.should_receive(:switch_to_scraperwiki_morph).with(output2).and_return(output3)
       CodeTranslate.ruby(input).should == output3
     end
   end
@@ -37,8 +37,8 @@ describe CodeTranslate do
 
   describe ".change_table_in_sqliteexecute_and_select" do
     it "should replace the table name" do
-      CodeTranslate.change_table_in_sqliteexecute_and_select("ScraperWikiMorph.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from swdata', foo, bar)\n").should ==
-        "ScraperWikiMorph.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from data', foo, bar)\n"
+      CodeTranslate.change_table_in_sqliteexecute_and_select("ScraperWiki.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from swdata', foo, bar)\nScraperWiki.select('select * from swdata; select * from swdata', foo, bar)\n").should ==
+        "ScraperWiki.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from data', foo, bar)\nScraperWiki.select('select * from data; select * from data', foo, bar)\n"
     end
   end
 end
