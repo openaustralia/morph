@@ -3,7 +3,7 @@
 %p
   For the time being scrapers are restricted to using Ruby. They need to have a file in the root
   directory called "scraper.rb" and they should create an sqlite database in the current working
-  directory called "scraperwiki.sqlite". The main data should be written into a table called "swdata".
+  directory called "#{Scraper.sqlite_db_filename}". The main data should be written into a table called "swdata".
   The code needs to live in the master branch of the repository.
 
 -# TODO Don't show repos that we've already added
