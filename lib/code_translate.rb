@@ -7,9 +7,9 @@ class CodeTranslate
   # If necessary adds "require 'scraperwiki'" to the top of the scraper code
   def self.add_require(code)
     if code =~ /require ['"]scraperwiki['"]/
-      code
+      code.gsub(/require ['"]scraperwiki['"]/, "require 'scraperwiki-morph'")
     else
-      code = "require 'scraperwiki'\n" + code
+      code = "require 'scraperwiki-morph'\n" + code
     end
   end
 end

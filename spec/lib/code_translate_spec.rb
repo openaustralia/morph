@@ -11,19 +11,19 @@ describe CodeTranslate do
   end
 
   describe ".add_require" do
-    it "should not change anything if scraperwiki is already included (with single quotes)" do
+    it "should replace scraperwiki with scraperwiki-morph (with single quotes)" do
       CodeTranslate.add_require("require 'scraperwiki'\nsome other code\n").should ==
-        "require 'scraperwiki'\nsome other code\n"
+        "require 'scraperwiki-morph'\nsome other code\n"
     end
 
-    it "should not change anything if scraperwiki is already included (with double quotes)" do
+    it "should replace scraperwiki with scraperwiki-morph (with double quotes)" do
       CodeTranslate.add_require("require \"scraperwiki\"\nsome other code\n").should ==
-        "require \"scraperwiki\"\nsome other code\n"
+        "require 'scraperwiki-morph'\nsome other code\n"
     end
 
     it "should add the require if it's not there" do
       CodeTranslate.add_require("some code\n").should ==
-        "require 'scraperwiki'\nsome code\n"
+        "require 'scraperwiki-morph'\nsome code\n"
     end
   end
 end
