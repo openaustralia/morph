@@ -30,7 +30,7 @@ class ScrapersController < ApplicationController
 
   def show
     @scraper = Scraper.find(params[:id])
-    @rows = @scraper.sql_query_safe("select * from swdata limit 10")
+    @rows = @scraper.sql_query_safe("select * from #{Scraper.sqlite_table_name} limit 10")
   end
 
   def destroy
@@ -87,7 +87,7 @@ class ScrapersController < ApplicationController
       send_file scraper.sqlite_db_path, filename: "#{scraper.name}.sqlite",
         type: "application/x-sqlite3"
     else
-      query = params[:query] || "select * from swdata"
+      query = params[:query] || "select * from #{Scraper.sqlite_table_name}"
       begin
         rows = scraper.sql_query(query)
         respond_to do |format|

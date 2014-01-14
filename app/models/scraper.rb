@@ -94,6 +94,10 @@ class Scraper < ActiveRecord::Base
     "data.sqlite"
   end
 
+  def self.sqlite_table_name
+    "data"
+  end
+
   def sqlite_db_path
     File.join(data_path, Scraper.sqlite_db_filename)
   end
@@ -114,7 +118,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def no_rows
-    sql_query_safe("select count(*) from swdata").first.values.first
+    sql_query_safe("select count(*) from #{Scraper.sqlite_table_name}").first.values.first
   end
 
   # It seems silly implementing this
