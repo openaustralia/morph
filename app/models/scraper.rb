@@ -102,16 +102,16 @@ class Scraper < ActiveRecord::Base
     File.join(data_path, Scraper.sqlite_db_filename)
   end
 
-  def sql_query(query)
-    db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: true)
+  def sql_query(query, readonly = true)
+    db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: readonly)
     # If database is busy wait 5s
     db.busy_timeout(5000)
     db.execute(query)
   end
 
-  def sql_query_safe(query)
+  def sql_query_safe(query, readonly = true)
     begin
-      sql_query(query)
+      sql_query(query, readonly)
     rescue SQLite3::CantOpenException, SQLite3::SQLException
       nil
     end
@@ -203,6 +203,8 @@ class Scraper < ActiveRecord::Base
     end
     FileUtils.mkdir_p data_path
     File.open(sqlite_db_path, 'wb') {|file| file.write(sqlite_db) }
+    # Rename the main table in the sqlite database
+    sql_query_safe("ALTER TABLE swdata RENAME TO #{Scraper.sqlite_table_name}", false)
 
     # Fill in description
     repo = client.edit_repository(full_name, description: description)
