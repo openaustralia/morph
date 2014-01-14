@@ -91,7 +91,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def self.sqlite_db_filename
-    "scraperwiki.sqlite"
+    "data.sqlite"
   end
 
   def sqlite_db_path
