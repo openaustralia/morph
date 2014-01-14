@@ -37,8 +37,15 @@ describe CodeTranslate do
 
   describe ".change_table_in_sqliteexecute_and_select" do
     it "should replace the table name" do
-      CodeTranslate.change_table_in_sqliteexecute_and_select("ScraperWiki.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from swdata', foo, bar)\nScraperWiki.select('select * from swdata; select * from swdata', foo, bar)\n").should ==
+      CodeTranslate.change_table_in_sqliteexecute_and_select( \
+        "ScraperWiki.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from swdata', foo, bar)\nScraperWiki.select('select * from swdata; select * from swdata', foo, bar)\n").should ==
         "ScraperWiki.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from data', foo, bar)\nScraperWiki.select('select * from data; select * from data', foo, bar)\n"
+    end
+
+    it "another example" do
+      CodeTranslate.change_table_in_sqliteexecute_and_select( \
+        "if (ScraperWiki.select(\"* from swdata where `council_reference`='\#{record['council_reference']}'\").empty? rescue true)").should ==
+        "if (ScraperWiki.select(\"* from data where `council_reference`='\#{record['council_reference']}'\").empty? rescue true)"
     end
   end
 end

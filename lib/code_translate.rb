@@ -18,11 +18,10 @@ class CodeTranslate
   end
 
   def self.change_table_in_sqliteexecute_and_select(code)
-    code.gsub(/ScraperWiki.(sqliteexecute|select)\(['"](.*)['"](.*)\)/) do |s|
-      method = $1
-      rest = $3
-      sql = $2.gsub('swdata', 'data')
-      "ScraperWiki.#{method}('#{sql}'#{rest})"
+    code.gsub(/ScraperWiki.(sqliteexecute|select)\((['"])(.*)(['"])(.*)\)/) do |s|
+      method, bracket1, sql, bracket2, rest = $1, $2, $3, $4, $5
+      sql = sql.gsub('swdata', 'data')
+      "ScraperWiki.#{method}(#{bracket1}#{sql}#{bracket2}#{rest})"
     end
   end
 end
