@@ -2,7 +2,7 @@ class Scraper < ActiveRecord::Base
   belongs_to :owner, class_name: User
   has_many :runs
   has_many :metrics, through: :runs
-  validates :scraperwiki_url, format: { with: /\Ahttps:\/\/classic.scraperwiki.com\/scrapers\/(\w+)(\/)?\z/,
+  validates :scraperwiki_url, format: { with: /\Ahttps:\/\/classic.scraperwiki.com\/scrapers\/([-\w]+)(\/)?\z/,
     message: "Should be a valid ScraperWiki scraper url" }, allow_nil: true
 
   extend FriendlyId
@@ -161,7 +161,7 @@ class Scraper < ActiveRecord::Base
 
   def scraperwiki_shortname
     # scraperwiki_url should be of the form https://classic.scraperwiki.com/scrapers/shortname/
-    m = scraperwiki_url.match(/https:\/\/classic.scraperwiki.com\/scrapers\/(\w+)(\/)?/)
+    m = scraperwiki_url.match(/https:\/\/classic.scraperwiki.com\/scrapers\/([-\w]+)(\/)?/)
     m[1] if m
   end
 
