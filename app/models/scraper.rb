@@ -166,6 +166,18 @@ class Scraper < ActiveRecord::Base
     Grit::Head.current(r).commit.id
   end
 
+  # Defines our naming convention for the scraper of each language
+  def self.language_to_file_extension(language)
+    case language
+    when :ruby
+      "rb"
+    when :php
+      "php"
+    when :python
+      "py"
+    end
+  end
+
   def fork_from_scraperwiki!
     client = Octokit::Client.new :access_token => owner.access_token
 
@@ -183,6 +195,7 @@ class Scraper < ActiveRecord::Base
     code = v["code"]
     description = v["title"]
     readme_text = v["description"]
+    language = v["language"].to_sym
 
     # Copy the sqlite database across from Scraperwiki
     url = "https://classic.scraperwiki.com/scrapers/export_sqlite/#{scraperwiki_shortname}/"
@@ -203,7 +216,7 @@ class Scraper < ActiveRecord::Base
     gitignore_contents = "# Ignore output of scraper\n#{Scraper.sqlite_db_filename}\n"
     blobs =  [
       {
-        :path => "scraper.rb",
+        :path => "scraper.#{Scraper.language_to_file_extension(language)}",
         :mode => "100644",
         :type => "blob",
         :content => code
@@ -230,7 +243,7 @@ class Scraper < ActiveRecord::Base
     client.update_ref(full_name,"heads/master", commit.sha)
 
     # Add another commit (but only if necessary) to translate the code so it runs here
-    translated_code = CodeTranslate.ruby(code)
+    translated_code = CodeTranslate.translate(language, code)
     unless translated_code == code
       tree2 = client.create_tree(full_name, [
         {
