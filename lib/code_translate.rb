@@ -1,5 +1,16 @@
 class CodeTranslate
   # Translate Ruby code on ScraperWiki to something that will run on Morph
+  def self.translate(language, code)
+    case language
+    when :ruby
+      ruby(code)
+    when :php, :python
+      code
+    else
+      raise "unsupported language"
+    end
+  end
+
   def self.ruby(code)
     switch_to_scraperwiki_morph(change_table_in_sqliteexecute_and_select(add_require(code)))
   end

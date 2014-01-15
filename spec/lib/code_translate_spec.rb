@@ -1,6 +1,23 @@
 require 'spec_helper'
 
 describe CodeTranslate do
+  describe ".translate" do
+    let(:code) { double }
+
+    it "should translate ruby" do
+      CodeTranslate.should_receive(:ruby).with(code)
+      CodeTranslate.translate(:ruby, code)
+    end
+
+    it "should do nothing with php" do
+      CodeTranslate.translate(:php, code).should == code
+    end
+
+    it "should do nothing with python" do
+      CodeTranslate.translate(:python, code).should == code
+    end
+  end
+
   describe ".ruby" do
     it "should do a series of translations and return the final result" do
       input, output1, output2, output3 = double, double, double, double
