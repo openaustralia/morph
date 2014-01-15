@@ -18,7 +18,7 @@ class Run < ActiveRecord::Base
   end
 
   def self.docker_image_name
-    "scraper"
+    "openaustralia/morph-ruby"
   end
 
   def time_output_path

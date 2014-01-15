@@ -39,7 +39,7 @@ class Scraper < ActiveRecord::Base
 
   def self.build_docker_image!
     docker_command = "docker #{ENV['DOCKER_TCP'] ? "-H #{ENV['DOCKER_TCP']}" : ""}"
-    system("#{docker_command} build -t=scraper lib/build_docker_image")
+    system("#{docker_command} pull openaustralia/morph-ruby")
     # TODO On Linux we'll have access to the "docker" command line which can show standard out which
     # would be very helpful. As far as I can tell this is not currently possible with the docker api gem.
 
