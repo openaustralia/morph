@@ -33,7 +33,7 @@ Edit `.env` with the details of the application you've just created
 
 Now you'll need to build the Docker container that scrapers run in.
 
-    dotenv bundle exec rake app:build_docker_image
+    dotenv bundle exec rake app:update_docker_image
 
 Now you can start the server
 
