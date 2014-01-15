@@ -33,14 +33,7 @@ Edit `.env` with the details of the application you've just created
 
 Now you'll need to build the Docker container that scrapers run in.
 
-If you're on OS X you'll need to do this from the docker virtual machine, so
-
-    vagrant ssh dev
-    docker -H localhost:4243 build -t scraper /source/lib/build_docker_image
-
-On Linux
-
-    docker build -t scraper lib/build_docker_image
+    dotenv bundle exec rake app:build_docker_image
 
 Now you can start the server
 
@@ -60,6 +53,8 @@ We've made it easier by providing a Vagrantfile that sets up a VM, installs dock
 First install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads). Then,
 
     vagrant up dev
+
+Just recently the Docker folks have released a version of the docker client that works on OS X. The first build is [available to download](http://test.docker.io/builds/Darwin/x86_64/docker-0.7.3.tgz). You might find this helpful later but isn't essential.
 
 ### Guard Livereload
 
@@ -90,7 +85,7 @@ If you want to contribute an enhancement or a fix:
 
 ### Copyright & License
 
-Copyright OpenAustralia Foundation Limited 2013. Licensed under the Affero GPL. See LICENSE file for more details.
+Copyright OpenAustralia Foundation Limited 2013 - 2014. Licensed under the Affero GPL. See LICENSE file for more details.
 
 ### Authors
 
