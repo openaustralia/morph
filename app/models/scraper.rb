@@ -73,8 +73,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def main_scraper_filename
-    # TODO This will obviously be different for different languages
-    "scraper.rb"
+    Scraper.language_to_scraper_filename(language)
   end
 
   def github_url_main_scraper_file
@@ -225,7 +224,7 @@ class Scraper < ActiveRecord::Base
     repo = client.edit_repository(full_name, description: description)
     self.update_attributes(description: description)
 
-    scraper_filename = "scraper.#{Scraper.language_to_file_extension(language)}"
+    scraper_filename = Scraper.language_to_scraper_filename(language)
     gitignore_contents = "# Ignore output of scraper\n#{Scraper.sqlite_db_filename}\n"
     blobs =  [
       {

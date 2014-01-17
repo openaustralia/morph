@@ -3,7 +3,8 @@ class Run < ActiveRecord::Base
   has_many :log_lines
   belongs_to :metric
 
-  delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo, :full_name, :language, to: :scraper
+  delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo,
+    :full_name, :language, :main_scraper_filename, to: :scraper
 
   def finished?
     !!finished_at
@@ -17,16 +18,27 @@ class Run < ActiveRecord::Base
     "time.output"
   end
 
-  def self.docker_image_name
-    "openaustralia/morph-ruby"
-  end
-
   def time_output_path
     File.join(data_path, Run.time_output_filename)
   end
 
   def docker_container_name
     owner.to_param + "_" + name
+  end
+
+  def scraper_command
+    case language
+    when :ruby
+      "ruby /repo/#{main_scraper_filename}"
+    when :php
+      "php /repo/#{main_scraper_filename}"
+    else
+      "echo 'can not find scraper code'"
+    end
+  end
+
+  def docker_image
+    "openaustralia/morph-#{language}"
   end
 
   # The main section of the scraper running that is run in the background
@@ -36,17 +48,6 @@ class Run < ActiveRecord::Base
     FileUtils.mkdir_p data_path
 
     Docker.options[:read_timeout] = 3600
-
-    case language
-    when :ruby
-      scraper_command = 'ruby /repo/scraper.rb'
-      docker_image = "openaustralia/morph-ruby"
-    when :php
-      scraper_command = 'php /repo/scraper.php'
-      docker_image = "openaustralia/morph-php"
-    else
-      scraper_command = "echo 'can not find scraper either at scraper.rb or scraper.php'"
-    end
 
     # This will fail if there is another container with the same name
     command = Metric.command(scraper_command, Run.time_output_filename)
