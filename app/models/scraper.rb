@@ -254,7 +254,7 @@ class Scraper < ActiveRecord::Base
           :content => translated_code
         },
       ], :base_tree => tree.sha)
-      commit2 = client.create_commit(full_name, "Make ScraperWiki scraper work on Morph (automated)", tree2.sha, commit.sha)
+      commit2 = client.create_commit(full_name, "Automatic update to make ScraperWiki scraper work on Morph", tree2.sha, commit.sha)
       client.update_ref(full_name,"heads/master", commit2.sha)
     end
 
