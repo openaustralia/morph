@@ -21,9 +21,20 @@ describe CodeTranslate do
   end
 
   describe "PHP" do
-    it "should do nothing" do
-      code = double
-      CodeTranslate::PHP.translate(code).should == code
+    it "should do each step" do
+      input, output1 = double, double
+      CodeTranslate::PHP.should_receive(:add_require).with(input).and_return(output1)
+      CodeTranslate::PHP.translate(input).should == output1
+    end
+
+    it "should insert require scraperwiki after the opening php tag" do
+      CodeTranslate::PHP.add_require("<?php\nsome code here\nsome more").should ==
+        "<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more"
+    end
+
+    it "shouldn't insert require if it's already there" do
+      CodeTranslate::PHP.add_require("<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more").should ==
+        "<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more"
     end
   end
 
