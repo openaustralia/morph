@@ -52,10 +52,8 @@ group :test do
   gem 'simplecov', :require => false
 end
 
-group :production do
-  # Javascript runtime (required for precompiling assets in production)
-  gem 'therubyracer'
-end
+# For our javascript runtime on production we don't want to use therubyracer because it uses too
+# much memory. We're assuming Node.js is installed
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -66,8 +64,6 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
 
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
