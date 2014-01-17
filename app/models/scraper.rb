@@ -214,10 +214,11 @@ class Scraper < ActiveRecord::Base
     repo = client.edit_repository(full_name, description: description)
     self.update_attributes(description: description)
 
+    scraper_filename = "scraper.#{Scraper.language_to_file_extension(language)}"
     gitignore_contents = "# Ignore output of scraper\n#{Scraper.sqlite_db_filename}\n"
     blobs =  [
       {
-        :path => "scraper.#{Scraper.language_to_file_extension(language)}",
+        :path => scraper_filename,
         :mode => "100644",
         :type => "blob",
         :content => code
@@ -248,7 +249,7 @@ class Scraper < ActiveRecord::Base
     unless translated_code == code
       tree2 = client.create_tree(full_name, [
         {
-          :path => "scraper.rb",
+          :path => scraper_filename,
           :mode => "100644",
           :type => "blob",
           :content => translated_code
