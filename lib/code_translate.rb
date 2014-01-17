@@ -4,12 +4,26 @@ module CodeTranslate
     case language
     when :ruby
       Ruby::translate(code)
-    when :php, :python
-      code
+    when :php
+      PHP::translate(code)
+    when :python
+      Python::translate(code)
     else
       raise "unsupported language"
     end
   end
+
+  module PHP
+    def self.translate(code)
+      code
+    end
+  end
+
+  module Python
+    def self.translate(code)
+      code
+    end
+  end    
 
   module Ruby
     def self.translate(code)

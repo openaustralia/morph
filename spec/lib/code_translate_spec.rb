@@ -9,12 +9,28 @@ describe CodeTranslate do
       CodeTranslate.translate(:ruby, code)
     end
 
-    it "should do nothing with php" do
-      CodeTranslate.translate(:php, code).should == code
+    it "should translate php" do
+      CodeTranslate::PHP.should_receive(:translate).with(code)
+      CodeTranslate.translate(:php, code)
     end
 
-    it "should do nothing with python" do
-      CodeTranslate.translate(:python, code).should == code
+    it "should translate python" do
+      CodeTranslate::Python.should_receive(:translate).with(code)
+      CodeTranslate.translate(:python, code)
+    end
+  end
+
+  describe "PHP" do
+    it "should do nothing" do
+      code = double
+      CodeTranslate::PHP.translate(code).should == code
+    end
+  end
+
+  describe "Python" do
+    it "should do nothing" do
+      code = double
+      CodeTranslate::Python.translate(code).should == code
     end
   end
 
