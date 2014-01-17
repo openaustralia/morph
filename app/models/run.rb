@@ -3,7 +3,7 @@ class Run < ActiveRecord::Base
   has_many :log_lines
   belongs_to :metric
 
-  delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo, :full_name, to: :scraper
+  delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo, :full_name, :language, to: :scraper
 
   def finished?
     !!finished_at
@@ -37,10 +37,11 @@ class Run < ActiveRecord::Base
 
     Docker.options[:read_timeout] = 3600
 
-    if File.exists?(File.join(repo_path, "scraper.rb"))
+    case language
+    when :ruby
       scraper_command = 'ruby /repo/scraper.rb'
       docker_image = "openaustralia/morph-ruby"
-    elsif File.exists?(File.join(repo_path, "scraper.php"))
+    when :php
       scraper_command = 'php /repo/scraper.php'
       docker_image = "openaustralia/morph-php"
     else

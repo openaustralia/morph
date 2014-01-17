@@ -179,6 +179,17 @@ class Scraper < ActiveRecord::Base
     end
   end
 
+  def self.language_to_scraper_filename(language)
+    "scraper.#{language_to_file_extension(language)}"
+  end
+
+  # Based on the scraper code figure out which language this scraper is
+  def language
+    [:ruby, :python, :php].find do |language|
+      File.exists?(File.join(repo_path, Scraper.language_to_scraper_filename(language)))
+    end
+  end
+
   def fork_from_scraperwiki!
     client = Octokit::Client.new :access_token => owner.access_token
 
