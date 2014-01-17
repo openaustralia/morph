@@ -24,7 +24,7 @@ module CodeTranslate
 
     # Add require immediately after "<?php"
     def self.add_require(code)
-      if code =~ /require 'scraperwiki.php'/
+      if code =~ /require ['"]scraperwiki.php['"]/
         code
       else      
         code.sub(/<\?php/, "<?php\nrequire 'scraperwiki.php';")

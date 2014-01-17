@@ -40,6 +40,11 @@ describe CodeTranslate do
         CodeTranslate::PHP.add_require("<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more").should ==
           "<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more"
       end
+
+      it "shouldn't insert require if it's already there" do
+        CodeTranslate::PHP.add_require("<?php\nrequire \"scraperwiki.php\";\nsome code here\nsome more").should ==
+          "<?php\nrequire \"scraperwiki.php\";\nsome code here\nsome more"
+      end
     end
 
     describe ".change_table_in_select" do
