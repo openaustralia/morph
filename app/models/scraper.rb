@@ -179,7 +179,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def self.language_to_scraper_filename(language)
-    "scraper.#{language_to_file_extension(language)}"
+    "scraper.#{language_to_file_extension(language)}" if language
   end
 
   # Based on the scraper code figure out which language this scraper is
