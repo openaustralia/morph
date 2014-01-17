@@ -27,7 +27,7 @@ module CodeTranslate
       if code =~ /require 'scraperwiki.php'/
         code
       else      
-        code.sub(/<\?php/, "<?php\nrequire 'scraperwiki.php'")
+        code.sub(/<\?php/, "<?php\nrequire 'scraperwiki.php';")
       end
     end
 

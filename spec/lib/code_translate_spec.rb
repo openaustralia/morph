@@ -33,12 +33,12 @@ describe CodeTranslate do
     describe ".add_require" do
       it "should insert require scraperwiki after the opening php tag" do
         CodeTranslate::PHP.add_require("<?php\nsome code here\nsome more").should ==
-          "<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more"
+          "<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more"
       end
 
       it "shouldn't insert require if it's already there" do
-        CodeTranslate::PHP.add_require("<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more").should ==
-          "<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more"
+        CodeTranslate::PHP.add_require("<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more").should ==
+          "<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more"
       end
     end
 
