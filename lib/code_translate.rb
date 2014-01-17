@@ -15,7 +15,7 @@ module CodeTranslate
 
   module PHP
     def self.translate(code)
-      add_require(code)
+      change_table_in_select(add_require(code))
     end
 
     # Add require immediately after "<?php"
@@ -24,6 +24,14 @@ module CodeTranslate
         code
       else      
         code.sub(/<\?php/, "<?php\nrequire 'scraperwiki.php'")
+      end
+    end
+
+    def self.change_table_in_select(code)
+      code.gsub(/scraperwiki::select\((['"])(.*)(['"])(.*)\)/) do |s|
+        bracket1, sql, bracket2, rest = $1, $2, $3, $4
+        sql = sql.gsub('swdata', 'data')
+        "scraperwiki::select(#{bracket1}#{sql}#{bracket2}#{rest})"
       end
     end
   end

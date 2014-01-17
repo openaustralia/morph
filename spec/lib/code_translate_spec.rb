@@ -21,20 +21,32 @@ describe CodeTranslate do
   end
 
   describe "PHP" do
-    it "should do each step" do
-      input, output1 = double, double
-      CodeTranslate::PHP.should_receive(:add_require).with(input).and_return(output1)
-      CodeTranslate::PHP.translate(input).should == output1
+    describe ".translate" do
+      it "should do each step" do
+        input, output1, output2 = double, double, double
+        CodeTranslate::PHP.should_receive(:add_require).with(input).and_return(output1)
+        CodeTranslate::PHP.should_receive(:change_table_in_select).with(output1).and_return(output2)
+        CodeTranslate::PHP.translate(input).should == output2
+      end
     end
 
-    it "should insert require scraperwiki after the opening php tag" do
-      CodeTranslate::PHP.add_require("<?php\nsome code here\nsome more").should ==
-        "<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more"
+    describe ".add_require" do
+      it "should insert require scraperwiki after the opening php tag" do
+        CodeTranslate::PHP.add_require("<?php\nsome code here\nsome more").should ==
+          "<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more"
+      end
+
+      it "shouldn't insert require if it's already there" do
+        CodeTranslate::PHP.add_require("<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more").should ==
+          "<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more"
+      end
     end
 
-    it "shouldn't insert require if it's already there" do
-      CodeTranslate::PHP.add_require("<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more").should ==
-        "<?php\nrequire 'scraperwiki.php'\nsome code here\nsome more"
+    describe ".change_table_in_select" do
+      it "should change the table name" do
+        CodeTranslate::PHP.change_table_in_select("<?php\nsome code\nprint_r(scraperwiki::select(\"* from swdata\"));\nsome more").should == 
+          "<?php\nsome code\nprint_r(scraperwiki::select(\"* from data\"));\nsome more"
+      end
     end
   end
 
