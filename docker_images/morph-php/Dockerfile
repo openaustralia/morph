@@ -13,11 +13,13 @@ VOLUME /repo
 VOLUME /data
 WORKDIR /data
 
+RUN apt-get -y install php5-tidy
+
 RUN apt-get -y install time php5-cli git
 RUN git clone https://github.com/openaustralia/scraperwiki-php.git /usr/local/lib/scraperwiki
-RUN cd /usr/local/lib/scraperwiki; git checkout add_scraperwiki_select
+RUN cd /usr/local/lib/scraperwiki; git checkout morph_defaults
 ADD php.ini /etc/php5/cli/php.ini
 RUN apt-get -y install php5-curl
 RUN apt-get -y install php5-sqlite
-
-
+RUN apt-get -y install php5-gd
+# TODO Install php5-geoip (which doesn not appear to be present on this version of Ubuntu)
