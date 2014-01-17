@@ -37,11 +37,21 @@ class Run < ActiveRecord::Base
 
     Docker.options[:read_timeout] = 3600
 
+    if File.exists?(File.join(repo_path, "scraper.rb"))
+      scraper_command = 'ruby /repo/scraper.rb'
+      docker_image = "openaustralia/morph-ruby"
+    elsif File.exists?(File.join(repo_path, "scraper.php"))
+      scraper_command = 'php /repo/scraper.php'
+      docker_image = "openaustralia/morph-php"
+    else
+      scraper_command = "echo 'can not find scraper either at scraper.rb or scraper.php'"
+    end
+
     # This will fail if there is another container with the same name
-    command = Metric.command('ruby /repo/scraper.rb', Run.time_output_filename)
+    command = Metric.command(scraper_command, Run.time_output_filename)
     c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', command],
       "User" => "scraper",
-      "Image" => Run.docker_image_name,
+      "Image" => docker_image,
       "name" => docker_container_name)
       # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
       # HACK to detect vagrant installation in crude way
