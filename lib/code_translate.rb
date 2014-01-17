@@ -13,6 +13,10 @@ module CodeTranslate
     end
   end
 
+  def self.sql(sql)
+    sql.gsub('swdata', 'data')
+  end
+
   module PHP
     def self.translate(code)
       change_table_in_select(add_require(code))
@@ -29,9 +33,7 @@ module CodeTranslate
 
     def self.change_table_in_select(code)
       code.gsub(/scraperwiki::select\((['"])(.*)(['"])(.*)\)/) do |s|
-        bracket1, sql, bracket2, rest = $1, $2, $3, $4
-        sql = sql.gsub('swdata', 'data')
-        "scraperwiki::select(#{bracket1}#{sql}#{bracket2}#{rest})"
+        "scraperwiki::select(#{$1}#{CodeTranslate.sql($2)}#{$3}#{$4})"
       end
     end
   end
@@ -62,9 +64,7 @@ module CodeTranslate
 
     def self.change_table_in_sqliteexecute_and_select(code)
       code.gsub(/ScraperWiki.(sqliteexecute|select)\((['"])(.*)(['"])(.*)\)/) do |s|
-        method, bracket1, sql, bracket2, rest = $1, $2, $3, $4, $5
-        sql = sql.gsub('swdata', 'data')
-        "ScraperWiki.#{method}(#{bracket1}#{sql}#{bracket2}#{rest})"
+        "ScraperWiki.#{$1}(#{$2}#{CodeTranslate.sql($3)}#{$4}#{$5})"
       end
     end
   end
