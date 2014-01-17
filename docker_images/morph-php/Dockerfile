@@ -23,3 +23,7 @@ RUN apt-get -y install php5-curl
 RUN apt-get -y install php5-sqlite
 RUN apt-get -y install php5-gd
 # TODO Install php5-geoip (which doesn not appear to be present on this version of Ubuntu)
+RUN apt-get -y install php-pear
+RUN apt-get -y install re2c
+# TODO This doesn't yet work because it needs the database
+#RUN pecl install geoip
