@@ -1,0 +1,4 @@
+test:
+  adapter: mysql2
+  database: scraping_test
+  username: root
