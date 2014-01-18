@@ -44,6 +44,10 @@ Page size (bytes): 4096
 
   describe ".read_from_file" do
     context "output in a file" do
+      before :each do
+        FileUtils::mkdir_p("#{Rails.root}/tmp")
+      end
+      
       let(:filename) { "#{Rails.root}/tmp/time.output" }
       let(:text) { "User time (seconds): 1.12\nVoluntary context switches: 42\n" }
 
