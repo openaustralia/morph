@@ -1,4 +1,4 @@
 # Redirect (301) http://*/foo -> http://morph.io/foo
 <VirtualHost *:80>
-    RedirectMatch permanent ^/(.*) http://morph.io/$1
+    RedirectMatch permanent ^/(.*) https://morph.io/$1
 </VirtualHost>
