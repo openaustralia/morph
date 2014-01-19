@@ -12,6 +12,7 @@ Morph::Application.routes.draw do
 
   root 'static#index'
   get "/api", to: "static#api"
+  get "/documentation", to: 'static#documentation'
   # Hmm not totally sure about this url.
   post "/run", to: "api#run_remote"
   get "/test", to: "api#test"
