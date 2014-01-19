@@ -27,3 +27,24 @@
     #ErrorLog "/var/www/shared/log/error_log"
     #CustomLog /var/www/shared/log/access_log common
 </VirtualHost>
+
+<VirtualHost *:443>
+    ServerName {{ server_name }}
+    ServerAlias api.morph.io
+    DocumentRoot "/var/www/current/public"
+
+    #ErrorLog "/srv/www/www.openaustraliafoundation.org.au/log/error_log"
+    #CustomLog /srv/www/www.openaustraliafoundation.org.au/log/access_log common
+
+    SSLEngine on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+
+    SSLCertificateFile /etc/apache2/ssl/ssl.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/ssl.key
+    SSLCertificateChainFile /etc/apache2/ssl/sub.class1.server.ca.pem
+    SSLCACertificateFile /etc/apache2/ssl/ca.pem
+
+    #CustomLog /srv/www/www.openaustraliafoundation.org.au/log/ssl_request_log \
+    #  "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+</VirtualHost>
