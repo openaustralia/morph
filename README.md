@@ -63,6 +63,12 @@ We use Guard and Livereload so that whenever you edit a view in development the 
 
     bundle exec guard
 
+### Special notes if you're deploying to production
+
+This section will not be relevant to most people. It will however be relevant if you're deploying to a production server.
+
+We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt certain files, like the private key for the SSL certificate. To make this work you have to do some [special things](https://github.com/shadowhand/git-encrypt#decrypting-clones) _before_ you clone the morph repository. 
+
 ### Running tests
 
 If you're running guard (see above) the tests will also automatically run when you change a file. By default it's setup to use [Zeus](https://github.com/burke/zeus) which speeds things up considerably. You'll need to install this with
