@@ -36,6 +36,24 @@
     #ErrorLog "/srv/www/www.openaustraliafoundation.org.au/log/error_log"
     #CustomLog /srv/www/www.openaustraliafoundation.org.au/log/access_log common
 
+    <Location "/">
+        Order allow,deny
+        Allow from all
+        Options -MultiViews
+
+        AuthType Basic
+        AuthName "Morph says an odd hello"
+        AuthUserFile /var/www/shared/htpasswd
+        Require user test
+    </Location>
+
+    # A regex for the API url. Let's open this up to the world
+    <LocationMatch "/[^/]+/[^/]+/data>
+        # All access controls and authentication are disabled
+        Satisfy Any
+        Allow from all
+    </LocationMatch>
+
     SSLEngine on
     SSLProtocol all -SSLv2
     SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
