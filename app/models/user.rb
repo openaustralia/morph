@@ -7,6 +7,20 @@ class User < Owner
 
   has_many :scrapers, foreign_key: :owner_id
 
+  # Using American spelling to mirror GitHub naming
+  def organizations
+    octokit_client.organizations.map do |data|
+      org = Organization.find_by(uid: data.id)
+      if org.nil?
+        # Get more information for that organisation
+        data2 = Octokit.organization(data.login)
+        org = Organization.create(uid: data.id, nickname: data.login, name: data2.name, blog: data2.blog, company: data2.company,
+          email: data2.email, gravatar_url: data2.rels[:avatar].href)
+      end
+      org
+    end
+  end
+
   def octokit_client
     Octokit::Client.new :access_token => access_token
   end
