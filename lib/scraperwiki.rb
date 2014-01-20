@@ -13,8 +13,7 @@ class Scraperwiki
 
   def get_scraperwiki_info
     url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{short_name}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
-    response = Faraday.get url
-    JSON.parse(response.body).first
+    JSON.parse(Scraperwiki.content(url)).first
   end
 
   def self.content(url)
