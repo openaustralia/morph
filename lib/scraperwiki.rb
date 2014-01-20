@@ -6,7 +6,8 @@ class Scraperwiki
   end
 
   def sqlite_database
-    response = Faraday.get("https://classic.scraperwiki.com/scrapers/export_sqlite/#{short_name}/")
-    response.body
+    content = Faraday.get("https://classic.scraperwiki.com/scrapers/export_sqlite/#{short_name}/").body
+    raise content if content =~ /The dataproxy connection timed out, please retry/
+    content
   end
 end
