@@ -2,6 +2,8 @@ class Scraper < ActiveRecord::Base
   belongs_to :owner
   has_many :runs
   has_many :metrics, through: :runs
+  belongs_to :forked_by, class_name: "User"
+
   validates :scraperwiki_url, format: { with: /\Ahttps:\/\/classic.scraperwiki.com\/scrapers\/([-\w]+)(\/)?\z/,
     message: "Should be a valid ScraperWiki scraper url" }, allow_nil: true
 
@@ -190,12 +192,16 @@ class Scraper < ActiveRecord::Base
   end
 
   def fork_from_scraperwiki!
-    client = owner.octokit_client
+    client = forked_by.octokit_client
 
     # We need to set auto_init so that we can create a commit later. The API doesn't support
     # adding a commit to an empty repository
     begin
-      repo = client.create_repository(name, auto_init: true)
+      if forked_by == owner
+        repo = client.create_repository(name, auto_init: true)
+      else
+        repo = client.create_repository(name, auto_init: true, organization: owner.nickname)
+      end
       update_attributes(github_id: repo.id, github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
     rescue Octokit::UnprocessableEntity
       # This means the repo has already been created. We will have gotten here if this background job failed at some

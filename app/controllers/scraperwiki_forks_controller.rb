@@ -8,9 +8,9 @@ class ScraperwikiForksController < ApplicationController
   # Fork away
   def create
     @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_url: params[:scraper][:scraperwiki_url],
-      owner_id: current_user.id, forking: true)
+      owner_id: params[:scraper][:owner_id], forking: true, forked_by_id: current_user.id)
     # TODO Should we really store full_name in the db?
-    @scraper.full_name = "#{current_user.to_param}/#{@scraper.name}"
+    @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
 
     # As quickly as possible check if it's possible to create the repository. If it isn't possible then allow
     # the user to choose another name
@@ -21,8 +21,11 @@ class ScraperwikiForksController < ApplicationController
       exists_on_github = false
     end
 
+    # TODO should really check here that this user has the permissions to write to the owner_id owner
+    # It will just get stuck later
+
     # Should do this with validation
-    if !Scraper.exists?(name: @scraper.name) && !exists_on_github
+    if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github
       if @scraper.save
         @scraper.delay.fork_from_scraperwiki!
         #flash[:notice] = "Forking in action..."
