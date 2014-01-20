@@ -7,6 +7,10 @@ class User < Owner
 
   has_many :scrapers, foreign_key: :owner_id
 
+  def octokit_client
+    Octokit::Client.new :access_token => access_token
+  end
+
   def self.find_for_github_oauth(auth, signed_in_resource=nil)
     user = User.find_or_create_by(:provider => auth.provider, :uid => auth.uid)
     user.update_attributes(nickname: auth.info.nickname, name:auth.info.name,

@@ -5,17 +5,13 @@ class ScrapersController < ApplicationController
     # Get the list of repositories
     # TODO Move this to an initializer
     Octokit.auto_paginate = true
-    client = Octokit::Client.new :access_token => current_user.access_token
-    @repos = client.repositories(nil, sort: :pushed)
+    @repos = current_user.octokit_client.repositories(nil, sort: :pushed)
     @scraper = Scraper.new
   end
 
   def create
-    # Get the rest of the info from the API
-    client = Octokit::Client.new :access_token => current_user.access_token
-
     # Look up the repository by name
-    repo = client.repository("#{current_user.to_param}/#{params[:scraper][:name]}")
+    repo = current_user.octokit_client.repository("#{current_user.to_param}/#{params[:scraper][:name]}")
 
     # Populate a new scraper with information from the repo
     @scraper = Scraper.new(name: repo.name, full_name: repo.full_name,

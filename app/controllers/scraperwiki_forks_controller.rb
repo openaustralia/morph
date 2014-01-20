@@ -14,9 +14,8 @@ class ScraperwikiForksController < ApplicationController
 
     # As quickly as possible check if it's possible to create the repository. If it isn't possible then allow
     # the user to choose another name
-    client = Octokit::Client.new :access_token => current_user.access_token
     begin
-      client.repository(@scraper.full_name)
+      current_user.octokit_client.repository(@scraper.full_name)
       exists_on_github = true      
     rescue Octokit::NotFound
       exists_on_github = false

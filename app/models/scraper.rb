@@ -190,7 +190,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def fork_from_scraperwiki!
-    client = Octokit::Client.new :access_token => owner.access_token
+    client = owner.octokit_client
 
     # We need to set auto_init so that we can create a commit later. The API doesn't support
     # adding a commit to an empty repository
