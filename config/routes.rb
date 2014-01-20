@@ -17,6 +17,7 @@ Morph::Application.routes.draw do
   resources :scrapers, path: '/', only: [:new, :create]
   resources :owners, path: "/", only: :show
   resources :users, path: "/", only: :show
+  resources :organizations, path: "/", only: :show
   # TODO Not very happy with this URL but this will do for the time being
   resources "scraperwiki_forks", only: [:new, :create]
 

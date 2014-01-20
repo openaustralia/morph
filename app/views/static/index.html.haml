@@ -52,7 +52,11 @@
     %h2 All Users
     %ul
       - User.all.each do |user|
-        %li= link_to user.name, user
+        %li= link_to user.nickname, user
+    %h2 All Organizations
+    %ul
+      - Organization.all.each do |org|
+        %li= link_to org.nickname, org
   .col-md-6
     %h2 All Scrapers
     %ul
