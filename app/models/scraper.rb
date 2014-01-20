@@ -202,14 +202,14 @@ class Scraper < ActiveRecord::Base
       # point past here and is rerun. So, let's happily continue
     end
 
-    v = Scraperwiki.new(scraperwiki_shortname).get_scraperwiki_info
-    code = v["code"]
-    description = v["title"]
-    readme_text = v["description"]
-    language = v["language"].to_sym
+    scraperwiki = Scraperwiki.new(scraperwiki_shortname)
+    code = scraperwiki.code
+    description = scraperwiki.title
+    readme_text = scraperwiki.description
+    language = scraperwiki.language
 
     # Copy the sqlite database across from Scraperwiki
-    sqlite_db = Scraperwiki.new(scraperwiki_shortname).sqlite_database
+    sqlite_db = scraperwiki.sqlite_database
     FileUtils.mkdir_p data_path
     File.open(sqlite_db_path, 'wb') {|file| file.write(sqlite_db) }
     # Rename the main table in the sqlite database

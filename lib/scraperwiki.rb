@@ -6,14 +6,36 @@ class Scraperwiki
   end
 
   def sqlite_database
-    content = Scraperwiki.content("https://classic.scraperwiki.com/scrapers/export_sqlite/#{short_name}/")
-    raise content if content =~ /The dataproxy connection timed out, please retry/
-    content
+    if @sqlite_database.nil?
+      content = Scraperwiki.content("https://classic.scraperwiki.com/scrapers/export_sqlite/#{short_name}/")
+      raise content if content =~ /The dataproxy connection timed out, please retry/
+      @sqlite_database = content
+    end
+    @sqlite_database
   end
 
-  def get_scraperwiki_info
-    url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{short_name}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
-    JSON.parse(Scraperwiki.content(url)).first
+  def info
+    if @info.nil?
+      url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{short_name}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
+      @info = JSON.parse(Scraperwiki.content(url)).first
+    end
+    @info
+  end
+
+  def code
+    info["code"]
+  end
+
+  def title
+    info["title"]
+  end
+
+  def description
+    info["description"]
+  end
+
+  def language
+    info["language"].to_sym
   end
 
   def self.content(url)
