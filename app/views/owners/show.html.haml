@@ -1,0 +1,41 @@
+.row
+  .col-md-3
+    = image_tag @owner.gravatar_url, class: "img-responsive img-thumbnail"
+    %h1= @owner.name
+    %h2= @owner.nickname
+    %ul
+      - unless @owner.company.blank?
+        %li= @owner.company
+      - unless @owner.blog.blank?
+        %li= link_to @owner.blog, @owner.blog
+    %p
+      = link_to @owner.github_url, target: "_blank" do
+        %i.icon-github-sign.icon-large
+        = @owner.nickname
+        on GitHub
+
+  .col-md-9
+
+    - if @owner.scrapers.empty?
+      %h3 Has no scrapers
+
+    - else
+      %h3 Scrapers
+
+      %ul
+        - @owner.scrapers.each do |scraper|
+          %li
+            %strong
+              = link_to scraper.name, scraper
+            - unless scraper.description.blank?
+              &mdash;
+              = scraper.description
+
+    - if @owner == current_user
+      %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"
+      %p
+        CPU time used:
+        = "%.1f s" % @owner.scrapers.sum(&:cpu_time)
+      %p
+        Disk space used:
+        = number_to_human_size @owner.scrapers.sum(&:total_disk_usage)

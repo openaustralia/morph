@@ -2,11 +2,6 @@ class User < Owner
   # TODO Add :omniauthable
   devise :trackable, :omniauthable, :omniauth_providers => [:github]
 
-  extend FriendlyId
-  friendly_id :nickname, use: :finders
-
-  has_many :scrapers, foreign_key: :owner_id
-
   # Using American spelling to mirror GitHub naming
   def organizations
     octokit_client.organizations.map {|data| Organization.find_or_create(data.id, data.login) }
@@ -40,7 +35,4 @@ class User < Owner
     "https://www.gravatar.com/avatar/#{gravatar_id}?r=x&s=#{size}"
   end
 
-  def github_url
-    "https://github.com/#{nickname}"
-  end
 end
