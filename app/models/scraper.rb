@@ -12,6 +12,8 @@ class Scraper < ActiveRecord::Base
 
   def can_write?(user)
     owner == user
+    # Very slow!
+    #user && (owner == user || user.organizations.include?(owner))
   end
 
   def destroy_repo_and_data
