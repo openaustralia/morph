@@ -46,20 +46,16 @@ module CodeTranslate
 
   module Ruby
     def self.translate(code)
-      switch_to_scraperwiki_morph(change_table_in_sqliteexecute_and_select(add_require(code)))
+      change_table_in_sqliteexecute_and_select(add_require(code))
     end
 
     # If necessary adds "require 'scraperwiki'" to the top of the scraper code
     def self.add_require(code)
       if code =~ /require ['"]scraperwiki['"]/
-        code.gsub(/require ['"]scraperwiki['"]/, "require 'scraperwiki-morph'")
+        code
       else
-        code = "require 'scraperwiki-morph'\n" + code
+        code = "require 'scraperwiki'\n" + code
       end
-    end
-
-    def self.switch_to_scraperwiki_morph(code)
-      code.gsub(/ScraperWiki\./, "ScraperWikiMorph.")
     end
 
     def self.change_table_in_sqliteexecute_and_select(code)

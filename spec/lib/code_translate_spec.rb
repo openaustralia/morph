@@ -65,35 +65,27 @@ describe CodeTranslate do
   describe "Ruby" do
     describe ".translate" do
       it "should do a series of translations and return the final result" do
-        input, output1, output2, output3 = double, double, double, double
+        input, output1, output2 = double, double, double
         CodeTranslate::Ruby.should_receive(:add_require).with(input).and_return(output1)
         CodeTranslate::Ruby.should_receive(:change_table_in_sqliteexecute_and_select).with(output1).and_return(output2)
-        CodeTranslate::Ruby.should_receive(:switch_to_scraperwiki_morph).with(output2).and_return(output3)
-        CodeTranslate::Ruby.translate(input).should == output3
+        CodeTranslate::Ruby.translate(input).should == output2
       end
     end
 
     describe ".add_require" do
-      it "should replace scraperwiki with scraperwiki-morph (with single quotes)" do
+      it "should do nothing if scraperwiki already required (with single quotes)" do
         CodeTranslate::Ruby.add_require("require 'scraperwiki'\nsome other code\n").should ==
-          "require 'scraperwiki-morph'\nsome other code\n"
+          "require 'scraperwiki'\nsome other code\n"
       end
 
-      it "should replace scraperwiki with scraperwiki-morph (with double quotes)" do
+      it "should do nothing if scraperwiki already required (with double quotes)" do
         CodeTranslate::Ruby.add_require("require \"scraperwiki\"\nsome other code\n").should ==
-          "require 'scraperwiki-morph'\nsome other code\n"
+          "require \"scraperwiki\"\nsome other code\n"
       end
 
       it "should add the require if it's not there" do
         CodeTranslate::Ruby.add_require("some code\n").should ==
-          "require 'scraperwiki-morph'\nsome code\n"
-      end
-
-      describe ".switch_to_scraperwiki_morph" do
-        it "should replace all uses of ScraperWiki with ScraperWikiMorph" do
-          CodeTranslate::Ruby.switch_to_scraperwiki_morph("if foo\n  ScraperWiki.select(twiddle, bob)\nend\n").should ==
-            "if foo\n  ScraperWikiMorph.select(twiddle, bob)\nend\n"
-        end
+          "require 'scraperwiki'\nsome code\n"
       end
 
       describe ".change_table_in_sqliteexecute_and_select" do
