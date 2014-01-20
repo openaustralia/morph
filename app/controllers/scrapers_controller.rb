@@ -31,7 +31,7 @@ class ScrapersController < ApplicationController
 
   def destroy
     @scraper = Scraper.find(params[:id])
-    if @scraper.owned_by?(current_user)
+    if @scraper.can_write?(current_user)
       flash[:notice] = "Scraper #{@scraper.name} deleted"
       @scraper.destroy
       # TODO Make this done by default after calling Scraper#destroy
@@ -45,7 +45,7 @@ class ScrapersController < ApplicationController
 
   def update
     @scraper = Scraper.find(params[:id])
-    if @scraper.owned_by?(current_user)
+    if @scraper.can_write?(current_user)
       # TODO This is definitely the dumb and long winded way to do things
       if @scraper.update_attributes(auto_run: params[:scraper][:auto_run])
         flash[:notice] = "Scraper settings successfully updated"
@@ -58,7 +58,7 @@ class ScrapersController < ApplicationController
 
   def run
     scraper = Scraper.find(params[:id])
-    if scraper.owned_by?(current_user)
+    if scraper.can_write?(current_user)
       scraper.queue!
     else
       flash[:alert] = "Can't run someone else's scraper!"
@@ -69,7 +69,7 @@ class ScrapersController < ApplicationController
   # TODO Extract checking of who owns the scraper
   def clear
     scraper = Scraper.find(params[:id])
-    if scraper.owned_by?(current_user)
+    if scraper.can_write?(current_user)
       scraper.clear
     else
       flash[:alert] = "Can't clear someone else's scraper!"

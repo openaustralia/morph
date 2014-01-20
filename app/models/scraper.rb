@@ -10,7 +10,7 @@ class Scraper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :full_name, use: :finders
 
-  def owned_by?(user)
+  def can_write?(user)
     owner == user
   end
 
