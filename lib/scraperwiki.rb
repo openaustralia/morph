@@ -22,6 +22,10 @@ class Scraperwiki
     @info
   end
 
+  def translated_code
+    CodeTranslate.translate(language, code)
+  end
+
   def code
     info["code"]
   end

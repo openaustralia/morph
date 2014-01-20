@@ -245,14 +245,13 @@ class Scraper < ActiveRecord::Base
     client.update_ref(full_name,"heads/master", commit.sha)
 
     # Add another commit (but only if necessary) to translate the code so it runs here
-    translated_code = CodeTranslate.translate(scraperwiki.language, scraperwiki.code)
-    unless translated_code == scraperwiki.code
+    unless scraperwiki.translated_code == scraperwiki.code
       tree2 = client.create_tree(full_name, [
         {
           :path => scraper_filename,
           :mode => "100644",
           :type => "blob",
-          :content => translated_code
+          :content => scraperwiki.translated_code
         },
       ], :base_tree => tree.sha)
       commit2 = client.create_commit(full_name, "Automatic update to make ScraperWiki scraper work on Morph", tree2.sha, commit.sha)
