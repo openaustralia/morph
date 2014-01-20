@@ -13,6 +13,17 @@
         %i.icon-github-sign.icon-large
         = @owner.nickname
         on GitHub
+    - unless @owner.organizations.empty?
+      %h4 Organizations
+      - @owner.organizations.each do |org|
+        = link_to org do
+          = image_tag org.gravatar_url(30), size: "30x30"
+    - unless @owner.users.empty?
+      %h4 Members
+      - @owner.users.each do |user|
+        = link_to user do
+          = image_tag user.gravatar_url(30), size: "30x30"
+
 
   .col-md-9
 

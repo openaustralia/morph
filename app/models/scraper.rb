@@ -11,9 +11,7 @@ class Scraper < ActiveRecord::Base
   friendly_id :full_name, use: :finders
 
   def can_write?(user)
-    owner == user
-    # Very slow!
-    #user && (owner == user || user.organizations.include?(owner))
+    user && (owner == user || user.organizations.include?(owner))
   end
 
   def destroy_repo_and_data

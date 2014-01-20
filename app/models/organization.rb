@@ -12,4 +12,8 @@ class Organization < Owner
     end
     org
   end
+
+  def organizations
+    []
+  end
 end

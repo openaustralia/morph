@@ -32,4 +32,8 @@ class User < Owner
         company: user.company,
         email: user.email)
   end
+
+  def users
+    []
+  end
 end
