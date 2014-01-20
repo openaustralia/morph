@@ -203,30 +203,25 @@ class Scraper < ActiveRecord::Base
     end
 
     scraperwiki = Scraperwiki.new(scraperwiki_shortname)
-    code = scraperwiki.code
-    description = scraperwiki.title
-    readme_text = scraperwiki.description
-    language = scraperwiki.language
 
     # Copy the sqlite database across from Scraperwiki
-    sqlite_db = scraperwiki.sqlite_database
     FileUtils.mkdir_p data_path
-    File.open(sqlite_db_path, 'wb') {|file| file.write(sqlite_db) }
+    File.open(sqlite_db_path, 'wb') {|file| file.write(scraperwiki.sqlite_database) }
     # Rename the main table in the sqlite database
     sql_query_safe("ALTER TABLE swdata RENAME TO #{Scraper.sqlite_table_name}", false)
 
     # Fill in description
-    repo = client.edit_repository(full_name, description: description)
-    self.update_attributes(description: description)
+    repo = client.edit_repository(full_name, description: scraperwiki.title)
+    self.update_attributes(description: scraperwiki.title)
 
-    scraper_filename = Scraper.language_to_scraper_filename(language)
+    scraper_filename = Scraper.language_to_scraper_filename(scraperwiki.language)
     gitignore_contents = "# Ignore output of scraper\n#{Scraper.sqlite_db_filename}\n"
     blobs =  [
       {
         :path => scraper_filename,
         :mode => "100644",
         :type => "blob",
-        :content => code
+        :content => scraperwiki.code
       },
       {
         :path => ".gitignore",
@@ -235,12 +230,12 @@ class Scraper < ActiveRecord::Base
         :content => gitignore_contents       
       }
     ]
-    unless readme_text.blank?
+    unless scraperwiki.description.blank?
       blobs << {
         :path => "README.md",
         :mode => "100644",
         :type => "blob",
-        :content => readme_text
+        :content => scraperwiki.description
       }
     end
     # Commit the code
@@ -250,8 +245,8 @@ class Scraper < ActiveRecord::Base
     client.update_ref(full_name,"heads/master", commit.sha)
 
     # Add another commit (but only if necessary) to translate the code so it runs here
-    translated_code = CodeTranslate.translate(language, code)
-    unless translated_code == code
+    translated_code = CodeTranslate.translate(scraperwiki.language, scraperwiki.code)
+    unless translated_code == scraperwiki.code
       tree2 = client.create_tree(full_name, [
         {
           :path => scraper_filename,
