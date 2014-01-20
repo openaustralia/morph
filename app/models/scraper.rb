@@ -157,12 +157,6 @@ class Scraper < ActiveRecord::Base
     m[1] if m
   end
 
-  def get_scraperwiki_info
-    url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{scraperwiki_shortname}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
-    response = Faraday.get url
-    JSON.parse(response.body).first
-  end
-
   def current_revision_from_repo
     r = Grit::Repo.new(repo_path)
     Grit::Head.current(r).commit.id
@@ -208,7 +202,7 @@ class Scraper < ActiveRecord::Base
       # point past here and is rerun. So, let's happily continue
     end
 
-    v = get_scraperwiki_info
+    v = Scraperwiki.new(scraperwiki_shortname).get_scraperwiki_info
     code = v["code"]
     description = v["title"]
     readme_text = v["description"]
