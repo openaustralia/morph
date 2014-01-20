@@ -185,6 +185,11 @@ class Scraper < ActiveRecord::Base
     end
   end
 
+  def write_sqlite_database(content)
+    FileUtils.mkdir_p data_path
+    File.open(sqlite_db_path, 'wb') {|file| file.write(content) }
+  end
+
   def fork_from_scraperwiki!
     client = forked_by.octokit_client
 
@@ -205,8 +210,7 @@ class Scraper < ActiveRecord::Base
     scraperwiki = Scraperwiki.new(scraperwiki_shortname)
 
     # Copy the sqlite database across from Scraperwiki
-    FileUtils.mkdir_p data_path
-    File.open(sqlite_db_path, 'wb') {|file| file.write(scraperwiki.sqlite_database) }
+    write_sqlite_database(scraperwiki.sqlite_database)
     # Rename the main table in the sqlite database
     sql_query_safe("ALTER TABLE swdata RENAME TO #{Scraper.sqlite_table_name}", false)
 
