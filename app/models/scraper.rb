@@ -1,5 +1,5 @@
 class Scraper < ActiveRecord::Base
-  belongs_to :owner, class_name: User
+  belongs_to :owner
   has_many :runs
   has_many :metrics, through: :runs
   validates :scraperwiki_url, format: { with: /\Ahttps:\/\/classic.scraperwiki.com\/scrapers\/([-\w]+)(\/)?\z/,
