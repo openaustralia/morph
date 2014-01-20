@@ -215,12 +215,7 @@ class Scraper < ActiveRecord::Base
     language = v["language"].to_sym
 
     # Copy the sqlite database across from Scraperwiki
-    url = "https://classic.scraperwiki.com/scrapers/export_sqlite/#{scraperwiki_shortname}/"
-    response = Faraday.get(url)
-    sqlite_db = response.body
-    if sqlite_db =~ /The dataproxy connection timed out, please retry./
-      raise response.body
-    end
+    sqlite_db = Scraperwiki.new(scraperwiki_shortname).sqlite_database
     FileUtils.mkdir_p data_path
     File.open(sqlite_db_path, 'wb') {|file| file.write(sqlite_db) }
     # Rename the main table in the sqlite database
