@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140113040319) do
+ActiveRecord::Schema.define(version: 20140120010150) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -53,6 +53,26 @@ ActiveRecord::Schema.define(version: 20140113040319) do
     t.datetime "updated_at"
   end
 
+  create_table "owners", force: true do |t|
+    t.integer  "sign_in_count",      default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "name"
+    t.string   "access_token"
+    t.string   "gravatar_id"
+    t.string   "blog"
+    t.string   "company"
+    t.string   "email"
+    t.string   "nickname"
+    t.string   "type"
+  end
+
   create_table "runs", force: true do |t|
     t.integer  "scraper_id"
     t.datetime "started_at"
@@ -79,25 +99,6 @@ ActiveRecord::Schema.define(version: 20140113040319) do
     t.boolean  "auto_run",        default: false, null: false
     t.string   "scraperwiki_url"
     t.boolean  "forking",         default: false, null: false
-  end
-
-  create_table "users", force: true do |t|
-    t.integer  "sign_in_count",      default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "provider"
-    t.string   "uid"
-    t.string   "name"
-    t.string   "nickname"
-    t.string   "access_token"
-    t.string   "gravatar_id"
-    t.string   "blog"
-    t.string   "company"
-    t.string   "email"
   end
 
 end

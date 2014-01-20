@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < Owner
   # TODO Add :omniauthable
   devise :trackable, :omniauthable, :omniauth_providers => [:github]
 

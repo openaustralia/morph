@@ -1,5 +1,9 @@
 Morph::Application.routes.draw do
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  # Owner.table_exists? is workaround to allow migration to add STI Owner/User table to run
+  if Owner.table_exists?
+    devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  end
+
   devise_scope :user do
     get 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
   end
