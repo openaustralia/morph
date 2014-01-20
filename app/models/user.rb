@@ -1,10 +1,10 @@
 class User < Owner
   # TODO Add :omniauthable
   devise :trackable, :omniauthable, :omniauth_providers => [:github]
+  has_and_belongs_to_many :organizations, join_table: :organizations_users
 
-  # Using American spelling to mirror GitHub naming
-  def organizations
-    octokit_client.organizations.map {|data| Organization.find_or_create(data.id, data.login) }
+  def refresh_organizations!
+    self.organizations = octokit_client.organizations.map {|data| Organization.find_or_create(data.id, data.login) }
   end
 
   def octokit_client
@@ -18,6 +18,8 @@ class User < Owner
       gravatar_id: auth.extra.raw_info.gravatar_id,
       blog: auth.extra.raw_info.blog,
       company: auth.extra.raw_info.company, email:auth.info.email)
+    # Also every time you login it should update the list of organizations that the user is attached to
+    user.refresh_organizations!
     user
   end
 
