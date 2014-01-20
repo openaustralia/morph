@@ -30,9 +30,4 @@ class User < Owner
         company: user.company,
         email: user.email)
   end
-
-  def gravatar_url(size = 440)
-    "https://www.gravatar.com/avatar/#{gravatar_id}?r=x&s=#{size}"
-  end
-
 end
