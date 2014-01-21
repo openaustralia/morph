@@ -115,7 +115,7 @@ some code
 # TODO:
 # 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/foo/
 # 2. Add the forked repo as a git submodule in this repo
-# 3. Change the line below to load to something like require File.dirname(__FILE) + '/foo/scraper'
+# 3. Change the line below to something like require File.dirname(__FILE__) + '/foo/scraper'
 # 4. Remove these instructions
 require 'scrapers/foo'
 some more code

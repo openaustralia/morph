@@ -70,7 +70,7 @@ module CodeTranslate
 # TODO:
 # 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/#{$1}/
 # 2. Add the forked repo as a git submodule in this repo
-# 3. Change the line below to load to something like require File.dirname(__FILE) + '/#{$1}/scraper'
+# 3. Change the line below to something like require File.dirname(__FILE__) + '/#{$1}/scraper'
 # 4. Remove these instructions
         EOF
         i + s
