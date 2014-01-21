@@ -44,4 +44,21 @@ class Database
       0
     end
   end
+
+  def clear
+    FileUtils.rm sqlite_db_path
+  end
+
+  def write_sqlite_database(content)
+    FileUtils.mkdir_p data_path
+    File.open(sqlite_db_path, 'wb') {|file| file.write(content) }
+  end
+
+  def standardise_table_name(table_name)
+    sql_query_safe("ALTER TABLE #{table_name} RENAME TO #{Database.sqlite_table_name}", false)
+  end
+
+  def first_ten_rows
+    sql_query_safe("select * from #{Database.sqlite_table_name} limit 10")
+  end
 end

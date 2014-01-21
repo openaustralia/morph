@@ -26,7 +26,7 @@ class ScrapersController < ApplicationController
 
   def show
     @scraper = Scraper.find(params[:id])
-    @rows = @scraper.sql_query_safe("select * from #{Database.sqlite_table_name} limit 10")
+    @rows = @scraper.database.first_ten_rows
   end
 
   def destroy
@@ -70,7 +70,7 @@ class ScrapersController < ApplicationController
   def clear
     scraper = Scraper.find(params[:id])
     if scraper.can_write?(current_user)
-      scraper.clear
+      scraper.database.clear
     else
       flash[:alert] = "Can't clear someone else's scraper!"
     end
@@ -80,12 +80,12 @@ class ScrapersController < ApplicationController
   def data
     scraper = Scraper.find(params[:id])
     if params[:format] == "sqlite"
-      send_file scraper.sqlite_db_path, filename: "#{scraper.name}.sqlite",
+      send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite",
         type: "application/x-sqlite3"
     else
       query = params[:query] || "select * from #{Database.sqlite_table_name}"
       begin
-        rows = scraper.sql_query(query)
+        rows = scraper.database.sql_query(query)
         respond_to do |format|
           format.json { render :json => rows}
           format.csv do

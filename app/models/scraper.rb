@@ -66,10 +66,6 @@ class Scraper < ActiveRecord::Base
     runs.create(queued_at: Time.now, auto: auto).delay.go! if runnable?
   end
 
-  def clear
-    FileUtils.rm sqlite_db_path
-  end
-
   def github_url_for_file(file)
     github_url + "/blob/master/" + file
   end
@@ -82,27 +78,10 @@ class Scraper < ActiveRecord::Base
     github_url_for_file(main_scraper_filename)
   end
 
-  # TODO Inline this
-  def sqlite_db_path
-    Database.new(self).sqlite_db_path
+  def database
+    Database.new(self)
   end
-
-  def sql_query(query, readonly = true)
-    Database.new(self).sql_query(query, readonly)
-  end
-
-  def sql_query_safe(query, readonly = true)
-    Database.new(self).sql_query_safe(query, readonly)
-  end
-
-  def no_rows
-    Database.new(self).no_rows
-  end
-
-  def sqlite_db_size
-    Database.new(self).sqlite_db_size
-  end
-
+  
   # It seems silly implementing this
   def Scraper.directory_size(directory)
     r = 0
@@ -122,7 +101,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def total_disk_usage
-    repo_size + sqlite_db_size
+    repo_size + database.sqlite_db_size
   end
 
   def repo_size
@@ -165,11 +144,6 @@ class Scraper < ActiveRecord::Base
     [:ruby, :python, :php].find do |language|
       File.exists?(File.join(repo_path, Scraper.language_to_scraper_filename(language)))
     end
-  end
-
-  def write_sqlite_database(content)
-    FileUtils.mkdir_p data_path
-    File.open(sqlite_db_path, 'wb') {|file| file.write(content) }
   end
 
   # files should be a hash of "filename" => "content"
@@ -232,9 +206,9 @@ class Scraper < ActiveRecord::Base
     scraperwiki = Scraperwiki.new(scraperwiki_shortname)
 
     # Copy the sqlite database across from Scraperwiki
-    write_sqlite_database(scraperwiki.sqlite_database)
+    database.write_sqlite_database(scraperwiki.sqlite_database)
     # Rename the main table in the sqlite database
-    sql_query_safe("ALTER TABLE swdata RENAME TO #{Database.sqlite_table_name}", false)
+    database.standardise_table_name("swdata")
 
     # Fill in description
     repo = client.edit_repository(full_name, description: scraperwiki.title)
