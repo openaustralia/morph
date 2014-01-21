@@ -1,6 +1,9 @@
 %h3 Settings
 = semantic_form_for @scraper do |f|
   = f.inputs do
+    -# Workaround for bug (I think in formtastic)
+    -# TODO: Fix this in Formtastic (or wherever it's coming from)
+    %input(name="scraper[auto_run]" type="hidden" value="0")
     = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !@scraper.can_write?(current_user)}
   - if @scraper.can_write?(current_user)
     = f.actions do
