@@ -82,16 +82,8 @@ class Scraper < ActiveRecord::Base
     github_url_for_file(main_scraper_filename)
   end
 
-  def self.sqlite_db_filename
-    "data.sqlite"
-  end
-
-  def self.sqlite_table_name
-    "data"
-  end
-
   def sqlite_db_path
-    File.join(data_path, Scraper.sqlite_db_filename)
+    File.join(data_path, Database.sqlite_db_filename)
   end
 
   def sql_query(query, readonly = true)
@@ -110,7 +102,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def no_rows
-    sql_query_safe("select count(*) from #{Scraper.sqlite_table_name}").first.values.first
+    sql_query_safe("select count(*) from #{Database.sqlite_table_name}").first.values.first
   end
 
   # It seems silly implementing this
@@ -252,7 +244,7 @@ class Scraper < ActiveRecord::Base
     # Copy the sqlite database across from Scraperwiki
     write_sqlite_database(scraperwiki.sqlite_database)
     # Rename the main table in the sqlite database
-    sql_query_safe("ALTER TABLE swdata RENAME TO #{Scraper.sqlite_table_name}", false)
+    sql_query_safe("ALTER TABLE swdata RENAME TO #{Database.sqlite_table_name}", false)
 
     # Fill in description
     repo = client.edit_repository(full_name, description: scraperwiki.title)
@@ -260,7 +252,7 @@ class Scraper < ActiveRecord::Base
 
     files = {
       Scraper.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
-      ".gitignore" => "# Ignore output of scraper\n#{Scraper.sqlite_db_filename}\n",
+      ".gitignore" => "# Ignore output of scraper\n#{Database.sqlite_db_filename}\n",
     }
     files["README.md"] = scraperwiki.description unless scraperwiki.description.blank?
     add_commit_to_root_on_github(forked_by, files, "Fork of code from ScraperWiki at #{scraperwiki_url}")

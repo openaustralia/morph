@@ -3,7 +3,7 @@
 %p
   Scrapers can be written in Ruby or PHP. For Ruby They need to have a file in the root
   directory called "scraper.rb" and for PHP "scraper.php". They should create an sqlite database in the current working
-  directory called "#{Scraper.sqlite_db_filename}". The main data should be written into a table called "#{Scraper.sqlite_table_name}".
+  directory called "#{Database.sqlite_db_filename}". The main data should be written into a table called "#{Database.sqlite_table_name}".
   The code needs to live in the master branch of the repository.
 
 -# TODO Don't show repos that we've already added
