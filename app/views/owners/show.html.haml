@@ -32,15 +32,7 @@
 
     - else
       %h3 Scrapers
-
-      %ul
-        - @owner.scrapers.each do |scraper|
-          %li
-            %strong
-              = link_to scraper.name, scraper
-            - unless scraper.description.blank?
-              &mdash;
-              = scraper.description
+      %ul= render @owner.scrapers
 
     - if @owner == current_user
       %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"

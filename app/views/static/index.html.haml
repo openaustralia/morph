@@ -59,6 +59,4 @@
         %li= link_to org.nickname, org
   .col-md-6
     %h2 All Scrapers
-    %ul
-      - Scraper.all.each do |scraper|
-        %li= link_to scraper.full_name, scraper
+    %ul= render Scraper.all
