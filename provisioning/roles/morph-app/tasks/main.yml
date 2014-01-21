@@ -74,7 +74,7 @@
 - name: Update timezone
   command: dpkg-reconfigure --frontend noninteractive tzdata
 # TODO: Use special_time (or at least look at using it)
-- name: Setting daily cron job for 11:40am
-  cron: name="daily scraping" hour=11 minute=40 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:auto_run_scrapers RAILS_ENV=production"
+- name: Setting daily cron job for 10:00am
+  cron: name="daily scraping" hour=10 minute=0 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:auto_run_scrapers RAILS_ENV=production"
 - name: Install nodejs for asset precompiling
   apt: pkg=nodejs
