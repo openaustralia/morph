@@ -58,10 +58,18 @@ class Database
     sql_query_safe("ALTER TABLE #{table_name} RENAME TO #{Database.sqlite_table_name}", false)
   end
 
-  def first_ten_rows
-    sql_query_safe("select * from #{Database.sqlite_table_name} limit 10")
+  def select_first_ten
+    "select * from #{Database.sqlite_table_name} limit 10"
   end
-  
+
+  def select_all
+    "select * from #{Database.sqlite_table_name}"
+  end
+
+  def first_ten_rows
+    sql_query_safe(select_first_ten)
+  end
+
   # Remove any files or directories in the data_path that are not the actual database
   def tidy_data_path
     # First get all the files in the data directory
