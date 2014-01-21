@@ -190,6 +190,46 @@ class Scraper < ActiveRecord::Base
     File.open(sqlite_db_path, 'wb') {|file| file.write(content) }
   end
 
+  # files should be a hash of "filename" => "content"
+  def add_commit_to_master_on_github(user, files, message)
+    client = user.octokit_client
+    blobs = files.map do |filename, content|
+      {
+        :path => filename,
+        :mode => "100644",
+        :type => "blob",
+        :content => content
+      }
+    end
+
+    # Let's get all the info about head
+    ref = client.ref(full_name, "heads/master")
+    commit_sha = ref.object.sha
+    commit = client.commit(full_name, commit_sha)
+    tree_sha = commit.commit.tree.sha
+
+    tree2 = client.create_tree(full_name, blobs, :base_tree => tree_sha)
+    commit2 = client.create_commit(full_name, message, tree2.sha, commit_sha)
+    client.update_ref(full_name, "heads/master", commit2.sha)
+  end
+
+  # Overwrites whatever there was before in that repo
+  # Obviously use with great care
+  def add_commit_to_root_on_github(user, files, message)
+    client = user.octokit_client
+    blobs = files.map do |filename, content|
+      {
+        :path => filename,
+        :mode => "100644",
+        :type => "blob",
+        :content => content
+      }
+    end
+    tree = client.create_tree(full_name, blobs)
+    commit = client.create_commit(full_name, message, tree.sha)
+    client.update_ref(full_name, "heads/master", commit.sha)
+  end
+
   def fork_from_scraperwiki!
     client = forked_by.octokit_client
 
@@ -218,48 +258,17 @@ class Scraper < ActiveRecord::Base
     repo = client.edit_repository(full_name, description: scraperwiki.title)
     self.update_attributes(description: scraperwiki.title)
 
-    scraper_filename = Scraper.language_to_scraper_filename(scraperwiki.language)
-    gitignore_contents = "# Ignore output of scraper\n#{Scraper.sqlite_db_filename}\n"
-    blobs =  [
-      {
-        :path => scraper_filename,
-        :mode => "100644",
-        :type => "blob",
-        :content => scraperwiki.code
-      },
-      {
-        :path => ".gitignore",
-        :mode => "100644",
-        :type => "blob",
-        :content => gitignore_contents       
-      }
-    ]
-    unless scraperwiki.description.blank?
-      blobs << {
-        :path => "README.md",
-        :mode => "100644",
-        :type => "blob",
-        :content => scraperwiki.description
-      }
-    end
-    # Commit the code
-    tree = client.create_tree(full_name, blobs)
-    commit_message = "Fork of code from ScraperWiki at #{scraperwiki_url}"
-    commit = client.create_commit(full_name, commit_message, tree.sha)
-    client.update_ref(full_name,"heads/master", commit.sha)
+    files = {
+      Scraper.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
+      ".gitignore" => "# Ignore output of scraper\n#{Scraper.sqlite_db_filename}\n",
+    }
+    files["README.md"] = scraperwiki.description unless scraperwiki.description.blank?
+    add_commit_to_root_on_github(forked_by, files, "Fork of code from ScraperWiki at #{scraperwiki_url}")
 
     # Add another commit (but only if necessary) to translate the code so it runs here
     unless scraperwiki.translated_code == scraperwiki.code
-      tree2 = client.create_tree(full_name, [
-        {
-          :path => scraper_filename,
-          :mode => "100644",
-          :type => "blob",
-          :content => scraperwiki.translated_code
-        },
-      ], :base_tree => tree.sha)
-      commit2 = client.create_commit(full_name, "Automatic update to make ScraperWiki scraper work on Morph", tree2.sha, commit.sha)
-      client.update_ref(full_name,"heads/master", commit2.sha)
+      add_commit_to_master_on_github(forked_by, {Scraper.language_to_scraper_filename(scraperwiki.language) => scraperwiki.translated_code},
+        "Automatic update to make ScraperWiki scraper work on Morph")
     end
 
     # Forking has finished
