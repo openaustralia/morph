@@ -218,7 +218,7 @@ class Scraper < ActiveRecord::Base
       Scraper.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
       ".gitignore" => "# Ignore output of scraper\n#{Database.sqlite_db_filename}\n",
     }
-    files["README.md"] = scraperwiki.description unless scraperwiki.description.blank?
+    files["README.textile"] = scraperwiki.description unless scraperwiki.description.blank?
     add_commit_to_root_on_github(forked_by, files, "Fork of code from ScraperWiki at #{scraperwiki_url}")
 
     # Add another commit (but only if necessary) to translate the code so it runs here
