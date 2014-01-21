@@ -65,10 +65,11 @@ describe CodeTranslate do
   describe "Ruby" do
     describe ".translate" do
       it "should do a series of translations and return the final result" do
-        input, output1, output2 = double, double, double
+        input, output1, output2, output3 = double, double, double, double
         CodeTranslate::Ruby.should_receive(:add_require).with(input).and_return(output1)
         CodeTranslate::Ruby.should_receive(:change_table_in_sqliteexecute_and_select).with(output1).and_return(output2)
-        CodeTranslate::Ruby.translate(input).should == output2
+        CodeTranslate::Ruby.should_receive(:add_instructions_for_libraries).with(output2).and_return(output3)
+        CodeTranslate::Ruby.translate(input).should == output3
       end
     end
 
@@ -99,6 +100,27 @@ describe CodeTranslate do
           CodeTranslate::Ruby.change_table_in_sqliteexecute_and_select( \
             "if (ScraperWiki.select(\"* from swdata where `council_reference`='\#{record['council_reference']}'\").empty? rescue true)").should ==
             "if (ScraperWiki.select(\"* from data where `council_reference`='\#{record['council_reference']}'\").empty? rescue true)"
+        end
+      end
+
+      describe ".add_instructions_for_libraries" do
+        it "should add some help above where a library is required" do
+          original = <<-EOF
+some code
+require 'scrapers/foo'
+some more code
+          EOF
+          translated = <<-EOF
+some code
+# TODO:
+# 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/foo/
+# 2. Add the forked repo as a git submodule in this repo
+# 3. Change the line below to load to something like require File.dirname(__FILE) + '/foo/scraper'
+# 4. Remove these instructions
+require 'scrapers/foo'
+some more code
+          EOF
+          CodeTranslate::Ruby.add_instructions_for_libraries(original).should == translated
         end
       end
     end

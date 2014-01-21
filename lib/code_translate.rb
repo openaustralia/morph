@@ -46,7 +46,7 @@ module CodeTranslate
 
   module Ruby
     def self.translate(code)
-      change_table_in_sqliteexecute_and_select(add_require(code))
+      add_instructions_for_libraries(change_table_in_sqliteexecute_and_select(add_require(code)))
     end
 
     # If necessary adds "require 'scraperwiki'" to the top of the scraper code
@@ -61,6 +61,19 @@ module CodeTranslate
     def self.change_table_in_sqliteexecute_and_select(code)
       code.gsub(/ScraperWiki.(sqliteexecute|select)\((['"])(.*)(['"])(.*)\)/) do |s|
         "ScraperWiki.#{$1}(#{$2}#{CodeTranslate.sql($3)}#{$4}#{$5})"
+      end
+    end
+
+    def self.add_instructions_for_libraries(code)
+      code.gsub(/require 'scrapers\/(.*)'/) do |s|
+        i = <<-EOF
+# TODO:
+# 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/#{$1}/
+# 2. Add the forked repo as a git submodule in this repo
+# 3. Change the line below to load to something like require File.dirname(__FILE) + '/#{$1}/scraper'
+# 4. Remove these instructions
+        EOF
+        i + s
       end
     end
   end
