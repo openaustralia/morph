@@ -47,6 +47,12 @@ class Run < ActiveRecord::Base
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
     FileUtils.mkdir_p data_path
 
+    if language.nil?
+      log_lines.create(stream: "stderr", text: "Can't find scraper code", number: 0)
+      update_attributes(status_code: 999, finished_at: Time.now)
+      return
+    end
+
     Docker.options[:read_timeout] = 3600
 
     # This will fail if there is another container with the same name
