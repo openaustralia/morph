@@ -82,27 +82,25 @@ class Scraper < ActiveRecord::Base
     github_url_for_file(main_scraper_filename)
   end
 
+  # TODO Inline this
   def sqlite_db_path
-    File.join(data_path, Database.sqlite_db_filename)
+    Database.new(self).sqlite_db_path
   end
 
   def sql_query(query, readonly = true)
-    db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: readonly)
-    # If database is busy wait 5s
-    db.busy_timeout(5000)
-    db.execute(query)
+    Database.new(self).sql_query(query, readonly)
   end
 
   def sql_query_safe(query, readonly = true)
-    begin
-      sql_query(query, readonly)
-    rescue SQLite3::CantOpenException, SQLite3::SQLException
-      nil
-    end
+    Database.new(self).sql_query_safe(query, readonly)
   end
 
   def no_rows
-    sql_query_safe("select count(*) from #{Database.sqlite_table_name}").first.values.first
+    Database.new(self).no_rows
+  end
+
+  def sqlite_db_size
+    Database.new(self).sqlite_db_size
   end
 
   # It seems silly implementing this
@@ -130,14 +128,6 @@ class Scraper < ActiveRecord::Base
   def repo_size
     if File.exists?(repo_path)
       Scraper.directory_size(repo_path)
-    else
-      0
-    end
-  end
-
-  def sqlite_db_size
-    if File.exists?(sqlite_db_path)
-      File::Stat.new(sqlite_db_path).size
     else
       0
     end
