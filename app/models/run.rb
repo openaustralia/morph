@@ -4,7 +4,7 @@ class Run < ActiveRecord::Base
   belongs_to :metric
 
   delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo,
-    :full_name, :language, :main_scraper_filename, to: :scraper
+    :full_name, :language, :main_scraper_filename, :database, to: :scraper
 
   def finished?
     !!finished_at
@@ -87,7 +87,7 @@ class Run < ActiveRecord::Base
     metric = Metric.read_from_file(time_output_path)
 
     update_attributes(status_code: status_code, metric_id: metric.id, finished_at: Time.now)
-    tidy_data_path
+    database.tidy_data_path
   end
 
   def synchronise_repo
@@ -106,15 +106,5 @@ class Run < ActiveRecord::Base
       puts "Cloning git repo #{git_url}..."
       puts gritty.clone({:verbose => true, :progress => true, :raise => true}, git_url, repo_path)
     end
-  end
-
-  # Remove any files or directories in the data_path that are not the actual database
-  def tidy_data_path
-    # First get all the files in the data directory
-    filenames = Dir.entries(data_path)
-    filenames.delete(".")
-    filenames.delete("..")
-    filenames.delete(Database.sqlite_db_filename)
-    FileUtils.rm_rf filenames.map{|f| File.join(data_path, f)}
   end
 end

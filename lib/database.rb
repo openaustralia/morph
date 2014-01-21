@@ -61,4 +61,14 @@ class Database
   def first_ten_rows
     sql_query_safe("select * from #{Database.sqlite_table_name} limit 10")
   end
+  
+  # Remove any files or directories in the data_path that are not the actual database
+  def tidy_data_path
+    # First get all the files in the data directory
+    filenames = Dir.entries(data_path)
+    filenames.delete(".")
+    filenames.delete("..")
+    filenames.delete(Database.sqlite_db_filename)
+    FileUtils.rm_rf filenames.map{|f| File.join(data_path, f)}
+  end
 end
