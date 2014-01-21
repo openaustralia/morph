@@ -1,0 +1,7 @@
+%li
+  %strong= link_to scraper.full_name, scraper
+  - unless scraper.description.blank?
+    &mdash;
+    = scraper.description
+  - if scraper.auto_run
+    %i.icon-time
