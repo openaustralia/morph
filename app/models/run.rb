@@ -111,6 +111,9 @@ class Run < ActiveRecord::Base
     else
       puts "Cloning git repo #{git_url}..."
       puts gritty.clone({:verbose => true, :progress => true, :raise => true}, git_url, repo_path)
+      # Handle submodules
+      system("cd #{repo_path}; git submodule init")
     end
+    system("cd #{repo_path}; git submodule update")
   end
 end
