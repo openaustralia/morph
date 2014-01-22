@@ -83,7 +83,7 @@ class ScrapersController < ApplicationController
       send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite",
         type: "application/x-sqlite3"
     else
-      query = params[:query] || Database.select_all
+      query = params[:query] || scraper.database.select_all
       begin
         rows = scraper.database.sql_query(query)
         respond_to do |format|
