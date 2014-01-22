@@ -4,6 +4,11 @@
 
 .table-responsive.scraper-data {
   overflow-x: scroll;
+  -webkit-mask: -webkit-linear-gradient(
+      left,
+      rgba(255,255,255,1) 95%,
+      rgba(255,255,255,0)
+    );
 }
 
 span.stderr {
