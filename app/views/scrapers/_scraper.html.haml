@@ -1,5 +1,6 @@
-%li
-  %strong= link_to scraper.full_name, scraper
+%li{class: ("alert-danger" if scraper.last_run && scraper.last_run.finished_with_errors?)}
+  %strong
+    = link_to scraper.full_name, scraper
   - unless scraper.description.blank?
     &mdash;
     = scraper.description
