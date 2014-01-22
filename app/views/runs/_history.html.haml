@@ -17,7 +17,7 @@
   .pull-right
     - if run.metric
       real / cpu time:
-      = "%.1f s" % (run.finished_at - run.started_at)
+      = "%.1f s" % run.wall_time
       \/
       = "%.1f s" % run.metric.cpu_time
       max memory:

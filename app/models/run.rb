@@ -6,6 +6,10 @@ class Run < ActiveRecord::Base
   delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo,
     :full_name, :language, :main_scraper_filename, :database, to: :scraper
 
+  def wall_time
+    finished_at - started_at
+  end
+
   def queued?
     queued_at && started_at.nil?
   end
