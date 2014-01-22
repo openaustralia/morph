@@ -28,7 +28,7 @@ class Database
   def sql_query_safe(query, readonly = true)
     begin
       sql_query(query, readonly)
-    rescue SQLite3::CantOpenException, SQLite3::SQLException
+    rescue SQLite3::CantOpenException, SQLite3::SQLException, SQLite3::NotADatabaseException
       nil
     end
   end
