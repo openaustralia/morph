@@ -41,13 +41,17 @@ class Run < ActiveRecord::Base
     "openaustralia/morph-#{language}"
   end
 
+  def language_supported?
+    [:ruby, :php].include?(language)
+  end
+
   # The main section of the scraper running that is run in the background
   def go!
     synchronise_repo
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
     FileUtils.mkdir_p data_path
 
-    if language.nil?
+    unless language_supported?
       log_lines.create(stream: "stderr", text: "Can't find scraper code", number: 0)
       update_attributes(status_code: 999, finished_at: Time.now)
       return
