@@ -104,6 +104,14 @@ describe CodeTranslate do
       end
 
       describe ".add_instructions_for_libraries" do
+        it "should do nothing if nothing needs to be done" do
+          original = <<-EOF
+some code
+some more code
+          EOF
+          CodeTranslate::Ruby.add_instructions_for_libraries(original).should == original
+        end
+
         it "should add some help above where a library is required" do
           original = <<-EOF
 some code
@@ -118,6 +126,25 @@ some code
 # 3. Change the line below to something like require File.dirname(__FILE__) + '/foo/scraper'
 # 4. Remove these instructions
 require 'scrapers/foo'
+some more code
+          EOF
+          CodeTranslate::Ruby.add_instructions_for_libraries(original).should == translated
+        end
+
+        it "should also translate where double quotes are used" do
+          original = <<-EOF
+some code
+require "scrapers/foo"
+some more code
+          EOF
+          translated = <<-EOF
+some code
+# TODO:
+# 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/foo/
+# 2. Add the forked repo as a git submodule in this repo
+# 3. Change the line below to something like require File.dirname(__FILE__) + '/foo/scraper'
+# 4. Remove these instructions
+require "scrapers/foo"
 some more code
           EOF
           CodeTranslate::Ruby.add_instructions_for_libraries(original).should == translated

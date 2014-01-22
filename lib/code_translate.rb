@@ -65,7 +65,7 @@ module CodeTranslate
     end
 
     def self.add_instructions_for_libraries(code)
-      code.gsub(/require 'scrapers\/(.*)'/) do |s|
+      code.gsub(/require ['"]scrapers\/(.*)['"]/) do |s|
         i = <<-EOF
 # TODO:
 # 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/#{$1}/
