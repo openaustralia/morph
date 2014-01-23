@@ -1,13 +1,12 @@
-%li.list-group-item
-  %div.pull-right
+= link_to scraper, class: "list-group-item" do
+  .pull-right
     - if scraper.auto_run
       %i.icon-time
     - if scraper.last_run && (scraper.last_run.queued? || scraper.last_run.running?)
       .pulse
-  %div
-    - if scraper.last_run && scraper.last_run.finished_with_errors?
-      %span.label.label-danger errored
-    %strong= link_to scraper.full_name, scraper
+  - if scraper.last_run && scraper.last_run.finished_with_errors?
+    %span.label.label-danger errored
+  %strong= scraper.full_name
   %div
     - unless scraper.description.blank?
       = scraper.description
