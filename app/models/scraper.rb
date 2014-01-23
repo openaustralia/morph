@@ -19,6 +19,11 @@ class Scraper < ActiveRecord::Base
     successful_runs.sum(&:wall_time) / successful_runs.count if successful_runs.count > 0
   end
 
+  # Let's say a scraper requires attention if it's set to run automatically and the last run failed
+  def requires_attention?
+    auto_run && last_run && last_run.finished_with_errors?
+  end
+
   def total_wall_time
     runs.all.sum(&:wall_time)
   end

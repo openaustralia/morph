@@ -32,7 +32,9 @@
 
     - else
       %h3 Scrapers
-      %ul.list-unstyled= render @owner.scrapers
+      - if @owner.scrapers.any?{|s| s.requires_attention?}
+        %ul.list-unstyled= render @owner.scrapers.select{|s| s.requires_attention?}
+      %ul.list-unstyled= render @owner.scrapers.select{|s| !s.requires_attention?}
 
     - if @owner == current_user
       %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"
