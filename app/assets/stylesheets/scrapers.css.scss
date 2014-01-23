@@ -18,6 +18,10 @@
     );
 }
 
+.popover-content {
+  word-wrap: break-word;
+}
+
 span.stderr {
   color: red;
 }

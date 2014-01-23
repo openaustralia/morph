@@ -14,4 +14,6 @@
       - @rows.each do |row|
         %tr
           - row.each_value do |v|
-            %td= v
+            %td
+              %div.has-popover{data: {toggle: "popover", placement: "bottom", trigger: "hover", content: v, container: "body"}}
+                = v
