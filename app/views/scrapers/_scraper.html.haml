@@ -1,9 +1,13 @@
-%li{class: ("alert-danger" if scraper.last_run && scraper.last_run.finished_with_errors?)}
-  %strong= link_to scraper.full_name, scraper, class: "alert-link"
-  - unless scraper.description.blank?
-    &mdash;
-    = scraper.description
-  - if scraper.auto_run
-    %i.icon-time
-  - if scraper.last_run && (scraper.last_run.queued? || scraper.last_run.running?)
-    .pulse
+%li.list-group-item
+  %div.pull-right
+    - if scraper.auto_run
+      %i.icon-time
+    - if scraper.last_run && (scraper.last_run.queued? || scraper.last_run.running?)
+      .pulse
+  %div
+    - if scraper.last_run && scraper.last_run.finished_with_errors?
+      %span.label.label-danger errored
+    %strong= link_to scraper.full_name, scraper
+  %div
+    - unless scraper.description.blank?
+      = scraper.description
