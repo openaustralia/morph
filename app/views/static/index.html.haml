@@ -52,11 +52,19 @@
     %h2 All Users
     %ul.list-unstyled
       - User.all.each do |user|
-        %li= link_to user.nickname, user
+        %li
+          = link_to user.nickname, user
+          - if user.name
+            &mdash;
+            = user.name
     %h2 All Organizations
     %ul.list-unstyled
       - Organization.all.each do |org|
-        %li= link_to org.nickname, org
+        %li
+          = link_to org.nickname, org
+          - if org.name
+            &mdash;
+            = org.name
   .col-md-6
     %h2 All Scrapers
     %ul.list-unstyled= render Scraper.all
