@@ -3,7 +3,7 @@
     = image_tag @owner.gravatar_url, class: "img-responsive img-thumbnail"
     %h1= @owner.name
     %h2= @owner.nickname
-    %ul
+    %ul.list-unstyled
       - unless @owner.company.blank?
         %li= @owner.company
       - unless @owner.blog.blank?
@@ -32,7 +32,7 @@
 
     - else
       %h3 Scrapers
-      %ul= render @owner.scrapers
+      %ul.list-unstyled= render @owner.scrapers
 
     - if @owner == current_user
       %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"
