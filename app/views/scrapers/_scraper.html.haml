@@ -1,7 +1,8 @@
 = link_to scraper, class: "list-group-item" do
-  .pull-right
+  .icon-box.pull-right
     - if scraper.auto_run
       %i.icon-time
+  .icon-box.pull-right
     - if scraper.last_run && (scraper.last_run.queued? || scraper.last_run.running?)
       .pulse
   - if scraper.last_run && scraper.last_run.finished_with_errors?
