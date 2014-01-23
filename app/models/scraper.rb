@@ -10,6 +10,19 @@ class Scraper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :full_name, use: :finders
 
+  # For successful runs calculates the average wall clock time that this scraper takes
+  # Handy for the user to know how long it should expect to run for
+  # Returns nil if not able to calculate this
+  # TODO Refactor this using scopes
+  def average_successful_wall_time
+    successful_runs = runs.where("finished_at IS NOT NULL").where(status_code: 0).all
+    successful_runs.sum(&:wall_time) / successful_runs.count if successful_runs.count > 0
+  end
+
+  def total_wall_time
+    runs.all.sum(&:wall_time)
+  end
+
   def can_write?(user)
     user && (owner == user || user.organizations.include?(owner))
   end

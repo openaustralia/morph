@@ -31,14 +31,22 @@
   = render "status"
   .row
     .col-md-9
-
       - if @scraper.can_write?(current_user)
         %p= button_to "Run it now!", run_scraper_path(@scraper), class: (!@scraper.runnable? ? "btn btn-primary btn-lg disabled" : "btn btn-primary btn-lg"), disabled: !@scraper.runnable?
+
+      %h3 Statistics
+      - if @scraper.average_successful_wall_time
+        %p
+          Average successful run time:
+          = "%.1f s" % @scraper.average_successful_wall_time
       %p
-        CPU time used:
+        Total run time:
+        = "%.1f s" % @scraper.total_wall_time
+      %p
+        Total cpu time used:
         = "%.1f s" % @scraper.cpu_time
       %p
-        Disk space used:
+        Total disk space used:
         = number_to_human_size @scraper.total_disk_usage
     .col-md-3
       = render "settings"

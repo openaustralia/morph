@@ -36,9 +36,15 @@
 
     - if @owner == current_user
       %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"
+
+    %h3 Statistics
     %p
-      CPU time used:
+      Total run time:
+      -# TODO refactor this by using (and creating) @owner.runs
+      = "%.1f s" % @owner.scrapers.sum(&:total_wall_time)  
+    %p
+      Total cpu time used:
       = "%.1f s" % @owner.scrapers.sum(&:cpu_time)
     %p
-      Disk space used:
+      Total disk space used:
       = number_to_human_size @owner.scrapers.sum(&:total_disk_usage)

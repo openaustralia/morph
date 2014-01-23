@@ -7,7 +7,11 @@ class Run < ActiveRecord::Base
     :full_name, :language, :main_scraper_filename, :database, to: :scraper
 
   def wall_time
-    finished_at - started_at
+    if started_at && finished_at
+      finished_at - started_at
+    else
+      0
+    end
   end
 
   def queued?
