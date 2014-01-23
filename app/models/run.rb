@@ -27,11 +27,17 @@ class Run < ActiveRecord::Base
   end
 
   def finished_with_errors?
-    finished? && status_code != 0
+    finished? && !finished_successfully?
+  end
+
+  def errors_in_logs?
+    !log_lines.where(stream: "stderr").empty?
   end
 
   def finished_successfully?
-    finished? && status_code == 0
+    # PHP doesn't seem to set the exit status to non-zero if there is a warning.
+    # So, will say that things are successful if there are no errors in the log as well
+    finished? && status_code == 0 && !errors_in_logs?
   end
 
   def self.time_output_filename

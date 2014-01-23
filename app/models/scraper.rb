@@ -15,7 +15,7 @@ class Scraper < ActiveRecord::Base
   # Returns nil if not able to calculate this
   # TODO Refactor this using scopes
   def average_successful_wall_time
-    successful_runs = runs.where("finished_at IS NOT NULL").where(status_code: 0).all
+    successful_runs = runs.all.find_all{|r| r.finished_successfully?}
     successful_runs.sum(&:wall_time) / successful_runs.count if successful_runs.count > 0
   end
 
