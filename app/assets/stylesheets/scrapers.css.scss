@@ -3,6 +3,13 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .table-responsive.scraper-data {
+  table {
+    white-space: nowrap;
+    td, th {
+      max-width: 200px;
+      overflow: hidden;
+    }
+  }
   overflow-x: scroll;
   -webkit-mask: -webkit-linear-gradient(
       left,
