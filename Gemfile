@@ -9,6 +9,9 @@ gem 'rails', '4.0.2'
 gem 'sqlite3'
 gem 'mysql2'
 
+gem 'rack-mini-profiler'
+gem "flamegraph"
+
 gem "haml-rails"
 gem "twitter-bootstrap-rails", git: "https://github.com/seyhunak/twitter-bootstrap-rails.git", branch: "bootstrap3"
 gem "devise"
