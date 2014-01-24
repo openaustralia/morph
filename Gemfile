@@ -37,6 +37,10 @@ gem 'github-markup', :require => 'github/markup'
 gem 'redcarpet'
 gem 'RedCloth'
 
+group :production do
+  gem "dalli"
+end
+
 group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
