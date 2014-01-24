@@ -1,5 +1,5 @@
 class Run < ActiveRecord::Base
-  belongs_to :scraper
+  belongs_to :scraper, inverse_of: :runs
   has_many :log_lines
   belongs_to :metric
 
