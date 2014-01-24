@@ -58,8 +58,8 @@ class Run < ActiveRecord::Base
       "ruby /repo/#{main_scraper_filename}"
     when :php
       "php /repo/#{main_scraper_filename}"
-    else
-      "echo 'can not find scraper code'"
+    when :python
+      "python /repo/#{main_scraper_filename}"
     end
   end
 
@@ -68,7 +68,7 @@ class Run < ActiveRecord::Base
   end
 
   def language_supported?
-    [:ruby, :php].include?(language)
+    [:ruby, :php, :python].include?(language)
   end
 
   # The main section of the scraper running that is run in the background
