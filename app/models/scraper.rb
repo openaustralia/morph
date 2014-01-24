@@ -15,7 +15,7 @@ class Scraper < ActiveRecord::Base
   # Returns nil if not able to calculate this
   # TODO Refactor this using scopes
   def average_successful_wall_time
-    successful_runs = runs.all.find_all{|r| r.finished_successfully?}
+    successful_runs = runs.find_all{|r| r.finished_successfully?}
     successful_runs.sum(&:wall_time) / successful_runs.count if successful_runs.count > 0
   end
 
@@ -25,7 +25,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def total_wall_time
-    runs.all.sum(&:wall_time)
+    runs.to_a.sum(&:wall_time)
   end
 
   def can_write?(user)
