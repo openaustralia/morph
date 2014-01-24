@@ -78,3 +78,6 @@
   cron: name="daily scraping" hour=10 minute=0 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:auto_run_scrapers RAILS_ENV=production"
 - name: Install nodejs for asset precompiling
   apt: pkg=nodejs
+- name: Install memcached
+  apt: pkg=memcached
+
