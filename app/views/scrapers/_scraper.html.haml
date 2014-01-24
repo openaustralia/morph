@@ -1,13 +1,14 @@
-= link_to scraper, class: "list-group-item" do
-  .icon-box.pull-right
-    - if scraper.auto_run
-      %i.icon-time
-  .icon-box.pull-right
-    - if scraper.last_run && (scraper.last_run.queued? || scraper.last_run.running?)
-      .pulse
-  - if scraper.last_run && scraper.last_run.finished_with_errors?
-    %span.label.label-danger errored
-  %strong= scraper.full_name
-  %div
-    - unless scraper.description.blank?
-      = scraper.description
+- cache ["v1", scraper] do
+  = link_to scraper, class: "list-group-item" do
+    .icon-box.pull-right
+      - if scraper.auto_run
+        %i.icon-time
+    .icon-box.pull-right
+      - if scraper.last_run && (scraper.last_run.queued? || scraper.last_run.running?)
+        .pulse
+    - if scraper.last_run && scraper.last_run.finished_with_errors?
+      %span.label.label-danger errored
+    %strong= scraper.full_name
+    %div
+      - unless scraper.description.blank?
+        = scraper.description
