@@ -45,6 +45,7 @@ group :development do
   gem "rack-livereload"
   gem 'guard-rspec', require: false
   gem 'growl'
+  gem "bullet"
 end
 
 group :development, :test do

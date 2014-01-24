@@ -50,6 +50,9 @@ GEM
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
     builder (3.1.4)
+    bullet (4.7.1)
+      activesupport
+      uniform_notifier (>= 1.4.0)
     capistrano (3.0.1)
       i18n
       rake (>= 10.0.0)
@@ -293,6 +296,7 @@ GEM
     uglifier (2.4.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    uniform_notifier (1.4.0)
     warden (1.2.3)
       rack (>= 1.0)
 
@@ -301,6 +305,7 @@ PLATFORMS
 
 DEPENDENCIES
   RedCloth
+  bullet
   capistrano-rails
   capistrano-rvm
   coffee-rails (~> 4.0.0)
