@@ -1,26 +1,27 @@
-%li.list-group-item{class: run.finished_successfully? ? "alert-success" : "alert-danger"}
-  - if run.auto?
-    Auto
-  - else
-    Manually
-  ran
-  - if run.git_revision
-    revision
-    = link_to run.git_revision[0..7], "https://github.com/#{run.full_name}/commit/#{run.git_revision}"
-  and
-  - if run.finished_successfully?
-    completed successfully
-  - else
-    failed
-  = time_ago_in_words(run.finished_at)
-  ago
-  .pull-right
-    - if run.metric
-      real / cpu time:
-      = "%.1f s" % run.wall_time
-      \/
-      = "%.1f s" % run.metric.cpu_time
-      max memory:
-      = number_to_human_size(run.metric.maxrss * 1024)
+- cache ["v1", run] do
+  %li.list-group-item{class: run.finished_successfully? ? "alert-success" : "alert-danger"}
+    - if run.auto?
+      Auto
     - else
-      real time: #{"%.1f s" % (run.finished_at - run.started_at)}
+      Manually
+    ran
+    - if run.git_revision
+      revision
+      = link_to run.git_revision[0..7], "https://github.com/#{run.full_name}/commit/#{run.git_revision}"
+    and
+    - if run.finished_successfully?
+      completed successfully
+    - else
+      failed
+    = time_ago_in_words(run.finished_at)
+    ago
+    .pull-right
+      - if run.metric
+        real / cpu time:
+        = "%.1f s" % run.wall_time
+        \/
+        = "%.1f s" % run.metric.cpu_time
+        max memory:
+        = number_to_human_size(run.metric.maxrss * 1024)
+      - else
+        real time: #{"%.1f s" % (run.finished_at - run.started_at)}
