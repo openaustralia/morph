@@ -31,7 +31,7 @@ class Run < ActiveRecord::Base
   end
 
   def errors_in_logs?
-    !log_lines.where(stream: "stderr").empty?
+    log_lines.to_a.count{|l| l.stream == "stderr"} > 0
   end
 
   def finished_successfully?

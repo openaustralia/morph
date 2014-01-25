@@ -12,12 +12,15 @@ class Scraper < ActiveRecord::Base
 
   delegate :queued?, :running?, to: :last_run
 
+  def successful_runs
+    runs.includes(:log_lines).select{|r| r.finished_successfully?}
+  end
+
   # For successful runs calculates the average wall clock time that this scraper takes
   # Handy for the user to know how long it should expect to run for
   # Returns nil if not able to calculate this
   # TODO Refactor this using scopes
   def average_successful_wall_time
-    successful_runs = runs.find_all{|r| r.finished_successfully?}
     successful_runs.sum(&:wall_time) / successful_runs.count if successful_runs.count > 0
   end
 
