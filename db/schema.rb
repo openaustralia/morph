@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140120072245) do
+ActiveRecord::Schema.define(version: 20140125020217) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20140120072245) do
     t.integer  "nivcsw"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "run_id"
   end
 
   create_table "organizations_users", force: true do |t|
@@ -69,12 +70,12 @@ ActiveRecord::Schema.define(version: 20140120072245) do
     t.string   "provider"
     t.string   "uid"
     t.string   "name"
+    t.string   "nickname"
     t.string   "access_token"
     t.string   "gravatar_id"
     t.string   "blog"
     t.string   "company"
     t.string   "email"
-    t.string   "nickname"
     t.string   "type"
     t.string   "gravatar_url"
   end
@@ -87,7 +88,6 @@ ActiveRecord::Schema.define(version: 20140120072245) do
     t.datetime "updated_at"
     t.integer  "status_code"
     t.datetime "queued_at"
-    t.integer  "metric_id"
     t.boolean  "auto",         default: false, null: false
     t.string   "git_revision"
   end

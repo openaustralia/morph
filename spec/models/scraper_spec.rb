@@ -5,10 +5,10 @@ describe Scraper do
     before :each do
       user = User.create
       @scraper = user.scrapers.create(name: "my scraper")
-      metric1 = Metric.create(utime: 10.2, stime: 2.4)
-      metric2 = Metric.create(utime: 1.3, stime: 3.5)
-      run1 = @scraper.runs.create(metric_id: metric1.id)
-      run2 = @scraper.runs.create(metric_id: metric2.id)
+      run1 = @scraper.runs.create
+      run2 = @scraper.runs.create
+      metric1 = Metric.create(utime: 10.2, stime: 2.4, run_id: run1.id)
+      metric2 = Metric.create(utime: 1.3, stime: 3.5, run_id: run2.id)
     end
 
     it "#utime" do

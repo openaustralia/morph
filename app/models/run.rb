@@ -1,7 +1,7 @@
 class Run < ActiveRecord::Base
   belongs_to :scraper, inverse_of: :runs, touch: true
   has_many :log_lines
-  belongs_to :metric
+  has_one :metric
 
   delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo,
     :full_name, :language, :main_scraper_filename, :database, to: :scraper
@@ -121,8 +121,9 @@ class Run < ActiveRecord::Base
 
     # Now collect and save the metrics
     metric = Metric.read_from_file(time_output_path)
+    metric.update_attributes(run_id: self.id)
 
-    update_attributes(status_code: status_code, metric_id: metric.id, finished_at: Time.now)
+    update_attributes(status_code: status_code, finished_at: Time.now)
     database.tidy_data_path
   end
 
