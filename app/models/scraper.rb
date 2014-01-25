@@ -10,6 +10,8 @@ class Scraper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :full_name, use: :finders
 
+  delegate :queued?, :running?, to: :last_run
+
   # For successful runs calculates the average wall clock time that this scraper takes
   # Handy for the user to know how long it should expect to run for
   # Returns nil if not able to calculate this
@@ -17,6 +19,10 @@ class Scraper < ActiveRecord::Base
   def average_successful_wall_time
     successful_runs = runs.find_all{|r| r.finished_successfully?}
     successful_runs.sum(&:wall_time) / successful_runs.count if successful_runs.count > 0
+  end
+
+  def queued_or_running?
+    queued? || running?
   end
 
   # Let's say a scraper requires attention if it's set to run automatically and the last run failed
