@@ -306,6 +306,7 @@ PLATFORMS
 
 DEPENDENCIES
   RedCloth
+  archive-tar-minitar
   bullet
   capistrano-rails
   capistrano-rvm

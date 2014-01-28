@@ -26,6 +26,7 @@ gem 'delayed_job_active_record'
 gem "foreman"
 gem "faraday"
 gem 'jquery-turbolinks'
+gem "archive-tar-minitar"
 
 # We're currently only supporting the plain text, markdown and textile
 # markups for the README. If we want more then we need to install some

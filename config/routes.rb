@@ -12,6 +12,8 @@ Morph::Application.routes.draw do
 
   root 'static#index'
   get "/api", to: "static#api"
+  # Hmm not totally sure about this url.
+  post "/run", to: "scrapers#run_remote"
 
   # TODO: Don't allow a user to be called "new". Chances are GitHub enforces this anyway.
   resources :scrapers, path: '/', only: [:new, :create]
