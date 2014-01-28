@@ -72,13 +72,8 @@ class ScrapersController < ApplicationController
   # Receive code from a remote client, run it and return the result.
   # This will be a long running request
   def run_remote
-    puts "In run_remote"
     render text: "Well done!\n"
-    p params
-    code = params[:code]
-    File.write("/tmp/foobar.tar", code)
-    puts "Files written to uploaded_files"
-    Archive::Tar::Minitar.unpack('/tmp/foobar.tar', 'uploaded_files')
+    Archive::Tar::Minitar.unpack(params[:code].tempfile, 'uploaded_files')
   end
 
   # TODO Extract checking of who owns the scraper
