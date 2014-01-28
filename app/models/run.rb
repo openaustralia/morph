@@ -71,6 +71,47 @@ class Run < ActiveRecord::Base
     [:ruby, :php, :python].include?(language)
   end
 
+  # Only knows about docker stuff for running
+  def docker_run(options)
+    Docker.options[:read_timeout] = 3600
+
+    # This will fail if there is another container with the same name
+    c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
+      "User" => "scraper",
+      "Image" => options[:image_name],
+      "name" => options[:container_name])
+
+    # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
+    # HACK to detect vagrant installation in crude way
+    if Rails.root.to_s =~ /\/var\/www/
+      local_root_path = Rails.root
+    else
+      local_root_path = "/vagrant"
+    end
+
+    begin
+      c.start("Binds" => [
+        "#{local_root_path}/#{options[:repo_path]}:/repo:ro",
+        "#{local_root_path}/#{options[:data_path]}:/data"
+      ])
+      puts "Running docker container..."
+      c.attach(logs: true) do |s,c|
+        p s
+        p c
+        yield s,c
+      end
+    ensure
+      c.kill if c.json["State"]["Running"]
+    end
+    # Scraper should already have finished now. We're just using this to return the scraper status code
+    status_code = c.wait["StatusCode"]
+
+    # Clean up after ourselves
+    c.delete
+
+    status_code
+  end
+
   # The main section of the scraper running that is run in the background
   def go!
     synchronise_repo
@@ -83,41 +124,13 @@ class Run < ActiveRecord::Base
       return
     end
 
-    Docker.options[:read_timeout] = 3600
-
-    # This will fail if there is another container with the same name
+    log_line_number = 0
     command = Metric.command(scraper_command, Run.time_output_filename)
-    c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', command],
-      "User" => "scraper",
-      "Image" => docker_image,
-      "name" => docker_container_name)
-      # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
-      # HACK to detect vagrant installation in crude way
-    if Rails.root.to_s =~ /\/var\/www/
-      local_root_path = Rails.root
-    else
-      local_root_path = "/vagrant"
-    end
-
-    begin
-      c.start("Binds" => [
-        "#{local_root_path}/#{repo_path}:/repo:ro",
-        "#{local_root_path}/#{data_path}:/data"
-      ])
-      puts "Running docker container..."
-      log_line_number = 0
-      c.attach(logs: true) do |s,c|
+    status_code = docker_run(command: command, image_name: docker_image, container_name: docker_container_name,
+      repo_path: repo_path, data_path: data_path) do |s,c|
         log_lines.create(stream: s, text: c, number: log_line_number)
         log_line_number += 1
-      end
-    ensure
-      c.kill if c.json["State"]["Running"]
     end
-    # Scraper should already have finished now. We're just using this to return the scraper status code
-    status_code = c.wait["StatusCode"]
-
-    # Clean up after ourselves
-    c.delete
 
     # Now collect and save the metrics
     metric = Metric.read_from_file(time_output_path)
