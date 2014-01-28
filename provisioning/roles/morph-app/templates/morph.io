@@ -22,7 +22,7 @@
         AuthType Basic
         AuthName "Morph says an odd hello"
         AuthUserFile /var/www/shared/htpasswd
-        Require user test
+        Require user test walkleys
     </Location>
 
     # A regex for the API url. Let's open this up to the world
