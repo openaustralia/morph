@@ -113,7 +113,7 @@ class Run < ActiveRecord::Base
   end
 
   # The main section of the scraper running that is run in the background
-  def go!
+  def synch_and_go!
     synchronise_repo
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
     FileUtils.mkdir_p data_path
