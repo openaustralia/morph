@@ -32,6 +32,12 @@
         Allow from all
     </LocationMatch>
 
+    <Location "/run>
+        # All access controls and authentication are disabled
+        Satisfy Any
+        Allow from all
+    </Location>
+
     SSLEngine on
 
     SSLProtocol all -SSLv2 -SSLv3
