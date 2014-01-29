@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140125020217) do
+ActiveRecord::Schema.define(version: 20140128235939) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(version: 20140125020217) do
     t.datetime "queued_at"
     t.boolean  "auto",         default: false, null: false
     t.string   "git_revision"
+    t.integer  "owner_id"
   end
 
   create_table "scrapers", force: true do |t|

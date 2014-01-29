@@ -1,9 +1,10 @@
 class Run < ActiveRecord::Base
+  belongs_to :owner
   belongs_to :scraper, inverse_of: :runs, touch: true
   has_many :log_lines
   has_one :metric
 
-  delegate :data_path, :repo_path, :owner, :name, :git_url, :current_revision_from_repo,
+  delegate :data_path, :repo_path, :name, :git_url, :current_revision_from_repo,
     :full_name, :language, :main_scraper_filename, :database, to: :scraper
 
   def wall_time

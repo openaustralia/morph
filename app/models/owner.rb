@@ -3,7 +3,7 @@ class Owner < ActiveRecord::Base
   friendly_id :nickname, use: :finders
 
   has_many :scrapers
-  has_many :runs, through: :scrapers
+  has_many :runs
 
   def github_url
     "https://github.com/#{nickname}"
