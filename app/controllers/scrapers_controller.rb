@@ -74,22 +74,26 @@ class ScrapersController < ApplicationController
   def run_remote
     puts "**** IN RUN_REMOTE ****"
     # TODO: Get the id of the person making the request and set current_user.
-    user = User.find_by_nickname("mlandauer")
-    run = Run.create(queued_at: Time.now, auto: false, owner_id: user.id)
+    user = User.find_by_api_key(params[:api_key])
+    if user.nil?
+      render :text => "API key is not valid", status: 401
+    else
+      run = Run.create(queued_at: Time.now, auto: false, owner_id: user.id)
 
-    Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
-    #Archive::Tar::Minitar.unpack(params[:code].tempfile, "uploaded_files")
+      Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
+      #Archive::Tar::Minitar.unpack(params[:code].tempfile, "uploaded_files")
 
-    result = []
-    run.go_with_logging do |s,text|
-      result << {stream: s, text: text}.to_json
+      result = []
+      run.go_with_logging do |s,text|
+        result << {stream: s, text: text}.to_json
+      end
+
+      # Cleanup run
+      FileUtils.rm_rf(run.data_path)
+      FileUtils.rm_rf(run.repo_path)
+      
+      render text: result.join("\n")
     end
-
-    # Cleanup run
-    FileUtils.rm_rf(run.data_path)
-    FileUtils.rm_rf(run.repo_path)
-    
-    render text: result.join("\n")
   end
 
   # TODO Extract checking of who owns the scraper
