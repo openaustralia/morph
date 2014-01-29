@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140128235939) do
+ActiveRecord::Schema.define(version: 20140129060238) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 20140128235939) do
     t.string   "email"
     t.string   "type"
     t.string   "gravatar_url"
+    t.string   "api_key"
   end
 
   create_table "runs", force: true do |t|

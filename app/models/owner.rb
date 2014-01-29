@@ -4,6 +4,11 @@ class Owner < ActiveRecord::Base
 
   has_many :scrapers
   has_many :runs
+  before_create :set_api_key
+
+  def set_api_key
+    self.api_key = Digest::MD5.base64digest(id.to_s + rand.to_s + Time.now.to_s)[0...20]
+  end
 
   def github_url
     "https://github.com/#{nickname}"
