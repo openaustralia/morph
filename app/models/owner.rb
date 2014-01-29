@@ -24,4 +24,12 @@ class Owner < ActiveRecord::Base
       end
     end
   end
+
+  def repo_root
+    "db/scrapers/repos/#{to_param}"
+  end
+
+  def data_root
+    "db/scrapers/data/#{to_param}"
+  end
 end

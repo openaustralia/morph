@@ -47,11 +47,11 @@ class Scraper < ActiveRecord::Base
   end
 
   def repo_path
-    "db/scrapers/repos/#{full_name}"
+    "#{owner.repo_root}/#{name}"
   end
 
   def data_path
-    "db/scrapers/data/#{full_name}"
+    "#{owner.data_root}/#{name}"
   end
 
   def utime
