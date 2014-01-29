@@ -15,6 +15,7 @@ Morph::Application.routes.draw do
   # Hmm not totally sure about this url.
   post "/run", to: "scrapers#run_remote"
   get '/settings', to: "users#settings", as: :user_settings
+  post '/settings/reset_key', to: "users#reset_key", as: :user_reset_key
 
   # TODO: Don't allow a user to be called "new". Chances are GitHub enforces this anyway.
   resources :scrapers, path: '/', only: [:new, :create]
