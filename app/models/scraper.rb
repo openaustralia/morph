@@ -10,7 +10,7 @@ class Scraper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :full_name, use: :finders
 
-  delegate :queued?, :running?, to: :last_run
+  delegate :queued?, :running?, to: :last_run, allow_nil: true
 
   def successful_runs
     runs.includes(:log_lines).select{|r| r.finished_successfully?}
