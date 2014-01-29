@@ -80,16 +80,16 @@ class ScrapersController < ApplicationController
     Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
     #Archive::Tar::Minitar.unpack(params[:code].tempfile, "uploaded_files")
 
-    result = ""
+    result = []
     run.go_with_logging do |s,text|
-      result += "#{s}: #{text}\n"
+      result << {stream: s, text: text}.to_json
     end
 
     # Cleanup run
     FileUtils.rm_rf(run.data_path)
     FileUtils.rm_rf(run.repo_path)
     
-    render text: result
+    render text: result.join("\n")
   end
 
   # TODO Extract checking of who owns the scraper
