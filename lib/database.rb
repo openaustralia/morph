@@ -70,13 +70,17 @@ class Database
     sql_query_safe(select_first_ten)
   end
 
-  # Remove any files or directories in the data_path that are not the actual database
-  def tidy_data_path
+  def self.tidy_data_path(data_path)
     # First get all the files in the data directory
     filenames = Dir.entries(data_path)
     filenames.delete(".")
     filenames.delete("..")
-    filenames.delete(Database.sqlite_db_filename)
+    filenames.delete(sqlite_db_filename)
     FileUtils.rm_rf filenames.map{|f| File.join(data_path, f)}
+  end
+
+  # Remove any files or directories in the data_path that are not the actual database
+  def tidy_data_path
+    Database.tidy_data_path(data_path)
   end
 end

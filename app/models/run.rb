@@ -4,8 +4,8 @@ class Run < ActiveRecord::Base
   has_many :log_lines
   has_one :metric
 
-  delegate :data_path, :repo_path, :name, :git_url, :current_revision_from_repo,
-    :full_name, :database, to: :scraper
+  delegate :git_url, :full_name, :database, to: :scraper
+  delegate :current_revision_from_repo, to: :scraper, allow_nil: true
 
   def language
     Language.language(repo_path)
@@ -17,6 +17,23 @@ class Run < ActiveRecord::Base
     else
       0
     end
+  end
+
+  def name
+    if scraper
+      scraper.name
+    else
+      # This run is using uploaded code and so is not associated with a scraper
+      "run_#{id}"
+    end
+  end
+
+  def data_path
+    "#{owner.data_root}/#{name}"
+  end
+
+  def repo_path
+    "#{owner.repo_root}/#{name}"
   end
 
   def queued?
@@ -61,22 +78,21 @@ class Run < ActiveRecord::Base
     "openaustralia/morph-#{language}"
   end
 
-  def go!
+  def go_with_logging
+    puts "Starting...\n"
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
     FileUtils.mkdir_p data_path
 
     unless Language.language_supported?(language)
-      log_lines.create(stream: "stderr", text: "Can't find scraper code", number: 0)
+      yield "stderr", "Can't find scraper code"
       update_attributes(status_code: 999, finished_at: Time.now)
       return
     end
 
-    log_line_number = 0
     command = Metric.command(Language.scraper_command(language), Run.time_output_filename)
     status_code = DockerRunner.run(command: command, image_name: docker_image, container_name: docker_container_name,
       repo_path: repo_path, data_path: data_path) do |s,c|
-        log_lines.create(stream: s, text: c, number: log_line_number)
-        log_line_number += 1
+        yield s, c
     end
 
     # Now collect and save the metrics
@@ -84,7 +100,16 @@ class Run < ActiveRecord::Base
     metric.update_attributes(run_id: self.id)
 
     update_attributes(status_code: status_code, finished_at: Time.now)
-    database.tidy_data_path
+    Database.tidy_data_path(data_path)
+  end
+
+  def go!
+    log_line_number = 0
+    go_with_logging do |s,c|
+      puts "#{s}: #{c}"
+      log_lines.create(stream: s, text: c, number: log_line_number)
+      log_line_number += 1
+    end
   end
 
   # The main section of the scraper running that is run in the background
