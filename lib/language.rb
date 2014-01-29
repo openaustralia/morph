@@ -1,4 +1,8 @@
 class Language
+  def self.languages_supported
+    [:ruby, :php, :python]
+  end
+
   # Defines our naming convention for the scraper of each language
   def self.language_to_file_extension(language)
     case language
@@ -11,13 +15,25 @@ class Language
     end
   end
 
+  # Name of the binary for running scripts of a particular language
+  def self.binary_name(language)
+    case language
+    when :ruby
+      "ruby"
+    when :php
+      "php"
+    when :python
+      "python"
+    end
+  end
+
   def self.language_to_scraper_filename(language)
     "scraper.#{language_to_file_extension(language)}" if language
   end
 
   # Find the language of the code in the given directory
   def self.language(repo_path)
-    [:ruby, :python, :php].find do |language|
+    languages_supported.find do |language|
       File.exists?(File.join(repo_path, language_to_scraper_filename(language)))
     end
   end
@@ -27,17 +43,10 @@ class Language
   end
 
   def self.scraper_command(language)
-    case language
-    when :ruby
-      "ruby /repo/#{language_to_scraper_filename(language)}"
-    when :php
-      "php /repo/#{language_to_scraper_filename(language)}"
-    when :python
-      "python /repo/#{language_to_scraper_filename(language)}"
-    end
+    "#{binary_name(language)} /repo/#{language_to_scraper_filename(language)}"
   end
 
   def self.language_supported?(language)
-    [:ruby, :php, :python].include?(language)
+    languages_supported.include?(language)
   end
 end
