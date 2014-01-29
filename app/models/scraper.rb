@@ -99,7 +99,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def main_scraper_filename
-    Scraper.language_to_scraper_filename(language)
+    Language.main_scraper_filename(repo_path)
   end
 
   def github_url_main_scraper_file
@@ -149,29 +149,6 @@ class Scraper < ActiveRecord::Base
   def current_revision_from_repo
     r = Grit::Repo.new(repo_path)
     Grit::Head.current(r).commit.id
-  end
-
-  # Defines our naming convention for the scraper of each language
-  def self.language_to_file_extension(language)
-    case language
-    when :ruby
-      "rb"
-    when :php
-      "php"
-    when :python
-      "py"
-    end
-  end
-
-  def self.language_to_scraper_filename(language)
-    "scraper.#{language_to_file_extension(language)}" if language
-  end
-
-  # Based on the scraper code figure out which language this scraper is
-  def language
-    [:ruby, :python, :php].find do |language|
-      File.exists?(File.join(repo_path, Scraper.language_to_scraper_filename(language)))
-    end
   end
 
   # files should be a hash of "filename" => "content"
@@ -243,7 +220,7 @@ class Scraper < ActiveRecord::Base
     self.update_attributes(description: scraperwiki.title)
 
     files = {
-      Scraper.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
+      Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
       ".gitignore" => "# Ignore output of scraper\n#{Database.sqlite_db_filename}\n",
     }
     files["README.textile"] = scraperwiki.description unless scraperwiki.description.blank?
@@ -251,7 +228,7 @@ class Scraper < ActiveRecord::Base
 
     # Add another commit (but only if necessary) to translate the code so it runs here
     unless scraperwiki.translated_code == scraperwiki.code
-      add_commit_to_master_on_github(forked_by, {Scraper.language_to_scraper_filename(scraperwiki.language) => scraperwiki.translated_code},
+      add_commit_to_master_on_github(forked_by, {Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.translated_code},
         "Automatic update to make ScraperWiki scraper work on Morph")
     end
 

@@ -5,7 +5,11 @@ class Run < ActiveRecord::Base
   has_one :metric
 
   delegate :data_path, :repo_path, :name, :git_url, :current_revision_from_repo,
-    :full_name, :language, :main_scraper_filename, :database, to: :scraper
+    :full_name, :database, to: :scraper
+
+  def language
+    Language.language(repo_path)
+  end
 
   def wall_time
     if started_at && finished_at
@@ -53,37 +57,22 @@ class Run < ActiveRecord::Base
     owner.to_param + "_" + name
   end
 
-  def scraper_command
-    case language
-    when :ruby
-      "ruby /repo/#{main_scraper_filename}"
-    when :php
-      "php /repo/#{main_scraper_filename}"
-    when :python
-      "python /repo/#{main_scraper_filename}"
-    end
-  end
-
   def docker_image
     "openaustralia/morph-#{language}"
-  end
-
-  def language_supported?
-    [:ruby, :php, :python].include?(language)
   end
 
   def go!
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
     FileUtils.mkdir_p data_path
 
-    unless language_supported?
+    unless Language.language_supported?(language)
       log_lines.create(stream: "stderr", text: "Can't find scraper code", number: 0)
       update_attributes(status_code: 999, finished_at: Time.now)
       return
     end
 
     log_line_number = 0
-    command = Metric.command(scraper_command, Run.time_output_filename)
+    command = Metric.command(Language.scraper_command(language), Run.time_output_filename)
     status_code = DockerRunner.run(command: command, image_name: docker_image, container_name: docker_container_name,
       repo_path: repo_path, data_path: data_path) do |s,c|
         log_lines.create(stream: s, text: c, number: log_line_number)
