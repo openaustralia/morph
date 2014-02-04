@@ -18,14 +18,13 @@ class ApiController < ApplicationController
 
       result = []
       run.go_with_logging do |s,text|
-        result << {stream: s, text: text}.to_json
+        response.stream.write({stream: s, text: text}.to_json + "\n")
       end
+      response.stream.close
 
       # Cleanup run
       FileUtils.rm_rf(run.data_path)
-      FileUtils.rm_rf(run.repo_path)
-      
-      render text: result.join("\n")
+      FileUtils.rm_rf(run.repo_path)      
     end
   end
 end
