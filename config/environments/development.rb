@@ -32,14 +32,14 @@ Morph::Application.configure do
   # Add Rack::LiveReload to the bottom of the middleware stack with the default options.
   config.middleware.use Rack::LiveReload
 
-  config.after_initialize do
-    Bullet.enable = true
-    #Bullet.alert = true
-    Bullet.bullet_logger = true
-    Bullet.console = true
-    #Bullet.growl = true
-    Bullet.rails_logger = true
-    Bullet.add_footer = true
-  end
+  # config.after_initialize do
+  #   Bullet.enable = true
+  #   #Bullet.alert = true
+  #   Bullet.bullet_logger = true
+  #   Bullet.console = true
+  #   #Bullet.growl = true
+  #   Bullet.rails_logger = true
+  #   Bullet.add_footer = true
+  # end
 end
 

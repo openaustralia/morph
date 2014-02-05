@@ -14,6 +14,7 @@ Morph::Application.routes.draw do
   get "/api", to: "static#api"
   # Hmm not totally sure about this url.
   post "/run", to: "api#run_remote"
+  get "/test", to: "api#test"
   get '/settings', to: "users#settings", as: :user_settings
   post '/settings/reset_key', to: "users#reset_key", as: :user_reset_key
 

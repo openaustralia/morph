@@ -40,6 +40,8 @@ group :production do
 end
 
 group :development do
+  gem "puma"
+
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
   gem 'guard'
@@ -47,9 +49,9 @@ group :development do
   gem "rack-livereload"
   gem 'guard-rspec', require: false
   gem 'growl'
-  gem "bullet"
-  gem 'rack-mini-profiler'
-  gem "flamegraph"
+  #gem "bullet"
+  #gem 'rack-mini-profiler'
+  #gem "flamegraph"
 end
 
 group :development, :test do
