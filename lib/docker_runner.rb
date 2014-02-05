@@ -1,6 +1,7 @@
 class DockerRunner
   def self.run(options)
     Docker.options[:read_timeout] = 3600
+    Docker.options[:chunk_size] = 1
 
     # This will fail if there is another container with the same name
     c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
