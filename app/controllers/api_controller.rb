@@ -32,6 +32,7 @@ class ApiController < ApplicationController
       #Archive::Tar::Minitar.unpack(params[:code].tempfile, "uploaded_files")
 
       result = []
+      response.headers['Content-Type'] = 'text/event-stream'
       run.go_with_logging do |s,text|
         response.stream.write({stream: s, text: text}.to_json + "\n")
       end
