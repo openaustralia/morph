@@ -38,10 +38,20 @@ describe ScrapersController do
         end
       end
 
-      it "should allow you to delete a scraper if it's owner by an organisation you're part of" do
-        scraper = Scraper.create(owner: organization, name: "A scraper", full_name: "org/a_scraper")
-        delete :destroy, id: "org/a_scraper"
-        Scraper.count.should == 0
+      context "an organisation you're part of owns the scraper" do
+        before :each do
+          Scraper.create(owner: organization, name: "A scraper", full_name: "org/a_scraper")
+        end
+
+        it "should allow you to delete a scraper if it's owner by an organisation you're part of" do
+          delete :destroy, id: "org/a_scraper"
+          Scraper.count.should == 0
+        end
+
+        it "should redirect to the owning organisation" do
+          delete :destroy, id: "org/a_scraper"
+          response.should redirect_to organization_url(organization)     
+        end
       end
 
       it "should not allow you to delete a scraper if you don't own the scraper" do

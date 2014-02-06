@@ -36,7 +36,7 @@ class ScrapersController < ApplicationController
       @scraper.destroy
       # TODO Make this done by default after calling Scraper#destroy
       @scraper.destroy_repo_and_data
-      redirect_to current_user
+      redirect_to @scraper.owner
     else
       flash[:alert] = "Can't delete someone else's scraper!"
       redirect_to @scraper
