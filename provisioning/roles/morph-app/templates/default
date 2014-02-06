@@ -1,4 +1,7 @@
-# Redirect (301) http://*/foo -> http://morph.io/foo
 <VirtualHost *:80>
-    RedirectMatch permanent ^/(.*) https://morph.io/$1
+{% if ssl %}
+    RedirectMatch permanent ^/(.*) https://{{ server_name }}/$1
+{% else %}
+    RedirectMatch permanent ^/(.*) http://{{ server_name }}/$1
+{% endif %}
 </VirtualHost>

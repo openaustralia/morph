@@ -1,12 +1,19 @@
+{% if ssl %}
 <VirtualHost *:80>
     ServerName {{ server_name }}
     ServerAlias api.{{ server_name }}
-    RedirectMatch permanent ^/(.*) https://morph.io/$1
+    RedirectMatch permanent ^/(.*) https://{{ server_name }}/$1
 </VirtualHost>
+{% endif %}
 
+{% if ssl %}
 <VirtualHost *:443>
+{% else %}
+<VirtualHost *:80>
+{% endif %}
+
     ServerName {{ server_name }}
-    ServerAlias api.morph.io
+    ServerAlias api.{{ server_name }}
     DocumentRoot "/var/www/current/public"
 
     PassengerRuby /home/deploy/.rvm/rubies/ruby-2.0.0-p353/bin/ruby
@@ -38,6 +45,7 @@
         Allow from all
     </Location>
 
+{% if ssl %}
     SSLEngine on
 
     SSLProtocol all -SSLv2 -SSLv3
@@ -50,7 +58,8 @@
     SSLCertificateKeyFile /etc/apache2/ssl/ssl.key
     SSLCertificateChainFile /etc/apache2/ssl/sub.class1.server.ca.pem
     SSLCACertificateFile /etc/apache2/ssl/ca.pem
+{% endif %}
 
-    #CustomLog /srv/www/www.openaustraliafoundation.org.au/log/ssl_request_log \
-    #  "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 </VirtualHost>
+
+
