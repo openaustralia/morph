@@ -1,0 +1,7 @@
+---
+- name: Add the Percona repository key
+  apt_key: url=http://keys.gnupg.net/pks/lookup?search=0x1C4CBDCDCD2EFD2A&fingerprint=on&op=get id=CD2EFD2A
+- name: Add the Percona sources
+  apt_repository: repo='deb http://repo.percona.com/apt precise main'
+- name: Install percona xtrabackup
+  apt: pkg=percona-xtrabackup update_cache=yes

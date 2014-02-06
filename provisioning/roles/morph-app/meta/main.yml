@@ -4,3 +4,4 @@ dependencies:
   - { role: apache-passenger }
   - { role: ruby-2.0.0-p353 }
   - { role: mysql }
+  - { role: backups }
