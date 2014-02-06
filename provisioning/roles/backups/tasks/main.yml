@@ -4,4 +4,6 @@
 - name: Add the Percona sources
   apt_repository: repo='deb http://repo.percona.com/apt precise main'
 - name: Install percona xtrabackup
-  apt: pkg=percona-xtrabackup update_cache=yes
+  apt: pkg=percona-xtrabackup update_cache=yes cache_valid_time=3600
+- name: Copy across database backup script
+  copy: src=database-backup.sh dest=/usr/local/bin/database-backup.sh mode=0500
