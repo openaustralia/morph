@@ -57,14 +57,14 @@
           - if user.name
             &mdash;
             = user.name
-    %h2 All Organizations
+    %h2 Organizations with Scrapers
     %ul.list-unstyled
-      - Organization.all.each do |org|
+      - Organization.all.select{|u| !u.scrapers.empty?}.each do |org|
         %li
           = link_to org.nickname, org
           - if org.name
             &mdash;
             = org.name
   .col-md-6
-    %h2 All Scrapers
-    .list-group= render Scraper.all
+    %h2 Recently Active Scrapers
+    .list-group= render Scraper.order(:updated_at => :desc).limit(10).all
