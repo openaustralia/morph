@@ -29,8 +29,7 @@
       %div
         = link_to "Show your key", user_settings_path, class: "btn btn-default"
 
-  .col-md-9
-
+  .col-md-8
     - if @owner.scrapers.empty?
       %h3 Has no scrapers
 
@@ -54,3 +53,11 @@
       %p
         Total disk space used:
         = number_to_human_size @owner.scrapers.sum(&:total_disk_usage)
+
+  .col-md-1
+    - if signed_in?
+      - if current_user.watching?(@owner)
+        = button_to "Unwatch", owner_watch_path, class: "btn btn-default"
+      - else
+        = button_to "Watch", owner_watch_path, class: "btn btn-default"
+

@@ -2,6 +2,19 @@ class User < Owner
   # TODO Add :omniauthable
   devise :trackable, :omniauthable, :omniauth_providers => [:github]
   has_and_belongs_to_many :organizations, join_table: :organizations_users
+  has_many :alerts
+
+  def toggle_watch(object)
+    if watching?(object)
+      alerts.where(watch: object).first.destroy
+    else
+      alerts.create(watch: object)
+    end
+  end
+
+  def watching?(object)
+    alerts.map{|a| a.watch}.include? object
+  end
 
   def refresh_organizations!
     self.organizations = octokit_client.organizations.map {|data| Organization.find_or_create(data.id, data.login) }

@@ -23,6 +23,7 @@ Morph::Application.routes.draw do
   # TODO: Don't allow a user to be called "new". Chances are GitHub enforces this anyway.
   resources :scrapers, path: '/', only: [:new, :create]
   resources :owners, path: "/", only: :show
+  post '/:id/watch', to: "owners#watch", as: :owner_watch
   resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
   # TODO Not very happy with this URL but this will do for the time being
