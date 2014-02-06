@@ -49,10 +49,7 @@
   command: foreman export upstart /etc/init -u deploy -a morph -f /home/deploy/Procfile.production --root /var/www/current
 - name: Create sudoers ready for testing
   template: src=sudoers dest=/etc/sudoers.d/deploy.test owner=root group=root mode=0440
-- name: Test sudoers
-  command: visudo -c -f /etc/sudoers.d/deploy.test
-- name: Make sudoers live
-  command: mv -f /etc/sudoers.d/deploy.test /etc/sudoers.d/deploy
+  notify: Test sudoers and make it live
 # TODO There are serious security concerns with doing this. This will probably be improved
 # as Docker matures
 - name: Add deploy to the docker group (so it has permissions to do dockery things)

@@ -3,3 +3,5 @@
   service: name=apache2 state=restarted
 - name: Update timezone
   command: dpkg-reconfigure --frontend noninteractive tzdata
+- name: Test sudoers and make it live
+  shell: visudo -c -f /etc/sudoers.d/deploy.test && cp -f /etc/sudoers.d/deploy.test /etc/sudoers.d/deploy
