@@ -76,4 +76,18 @@
   apt: pkg=nodejs
 - name: Install memcached
   apt: pkg=memcached
+- name: Create directory for duply backup config for mysql
+  file: path=/root/.duply/mysql state=directory
+- name: Create directory for duply backup config for sqlite
+  file: path=/root/.duply/sqlite state=directory
+- name: Copy across duply backup config for mysql
+  copy: src=duply_mysql_conf.secure dest=/root/.duply/mysql/conf owner=root group=root mode=0400
+- name: Copy across duply backup config for sqlite
+  copy: src=duply_sqlite_conf.secure dest=/root/.duply/sqlite/conf owner=root group=root mode=0400
+- name: Do backups daily of mysql to S3 at 4:40AM
+  cron: name="duply mysql" hour=4 minute=40 user=root job="duply mysql backup"
+  when: backups
+- name: Do backups daily of sqlite to S3 at 4:40AM
+  cron: name="duply sqlite" hour=4 minute=40 user=root job="duply sqlite backup"
+  when: backups
 

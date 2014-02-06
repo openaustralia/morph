@@ -117,7 +117,7 @@ Vagrant.configure("2") do |config|
 
     local.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/playbook.yml"
-      ansible.extra_vars = { server_name: "dev.morph.io", env_file: ".env.local", ssl: false}
+      ansible.extra_vars = { server_name: "dev.morph.io", env_file: ".env.local", ssl: false, backups: false}
       #ansible.verbose = 'vvv'
     end
   end

@@ -1,3 +1,4 @@
 server_name: morph.io
 env_file: .env.production
 ssl: true
+backups: true
