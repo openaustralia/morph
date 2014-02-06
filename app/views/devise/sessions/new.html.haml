@@ -1,0 +1,5 @@
+%div.sign_in
+  %p
+    Everything on Morph is hooked into GitHub. If you don't have a GitHub account you will need to register one.
+  %p
+    = link_to "Sign in with GitHub", user_omniauth_authorize_path(:github), class: "btn btn-primary btn-lg"
