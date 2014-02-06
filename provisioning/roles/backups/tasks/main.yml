@@ -7,3 +7,5 @@
   apt: pkg=percona-xtrabackup update_cache=yes cache_valid_time=3600
 - name: Copy across database backup script
   copy: src=database-backup.sh dest=/usr/local/bin/database-backup.sh mode=0500
+- name: Run database backup at 6:25am
+  cron: name="database backup" hour=6 minute=25 user=root job="/usr/local/bin/database-backup.sh"
