@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140129060238) do
+ActiveRecord::Schema.define(version: 20140206220031) do
+
+  create_table "alerts", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "watch_id"
+    t.string   "watch_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
