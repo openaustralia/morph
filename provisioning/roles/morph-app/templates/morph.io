@@ -1,6 +1,6 @@
 <VirtualHost *:80>
     ServerName {{ server_name }}
-    ServerAlias api.morph.io
+    ServerAlias api.{{ server_name }}
     RedirectMatch permanent ^/(.*) https://morph.io/$1
 </VirtualHost>
 
