@@ -5,9 +5,4 @@
 # rather than running it through vagrant
 #  user: ubuntu
   roles:
-    - docker-server
-    - apache-passenger
-    - ruby-2.0.0-p353
-    - mysql
     - morph-app
-    
