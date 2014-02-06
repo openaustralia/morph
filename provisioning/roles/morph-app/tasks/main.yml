@@ -44,9 +44,7 @@
   gem: name=foreman state=present user_install=no
 - name: Ensure Procfile.production copied
   copy: src=../Procfile.production dest=/home/deploy/Procfile.production
-# TODO Restart morph service if this changed the /etc/init files
-- name: Ensure upstart is setup for the application
-  command: foreman export upstart /etc/init -u deploy -a morph -f /home/deploy/Procfile.production --root /var/www/current
+  notify: Export to upstart
 - name: Create sudoers ready for testing
   template: src=sudoers dest=/etc/sudoers.d/deploy.test owner=root group=root mode=0440
   notify: Test sudoers and make it live
