@@ -57,7 +57,7 @@
   .col-md-1
     - if signed_in?
       - if current_user.watching?(@owner)
-        = button_to "Unwatch", owner_watch_path, class: "btn btn-default"
+        = button_to "Unwatch", owner_watch_path, class: "btn btn-default has-tooltip", data: {placement: "bottom", title: "Stop receiving alerts for #{@owner.nickname}'s scraper"}
       - else
-        = button_to "Watch", owner_watch_path, class: "btn btn-default"
+        = button_to "Watch", owner_watch_path, class: "btn btn-default has-tooltip", data: {placement: "bottom", title: "Receive alerts when any of #{@owner.nickname}'s scrapers errors"}
 
