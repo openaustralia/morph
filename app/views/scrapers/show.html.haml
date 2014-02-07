@@ -10,8 +10,7 @@
 
 %h4
   = @scraper.description
-  - if @scraper.auto_run
-    %i.icon-time
+  = render partial: "auto_clock", locals: {scraper: @scraper}
   - if @scraper.queued? || @scraper.running?
     .pulse
 
