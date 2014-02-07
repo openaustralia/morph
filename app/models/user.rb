@@ -16,7 +16,12 @@ class User < Owner
     if watching?(object)
       alerts.where(watch: object).first.destroy
     else
+      # If we're starting to watch a whole bunch of scrapers (by watching a user/org) and we're
+      # already following one of those scrapers individually then remove the individual alert
       alerts.create(watch: object)
+      if object.respond_to?(:scrapers)
+        alerts.where(watch_id: object.scrapers, watch_type: "Scraper").destroy_all
+      end
     end
   end
 
