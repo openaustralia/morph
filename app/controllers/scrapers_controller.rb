@@ -106,4 +106,11 @@ class ScrapersController < ApplicationController
       end
     end
   end
+
+  # Toggle whether we're watching this scraper
+  def watch
+    scraper = Scraper.find(params[:id])
+    current_user.toggle_watch(scraper)
+    redirect_to scraper
+  end
 end

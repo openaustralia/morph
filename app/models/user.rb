@@ -12,6 +12,11 @@ class User < Owner
     end
   end
 
+  # Are we watching this scraper because we're watching the owner of the scraper?
+  def indirectly_watching?(scraper)
+    watching?(scraper.owner)
+  end
+
   def watching?(object)
     alerts.map{|a| a.watch}.include? object
   end

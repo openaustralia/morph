@@ -1,7 +1,16 @@
-%h1
-  = link_to @scraper.owner.to_param, @scraper.owner
-  \/
-  = link_to @scraper.name, @scraper
+.row
+  .col-md-11
+    %h1
+      = link_to @scraper.owner.to_param, @scraper.owner
+      \/
+      = link_to @scraper.name, @scraper
+  .col-md-1
+    - if current_user.indirectly_watching?(@scraper)
+      = button_to "Unwatch", "#", class: "btn btn-default", disabled: "disabled"
+    - elsif current_user.watching?(@scraper)
+      = button_to "Unwatch", scraper_watch_path(@scraper), class: "btn btn-default"
+    - else
+      = button_to "Watch", scraper_watch_path(@scraper), class: "btn btn-default"
 
 %h4
   = @scraper.description

@@ -30,6 +30,7 @@ Morph::Application.routes.draw do
   resources "scraperwiki_forks", only: [:new, :create]
 
   get '/*id/data', to: "scrapers#data", as: :scraper_data
+  post '/*id/watch', to: "scrapers#watch", as: :scraper_watch
   get "/*id", to: "scrapers#show", as: :scraper
   delete "/*id", to: "scrapers#destroy"
   patch "/*id", to: "scrapers#update"
