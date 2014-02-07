@@ -1,0 +1,6 @@
+- if current_user.indirectly_watching?(scraper)
+  = button_to "Unwatch", "#", class: "btn btn-default", disabled: "disabled"
+- elsif current_user.watching?(scraper)
+  = button_to "Unwatch", scraper_watch_path(scraper), class: "btn btn-default has-tooltip", data: {placement: "bottom", title: "Stop receiving alerts for this scraper"}
+- else
+  = button_to "Watch", scraper_watch_path(scraper), class: "btn btn-default has-tooltip", data: {placement: "bottom", title: "Receive alerts when this scraper errors"}
