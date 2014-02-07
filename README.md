@@ -8,6 +8,7 @@
 * Schedule scrapers or run manually
 * Process isolation via [Docker](http://www.docker.io/)
 * Trivial to move scraper code and data from [ScraperWiki Classic](https://classic.scraperwiki.com/)
+* Email alerts for broken scrapers
 
 ### Dependencies
 Ruby 2.0.0, Docker, MySQL, SQLite 3
