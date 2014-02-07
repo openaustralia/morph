@@ -2,6 +2,14 @@
 class Organization < Owner
   has_and_belongs_to_many :users, join_table: :organizations_users
 
+  def user?
+    false
+  end
+
+  def organization?
+    true
+  end
+
   def self.find_or_create(uid, nickname)
     org = Organization.find_by(uid: uid)
     if org.nil?

@@ -4,12 +4,32 @@ class User < Owner
   has_and_belongs_to_many :organizations, join_table: :organizations_users
   has_many :alerts
 
+  def user?
+    true
+  end
+
+  def organization?
+    false
+  end
+  
   def toggle_watch(object)
     if watching?(object)
       alerts.where(watch: object).first.destroy
     else
       alerts.create(watch: object)
     end
+  end
+
+  def organizations_watched
+    alerts.map{|a| a.watch}.select{|w| w.kind_of?(Organization)}
+  end
+
+  def users_watched
+    alerts.map{|a| a.watch}.select{|w| w.kind_of?(User)}
+  end
+
+  def scrapers_watched
+    alerts.map{|a| a.watch}.select{|w| w.kind_of?(Scraper)}
   end
 
   # Are we watching this scraper because we're watching the owner of the scraper?

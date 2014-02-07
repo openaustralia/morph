@@ -10,4 +10,10 @@ class UsersController < ApplicationController
     current_user.save!
     redirect_to :user_settings
   end
+
+  def watching
+    # Can't do User.find(params[:id]). Figure out why
+    @user = Owner.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @user.user?
+  end
 end

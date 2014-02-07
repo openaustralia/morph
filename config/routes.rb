@@ -24,6 +24,8 @@ Morph::Application.routes.draw do
   resources :scrapers, path: '/', only: [:new, :create]
   resources :owners, path: "/", only: :show
   post '/:id/watch', to: "owners#watch", as: :owner_watch
+  # This url begins with /users so that we don't stop users have scrapers called watching
+  get '/users/:id/watching', to: "users#watching", as: :user_watching
   resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
   # TODO Not very happy with this URL but this will do for the time being
