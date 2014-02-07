@@ -13,14 +13,34 @@
   This makes it very easy to fix any problems quickly.
 
 %h2 Individual scrapers
-.list-group= render @user.scrapers_watched
+.list-group
+  - @user.scrapers_watched.each do |scraper|
+    .row
+      .col-md-11= render scraper
+      .col-md-1
+        - if @user == current_user
+          = render partial: "scrapers/watch_button", locals: {scraper: scraper}
 
 - @user.users_watched.each do |user|
-  %h2= link_to user.nickname, user
-  .list-group= render user.scrapers
+  .row
+    .col-md-11
+      %h2= link_to user.nickname, user
+    .col-md-1
+      - if @user == current_user
+        = render partial: "owners/watch_button", locals: {owner: user}
+  .row
+    .col-md-11
+      .list-group= render user.scrapers
 
 - @user.organizations_watched.each do |organization|
-  %h2= link_to organization.nickname, organization
-  .list-group= render organization.scrapers
+  .row
+    .col-md-11
+      %h2= link_to organization.nickname, organization
+    .col-md-1
+      - if @user == current_user
+        = render partial: "owners/watch_button", locals: {owner: organization}
+  .row
+    .col-md-11
+      .list-group= render organization.scrapers
 
 
