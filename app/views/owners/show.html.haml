@@ -70,5 +70,5 @@
 
   .col-md-1
     - if signed_in?
-      = render partial: "watch_button", locals: {owner: @owner}
+      .button_title_adjust= render partial: "watch_button", locals: {owner: @owner}
 
