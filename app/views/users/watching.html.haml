@@ -12,14 +12,15 @@
   will receive an email alert at most once per day.
   This makes it very easy to fix any problems quickly.
 
-%h2 Individual scrapers
-.list-group
-  - @user.scrapers_watched.each do |scraper|
-    .row
-      .col-md-11= render scraper
-      .col-md-1
-        - if @user == current_user
-          = render partial: "scrapers/watch_button", locals: {scraper: scraper}
+- unless @user.scrapers_watched.empty?
+  %h2 Individual scrapers
+  .list-group
+    - @user.scrapers_watched.each do |scraper|
+      .row
+        .col-md-11= render scraper
+        .col-md-1
+          - if @user == current_user
+            = render partial: "scrapers/watch_button", locals: {scraper: scraper}
 
 - @user.users_watched.each do |user|
   .row
