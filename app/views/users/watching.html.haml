@@ -31,7 +31,10 @@
         .button_title_adjust= render partial: "owners/watch_button", locals: {owner: user}
   .row
     .col-md-11
-      .list-group= render user.scrapers
+      - if user.scrapers.empty?
+        %p Has no scrapers
+      - else
+        .list-group= render user.scrapers
 
 - @user.organizations_watched.each do |organization|
   .row
@@ -42,6 +45,9 @@
         .button_title_adjust= render partial: "owners/watch_button", locals: {owner: organization}
   .row
     .col-md-11
-      .list-group= render organization.scrapers
+      - if organization.scrapers.empty?
+        %p Has no scrapers
+      - else
+        .list-group= render organization.scrapers
 
 
