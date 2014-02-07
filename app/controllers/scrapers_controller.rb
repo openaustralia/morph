@@ -111,6 +111,6 @@ class ScrapersController < ApplicationController
   def watch
     scraper = Scraper.find(params[:id])
     current_user.toggle_watch(scraper)
-    redirect_to scraper
+    redirect_to :back
   end
 end

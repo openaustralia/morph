@@ -7,6 +7,6 @@ class OwnersController < ApplicationController
   def watch
     owner = Owner.find(params[:id])
     current_user.toggle_watch(owner)
-    redirect_to owner
+    redirect_to :back
   end
 end
