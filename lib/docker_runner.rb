@@ -27,7 +27,10 @@ class DockerRunner
         yield s,c
       end
     ensure
-      c.kill if c.json["State"]["Running"]
+      # This appears to be giving a broken pipe (Errno::EPIPE) sometimes
+      if c.json["State"]["Running"]
+        c.kill 
+      end
     end
     # Scraper should already have finished now. We're just using this to return the scraper status code
     status_code = c.wait["StatusCode"]
