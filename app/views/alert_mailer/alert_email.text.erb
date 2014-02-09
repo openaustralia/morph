@@ -1,13 +1,10 @@
-planningalerts-scrapers/campbelltown errored about 2 hours ago
-Fix it: https://morph.io/planningalerts-scrapers/campbelltown
-PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16
-
-planningalerts-scrapers/spear errored about 22 hours ago
-Fix it: https://morph.io/planningalerts-scrapers/spear
-/repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )
-
-32 other scrapers you are watching ran without error
+<% @broken_runs.each do |run| %>
+<%= run.full_name %> errored <%= time_ago_in_words(run.finished_at) %> ago
+Fix it: <%= scraper_url(run.scraper) %>
+<%= run.error_text %>
+<% end %>
+<%= @successful_count %> other scrapers you are watching finished successfully
 
 -----
-Change what you're watching - https://morph.io/users/mlandauer/watching
-Morph.io - https://morph.io
+Change what you're watching - <%= user_watching_url(@user) %>
+Morph.io - <%= root_url %>
