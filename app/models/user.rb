@@ -4,6 +4,29 @@ class User < Owner
   has_and_belongs_to_many :organizations, join_table: :organizations_users
   has_many :alerts
 
+  # Send all alerts. This method should be run from a daily cron job
+  def self.process_alerts
+    User.all.each do |user|
+      user.process_alerts
+    end
+  end
+
+  def process_alerts
+    broken_scrapers = all_scrapers_watched.select do |s|
+      s.last_run && s.last_run.auto? && s.last_run.finished_with_errors?
+    end
+    successful_scrapers = all_scrapers_watched.select do |s|
+      s.last_run && s.last_run.auto? && s.last_run.finished_successfully?
+    end
+
+    broken_runs = broken_scrapers.map{|s| s.last_run}
+    successful_count = successful_scrapers.count
+
+    unless broken_runs.empty?
+      AlertMailer.alert_email(self, broken_runs, successful_count).deliver
+    end
+  end
+
   def user?
     true
   end
@@ -35,6 +58,12 @@ class User < Owner
 
   def scrapers_watched
     alerts.map{|a| a.watch}.select{|w| w.kind_of?(Scraper)}
+  end
+
+  def all_scrapers_watched
+    s = scrapers_watched
+    (organizations_watched + users_watched).each {|owner| s += owner.scrapers }
+    s.uniq
   end
 
   # Are we watching this scraper because we're watching the owner of the scraper?
