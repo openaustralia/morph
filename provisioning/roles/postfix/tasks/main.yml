@@ -1,0 +1,8 @@
+---
+- name: Install postfix
+  apt: pkg=postfix
+- name: Copy across postfix config
+  copy: src=main.cf dest=/etc/postfix/main.cf
+  notify: Reload postfix
+
+
