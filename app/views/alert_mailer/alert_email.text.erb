@@ -1,7 +1,11 @@
 <% @broken_runs.each do |run| %>
 <%= run.full_name %> errored <%= time_ago_in_words(run.finished_at) %> ago
 Fix it: <%= scraper_url(run.scraper) %>
-<%= run.error_text %>
+<%= run.error_text.split("\n")[0..4].join("\n") %>
+<% if run.error_text.split("\n").count > 5 %>
+(truncated)
+<% end %>
+
 <% end %>
 <%= @successful_count %> other scrapers you are watching finished successfully
 

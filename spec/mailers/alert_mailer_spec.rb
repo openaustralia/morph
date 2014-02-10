@@ -44,5 +44,27 @@ Morph.io - http://dev.morph.io/
         EOF
       end
     end
+
+    context "more than 5 lines of errors for a scraper run" do
+      it "should trunctate the log output" do
+        run1.stub(error_text: "This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
+        AlertMailer.alert_email(user, [run1], 32).body.to_s.should == <<-EOF
+planningalerts-scrapers/campbelltown errored about 2 hours ago
+Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
+This is line one of an error
+This is line two
+Line three
+Line four
+Line five
+(truncated)
+
+32 other scrapers you are watching finished successfully
+
+-----
+Change what you're watching - http://dev.morph.io/users/mlandauer/watching
+Morph.io - http://dev.morph.io/
+        EOF
+      end
+    end
   end  
 end
