@@ -52,7 +52,6 @@ group :development do
   #gem "bullet"
   #gem 'rack-mini-profiler'
   #gem "flamegraph"
-  gem "mailcatcher"
 end
 
 group :development, :test do
