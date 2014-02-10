@@ -31,12 +31,12 @@ class DockerRunner
       if c.json["State"]["Running"]
         c.kill 
       end
-    end
-    # Scraper should already have finished now. We're just using this to return the scraper status code
-    status_code = c.wait["StatusCode"]
+      # Scraper should already have finished now. We're just using this to return the scraper status code
+      status_code = c.wait["StatusCode"]
 
-    # Clean up after ourselves
-    c.delete
+      # Clean up after ourselves
+      c.delete
+    end
 
     status_code
   end
