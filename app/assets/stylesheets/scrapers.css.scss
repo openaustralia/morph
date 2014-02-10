@@ -23,7 +23,11 @@
 }
 
 span.stderr {
-  color: red;
+  color: #e00;
+}
+
+span.internal {
+  color: #a00;
 }
 
 .icon-box {
