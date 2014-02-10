@@ -6,6 +6,11 @@ namespace :app do
     puts "Queued #{scrapers.count} scrapers to run now"
   end
 
+  desc "Send out alerts for all users (Run once per day with a cron job)"
+  task :send_alerts => :environment do
+    User.process_alerts
+  end
+
   desc "Refresh info for all users from github"
   task :refresh_all_users => :environment do
     User.all.each {|user| user.refresh_info_from_github!}
