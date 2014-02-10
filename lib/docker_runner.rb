@@ -4,10 +4,16 @@ class DockerRunner
     Docker.options[:chunk_size] = 1
 
     # This will fail if there is another container with the same name
-    c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
-      "User" => "scraper",
-      "Image" => options[:image_name],
-      "name" => options[:container_name])
+    begin
+      c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
+        "User" => "scraper",
+        "Image" => options[:image_name],
+        "name" => options[:container_name])
+    rescue Excon::Errors::SocketError => e
+      yield :internal, "Morph internal error: Could not connect to Docker server: #{e}\n"
+      yield :internal, "Requeueing...\n"
+      raise "Could not connect to Docker server: #{e}"
+    end
 
     # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
     # HACK to detect vagrant installation in crude way
