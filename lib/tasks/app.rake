@@ -10,4 +10,9 @@ namespace :app do
   task :refresh_all_users => :environment do
     User.all.each {|user| user.refresh_info_from_github!}
   end
+
+  desc "Build docker image (Needs to be done once before any scrapers are run)"
+  task :update_docker_image => :environment do
+    Scraper.update_docker_image!
+  end
 end
