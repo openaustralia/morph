@@ -107,12 +107,15 @@ class Run < ActiveRecord::Base
     Database.tidy_data_path(data_path)
   end
 
+  def log(stream, text)
+    puts "#{stream}: #{text}"
+    number = log_lines.maximum(:number) || 0
+    log_lines.create(stream: stream, text: text, number: (number + 1))
+  end
+
   def go!
-    log_line_number = 0
     go_with_logging do |s,c|
-      puts "#{s}: #{c}"
-      log_lines.create(stream: s, text: c, number: log_line_number)
-      log_line_number += 1
+      log(s, c)
     end
   end
 
