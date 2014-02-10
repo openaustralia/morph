@@ -33,16 +33,9 @@
     - if @owner.user?
       %p
         - if @owner.alerts.empty?
-          - if @owner == current_user
-            You are watching no scrapers
-          - else
-            = @owner.nickname
-            is watching no scrapers
+          watching no scrapers
         - else
-          - if @owner == current_user
-            = link_to "Scrapers you are watching", user_watching_path(@owner)
-          - else
-            = link_to "Scrapers #{@owner.nickname} is watching", user_watching_path(@owner)
+          = link_to "watching #{pluralize(@owner.all_scrapers_watched.count, 'scrapers')}", user_watching_path(@owner)
 
     - if @owner.scrapers.empty?
       %h3 Has no scrapers
