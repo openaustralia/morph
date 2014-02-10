@@ -16,7 +16,7 @@ append_dot_mydomain = no
 #delay_warning_time = 4h
 
 readme_directory = no
-myorigin = /etc/mailname
+myorigin = $myhostname
 mydestination = localhost
 relayhost =
 mailbox_size_limit = 0
