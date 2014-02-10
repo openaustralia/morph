@@ -26,8 +26,7 @@ class DockerRunner
       c.attach(logs: true) do |s,c|
         yield s,c
       end
-    ensure e
-      puts "Caught error inside DockerRunner: #{e}"
+    ensure
       # This appears to be giving a broken pipe (Errno::EPIPE) sometimes
       if c.json["State"]["Running"]
         c.kill 
