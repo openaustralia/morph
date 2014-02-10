@@ -13,10 +13,10 @@ class User < Owner
 
   def process_alerts
     broken_scrapers = all_scrapers_watched.select do |s|
-      s.last_run && s.last_run.auto? && s.last_run.finished_with_errors?
+      s.auto_run? && s.last_run && s.last_run.auto? && s.last_run.finished_with_errors?
     end
     successful_scrapers = all_scrapers_watched.select do |s|
-      s.last_run && s.last_run.auto? && s.last_run.finished_successfully?
+      s.auto_run? && s.last_run && s.last_run.auto? && s.last_run.finished_successfully?
     end
 
     broken_runs = broken_scrapers.map{|s| s.last_run}
