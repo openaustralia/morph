@@ -70,8 +70,6 @@ By default in development mails are sent to [Mailcatcher](http://mailcatcher.me/
 
     gem install mailcatcher
 
-It's also started up by default with foreman.
-
 ### Special notes if you're deploying to production
 
 This section will not be relevant to most people. It will however be relevant if you're deploying to a production server.
