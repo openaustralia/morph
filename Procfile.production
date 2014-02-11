@@ -1,1 +1,1 @@
-worker: rvm . do bundle exec --concurrency 10 sidekiq -e production
+worker: rvm . do bundle exec sidekiq --concurrency 10-e production
