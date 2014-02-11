@@ -30,11 +30,15 @@ describe AlertMailer do
         email.body.to_s.should == <<-EOF
 planningalerts-scrapers/campbelltown errored about 2 hours ago
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
+
 PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16
+
 
 planningalerts-scrapers/spear errored about 22 hours ago
 Fix it: http://dev.morph.io/planningalerts-scrapers/spear
+
 /repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )
+
 
 32 other scrapers you are watching finished successfully
 
@@ -51,12 +55,14 @@ Morph.io - http://dev.morph.io/
         AlertMailer.alert_email(user, [run1], 32).body.to_s.should == <<-EOF
 planningalerts-scrapers/campbelltown errored about 2 hours ago
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
+
 This is line one of an error
 This is line two
 Line three
 Line four
 Line five
 (truncated)
+
 
 32 other scrapers you are watching finished successfully
 
