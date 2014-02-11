@@ -1,2 +1,2 @@
-worker: bundle exec rake jobs:work
+worker: bundle exec sidekiq
 web: bundle exec rails s

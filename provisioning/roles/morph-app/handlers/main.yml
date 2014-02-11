@@ -6,7 +6,7 @@
 - name: Test sudoers and make it live
   shell: visudo -c -f /etc/sudoers.d/deploy.test && cp -f /etc/sudoers.d/deploy.test /etc/sudoers.d/deploy
 - name: Export to upstart
-  command: foreman export upstart /etc/init --concurrency "worker=2" -u deploy -a morph -f /home/deploy/Procfile.production --root /var/www/current
+  command: foreman export upstart /etc/init -u deploy -a morph -f /home/deploy/Procfile.production --root /var/www/current
   notify: Restart morph service
 - name: Restart morph service
   service: name=morph state=restarted

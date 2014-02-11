@@ -27,7 +27,7 @@ class ScraperwikiForksController < ApplicationController
     # Should do this with validation
     if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github
       if @scraper.save
-        @scraper.delay.fork_from_scraperwiki!
+        ForkScraperwikiWorker.perform_async(@scraper.id)
         #flash[:notice] = "Forking in action..."
         redirect_to @scraper      
       else

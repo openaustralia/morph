@@ -91,7 +91,10 @@ class Scraper < ActiveRecord::Base
   # Set auto to true if this job is being queued automatically (i.e. not directly by a person)
   def queue!(auto = false)
     # Guard against more than one of a particular scraper running at the same time
-    runs.create(queued_at: Time.now, auto: auto, owner_id: owner_id).delay.synch_and_go! if runnable?
+    if runnable?
+      run = runs.create(queued_at: Time.now, auto: auto, owner_id: owner_id)
+      RunWorker.perform_async(run.id) 
+    end
   end
 
   def github_url_for_file(file)

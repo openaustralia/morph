@@ -22,7 +22,7 @@ gem "formtastic-bootstrap", git: "https://github.com/mikowitz/formtastic-bootstr
 gem "formtastic", "2.3.0.rc2"
 gem "grit"
 gem 'docker-api', :require => 'docker'
-gem 'delayed_job_active_record'
+gem "sidekiq"
 gem "foreman"
 gem "faraday"
 gem 'jquery-turbolinks'
@@ -34,6 +34,9 @@ gem "archive-tar-minitar"
 gem 'github-markup', :require => 'github/markup'
 gem 'redcarpet'
 gem 'RedCloth'
+
+# For sidekiq ui
+gem 'sinatra', '>= 1.3.0', :require => nil
 
 group :production do
   gem "dalli"
