@@ -5,4 +5,4 @@
 # rather than running it through vagrant
 #  user: ubuntu
   roles:
-    - redis
+    - morph-app
