@@ -32,11 +32,14 @@ class DockerRunner
       c.attach(logs: true) do |s,c|
         yield s,c
       end
+      status_code = c.json["State"]["ExitCode"]
+      puts "Docker container finished..."
+    rescue Exception => e
+      yield :internal, "Morph internal error: #{e}\n"
+      yield :internal, "Stopping current container and requeueing\n"
+      c.kill
+      raise e
     ensure
-      state = c.json["State"]
-      c.kill if state["Running"]
-      status_code = state["ExitCode"]
-
       # Clean up after ourselves
       c.delete
     end
