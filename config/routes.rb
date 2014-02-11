@@ -11,6 +11,12 @@ Morph::Application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
+  # TODO: Put this in a path where it won't conflict
+  require 'sidekiq/web'
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/admin/jobs'
+  end
+
   root 'static#index'
   get "/api", to: "static#api"
   get "/documentation", to: 'static#documentation'

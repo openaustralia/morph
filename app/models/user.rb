@@ -4,6 +4,11 @@ class User < Owner
   has_and_belongs_to_many :organizations, join_table: :organizations_users
   has_many :alerts
 
+  # For the time being just hardcode a couple of people as admins
+  def admin?
+    ["mlandauer", "henare"].include?(nickname)
+  end
+
   # Send all alerts. This method should be run from a daily cron job
   def self.process_alerts
     User.all.each do |user|
