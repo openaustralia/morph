@@ -92,4 +92,6 @@
 - name: Do backups daily of sqlite to S3 at 4:40AM
   cron: name="duply sqlite" hour=4 minute=40 user=root job="duply sqlite backup"
   when: backups
+- name: Install redis for sidekiq background jobs
+  apt: pkg=redis-server
 
