@@ -40,6 +40,8 @@ class DockerRunner
       c.kill
       raise e
     ensure
+      # Wait until container has definitely stopped
+      c.wait
       # Clean up after ourselves
       c.delete
     end
