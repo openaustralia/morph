@@ -42,6 +42,8 @@
                 %li= link_to "Fork scraper from Scraperwiki", new_scraperwiki_fork_path
             %li= link_to "API", api_path
             %li= link_to "Documentation", documentation_path
+            - if user_signed_in? && current_user.admin?
+              %li= link_to "Admin", "/admin/jobs", data: {"no-turbolink" => true}
           %ul.nav.navbar-nav.navbar-right
             %li
               - if user_signed_in?
