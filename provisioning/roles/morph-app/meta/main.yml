@@ -6,3 +6,4 @@ dependencies:
   - { role: mysql }
   - { role: backups }
   - { role: postfix }
+  - { role: redis }
