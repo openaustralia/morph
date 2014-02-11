@@ -18,3 +18,5 @@ production:
   database: scraping_production
   username: scraping
   password: ** a password goes here **
+  # This needs to be high to handle the concurrency in sidekiq
+  pool: 25
