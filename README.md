@@ -12,7 +12,7 @@
 * Email alerts for broken scrapers
 
 ### Dependencies
-Ruby 2.0.0, Docker, MySQL, SQLite 3
+Ruby 2.0.0, Docker, MySQL, SQLite 3, Redis
 (On OS X for development also Vagrant & VirtualBox to host a VM with Docker - see below for more)
 
 ### To Install
