@@ -17,18 +17,15 @@ class User < Owner
   end
 
   def process_alerts
-    broken_scrapers = all_scrapers_watched.select do |s|
-      s.auto_run? && s.last_run && s.last_run.auto? && s.last_run.finished_with_errors?
-    end
-    successful_scrapers = all_scrapers_watched.select do |s|
-      s.auto_run? && s.last_run && s.last_run.auto? && s.last_run.finished_successfully?
-    end
+    auto_runs = all_scrapers_watched.select do |s|
+      s.auto_run? && s.last_run && s.last_run.auto?
+    end.map{|s| s.last_run}
 
-    broken_runs = broken_scrapers.map{|s| s.last_run}
-    successful_count = successful_scrapers.count
+    broken_runs = auto_runs.select {|r| r.finished_with_errors?}
+    successful_runs = auto_runs.select {|r| r.finished_successfully?}
 
     unless broken_runs.empty?
-      AlertMailer.alert_email(self, broken_runs, successful_count).deliver
+      AlertMailer.alert_email(self, broken_runs, successful_runs.count).deliver
     end
   end
 
