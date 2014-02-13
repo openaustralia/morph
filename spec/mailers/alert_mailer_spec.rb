@@ -56,10 +56,8 @@ Morph.io - http://dev.morph.io/
 <p>Fix it: <a href="http://dev.morph.io/planningalerts-scrapers/spear">http://dev.morph.io/planningalerts-scrapers/spear</a></p>
 <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
 <p>32 other scrapers you are watching finished successfully</p>
-<p>
-Change what you're watching - <a href="http://dev.morph.io/users/mlandauer/watching">http://dev.morph.io/users/mlandauer/watching</a>
-Morph.io - <a href="http://dev.morph.io/">http://dev.morph.io/</a>
-</p>
+<p>Change what you're watching - <a href="http://dev.morph.io/users/mlandauer/watching">http://dev.morph.io/users/mlandauer/watching</a></p>
+<p><a href="http://dev.morph.io/">Morph.io</a></p>
         EOF
       end
     end
