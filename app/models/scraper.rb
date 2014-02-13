@@ -149,6 +149,10 @@ class Scraper < ActiveRecord::Base
     m[1] if m
   end
 
+  def scraperwiki_shortname=(shortname)
+    self.scraperwiki_url = "https://classic.scraperwiki.com/scrapers/#{shortname}/"
+  end
+
   def current_revision_from_repo
     r = Grit::Repo.new(repo_path)
     Grit::Head.current(r).commit.id
