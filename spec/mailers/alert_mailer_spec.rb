@@ -53,11 +53,14 @@ Morph.io - http://dev.morph.io/
 
       it do
         expected = <<-EOF
-<h2>
-<image height='75px' src='http://dev.morph.io//assets/logo.png' width='75px'></image>
 <a href="http://dev.morph.io/">Morph</a>
 is letting you know that
-</h2>
+        EOF
+        email.html_part.body.to_s.should include(expected)
+      end
+
+      it do
+        expected = <<-EOF
 <h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
 errored about 2 hours ago
