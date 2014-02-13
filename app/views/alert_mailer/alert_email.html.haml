@@ -6,44 +6,44 @@
     %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
     %title= @subject
 
-  %body(bgcolor="#f6f6f6" style="-webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%;")
+  %body
     -# body
-    %table.body-wrap(style="width: 100%; padding: 20px;")
+    %table.body-wrap
       %tr
         %td
-        %td.container(bgcolor="#FFFFFF" style="display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto; padding: 20px; border: 1px solid #f0f0f0;")
-          .content(style="max-width: 600px; display: block; margin: 0 auto;")
-            %table(style="width: 100%;")
+        %td.container
+          .content
+            %table
               %tr
-                %td(style="text-align: center;" align="center")
-                  %h2(style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; line-height: 1.2; font-weight: 200; font-size: 28px; margin: 40px 0 10px;")
+                %td
+                  %h2
                     -# Hacky way to get full url in there
                     %image{src: root_url(trailing_slash: false) + image_path("logo.png"), style: "width: 75px; height: 75px"}
-                    = link_to "Morph", root_url, style: "color: #348eda;"
+                    = link_to "Morph", root_url
                     is letting you know that
                   - @broken_runs.each do |run|
-                    %h3(style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; line-height: 1.2; font-weight: 200; font-size: 22px; margin: 40px 0 10px;")
-                      = link_to run.full_name, scraper_url(run.scraper), style: "color: #348eda;"
+                    %h3
+                      = link_to run.full_name, scraper_url(run.scraper)
                       errored #{time_ago_in_words(run.finished_at)} ago
-                    %pre(style="max-width: 570px; color: #333333; word-break: break-all; word-wrap: break-word; background-color: #f5f5f5; border-radius: 4px; text-align: left; margin: 0 0 10px; padding: 9.5px; border: 1px solid #cccccc;")
+                    %pre
                       = run.error_text.split("\n")[0..4].join("\n")
                       - if run.error_text.split("\n").count > 5
                         (truncated)
 
-                  %h3(style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; line-height: 1.2; font-weight: 200; font-size: 22px; margin: 40px 0 10px;") #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
+                  %h3 #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
         %td
 
     -# footer
-    %table.footer-wrap(style="width: 100%; clear: both !important;")
+    %table.footer-wrap
       %tr
         %td
-        %td.container(style="display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;")
-          .content(style="max-width: 600px; display: block; margin: 0 auto;")
-            %table(style="width: 100%;")
+        %td.container
+          .content
+            %table
               %tr
-                %td(align="center")
-                  %p(style="font-size: 12px; color: #666; margin-bottom: 10px; font-weight: normal;")
+                %td
+                  %p
                     Annoyed by these emails? Then
                     = link_to "change what you're watching", user_watching_url(@user), style: "color: #999;"
-                  %p(style="font-size: 12px; color: #666; margin-bottom: 10px; font-weight: normal;")= link_to "Morph.io", root_url, style: "color: #999;"
+                  %p= link_to "Morph.io", root_url, style: "color: #999;"
         %td

@@ -53,33 +53,33 @@ Morph.io - http://dev.morph.io/
 
       it do
         expected = <<-EOF
-<h2 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; line-height: 1.2; font-weight: 200; font-size: 28px; margin: 40px 0 10px;">
+<h2>
 <image src='http://dev.morph.io//assets/logo.png' style='width: 75px; height: 75px'></image>
-<a href="http://dev.morph.io/" style="color: #348eda;">Morph</a>
+<a href="http://dev.morph.io/">Morph</a>
 is letting you know that
 </h2>
-<h3 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; line-height: 1.2; font-weight: 200; font-size: 22px; margin: 40px 0 10px;">
-<a href="http://dev.morph.io/planningalerts-scrapers/campbelltown" style="color: #348eda;">planningalerts-scrapers/campbelltown</a>
+<h3>
+<a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
 errored about 2 hours ago
 </h3>
-<pre style='max-width: 570px; color: #333333; word-break: break-all; word-wrap: break-word; background-color: #f5f5f5; border-radius: 4px; text-align: left; margin: 0 0 10px; padding: 9.5px; border: 1px solid #cccccc;'>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
-<h3 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; line-height: 1.2; font-weight: 200; font-size: 22px; margin: 40px 0 10px;">
-<a href="http://dev.morph.io/planningalerts-scrapers/spear" style="color: #348eda;">planningalerts-scrapers/spear</a>
+<pre>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
+<h3>
+<a href="http://dev.morph.io/planningalerts-scrapers/spear">planningalerts-scrapers/spear</a>
 errored about 22 hours ago
 </h3>
-<pre style='max-width: 570px; color: #333333; word-break: break-all; word-wrap: break-word; background-color: #f5f5f5; border-radius: 4px; text-align: left; margin: 0 0 10px; padding: 9.5px; border: 1px solid #cccccc;'>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
-<h3 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; line-height: 1.2; font-weight: 200; font-size: 22px; margin: 40px 0 10px;">32 other scrapers you are watching finished successfully</h3>
+<pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
+<h3>32 other scrapers you are watching finished successfully</h3>
         EOF
         email.html_part.body.to_s.should include(expected)
       end
 
       it do
         expected = <<-EOF
-<p style='font-size: 12px; color: #666; margin-bottom: 10px; font-weight: normal;'>
+<p>
 Annoyed by these emails? Then
-<a href="http://dev.morph.io/users/mlandauer/watching" style="color: #999;">change what you&#39;re watching</a>
+<a href="http://dev.morph.io/users/mlandauer/watching">change what you&#39;re watching</a>
 </p>
-<p style='font-size: 12px; color: #666; margin-bottom: 10px; font-weight: normal;'><a href="http://dev.morph.io/" style="color: #999;">Morph.io</a></p>
+<p><a href="http://dev.morph.io/">Morph.io</a></p>
         EOF
         email.html_part.body.to_s.should include(expected)
       end
