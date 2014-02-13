@@ -18,7 +18,7 @@ class User < Owner
 
   def process_alerts
     auto_runs = all_scrapers_watched.select do |s|
-      s.auto_run? && s.last_run && s.last_run.auto?
+      s.last_run
     end.map{|s| s.last_run}
 
     broken_runs = auto_runs.select {|r| r.finished_with_errors?}

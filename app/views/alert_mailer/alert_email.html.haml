@@ -202,7 +202,7 @@
                 %td(style="text-align: center")
                   %h2
                     -# Hacky way to get full url in there
-                    %image{src: root_url(trailing_slash: false) + image_path("logo.png"), style: "width: 75px; height: 75px"}
+                    %image{src: root_url(trailing_slash: false) + image_path("logo.png"), width: "75px", height: "75px"}
                     = link_to "Morph", root_url
                     is letting you know that
                   - @broken_runs.each do |run|
