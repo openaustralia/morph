@@ -54,7 +54,7 @@ Morph.io - http://dev.morph.io/
       it do
         expected = <<-EOF
 <h2>
-<image src='http://dev.morph.io//assets/logo.png' style='width: 75px; height: 75px'></image>
+<image height='75px' src='http://dev.morph.io//assets/logo.png' width='75px'></image>
 <a href="http://dev.morph.io/">Morph</a>
 is letting you know that
 </h2>
