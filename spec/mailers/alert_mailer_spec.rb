@@ -43,7 +43,7 @@ Fix it: http://dev.morph.io/planningalerts-scrapers/spear
 32 other scrapers you are watching finished successfully
 
 -----
-Change what you're watching - http://dev.morph.io/users/mlandauer/watching
+Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching
 Morph.io - http://dev.morph.io/
         EOF
       end
@@ -62,7 +62,10 @@ errored about 22 hours ago
 <p><a href="http://dev.morph.io/planningalerts-scrapers/spear">Fix it</a></p>
 <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
 <p>32 other scrapers you are watching finished successfully</p>
-<p><a href="http://dev.morph.io/users/mlandauer/watching">Change what you&#39;re watching</a></p>
+<p>
+Annoyed by these emails? Then
+<a href="http://dev.morph.io/users/mlandauer/watching">change what you&#39;re watching</a>
+</p>
 <p><a href="http://dev.morph.io/">Morph.io</a></p>
         EOF
       end
@@ -86,7 +89,7 @@ Line five
 32 other scrapers you are watching finished successfully
 
 -----
-Change what you're watching - http://dev.morph.io/users/mlandauer/watching
+Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching
 Morph.io - http://dev.morph.io/
         EOF
       end

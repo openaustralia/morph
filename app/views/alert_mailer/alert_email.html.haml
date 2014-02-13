@@ -10,5 +10,7 @@
 
 %p #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
 
-%p= link_to "Change what you're watching", user_watching_url(@user)
+%p
+  Annoyed by these emails? Then
+  = link_to "change what you're watching", user_watching_url(@user)
 %p= link_to "Morph.io", root_url
