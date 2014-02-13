@@ -1,0 +1,13 @@
+- @broken_runs.each do |run|
+  %h2 #{run.full_name} errored #{time_ago_in_words(run.finished_at)} ago
+  %p Fix it: #{link_to scraper_url(run.scraper), scraper_url(run.scraper)}
+  %pre
+    = run.error_text.split("\n")[0..4].join("\n")
+    - if run.error_text.split("\n").count > 5
+      (truncated)
+
+%p #{@successful_count} other scrapers you are watching finished successfully
+
+%p
+  Change what you're watching - #{link_to user_watching_url(@user), user_watching_url(@user)}
+  Morph.io - #{link_to root_url, root_url}

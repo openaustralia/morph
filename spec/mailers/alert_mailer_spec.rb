@@ -27,7 +27,7 @@ describe AlertMailer do
 
       it { email.subject.should == "Morph: 2 scrapers you are watching are erroring" }
       it do
-        email.body.to_s.should == <<-EOF
+        email.text_part.body.to_s.should == <<-EOF
 planningalerts-scrapers/campbelltown errored about 2 hours ago
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
 
@@ -47,12 +47,27 @@ Change what you're watching - http://dev.morph.io/users/mlandauer/watching
 Morph.io - http://dev.morph.io/
         EOF
       end
+      it do
+        email.html_part.body.to_s.should == <<-EOF
+<h2>planningalerts-scrapers/campbelltown errored about 2 hours ago</h2>
+<p>Fix it: <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">http://dev.morph.io/planningalerts-scrapers/campbelltown</a></p>
+<pre>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
+<h2>planningalerts-scrapers/spear errored about 22 hours ago</h2>
+<p>Fix it: <a href="http://dev.morph.io/planningalerts-scrapers/spear">http://dev.morph.io/planningalerts-scrapers/spear</a></p>
+<pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
+<p>32 other scrapers you are watching finished successfully</p>
+<p>
+Change what you're watching - <a href="http://dev.morph.io/users/mlandauer/watching">http://dev.morph.io/users/mlandauer/watching</a>
+Morph.io - <a href="http://dev.morph.io/">http://dev.morph.io/</a>
+</p>
+        EOF
+      end
     end
 
     context "more than 5 lines of errors for a scraper run" do
       it "should trunctate the log output" do
         run1.stub(error_text: "This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
-        AlertMailer.alert_email(user, [run1], 32).body.to_s.should == <<-EOF
+        AlertMailer.alert_email(user, [run1], 32).text_part.body.to_s.should == <<-EOF
 planningalerts-scrapers/campbelltown errored about 2 hours ago
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
 
