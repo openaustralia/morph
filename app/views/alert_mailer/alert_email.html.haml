@@ -188,7 +188,7 @@
                       = link_to run.full_name, scraper_url(run.scraper)
                       errored #{time_ago_in_words(run.finished_at)} ago
                     %p= link_to "Fix it", scraper_url(run.scraper)
-                    %pre
+                    %pre(style="word-break: break-word; max-width: 600px;")
                       = run.error_text.split("\n")[0..4].join("\n")
                       - if run.error_text.split("\n").count > 5
                         (truncated)
