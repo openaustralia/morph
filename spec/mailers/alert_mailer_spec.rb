@@ -48,7 +48,7 @@ Morph.io - http://dev.morph.io/
         EOF
       end
       it do
-        email.html_part.body.to_s.should == <<-EOF
+        expected = <<-EOF
 <h2>
 <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
 errored about 2 hours ago
@@ -62,12 +62,19 @@ errored about 22 hours ago
 <p><a href="http://dev.morph.io/planningalerts-scrapers/spear">Fix it</a></p>
 <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
 <p>32 other scrapers you are watching finished successfully</p>
+        EOF
+        email.html_part.body.to_s.should include(expected)
+      end
+
+      it do
+        expected = <<-EOF
 <p>
 Annoyed by these emails? Then
 <a href="http://dev.morph.io/users/mlandauer/watching">change what you&#39;re watching</a>
 </p>
 <p><a href="http://dev.morph.io/">Morph.io</a></p>
         EOF
+        email.html_part.body.to_s.should include(expected)
       end
     end
 

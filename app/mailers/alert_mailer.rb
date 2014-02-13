@@ -5,9 +5,7 @@ class AlertMailer < ActionMailer::Base
   def alert_email(user, broken_runs, successful_count)
     count = broken_runs.count
     @user, @broken_runs, @successful_count = user, broken_runs, successful_count
-    mail(
-      to: "#{user.name} <#{user.email}>",
-      subject: "Morph: #{pluralize(count, 'scraper')} you are watching #{count == 1 ? "is" : "are"} erroring"
-      )
+    @subject = "Morph: #{pluralize(count, 'scraper')} you are watching #{count == 1 ? "is" : "are"} erroring"
+    mail(to: "#{user.name} <#{user.email}>", subject: @subject)
   end
 end

@@ -1,16 +1,44 @@
-- @broken_runs.each do |run|
-  %h2
-    = link_to run.full_name, scraper_url(run.scraper)
-    errored #{time_ago_in_words(run.finished_at)} ago
-  %p= link_to "Fix it", scraper_url(run.scraper)
-  %pre
-    = run.error_text.split("\n")[0..4].join("\n")
-    - if run.error_text.split("\n").count > 5
-      (truncated)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+%html(xmlns="http://www.w3.org/1999/xhtml")
+  %head
+    %meta(name="viewport" content="width=device-width")
+    %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+    %title= @subject
+   
+  %body(bgcolor="#f6f6f6")
+    -# body
+    %table.body-wrap
+      %tr
+        %td
+        %td.container(bgcolor="#FFFFFF")
+          .content
+            %table
+              %tr
+                %td
+                  - @broken_runs.each do |run|
+                    %h2
+                      = link_to run.full_name, scraper_url(run.scraper)
+                      errored #{time_ago_in_words(run.finished_at)} ago
+                    %p= link_to "Fix it", scraper_url(run.scraper)
+                    %pre
+                      = run.error_text.split("\n")[0..4].join("\n")
+                      - if run.error_text.split("\n").count > 5
+                        (truncated)
 
-%p #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
+                  %p #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
+        %td
 
-%p
-  Annoyed by these emails? Then
-  = link_to "change what you're watching", user_watching_url(@user)
-%p= link_to "Morph.io", root_url
+    -# footer
+    %table.footer-wrap
+      %tr
+        %td
+        %td.container
+          .content
+            %table
+              %tr
+                %td(align="center")
+                  %p
+                    Annoyed by these emails? Then
+                    = link_to "change what you're watching", user_watching_url(@user)
+                  %p= link_to "Morph.io", root_url
+        %td
