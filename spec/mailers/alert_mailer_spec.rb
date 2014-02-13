@@ -87,5 +87,19 @@ Morph.io - http://dev.morph.io/
         EOF
       end
     end
+
+    describe "count of number of scrapers that finished successfully" do
+      context "32 scrapers" do
+        let(:mail) { AlertMailer.alert_email(user, [run1], 32) }
+        it { mail.text_part.body.to_s.should include("32 other scrapers you are watching finished successfully") }
+        it { mail.html_part.body.to_s.should include("32 other scrapers you are watching finished successfully") }
+      end
+
+      context "1 scraper" do
+        let(:mail) { AlertMailer.alert_email(user, [run1], 1) }
+        it { mail.text_part.body.to_s.should include("1 other scraper you are watching finished successfully") }
+        it { mail.html_part.body.to_s.should include("1 other scraper you are watching finished successfully") }
+      end
+    end
   end  
 end

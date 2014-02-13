@@ -6,7 +6,7 @@
     - if run.error_text.split("\n").count > 5
       (truncated)
 
-%p #{@successful_count} other scrapers you are watching finished successfully
+%p #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
 
 %p
   Change what you're watching - #{link_to user_watching_url(@user), user_watching_url(@user)}

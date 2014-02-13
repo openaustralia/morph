@@ -9,7 +9,7 @@ Fix it: <%= scraper_url(run.scraper) %>
 
 
 <% end %>
-<%= @successful_count %> other scrapers you are watching finished successfully
+<%= pluralize(@successful_count, "other scraper") %> you are watching finished successfully
 
 -----
 Change what you're watching - <%= user_watching_url(@user) %>
