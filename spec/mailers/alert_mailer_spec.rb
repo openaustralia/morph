@@ -28,6 +28,9 @@ describe AlertMailer do
       it { email.subject.should == "Morph: 2 scrapers you are watching are erroring" }
       it do
         email.text_part.body.to_s.should == <<-EOF
+Morph is letting you know that
+
+
 planningalerts-scrapers/campbelltown errored about 2 hours ago
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
 
@@ -49,19 +52,22 @@ Morph.io - http://dev.morph.io/
       end
       it do
         expected = <<-EOF
+<h2>
+<image src='http://dev.morph.io//assets/logo.png' style='width: 75px; height: 75px'></image>
+<a href="http://dev.morph.io/">Morph</a>
+is letting you know that
+</h2>
 <h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
 errored about 2 hours ago
 </h3>
-<p><a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">Fix it</a></p>
-<pre style='word-break: break-word; max-width: 600px;'>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
+<pre>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
 <h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/spear">planningalerts-scrapers/spear</a>
 errored about 22 hours ago
 </h3>
-<p><a href="http://dev.morph.io/planningalerts-scrapers/spear">Fix it</a></p>
-<pre style='word-break: break-word; max-width: 600px;'>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
-<p>32 other scrapers you are watching finished successfully</p>
+<pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
+<h3>32 other scrapers you are watching finished successfully</h3>
         EOF
         email.html_part.body.to_s.should include(expected)
       end
@@ -82,6 +88,9 @@ Annoyed by these emails? Then
       it "should trunctate the log output" do
         run1.stub(error_text: "This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
         AlertMailer.alert_email(user, [run1], 32).text_part.body.to_s.should == <<-EOF
+Morph is letting you know that
+
+
 planningalerts-scrapers/campbelltown errored about 2 hours ago
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
 

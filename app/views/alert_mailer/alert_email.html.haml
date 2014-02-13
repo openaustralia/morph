@@ -183,6 +183,11 @@
           background-color: #f5f5f5;
           border: 1px solid #cccccc;
           border-radius: 4px;
+          text-align: left;
+        }
+
+        img {
+          vertical-align: middle;
         }
 
   %body(bgcolor="#f6f6f6")
@@ -194,18 +199,22 @@
           .content
             %table
               %tr
-                %td
+                %td(style="text-align: center")
+                  %h2
+                    -# Hacky way to get full url in there
+                    %image{src: root_url(trailing_slash: false) + image_path("logo.png"), style: "width: 75px; height: 75px"}
+                    = link_to "Morph", root_url
+                    is letting you know that
                   - @broken_runs.each do |run|
                     %h3
                       = link_to run.full_name, scraper_url(run.scraper)
                       errored #{time_ago_in_words(run.finished_at)} ago
-                    %p= link_to "Fix it", scraper_url(run.scraper)
                     %pre
                       = run.error_text.split("\n")[0..4].join("\n")
                       - if run.error_text.split("\n").count > 5
                         (truncated)
 
-                  %p #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
+                  %h3 #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
         %td
 
     -# footer
