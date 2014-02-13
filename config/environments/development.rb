@@ -30,8 +30,18 @@ Morph::Application.configure do
   # Send mail via Mailcatcher and raise an error if there is a problem
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
+  # To test sending via Gmail comment out line above and uncomment lines below
+  # config.action_mailer.smtp_settings = {
+  #   address: "smtp.gmail.com",
+  #   port: 587,
+  #   domain: "gmail.com",
+  #   authentication: "plain",
+  #   enable_starttls_auto: true,
+  #   user_name: "GMAIL_USERNAME",
+  #   password: "GMAIL_PASSWORD"
+  # }
 
   # Add Rack::LiveReload to the bottom of the middleware stack with the default options.
   config.middleware.use Rack::LiveReload
