@@ -190,16 +190,16 @@
           vertical-align: middle;
         }
 
-  %body
+  %body(bgcolor="#f6f6f6")
     -# body
     %table.body-wrap
       %tr
         %td
-        %td.container
+        %td.container(bgcolor="#FFFFFF")
           .content
             %table
               %tr
-                %td
+                %td(style="text-align: center")
                   %h2
                     -# Hacky way to get full url in there
                     %image{src: root_url(trailing_slash: false) + image_path("logo.png"), style: "width: 75px; height: 75px"}
@@ -225,9 +225,9 @@
           .content
             %table
               %tr
-                %td
+                %td(align="center")
                   %p
                     Annoyed by these emails? Then
-                    = link_to "change what you're watching", user_watching_url(@user), style: "color: #999;"
-                  %p= link_to "Morph.io", root_url, style: "color: #999;"
+                    = link_to "change what you're watching", user_watching_url(@user)
+                  %p= link_to "Morph.io", root_url
         %td
