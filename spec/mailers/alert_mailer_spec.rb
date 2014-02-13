@@ -49,16 +49,16 @@ Morph.io - http://dev.morph.io/
       end
       it do
         expected = <<-EOF
-<h2>
+<h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
 errored about 2 hours ago
-</h2>
+</h3>
 <p><a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">Fix it</a></p>
 <pre style='word-break: break-word; max-width: 600px;'>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
-<h2>
+<h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/spear">planningalerts-scrapers/spear</a>
 errored about 22 hours ago
-</h2>
+</h3>
 <p><a href="http://dev.morph.io/planningalerts-scrapers/spear">Fix it</a></p>
 <pre style='word-break: break-word; max-width: 600px;'>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
 <p>32 other scrapers you are watching finished successfully</p>
