@@ -173,6 +173,18 @@
           width: 100%; 
         }
 
+        pre {
+          max-width: 570px;
+          padding: 9.5px;
+          margin: 0 0 10px;
+          color: #333333;
+          word-break: break-all;
+          word-wrap: break-word;
+          background-color: #f5f5f5;
+          border: 1px solid #cccccc;
+          border-radius: 4px;
+        }
+
   %body(bgcolor="#f6f6f6")
     -# body
     %table.body-wrap
@@ -188,7 +200,7 @@
                       = link_to run.full_name, scraper_url(run.scraper)
                       errored #{time_ago_in_words(run.finished_at)} ago
                     %p= link_to "Fix it", scraper_url(run.scraper)
-                    %pre(style="word-break: break-word; max-width: 600px;")
+                    %pre
                       = run.error_text.split("\n")[0..4].join("\n")
                       - if run.error_text.split("\n").count > 5
                         (truncated)
