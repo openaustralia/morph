@@ -1,6 +1,8 @@
 - @broken_runs.each do |run|
-  %h2 #{run.full_name} errored #{time_ago_in_words(run.finished_at)} ago
-  %p Fix it: #{link_to scraper_url(run.scraper), scraper_url(run.scraper)}
+  %h2
+    = link_to run.full_name, scraper_url(run.scraper)
+    errored #{time_ago_in_words(run.finished_at)} ago
+  %p= link_to "Fix it", scraper_url(run.scraper)
   %pre
     = run.error_text.split("\n")[0..4].join("\n")
     - if run.error_text.split("\n").count > 5
@@ -8,5 +10,5 @@
 
 %p #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
 
-%p Change what you're watching - #{link_to user_watching_url(@user), user_watching_url(@user)}
+%p= link_to "Change what you're watching", user_watching_url(@user)
 %p= link_to "Morph.io", root_url

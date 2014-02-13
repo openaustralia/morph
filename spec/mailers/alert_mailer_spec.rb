@@ -49,14 +49,20 @@ Morph.io - http://dev.morph.io/
       end
       it do
         email.html_part.body.to_s.should == <<-EOF
-<h2>planningalerts-scrapers/campbelltown errored about 2 hours ago</h2>
-<p>Fix it: <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">http://dev.morph.io/planningalerts-scrapers/campbelltown</a></p>
+<h2>
+<a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
+errored about 2 hours ago
+</h2>
+<p><a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">Fix it</a></p>
 <pre>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
-<h2>planningalerts-scrapers/spear errored about 22 hours ago</h2>
-<p>Fix it: <a href="http://dev.morph.io/planningalerts-scrapers/spear">http://dev.morph.io/planningalerts-scrapers/spear</a></p>
+<h2>
+<a href="http://dev.morph.io/planningalerts-scrapers/spear">planningalerts-scrapers/spear</a>
+errored about 22 hours ago
+</h2>
+<p><a href="http://dev.morph.io/planningalerts-scrapers/spear">Fix it</a></p>
 <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
 <p>32 other scrapers you are watching finished successfully</p>
-<p>Change what you're watching - <a href="http://dev.morph.io/users/mlandauer/watching">http://dev.morph.io/users/mlandauer/watching</a></p>
+<p><a href="http://dev.morph.io/users/mlandauer/watching">Change what you&#39;re watching</a></p>
 <p><a href="http://dev.morph.io/">Morph.io</a></p>
         EOF
       end
