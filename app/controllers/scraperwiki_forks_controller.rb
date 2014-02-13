@@ -2,7 +2,7 @@ class ScraperwikiForksController < ApplicationController
   before_filter :authenticate_user!
 
   def new
-    @scraper = Scraper.new
+    @scraper = Scraper.new(scraperwiki_shortname: params[:scraperwiki_shortname])
   end
 
   # Fork away
