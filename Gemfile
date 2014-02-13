@@ -40,6 +40,7 @@ gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'premailer-rails'
 # nokogiri required by premailer-rails
 gem 'nokogiri'
+gem "rails_autolink"
 
 group :production do
   gem "dalli"

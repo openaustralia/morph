@@ -16,4 +16,4 @@
           - row.each_value do |v|
             %td
               %div.has-popover{data: {toggle: "popover", placement: "bottom", trigger: "hover", content: v, container: "body"}}
-                = v
+                = auto_link(v)
