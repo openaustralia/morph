@@ -97,6 +97,9 @@ GEM
       http_parser.rb (~> 0.5.3)
     erubis (2.7.0)
     eventmachine (1.0.3)
+    exception_notification (4.0.1)
+      actionmailer (>= 3.0.4)
+      activesupport (>= 3.0.4)
     excon (0.31.0)
     execjs (2.0.2)
     faraday (0.8.9)
@@ -328,6 +331,7 @@ DEPENDENCIES
   devise
   docker-api
   dotenv-rails
+  exception_notification
   faraday
   foreman
   formtastic (= 2.3.0.rc2)

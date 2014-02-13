@@ -41,6 +41,7 @@ gem 'premailer-rails'
 # nokogiri required by premailer-rails
 gem 'nokogiri'
 gem "rails_autolink"
+gem 'exception_notification'
 
 group :production do
   gem "dalli"
