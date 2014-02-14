@@ -13,6 +13,17 @@ class User < Owner
     Octokit.repositories(nickname, sort: :pushed)
   end
 
+  def github_all_public_repos
+    Octokit.auto_paginate = true
+    repos = github_public_user_repos
+    Octokit.organizations(nickname).each do |org|
+      # This call doesn't seem to support sort by pushed
+      repos += Octokit.organization_repositories(org.login)
+    end
+
+    repos.sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
+  end
+
   # For the time being just hardcode a couple of people as admins
   def admin?
     ["mlandauer", "henare"].include?(nickname)
