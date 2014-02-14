@@ -6,10 +6,11 @@ class User < Owner
 
   # All repos in github for this user in their personal area
   # It does not include organizations that they are part of
-  def github_user_repos
+  # Also doesn't include private repos
+  def github_public_user_repos
     # TODO Move this to an initializer
     Octokit.auto_paginate = true
-    octokit_client.repositories(nil, sort: :pushed)
+    Octokit.repositories(nickname, sort: :pushed)
   end
 
   # For the time being just hardcode a couple of people as admins
