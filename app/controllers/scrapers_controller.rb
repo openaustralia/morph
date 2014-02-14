@@ -9,18 +9,22 @@ class ScrapersController < ApplicationController
 
   def create
     # Look up the repository by name
-    # TODO Check that we have access to that repo
     repo = current_user.octokit_client.repository("#{params[:scraper][:full_name]}")
     repo_owner = Owner.find_by_nickname(repo.owner.login)
-    
-    # Populate a new scraper with information from the repo
-    @scraper = Scraper.new(name: repo.name, full_name: repo.full_name,
-      description: repo.description, github_id: repo.id, owner_id: repo_owner.id,
-      github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
-    if @scraper.save
-      redirect_to @scraper
+
+    if Scraper.can_write?(current_user, repo_owner)
+      # Populate a new scraper with information from the repo
+      @scraper = Scraper.new(name: repo.name, full_name: repo.full_name,
+        description: repo.description, github_id: repo.id, owner_id: repo_owner.id,
+        github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
+      if @scraper.save
+        redirect_to @scraper
+      else
+        render :new
+      end
     else
-      render :new
+      flash[:alert] = "Can't add someone else's scraper"
+      redirect_to :new
     end
   end
 

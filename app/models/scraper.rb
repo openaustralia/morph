@@ -37,8 +37,12 @@ class Scraper < ActiveRecord::Base
     runs.to_a.sum(&:wall_time)
   end
 
-  def can_write?(user)
+  def self.can_write?(user, owner)
     user && (owner == user || user.organizations.include?(owner))
+  end
+
+  def can_write?(user)
+    Scraper.can_write?(user, owner)
   end
 
   def destroy_repo_and_data
