@@ -9,7 +9,8 @@ class ScrapersController < ApplicationController
 
   def create
     # Look up the repository by name
-    repo = current_user.octokit_client.repository("#{current_user.to_param}/#{params[:scraper][:name]}")
+    # TODO Check that we have access to that repo
+    repo = current_user.octokit_client.repository("#{params[:scraper][:full_name]}")
 
     # Populate a new scraper with information from the repo
     @scraper = Scraper.new(name: repo.name, full_name: repo.full_name,
