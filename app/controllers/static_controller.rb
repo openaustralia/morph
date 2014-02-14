@@ -4,7 +4,7 @@ class StaticController < ApplicationController
 
   def api
     # Example scraper
-    @scraper = Scraper.find_by(full_name: "mlandauer/scraper-blue-mountains") || Scraper.first
+    @scraper = Scraper.find_by(full_name: params[:scraper] || "mlandauer/scraper-blue-mountains") || Scraper.first
     @query = @scraper.database.select_first_ten
   end
 
