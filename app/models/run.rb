@@ -24,7 +24,7 @@ class Run < ActiveRecord::Base
       scraper.name
     else
       # This run is using uploaded code and so is not associated with a scraper
-      "run_#{id}"
+      "run"
     end
   end
 
@@ -75,7 +75,7 @@ class Run < ActiveRecord::Base
   end
 
   def docker_container_name
-    owner.to_param + "_" + name
+    "#{owner.to_param}_#{name}_#{id}"
   end
 
   def docker_image
