@@ -3,9 +3,7 @@ class ScrapersController < ApplicationController
 
   def new
     # Get the list of repositories
-    # TODO Move this to an initializer
-    Octokit.auto_paginate = true
-    @repos = current_user.octokit_client.repositories(nil, sort: :pushed)
+    @repos = current_user.github_user_repos
     @scraper = Scraper.new
   end
 

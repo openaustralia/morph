@@ -4,6 +4,14 @@ class User < Owner
   has_and_belongs_to_many :organizations, join_table: :organizations_users
   has_many :alerts
 
+  # All repos in github for this user in their personal area
+  # It does not include organizations that they are part of
+  def github_user_repos
+    # TODO Move this to an initializer
+    Octokit.auto_paginate = true
+    octokit_client.repositories(nil, sort: :pushed)
+  end
+
   # For the time being just hardcode a couple of people as admins
   def admin?
     ["mlandauer", "henare"].include?(nickname)
