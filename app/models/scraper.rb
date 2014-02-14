@@ -102,7 +102,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def main_scraper_filename
-    Language.main_scraper_filename(repo_path)
+    Morph::Language.main_scraper_filename(repo_path)
   end
 
   def github_url_main_scraper_file
@@ -110,7 +110,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def database
-    Database.new(self)
+    Morph::Database.new(self)
   end
   
   # It seems silly implementing this
@@ -215,7 +215,7 @@ class Scraper < ActiveRecord::Base
       # point past here and is rerun. So, let's happily continue
     end
 
-    scraperwiki = Scraperwiki.new(scraperwiki_shortname)
+    scraperwiki = Morph::Scraperwiki.new(scraperwiki_shortname)
 
     # Copy the sqlite database across from Scraperwiki
     database.write_sqlite_database(scraperwiki.sqlite_database)
@@ -227,15 +227,15 @@ class Scraper < ActiveRecord::Base
     self.update_attributes(description: scraperwiki.title)
 
     files = {
-      Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
-      ".gitignore" => "# Ignore output of scraper\n#{Database.sqlite_db_filename}\n",
+      Morph::Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
+      ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
     }
     files["README.textile"] = scraperwiki.description unless scraperwiki.description.blank?
     add_commit_to_root_on_github(forked_by, files, "Fork of code from ScraperWiki at #{scraperwiki_url}")
 
     # Add another commit (but only if necessary) to translate the code so it runs here
     unless scraperwiki.translated_code == scraperwiki.code
-      add_commit_to_master_on_github(forked_by, {Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.translated_code},
+      add_commit_to_master_on_github(forked_by, {Morph::Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.translated_code},
         "Automatic update to make ScraperWiki scraper work on Morph")
     end
 

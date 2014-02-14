@@ -8,7 +8,7 @@ class Run < ActiveRecord::Base
   delegate :current_revision_from_repo, to: :scraper, allow_nil: true
 
   def language
-    Language.language(repo_path)
+    Morph::Language.language(repo_path)
   end
 
   def wall_time
@@ -87,14 +87,14 @@ class Run < ActiveRecord::Base
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
     FileUtils.mkdir_p data_path
 
-    unless Language.language_supported?(language)
+    unless Morph::Language.language_supported?(language)
       yield "stderr", "Can't find scraper code"
       update_attributes(status_code: 999, finished_at: Time.now)
       return
     end
 
-    command = Metric.command(Language.scraper_command(language), Run.time_output_filename)
-    status_code = DockerRunner.run(command: command, image_name: docker_image, container_name: docker_container_name,
+    command = Metric.command(Morph::Language.scraper_command(language), Run.time_output_filename)
+    status_code = Morph::DockerRunner.run(command: command, image_name: docker_image, container_name: docker_container_name,
       repo_path: repo_path, data_path: data_path) do |s,c|
         yield s, c
     end
@@ -104,7 +104,7 @@ class Run < ActiveRecord::Base
     metric.update_attributes(run_id: self.id)
 
     update_attributes(status_code: status_code, finished_at: Time.now)
-    Database.tidy_data_path(data_path)
+    Morph::Database.tidy_data_path(data_path)
   end
 
   def log(stream, text)
