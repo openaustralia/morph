@@ -6,20 +6,43 @@
 %pre
   %code #{api_root}<em>[scraper]</em>/data.json?query=<em>[sql]</em>
 
-%h2 parameters
+%h2 Parameters
 
-%dl
-  %dt <em>[scraper]</em>
-  %dd The full name of the scraper as seen in the url (e.g. #{@scraper.full_name})
-  %dt <em>[sql]</em>
-  %dd
-    The SQL query to perform on the SQLite database that is the output of the scraper (e.g. "#{@query}").
-    Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
+= semantic_form_for @scraper do |f|
+  = f.inputs do
+    = f.input :full_name, label: "[scraper]", hint: "The full name of the scraper as seen in the url (e.g. #{@scraper.full_name})"
+    .string.input.optional.stringish.form-group#query_input
+      %label.control-label(for="query")
+        [sql]
+      %input.form-control#query(maxlength="255" name="scraper[full_name]" type="text" value="#{@query}")
+      %span.help-block
+        The SQL query to perform on the SQLite database that is the output of the scraper (e.g. "#{@query}").
+        Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
 
+%h2 Full URL
 %p
-  For example, to retrieve data from the
-  = link_to "#{@scraper.full_name} scraper", @scraper
-  with the SQL query "#{@query}"
+  To do the API query with the values above
 
 %pre
-  %code= link_to scraper_data_url(@scraper, host: api_host, query: @query, format: :json), scraper_data_url(@scraper, host: api_host, query: @query, format: :json)
+  %code= link_to scraper_data_url(@scraper, host: api_host, query: @query, format: :json), scraper_data_url(@scraper, host: api_host, query: @query, format: :json), target: "_blank"
+
+:javascript
+  $(function() {
+    function update_url() {
+      console.log("In update_url");
+      var scraper = $("#scraper_full_name").val();
+      var sql = $("#query").val();
+      console.log("scraper:", scraper, "sql:", sql);
+      // Would be nice for this not to be hardcoded
+      var host = "https://morph.io";
+      url = host + "/" + scraper + "/data.json?query=" + encodeURIComponent(sql);
+      $("code a").html(url);
+      $("code a").attr('href', url);
+    }
+
+    update_url();
+    $("#scraper_full_name").change(update_url);
+    $("#scraper_full_name").keyup(update_url);
+    $("#query").change(update_url);
+    $("#query").keyup(update_url);
+  });
