@@ -3,7 +3,8 @@ class ScraperwikiForksController < ApplicationController
 
   def new
     @name_set = !!params[:scraperwiki_shortname]
-    @scraper = Scraper.new(scraperwiki_shortname: params[:scraperwiki_shortname])
+    @scraper = Scraper.new(scraperwiki_shortname: params[:scraperwiki_shortname],
+      name: params[:scraperwiki_shortname])
   end
 
   # Fork away

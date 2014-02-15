@@ -7,6 +7,5 @@ $ ->
     value = $("#scraper_scraperwiki_shortname").val()
     $("#scraper_name").val(value) if value
 
-  update_name()
   $("#scraper_scraperwiki_shortname").change(update_name)
   $("#scraper_scraperwiki_shortname").keyup(update_name)
