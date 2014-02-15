@@ -205,6 +205,7 @@ class Scraper < ActiveRecord::Base
     client.update_ref(full_name, "heads/master", commit.sha)
   end
 
+  # progress should be between 0 and 100
   def fork_progress(message, progress)
       update_attributes(forking_message: message, forking_progress: progress)
   end
@@ -215,7 +216,7 @@ class Scraper < ActiveRecord::Base
     # We need to set auto_init so that we can create a commit later. The API doesn't support
     # adding a commit to an empty repository
     begin
-      fork_progress("Creating GitHub repository", 25)
+      fork_progress("Creating GitHub repository", 20)
       if forked_by == owner
         repo = client.create_repository(name, auto_init: true)
       else
@@ -230,7 +231,7 @@ class Scraper < ActiveRecord::Base
     scraperwiki = Morph::Scraperwiki.new(scraperwiki_shortname)
 
     # Copy the sqlite database across from Scraperwiki
-    fork_progress("Forking ScraperWiki sqlite database", 50)
+    fork_progress("Forking sqlite database", 40)
     database.write_sqlite_database(scraperwiki.sqlite_database)
     # Rename the main table in the sqlite database
     database.standardise_table_name("swdata")
@@ -239,7 +240,7 @@ class Scraper < ActiveRecord::Base
     repo = client.edit_repository(full_name, description: scraperwiki.title)
     self.update_attributes(description: scraperwiki.title)
 
-    fork_progress("Forking ScraperWiki code onto GitHub", 75)
+    fork_progress("Forking code", 60)
     files = {
       Morph::Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
       ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
@@ -252,6 +253,9 @@ class Scraper < ActiveRecord::Base
       add_commit_to_master_on_github(forked_by, {Morph::Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.translated_code},
         "Automatic update to make ScraperWiki scraper work on Morph")
     end
+
+    fork_progress("Synching repository", 80)
+    Morph::Github.synchronise_repo(repo_path, git_url)
 
     # Forking has finished
     fork_progress(nil, 100)
