@@ -28,9 +28,9 @@
           .input-group
             %span.input-group-addon /
             %input.form-control#scraper_name{maxlength: "255", name:"scraper[name]", placeholder:"city_of_sydney_development_applications", type:"text", value:"#{@scraper.name}", class:("error" unless @scraper.errors[:name].empty?)}
-          %span.help-block Name to give the scraper here and on GitHub
           - @scraper.errors.full_messages_for(:name).each do |m|
-            %span.help-inline= m
+            .alert.alert-warning= m
+          %span.help-block Name to give the scraper here and on GitHub
 
   = f.actions do
     = f.action :submit, label: "Fork Scraperwiki scraper"
