@@ -22,11 +22,15 @@ class ScraperwikiForksController < ApplicationController
       exists_on_github = false
     end
 
+
+    # Check that scraperwiki scraper exists
+    exists_on_scraperwiki = !!Morph::Scraperwiki.new(@scraper.scraperwiki_shortname).info
+
     # TODO should really check here that this user has the permissions to write to the owner_id owner
     # It will just get stuck later
 
     # Should do this with validation
-    if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github
+    if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github && exists_on_scraperwiki
       if @scraper.save
         ForkScraperwikiWorker.perform_async(@scraper.id)
         #flash[:notice] = "Forking in action..."
@@ -35,7 +39,12 @@ class ScraperwikiForksController < ApplicationController
         render :new
       end
     else
-      @scraper.errors.add(:name, "is already taken")
+      if !exists_on_scraperwiki
+        @scraper.errors.add(:scraperwiki_shortname, "doesn't exist on ScraperWiki")
+      end
+      if Scraper.exists?(full_name: @scraper.full_name) || exists_on_github
+        @scraper.errors.add(:name, "is already taken")
+      end
       render :new
     end
   end

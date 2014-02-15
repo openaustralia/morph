@@ -18,7 +18,12 @@ module Morph
     def info
       if @info.nil?
         url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{short_name}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
-        @info = JSON.parse(Morph::Scraperwiki.content(url)).first
+        v = JSON.parse(Morph::Scraperwiki.content(url))
+        if v.kind_of?(Hash) && v["error"] == "Sorry, this scraper does not exist"
+          @info = nil
+        else
+          @info = v.first
+        end
       end
       @info
     end
