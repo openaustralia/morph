@@ -214,6 +214,11 @@ class Scraper < ActiveRecord::Base
     Morph::Github.synchronise_repo(repo_path, git_url)
   end
 
+  # Return the https version of the git clone url (git_url)
+  def git_url_https
+    "https" + git_url[3..-1]
+  end
+
   def fork_from_scraperwiki!
     client = forked_by.octokit_client
 

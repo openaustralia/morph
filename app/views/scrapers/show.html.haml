@@ -33,6 +33,8 @@
       Forked from
       = link_to "ScraperWiki", @scraper.scraperwiki_url, target: "_blank"
 
+  %p
+    git clone URL: #{@scraper.git_url_https}
   - if @scraper.github_url
     %p
       %i.icon-github-sign.icon-large
