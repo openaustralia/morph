@@ -6,13 +6,24 @@
   =require twitter-bootstrap-static/fontawesome
   */
 
-  body { padding-top: 70px; }
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+  body {
+    padding-top: 70px;
+    margin-bottom: 170px;
+  }
 
   footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     background-color: #f5f5f5;
     text-align: center;
-    margin-top: 70px;
     padding: 30px 0;
+    height: 140px;
   }
 
   .sign_in {
