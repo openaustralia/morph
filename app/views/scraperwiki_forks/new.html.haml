@@ -1,4 +1,4 @@
-- if @scraper.scraperwiki_shortname
+- if @name_set
   %h1 Fork Scraperwiki scraper #{@scraper.scraperwiki_shortname}
 
   %p Choose a name for the scraper on GitHub
@@ -15,7 +15,7 @@
   = f.inputs do
     .row
       .col-sm-8
-        - if @scraper.scraperwiki_shortname
+        - if @name_set
           = f.hidden_field :scraperwiki_shortname
         - else
           = f.input :scraperwiki_shortname, hint: "The name (as it's shown in a url) of the ScraperWiki Classic scraper that you want to fork", input_html: {placeholder: "city_of_sydney_development_applications"}, label: "Name of Scraperwiki scraper"
