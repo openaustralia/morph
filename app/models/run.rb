@@ -121,28 +121,7 @@ class Run < ActiveRecord::Base
 
   # The main section of the scraper running that is run in the background
   def synch_and_go!
-    synchronise_repo
+    Morph::Github.synchronise_repo(repo_path, git_url)
     go!
-  end
-
-  def synchronise_repo
-    # Set git timeout to 1 minute
-    # TODO Move this to a configuration
-    Grit::Git.git_timeout = 60
-    gritty = Grit::Git.new(repo_path)
-    if gritty.exist?
-      puts "Pulling git repo #{repo_path}..."
-      # TODO Fix this. Using grit seems to do a pull but not update the working directory
-      # So falling back to shelling out to the git command
-      #gritty = Grit::Repo.new(repo_path).git
-      #puts gritty.pull({:raise => true}, "origin", "master")
-      system("cd #{repo_path}; git pull")
-    else
-      puts "Cloning git repo #{git_url}..."
-      puts gritty.clone({:verbose => true, :progress => true, :raise => true}, git_url, repo_path)
-    end
-    # Handle submodules. Always do this
-    system("cd #{repo_path}; git submodule init")
-    system("cd #{repo_path}; git submodule update")
   end
 end
