@@ -57,3 +57,5 @@ Morph::Application.configure do
   # end
 end
 
+# So that the same host setting is available outside the mailer
+Morph::Application.default_url_options = Morph::Application.config.action_mailer.default_url_options

@@ -245,11 +245,13 @@ class Scraper < ActiveRecord::Base
     # Rename the main table in the sqlite database
     database.standardise_table_name("swdata")
 
+    fork_progress("Forking code", 60)
+
     # Fill in description
-    repo = client.edit_repository(full_name, description: scraperwiki.title)
+    repo = client.edit_repository(full_name, description: scraperwiki.title,
+      homepage: Rails.application.routes.url_helpers.scraper_url(self))
     self.update_attributes(description: scraperwiki.title)
 
-    fork_progress("Forking code", 60)
     files = {
       Morph::Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
       ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
@@ -270,12 +272,7 @@ class Scraper < ActiveRecord::Base
     fork_progress(nil, 100)
     update_attributes(forking: false)
 
-    # TODO Make each background step idempotent so that failures can be retried
 
     # TODO Add repo link
-    # TODO Copy across run interval from scraperwiki
-    # TODO Check that it's a ruby scraper
-    # TODO Add support for non-ruby scrapers
-    # TODO Record progress (so that it can be shown in the UI)
   end
 end
