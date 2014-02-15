@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140211043744) do
+ActiveRecord::Schema.define(version: 20140215042036) do
 
   create_table "alerts", force: true do |t|
     t.integer  "user_id"
@@ -87,19 +87,21 @@ ActiveRecord::Schema.define(version: 20140211043744) do
   end
 
   create_table "scrapers", force: true do |t|
-    t.string   "name",                            null: false
+    t.string   "name",                             null: false
     t.string   "description"
     t.integer  "github_id"
-    t.integer  "owner_id",                        null: false
+    t.integer  "owner_id",                         null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "full_name"
     t.string   "github_url"
     t.string   "git_url"
-    t.boolean  "auto_run",        default: false, null: false
+    t.boolean  "auto_run",         default: false, null: false
     t.string   "scraperwiki_url"
-    t.boolean  "forking",         default: false, null: false
+    t.boolean  "forking",          default: false, null: false
     t.integer  "forked_by_id"
+    t.string   "forking_message"
+    t.integer  "forking_progress"
   end
 
 end

@@ -201,12 +201,17 @@ class Scraper < ActiveRecord::Base
     client.update_ref(full_name, "heads/master", commit.sha)
   end
 
+  def fork_progress(message, progress)
+      update_attributes(forking_message: message, forking_progress: progress)
+  end
+
   def fork_from_scraperwiki!
     client = forked_by.octokit_client
 
     # We need to set auto_init so that we can create a commit later. The API doesn't support
     # adding a commit to an empty repository
     begin
+      fork_progress("Creating GitHub repository", 25)
       if forked_by == owner
         repo = client.create_repository(name, auto_init: true)
       else
@@ -221,6 +226,7 @@ class Scraper < ActiveRecord::Base
     scraperwiki = Morph::Scraperwiki.new(scraperwiki_shortname)
 
     # Copy the sqlite database across from Scraperwiki
+    fork_progress("Forking ScraperWiki sqlite database", 50)
     database.write_sqlite_database(scraperwiki.sqlite_database)
     # Rename the main table in the sqlite database
     database.standardise_table_name("swdata")
@@ -229,6 +235,7 @@ class Scraper < ActiveRecord::Base
     repo = client.edit_repository(full_name, description: scraperwiki.title)
     self.update_attributes(description: scraperwiki.title)
 
+    fork_progress("Forking ScraperWiki code onto GitHub", 75)
     files = {
       Morph::Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
       ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
@@ -243,6 +250,7 @@ class Scraper < ActiveRecord::Base
     end
 
     # Forking has finished
+    fork_progress(nil, 100)
     update_attributes(forking: false)
 
     # TODO Make each background step idempotent so that failures can be retried
