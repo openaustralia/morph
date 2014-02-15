@@ -53,13 +53,13 @@
       - if @scraper.average_successful_wall_time
         %p
           Average successful run time:
-          = "%.1f s" % @scraper.average_successful_wall_time
+          = duration_of_time_in_words(@scraper.average_successful_wall_time)
       %p
         Total run time:
-        = "%.1f s" % @scraper.total_wall_time
+        = duration_of_time_in_words(@scraper.total_wall_time)
       %p
         Total cpu time used:
-        = "%.1f s" % @scraper.cpu_time
+        = duration_of_time_in_words(@scraper.cpu_time)
       %p
         Total disk space used:
         = number_to_human_size @scraper.total_disk_usage

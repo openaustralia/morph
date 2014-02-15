@@ -54,10 +54,10 @@
       %h3 Statistics
       %p
         Total run time:
-        = "%.1f s" % @owner.runs.sum(&:wall_time)  
+        = duration_of_time_in_words(@owner.runs.sum(&:wall_time))
       %p
         Total cpu time used:
-        = "%.1f s" % @owner.scrapers.sum(&:cpu_time)
+        = duration_of_time_in_words(@owner.scrapers.sum(&:cpu_time))
       %p
         Total disk space used:
         = number_to_human_size @owner.scrapers.sum(&:total_disk_usage)
