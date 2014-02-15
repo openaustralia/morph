@@ -13,6 +13,10 @@ class Scraper < ActiveRecord::Base
     runs.includes(:log_lines).select{|r| r.finished_successfully?}
   end
 
+  def finished_runs
+    runs.where("finished_at IS NOT NULL").order(finished_at: :desc)
+  end
+
   # For successful runs calculates the average wall clock time that this scraper takes
   # Handy for the user to know how long it should expect to run for
   # Returns nil if not able to calculate this

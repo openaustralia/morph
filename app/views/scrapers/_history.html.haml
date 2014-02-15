@@ -1,6 +1,7 @@
-%h3 Finished Runs
+- unless @scraper.finished_runs.empty?
+  %h3 Finished Runs
 
--# TODO Only show a limited number of the most recent runs
-%ul.list-group
-- @scraper.runs.where("finished_at IS NOT NULL").order(finished_at: :desc).each do |run|
-  = render partial: "runs/history", locals: {run: run}
+  -# TODO Only show a limited number of the most recent runs
+  %ul.list-group
+  - @scraper.finished_runs.each do |run|
+    = render partial: "runs/history", locals: {run: run}
