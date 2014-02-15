@@ -7,7 +7,7 @@ class ScraperwikiForksController < ApplicationController
 
   # Fork away
   def create
-    @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_url: params[:scraper][:scraperwiki_url],
+    @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_shortname: params[:scraper][:scraperwiki_shortname],
       owner_id: params[:scraper][:owner_id], forking: true, forked_by_id: current_user.id)
     # TODO Should we really store full_name in the db?
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"

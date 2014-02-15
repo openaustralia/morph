@@ -4,9 +4,6 @@ class Scraper < ActiveRecord::Base
   has_many :metrics, through: :runs
   belongs_to :forked_by, class_name: "User"
 
-  validates :scraperwiki_url, format: { with: /\Ahttps:\/\/classic.scraperwiki.com\/scrapers\/([-\w]+)(\/)?\z/,
-    message: "Should be a valid ScraperWiki scraper url" }, allow_nil: true
-
   extend FriendlyId
   friendly_id :full_name, use: :finders
 
@@ -149,8 +146,10 @@ class Scraper < ActiveRecord::Base
 
   def scraperwiki_shortname
     # scraperwiki_url should be of the form https://classic.scraperwiki.com/scrapers/shortname/
-    m = scraperwiki_url.match(/https:\/\/classic.scraperwiki.com\/scrapers\/([-\w]+)(\/)?/)
-    m[1] if m
+    if scraperwiki_url
+      m = scraperwiki_url.match(/https:\/\/classic.scraperwiki.com\/scrapers\/([-\w]+)(\/)?/)
+      m[1] if m
+    end
   end
 
   def scraperwiki_shortname=(shortname)

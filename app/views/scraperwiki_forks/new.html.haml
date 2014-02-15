@@ -4,13 +4,13 @@
 
 %p
   = link_to "Browse and Search", "https://classic.scraperwiki.com/browse/", target: "_blank"
-  for a scraper on ScraperWiki Classic that you want to fork. Then paste the url of the scraper below.
+  for a scraper on ScraperWiki Classic that you want to fork. Then paste the name of the scraper below.
 
 = semantic_form_for @scraper, url: scraperwiki_forks_path do |f|
   = f.inputs do
     .row
       .col-sm-8
-        = f.input :scraperwiki_url, hint: "The full URL for the ScraperWiki Classic scraper that you want to fork to here", input_html: {placeholder: "https://classic.scraperwiki.com/scrapers/city_of_sydney_development_applications/"}
+        = f.input :scraperwiki_shortname, hint: "The name (as it's shown in a url) of the ScraperWiki Classic scraper that you want to fork", input_html: {placeholder: "city_of_sydney_development_applications"}, label: "Name of Scraperwiki scraper"
     .row
       .col-sm-2
         = f.input :owner, collection: ([current_user] + current_user.organizations).map{|o| [o.nickname, o.id]}, include_blank: false
