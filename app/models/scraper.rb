@@ -210,6 +210,10 @@ class Scraper < ActiveRecord::Base
       update_attributes(forking_message: message, forking_progress: progress)
   end
 
+  def synchronise_repo
+    Morph::Github.synchronise_repo(repo_path, git_url)
+  end
+
   def fork_from_scraperwiki!
     client = forked_by.octokit_client
 
@@ -255,7 +259,7 @@ class Scraper < ActiveRecord::Base
     end
 
     fork_progress("Synching repository", 80)
-    Morph::Github.synchronise_repo(repo_path, git_url)
+    synchronise_repo
 
     # Forking has finished
     fork_progress(nil, 100)

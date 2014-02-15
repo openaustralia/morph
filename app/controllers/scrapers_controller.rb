@@ -18,6 +18,8 @@ class ScrapersController < ApplicationController
         description: repo.description, github_id: repo.id, owner_id: repo_owner.id,
         github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
       if @scraper.save
+        # TODO This could be a long running task shouldn't really be in the request cycle
+        @scraper.synchronise_repo
         redirect_to @scraper
       else
         render :new
