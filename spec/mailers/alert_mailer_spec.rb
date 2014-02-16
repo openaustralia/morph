@@ -5,8 +5,8 @@ describe AlertMailer do
     let(:user) { mock_model(User, name: "Matthew Landauer", email: "matthew@oaf.org.au", to_param: "mlandauer") }
     let(:full_name1) { "planningalerts-scrapers/campbelltown" }
     let(:full_name2) { "planningalerts-scrapers/spear" }
-    let(:scraper1) { mock_model(Scraper, to_param: full_name1) }
-    let(:scraper2) { mock_model(Scraper, to_param: full_name2) }
+    let(:scraper1) { mock_model(Scraper, to_param: full_name1, latest_successful_run_time: 3.days.ago) }
+    let(:scraper2) { mock_model(Scraper, to_param: full_name2, latest_successful_run_time: 7.days.ago) }
     let(:run1) { mock_model(Run, full_name: full_name1, finished_at: 2.hours.ago, scraper: scraper1,
       error_text: "PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16\n") }
     let(:run2) { mock_model(Run, full_name: full_name2, finished_at: 22.hours.ago, scraper: scraper2,
@@ -31,16 +31,18 @@ describe AlertMailer do
 Morph is letting you know that
 
 
-planningalerts-scrapers/campbelltown errored
-Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
-
-PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16
-
-
 planningalerts-scrapers/spear errored
+It has been erroring for 7 days
 Fix it: http://dev.morph.io/planningalerts-scrapers/spear
 
 /repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )
+
+
+planningalerts-scrapers/campbelltown errored
+It has been erroring for 3 days
+Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
+
+PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16
 
 
 32 other scrapers you are watching finished successfully
@@ -62,15 +64,21 @@ is letting you know that
       it do
         expected = <<-EOF
 <h3>
-<a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
-errored
-</h3>
-<pre>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
-<h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/spear">planningalerts-scrapers/spear</a>
 errored
 </h3>
+<p>
+It has been erroring for 7 days
+</p>
 <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
+<h3>
+<a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
+errored
+</h3>
+<p>
+It has been erroring for 3 days
+</p>
+<pre>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
 <h3>32 other scrapers you are watching finished successfully</h3>
         EOF
         email.html_part.body.to_s.should include(expected)
@@ -96,6 +104,7 @@ Morph is letting you know that
 
 
 planningalerts-scrapers/campbelltown errored
+It has been erroring for 3 days
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
 
 This is line one of an error

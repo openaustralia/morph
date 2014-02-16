@@ -209,6 +209,11 @@
                     %h3
                       = link_to run.full_name, scraper_url(run.scraper)
                       errored
+                    %p
+                      - if run.scraper.latest_successful_run_time
+                        It has been erroring for #{time_ago_in_words(run.scraper.latest_successful_run_time)}
+                      - else
+                        It has never run successfully
                     %pre
                       = run.error_text.split("\n")[0..4].join("\n")
                       - if run.error_text.split("\n").count > 5
