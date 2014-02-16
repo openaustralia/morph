@@ -31,13 +31,13 @@ describe AlertMailer do
 Morph is letting you know that
 
 
-planningalerts-scrapers/campbelltown errored about 2 hours ago
+planningalerts-scrapers/campbelltown errored
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
 
 PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16
 
 
-planningalerts-scrapers/spear errored about 22 hours ago
+planningalerts-scrapers/spear errored
 Fix it: http://dev.morph.io/planningalerts-scrapers/spear
 
 /repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )
@@ -63,12 +63,12 @@ is letting you know that
         expected = <<-EOF
 <h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
-errored about 2 hours ago
+errored
 </h3>
 <pre>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
 <h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/spear">planningalerts-scrapers/spear</a>
-errored about 22 hours ago
+errored
 </h3>
 <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
 <h3>32 other scrapers you are watching finished successfully</h3>
@@ -95,7 +95,7 @@ Annoyed by these emails? Then
 Morph is letting you know that
 
 
-planningalerts-scrapers/campbelltown errored about 2 hours ago
+planningalerts-scrapers/campbelltown errored
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
 
 This is line one of an error

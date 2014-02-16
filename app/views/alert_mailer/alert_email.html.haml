@@ -208,7 +208,7 @@
                   - @broken_runs.each do |run|
                     %h3
                       = link_to run.full_name, scraper_url(run.scraper)
-                      errored #{time_ago_in_words(run.finished_at)} ago
+                      errored
                     %pre
                       = run.error_text.split("\n")[0..4].join("\n")
                       - if run.error_text.split("\n").count > 5

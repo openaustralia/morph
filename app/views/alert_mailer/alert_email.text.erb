@@ -2,7 +2,7 @@ Morph is letting you know that
 
 
 <% @broken_runs.each do |run| %>
-<%= run.full_name %> errored <%= time_ago_in_words(run.finished_at) %> ago
+<%= run.full_name %> errored
 Fix it: <%= scraper_url(run.scraper) %>
 
 <%= run.error_text.split("\n")[0..4].join("\n") %>
