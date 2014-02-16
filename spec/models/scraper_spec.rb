@@ -5,10 +5,12 @@ describe Scraper do
     before :each do
       user = User.create
       @scraper = user.scrapers.create(name: "my scraper")
-      run1 = @scraper.runs.create
-      run2 = @scraper.runs.create
-      metric1 = Metric.create(utime: 10.2, stime: 2.4, run_id: run1.id)
-      metric2 = Metric.create(utime: 1.3, stime: 3.5, run_id: run2.id)
+      @time1 = 2.minutes.ago
+      @time2 = 1.minute.ago
+      @run1 = @scraper.runs.create(finished_at: @time1)
+      @run2 = @scraper.runs.create(finished_at: @time2)
+      metric1 = Metric.create(utime: 10.2, stime: 2.4, run_id: @run1.id)
+      metric2 = Metric.create(utime: 1.3, stime: 3.5, run_id: @run2.id)
     end
 
     it "#utime" do
@@ -39,6 +41,44 @@ describe Scraper do
       it do
         @scraper.scraperwiki_shortname = nil
         @scraper.scraperwiki_url.should be_nil
+      end
+    end
+
+    describe "#latest_successful_run_time" do
+      context "The first run is successful" do
+        before :each do
+          @run1.update_attributes(status_code: 0)
+          @run2.update_attributes(status_code: 255)
+        end
+
+        it { @scraper.latest_successful_run_time.to_s.should == @time1.to_s }
+      end
+
+      context "The second run is successful" do
+        before :each do
+          @run1.update_attributes(status_code: 255)
+          @run2.update_attributes(status_code: 0)
+        end
+
+        it { @scraper.latest_successful_run_time.to_s.should == @time2.to_s }
+      end
+
+      context "Neither are successful" do
+        before :each do
+          @run1.update_attributes(status_code: 255)
+          @run2.update_attributes(status_code: 255)
+        end
+
+        it { @scraper.latest_successful_run_time.should be_nil }
+      end
+
+      context "Both are successful" do
+        before :each do
+          @run1.update_attributes(status_code: 0)
+          @run2.update_attributes(status_code: 0)
+        end
+
+        it { @scraper.latest_successful_run_time.to_s.should == @time2.to_s }
       end
     end
   end

@@ -10,7 +10,12 @@ class Scraper < ActiveRecord::Base
   delegate :queued?, :running?, to: :last_run, allow_nil: true
 
   def successful_runs
-    runs.includes(:log_lines).select{|r| r.finished_successfully?}
+    runs.includes(:log_lines).order(finished_at: :desc).select{|r| r.finished_successfully?}
+  end
+
+  def latest_successful_run_time
+    latest_successful_run = successful_runs.first
+    latest_successful_run.finished_at if latest_successful_run
   end
 
   def finished_runs
