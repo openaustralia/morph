@@ -7,7 +7,17 @@ class AlertMailer < ActionMailer::Base
     count = broken_runs.count
     @user, @successful_count = user, successful_count
     # The ones that are broken for the longest time come first
-    @broken_runs = broken_runs.sort{|a,b| a.scraper.latest_successful_run_time <=> b.scraper.latest_successful_run_time}
+    @broken_runs = broken_runs.sort do |a,b|
+      if a.scraper.latest_successful_run_time.nil? && b.scraper.latest_successful_run_time.nil?
+        0
+      elsif a.scraper.latest_successful_run_time.nil?
+        -1
+      elsif b.scraper.latest_successful_run_time.nil?
+        1
+      else
+        a.scraper.latest_successful_run_time <=> b.scraper.latest_successful_run_time
+      end
+    end
     @subject = "Morph: #{pluralize(count, 'scraper')} you are watching #{count == 1 ? "is" : "are"} erroring"
 
     attachments.inline['logo_75x75.png'] = File.read(File.join(Rails.root, "app", "assets", path_to_image("logo_75x75.png")))
