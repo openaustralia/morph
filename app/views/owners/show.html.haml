@@ -67,7 +67,7 @@
       .list-group= render @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
 
     - if @owner == current_user
-      %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"
+      %p= link_to "Add scraper", github_new_scraper_path, class: "btn btn-default"
 
 
   .col-md-1

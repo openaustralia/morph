@@ -26,7 +26,10 @@ Morph::Application.routes.draw do
   post '/settings/reset_key', to: "users#reset_key", as: :user_reset_key
 
   # TODO: Don't allow a user to be called "scrapers"
-  resources :scrapers, path: '/scrapers', only: [:new, :create]
+  resources :scrapers, path: '/scrapers', only: [] do
+    get 'github', on: :new
+    post 'github', to: "scrapers#create_github", on: :collection
+  end
   resources :owners, path: "/", only: :show
   post '/:id/watch', to: "owners#watch", as: :owner_watch
   # This url begins with /users so that we don't stop users have scrapers called watching

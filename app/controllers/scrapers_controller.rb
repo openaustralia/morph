@@ -9,13 +9,13 @@ class ScrapersController < ApplicationController
     end
   end
 
-  def new
+  def github
     # Get the list of repositories
     @repos = current_user.github_all_public_repos
     @scraper = Scraper.new
   end
 
-  def create
+  def create_github
     # Look up the repository by name
     repo = current_user.octokit_client.repository("#{params[:scraper][:full_name]}")
     repo_owner = Owner.find_by_nickname(repo.owner.login)
