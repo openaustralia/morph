@@ -46,8 +46,8 @@
       = render "status"
       = render "console"
       = render "data"
-      = render "history"
       = render "statistics"
+      = render "history"
     .col-md-2
       - if signed_in?
         - if @scraper.can_write?(current_user)
