@@ -27,7 +27,12 @@
     - if @scraper.queued? || @scraper.running?
       .pulse
 
-  %p= @scraper.readme
+  - if @scraper.readme
+    .panel.panel-default
+      .panel-heading
+        %h4.panel-title= link_to @scraper.readme_filename, @scraper.github_url_readme
+      .panel-body
+        = @scraper.readme
 
   - if @scraper.scraperwiki_url
     %p

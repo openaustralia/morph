@@ -90,6 +90,14 @@ class Scraper < ActiveRecord::Base
     end
   end
 
+  def readme_filename
+    Pathname.new(Dir.glob(File.join(repo_path, "README*")).first).basename.to_s
+  end
+
+  def github_url_readme
+    github_url_for_file(readme_filename)
+  end
+
   def runnable?
     last_run.nil? || last_run.finished?
   end
