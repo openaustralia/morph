@@ -8,6 +8,7 @@
   .col-md-1
     - if signed_in?
       .button_title_adjust= render partial: "watch_button", locals: {scraper: @scraper}
+      = link_to "Settings", scraper_settings_path
 
 - if @scraper.forking?
   %h2 Forking!
@@ -44,15 +45,10 @@
         (#{link_to @scraper.main_scraper_filename, @scraper.github_url_main_scraper_file, target: "_blank"}) on GitHub
 
   = render "status"
-  .row
-    .col-md-9
-      - if @scraper.can_write?(current_user)
-        %p= button_to "Run it now!", run_scraper_path(@scraper), class: (!@scraper.runnable? ? "btn btn-primary btn-lg disabled" : "btn btn-primary btn-lg"), disabled: !@scraper.runnable?
-    .col-md-3
-      = render "settings"
+  - if @scraper.can_write?(current_user)
+    %p= button_to "Run it now!", run_scraper_path(@scraper), class: (!@scraper.runnable? ? "btn btn-primary btn-lg disabled" : "btn btn-primary btn-lg"), disabled: !@scraper.runnable?
 
   = render "console"
   = render "data"
   = render "history"
   = render "statistics"
-  = render "danger"

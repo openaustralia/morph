@@ -1,6 +1,10 @@
 class ScrapersController < ApplicationController
   before_filter :authenticate_user!, except: [:show, :data]
 
+  def settings
+    @scraper = Scraper.find(params[:id])
+  end
+
   def new
     # Get the list of repositories
     @repos = current_user.github_all_public_repos

@@ -39,6 +39,7 @@ Morph::Application.routes.draw do
 
   get '/*id/data', to: "scrapers#data", as: :scraper_data
   post '/*id/watch', to: "scrapers#watch", as: :scraper_watch
+  get '/*id/settings', to: "scrapers#settings", as: :scraper_settings
   get "/*id", to: "scrapers#show", as: :scraper
   delete "/*id", to: "scrapers#destroy"
   patch "/*id", to: "scrapers#update"
