@@ -82,6 +82,10 @@ class Run < ActiveRecord::Base
     "openaustralia/morph-#{language}"
   end
 
+  def git_revision_github_url
+    "https://github.com/#{full_name}/commit/#{git_revision}"
+  end
+
   def go_with_logging
     puts "Starting...\n"
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)

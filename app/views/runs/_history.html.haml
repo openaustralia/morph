@@ -7,7 +7,7 @@
     ran
     - if run.git_revision
       revision
-      = link_to run.git_revision[0..7], "https://github.com/#{run.full_name}/commit/#{run.git_revision}"
+      = link_to run.git_revision[0..7], run.git_revision_github_url
     and
     - if run.finished_successfully?
       completed successfully
