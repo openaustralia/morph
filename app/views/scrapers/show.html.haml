@@ -57,7 +57,13 @@
           Settings
 
       %p
-        git clone URL: #{@scraper.git_url_https}
+        .form-group
+          %label(for="git_url") git clone URL
+          .input-group
+            %input.form-control#git_url{type: "text", value: @scraper.git_url_https, disabled: true}
+            %span.input-group-addon
+              %i.icon-copy
+
       - if @scraper.github_url
         %p
           %i.icon-github-sign.icon-large
