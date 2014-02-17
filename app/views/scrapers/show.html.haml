@@ -56,6 +56,17 @@
           %i.icon-wrench
           Settings
 
+      #scraper_code
+        %h4
+          %i.icon-github-sign.icon-large
+          Scraper code
+        - if @scraper.github_url
+          %p
+            = link_to @scraper.github_url, target: "_blank" do
+              = @scraper.name
+              repo
+            - if @scraper.main_scraper_filename
+              #{link_to @scraper.main_scraper_filename, @scraper.github_url_main_scraper_file, target: "_blank"}
       %p
         .form-group
           %label(for="git_url") git clone URL
@@ -64,12 +75,5 @@
             %span.input-group-addon
               %i.icon-copy
 
-      - if @scraper.github_url
-        %p
-          %i.icon-github-sign.icon-large
-          = link_to @scraper.github_url, target: "_blank" do
-            = @scraper.name
-          - if @scraper.main_scraper_filename
-            (#{link_to @scraper.main_scraper_filename, @scraper.github_url_main_scraper_file, target: "_blank"}) on GitHub
 
 
