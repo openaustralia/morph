@@ -22,7 +22,11 @@
         \/
         = link_to @scraper.name, @scraper
         %span.pull-right
-          = render partial: "auto_clock", locals: {scraper: @scraper}
+          - if @scraper.can_write?(current_user)
+            = link_to scraper_settings_path(@scraper) do
+              = render partial: "auto_clock", locals: {scraper: @scraper}
+          - else
+            = render partial: "auto_clock", locals: {scraper: @scraper}
           - if @scraper.queued? || @scraper.running?
             .pulse
     .col-md-2
