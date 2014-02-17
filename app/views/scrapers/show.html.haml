@@ -81,7 +81,8 @@
                 %i.icon-copy
       :javascript
         $(document).ready(function() {
-          var clip = new ZeroClipboard($("#copy_to_clipboard_button"))
+          var clip = new ZeroClipboard($("#copy_to_clipboard_button"));
+          $("#global-zeroclipboard-html-bridge").tooltip({title: "copy to clipboard", placement: 'bottom'});
         });
 
 
