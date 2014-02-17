@@ -82,8 +82,12 @@ pre {
   overflow-y: scroll;
 }
 
-#scraper_code {
-  margin-top: 5em;
+#scraper_settings {
+  margin-bottom: 4em;
+}
+
+#scraper_run {
+  margin-bottom: 2em
 }
 
 // Workaround for copy to clipboard

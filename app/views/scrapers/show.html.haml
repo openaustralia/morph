@@ -56,10 +56,12 @@
     .col-md-2
       - if signed_in?
         - if @scraper.can_write?(current_user)
-          %p= button_to "Run it now!", run_scraper_path(@scraper), class: ("btn btn-primary " + (@scraper.runnable? ? "" : "disabled")), disabled: !@scraper.runnable?
-        = link_to scraper_settings_path, class: "btn btn-default" do
-          %i.icon-wrench
-          Settings
+          #scraper_run
+            %p= button_to "Run it now!", run_scraper_path(@scraper), class: ("btn btn-primary " + (@scraper.runnable? ? "" : "disabled")), disabled: !@scraper.runnable?
+          #scraper_settings
+            = link_to scraper_settings_path, class: "btn btn-default" do
+              %i.icon-wrench
+              Settings
 
       #scraper_code
         %h4
