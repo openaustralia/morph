@@ -26,13 +26,17 @@
         = render partial: "auto_clock", locals: {scraper: @scraper}
         - if @scraper.queued? || @scraper.running?
           .pulse
-
       - if @scraper.readme
         .panel.panel-default
           .panel-heading
             %h4.panel-title= link_to @scraper.readme_filename, @scraper.github_url_readme
           .panel-body
             = @scraper.readme
+      - if @scraper.scraperwiki_url
+        %p
+          Forked from
+          = link_to "ScraperWiki", @scraper.scraperwiki_url, target: "_blank"
+
       = render "status"
       = render "console"
       = render "data"
@@ -44,10 +48,6 @@
         = link_to "Settings", scraper_settings_path
         - if @scraper.can_write?(current_user)
           %p= button_to "Run it now!", run_scraper_path(@scraper), class: (!@scraper.runnable? ? "btn btn-primary btn-lg disabled" : "btn btn-primary"), disabled: !@scraper.runnable?
-      - if @scraper.scraperwiki_url
-        %p
-          Forked from
-          = link_to "ScraperWiki", @scraper.scraperwiki_url, target: "_blank"
 
       %p
         git clone URL: #{@scraper.git_url_https}
