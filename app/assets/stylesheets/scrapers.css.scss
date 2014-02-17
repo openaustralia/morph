@@ -76,3 +76,8 @@ span.internal {
 #console_title.collapsed:after {
     content: "(show)";
 }
+
+pre {
+  max-height: 15em;
+  overflow-y: scroll;
+}
