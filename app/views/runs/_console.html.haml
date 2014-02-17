@@ -1,6 +1,7 @@
 - unless run.log_lines.empty?
 
-  %h3{data: {toggle: "collapse", target: "#console"}} Console output 
+  %h3#console_title{data: {toggle: "collapse", target: "#console"}, class: ("collapsed" if !open)}
+    Console output 
   #console.collapse{class: ("in" if open)}
     %p Hint: Keep this to a minimum during normal use (so that things remain readable)
     %pre

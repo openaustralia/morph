@@ -68,3 +68,13 @@ span.internal {
 .panel.panel-danger {
   margin-top: 5em;
 }
+
+#console_title:after {
+    font-family: 'FontAwesome';
+    content: "\f078";
+    float: right;
+    color: gray;
+}
+#console_title.collapsed:after {
+    content: "\f054";
+}
