@@ -3,6 +3,10 @@ class ScrapersController < ApplicationController
 
   def settings
     @scraper = Scraper.find(params[:id])
+    unless @scraper.can_write?(current_user)
+      redirect_to @scraper
+      return
+    end
   end
 
   def new
