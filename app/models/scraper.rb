@@ -119,6 +119,10 @@ class Scraper < ActiveRecord::Base
     github_url + "/blob/master/" + file
   end
 
+  def language
+    Morph::Language.language(repo_path).capitalize
+  end
+
   def main_scraper_filename
     Morph::Language.main_scraper_filename(repo_path)
   end

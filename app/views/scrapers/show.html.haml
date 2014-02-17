@@ -62,11 +62,15 @@
           Scraper code
         - if @scraper.github_url
           %p
+            %h5 Repository
             = link_to @scraper.github_url, target: "_blank" do
               = @scraper.name
               repo
+            %h5 Main scraper
             - if @scraper.main_scraper_filename
               #{link_to @scraper.main_scraper_filename, @scraper.github_url_main_scraper_file, target: "_blank"}
+            &mdash;
+            written in #{@scraper.language}
       %p
         .form-group
           %label(for="git_url") git clone URL
