@@ -1,2 +1,2 @@
-- if @scraper.last_run 
-  = render partial: "runs/console", locals: {run: @scraper.last_run}
+- if @scraper.last_run
+  = render partial: "runs/console", locals: {run: @scraper.last_run, open: !@scraper.last_run.finished_successfully?}
