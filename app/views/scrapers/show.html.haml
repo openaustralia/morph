@@ -76,8 +76,12 @@
           %label(for="git_url") git clone URL
           .input-group
             %input.form-control#git_url{type: "text", value: @scraper.git_url_https, disabled: true}
-            %span.input-group-addon
-              %i.icon-copy
-
+            %span.input-group-btn
+              %button.btn.btn-default#copy_to_clipboard_button{type: "button", data: {"clipboard-target" => "git_url"}}
+                %i.icon-copy
+      :javascript
+        $(document).ready(function() {
+          var clip = new ZeroClipboard($("#copy_to_clipboard_button"))
+        });
 
 

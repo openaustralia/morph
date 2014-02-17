@@ -42,6 +42,7 @@ gem 'premailer-rails'
 gem 'nokogiri'
 gem "rails_autolink"
 gem 'exception_notification'
+gem 'zeroclipboard-rails'
 
 group :production do
   gem "dalli"
