@@ -1,10 +1,7 @@
 - content_for :title, @scraper.full_name
 
 - if @scraper.forking?
-  %h1
-    = link_to @scraper.owner.to_param, @scraper.owner
-    \/
-    = link_to @scraper.name, @scraper
+  %h1= full_name_with_links(@scraper)
   %h2 Forking!
   .progress.progress-striped.active
     .progress-bar(style="width: #{@scraper.forking_progress == 0 ? 5 : @scraper.forking_progress}%")
@@ -18,9 +15,7 @@
   .row
     .col-md-10
       %h1
-        = link_to @scraper.owner.to_param, @scraper.owner
-        \/
-        = link_to @scraper.name, @scraper
+        = full_name_with_links(@scraper)
         %span.pull-right
           - if @scraper.can_write?(current_user)
             = link_to scraper_settings_path(@scraper) do
