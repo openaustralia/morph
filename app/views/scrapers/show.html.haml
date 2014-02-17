@@ -21,9 +21,10 @@
         = link_to @scraper.owner.to_param, @scraper.owner
         \/
         = link_to @scraper.name, @scraper
-        = render partial: "auto_clock", locals: {scraper: @scraper}
-        - if @scraper.queued? || @scraper.running?
-          .pulse
+        %span.pull-right
+          = render partial: "auto_clock", locals: {scraper: @scraper}
+          - if @scraper.queued? || @scraper.running?
+            .pulse
     .col-md-2
       - if signed_in?
         .button_title_adjust= render partial: "watch_button", locals: {scraper: @scraper}
