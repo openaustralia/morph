@@ -43,7 +43,7 @@
         .button_title_adjust= render partial: "watch_button", locals: {scraper: @scraper}
         = link_to "Settings", scraper_settings_path
         - if @scraper.can_write?(current_user)
-          %p= button_to "Run it now!", run_scraper_path(@scraper), class: (!@scraper.runnable? ? "btn btn-primary btn-lg disabled" : "btn btn-primary btn-lg"), disabled: !@scraper.runnable?
+          %p= button_to "Run it now!", run_scraper_path(@scraper), class: (!@scraper.runnable? ? "btn btn-primary btn-lg disabled" : "btn btn-primary"), disabled: !@scraper.runnable?
       - if @scraper.scraperwiki_url
         %p
           Forked from
