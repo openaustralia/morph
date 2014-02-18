@@ -5,7 +5,9 @@ module Morph
     end
 
     def self.human(language)
-      {ruby: "Ruby", php: "PHP", python: "Python" }[language]
+      t = {ruby: "Ruby", php: "PHP", python: "Python" }[language]
+      raise "Unsupported language" if t.nil?
+      t
     end
 
     # Defines our naming convention for the scraper of each language

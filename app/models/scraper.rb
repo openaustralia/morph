@@ -121,7 +121,6 @@ class Scraper < ActiveRecord::Base
 
   def language
     l = Morph::Language.language(repo_path)
-    l.capitalize if l
   end
 
   def main_scraper_filename
