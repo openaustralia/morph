@@ -9,6 +9,10 @@ class ScrapersController < ApplicationController
     end
   end
 
+  def new
+    @scraper = Scraper.new
+  end
+
   def github
     # Get the list of repositories
     @repos = current_user.github_all_public_repos
