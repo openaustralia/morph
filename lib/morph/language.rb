@@ -4,6 +4,10 @@ module Morph
       [:ruby, :php, :python]
     end
 
+    def self.human(language)
+      {ruby: "Ruby", php: "PHP", python: "Python" }[language]
+    end
+
     # Defines our naming convention for the scraper of each language
     def self.language_to_file_extension(language)
       case language
