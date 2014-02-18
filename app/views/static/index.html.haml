@@ -54,9 +54,9 @@
 
 .row
   .col-md-6
-    %h2 All Users
+    %h2 Recent New Users
     %ul.list-unstyled
-      - User.all.each do |user|
+      - User.all.order(created_at: :desc).limit(10).each do |user|
         %li
           = link_to user.nickname, user
           - if user.name
