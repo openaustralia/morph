@@ -39,7 +39,7 @@
               %ul(class="dropdown-menu")
                 %li= link_to "Add scraper from GitHub", github_new_scraper_path
                 %li(class="divider")
-                %li= link_to "Fork scraper from Scraperwiki", new_scraperwiki_fork_path
+                %li= link_to "Fork scraper from Scraperwiki", scraperwiki_new_scraper_path
             %li= link_to "API", api_path
             %li= link_to "Documentation", documentation_path
             - if user_signed_in? && current_user.admin?

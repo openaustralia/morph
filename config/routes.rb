@@ -29,6 +29,8 @@ Morph::Application.routes.draw do
   resources :scrapers, path: '/scrapers', only: [] do
     get 'github', on: :new
     post 'github', to: "scrapers#create_github", on: :collection
+    get 'scraperwiki', on: :new
+    post 'scraperwiki', to: "scrapers#create_scraperwiki", on: :collection
   end
   resources :owners, path: "/", only: :show
   post '/:id/watch', to: "owners#watch", as: :owner_watch
@@ -36,8 +38,16 @@ Morph::Application.routes.draw do
   get '/users/:id/watching', to: "users#watching", as: :user_watching
   resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
-  # TODO Not very happy with this URL but this will do for the time being
-  resources "scraperwiki_forks", only: [:new, :create]
+  # TODO: Hmm would be nice if this could be tidier
+  get '/scraperwiki_forks/new', to: redirect {|params, req|
+    if req.query_string.empty?
+      "/scrapers/new/scraperwiki"
+    else
+      "/scrapers/new/scraperwiki?#{req.query_string}"
+    end
+  }
+
+  #resources "scraperwiki_forks", only: [:new, :create]
 
   get '/*id/data', to: "scrapers#data", as: :scraper_data
   post '/*id/watch', to: "scrapers#watch", as: :scraper_watch
