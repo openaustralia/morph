@@ -35,16 +35,23 @@
     - if @owner == current_user
       %div
         = link_to "Show your key", user_settings_path, class: "btn btn-default"
-    %hr
-    %h3 Statistics
     - if @owner.user?
+      %hr
       %p
         Watching:
         - if @owner.alerts.empty?
           no scrapers
         - else
           = link_to "#{pluralize(@owner.all_scrapers_watched.count, 'scrapers')}", user_watching_path(@owner)
-    - unless @owner.scrapers.empty?
+
+  .col-md-9
+
+    - if @owner.scrapers.empty?
+      %h3 Has no scrapers
+
+    - else
+      - scrapers = @owner.scrapers
+      %h3= pluralize(scrapers.count, "scraper")
       %p
         Total run time used:
         = duration_of_time_in_words(@owner.runs.sum(&:wall_time))
@@ -55,14 +62,6 @@
         Total disk space used:
         = number_to_human_size @owner.scrapers.sum(&:total_disk_usage)
 
-  .col-md-9
-
-    - if @owner.scrapers.empty?
-      %h3 Has no scrapers
-
-    - else
-      - scrapers = @owner.scrapers
-      %h3= pluralize(scrapers.count, "scraper")
       .list-group= render scrapers.select{|s| s.running?}
       .list-group= render scrapers.select{|s| s.requires_attention?}
       .list-group= render scrapers.select{|s| !s.requires_attention? && !s.running?}.sort{|a,b| b.updated_at <=> a.updated_at}
