@@ -3,6 +3,7 @@ class Scraper < ActiveRecord::Base
   has_many :runs, inverse_of: :scraper
   has_many :metrics, through: :runs
   belongs_to :forked_by, class_name: "User"
+  validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
 
   extend FriendlyId
   friendly_id :full_name, use: :finders
