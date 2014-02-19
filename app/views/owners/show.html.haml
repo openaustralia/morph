@@ -46,7 +46,7 @@
           = link_to "#{pluralize(@owner.all_scrapers_watched.count, 'scrapers')}", user_watching_path(@owner)
     - unless @owner.scrapers.empty?
       %p
-        Total run time:
+        Total run time used:
         = duration_of_time_in_words(@owner.runs.sum(&:wall_time))
       %p
         Total cpu time used:
