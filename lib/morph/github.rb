@@ -20,5 +20,15 @@ module Morph
       system("cd #{repo_path}; git submodule init")
       system("cd #{repo_path}; git submodule update")
     end
+
+    # Check if repo name is already in use. This only checks public repos
+    def self.in_public_use?(full_name)
+      begin
+        Octokit.repository(full_name)
+        true      
+      rescue Octokit::NotFound
+        false
+      end
+    end
   end
 end

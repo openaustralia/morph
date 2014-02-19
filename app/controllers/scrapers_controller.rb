@@ -57,13 +57,7 @@ class ScrapersController < ApplicationController
 
     # As quickly as possible check if it's possible to create the repository. If it isn't possible then allow
     # the user to choose another name
-    begin
-      current_user.octokit_client.repository(@scraper.full_name)
-      exists_on_github = true      
-    rescue Octokit::NotFound
-      exists_on_github = false
-    end
-
+    exists_on_github = Morph::Github.in_public_use?(@scraper.full_name)
 
     # Check that scraperwiki scraper exists
     exists_on_scraperwiki = !!Morph::Scraperwiki.new(@scraper.scraperwiki_shortname).info
