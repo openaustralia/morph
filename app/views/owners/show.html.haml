@@ -36,8 +36,15 @@
       %div
         = link_to "Show your key", user_settings_path, class: "btn btn-default"
     %hr
+    %h3 Statistics
+    - if @owner.user?
+      %p
+        Watching:
+        - if @owner.alerts.empty?
+          no scrapers
+        - else
+          = link_to "#{pluralize(@owner.all_scrapers_watched.count, 'scrapers')}", user_watching_path(@owner)
     - unless @owner.scrapers.empty?
-      %h3 Statistics
       %p
         Total run time:
         = duration_of_time_in_words(@owner.runs.sum(&:wall_time))
@@ -49,12 +56,6 @@
         = number_to_human_size @owner.scrapers.sum(&:total_disk_usage)
 
   .col-md-9
-    - if @owner.user?
-      %p
-        - if @owner.alerts.empty?
-          watching no scrapers
-        - else
-          = link_to "watching #{pluralize(@owner.all_scrapers_watched.count, 'scrapers')}", user_watching_path(@owner)
 
     - if @owner.scrapers.empty?
       %h3 Has no scrapers
