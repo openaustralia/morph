@@ -49,9 +49,10 @@
 
     - else
       %h3 Scrapers
-      - if @owner.scrapers.any?{|s| s.requires_attention?}
-        .list-group= render @owner.scrapers.select{|s| s.requires_attention?}
-      .list-group= render @owner.scrapers.select{|s| !s.requires_attention?}
+      - scrapers = @owner.scrapers
+      .list-group= render scrapers.select{|s| s.running?}
+      .list-group= render scrapers.select{|s| s.requires_attention?}
+      .list-group= render scrapers.select{|s| !s.requires_attention? && !s.running?}.sort{|a,b| b.updated_at <=> a.updated_at}
 
     - if @owner == current_user
       %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"
