@@ -244,11 +244,7 @@ class Scraper < ActiveRecord::Base
     # adding a commit to an empty repository
     begin
       fork_progress("Creating GitHub repository", 20)
-      if forked_by == owner
-        repo = client.create_repository(name, auto_init: true)
-      else
-        repo = client.create_repository(name, auto_init: true, organization: owner.nickname)
-      end
+      repo = Morph::Github.create_repository(forked_by, owner, name)
       update_attributes(github_id: repo.id, github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
     rescue Octokit::UnprocessableEntity
       # This means the repo has already been created. We will have gotten here if this background job failed at some

@@ -30,5 +30,15 @@ module Morph
         false
       end
     end
+
+    # Will create a repository. Works for both an individual and an organisation.
+    # Returns a repo
+    def self.create_repository(user, owner, name)
+      if user == owner
+        user.octokit_client.create_repository(name, auto_init: true)
+      else
+        user.octokit_client.create_repository(name, auto_init: true, organization: owner.nickname)
+      end
+    end
   end
 end
