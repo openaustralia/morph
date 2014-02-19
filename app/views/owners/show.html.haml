@@ -60,8 +60,8 @@
       %h3 Has no scrapers
 
     - else
-      %h3 Scrapers
       - scrapers = @owner.scrapers
+      %h3= pluralize(scrapers.count, "scraper")
       .list-group= render scrapers.select{|s| s.running?}
       .list-group= render scrapers.select{|s| s.requires_attention?}
       .list-group= render scrapers.select{|s| !s.requires_attention? && !s.running?}.sort{|a,b| b.updated_at <=> a.updated_at}
