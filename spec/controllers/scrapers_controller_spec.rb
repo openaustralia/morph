@@ -11,7 +11,7 @@ describe ScrapersController do
 
     context "not signed in" do
       it "should not allow you to delete a scraper" do
-        scraper = Scraper.create(owner: user, name: "A scraper", full_name: "mlandauer/a_scraper")
+        scraper = Scraper.create(owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
         delete :destroy, id: "mlandauer/a_scraper"
         Scraper.count.should == 1
       end
@@ -24,7 +24,7 @@ describe ScrapersController do
 
       context "you own the scraper" do
         before :each do
-          Scraper.create(owner: user, name: "A scraper", full_name: "mlandauer/a_scraper")
+          Scraper.create(owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
         end
 
         it "should allow you to delete the scraper" do
@@ -40,7 +40,7 @@ describe ScrapersController do
 
       context "an organisation you're part of owns the scraper" do
         before :each do
-          Scraper.create(owner: organization, name: "A scraper", full_name: "org/a_scraper")
+          Scraper.create(owner: organization, name: "a_scraper", full_name: "org/a_scraper")
         end
 
         it "should allow you to delete a scraper if it's owner by an organisation you're part of" do
@@ -56,14 +56,14 @@ describe ScrapersController do
 
       it "should not allow you to delete a scraper if you don't own the scraper" do
         other_user = User.create(nickname: "otheruser")
-        scraper = Scraper.create(owner: other_user, name: "A scraper", full_name: "otheruser/a_scraper")
+        scraper = Scraper.create(owner: other_user, name: "a_scraper", full_name: "otheruser/a_scraper")
         delete :destroy, id: "otheruser/a_scraper"
         Scraper.count.should == 1
       end
 
       it "should not allow you to delete a scraper if it's owner is an organisation your're not part of" do
         other_organisation = Organization.create(nickname: "otherorg")
-        scraper = Scraper.create(owner: other_organisation, name: "A scraper", full_name: "otherorg/a_scraper")
+        scraper = Scraper.create(owner: other_organisation, name: "a_scraper", full_name: "otherorg/a_scraper")
         delete :destroy, id: "otherorg/a_scraper"
         Scraper.count.should == 1
       end

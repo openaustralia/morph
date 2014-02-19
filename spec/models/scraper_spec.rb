@@ -4,7 +4,7 @@ describe Scraper do
   context "A scraper with a couple of runs" do
     before :each do
       user = User.create
-      @scraper = user.scrapers.create(name: "my scraper")
+      @scraper = user.scrapers.create(name: "my_scraper")
       @time1 = 2.minutes.ago
       @time2 = 1.minute.ago
       @run1 = @scraper.runs.create(finished_at: @time1)
