@@ -44,7 +44,7 @@
           no scrapers
         - else
           = link_to "#{pluralize(@owner.all_scrapers_watched.count, 'scrapers')}", user_watching_path(@owner)
-    - unless @owner.scrapers.empty?
+    - unless @scrapers.empty?
       %p
         Total run time used:
         = duration_of_time_in_words(@owner.wall_time)
@@ -57,15 +57,14 @@
 
   .col-md-9
 
-    - if @owner.scrapers.empty?
+    - if @scrapers.empty?
       %h3 Has no scrapers
 
     - else
-      - scrapers = @owner.scrapers
-      %h3= pluralize(scrapers.count, "scraper")
-      .list-group= render scrapers.select{|s| s.running?}
-      .list-group= render scrapers.select{|s| s.requires_attention?}
-      .list-group= render scrapers.select{|s| !s.requires_attention? && !s.running?}.sort{|a,b| b.updated_at <=> a.updated_at}
+      %h3= pluralize(@scrapers.count, "scraper")
+      .list-group= render @running_scrapers
+      .list-group= render @erroring_scrapers
+      .list-group= render @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
 
     - if @owner == current_user
       %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"
