@@ -30,12 +30,12 @@ class ScrapersController < ApplicationController
       repo = Morph::Github.create_repository(current_user, @scraper.owner, @scraper.name)
       # TODO Populate it with a default scraper in the chosen language
       files = {
-        Morph::Language.language_to_scraper_filename(@scraper.original_language) => Morph::Language.default_scraper(@scraper.original_language),
+        Morph::Language.language_to_scraper_filename(@scraper.original_language.to_sym) => Morph::Language.default_scraper(@scraper.original_language.to_sym),
         ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
       }
       # TODO Don't use hardcoded urls
       files["README.md"] = "This is a scraper that runs on [Morph](https://morph.io). To get started [see the documentation](https://morph.io/documentation)"
-      add_commit_to_root_on_github(forked_by, files, "Fork of code from ScraperWiki at #{scraperwiki_url}")
+      @scraper.add_commit_to_root_on_github(current_user, files, "Add template for Morph scraper")
 
       @scraper = Scraper.new_from_github(repo.full_name)
       if @scraper.save        
