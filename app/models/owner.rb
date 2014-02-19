@@ -7,15 +7,15 @@ class Owner < ActiveRecord::Base
   before_create :set_api_key
 
   def wall_time
-    runs.sum(&:wall_time)
+    runs.to_a.sum(&:wall_time)
   end
 
   def cpu_time
-    scrapers.sum(&:cpu_time)
+    scrapers.to_a.sum(&:cpu_time)
   end
 
   def total_disk_usage
-    scrapers.sum(&:total_disk_usage)
+    scrapers.to_a.sum(&:total_disk_usage)
   end
 
   def set_api_key
