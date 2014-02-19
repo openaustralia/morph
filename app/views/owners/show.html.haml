@@ -35,6 +35,18 @@
     - if @owner == current_user
       %div
         = link_to "Show your key", user_settings_path, class: "btn btn-default"
+    %hr
+    - unless @owner.scrapers.empty?
+      %h3 Statistics
+      %p
+        Total run time:
+        = duration_of_time_in_words(@owner.runs.sum(&:wall_time))
+      %p
+        Total cpu time used:
+        = duration_of_time_in_words(@owner.scrapers.sum(&:cpu_time))
+      %p
+        Total disk space used:
+        = number_to_human_size @owner.scrapers.sum(&:total_disk_usage)
 
   .col-md-9
     - if @owner.user?
@@ -57,17 +69,6 @@
     - if @owner == current_user
       %p= link_to "Add scraper", new_scraper_path, class: "btn btn-default"
 
-    - unless @owner.scrapers.empty?
-      %h3 Statistics
-      %p
-        Total run time:
-        = duration_of_time_in_words(@owner.runs.sum(&:wall_time))
-      %p
-        Total cpu time used:
-        = duration_of_time_in_words(@owner.scrapers.sum(&:cpu_time))
-      %p
-        Total disk space used:
-        = number_to_human_size @owner.scrapers.sum(&:total_disk_usage)
 
   .col-md-1
 
