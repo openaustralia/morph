@@ -43,6 +43,7 @@ gem 'nokogiri'
 gem "rails_autolink"
 gem 'exception_notification'
 gem 'zeroclipboard-rails'
+gem 'newrelic_rpm'
 
 group :production do
   gem "dalli"
