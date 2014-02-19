@@ -10,8 +10,16 @@ class Owner < ActiveRecord::Base
     runs.to_a.sum(&:wall_time)
   end
 
+  def utime
+    scrapers.joins(:metrics).sum(:utime)
+  end
+
+  def stime
+    scrapers.joins(:metrics).sum(:stime)
+  end
+
   def cpu_time
-    scrapers.to_a.sum(&:cpu_time)
+    utime + stime
   end
 
   def total_disk_usage
