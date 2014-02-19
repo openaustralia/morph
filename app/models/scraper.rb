@@ -4,6 +4,7 @@ class Scraper < ActiveRecord::Base
   has_many :metrics, through: :runs
   belongs_to :forked_by, class_name: "User"
   validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
+  has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 
   extend FriendlyId
   friendly_id :full_name, use: :finders
@@ -111,10 +112,6 @@ class Scraper < ActiveRecord::Base
 
   def runnable?
     last_run.nil? || last_run.finished?
-  end
-
-  def last_run
-    runs.order(queued_at: :desc).first
   end
 
   # Set auto to true if this job is being queued automatically (i.e. not directly by a person)
