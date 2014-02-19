@@ -1,7 +1,7 @@
 class OwnersController < ApplicationController
   def show
     @owner = Owner.find(params[:id])
-    @scrapers = @owner.scrapers
+    @scrapers = @owner.scrapers.includes(:last_run)
 
     # Split out scrapers into different groups
     @running_scrapers, @erroring_scrapers, @other_scrapers = [], [], []
