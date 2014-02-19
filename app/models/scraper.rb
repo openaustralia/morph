@@ -10,6 +10,16 @@ class Scraper < ActiveRecord::Base
 
   delegate :queued?, :running?, to: :last_run, allow_nil: true
 
+  # Given a scraper name on github populates the fields for a morph scraper but doesn't save it
+  def self.new_from_github(full_name)
+    repo = Octokit.repository(full_name)
+    repo_owner = Owner.find_by_nickname(repo.owner.login)
+    # Populate a new scraper with information from the repo
+    Scraper.new(name: repo.name, full_name: repo.full_name,
+      description: repo.description, github_id: repo.id, owner_id: repo_owner.id,
+      github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
+  end
+
   def successful_runs
     runs.includes(:log_lines).order(finished_at: :desc).select{|r| r.finished_successfully?}
   end

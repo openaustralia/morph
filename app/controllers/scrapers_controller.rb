@@ -20,15 +20,8 @@ class ScrapersController < ApplicationController
   end
 
   def create_github
-    # Look up the repository by name
-    repo = current_user.octokit_client.repository("#{params[:scraper][:full_name]}")
-    repo_owner = Owner.find_by_nickname(repo.owner.login)
-
-    if Scraper.can_write?(current_user, repo_owner)
-      # Populate a new scraper with information from the repo
-      @scraper = Scraper.new(name: repo.name, full_name: repo.full_name,
-        description: repo.description, github_id: repo.id, owner_id: repo_owner.id,
-        github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
+    @scraper = Scraper.new_from_github(params[:scraper][:full_name])
+    if @scraper.can_write?(current_user)
       if @scraper.save
         # TODO This could be a long running task shouldn't really be in the request cycle
         @scraper.synchronise_repo
