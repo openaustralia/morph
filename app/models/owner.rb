@@ -6,6 +6,18 @@ class Owner < ActiveRecord::Base
   has_many :runs
   before_create :set_api_key
 
+  def wall_time
+    runs.sum(&:wall_time)
+  end
+
+  def cpu_time
+    scrapers.sum(&:cpu_time)
+  end
+
+  def total_disk_usage
+    scrapers.sum(&:total_disk_usage)
+  end
+
   def set_api_key
     self.api_key = Digest::MD5.base64digest(id.to_s + rand.to_s + Time.now.to_s)[0...20]
   end

@@ -47,13 +47,13 @@
     - unless @owner.scrapers.empty?
       %p
         Total run time used:
-        = duration_of_time_in_words(@owner.runs.sum(&:wall_time))
+        = duration_of_time_in_words(@owner.wall_time)
       %p
         Total cpu time used:
-        = duration_of_time_in_words(@owner.scrapers.sum(&:cpu_time))
+        = duration_of_time_in_words(@owner.cpu_time)
       %p
         Total disk space used:
-        = number_to_human_size @owner.scrapers.sum(&:total_disk_usage)
+        = number_to_human_size(@owner.total_disk_usage)
 
   .col-md-9
 
