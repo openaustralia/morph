@@ -2,6 +2,8 @@
 #
 # Adapted from https://github.com/jprichardson/ansible-redis
 #
+- name: Set os overcommit memory setting for redis
+  sysctl: name=vm.overcommit_memory value=1
 - name: ensure necessary packages installed
   apt: pkg={{ item }} state=latest
   with_items:
