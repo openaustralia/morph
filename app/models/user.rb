@@ -16,7 +16,7 @@ class User < Owner
   def github_all_public_repos
     Octokit.auto_paginate = true
     repos = github_public_user_repos
-    Octokit.organizations(nickname).each do |org|
+    octokit_client.organizations(nickname).each do |org|
       # This call doesn't seem to support sort by pushed
       repos += Octokit.organization_repositories(org.login)
     end
