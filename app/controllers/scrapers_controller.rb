@@ -13,6 +13,33 @@ class ScrapersController < ApplicationController
     @scraper = Scraper.new
   end
 
+  def create
+    @scraper = Scraper.new(original_language: params[:scraper][:original_language],
+      owner_id: params[:scraper][:owner_id], name: params[:scraper][:name])
+    @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
+    if !Scraper.can_write?(current_user, @scraper.owner)
+      @scraper.errors.add(:owner_id, "doesn't belong to you")
+      render :new
+    elsif Scraper.exists?(full_name: @scraper.full_name)
+      @scraper.errors.add(:name, "is already taken on Morph")
+      render :new
+    elsif Morph::Github.in_public_use?(@scraper.full_name)
+      @scraper.errors.add(:name, "is already taken on GitHub")
+      render :new
+    else
+      repo = Morph::Github.create_repository(current_user, @scraper.owner, @scraper.name)
+      # TODO Populate it with a default scraper in the chosen language
+      @scraper = Scraper.new_from_github(repo.full_name)
+      if @scraper.save
+        # TODO This could be a long running task shouldn't really be in the request cycle
+        @scraper.synchronise_repo
+        redirect_to @scraper        
+      else
+        render :new
+      end
+    end
+  end
+
   def github
     # Get the list of repositories
     @repos = current_user.github_all_public_repos
