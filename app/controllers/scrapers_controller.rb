@@ -21,17 +21,15 @@ class ScrapersController < ApplicationController
 
   def create_github
     @scraper = Scraper.new_from_github(params[:scraper][:full_name])
-    if @scraper.can_write?(current_user)
-      if @scraper.save
-        # TODO This could be a long running task shouldn't really be in the request cycle
-        @scraper.synchronise_repo
-        redirect_to @scraper
-      else
-        render :github
-      end
+    if !@scraper.can_write?(current_user)
+      @scraper.errors.add(:full_name, "is not one of your scrapers")
+      render :github
+    elsif !@scraper.save
+      render :github
     else
-      flash[:alert] = "Can't add someone else's scraper"
-      redirect_to :github
+      # TODO This could be a long running task shouldn't really be in the request cycle
+      @scraper.synchronise_repo
+      redirect_to @scraper
     end
   end
 
