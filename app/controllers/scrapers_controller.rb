@@ -40,6 +40,7 @@ class ScrapersController < ApplicationController
       @scraper = Scraper.new_from_github(repo.full_name)
       if @scraper.save        
         # TODO This could be a long running task shouldn't really be in the request cycle
+        repo = current_user.octokit_client.edit_repository(@scraper.full_name, homepage: scraper_url(@scraper))
         @scraper.synchronise_repo
         redirect_to @scraper        
       else
