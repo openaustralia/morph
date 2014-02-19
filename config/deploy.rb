@@ -12,7 +12,7 @@ set :rvm_ruby_version, '2.0.0-p353'
 # set :log_level, :debug
 # set :pty, true
 
-set :linked_files, %w{config/database.yml .env}
+set :linked_files, %w{config/database.yml config/newrelic.yml .env}
 set :linked_dirs, %w{db/scrapers}
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
