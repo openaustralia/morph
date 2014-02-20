@@ -25,7 +25,7 @@ gem 'docker-api', :require => 'docker'
 gem "sidekiq"
 gem "foreman"
 gem "faraday"
-gem 'jquery-turbolinks'
+#gem 'jquery-turbolinks'
 gem "archive-tar-minitar"
 
 # We're currently only supporting the plain text, markdown and textile
@@ -89,7 +89,8 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+# Disabling so we can browser traces on newrelic
+#gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
