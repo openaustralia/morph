@@ -4,7 +4,7 @@ class Owner < ActiveRecord::Base
   extend FriendlyId
   friendly_id :nickname, use: :finders
 
-  has_many :scrapers
+  has_many :scrapers, inverse_of: :owner
   has_many :runs
   before_create :set_api_key
 

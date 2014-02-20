@@ -1,5 +1,5 @@
 class Scraper < ActiveRecord::Base
-  belongs_to :owner
+  belongs_to :owner, inverse_of: :scrapers
   has_many :runs, inverse_of: :scraper
   has_many :metrics, through: :runs
   belongs_to :forked_by, class_name: "User"
