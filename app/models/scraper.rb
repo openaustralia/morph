@@ -1,3 +1,5 @@
+require 'new_relic/agent/method_tracer'
+
 class Scraper < ActiveRecord::Base
   belongs_to :owner, inverse_of: :scrapers
   has_many :runs, inverse_of: :scraper
@@ -42,6 +44,31 @@ class Scraper < ActiveRecord::Base
     successful_runs.sum(&:wall_time) / successful_runs.count if successful_runs.count > 0
   end
 
+  def total_wall_time
+    runs.to_a.sum(&:wall_time)
+  end
+
+  def utime
+    metrics.sum(:utime)
+  end
+
+  def stime
+    metrics.sum(:stime)
+  end
+
+  def cpu_time
+    utime + stime
+  end
+
+  def total_disk_usage
+    repo_size + database.sqlite_db_size
+  end
+
+  add_method_tracer :average_successful_wall_time, 'Custom/Scraper/average_successful_wall_time'
+  add_method_tracer :total_wall_time, 'Custom/Scraper/total_wall_time'
+  add_method_tracer :cpu_time, 'Custom/Scraper/cpu_time'
+  add_method_tracer :total_disk_usage, 'Custom/Scraper/total_disk_usage'
+
   def queued_or_running?
     queued? || running?
   end
@@ -49,10 +76,6 @@ class Scraper < ActiveRecord::Base
   # Let's say a scraper requires attention if it's set to run automatically and the last run failed
   def requires_attention?
     auto_run && last_run && last_run.finished_with_errors?
-  end
-
-  def total_wall_time
-    runs.to_a.sum(&:wall_time)
   end
 
   def self.can_write?(user, owner)
@@ -74,18 +97,6 @@ class Scraper < ActiveRecord::Base
 
   def data_path
     "#{owner.data_root}/#{name}"
-  end
-
-  def utime
-    metrics.sum(:utime)
-  end
-
-  def stime
-    metrics.sum(:stime)
-  end
-
-  def cpu_time
-    utime + stime
   end
 
   def self.update_docker_image!
@@ -159,10 +170,6 @@ class Scraper < ActiveRecord::Base
       end
     end
     r
-  end
-
-  def total_disk_usage
-    repo_size + database.sqlite_db_size
   end
 
   def repo_size
