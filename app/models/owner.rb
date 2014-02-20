@@ -9,7 +9,7 @@ class Owner < ActiveRecord::Base
   before_create :set_api_key
 
   def wall_time
-    runs.to_a.sum(&:wall_time)
+    runs.sum(:wall_time)
   end
 
   def utime
