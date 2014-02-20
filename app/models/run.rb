@@ -11,12 +11,15 @@ class Run < ActiveRecord::Base
     Morph::Language.language(repo_path)
   end
 
-  def wall_time
+  def finished_at=(time)
+    write_attribute(:finished_at, time)
     if started_at && finished_at
-      finished_at - started_at
-    else
-      0
+      write_attribute(:wall_time, finished_at - started_at)
     end
+  end
+
+  def wall_time=(t)
+    raise "Can't set wall_time directly"
   end
 
   def name

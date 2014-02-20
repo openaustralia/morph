@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140218032759) do
+ActiveRecord::Schema.define(version: 20140220053050) do
 
   create_table "alerts", force: true do |t|
     t.integer  "user_id"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20140218032759) do
     t.boolean  "auto",         default: false, null: false
     t.string   "git_revision"
     t.integer  "owner_id"
+    t.float    "wall_time",    default: 0.0,   null: false
   end
 
   create_table "scrapers", force: true do |t|
