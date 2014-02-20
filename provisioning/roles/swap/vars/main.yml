@@ -1,0 +1,2 @@
+# We have 1GB of ram on our server so we should allocate the same amount of swap
+swap_size: 1G

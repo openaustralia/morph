@@ -1,7 +1,6 @@
 ---
-# We have 1GB of ram on our server so we should allocate the same amount of swap
 - name: Create swap file
-  command: dd if=/dev/zero of=/swapfile bs=1024 count=1M creates=/swapfile
+  command: dd if=/dev/zero of=/swapfile bs=1024 count={{ swap_size }} creates=/swapfile
   notify: Make linux swap area
 
 - name: Make sure that swapfile isn't world readable
