@@ -1,0 +1,7 @@
+---
+- name: Make linux swap area
+  command: mkswap /swapfile
+  notify: Activate swap
+
+- name: Activate swap
+  command: swapon /swapfile

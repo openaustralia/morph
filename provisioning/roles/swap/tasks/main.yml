@@ -1,0 +1,14 @@
+---
+# We have 1GB of ram on our server so we should allocate the same amount of swap
+- name: Create swap file
+  command: dd if=/dev/zero of=/swapfile bs=1024 count=1M creates=/swapfile
+  notify: Make linux swap area
+
+- name: Make sure that swapfile isn't world readable
+  file: path=/swapfile owner=root group=root mode=0600
+
+- name: Add to fstab
+  action: lineinfile dest=/etc/fstab regexp="swapfile" line="/swapfile none swap sw 0 0" state=present
+
+- name: Set swappiness to 0
+  sysctl: name=vm.swappiness value=0
