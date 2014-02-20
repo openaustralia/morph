@@ -31,7 +31,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def finished_runs
-    runs.where("finished_at IS NOT NULL").order(finished_at: :desc)
+    runs.where("finished_at IS NOT NULL").order(finished_at: :desc).includes(:log_lines, :metric)
   end
 
   # For successful runs calculates the average wall clock time that this scraper takes

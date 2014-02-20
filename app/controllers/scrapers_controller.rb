@@ -113,7 +113,7 @@ class ScrapersController < ApplicationController
   end
 
   def show
-    @scraper = Scraper.includes(:runs => [:log_lines, :metric]).find(params[:id])
+    @scraper = Scraper.find(params[:id])
     @rows = @scraper.database.first_ten_rows
   end
 
