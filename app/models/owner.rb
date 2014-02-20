@@ -1,3 +1,5 @@
+require 'new_relic/agent/method_tracer'
+
 class Owner < ActiveRecord::Base
   extend FriendlyId
   friendly_id :nickname, use: :finders
@@ -25,6 +27,12 @@ class Owner < ActiveRecord::Base
   def total_disk_usage
     scrapers.to_a.sum(&:total_disk_usage)
   end
+
+  add_method_tracer :wall_time, 'Custom/Owner/wall_time'
+  add_method_tracer :utime, 'Custom/Owner/utime'
+  add_method_tracer :stime, 'Custom/Owner/stime'
+  add_method_tracer :cpu_time, 'Custom/Owner/cpu_time'
+  add_method_tracer :total_disk_usage, 'Custom/Owner/total_disk_usage'
 
   def set_api_key
     self.api_key = Digest::MD5.base64digest(id.to_s + rand.to_s + Time.now.to_s)[0...20]
