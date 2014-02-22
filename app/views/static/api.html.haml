@@ -29,12 +29,20 @@
         %span.help-block
           The SQL query to perform on the SQLite database that is the output of the scraper (e.g. "#{@query}").
           Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
-    .string.input.optional.stringish.form-group#api_key_input
-      %label.control-label.col-sm-1(for="api_key") [api_key]
-      .col-sm-11
-        %p.form-control-static#api_key= current_user.api_key
-        %span.help-block
-          Your personal api key which should only be used by you.
+    .row
+      .col-sm-6
+        .string.input.optional.stringish.form-group#api_key_input
+          %label.control-label.col-sm-2(for="api_key") [api_key]
+          .col-sm-10
+            %p.form-control-static#api_key= current_user.api_key
+            %span.help-block
+              Don't tell anyone else what the api key is
+      .col-sm-3
+        .select.input.optional.form-group#owner_input
+          %select.form-control#owner(name="owner")
+            = options_for_select(current_user.all_owners.map{|o| [o.nickname, o.api_key]})
+          %span.help-block
+            Choose whose api key you want to use
 
 %h2 Example
 %p
