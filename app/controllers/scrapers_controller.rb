@@ -175,7 +175,17 @@ class ScrapersController < ApplicationController
       begin
         rows = scraper.database.sql_query(query)
         respond_to do |format|
-          format.json { render :json => rows}
+          format.json do
+            # Check authentication
+            api_key = request.headers["HTTP_X_API_KEY"]
+            owner = Owner.find_by_api_key(api_key)
+            if owner
+              render :json => rows
+              # TODO Log usage against owner
+            else
+              render :json => {error: "API key is not valid"}, status: 401
+            end
+          end
           format.csv do
             csv_string = CSV.generate do |csv|
               csv << rows.first.keys unless rows.empty?
