@@ -16,7 +16,7 @@
     ServerAlias api.{{ server_name }}
     DocumentRoot "/var/www/current/public"
 
-    PassengerRuby /home/deploy/.rvm/rubies/ruby-2.0.0-p353/bin/ruby
+    PassengerRuby /home/deploy/.rvm/gems/ruby-2.0.0-p353/wrappers/ruby
 
     #ErrorLog "/srv/www/www.openaustraliafoundation.org.au/log/error_log"
     #CustomLog /srv/www/www.openaustraliafoundation.org.au/log/access_log common
