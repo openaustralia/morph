@@ -5,7 +5,13 @@
 
 %pre
   %code
-    = curl_command(content_tag(:em, "[api_key]"), content_tag(:em, "[scraper]"), content_tag(:em, "[sql]"))    
+    GET #{api_url_in_html(content_tag(:em, "[scraper]"), content_tag(:em, "[sql]"))}
+
+%p With a simple header for authentication
+
+%pre
+  %code
+    = api_header(content_tag(:em, "[api_key]"))
 
 %h2 Parameters
 
