@@ -4,7 +4,9 @@
 %p The API allows you to programatically retrieve data from any public scraper using an SQL query. It's all pretty easy.
 
 %pre
-  %code #{api_root}<em>[scraper]</em>/data.json?query=<em>[sql]</em>
+  %code
+    curl -H "x-api-key:<em>[api_key]</em>" "#{api_root}<em>[scraper]</em>/data.json?query=<em>[sql]</em>"
+    
 
 %h2 Parameters
 
@@ -18,30 +20,36 @@
     .string.input.optional.stringish.form-group#query_input
       %label.control-label.col-sm-1(for="query") [sql]
       .col-sm-11
-        %input.form-control#query(maxlength="255" name="scraper[full_name]" type="text" value="#{@query}")
+        %input.form-control#query(maxlength="255" name="query" type="text" value="#{@query}")
         %span.help-block
           The SQL query to perform on the SQLite database that is the output of the scraper (e.g. "#{@query}").
           Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
+    .string.input.optional.stringish.form-group#api_key_input
+      %label.control-label.col-sm-1(for="api_key") [api_key]
+      .col-sm-11
+        %p.form-control-static#api_key= current_user.api_key
+        %span.help-block
+          Your personal api key which should only be used by you.
 
 %h2 Full URL
 %p
   To do the API query with the values above
 
 %pre
-  %code= link_to scraper_data_url(@scraper, host: api_host, query: @query, format: :json), scraper_data_url(@scraper, host: api_host, query: @query, format: :json), target: "_blank"
+  %code
+    curl -H "x-api-key:#{current_user.api_key}" "#{scraper_data_url(@scraper, host: api_host, query: @query, format: :json)}"
 
 :javascript
   $(function() {
     function update_url() {
-      console.log("In update_url");
       var scraper = $("#scraper_full_name").val();
       var sql = $("#query").val();
-      console.log("scraper:", scraper, "sql:", sql);
+      var api_key = $("#api_key").html();
       // Would be nice for this not to be hardcoded
       var host = "https://morph.io";
-      url = host + "/" + scraper + "/data.json?query=" + encodeURIComponent(sql);
-      $("code a").html(url);
-      $("code a").attr('href', url);
+
+      command = "curl -H \"x-api-key:" + api_key + "\" \"" + host + "/" + scraper + "/data.json?query=" + encodeURIComponent(sql) + "\""
+      $("code").html(command);
     }
 
     update_url();
