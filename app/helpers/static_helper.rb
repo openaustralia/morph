@@ -16,10 +16,15 @@ module StaticHelper
     end
   end
 
+  def quote(a)
+    '"'.html_safe + a + '"'.html_safe
+  end
+
   def curl_command(api_key, scraper, sql)
-    'curl -H "x-api-key:'.html_safe + api_key + '" "'.html_safe +
-      api_url_in_html(scraper, sql) +
-      '"'.html_safe
+    'curl -H '.html_safe +
+      quote('x-api-key:'.html_safe + api_key) +
+      ' '.html_safe +
+      quote(api_url_in_html(scraper, sql))
   end
 
   def api_url_in_html(scraper, sql)
