@@ -15,4 +15,9 @@ module StaticHelper
       root_url(host: api_host)
     end
   end
+
+  def curl_command(api_key, scraper, sql)
+    "curl -H \"x-api-key:".html_safe + api_key + "\" \"".html_safe + api_root + scraper +
+      "/data.json?query=".html_safe + sql + "\"".html_safe
+  end
 end

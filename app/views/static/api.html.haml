@@ -5,8 +5,7 @@
 
 %pre
   %code
-    curl -H "x-api-key:<em>[api_key]</em>" "#{api_root}<em>[scraper]</em>/data.json?query=<em>[sql]</em>"
-    
+    = curl_command(content_tag(:em, "[api_key]"), content_tag(:em, "[scraper]"), content_tag(:em, "[sql]"))    
 
 %h2 Parameters
 
@@ -31,30 +30,28 @@
         %span.help-block
           Your personal api key which should only be used by you.
 
-%h2 Full URL
+%h2 Example
 %p
   To do the API query with the values above
 
 %pre
   %code
-    curl -H "x-api-key:#{current_user.api_key}" "#{scraper_data_url(@scraper, host: api_host, query: @query, format: :json)}"
+    = curl_command(content_tag(:span, current_user.api_key, class: "api_key"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, CGI::escape(@query), class: "query"))
 
 :javascript
   $(function() {
-    function update_url() {
-      var scraper = $("#scraper_full_name").val();
-      var sql = $("#query").val();
-      var api_key = $("#api_key").html();
-      // Would be nice for this not to be hardcoded
-      var host = "https://morph.io";
-
-      command = "curl -H \"x-api-key:" + api_key + "\" \"" + host + "/" + scraper + "/data.json?query=" + encodeURIComponent(sql) + "\""
-      $("code").html(command);
+    function update_full_name() {
+      $("code span.full_name").html($("#scraper_full_name").val());
     }
 
-    update_url();
-    $("#scraper_full_name").change(update_url);
-    $("#scraper_full_name").keyup(update_url);
-    $("#query").change(update_url);
-    $("#query").keyup(update_url);
+    function update_query() {
+      $("code span.query").html(encodeURIComponent($("#query").val()));
+    }
+
+    update_full_name();
+    update_query();
+    $("#scraper_full_name").change(update_full_name);
+    $("#scraper_full_name").keyup(update_full_name);
+    $("#query").change(update_query);
+    $("#query").keyup(update_query);
   });
