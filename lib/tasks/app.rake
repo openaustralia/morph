@@ -20,4 +20,9 @@ namespace :app do
   task :update_docker_image => :environment do
     Scraper.update_docker_image!
   end
+
+  desc "Synchronise all repositories"
+  task :synchronise_repos => :environment do
+    Scraper.all.each{|s| s.synchronise_repo}
+  end
 end
