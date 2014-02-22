@@ -29,20 +29,29 @@
         %span.help-block
           The SQL query to perform on the SQLite database that is the output of the scraper (e.g. "#{@query}").
           Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
-    .row
-      .col-sm-6
-        .string.input.optional.stringish.form-group#api_key_input
-          %label.control-label.col-sm-2(for="api_key") [api_key]
-          .col-sm-10
-            %p.form-control-static#api_key= current_user.api_key
+    - if current_user
+      .row
+        .col-sm-6
+          .string.input.optional.stringish.form-group#api_key_input
+            %label.control-label.col-sm-2(for="api_key") [api_key]
+            .col-sm-10
+              %p.form-control-static#api_key= current_user.api_key
+              %span.help-block
+                Don't tell anyone else what the api key is
+        .col-sm-3
+          .select.input.optional.form-group#owner_input
+            %select.form-control#owner(name="owner")
+              = options_for_select(current_user.all_owners.map{|o| [o.nickname, o.api_key]})
             %span.help-block
-              Don't tell anyone else what the api key is
-      .col-sm-3
-        .select.input.optional.form-group#owner_input
-          %select.form-control#owner(name="owner")
-            = options_for_select(current_user.all_owners.map{|o| [o.nickname, o.api_key]})
-          %span.help-block
-            Choose whose api key you want to use
+              Choose whose api key you want to use
+    - else
+      .row
+        .col-sm-6
+          .string.input.optional.stringish.form-group#api_key_input
+            %label.control-label.col-sm-2(for="api_key") [api_key]
+            .col-sm-10
+              %p#api_key
+                = link_to "sign in with GitHub", user_omniauth_authorize_path(:github), class: "btn btn-default"
 
 %h2 Example
 %p
@@ -50,7 +59,10 @@
 
 %pre
   %code
-    = curl_command(content_tag(:span, current_user.api_key, class: "api_key"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, CGI::escape(@query), class: "query"))
+    - if current_user
+      = curl_command(content_tag(:span, current_user.api_key, class: "api_key"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, CGI::escape(@query), class: "query"))
+    - else
+      = curl_command(content_tag(:em, "[api_key]"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, CGI::escape(@query), class: "query"))
 
 :javascript
   $(function() {
