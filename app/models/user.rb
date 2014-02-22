@@ -13,6 +13,11 @@ class User < Owner
     Octokit.repositories(nickname, sort: :pushed)
   end
 
+  # A list of all owners thst this user can write to. Includes itself
+  def all_owners
+    [self] + organizations
+  end
+
   def github_all_public_repos
     Octokit.auto_paginate = true
     repos = github_public_user_repos

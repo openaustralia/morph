@@ -7,7 +7,7 @@
         = f.input :original_language, collection: Morph::Language.languages_supported.map{|l| [Morph::Language.human(l), l]}, label: "Language", include_blank: false, hint: "The language you would like to write your scraper in. You can change this later."
     .row
       .col-sm-2
-        = f.input :owner, collection: ([current_user] + current_user.organizations).map{|o| [o.nickname, o.id]}, include_blank: false
+        = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.id]}, include_blank: false
       .col-sm-6
         -# TODO Extract common layout code between this and scraperwiki.html.haml
         .string.input.optional.stringish.form-group#scraper_name_input{class: ("error has-error" unless @scraper.errors[:name].empty?)}
