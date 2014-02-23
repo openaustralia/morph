@@ -43,7 +43,7 @@
             %select.form-control#owner(name="owner")
               = options_for_select(current_user.all_owners.map{|o| [o.nickname, o.api_key]})
             %span.help-block
-              Choose whose api key you want to use
+              Choose which api key you want to use
     - else
       .row
         .col-sm-6
