@@ -187,29 +187,25 @@ class ScrapersController < ApplicationController
       # TODO Log usage against owner
     end
 
-    if params[:format] == "sqlite"
-      send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite",
-        type: "application/x-sqlite3"
-    else
-      begin
-        respond_to do |format|
-          format.json { render :json => scraper.database.sql_query(query) }
-          format.csv do
-            rows = scraper.database.sql_query(query)
-            csv_string = CSV.generate do |csv|
-              csv << rows.first.keys unless rows.empty?
-              rows.each do |row|
-                csv << row.values
-              end
+    begin
+      respond_to do |format|
+        format.sqlite { send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite" }
+        format.json { render :json => scraper.database.sql_query(query) }
+        format.csv do
+          rows = scraper.database.sql_query(query)
+          csv_string = CSV.generate do |csv|
+            csv << rows.first.keys unless rows.empty?
+            rows.each do |row|
+              csv << row.values
             end
-            send_data csv_string, :filename => "#{scraper.name}.csv"
           end
+          send_data csv_string, :filename => "#{scraper.name}.csv"
         end
-      rescue SQLite3::Exception => e
-        respond_to do |format|
-          format.json { render :json => {error: e.to_s} }
-          format.csv { send_data "error: #{e}", :filename => "#{scraper.name}.csv" }
-        end
+      end
+    rescue SQLite3::Exception => e
+      respond_to do |format|
+        format.json { render :json => {error: e.to_s} }
+        format.csv { send_data "error: #{e}", :filename => "#{scraper.name}.csv" }
       end
     end
   end
