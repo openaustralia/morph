@@ -175,38 +175,26 @@ class ScrapersController < ApplicationController
       query = params[:query] || scraper.database.select_all
       begin
         rows = scraper.database.sql_query(query)
-        respond_to do |format|
-          format.json do
-            # Check authentication
-            api_key = request.headers["HTTP_X_API_KEY"]
-            if api_key.nil?
-              authenticate_user!
-              # TODO Log usage against current_user
-            else
-              owner = Owner.find_by_api_key(api_key)
-              if owner.nil?
-                render :json => {error: "API key is not valid"}, status: 401
-                return
-              end
-              # TODO Log usage against owner
-            end
-
-            render :json => rows
+        # Check authentication
+        api_key = request.headers["HTTP_X_API_KEY"]
+        if api_key.nil?
+          authenticate_user!
+          # TODO Log usage against current_user
+        else
+          owner = Owner.find_by_api_key(api_key)
+          if owner.nil?
+            respond_to do |format|
+              format.json { render :json => {error: "API key is not valid"}, status: 401 }
+              format.csv { render :text => "API key is not valid", status: 401 }
+            end            
+            return
           end
-          format.csv do
-            api_key = request.headers["HTTP_X_API_KEY"]
-            if api_key.nil?
-              authenticate_user!
-              # TODO Log usage against current_user
-            else
-              owner = Owner.find_by_api_key(api_key)
-              if owner.nil?
-                render :text => "API key is not valid", status: 401
-                return
-              end
-              # TODO Log usage against owner
-            end
+          # TODO Log usage against owner
+        end
 
+        respond_to do |format|
+          format.json { render :json => rows }
+          format.csv do
             csv_string = CSV.generate do |csv|
               csv << rows.first.keys unless rows.empty?
               rows.each do |row|
