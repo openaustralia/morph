@@ -188,14 +188,23 @@ class ScrapersController < ApplicationController
             end
           end
           format.csv do
-            authenticate_user!
-            csv_string = CSV.generate do |csv|
-              csv << rows.first.keys unless rows.empty?
-              rows.each do |row|
-                csv << row.values
+            api_key = request.headers["HTTP_X_API_KEY"]
+            if api_key.nil?
+              authenticate_user!
+            else
+              owner = Owner.find_by_api_key(api_key)
+              if owner.nil?
+                render :text => "API key is not valid", status: 401
+              else
+                csv_string = CSV.generate do |csv|
+                  csv << rows.first.keys unless rows.empty?
+                  rows.each do |row|
+                    csv << row.values
+                  end
+                end
+                send_data csv_string, :filename => "#{scraper.name}.csv"
               end
             end
-            send_data csv_string, :filename => "#{scraper.name}.csv"
           end
         end
       rescue SQLite3::Exception => e
