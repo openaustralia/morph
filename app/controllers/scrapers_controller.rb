@@ -179,13 +179,19 @@ class ScrapersController < ApplicationController
           format.json do
             # Check authentication
             api_key = request.headers["HTTP_X_API_KEY"]
-            owner = Owner.find_by_api_key(api_key)
-            if owner
-              render :json => rows
-              # TODO Log usage against owner
+            if api_key.nil?
+              authenticate_user!
+              # TODO Log usage against current_user
             else
-              render :json => {error: "API key is not valid"}, status: 401
+              owner = Owner.find_by_api_key(api_key)
+              if owner.nil?
+                render :json => {error: "API key is not valid"}, status: 401
+                return
+              end
+              # TODO Log usage against owner
             end
+
+            render :json => rows
           end
           format.csv do
             api_key = request.headers["HTTP_X_API_KEY"]
@@ -200,6 +206,7 @@ class ScrapersController < ApplicationController
               end
               # TODO Log usage against owner
             end
+
             csv_string = CSV.generate do |csv|
               csv << rows.first.keys unless rows.empty?
               rows.each do |row|
