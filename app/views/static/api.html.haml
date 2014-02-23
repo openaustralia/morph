@@ -19,15 +19,15 @@
   = f.inputs do
     .string.input.optional.stringish.form-group#scraper_full_name_input
       %label.control-label.col-sm-1(for="scraper_full_name") [scraper]
-      .col-sm-11
+      .col-sm-5
         %input.form-control#scraper_full_name(maxlength="255" name="scraper[full_name]" type="text" value="#{@scraper.full_name}")
-        %span.help-block The full name of the scraper as seen in the url (e.g. #{@scraper.full_name})
+        %span.help-block The full name of the scraper as seen in the url
     .string.input.optional.stringish.form-group#query_input
       %label.control-label.col-sm-1(for="query") [sql]
-      .col-sm-11
+      .col-sm-5
         %input.form-control#query(maxlength="255" name="query" type="text" value="#{@query}")
         %span.help-block
-          The SQL query to perform on the SQLite database that is the output of the scraper (e.g. "#{@query}").
+          The SQL query to perform on the scraper data.
           Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
     .string.input.optional.stringish.form-group#format_input
       %label.control-label.col-sm-1(for="format") [format]
