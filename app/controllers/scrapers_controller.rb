@@ -168,6 +168,7 @@ class ScrapersController < ApplicationController
   def data
     scraper = Scraper.find(params[:id])
     if params[:format] == "sqlite"
+      authenticate_user!
       send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite",
         type: "application/x-sqlite3"
     else
@@ -187,6 +188,7 @@ class ScrapersController < ApplicationController
             end
           end
           format.csv do
+            authenticate_user!
             csv_string = CSV.generate do |csv|
               csv << rows.first.keys unless rows.empty?
               rows.each do |row|
