@@ -192,10 +192,10 @@ class ScrapersController < ApplicationController
         type: "application/x-sqlite3"
     else
       begin
-        rows = scraper.database.sql_query(query)
         respond_to do |format|
-          format.json { render :json => rows }
+          format.json { render :json => scraper.database.sql_query(query) }
           format.csv do
+            rows = scraper.database.sql_query(query)
             csv_string = CSV.generate do |csv|
               csv << rows.first.keys unless rows.empty?
               rows.each do |row|
