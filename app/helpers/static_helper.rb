@@ -24,14 +24,14 @@ module StaticHelper
     'x-api-key:'.html_safe + api_key
   end
 
-  def curl_command(api_key, scraper, sql)
+  def curl_command(api_key, scraper, format, sql)
     'curl -H '.html_safe +
       quote(api_header(api_key)) +
       ' '.html_safe +
-      quote(api_url_in_html(scraper, sql))
+      quote(api_url_in_html(scraper, format, sql))
   end
 
-  def api_url_in_html(scraper, sql)
-      api_root.html_safe + scraper + '/data.json?query='.html_safe + sql
+  def api_url_in_html(scraper, format, sql)
+      api_root.html_safe + scraper + '/data.' + format + '?query='.html_safe + sql
   end
 end
