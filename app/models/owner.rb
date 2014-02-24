@@ -29,7 +29,7 @@ class Owner < ActiveRecord::Base
   end
 
   def sqlite_db_size
-    scrapers.to_a.sum(&:sqlite_db_size)
+    scrapers.sum(:sqlite_db_size)
   end
 
   def total_disk_usage
