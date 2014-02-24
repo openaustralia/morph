@@ -13,6 +13,10 @@ class Run < ActiveRecord::Base
 
   def finished_at=(time)
     write_attribute(:finished_at, time)
+    update_wall_time
+  end
+
+  def update_wall_time
     if started_at && finished_at
       write_attribute(:wall_time, finished_at - started_at)
     end
