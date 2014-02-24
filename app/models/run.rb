@@ -112,6 +112,7 @@ class Run < ActiveRecord::Base
 
     update_attributes(status_code: status_code, finished_at: Time.now)
     Morph::Database.tidy_data_path(data_path)
+    scraper.update_sqlite_db_size
   end
 
   def log(stream, text)

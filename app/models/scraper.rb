@@ -60,8 +60,8 @@ class Scraper < ActiveRecord::Base
     utime + stime
   end
 
-  def sqlite_db_size
-    database.sqlite_db_size
+  def update_sqlite_db_size
+    update_attributes(sqlite_db_size: database.sqlite_db_size)
   end
 
   def total_disk_usage
