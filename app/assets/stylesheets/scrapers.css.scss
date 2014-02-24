@@ -113,3 +113,8 @@ a i.icon-time {
     word-break: break-all;
   }
 }
+
+h1.full_name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

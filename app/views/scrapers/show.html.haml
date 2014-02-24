@@ -1,7 +1,7 @@
 - content_for :title, @scraper.full_name
 
 - if @scraper.forking?
-  %h1= full_name_with_links(@scraper)
+  %h1.full_name= full_name_with_links(@scraper)
   %h2 Forking!
   .progress.progress-striped.active
     .progress-bar(style="width: #{@scraper.forking_progress == 0 ? 5 : @scraper.forking_progress}%")
@@ -14,7 +14,7 @@
 - else
   .row
     .col-md-10
-      %h1
+      %h1.full_name
         = full_name_with_links(@scraper)
         %span.pull-right
           - if @scraper.can_write?(current_user)
