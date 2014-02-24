@@ -172,12 +172,18 @@ class Scraper < ActiveRecord::Base
     r
   end
 
-  def repo_size
+  def update_repo_size
     if File.exists?(repo_path)
-      Scraper.directory_size(repo_path)
+      r = Scraper.directory_size(repo_path)
     else
-      0
+      r = 0
     end
+    update_attribute(:repo_size, r)
+    r
+  end
+
+  def repo_size
+    read_attribute(:repo_size) || update_repo_size
   end
 
   def scraperwiki_shortname
@@ -244,6 +250,7 @@ class Scraper < ActiveRecord::Base
 
   def synchronise_repo
     Morph::Github.synchronise_repo(repo_path, git_url)
+    update_repo_size
   end
 
   # Return the https version of the git clone url (git_url)
