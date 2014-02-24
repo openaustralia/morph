@@ -180,10 +180,6 @@ class Scraper < ActiveRecord::Base
     r
   end
 
-  def repo_size
-    read_attribute(:repo_size) || update_repo_size
-  end
-
   def scraperwiki_shortname
     # scraperwiki_url should be of the form https://classic.scraperwiki.com/scrapers/shortname/
     if scraperwiki_url
