@@ -60,8 +60,12 @@ class Scraper < ActiveRecord::Base
     utime + stime
   end
 
+  def sqlite_db_size
+    database.sqlite_db_size
+  end
+
   def total_disk_usage
-    repo_size + database.sqlite_db_size
+    repo_size + sqlite_db_size
   end
 
   add_method_tracer :average_successful_wall_time, 'Custom/Scraper/average_successful_wall_time'

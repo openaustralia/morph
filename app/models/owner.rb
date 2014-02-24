@@ -24,8 +24,16 @@ class Owner < ActiveRecord::Base
     utime + stime
   end
 
+  def repo_size
+    scrapers.sum(:repo_size)
+  end
+
+  def sqlite_db_size
+    scrapers.to_a.sum(&:sqlite_db_size)
+  end
+
   def total_disk_usage
-    scrapers.to_a.sum(&:total_disk_usage)
+    repo_size + sqlite_db_size
   end
 
   add_method_tracer :wall_time, 'Custom/Owner/wall_time'
