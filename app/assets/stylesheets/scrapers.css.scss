@@ -105,3 +105,11 @@ pre {
 a i.icon-time {
   text-decoration: none;
 }
+
+.scraper-block {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .full_name {
+    word-break: break-all;
+  }
+}
