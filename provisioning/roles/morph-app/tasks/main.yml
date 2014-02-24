@@ -60,6 +60,9 @@
   file: path=/var/www/shared/config owner=deploy group=deploy state=directory
 - name: Copy over database configuration for application
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
+- name: Copy across newrelic configuration
+  copy: src=newrelic.yml.secure dest=/var/www/shared/config/newrelic.yml
+  notify: Restart Apache  
 - name: Dependency for following command
   apt: pkg=python-passlib
 - name: Add basic authentication password
