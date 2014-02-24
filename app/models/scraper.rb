@@ -157,27 +157,25 @@ class Scraper < ActiveRecord::Base
   # It seems silly implementing this
   def Scraper.directory_size(directory)
     r = 0
-    # Ick
-    files = Dir.entries(directory)
-    files.delete(".")
-    files.delete("..") 
-    files.map{|f| File.join(directory, f)}.each do |f|
-      s = File.lstat(f)
-      if s.file?
-        r += s.size
-      else
-        r += Scraper.directory_size(f)
+    if File.exists?(directory)
+      # Ick
+      files = Dir.entries(directory)
+      files.delete(".")
+      files.delete("..") 
+      files.map{|f| File.join(directory, f)}.each do |f|
+        s = File.lstat(f)
+        if s.file?
+          r += s.size
+        else
+          r += Scraper.directory_size(f)
+        end
       end
     end
     r
   end
 
   def update_repo_size
-    if File.exists?(repo_path)
-      r = Scraper.directory_size(repo_path)
-    else
-      r = 0
-    end
+    r = Scraper.directory_size(repo_path)
     update_attribute(:repo_size, r)
     r
   end
