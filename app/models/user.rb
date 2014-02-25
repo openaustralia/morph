@@ -18,15 +18,18 @@ class User < Owner
     [self] + organizations
   end
 
-  def github_all_public_repos
+  def github_public_org_repos
     Octokit.auto_paginate = true
-    repos = github_public_user_repos
+    repos = []
     octokit_client.organizations(nickname).each do |org|
       # This call doesn't seem to support sort by pushed
       repos += octokit_client.organization_repositories(org.login, type: :public)
     end
-
     repos.sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
+  end
+
+  def github_all_public_repos
+    (github_public_user_repos + github_public_org_repos).sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
   end
 
   # For the time being just hardcode a couple of people as admins
