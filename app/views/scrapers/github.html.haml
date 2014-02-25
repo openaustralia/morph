@@ -9,9 +9,5 @@
 
 -# TODO Don't show repos that we've already added
 
-= semantic_form_for @scraper, url: github_scrapers_path do |f|
-  = f.inputs do
-    = f.input :full_name, as: :radio, collection: @repos.map{|r| [radio_description(r), r.full_name]}, label: "GitHub Repository", include_blank: false
-  = f.actions do
-    = f.action :submit, label: "Add Scraper"
+#github_form= render "github_form"
 
