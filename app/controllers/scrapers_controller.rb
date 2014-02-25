@@ -50,9 +50,6 @@ class ScrapersController < ApplicationController
   end
 
   def github
-    # Get the list of repositories
-    #@repos = current_user.github_all_public_repos
-    @scraper = Scraper.new
   end
 
   # For rendering ajax partial in github action
