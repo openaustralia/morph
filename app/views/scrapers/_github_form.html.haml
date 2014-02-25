@@ -3,3 +3,9 @@
     = f.input :full_name, as: :radio, collection: @repos.map{|r| [radio_description(r), r.full_name]}, label: "GitHub Repository", include_blank: false
   = f.actions do
     = f.action :submit, label: "Add Scraper"
+
+:javascript
+  $("#scraper_submit_action").attr("disabled", true);
+  $("input[type=radio]").change(function(){
+    $("#scraper_submit_action").attr("disabled", false);
+  });
