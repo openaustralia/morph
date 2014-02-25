@@ -10,7 +10,7 @@ class User < Owner
   def github_public_user_repos
     # TODO Move this to an initializer
     Octokit.auto_paginate = true
-    Octokit.repositories(nickname, sort: :pushed)
+    octokit_client.repositories(nickname, sort: :pushed, type: :public)
   end
 
   # A list of all owners thst this user can write to. Includes itself
@@ -23,7 +23,7 @@ class User < Owner
     repos = github_public_user_repos
     octokit_client.organizations(nickname).each do |org|
       # This call doesn't seem to support sort by pushed
-      repos += Octokit.organization_repositories(org.login)
+      repos += octokit_client.organization_repositories(org.login, type: :public)
     end
 
     repos.sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
