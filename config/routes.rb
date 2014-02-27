@@ -18,8 +18,10 @@ Morph::Application.routes.draw do
   end
 
   root 'static#index'
-  get "/api", to: "static#api"
-  resources :documentation, only: :index
+  get "/api", to: redirect("/documentation/api")
+  resources :documentation, only: :index do
+    get "api", on: :collection
+  end
   # Hmm not totally sure about this url.
   post "/run", to: "api#run_remote"
   get '/settings', to: "users#settings", as: :user_settings
