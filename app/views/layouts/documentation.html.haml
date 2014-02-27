@@ -1,0 +1,9 @@
+- content_for :content do
+  .row
+    .col-md-2
+      %ul.nav.nav-list#sidebar
+        %li= link_to "Main documentation", documentation_index_path
+        %li= link_to "How to use the API", api_documentation_index_path
+    .col-md-10
+      = yield
+= render template: "layouts/application"
