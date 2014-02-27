@@ -42,7 +42,7 @@
           Forked from
           = link_to "ScraperWiki", @scraper.scraperwiki_url, target: "_blank"
 
-      = render "status"
+      = sync partial: "status", resource: @scraper
       = render "console"
       = render "data"
       = render "statistics"
