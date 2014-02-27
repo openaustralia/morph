@@ -19,7 +19,7 @@ Morph::Application.routes.draw do
 
   root 'static#index'
   get "/api", to: "static#api"
-  get "/documentation", to: 'static#documentation'
+  resources :documentation, only: :index
   # Hmm not totally sure about this url.
   post "/run", to: "api#run_remote"
   get '/settings', to: "users#settings", as: :user_settings
