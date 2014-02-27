@@ -16,6 +16,9 @@ DOCKER_TCP=localhost:4243
 # Google Analytics (leave commented out to disable)
 #GOOGLE_ANALYTICS_TRACKING_ID=xx-xxxxxxx-xx
 
+# Heap Analytics (leave commented out to disable)
+#HEAP_ANALYTICS_TRACKING_ID=xxxxxxxxxx
+
 # For deployment to a Digital Ocean
 DIGITAL_OCEAN_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DIGITAL_OCEAN_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
