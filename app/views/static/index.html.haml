@@ -32,6 +32,8 @@
           = link_to "ScraperWiki Classic", "https://classic.scraperwiki.com/"
         %li
           Email alerts for broken scrapers
+        - unless signed_in?
+          = link_to "Get started", user_omniauth_authorize_path(:github), class: "btn btn-success btn-lg", id: "get_started_btn"
 
 %ul.list-inline
   %li
