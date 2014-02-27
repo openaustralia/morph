@@ -11,8 +11,6 @@ class Scraper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :full_name, use: :finders
 
-  sync :all
-
   delegate :queued?, :running?, to: :last_run, allow_nil: true
 
   # Given a scraper name on github populates the fields for a morph scraper but doesn't save it
