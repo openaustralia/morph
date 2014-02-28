@@ -118,6 +118,7 @@ class ScrapersController < ApplicationController
 
   def show
     @scraper = Scraper.find(params[:id])
+    @rows = @scraper.database.first_ten_rows
   end
 
   def destroy
