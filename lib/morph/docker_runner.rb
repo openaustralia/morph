@@ -1,7 +1,7 @@
 module Morph
   class DockerRunner
     def self.run(options)
-      Docker.options[:read_timeout] = 3600
+      Docker.options[:read_timeout] = 4.hours
       Docker.options[:chunk_size] = 1
 
       # This will fail if there is another container with the same name
