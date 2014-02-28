@@ -1,4 +1,4 @@
-- if @rows && !@rows.empty?
+- if @scraper.database.first_ten_rows && !@scraper.database.first_ten_rows.empty?
   %h3 Data
   %p
     - unless signed_in?
@@ -12,9 +12,9 @@
   .table-responsive.scraper-data
     %table.table.table-striped.table-bordered.table-condensed
       %tr
-        - @rows.first.each_key do |field|
+        - @scraper.database.first_ten_rows.first.each_key do |field|
           %th= field
-      - @rows.each do |row|
+      - @scraper.database.first_ten_rows.each do |row|
         %tr
           - row.each_value do |v|
             %td
