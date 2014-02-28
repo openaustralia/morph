@@ -19,6 +19,11 @@ module Morph
       File.join(data_path, Database.sqlite_db_filename)
     end
 
+    # The actual table names in the current db
+    def table_names
+      sql_query_safe("select name from sqlite_master where type='table'").map{|h| h["name"]}
+    end
+
     def sql_query(query, readonly = true)
       db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: readonly)
       # If database is busy wait 5s
