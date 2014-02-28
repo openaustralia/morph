@@ -60,6 +60,7 @@
     .container
       = bootstrap_flash
       = content_for?(:content) ? yield(:content) : yield
+      = render "heap_analytics_identify"
     
     %footer
       .container
