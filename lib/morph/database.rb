@@ -39,8 +39,8 @@ module Morph
       end
     end
 
-    def no_rows
-      sql_query_safe("select count(*) from #{Database.sqlite_table_name}").first.values.first
+    def no_rows(table = table_names.first)
+      sql_query_safe("select count(*) from #{table}").first.values.first
     end
 
     def sqlite_db_size
@@ -64,16 +64,16 @@ module Morph
       sql_query_safe("ALTER TABLE #{table_name} RENAME TO #{Database.sqlite_table_name}", false)
     end
 
-    def select_first_ten
-      "select * from #{Database.sqlite_table_name} limit 10"
+    def select_first_ten(table = table_names.first)
+      "select * from #{table} limit 10"
     end
 
-    def select_all
-      "select * from #{Database.sqlite_table_name}"
+    def select_all(table = table_names.first)
+      "select * from #{table}"
     end
 
-    def first_ten_rows
-      sql_query_safe(select_first_ten)
+    def first_ten_rows(table = table_names.first)
+      sql_query_safe(select_first_ten(table))
     end
 
     def self.tidy_data_path(data_path)
