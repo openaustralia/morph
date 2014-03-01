@@ -12,7 +12,7 @@ class Owner < ActiveRecord::Base
     b = read_attribute(:blog)
     if b.nil?
       nil
-    if b =~ /https?:\/\//
+    elsif b =~ /https?:\/\//
       b
     else
       "http://" + b
