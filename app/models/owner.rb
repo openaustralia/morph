@@ -10,6 +10,8 @@ class Owner < ActiveRecord::Base
 
   def blog
     b = read_attribute(:blog)
+    if b.nil?
+      nil
     if b =~ /https?:\/\//
       b
     else
