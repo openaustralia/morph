@@ -23,6 +23,12 @@ class Scraper < ActiveRecord::Base
       github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
   end
 
+  def contributors
+    Octokit.contributors(full_name).map do |c|
+      User.find_or_create_by_nickname(c["login"])
+    end
+  end
+
   def successful_runs
     runs.includes(:log_lines).order(finished_at: :desc).select{|r| r.finished_successfully?}
   end

@@ -134,6 +134,15 @@ class User < Owner
         email: user.email)
   end
 
+  def self.find_or_create_by_nickname(nickname)
+    u = User.find_by_nickname(nickname)
+    if u.nil?
+      u = User.create(nickname: nickname)
+      u.refresh_info_from_github!
+    end
+    u
+  end
+
   def users
     []
   end
