@@ -117,7 +117,8 @@ class User < Owner
     user = User.find_or_create_by(:provider => auth.provider, :uid => auth.uid)
     user.update_attributes(nickname: auth.info.nickname, name:auth.info.name,
       access_token: auth.credentials.token,
-      gravatar_id: auth.extra.raw_info.gravatar_id,
+      gravatar_id: nil,
+      gravatar_url: auth.info.image,
       blog: auth.extra.raw_info.blog,
       company: auth.extra.raw_info.company, email:auth.info.email)
     # Also every time you login it should update the list of organizations that the user is attached to

@@ -57,7 +57,7 @@ class Owner < ActiveRecord::Base
       "https://www.gravatar.com/avatar/#{gravatar_id}?r=x&s=#{size}"
     else
       url = read_attribute(:gravatar_url)
-      if url =~ /^https:\/\/identicons.github.com/
+      if url =~ /^https:\/\/(identicons.github.com|avatars.githubusercontent.com)/
         # Can't seem to change the size for the github images
         url
       else
