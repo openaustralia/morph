@@ -49,7 +49,7 @@
             %li
               - if user_signed_in?
                 = link_to current_user do
-                  = image_tag current_user.gravatar_url(140), width: 20
+                  = image_tag current_user.gravatar_url(20), width: 20
                   = current_user.nickname
               - else
                 = link_to "Sign in with GitHub", user_omniauth_authorize_path(:github)
