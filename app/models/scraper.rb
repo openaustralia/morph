@@ -7,6 +7,8 @@ class Scraper < ActiveRecord::Base
   belongs_to :forked_by, class_name: "User"
   validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
   has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
+  has_many :contributors, through: :contributions, source: :user
+  has_many :contributions
 
   extend FriendlyId
   friendly_id :full_name, use: :finders
@@ -23,10 +25,25 @@ class Scraper < ActiveRecord::Base
       github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
   end
 
-  def contributors
-    Octokit.contributors(full_name).map do |c|
-      User.find_or_create_by_nickname(c["login"])
+  # Find a user related to this scraper that we can use them to make authenticated github requests
+  def related_user
+    if owner.user?
+      owner
+    else
+      owner.users.first
     end
+  end
+
+  def update_contributors
+    # We can't use unauthenticated requests because we will go over our rate limit
+    begin
+      c = related_user.octokit_client.contributors(full_name).map do |c|
+        User.find_or_create_by_nickname(c["login"])
+      end
+    rescue Octokit::NotFound
+      c = []
+    end
+    update_attributes(contributors: c)
   end
 
   def successful_runs
@@ -255,6 +272,7 @@ class Scraper < ActiveRecord::Base
   def synchronise_repo
     Morph::Github.synchronise_repo(repo_path, git_url)
     update_repo_size
+    update_contributors
   end
 
   # Return the https version of the git clone url (git_url)

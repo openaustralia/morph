@@ -1,5 +1,6 @@
 # Using American spelling to match GitHub usage
 class Organization < Owner
+  # TODO rename this to members
   has_and_belongs_to_many :users, join_table: :organizations_users
 
   def user?
