@@ -11,12 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140301010740) do
+ActiveRecord::Schema.define(version: 20140301064910) do
 
   create_table "alerts", force: true do |t|
     t.integer  "user_id"
     t.integer  "watch_id"
     t.string   "watch_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contributions", force: true do |t|
+    t.integer  "scraper_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
