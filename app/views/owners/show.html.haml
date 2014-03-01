@@ -69,6 +69,10 @@
     - if @owner == current_user
       %p= link_to "Add scraper", github_new_scraper_path, class: "btn btn-default"
 
-
+    - if @owner.user? && !@owner.other_scrapers_contributed_to.empty?
+      %h3
+        Contributed to
+        = pluralize(@owner.other_scrapers_contributed_to.count, "scraper")
+      .list-group= render @owner.other_scrapers_contributed_to
   .col-md-1
 

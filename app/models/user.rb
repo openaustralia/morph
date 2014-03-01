@@ -3,6 +3,14 @@ class User < Owner
   devise :trackable, :omniauthable, :omniauth_providers => [:github]
   has_and_belongs_to_many :organizations, join_table: :organizations_users
   has_many :alerts
+  has_many :contributions
+  has_many :scrapers_contributed_to, through: :contributions, source: :scraper
+
+  # In most cases people have contributed to the scrapers that they own so we really don't
+  # want to see these twice. This method just removes their own scrapers from the list
+  def other_scrapers_contributed_to
+    scrapers_contributed_to - scrapers
+  end
 
   # All repos in github for this user in their personal area
   # It does not include organizations that they are part of
