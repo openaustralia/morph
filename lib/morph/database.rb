@@ -21,7 +21,12 @@ module Morph
 
     # The actual table names in the current db
     def table_names
-      sql_query_safe("select name from sqlite_master where type='table'").map{|h| h["name"]}
+      q = sql_query_safe("select name from sqlite_master where type='table'")
+      if q
+        q.map{|h| h["name"]}
+      else
+        []
+      end
     end
 
     def sql_query(query, readonly = true)
