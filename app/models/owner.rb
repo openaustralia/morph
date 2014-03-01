@@ -53,16 +53,12 @@ class Owner < ActiveRecord::Base
   # Organizations and users store their gravatar in different ways
   # TODO Fix this
   def gravatar_url(size = 440)
-    if gravatar_id
-      "https://www.gravatar.com/avatar/#{gravatar_id}?r=x&s=#{size}"
+    url = read_attribute(:gravatar_url)
+    if url =~ /^https:\/\/(identicons.github.com|avatars.githubusercontent.com)/
+      # Can't seem to change the size for the github images
+      url
     else
-      url = read_attribute(:gravatar_url)
-      if url =~ /^https:\/\/(identicons.github.com|avatars.githubusercontent.com)/
-        # Can't seem to change the size for the github images
-        url
-      else
-        url + "&s=#{size}"
-      end
+      url + "&s=#{size}"
     end
   end
 

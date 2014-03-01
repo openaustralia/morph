@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140224014033) do
+ActiveRecord::Schema.define(version: 20140301010740) do
 
   create_table "alerts", force: true do |t|
     t.integer  "user_id"
@@ -64,7 +64,6 @@ ActiveRecord::Schema.define(version: 20140224014033) do
     t.string   "name"
     t.string   "nickname"
     t.string   "access_token"
-    t.string   "gravatar_id"
     t.string   "blog"
     t.string   "company"
     t.string   "email"
