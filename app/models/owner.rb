@@ -8,6 +8,15 @@ class Owner < ActiveRecord::Base
   has_many :runs
   before_create :set_api_key
 
+  def blog
+    b = read_attribute(:blog)
+    if b =~ /https?:\/\//
+      b
+    else
+      "http://" + b
+    end
+  end
+
   def wall_time
     runs.sum(:wall_time)
   end
