@@ -25,13 +25,13 @@
       %p
         - @owner.organizations.each do |org|
           = link_to org do
-            = image_tag org.gravatar_url(30), size: "30x30"
+            = image_tag org.gravatar_url(30), size: "30x30", class: "has-tooltip", data: {placement: "bottom", title: org.nickname}
     - unless @owner.users.empty?
       %h4 Members
       %p
         - @owner.users.each do |user|
           = link_to user do
-            = image_tag user.gravatar_url(30), size: "30x30"
+            = image_tag user.gravatar_url(30), size: "30x30", class: "has-tooltip", data: {placement: "bottom", title: user.nickname}
     - if @owner == current_user
       %div
         = link_to "Show your key", user_settings_path, class: "btn btn-default"
