@@ -67,7 +67,15 @@
       .list-group= render @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
 
     - if @owner == current_user
-      %p= link_to "Add scraper", github_new_scraper_path, class: "btn btn-default"
+      .btn-group
+        = link_to "#", class: "dropdown-toggle btn btn-default", data: {toggle: "dropdown"} do
+          Add Scraper
+          %b.caret
+        %ul.dropdown-menu
+          %li= link_to "New scraper", new_scraper_path
+          %li.divider
+          %li= link_to "Add scraper from GitHub", github_new_scraper_path
+          %li= link_to "Fork scraper from Scraperwiki", scraperwiki_new_scraper_path
 
     - if @owner.user? && !@owner.other_scrapers_contributed_to.empty?
       %h3
