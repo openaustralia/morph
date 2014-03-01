@@ -33,14 +33,14 @@ Morph is letting you know that
 
 planningalerts-scrapers/spear errored
 It has been erroring for 7 days
-Fix it: http://dev.morph.io/planningalerts-scrapers/spear
+Fix it: http://dev.morph.io/planningalerts-scrapers/spear?utm_medium=email&utm_source=alerts
 
 /repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )
 
 
 planningalerts-scrapers/campbelltown errored
 It has been erroring for 3 days
-Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
+Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown?utm_medium=email&utm_source=alerts
 
 PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16
 
@@ -48,14 +48,14 @@ PHP Fatal error: Call to a member function find() on a non-object in /repo/scrap
 32 other scrapers you are watching finished successfully
 
 -----
-Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching
-Morph.io - http://dev.morph.io/
+Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
+Morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
         EOF
       end
 
       it do
         expected = <<-EOF
-<a href="http://dev.morph.io/">Morph</a>
+<a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">Morph</a>
 is letting you know that
         EOF
         email.html_part.body.to_s.should include(expected)
@@ -64,7 +64,7 @@ is letting you know that
       it do
         expected = <<-EOF
 <h3>
-<a href="http://dev.morph.io/planningalerts-scrapers/spear">planningalerts-scrapers/spear</a>
+<a href="http://dev.morph.io/planningalerts-scrapers/spear?utm_medium=email&amp;utm_source=alerts">planningalerts-scrapers/spear</a>
 errored
 </h3>
 <p>
@@ -72,7 +72,7 @@ It has been erroring for 7 days
 </p>
 <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
 <h3>
-<a href="http://dev.morph.io/planningalerts-scrapers/campbelltown">planningalerts-scrapers/campbelltown</a>
+<a href="http://dev.morph.io/planningalerts-scrapers/campbelltown?utm_medium=email&amp;utm_source=alerts">planningalerts-scrapers/campbelltown</a>
 errored
 </h3>
 <p>
@@ -88,9 +88,9 @@ It has been erroring for 3 days
         expected = <<-EOF
 <p>
 Annoyed by these emails? Then
-<a href="http://dev.morph.io/users/mlandauer/watching">change what you&#39;re watching</a>
+<a href="http://dev.morph.io/users/mlandauer/watching?utm_medium=email&amp;utm_source=alerts">change what you&#39;re watching</a>
 </p>
-<p><a href="http://dev.morph.io/">Morph.io</a></p>
+<p><a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">Morph.io</a></p>
         EOF
         email.html_part.body.to_s.should include(expected)
       end
@@ -105,7 +105,7 @@ Morph is letting you know that
 
 planningalerts-scrapers/campbelltown errored
 It has been erroring for 3 days
-Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown
+Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown?utm_medium=email&utm_source=alerts
 
 This is line one of an error
 This is line two
@@ -118,8 +118,8 @@ Line five
 32 other scrapers you are watching finished successfully
 
 -----
-Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching
-Morph.io - http://dev.morph.io/
+Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
+Morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
         EOF
       end
     end

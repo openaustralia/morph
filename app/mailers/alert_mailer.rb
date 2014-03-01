@@ -6,6 +6,7 @@ class AlertMailer < ActionMailer::Base
   def alert_email(user, broken_runs, successful_count)
     count = broken_runs.count
     @user, @successful_count = user, successful_count
+    @analytics_params = {utm_medium: "email", utm_source: "alerts"}
     # The ones that are broken for the longest time come first
     @broken_runs = broken_runs.sort do |a,b|
       if a.scraper.latest_successful_run_time.nil? && b.scraper.latest_successful_run_time.nil?

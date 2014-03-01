@@ -203,11 +203,11 @@
                   %h2
                     -# Hacky way to get full url in there
                     = image_tag attachments['logo_75x75.png'].url, size: "75x75"
-                    = link_to "Morph", root_url
+                    = link_to "Morph", root_url(@analytics_params)
                     is letting you know that
                   - @broken_runs.each do |run|
                     %h3
-                      = link_to run.full_name, scraper_url(run.scraper)
+                      = link_to run.full_name, scraper_url(run.scraper, @analytics_params)
                       errored
                     %p
                       - if run.scraper.latest_successful_run_time
@@ -233,6 +233,6 @@
                 %td(align="center")
                   %p
                     Annoyed by these emails? Then
-                    = link_to "change what you're watching", user_watching_url(@user)
-                  %p= link_to "Morph.io", root_url
+                    = link_to "change what you're watching", user_watching_url(@user, @analytics_params)
+                  %p= link_to "Morph.io", root_url(@analytics_params)
         %td

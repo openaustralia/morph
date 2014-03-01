@@ -8,7 +8,7 @@ It has been erroring for <%= time_ago_in_words(run.scraper.latest_successful_run
 <% else %>
 It has never run successfully
 <% end %>
-Fix it: <%= scraper_url(run.scraper) %>
+Fix it: <%= scraper_url(run.scraper, @analytics_params) %>
 
 <%= run.error_text.split("\n")[0..4].join("\n") %>
 <% if run.error_text.split("\n").count > 5 %>
@@ -20,5 +20,5 @@ Fix it: <%= scraper_url(run.scraper) %>
 <%= pluralize(@successful_count, "other scraper") %> you are watching finished successfully
 
 -----
-Annoyed by these emails? Then change what you're watching - <%= user_watching_url(@user) %>
-Morph.io - <%= root_url %>
+Annoyed by these emails? Then change what you're watching - <%= user_watching_url(@user, @analytics_params) %>
+Morph.io - <%= root_url(@analytics_params) %>
