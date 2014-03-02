@@ -44,6 +44,7 @@ gem "rails_autolink"
 gem 'exception_notification'
 gem 'zeroclipboard-rails'
 gem 'newrelic_rpm'
+gem 'sitemap_generator'
 
 group :production do
   gem "dalli"
