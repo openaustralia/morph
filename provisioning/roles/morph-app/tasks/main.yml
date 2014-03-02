@@ -73,6 +73,8 @@
   cron: name="daily scraping" hour=10 minute=0 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:auto_run_scrapers RAILS_ENV=production"
 - name: Setting cron job for sending out email alerts for 11:30am
   cron: name="email alerts" hour=11 minute=30 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:send_alerts RAILS_ENV=production"
+- name: Cron job to generate xml sitemaps at 4pm
+  cron: name="xml sitemaps" hour=16 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake sitemap:refresh RAILS_ENV=production"
 - name: Install nodejs for asset precompiling
   apt: pkg=nodejs
 - name: Install memcached
