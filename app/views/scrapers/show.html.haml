@@ -49,9 +49,9 @@
 
       = sync partial: "status", resource: @scraper
       = sync partial: "console", resource: @scraper
-      = render "data"
-      = render "statistics"
-      = render "history"
+      = render partial: "data", locals: {scraper: @scraper}
+      = render partial: "statistics", locals: {scraper: @scraper}
+      = render partial: "history", locals: {scraper: @scraper}
     .col-md-2
       - if signed_in?
         - if @scraper.can_write?(current_user)
