@@ -96,10 +96,6 @@ class Scraper < ActiveRecord::Base
   add_method_tracer :cpu_time, 'Custom/Scraper/cpu_time'
   add_method_tracer :total_disk_usage, 'Custom/Scraper/total_disk_usage'
 
-  def queued_or_running?
-    queued? || running?
-  end
-
   # Let's say a scraper requires attention if it's set to run automatically and the last run failed
   def requires_attention?
     auto_run && last_run && last_run.finished_with_errors?
