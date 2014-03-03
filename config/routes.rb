@@ -4,6 +4,9 @@ Morph::Application.routes.draw do
     devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   end
 
+  # The sync refetch route is being added after this stuff. We need it added before so repeating
+  get 'sync/refetch', controller: 'sync/refetches', action: 'show'
+
   devise_scope :user do
     get 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
     get 'sign_in', :to => 'devise/sessions#new', :as => :new_user_session

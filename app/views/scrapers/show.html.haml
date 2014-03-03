@@ -56,7 +56,7 @@
       - if signed_in?
         - if @scraper.can_write?(current_user)
           #scraper_run
-            %p= render partial: "run_button", locals: {scraper: @scraper}
+            = sync partial: "run_button", resource: @scraper, refetch: true
           #scraper_settings
             = button_link_to scraper_settings_path do
               %i.icon-wrench
