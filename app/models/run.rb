@@ -1,4 +1,5 @@
 class Run < ActiveRecord::Base
+  include Sync::Actions
   belongs_to :owner
   belongs_to :scraper, inverse_of: :runs, touch: true
   has_many :log_lines
@@ -115,6 +116,7 @@ class Run < ActiveRecord::Base
     metric.update_attributes(run_id: self.id)
 
     update_attributes(status_code: status_code, finished_at: Time.now)
+    sync_update scraper
     Morph::Database.tidy_data_path(data_path)
     scraper.update_sqlite_db_size
   end
