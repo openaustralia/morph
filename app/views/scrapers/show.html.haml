@@ -22,8 +22,7 @@
               = render partial: "auto_clock", locals: {scraper: @scraper}
           - else
             = render partial: "auto_clock", locals: {scraper: @scraper}
-          - if @scraper.queued? || @scraper.running?
-            .pulse
+          = render partial: "running_indicator", locals: {scraper: @scraper}
         %h4= @scraper.description
     .col-md-2
       - if signed_in?

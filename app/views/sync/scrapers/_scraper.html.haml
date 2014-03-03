@@ -1,11 +1,8 @@
 - cache ["v2", scraper] do
   = link_to scraper, class: "list-group-item" do
     %div.scraper-block
-      .icon-box.pull-right
-        - if scraper.last_run && (scraper.last_run.queued? || scraper.last_run.running?)
-          .pulse
-      .icon-box.pull-right
-        = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
+      .icon-box.pull-right= render partial: "scrapers/running_indicator", locals: {scraper: scraper}
+      .icon-box.pull-right= render partial: "scrapers/auto_clock", locals: {scraper: scraper}
       - if scraper.last_run && scraper.last_run.finished_with_errors?
         %span.label.label-danger errored
       %strong.full_name= scraper.full_name
