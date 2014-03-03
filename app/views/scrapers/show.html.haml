@@ -56,7 +56,7 @@
       - if signed_in?
         - if @scraper.can_write?(current_user)
           #scraper_run
-            %p= button_to "Run it now!", run_scraper_path(@scraper), class: ("btn btn-primary " + (@scraper.runnable? ? "" : "disabled")), disabled: !@scraper.runnable?
+            %p= render partial: "run_button", locals: {scraper: @scraper}
           #scraper_settings
             = button_link_to scraper_settings_path do
               %i.icon-wrench
