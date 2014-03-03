@@ -59,7 +59,7 @@
           #scraper_run
             %p= button_to "Run it now!", run_scraper_path(@scraper), class: ("btn btn-primary " + (@scraper.runnable? ? "" : "disabled")), disabled: !@scraper.runnable?
           #scraper_settings
-            = link_to scraper_settings_path, class: "btn btn-default" do
+            = button_link_to scraper_settings_path do
               %i.icon-wrench
               Settings
 

@@ -34,7 +34,7 @@
             = image_tag user.gravatar_url(30), size: "30x30", class: "has-tooltip", data: {placement: "bottom", title: user.nickname}
     - if @owner == current_user
       %div
-        = link_to "Show your key", user_settings_path, class: "btn btn-default"
+        = button_link_to "Show your key", user_settings_path
     %hr
     %h3 Statistics
     - if @owner.user?
@@ -68,7 +68,7 @@
 
     - if @owner == current_user
       .btn-group
-        = link_to "#", class: "dropdown-toggle btn btn-default", data: {toggle: "dropdown"} do
+        = button_link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
           Add Scraper
           %b.caret
         %ul.dropdown-menu

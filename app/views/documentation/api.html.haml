@@ -58,7 +58,7 @@
             %label.control-label.col-sm-2(for="api_key") [api_key]
             .col-sm-10
               %p#api_key
-                = link_to "sign in with GitHub", user_omniauth_authorize_path(:github), class: "btn btn-default"
+                = button_link_to "sign in with GitHub", user_omniauth_authorize_path(:github)
 
 %h2 Example
 %p
