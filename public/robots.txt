@@ -4,4 +4,4 @@
 # User-agent: *
 # Disallow: /
 
-Sitemap: https://morph.io/sitemap.xml.gz
+Sitemap: https://morph.io/sitemaps/sitemap.xml.gz
