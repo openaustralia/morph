@@ -51,7 +51,7 @@
       = sync partial: "console", resource: @scraper
       = sync partial: "data", resource: @scraper, refetch: true
       = sync partial: "statistics", resource: @scraper
-      = render partial: "history", locals: {scraper: @scraper}
+      = sync partial: "history", resource: @scraper
     .col-md-2
       - if signed_in?
         - if @scraper.can_write?(current_user)

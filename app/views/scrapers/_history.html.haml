@@ -1,7 +1,0 @@
-- unless scraper.finished_runs.empty?
-  %h3 History
-
-  -# TODO Only show a limited number of the most recent runs
-  %ul.list-group
-  - scraper.finished_runs.each do |run|
-    = render partial: "runs/history", locals: {run: run}
