@@ -48,7 +48,7 @@
             = link_to contributor do
               = image_tag contributor.gravatar_url(20), size: "20x20", class: "has-tooltip", data: {placement: "bottom", title: contributor.nickname}
 
-      = render "status"
+      = sync partial: "status", resource: @scraper
       = render "console"
       = render "data"
       = render "statistics"

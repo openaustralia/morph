@@ -97,6 +97,7 @@ class Run < ActiveRecord::Base
   def go_with_logging
     puts "Starting...\n"
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
+    sync_update scraper
     FileUtils.mkdir_p data_path
 
     unless Morph::Language.language_supported?(language)
@@ -116,9 +117,10 @@ class Run < ActiveRecord::Base
     metric.update_attributes(run_id: self.id)
 
     update_attributes(status_code: status_code, finished_at: Time.now)
-    sync_update scraper
     Morph::Database.tidy_data_path(data_path)
     scraper.update_sqlite_db_size
+    scraper.reload
+    sync_update scraper
   end
 
   def log(stream, text)
