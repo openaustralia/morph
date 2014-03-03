@@ -62,9 +62,9 @@
 
     - else
       %h3= pluralize(@scrapers.count, "scraper")
-      .list-group= render @running_scrapers
-      .list-group= render @erroring_scrapers
-      .list-group= render @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
+      .list-group= sync partial: "scraper", collection: @running_scrapers
+      .list-group= sync partial: "scraper", collection: @erroring_scrapers
+      .list-group= sync partial: "scraper", collection: @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
 
     - if @owner == current_user
       .btn-group
@@ -81,6 +81,6 @@
       %h3
         Contributed to
         = pluralize(@owner.other_scrapers_contributed_to.count, "scraper")
-      .list-group= render @owner.other_scrapers_contributed_to
+      .list-group= sync partial: "scraper", collection: @owner.other_scrapers_contributed_to
   .col-md-1
 
