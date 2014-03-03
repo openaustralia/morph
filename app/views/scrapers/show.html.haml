@@ -50,7 +50,7 @@
       = sync partial: "status", resource: @scraper
       = sync partial: "console", resource: @scraper
       = sync partial: "data", resource: @scraper, refetch: true
-      = render partial: "statistics", locals: {scraper: @scraper}
+      = sync partial: "statistics", resource: @scraper
       = render partial: "history", locals: {scraper: @scraper}
     .col-md-2
       - if signed_in?
