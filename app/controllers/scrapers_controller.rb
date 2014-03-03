@@ -140,6 +140,7 @@ class ScrapersController < ApplicationController
       # TODO This is definitely the dumb and long winded way to do things
       if @scraper.update_attributes(auto_run: params[:scraper][:auto_run])
         flash[:notice] = "Scraper settings successfully updated"
+        sync_update @scraper
       end
     else
       flash[:alert] = "Can't update someone else's scraper"
