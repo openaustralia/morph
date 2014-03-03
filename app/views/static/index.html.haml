@@ -77,6 +77,4 @@
             = org.name
   .col-md-6
     %h2 Recently Active Scrapers
-    .list-group
-      - Scraper.order(:updated_at => :desc).limit(10).all.each do |scraper|
-        = sync partial: "scraper", resource: scraper
+    .list-group= sync partial: "scraper", collection: Scraper.order(:updated_at => :desc).limit(10).all
