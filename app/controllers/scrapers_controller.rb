@@ -151,6 +151,8 @@ class ScrapersController < ApplicationController
     scraper = Scraper.find(params[:id])
     if scraper.can_write?(current_user)
       scraper.queue!
+      scraper.reload
+      sync_update scraper
     else
       flash[:alert] = "Can't run someone else's scraper!"
     end

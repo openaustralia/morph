@@ -45,6 +45,9 @@ gem 'exception_notification'
 gem 'zeroclipboard-rails'
 gem 'newrelic_rpm'
 gem 'sitemap_generator'
+gem 'faye'
+gem 'thin', require: false
+gem 'sync'
 
 group :production do
   gem "dalli"

@@ -14,4 +14,5 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require zeroclipboard
+//= require sync
 //= require_tree .
