@@ -49,7 +49,7 @@
 
       = sync partial: "status", resource: @scraper
       = sync partial: "console", resource: @scraper
-      = render partial: "data", locals: {scraper: @scraper}
+      = sync partial: "data", resource: @scraper, refetch: true
       = render partial: "statistics", locals: {scraper: @scraper}
       = render partial: "history", locals: {scraper: @scraper}
     .col-md-2
