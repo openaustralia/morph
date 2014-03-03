@@ -16,12 +16,13 @@
     .col-md-10
       %h1.full_name
         = full_name_with_links(@scraper)
-        %span.pull-right
+        .large-icon-box.pull-right
           - if @scraper.can_write?(current_user)
             = link_to scraper_settings_path(@scraper) do
               = render partial: "auto_clock", locals: {scraper: @scraper}
           - else
             = render partial: "auto_clock", locals: {scraper: @scraper}
+        .large-icon-box.pull-right
           = sync partial: "running_indicator", resource: @scraper
         %h4= @scraper.description
     .col-md-2
