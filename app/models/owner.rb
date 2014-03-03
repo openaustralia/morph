@@ -2,7 +2,7 @@ require 'new_relic/agent/method_tracer'
 
 class Owner < ActiveRecord::Base
   extend FriendlyId
-  friendly_id :nickname, use: :finders
+  friendly_id :nickname
 
   has_many :scrapers, inverse_of: :owner
   has_many :runs

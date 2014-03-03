@@ -2,7 +2,7 @@ class ScrapersController < ApplicationController
   before_filter :authenticate_user!, except: [:show, :data]
 
   def settings
-    @scraper = Scraper.find(params[:id])
+    @scraper = Scraper.friendly.find(params[:id])
     unless @scraper.can_write?(current_user)
       redirect_to @scraper
       return
@@ -117,11 +117,11 @@ class ScrapersController < ApplicationController
   end
 
   def show
-    @scraper = Scraper.find(params[:id])
+    @scraper = Scraper.friendly.find(params[:id])
   end
 
   def destroy
-    @scraper = Scraper.find(params[:id])
+    @scraper = Scraper.friendly.find(params[:id])
     if @scraper.can_write?(current_user)
       flash[:notice] = "Scraper #{@scraper.name} deleted"
       @scraper.destroy
@@ -135,7 +135,7 @@ class ScrapersController < ApplicationController
   end
 
   def update
-    @scraper = Scraper.find(params[:id])
+    @scraper = Scraper.friendly.find(params[:id])
     if @scraper.can_write?(current_user)
       # TODO This is definitely the dumb and long winded way to do things
       if @scraper.update_attributes(auto_run: params[:scraper][:auto_run])
@@ -149,7 +149,7 @@ class ScrapersController < ApplicationController
   end
 
   def run
-    scraper = Scraper.find(params[:id])
+    scraper = Scraper.friendly.find(params[:id])
     if scraper.can_write?(current_user)
       scraper.queue!
       scraper.reload
@@ -162,7 +162,7 @@ class ScrapersController < ApplicationController
 
   # TODO Extract checking of who owns the scraper
   def clear
-    scraper = Scraper.find(params[:id])
+    scraper = Scraper.friendly.find(params[:id])
     if scraper.can_write?(current_user)
       scraper.database.clear
     else
@@ -172,7 +172,7 @@ class ScrapersController < ApplicationController
   end
 
   def data
-    scraper = Scraper.find(params[:id])
+    scraper = Scraper.friendly.find(params[:id])
     query = params[:query] || scraper.database.select_all
 
     # Check authentication
@@ -218,7 +218,7 @@ class ScrapersController < ApplicationController
 
   # Toggle whether we're watching this scraper
   def watch
-    scraper = Scraper.find(params[:id])
+    scraper = Scraper.friendly.find(params[:id])
     current_user.toggle_watch(scraper)
     redirect_to :back
   end

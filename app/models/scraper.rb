@@ -11,7 +11,7 @@ class Scraper < ActiveRecord::Base
   has_many :contributions
 
   extend FriendlyId
-  friendly_id :full_name, use: :finders
+  friendly_id :full_name
 
   delegate :queued?, :running?, to: :last_run, allow_nil: true
 

@@ -1,6 +1,6 @@
 class OwnersController < ApplicationController
   def show
-    @owner = Owner.find(params[:id])
+    @owner = Owner.friendly.find(params[:id])
     @scrapers = @owner.scrapers.includes(:last_run => :log_lines)
 
     # Split out scrapers into different groups
@@ -18,7 +18,7 @@ class OwnersController < ApplicationController
 
   # Toggle whether we're watching this user / organization
   def watch
-    owner = Owner.find(params[:id])
+    owner = Owner.friendly.find(params[:id])
     current_user.toggle_watch(owner)
     redirect_to :back
   end

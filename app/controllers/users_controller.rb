@@ -13,7 +13,7 @@ class UsersController < ApplicationController
 
   def watching
     # Can't do User.find(params[:id]). Figure out why
-    @user = Owner.find(params[:id])
+    @user = Owner.friendly.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @user.user?
   end
 end
