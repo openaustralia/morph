@@ -1,5 +1,3 @@
-%h3#console_title{data: {toggle: "collapse", target: "#console"}, class: ("collapsed" if !open)}
-  Console output 
 #console.collapse{class: ("in" if open)}
   %pre
     - run.log_lines.order(:number).each do |line|
