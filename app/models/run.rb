@@ -126,7 +126,8 @@ class Run < ActiveRecord::Base
   def log(stream, text)
     puts "#{stream}: #{text}"
     number = log_lines.maximum(:number) || 0
-    log_lines.create(stream: stream, text: text, number: (number + 1))
+    line = log_lines.create(stream: stream.to_s, text: text, number: (number + 1))
+    sync_new line, scope: self
   end
 
   def go!
