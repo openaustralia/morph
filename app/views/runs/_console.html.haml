@@ -1,4 +1,5 @@
 #console.collapse{class: ("in" if open)}
   %pre
-    - run.log_lines.order(:number).each do |line|
-      = content_tag(:span, h(line.text).gsub("\n", "&#x000A;").html_safe, class: line.stream)
+    -# Not rendering this as a collection because otherwise it would add carriage returns between each line
+    - run.log_lines.order(:number).each do |log_line|
+      = render log_line
