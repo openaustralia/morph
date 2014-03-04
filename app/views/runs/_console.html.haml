@@ -1,9 +1,6 @@
-- unless run.log_lines.empty?
-
-  %h3#console_title{data: {toggle: "collapse", target: "#console"}, class: ("collapsed" if !open)}
-    Console output 
-  #console.collapse{class: ("in" if open)}
-    %p Hint: Keep this to a minimum during normal use (so that things remain readable)
-    %pre
-      - run.log_lines.order(:number).each do |line|
-        = content_tag(:span, h(line.text).gsub("\n", "&#x000A;").html_safe, class: line.stream)
+%h3#console_title{data: {toggle: "collapse", target: "#console"}, class: ("collapsed" if !open)}
+  Console output 
+#console.collapse{class: ("in" if open)}
+  %pre
+    - run.log_lines.order(:number).each do |line|
+      = content_tag(:span, h(line.text).gsub("\n", "&#x000A;").html_safe, class: line.stream)
