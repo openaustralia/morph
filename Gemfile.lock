@@ -87,7 +87,7 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
     docile (1.1.2)
-    docker-api (1.7.6)
+    docker-api (1.8.4)
       archive-tar-minitar
       excon (>= 0.28)
       json
@@ -110,7 +110,7 @@ GEM
     exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
       activesupport (>= 3.0.4)
-    excon (0.31.0)
+    excon (0.32.0)
     execjs (2.0.2)
     faraday (0.8.9)
       multipart-post (~> 1.2.0)
