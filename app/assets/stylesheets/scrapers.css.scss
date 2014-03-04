@@ -83,11 +83,6 @@ span.internal {
     content: "(show)";
 }
 
-pre {
-  height: 15em;
-  overflow-y: scroll;
-}
-
 #scraper_settings {
   margin-bottom: 4em;
 }
@@ -123,4 +118,25 @@ a i.icon-time {
 h1.full_name {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.log_lines {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.428571429;
+  color: #333333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  height: 15em;
+  overflow-y: scroll;
+}
+
+.log_line {
+  white-space: pre;  
 }

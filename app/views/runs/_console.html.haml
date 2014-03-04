@@ -1,5 +1,2 @@
 #console.collapse{class: ("in" if open)}
-  %pre
-    -# Not rendering this as a collection because otherwise it would add carriage returns between each line
-    - run.log_lines.order(:number).each do |log_line|
-      = render log_line
+  .log_lines= render run.log_lines.order(:number)
