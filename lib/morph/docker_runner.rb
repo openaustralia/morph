@@ -1,15 +1,16 @@
 module Morph
   class DockerRunner
     def self.run(options)
-      Docker.options[:read_timeout] = 4.hours
-      Docker.options[:chunk_size] = 1
+      # Open up a special interactive connection to Docker
+      # TODO Cache connection
+      conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"], {:chunk_size => 1, :read_timeout: 4.hours})
 
       # This will fail if there is another container with the same name
       begin
-        c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
+        c = Docker::Container.create({"Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
           "User" => "scraper",
           "Image" => options[:image_name],
-          "name" => options[:container_name])
+          "name" => options[:container_name]}, conn_interactive)
       rescue Excon::Errors::SocketError => e
         yield :internal, "Morph internal error: Could not connect to Docker server: #{e}\n"
         yield :internal, "Requeueing...\n"
