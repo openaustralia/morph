@@ -5,15 +5,15 @@
       .large-icon-box.pull-right
         - if scraper.can_write?(current_user)
           = link_to scraper_settings_path(scraper) do
-            = render partial: "auto_clock", locals: {scraper: scraper}
+            = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
         - else
-          = render partial: "auto_clock", locals: {scraper: scraper}
+          = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
       .large-icon-box.pull-right
-        = sync partial: "running_indicator", resource: scraper
+        = render partial: "scrapers/running_indicator", locals: {scraper: scraper}
       %h4= scraper.description
   .col-md-2
     - if signed_in?
-      .button_title_adjust= render partial: "watch_button", locals: {scraper: scraper}
+      .button_title_adjust= render partial: "scrapers/watch_button", locals: {scraper: scraper}
 %hr
 .row
   .col-md-10
@@ -34,18 +34,18 @@
           = link_to contributor do
             = image_tag contributor.gravatar_url(20), size: "20x20", class: "has-tooltip", data: {placement: "bottom", title: contributor.nickname}
 
-    = sync partial: "status", resource: scraper
-    = sync partial: "console", resource: scraper
-    = sync partial: "data", resource: scraper, refetch: true
-    = sync partial: "statistics", resource: scraper
-    = sync partial: "history", resource: scraper
+    = render partial: "scrapers/status", locals: {scraper: scraper}
+    = render partial: "scrapers/console", locals: {scraper: scraper}
+    = render partial: "scrapers/data", locals: {scraper: scraper}
+    = render partial: "scrapers/statistics", locals: {scraper: scraper}
+    = render partial: "scrapers/history", locals: {scraper: scraper}
   .col-md-2
     - if signed_in?
       - if scraper.can_write?(current_user)
         #scraper_run
-          = sync partial: "run_button", resource: scraper, refetch: true
+          = render partial: "scrapers/run_button", locals: {scraper: scraper}
         #scraper_settings
-          = button_link_to scraper_settings_path do
+          = button_link_to scraper_settings_path(scraper) do
             %i.icon-wrench
             Settings
 
