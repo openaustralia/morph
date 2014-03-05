@@ -4,7 +4,8 @@
 
 console_scroll_to_bottom = ->
   objDiv = document.getElementById("log_lines")
-  objDiv.scrollTop = objDiv.scrollHeight
+  if objDiv != null
+    objDiv.scrollTop = objDiv.scrollHeight
 
 # Always start with the console scrolled to the end
 $ -> console_scroll_to_bottom()
