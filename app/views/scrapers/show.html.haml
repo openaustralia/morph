@@ -1,6 +1,3 @@
 - content_for :title, @scraper.full_name
 
-- if @scraper.forking?
-  = render partial: "show_forking", locals: {scraper: @scraper}
-- else
-  = render partial: "show_normal", locals: {scraper: @scraper}
+= render partial: "show_partial", locals: {scraper: @scraper}
