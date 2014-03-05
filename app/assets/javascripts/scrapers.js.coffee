@@ -1,3 +1,18 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
+
+console_scroll_to_bottom = ->
+  objDiv = document.getElementById("log_lines")
+  objDiv.scrollTop = objDiv.scrollHeight
+
+# Always start with the console scrolled to the end
+$ ->
+  console_scroll_to_bottom()
+
+class Sync.LogLineLogLine extends Sync.View
+  afterInsert: -> console_scroll_to_bottom()
+
+class Sync.ScraperConsole extends Sync.View
+  afterUpdate: ->
+    console_scroll_to_bottom()
