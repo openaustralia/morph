@@ -3,15 +3,11 @@
     The scraper is <strong>queued to run</strong>. It was queued
     = time_ago_in_words(run.queued_at)
     ago.
-    %span.muted
-      (Refresh page for the latest)
 - elsif run.running?
   .alert.alert-info
     The scraper is <strong>running</strong>. It was started
     = time_ago_in_words(run.started_at)
     ago.
-    %span.muted
-      (Refresh page for the latest)
 - elsif run.finished_successfully?
   .alert.alert-success
     Last run completed successfully
