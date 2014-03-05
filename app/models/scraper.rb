@@ -1,6 +1,8 @@
 require 'new_relic/agent/method_tracer'
 
 class Scraper < ActiveRecord::Base
+  include Sync::Actions
+
   belongs_to :owner, inverse_of: :scrapers
   has_many :runs, inverse_of: :scraper
   has_many :metrics, through: :runs
@@ -263,6 +265,7 @@ class Scraper < ActiveRecord::Base
   # progress should be between 0 and 100
   def fork_progress(message, progress)
       update_attributes(forking_message: message, forking_progress: progress)
+      sync_update self
   end
 
   def synchronise_repo
@@ -325,6 +328,7 @@ class Scraper < ActiveRecord::Base
     fork_progress(nil, 100)
     update_attributes(forking: false)
 
+    sync_update self
 
     # TODO Add repo link
   end
