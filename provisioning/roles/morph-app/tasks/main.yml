@@ -62,7 +62,7 @@
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
 - name: Copy across newrelic configuration
   copy: src=newrelic.yml.secure dest=/var/www/shared/config/newrelic.yml
-  notify: Restart Apache  
+  notify: Restart Apache
 - name: Dependency for following command
   apt: pkg=python-passlib
 - name: Set timezone in /etc/timezone
@@ -95,4 +95,5 @@
   when: backups
 - name: Don't install redis for sidekiq background jobs from apt because it's too old (2.2)
   apt: pkg=redis-server state=absent
-
+- name: Sync configuration
+  template: src=sync.yml dest=/var/www/shared/config/sync.yml owner=deploy group=deploy
