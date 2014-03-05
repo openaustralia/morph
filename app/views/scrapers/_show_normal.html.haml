@@ -1,0 +1,79 @@
+.row
+  .col-md-10
+    %h1.full_name
+      = full_name_with_links(scraper)
+      .large-icon-box.pull-right
+        - if scraper.can_write?(current_user)
+          = link_to scraper_settings_path(scraper) do
+            = render partial: "auto_clock", locals: {scraper: scraper}
+        - else
+          = render partial: "auto_clock", locals: {scraper: scraper}
+      .large-icon-box.pull-right
+        = sync partial: "running_indicator", resource: scraper
+      %h4= scraper.description
+  .col-md-2
+    - if signed_in?
+      .button_title_adjust= render partial: "watch_button", locals: {scraper: scraper}
+%hr
+.row
+  .col-md-10
+    - if scraper.readme
+      .panel.panel-default
+        .panel-heading
+          %h4.panel-title= link_to scraper.readme_filename, scraper.github_url_readme
+        .panel-body
+          = scraper.readme
+    - if scraper.scraperwiki_url
+      %p
+        Forked from
+        = link_to "ScraperWiki", scraper.scraperwiki_url, target: "_blank"
+    - unless scraper.contributors.empty?
+      %p
+        Contributors
+        - scraper.contributors.each do |contributor|
+          = link_to contributor do
+            = image_tag contributor.gravatar_url(20), size: "20x20", class: "has-tooltip", data: {placement: "bottom", title: contributor.nickname}
+
+    = sync partial: "status", resource: scraper
+    = sync partial: "console", resource: scraper
+    = sync partial: "data", resource: scraper, refetch: true
+    = sync partial: "statistics", resource: scraper
+    = sync partial: "history", resource: scraper
+  .col-md-2
+    - if signed_in?
+      - if scraper.can_write?(current_user)
+        #scraper_run
+          = sync partial: "run_button", resource: scraper, refetch: true
+        #scraper_settings
+          = button_link_to scraper_settings_path do
+            %i.icon-wrench
+            Settings
+
+    #scraper_code
+      %h4
+        %i.icon-github-sign.icon-large
+        Scraper code
+      - if scraper.github_url
+        %p
+          %h5 Repository
+          = link_to scraper.github_url, target: "_blank" do
+            = scraper.name
+            repo
+          - if scraper.main_scraper_filename
+            %h5 Main scraper
+            #{link_to scraper.main_scraper_filename, scraper.github_url_main_scraper_file, target: "_blank"}
+            &mdash;
+            written in #{Morph::Language.human(scraper.language)}
+    %p
+      .form-group
+        %label(for="git_url") git clone URL
+        .input-group
+          %input.form-control#git_url{type: "text", value: scraper.git_url_https, disabled: true}
+          %span.input-group-btn
+            %button.btn.btn-default#copy_to_clipboard_button{type: "button", data: {"clipboard-target" => "git_url"}}
+              %i.icon-copy
+    :javascript
+      $(document).ready(function() {
+        var clip = new ZeroClipboard($("#copy_to_clipboard_button"));
+        $("#global-zeroclipboard-html-bridge").tooltip({title: "copy to clipboard", placement: 'bottom'});
+      });

@@ -1,0 +1,9 @@
+%h1.full_name= full_name_with_links(scraper)
+%h2 Forking!
+.progress.progress-striped.active
+  .progress-bar(style="width: #{scraper.forking_progress == 0 ? 5 : scraper.forking_progress}%")
+    - if scraper.forking_message
+      = scraper.forking_message
+      &hellip;
+%span.muted
+  (Refresh page for the latest)
