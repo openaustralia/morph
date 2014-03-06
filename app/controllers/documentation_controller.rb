@@ -7,4 +7,8 @@ class DocumentationController < ApplicationController
     @scraper = Scraper.find_by(full_name: params[:scraper] || "mlandauer/scraper-blue-mountains") || Scraper.first
     @query = @scraper.database.select_first_ten
   end
+
+  def pricing
+    render layout: "application"
+  end
 end
