@@ -23,7 +23,10 @@ module Morph
     def table_names
       q = sql_query_safe("select name from sqlite_master where type='table'")
       if q
-        q.map{|h| h["name"]}
+        q = q.map{|h| h["name"]}
+        # sqlite_sequence is a special system table (used with autoincrement)
+        q.delete("sqlite_sequence")
+        q
       else
         []
       end
