@@ -22,6 +22,7 @@ Morph::Application.routes.draw do
   resources :documentation, only: :index do
     get "api", on: :collection
   end
+  get "/pricing", to: "documentation#pricing"
   # Hmm not totally sure about this url.
   post "/run", to: "api#run_remote"
   get '/settings', to: "users#settings", as: :user_settings
