@@ -68,13 +68,18 @@
 - name: Set timezone in /etc/timezone
   copy: src=timezone dest=/etc/timezone
   notify: Update timezone
+
 # TODO: Use special_time (or at least look at using it)
 - name: Setting daily cron job for 10:00am
   cron: name="daily scraping" hour=10 minute=0 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:auto_run_scrapers RAILS_ENV=production"
+  when: cron_jobs
 - name: Setting cron job for sending out email alerts for 11:30am
   cron: name="email alerts" hour=11 minute=30 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:send_alerts RAILS_ENV=production"
+  when: cron_jobs
 - name: Cron job to generate xml sitemaps at 4pm
   cron: name="xml sitemaps" hour=16 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake sitemap:refresh RAILS_ENV=production"
+  when: cron_jobs
+
 - name: Install nodejs for asset precompiling
   apt: pkg=nodejs
 - name: Install memcached
@@ -87,12 +92,14 @@
   copy: src=duply_mysql_conf.secure dest=/root/.duply/mysql/conf owner=root group=root mode=0400
 - name: Copy across duply backup config for sqlite
   copy: src=duply_sqlite_conf.secure dest=/root/.duply/sqlite/conf owner=root group=root mode=0400
+
 - name: Do backups daily of mysql to S3 at 4:40AM
   cron: name="duply mysql" hour=4 minute=40 user=root job="duply mysql backup"
   when: backups
 - name: Do backups daily of sqlite to S3 at 4:40AM
   cron: name="duply sqlite" hour=4 minute=40 user=root job="duply sqlite backup"
   when: backups
+
 - name: Don't install redis for sidekiq background jobs from apt because it's too old (2.2)
   apt: pkg=redis-server state=absent
 - name: Sync configuration
