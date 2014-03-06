@@ -11,10 +11,10 @@
   copy: src=ssl/ca.pem dest=/etc/apache2/ssl/ca.pem mode=0600
   notify: Restart Apache
 - name: Add SSL certificate (public)
-  copy: src=ssl/ssl.crt dest=/etc/apache2/ssl/ssl.crt mode=0600
+  copy: src=ssl/{{ server_name }}/ssl.crt dest=/etc/apache2/ssl/ssl.crt mode=0600
   notify: Restart Apache
 - name: Add SSL certificate (private)
-  copy: src=ssl/ssl.key.secure dest=/etc/apache2/ssl/ssl.key mode=0600
+  copy: src=ssl/{{ server_name }}/ssl.key.secure dest=/etc/apache2/ssl/ssl.key mode=0600
   notify: Restart Apache
 - name: Add SSL certificate (class 1)
   copy: src=ssl/sub.class1.server.ca.pem dest=/etc/apache2/ssl/sub.class1.server.ca.pem mode=0600
