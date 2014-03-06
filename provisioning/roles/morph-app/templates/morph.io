@@ -1,17 +1,10 @@
-{% if ssl %}
 <VirtualHost *:80>
     ServerName {{ server_name }}
     ServerAlias api.{{ server_name }}
     RedirectMatch permanent ^/(.*) https://{{ server_name }}/$1
 </VirtualHost>
-{% endif %}
 
-{% if ssl %}
 <VirtualHost *:443>
-{% else %}
-<VirtualHost *:80>
-{% endif %}
-
     ServerName {{ server_name }}
     ServerAlias api.{{ server_name }}
     DocumentRoot "/var/www/current/public"
@@ -40,7 +33,6 @@
         Allow from all
     </Location>
 
-{% if ssl %}
     SSLEngine on
 
     SSLProtocol all -SSLv2 -SSLv3
@@ -53,8 +45,4 @@
     SSLCertificateKeyFile /etc/apache2/ssl/ssl.key
     SSLCertificateChainFile /etc/apache2/ssl/sub.class1.server.ca.pem
     SSLCACertificateFile /etc/apache2/ssl/ca.pem
-{% endif %}
-
 </VirtualHost>
-
-
