@@ -104,3 +104,5 @@
   apt: pkg=redis-server state=absent
 - name: Sync configuration
   template: src=sync.yml dest=/var/www/shared/config/sync.yml owner=deploy group=deploy
+- name: Add server name to /etc/hosts
+  lineinfile: dest=/etc/hosts line="127.0.0.1 {{ server_name }}" owner=root group=root mode=0644
