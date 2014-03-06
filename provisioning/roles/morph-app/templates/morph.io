@@ -11,26 +11,10 @@
 
     PassengerRuby /home/deploy/.rvm/gems/ruby-2.0.0-p353/wrappers/ruby
 
-    #ErrorLog "/srv/www/www.openaustraliafoundation.org.au/log/error_log"
-    #CustomLog /srv/www/www.openaustraliafoundation.org.au/log/access_log common
-
     <Location "/">
         Order allow,deny
         Allow from all
         Options -MultiViews
-    </Location>
-
-    # A regex for the API url. Let's open this up to the world
-    <LocationMatch "/[^/]+/[^/]+/data>
-        # All access controls and authentication are disabled
-        Satisfy Any
-        Allow from all
-    </LocationMatch>
-
-    <Location "/run>
-        # All access controls and authentication are disabled
-        Satisfy Any
-        Allow from all
     </Location>
 
     SSLEngine on
