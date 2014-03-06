@@ -29,6 +29,15 @@ module Morph
       end
     end
 
+    # The table that should be listed first because it is the most important
+    def first_table_name
+      if table_names.include?(Database.sqlite_table_name)
+        Database.sqlite_table_name
+      else
+        table_names.first
+      end
+    end
+
     def sql_query(query, readonly = true)
       db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: readonly)
       # If database is busy wait 5s
