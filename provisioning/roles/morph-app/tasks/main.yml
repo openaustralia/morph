@@ -14,6 +14,8 @@
 - name: Add SSL certificate (private)
   copy: src=ssl/{{ server_name }}/ssl.key.secure dest=/etc/nginx/cert.key mode=0600
   notify: restart nginx
+- name: Copy across 2048-bit certificate for Diffie Hellman Ephemeral Paramerts
+  copy: src=ssl/dhparam.pem.secure dest=/etc/nginx/dhparam.pem
 - name: Generate the overall nginx config
   template: src=nginx.conf dest=/etc/nginx/nginx.conf
   notify: restart nginx
