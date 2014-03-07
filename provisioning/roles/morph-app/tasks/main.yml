@@ -9,19 +9,19 @@
   file: owner=deploy group=deploy path=/var/www
 - name: Ensure that ssl/{{ server_name }} directory exist
   file: path=/etc/nginx/ssl/{{ server_name }} owner=deploy group=deploy state=directory
-- name: Ensure that ssl/faye.{{ server_name }} directory exist
-  file: path=/etc/nginx/ssl/faye.{{ server_name }} owner=deploy group=deploy state=directory
+- name: Ensure that ssl/faye directory exist
+  file: path=/etc/nginx/ssl/faye owner=deploy group=deploy state=directory
 - name: Add {{ server_name }} SSL certificate (public)
-  copy: src=ssl/{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/{{ server_name }}/cert.pem mode=0600
+  copy: src=ssl/{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/www/cert.pem mode=0600
   notify: restart nginx
 - name: Add {{ server_name }} SSL certificate (private)
-  copy: src=ssl/{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/{{ server_name }}/cert.key mode=0600
+  copy: src=ssl/{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/www/cert.key mode=0600
   notify: restart nginx
 - name: Add faye.{{ server_name }} SSL certificate (public)
-  copy: src=ssl/faye.{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/faye.{{ server_name }}/cert.pem mode=0600
+  copy: src=ssl/faye.{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/faye/cert.pem mode=0600
   notify: restart nginx
 - name: Add faye.{{ server_name }} SSL certificate (private)
-  copy: src=ssl/faye.{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/faye.{{ server_name }}/cert.key mode=0600
+  copy: src=ssl/faye.{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/faye/cert.key mode=0600
   notify: restart nginx
 - name: Copy across 2048-bit certificate for Diffie Hellman Ephemeral Paramerts
   copy: src=ssl/dhparam.pem.secure dest=/etc/nginx/dhparam.pem
