@@ -26,7 +26,7 @@ module Morph
     def self.binary_name(language)
       case language
       when :ruby
-        "ruby"
+        "ruby -r/usr/local/lib/prerun.rb"
       when :php
         "php"
       when :python
