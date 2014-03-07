@@ -1,6 +1,8 @@
 ---
 - name: Restart Apache
   service: name=apache2 state=restarted
+- name: restart nginx
+  service: name=nginx state=restarted
 - name: Update timezone
   command: dpkg-reconfigure --frontend noninteractive tzdata
 - name: Test sudoers and make it live
