@@ -133,13 +133,14 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "local" do |local|
     local.vm.network :forwarded_port, guest: 80, host: 8000
+    local.vm.network :forwarded_port, guest: 443, host: 8001
     local.vm.network :forwarded_port, guest: 22, host: 2200
     local.vm.network :forwarded_port, guest: 9292, host: 9292
     local.vm.synced_folder ".", "/vagrant", disabled: true
 
     local.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/playbook.yml"
-      ansible.extra_vars = { server_name: "dev.morph.io", env_file: "env.local.secure", ssl: false, backups: false,
+      ansible.extra_vars = { server_name: "dev.morph.io", env_file: "env.local.secure", backups: false,
         cron_jobs: false}
       #ansible.verbose = 'vvv'
     end

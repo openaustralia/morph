@@ -1,11 +1,11 @@
 - if @name_set
-  %h1 Fork Scraperwiki scraper #{@scraper.scraperwiki_shortname}
+  %h1 Fork ScraperWiki scraper #{@scraper.scraperwiki_shortname}
 
   %p Choose a name for the scraper on GitHub
 - else
-  %h1 Fork Scraperwiki scraper
+  %h1 Fork ScraperWiki scraper
 
-  %p This is where you can pick a Scraperwiki scraper, optionally choose a name for it on GitHub and fork away!
+  %p This is where you can pick a ScraperWiki scraper, optionally choose a name for it on GitHub and fork away!
 
   %p
     = link_to "Browse and Search", "https://classic.scraperwiki.com/browse/", target: "_blank"
@@ -38,4 +38,4 @@
           %span.help-block Name to give the scraper here and on GitHub
 
   = f.actions do
-    = f.action :submit, label: "Fork Scraperwiki scraper"
+    = f.action :submit, label: "Fork ScraperWiki scraper"

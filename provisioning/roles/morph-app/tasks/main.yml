@@ -1,39 +1,57 @@
 ---
+- name: Ensure apache is switch off
+  service: name=apache2 state=stopped
 # TODO Ensure that deploy user is setup first
 # TODO Ensure that apache is setup first
 - name: Ensure git is installed
   apt: pkg=git
 - name: Ensure that deploy owns /var/www
   file: owner=deploy group=deploy path=/var/www
-- name: Ensure that /etc/apache2/ssl exists
-  file: path=/etc/apache2/ssl mode=0700 state=directory
-- name: Add SSL certificate (CA)
-  copy: src=ssl/ca.pem dest=/etc/apache2/ssl/ca.pem mode=0600
-  notify: Restart Apache
+
 - name: Add SSL certificate (public)
-  copy: src=ssl/ssl.crt dest=/etc/apache2/ssl/ssl.crt mode=0600
-  notify: Restart Apache
+  copy: src=ssl/{{ server_name }}/ssl-unified.crt dest=/etc/nginx/cert.pem mode=0600
+  notify: restart nginx
 - name: Add SSL certificate (private)
-  copy: src=ssl/ssl.key.secure dest=/etc/apache2/ssl/ssl.key mode=0600
-  notify: Restart Apache
-- name: Add SSL certificate (class 1)
-  copy: src=ssl/sub.class1.server.ca.pem dest=/etc/apache2/ssl/sub.class1.server.ca.pem mode=0600
-  notify: Restart Apache
+  copy: src=ssl/{{ server_name }}/ssl.key.secure dest=/etc/nginx/cert.key mode=0600
+  notify: restart nginx
+- name: Copy across 2048-bit certificate for Diffie Hellman Ephemeral Paramerts
+  copy: src=ssl/dhparam.pem.secure dest=/etc/nginx/dhparam.pem
+- name: Generate the overall nginx config
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf
+  notify: restart nginx
+- name: Generate the nginx config for the app
+  template: src=default.nginx dest=/etc/nginx/sites-available/default
+  notify: restart nginx
+
+#- name: Ensure that /etc/apache2/ssl exists
+#  file: path=/etc/apache2/ssl mode=0700 state=directory
+#- name: Add SSL certificate (CA)
+#  copy: src=ssl/ca.pem dest=/etc/apache2/ssl/ca.pem mode=0600
+#  notify: Restart Apache
+#- name: Add SSL certificate (public)
+#  copy: src=ssl/{{ server_name }}/ssl.crt dest=/etc/apache2/ssl/ssl.crt mode=0600
+#  notify: Restart Apache
+#- name: Add SSL certificate (private)
+#  copy: src=ssl/{{ server_name }}/ssl.key.secure dest=/etc/apache2/ssl/ssl.key mode=0600
+#  notify: Restart Apache
+#- name: Add SSL certificate (class 1)
+#  copy: src=ssl/sub.class1.server.ca.pem dest=/etc/apache2/ssl/sub.class1.server.ca.pem mode=0600
+#  notify: Restart Apache
 # TODO Don't need to restart. reload would be fine.
-- name: Generate the apache config for the app
-  template: src=default
-            dest=/etc/apache2/sites-available/default
-  notify: Restart Apache
-- name: Generate the apache config for morph.io
-  template: src=morph.io
-            dest=/etc/apache2/sites-available/morph.io
-  notify: Restart Apache
-- name: Ensure that morph.io is enabled
-  command: a2ensite morph.io creates=/etc/apache2/sites-enabled/morph.io
-  notify: Restart Apache
-- name: Switch on Apache SSL support
-  command: a2enmod ssl creates=/etc/apache2/mods-enabled/ssl.load
-  notify: Restart Apache
+#- name: Generate the apache config for the app
+#  template: src=default
+#            dest=/etc/apache2/sites-available/default
+#  notify: Restart Apache
+#- name: Generate the apache config for morph.io
+#  template: src=morph.io
+#            dest=/etc/apache2/sites-available/morph.io
+#  notify: Restart Apache
+#- name: Ensure that morph.io is enabled
+#  command: a2ensite morph.io creates=/etc/apache2/sites-enabled/morph.io
+#  notify: Restart Apache
+#- name: Switch on Apache SSL support
+#  command: a2enmod ssl creates=/etc/apache2/mods-enabled/ssl.load
+#  notify: Restart Apache
 - name: Ensure that /var/www/shared exists
   file: path=/var/www/shared owner=deploy group=deploy state=directory
 - name: Ensure that .env exists

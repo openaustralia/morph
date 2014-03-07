@@ -75,7 +75,7 @@
           %li= link_to "New scraper", new_scraper_path
           %li.divider
           %li= link_to "Add scraper from GitHub", github_new_scraper_path
-          %li= link_to "Fork scraper from Scraperwiki", scraperwiki_new_scraper_path
+          %li= link_to "Fork scraper from ScraperWiki", scraperwiki_new_scraper_path
 
     - if @owner.user? && !@owner.other_scrapers_contributed_to.empty?
       %h3
@@ -83,4 +83,3 @@
         = pluralize(@owner.other_scrapers_contributed_to.count, "scraper")
       .list-group= sync partial: "scraper", collection: @owner.other_scrapers_contributed_to
   .col-md-1
-

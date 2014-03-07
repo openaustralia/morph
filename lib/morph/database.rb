@@ -23,9 +23,21 @@ module Morph
     def table_names
       q = sql_query_safe("select name from sqlite_master where type='table'")
       if q
-        q.map{|h| h["name"]}
+        q = q.map{|h| h["name"]}
+        # sqlite_sequence is a special system table (used with autoincrement)
+        q.delete("sqlite_sequence")
+        q
       else
         []
+      end
+    end
+
+    # The table that should be listed first because it is the most important
+    def first_table_name
+      if table_names.include?(Database.sqlite_table_name)
+        Database.sqlite_table_name
+      else
+        table_names.first
       end
     end
 
