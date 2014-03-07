@@ -26,11 +26,14 @@ module Morph
     def self.binary_name(language)
       case language
       when :ruby
+        # Run a special script of ours before anything else which switches off
+        # buffering on stdout and stderr
         "ruby -r/usr/local/lib/prerun.rb"
       when :php
         "php"
       when :python
-        "python"
+        # -u turns off buffering for stdout and stderr
+        "python -u"
       end
     end
 
