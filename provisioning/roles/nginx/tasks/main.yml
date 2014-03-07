@@ -1,0 +1,7 @@
+---
+- name: Add ngninx apt key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+- name: Add nginx binary repo
+  apt_repository: repo='deb http://nginx.org/packages/mainline/ubuntu/ precise nginx'
+- name: Ensure latest stable nginx is installed (we need recent version for websockets tunneling support)
+  apt: pkg=nginx
