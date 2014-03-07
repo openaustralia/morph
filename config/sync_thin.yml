@@ -1,7 +1,0 @@
----
-port: 4443
-ssl: true
-ssl_key_file: /etc/nginx/ssl/faye/cert.key
-ssl_cert_file: /etc/nginx/ssl/faye/cert.pem
-environment: production
-rackup: sync.ru
