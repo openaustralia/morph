@@ -5,10 +5,9 @@ server {
   passenger_enabled on;
   passenger_ruby /home/deploy/.rvm/gems/ruby-2.0.0-p353/wrappers/ruby;
 
-  # TODO: Check setup with https://www.ssllabs.com/ssltest/index.html
   ssl on;
-  ssl_certificate cert.pem;
-  ssl_certificate_key cert.key;
+  ssl_certificate /etc/nginx/ssl/{{ server_name }}/cert.pem;
+  ssl_certificate_key /etc/nginx/ssl/{{ server_name }}/cert.key;
 
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
   ssl_prefer_server_ciphers on;
