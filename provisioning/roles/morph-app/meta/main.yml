@@ -1,7 +1,6 @@
 ---
 dependencies:
   - { role: docker-server }
-  - { role: apache-passenger }
   - { role: nginx-passenger }
   - { role: ruby-2.0.0-p353 }
   - { role: mysql }
