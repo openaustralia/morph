@@ -7,8 +7,8 @@
   apt: pkg=git
 - name: Ensure that deploy owns /var/www
   file: owner=deploy group=deploy path=/var/www
-- name: Ensure that ssl/{{ server_name }} directory exist
-  file: path=/etc/nginx/ssl/{{ server_name }} owner=deploy group=deploy state=directory
+- name: Ensure that ssl/www directory exist
+  file: path=/etc/nginx/ssl/www owner=deploy group=deploy state=directory
 - name: Ensure that ssl/faye directory exist
   file: path=/etc/nginx/ssl/faye owner=deploy group=deploy state=directory
 - name: Add {{ server_name }} SSL certificate (public)
