@@ -57,7 +57,8 @@ module Morph
     end
 
     def no_rows(table = table_names.first)
-      sql_query_safe("select count(*) from #{table}").first.values.first
+      q = sql_query_safe("select count(*) from #{table}")
+      q.first.values.first if q
     end
 
     def sqlite_db_size
