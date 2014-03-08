@@ -10,7 +10,7 @@ class ScrapersController < ApplicationController
   end
 
   def index
-    @scrapers = Scraper.order(:updated_at => :desc).all
+    @scrapers = Scraper.order(:updated_at => :desc).page(params[:page])
   end
 
   def new
