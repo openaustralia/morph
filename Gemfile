@@ -46,6 +46,7 @@ gem 'zeroclipboard-rails'
 gem 'newrelic_rpm'
 gem 'sitemap_generator'
 gem 'kaminari'
+gem 'kaminari-bootstrap', '~> 3.0.1'
 
 group :production do
   gem "dalli"
