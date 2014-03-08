@@ -45,6 +45,7 @@ gem 'exception_notification'
 gem 'zeroclipboard-rails'
 gem 'newrelic_rpm'
 gem 'sitemap_generator'
+gem 'kaminari'
 
 group :production do
   gem "dalli"
