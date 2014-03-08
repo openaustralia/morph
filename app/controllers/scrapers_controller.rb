@@ -42,11 +42,11 @@ class ScrapersController < ApplicationController
       @scraper.add_commit_to_root_on_github(current_user, files, "Add template for Morph scraper")
 
       @scraper = Scraper.new_from_github(repo.full_name)
-      if @scraper.save        
+      if @scraper.save
         # TODO This could be a long running task shouldn't really be in the request cycle
         repo = current_user.octokit_client.edit_repository(@scraper.full_name, homepage: scraper_url(@scraper))
         @scraper.synchronise_repo
-        redirect_to @scraper        
+        redirect_to @scraper
       else
         render :new
       end
@@ -105,7 +105,7 @@ class ScrapersController < ApplicationController
       if @scraper.save
         ForkScraperwikiWorker.perform_async(@scraper.id)
         #flash[:notice] = "Forking in action..."
-        redirect_to @scraper      
+        redirect_to @scraper
       else
         render :scraperwiki
       end
@@ -169,7 +169,7 @@ class ScrapersController < ApplicationController
     else
       flash[:alert] = "Can't clear someone else's scraper!"
     end
-    redirect_to scraper    
+    redirect_to scraper
   end
 
   def data
@@ -188,7 +188,7 @@ class ScrapersController < ApplicationController
           format.sqlite { render :text => "API key is not valid", status: 401 }
           format.json { render :json => {error: "API key is not valid"}, status: 401 }
           format.csv { render :text => "API key is not valid", status: 401 }
-        end            
+        end
         return
       end
       # TODO Log usage against owner
