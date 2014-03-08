@@ -9,6 +9,10 @@ class ScrapersController < ApplicationController
     end
   end
 
+  def index
+    @scrapers = Scraper.order(:updated_at => :desc).all
+  end
+
   def new
     @scraper = Scraper.new
   end
