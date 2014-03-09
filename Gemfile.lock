@@ -198,6 +198,7 @@ GEM
     omniauth-oauth2 (1.1.1)
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
+    openaustralia-sqlite3 (1.0.0)
     orm_adapter (0.5.0)
     polyglot (0.3.4)
     posix-spawn (0.3.8)
@@ -299,7 +300,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
-    sqlite3 (1.3.8)
     sshkit (1.2.0)
       net-scp (>= 1.1.2)
       net-ssh
@@ -359,6 +359,7 @@ DEPENDENCIES
   nokogiri
   octokit
   omniauth-github
+  openaustralia-sqlite3
   premailer-rails
   puma
   rack-livereload
@@ -372,7 +373,6 @@ DEPENDENCIES
   simplecov
   sinatra (>= 1.3.0)
   sitemap_generator
-  sqlite3
   twitter-bootstrap-rails!
   uglifier (>= 1.3.0)
   zeroclipboard-rails

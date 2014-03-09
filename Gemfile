@@ -6,7 +6,10 @@ gem 'dotenv-rails'
 gem 'rails', '4.0.3'
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+# This is a patched version of the gem at https://github.com/openaustralia/sqlite3-ruby/tree/openaustralia-sqlite3
+# When/if PR https://github.com/sparklemotion/sqlite3-ruby/pull/123 gets merged and new version of gem gets released
+# switch back over to the normal sqlite3 gem
+gem 'openaustralia-sqlite3', require: "sqlite3"
 gem 'mysql2'
 
 gem "haml-rails"
