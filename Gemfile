@@ -50,6 +50,7 @@ gem 'newrelic_rpm'
 gem 'sitemap_generator'
 gem 'kaminari'
 gem 'kaminari-bootstrap', '~> 3.0.1'
+gem "rails-timeago", "~> 2.0"
 
 group :production do
   gem "dalli"
