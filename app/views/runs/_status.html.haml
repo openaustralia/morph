@@ -1,24 +1,21 @@
 - if run.queued?
   .alert.alert-info
     The scraper is <strong>queued to run</strong>. It was queued
-    = time_ago_in_words(run.queued_at)
-    ago.
+    #{timeago_tag(run.queued_at, force: true)}.
     %span.muted
       (Refresh page for the latest)
 - elsif run.running?
   .alert.alert-info
     The scraper is <strong>running</strong>. It was started
-    = time_ago_in_words(run.started_at)
-    ago.
+    #{timeago_tag(run.started_at, force: true)}.
     %span.muted
       (Refresh page for the latest)
 - elsif run.finished_successfully?
   .alert.alert-success
     Last run completed successfully
-    = time_ago_in_words(run.finished_at)
-    ago
+    #{timeago_tag(run.finished_at, force: true)}.
 - elsif run.finished_with_errors?
   .alert.alert-danger
     Last run failed
-    = time_ago_in_words(run.finished_at)
-    ago with status code #{run.status_code}.
+    = timeago_tag(run.finished_at, force: true)
+    with status code #{run.status_code}.
