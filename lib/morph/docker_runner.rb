@@ -9,7 +9,12 @@ module Morph
         c = Docker::Container.create("Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
           "User" => "scraper",
           "Image" => options[:image_name],
-          "name" => options[:container_name])
+          "name" => options[:container_name],
+          # See explanation in https://github.com/openaustralia/morph/issues/242
+          "CpuShares" => 307,
+          # Memory limit (in bytes)
+          # On a 1G machine we're allowing a max of 10 containers to run at a time. So, 100M
+          "Memory" => 100 * 1024 * 1024)
       rescue Excon::Errors::SocketError => e
         yield :internal, "Morph internal error: Could not connect to Docker server: #{e}\n"
         yield :internal, "Requeueing...\n"
