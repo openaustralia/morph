@@ -7,3 +7,4 @@ dependencies:
   - { role: backups }
   - { role: postfix }
   - { role: redis }
+  - { role: newrelic-sysmond }
