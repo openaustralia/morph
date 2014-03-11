@@ -1,0 +1,21 @@
+= link_to user, class: "list-group-item" do
+  .row
+    .col-md-2
+      = image_tag user.gravatar_url(20), width: 80
+    .col-md-7
+      %div= user.nickname
+      - if user.name
+        %div= user.name
+      - if !user.company.blank?
+        %div= user.company
+      - elsif !user.blog.blank?
+        %div= user.blog
+    .col-md-3
+      - if user.scrapers.count > 0
+        %div
+          Has
+          = pluralize(user.scrapers.count, "scraper")
+      - if user.other_scrapers_contributed_to.count > 0
+        %div
+          Contributed to
+          = pluralize(user.other_scrapers_contributed_to.count, "scraper")

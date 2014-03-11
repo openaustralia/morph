@@ -37,10 +37,11 @@ Morph::Application.routes.draw do
     get 'scraperwiki', on: :new
     post 'scraperwiki', to: "scrapers#create_scraperwiki", on: :collection
   end
-  resources :owners, path: "/", only: :show
-  post '/:id/watch', to: "owners#watch", as: :owner_watch
   # This url begins with /users so that we don't stop users have scrapers called watching
   get '/users/:id/watching', to: "users#watching", as: :user_watching
+  get '/users', to: "users#index"
+  resources :owners, path: "/", only: :show
+  post '/:id/watch', to: "owners#watch", as: :owner_watch
   resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
   # TODO: Hmm would be nice if this could be tidier

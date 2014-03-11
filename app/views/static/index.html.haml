@@ -58,6 +58,7 @@
 .row
   .col-md-6
     %h2 Recent New Users
+    %p= link_to "See More&hellip;".html_safe, users_path
     %ul.list-unstyled
       - User.all.order(created_at: :desc).limit(10).each do |user|
         %li
