@@ -45,13 +45,13 @@ span.internal {
 }
 
 .double-bounce1, .double-bounce2 {
-  width: 100%;
-  height: 100%;
+  width: 85%;
+  height: 85%;
   border-radius: 50%;
   background-color: #333;
   opacity: 0.6;
   position: absolute;
-  top: 0;
+  top: 0.05em;
   left: 0;
 
   -webkit-animation: bounce 2.0s infinite ease-in-out;
