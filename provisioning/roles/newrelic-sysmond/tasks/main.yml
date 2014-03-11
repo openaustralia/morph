@@ -1,0 +1,9 @@
+---
+- name: Trust New Relic
+  apt_key: url=https://download.newrelic.com/548C16BF.gpg id=548C16BF state=present
+- name: Configure the New Relic apt repository
+  apt_repository: repo='deb http://apt.newrelic.com/debian/ newrelic non-free' state=present
+- name: Install new relic server monitoring
+  apt: pkg=newrelic-sysmond state=present
+- name: Monitoring configuration
+  copy: src=nrsysmond.cfg.secure dest=/etc/newrelic/nrsysmond.cfg owner=root group=newrelic mode=0640
