@@ -69,7 +69,7 @@
             = user.name
     %h2 Organizations with Scrapers
     %ul.list-unstyled
-      - Organization.all.select{|u| !u.scrapers.empty?}.each do |org|
+      - Organization.all_with_scrapers.each do |org|
         %li
           = image_tag org.gravatar_url(20), width: 20
           = link_to org.nickname, org

@@ -25,4 +25,9 @@ class Organization < Owner
   def organizations
     []
   end
+
+  # All organizations that have scrapers
+  def self.all_with_scrapers
+    Organization.all.select{|u| !u.scrapers.empty?}
+  end
 end
