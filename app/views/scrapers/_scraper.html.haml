@@ -3,7 +3,7 @@
     %div.scraper-block
       .icon-box.pull-right
         - if scraper.last_run && (scraper.last_run.queued? || scraper.last_run.running?)
-          .pulse
+          = render "spinner"
       .icon-box.pull-right
         = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
       - if scraper.last_run && scraper.last_run.finished_with_errors?
