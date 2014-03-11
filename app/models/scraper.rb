@@ -184,7 +184,7 @@ class Scraper < ActiveRecord::Base
   def database
     Morph::Database.new(self)
   end
-  
+
   # It seems silly implementing this
   def Scraper.directory_size(directory)
     r = 0
@@ -192,7 +192,7 @@ class Scraper < ActiveRecord::Base
       # Ick
       files = Dir.entries(directory)
       files.delete(".")
-      files.delete("..") 
+      files.delete("..")
       files.map{|f| File.join(directory, f)}.each do |f|
         s = File.lstat(f)
         if s.file?
