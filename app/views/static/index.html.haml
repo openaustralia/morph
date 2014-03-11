@@ -79,4 +79,4 @@
   .col-md-6
     %h2 Recently Active Scrapers
     %p= link_to "See More&hellip;".html_safe, scrapers_path
-    .list-group= render Scraper.order(:updated_at => :desc).limit(10).all
+    .list-group= render Scraper.order(:updated_at => :desc).limit(10)
