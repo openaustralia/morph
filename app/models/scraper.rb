@@ -157,7 +157,11 @@ class Scraper < ActiveRecord::Base
     # Guard against more than one of a particular scraper running at the same time
     if runnable?
       run = runs.create(queued_at: Time.now, auto: auto, owner_id: owner_id)
-      RunWorker.perform_async(run.id) 
+      if auto
+        RunWorkerAuto.perform_async(run.id) 
+      else
+        RunWorker.perform_async(run.id)
+      end
     end
   end
 
