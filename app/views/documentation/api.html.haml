@@ -94,7 +94,16 @@
     }
 
     function update_format() {
-      $("code span.format").html($("#format").val());
+      var format = $("#format").val();
+      $("code span.format").html(format);
+      if (format == "json") {
+        $("#callback_input").show("fast");
+      }
+      else {
+        $("#callback_input").hide("fast");
+        $("#callback").val("");
+        update_callback();
+      }
     }
 
     function update_callback() {
