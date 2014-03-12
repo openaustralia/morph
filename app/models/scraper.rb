@@ -160,15 +160,6 @@ class Scraper < ActiveRecord::Base
     end
   end
 
-  # Call this if queued automatically (i.e. not directly by a person)
-  def queue_auto!
-    # Guard against more than one of a particular scraper running at the same time
-    if runnable?
-      run = runs.create(queued_at: Time.now, auto: true, owner_id: owner_id)
-      RunWorkerAuto.perform_async(run.id)
-    end
-  end
-
   def github_url_for_file(file)
     github_url + "/blob/master/" + file
   end

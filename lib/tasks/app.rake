@@ -2,7 +2,13 @@ namespace :app do
   desc "Run scrapers that need to run once per day (this task should be called from a cron job)"
   task :auto_run_scrapers => :environment do
     scrapers = Scraper.where(auto_run: true)
-    scrapers.each {|scraper| scraper.queue_auto!}
+    scrapers.each do |scraper|
+      # Guard against more than one of a particular scraper running at the same time
+      if scraper.runnable?
+        run = scraper.runs.create(queued_at: Time.now, auto: true, owner_id: scraper.owner_id)
+        RunWorkerAuto.perform_async(run.id)
+      end
+    end
     puts "Queued #{scrapers.count} scrapers to run now"
   end
 
