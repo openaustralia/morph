@@ -9,6 +9,9 @@ ActiveAdmin.register Owner do
     column :nickname
     column :name
 
+    column :scrapers do |owner|
+      owner.scrapers.count
+    end
     column :wall_time do |owner|
       owner.wall_time.to_i
     end
