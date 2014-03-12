@@ -92,7 +92,8 @@ module Morph
     end
 
     def first_ten_rows(table = table_names.first)
-      sql_query_safe(select_first_ten(table))
+      r = sql_query_safe(select_first_ten(table))
+      r ? r : []
     end
 
     def self.tidy_data_path(data_path)
