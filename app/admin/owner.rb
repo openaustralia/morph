@@ -9,6 +9,16 @@ ActiveAdmin.register Owner do
     column :nickname
     column :name
 
+    column :wall_time do |owner|
+      owner.wall_time.to_i
+    end
+    column :cpu_time do |owner|
+      owner.cpu_time.to_i
+    end
+    column :total_disk_usage do |owner|
+      number_to_human_size(owner.total_disk_usage)
+    end
+
     actions
   end
 
