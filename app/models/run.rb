@@ -6,6 +6,11 @@ class Run < ActiveRecord::Base
 
   delegate :git_url, :full_name, :database, to: :scraper
   delegate :current_revision_from_repo, to: :scraper, allow_nil: true
+  delegate :utime, :stime, to: :metric
+
+  def cpu_time
+    utime + stime
+  end
 
   def language
     Morph::Language.language(repo_path)
