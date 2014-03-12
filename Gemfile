@@ -51,6 +51,8 @@ gem 'sitemap_generator'
 gem 'kaminari'
 gem 'kaminari-bootstrap', '~> 3.0.1'
 gem "rails-timeago", "~> 2.0"
+# Rails 4 compatibility isn't released yet. So tracking HEAD.
+gem 'activeadmin', github: 'gregbell/active_admin'
 
 group :production do
   gem "dalli"

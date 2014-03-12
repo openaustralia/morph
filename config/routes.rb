@@ -1,4 +1,5 @@
 Morph::Application.routes.draw do
+  ActiveAdmin.routes(self)
   # Owner.table_exists? is workaround to allow migration to add STI Owner/User table to run
   if Owner.table_exists?
     devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
