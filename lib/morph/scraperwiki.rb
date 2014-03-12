@@ -32,6 +32,14 @@ module Morph
       Morph::CodeTranslate.translate(language, code)
     end
 
+    def exists?
+      !!info
+    end
+
+    def private_scraper?
+      info["error"] == "Invalid API Key"
+    end
+
     def code
       info["code"]
     end

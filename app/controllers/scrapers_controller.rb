@@ -94,14 +94,13 @@ class ScrapersController < ApplicationController
     # the user to choose another name
     exists_on_github = Morph::Github.in_public_use?(@scraper.full_name)
 
-    # Check that scraperwiki scraper exists
-    exists_on_scraperwiki = !!Morph::Scraperwiki.new(@scraper.scraperwiki_shortname).info
+    scraperwiki = Morph::Scraperwiki.new(@scraper.scraperwiki_shortname)
 
     # TODO should really check here that this user has the permissions to write to the owner_id owner
     # It will just get stuck later
 
     # Should do this with validation
-    if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github && exists_on_scraperwiki
+    if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github && scraperwiki.exists? && !scraperwiki.private_scraper?
       if @scraper.save
         ForkScraperwikiWorker.perform_async(@scraper.id)
         #flash[:notice] = "Forking in action..."
@@ -110,8 +109,11 @@ class ScrapersController < ApplicationController
         render :scraperwiki
       end
     else
-      if !exists_on_scraperwiki
+      if !scraperwiki.exists?
         @scraper.errors.add(:scraperwiki_shortname, "doesn't exist on ScraperWiki")
+      end
+      if scraperwiki.private_scraper?
+        @scraper.errors.add(:scraperwiki_shortname, "needs to be a public scraper on ScraperWiki")
       end
       if Scraper.exists?(full_name: @scraper.full_name) || exists_on_github
         @scraper.errors.add(:name, "is already taken")
