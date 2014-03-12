@@ -152,16 +152,20 @@ class Scraper < ActiveRecord::Base
     last_run.nil? || last_run.finished?
   end
 
-  # Set auto to true if this job is being queued automatically (i.e. not directly by a person)
-  def queue!(auto = false)
+  def queue!
     # Guard against more than one of a particular scraper running at the same time
     if runnable?
-      run = runs.create(queued_at: Time.now, auto: auto, owner_id: owner_id)
-      if auto
-        RunWorkerAuto.perform_async(run.id) 
-      else
-        RunWorker.perform_async(run.id)
-      end
+      run = runs.create(queued_at: Time.now, auto: false, owner_id: owner_id)
+      RunWorker.perform_async(run.id)
+    end
+  end
+
+  # Call this if queued automatically (i.e. not directly by a person)
+  def queue_auto!
+    # Guard against more than one of a particular scraper running at the same time
+    if runnable?
+      run = runs.create(queued_at: Time.now, auto: true, owner_id: owner_id)
+      RunWorkerAuto.perform_async(run.id)
     end
   end
 
