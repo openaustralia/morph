@@ -36,6 +36,12 @@
           = options_for_select(["json", "csv"])
         %span.help-block
           Format of outputted data
+    .string.input.optional.stringish.form-group#callback_input
+      %label.control-label.col-sm-1(for="callback") [callback]
+      .col-sm-5
+        %input.form-control#callback(maxlength="255" name="query" type="text")
+        %span.help-block
+          (Optional) To return JSONP set "callback" to the name of your javascript callback function.
     - if current_user
       .row
         .col-sm-6
@@ -59,12 +65,6 @@
             .col-sm-10
               %p#api_key
                 = button_link_to "sign in with GitHub", user_omniauth_authorize_path(:github)
-    .string.input.optional.stringish.form-group#callback_input
-      %label.control-label.col-sm-1(for="callback") [callback]
-      .col-sm-5
-        %input.form-control#callback(maxlength="255" name="query" type="text")
-        %span.help-block
-          (Optional) To return JSONP set "callback" to the name of your javascript callback function.
 
 %h2 Example
 %p
