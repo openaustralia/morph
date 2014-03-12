@@ -5,7 +5,7 @@
 
 %pre
   %code
-    GET #{api_url_in_html(content_tag(:em, "[scraper]"), content_tag(:em, "[format]"), content_tag(:em, "[sql]"))}
+    GET #{api_url_in_html(content_tag(:em, "[scraper]"), content_tag(:em, "[format]"), content_tag(:em, "[sql]"), "")}
 
 %p With a simple header for authentication
 
@@ -59,6 +59,12 @@
             .col-sm-10
               %p#api_key
                 = button_link_to "sign in with GitHub", user_omniauth_authorize_path(:github)
+    .string.input.optional.stringish.form-group#callback_input
+      %label.control-label.col-sm-1(for="callback") [callback]
+      .col-sm-5
+        %input.form-control#callback(maxlength="255" name="query" type="text")
+        %span.help-block
+          (Optional) To return JSONP set "callback" to the name of your javascript callback function.
 
 %h2 Example
 %p
@@ -67,9 +73,9 @@
 %pre
   %code
     - if current_user
-      = curl_command(content_tag(:span, current_user.api_key, class: "api_key"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, CGI::escape(@query), class: "query"))
+      = curl_command(content_tag(:span, current_user.api_key, class: "api_key"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
     - else
-      = curl_command(content_tag(:em, "[api_key]"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, CGI::escape(@query), class: "query"))
+      = curl_command(content_tag(:em, "[api_key]"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
 
 :javascript
   $(function() {
@@ -88,13 +94,24 @@
     }
 
     function update_format() {
-      $("code span.format").html($("#format").val());      
+      $("code span.format").html($("#format").val());
+    }
+
+    function update_callback() {
+      var v = $("#callback").val();
+      if (v == "") {
+        $("code span.callback").html("");
+      }
+      else {
+        $("code span.callback").html("&callback=" + v);
+      }
     }
 
     update_full_name();
     update_query();
     update_api_key();
     update_format();
+    update_callback();
 
     $("#scraper_full_name").change(update_full_name);
     $("#scraper_full_name").keyup(update_full_name);
@@ -102,4 +119,6 @@
     $("#query").keyup(update_query);
     $("#owner").change(update_api_key);
     $("#format").change(update_format);
+    $("#callback").change(update_callback);
+    $("#callback").keyup(update_callback);
   });
