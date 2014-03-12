@@ -199,7 +199,7 @@ class ScrapersController < ApplicationController
     begin
       respond_to do |format|
         format.sqlite { send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite" }
-        format.json { render :json => scraper.database.sql_query(query) }
+        format.json { render :json => scraper.database.sql_query(query), callback: params[:callback] }
         format.csv do
           rows = scraper.database.sql_query(query)
           csv_string = CSV.generate do |csv|
