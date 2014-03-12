@@ -97,10 +97,15 @@
       var format = $("#format").val();
       $("code span.format").html(format);
       if (format == "json") {
+        if (!(typeof save_callback === 'undefined')) {
+          $("#callback").val(save_callback);
+          update_callback();
+        }
         $("#callback_input").show("fast");
       }
       else {
         $("#callback_input").hide("fast");
+        save_callback = $("#callback").val();
         $("#callback").val("");
         update_callback();
       }
