@@ -72,7 +72,7 @@ class User < Owner
   def organization?
     false
   end
-  
+
   def toggle_watch(object)
     if watching?(object)
       alerts.where(watch: object).first.destroy
