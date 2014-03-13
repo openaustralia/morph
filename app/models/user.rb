@@ -137,7 +137,7 @@ class User < Owner
         gravatar_url: user._rels[:avatar].href,
         blog: user.blog,
         company: user.company,
-        email: user.email)
+        email: Morph::Github.primary_email(self))
   end
 
   def self.find_or_create_by_nickname(nickname)

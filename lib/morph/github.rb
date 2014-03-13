@@ -40,5 +40,20 @@ module Morph
         user.octokit_client.create_repository(name, auto_init: true, organization: owner.nickname)
       end
     end
+
+    def self.primary_email(user)
+      # TODO If email isn't verified probably should not send email to it
+      emails(user).find{|u| u.primary}.email
+    end
+
+    # Needs user:email oauth scope for this to work
+    # Will return nil if you don't have the right scope
+    def self.emails(user)
+      begin
+        user.octokit_client.emails(accept: 'application/vnd.github.v3')
+      rescue Octokit::NotFound
+        nil
+      end
+    end
   end
 end
