@@ -1,2 +1,2 @@
 worker: rvm . do bundle exec sidekiq --concurrency 5 -q default -q low -e production
-faye: RAILS_ENV=production rvm . do bundle exec rackup sync.ru -E production
+faye: RAILS_ENV=production rvm . do bundle exec dotenv rackup sync.ru -E production

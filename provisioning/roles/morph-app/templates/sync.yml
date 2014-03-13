@@ -3,5 +3,5 @@ production:
   server: "https://faye.{{ server_name }}/faye"
   adapter_javascript_url: "https://faye.{{ server_name }}/faye/faye.js"
   adapter: "Faye"
-  auth_token: "b43ffce0dc5477b6881e4310e784a26b716a1be36c8d69450d8c01d43ad8669f"
+  # auth_token is set to the environment variable SYNC_AUTH_TOKEN in sync.ru
   async: true
