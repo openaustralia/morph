@@ -25,7 +25,7 @@ module Morph
     def self.in_public_use?(full_name)
       begin
         Octokit.repository(full_name)
-        true      
+        true
       rescue Octokit::NotFound
         false
       end
