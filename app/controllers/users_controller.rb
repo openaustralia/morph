@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
 
+  def index
+    @users = User.order(created_at: :desc).page(params[:page])
+  end
+
   def settings
     @user = current_user
   end

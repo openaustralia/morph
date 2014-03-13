@@ -35,39 +35,46 @@ span.internal {
   height: 15px;
 }
 
-.large-icon-box {
-  width: 40px;
-  height: 40px;
-  margin-left: 10px;
-}
-
-.pulse {
-  vertical-align: bottom;
+.spinner {
   width: 1em;
   height: 1em;
-  background-color: #333;
+
+  position: relative;
   display: inline-block;
-  border-radius: 100%;  
-  -webkit-animation: scaleout 1.0s infinite ease-in-out;
-  animation: scaleout 1.0s infinite ease-in-out;
+  vertical-align: bottom;
 }
 
-@-webkit-keyframes scaleout {
-  0% { -webkit-transform: scale(0.0) }
-  100% {
-    -webkit-transform: scale(1.0);
-    opacity: 0;
-  }
+.double-bounce1, .double-bounce2 {
+  width: 85%;
+  height: 85%;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0.6;
+  position: absolute;
+  top: 0.05em;
+  left: 0;
+
+  -webkit-animation: bounce 2.0s infinite ease-in-out;
+  animation: bounce 2.0s infinite ease-in-out;
 }
 
-@keyframes scaleout {
-  0% { 
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes bounce {
+  0%, 100% {
     transform: scale(0.0);
     -webkit-transform: scale(0.0);
-  } 100% {
+  } 50% {
     transform: scale(1.0);
     -webkit-transform: scale(1.0);
-    opacity: 0;
   }
 }
 

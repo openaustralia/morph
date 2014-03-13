@@ -58,6 +58,7 @@
 .row
   .col-md-6
     %h2 Recent New Users
+    %p= link_to "See More&hellip;".html_safe, users_path
     %ul.list-unstyled
       - User.all.order(created_at: :desc).limit(10).each do |user|
         %li
@@ -68,7 +69,7 @@
             = user.name
     %h2 Organizations with Scrapers
     %ul.list-unstyled
-      - Organization.all.select{|u| !u.scrapers.empty?}.each do |org|
+      - Organization.all_with_scrapers.each do |org|
         %li
           = image_tag org.gravatar_url(20), width: 20
           = link_to org.nickname, org
@@ -77,4 +78,5 @@
             = org.name
   .col-md-6
     %h2 Recently Active Scrapers
-    .list-group= sync partial: "scraper", collection: Scraper.order(:updated_at => :desc).limit(10).all
+    %p= link_to "See More&hellip;".html_safe, scrapers_path
+    .list-group= sync partial: "scraper", collection: Scraper.order(:updated_at => :desc).limit(10)

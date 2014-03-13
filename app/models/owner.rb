@@ -8,6 +8,13 @@ class Owner < ActiveRecord::Base
   has_many :runs
   before_create :set_api_key
 
+  def name
+    # If nickname and name are identical return nil
+    if read_attribute(:name) != nickname
+      read_attribute(:name)
+    end
+  end
+
   def blog
     b = read_attribute(:blog)
     if b.nil?

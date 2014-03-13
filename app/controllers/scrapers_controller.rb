@@ -9,6 +9,10 @@ class ScrapersController < ApplicationController
     end
   end
 
+  def index
+    @scrapers = Scraper.order(:updated_at => :desc).page(params[:page])
+  end
+
   def new
     @scraper = Scraper.new
   end
@@ -38,11 +42,11 @@ class ScrapersController < ApplicationController
       @scraper.add_commit_to_root_on_github(current_user, files, "Add template for Morph scraper")
 
       @scraper = Scraper.new_from_github(repo.full_name)
-      if @scraper.save        
+      if @scraper.save
         # TODO This could be a long running task shouldn't really be in the request cycle
         repo = current_user.octokit_client.edit_repository(@scraper.full_name, homepage: scraper_url(@scraper))
         @scraper.synchronise_repo
-        redirect_to @scraper        
+        redirect_to @scraper
       else
         render :new
       end
@@ -90,24 +94,29 @@ class ScrapersController < ApplicationController
     # the user to choose another name
     exists_on_github = Morph::Github.in_public_use?(@scraper.full_name)
 
-    # Check that scraperwiki scraper exists
-    exists_on_scraperwiki = !!Morph::Scraperwiki.new(@scraper.scraperwiki_shortname).info
+    scraperwiki = Morph::Scraperwiki.new(@scraper.scraperwiki_shortname)
 
     # TODO should really check here that this user has the permissions to write to the owner_id owner
     # It will just get stuck later
 
     # Should do this with validation
-    if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github && exists_on_scraperwiki
+    if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github && scraperwiki.exists? && !scraperwiki.private_scraper? && !scraperwiki.view?
       if @scraper.save
         ForkScraperwikiWorker.perform_async(@scraper.id)
         #flash[:notice] = "Forking in action..."
-        redirect_to @scraper      
+        redirect_to @scraper
       else
         render :scraperwiki
       end
     else
-      if !exists_on_scraperwiki
+      if !scraperwiki.exists?
         @scraper.errors.add(:scraperwiki_shortname, "doesn't exist on ScraperWiki")
+      end
+      if scraperwiki.private_scraper?
+        @scraper.errors.add(:scraperwiki_shortname, "needs to be a public scraper on ScraperWiki")
+      end
+      if scraperwiki.view?
+        @scraper.errors.add(:scraperwiki_shortname, "can't be a ScraperWiki view")
       end
       if Scraper.exists?(full_name: @scraper.full_name) || exists_on_github
         @scraper.errors.add(:name, "is already taken")
@@ -168,7 +177,7 @@ class ScrapersController < ApplicationController
     else
       flash[:alert] = "Can't clear someone else's scraper!"
     end
-    redirect_to scraper    
+    redirect_to scraper
   end
 
   def data
@@ -187,7 +196,7 @@ class ScrapersController < ApplicationController
           format.sqlite { render :text => "API key is not valid", status: 401 }
           format.json { render :json => {error: "API key is not valid"}, status: 401 }
           format.csv { render :text => "API key is not valid", status: 401 }
-        end            
+        end
         return
       end
       # TODO Log usage against owner
@@ -196,7 +205,7 @@ class ScrapersController < ApplicationController
     begin
       respond_to do |format|
         format.sqlite { send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite" }
-        format.json { render :json => scraper.database.sql_query(query) }
+        format.json { render :json => scraper.database.sql_query(query), callback: params[:callback] }
         format.csv do
           rows = scraper.database.sql_query(query)
           csv_string = CSV.generate do |csv|

@@ -9,4 +9,10 @@ class ApplicationController < ActionController::Base
   def user_root_path
     user_path(current_user) if current_user
   end
+
+  # When trying to look at a page on active admin you're not allowed to
+  def access_denied(exception)
+    redirect_to current_user, :alert => exception.message
+  end
+
 end

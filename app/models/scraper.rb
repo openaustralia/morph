@@ -150,12 +150,11 @@ class Scraper < ActiveRecord::Base
     last_run.nil? || last_run.finished?
   end
 
-  # Set auto to true if this job is being queued automatically (i.e. not directly by a person)
-  def queue!(auto = false)
+  def queue!
     # Guard against more than one of a particular scraper running at the same time
     if runnable?
-      run = runs.create(queued_at: Time.now, auto: auto, owner_id: owner_id)
-      RunWorker.perform_async(run.id) 
+      run = runs.create(queued_at: Time.now, auto: false, owner_id: owner_id)
+      RunWorker.perform_async(run.id)
     end
   end
 
@@ -178,7 +177,7 @@ class Scraper < ActiveRecord::Base
   def database
     Morph::Database.new(self)
   end
-  
+
   # It seems silly implementing this
   def Scraper.directory_size(directory)
     r = 0
@@ -186,7 +185,7 @@ class Scraper < ActiveRecord::Base
       # Ick
       files = Dir.entries(directory)
       files.delete(".")
-      files.delete("..") 
+      files.delete("..")
       files.map{|f| File.join(directory, f)}.each do |f|
         s = File.lstat(f)
         if s.file?

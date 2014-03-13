@@ -14,5 +14,6 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require zeroclipboard
+//= require rails-timeago
 //= require sync
 //= require_tree .

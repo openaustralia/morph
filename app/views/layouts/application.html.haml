@@ -11,10 +11,11 @@
     /[if lt IE 9]
       = javascript_include_tag "//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js"
     = stylesheet_link_tag "application", :media => "all"
-    = favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
-    = favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
-    = favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
-    = favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
+    -#
+      = favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
+      = favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
+      = favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
+      = favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
     = favicon_link_tag '/favicon.ico', :rel => 'shortcut icon'
     = javascript_include_tag "application"
     = javascript_include_tag Sync.adapter_javascript_url
@@ -43,10 +44,18 @@
                 %li(class="divider")
                 %li= link_to "Add scraper from GitHub", github_new_scraper_path
                 %li= link_to "Fork scraper from ScraperWiki", scraperwiki_new_scraper_path
+            %li= link_to "Browse", scrapers_path
             %li= link_to "Pricing", pricing_path
             %li= link_to "Documentation", documentation_index_path
             - if user_signed_in? && current_user.admin?
-              %li= link_to "Admin", "/admin/jobs", data: {"no-turbolink" => true}
+              %li(class="dropdown")
+                %a(href="#" class="dropdown-toggle" data-toggle="dropdown")
+                  Admin
+                  %b(class="caret")
+                %ul(class="dropdown-menu")
+                  %li= link_to "Owner Metrics", admin_owners_path
+                  %li= link_to "Background queue", "/admin/jobs", data: {"no-turbolink" => true}
+
           %ul.nav.navbar-nav.navbar-right
             %li
               - if user_signed_in?

@@ -56,8 +56,10 @@ module Morph
       end
     end
 
+    # Returns 0 if table doesn't exists (or there is some other problem)
     def no_rows(table = table_names.first)
-      sql_query_safe("select count(*) from #{table}").first.values.first
+      q = sql_query_safe("select count(*) from #{table}")
+      q ? q.first.values.first : 0
     end
 
     def sqlite_db_size
@@ -90,7 +92,8 @@ module Morph
     end
 
     def first_ten_rows(table = table_names.first)
-      sql_query_safe(select_first_ten(table))
+      r = sql_query_safe(select_first_ten(table))
+      r ? r : []
     end
 
     def self.tidy_data_path(data_path)

@@ -10,5 +10,10 @@
  *
  *= require formtastic-bootstrap
  *= require_self
- *= require_tree .
+ *= require api
+ *= require bootstrap_and_overrides
+ *= require documentation
+ *= require scrapers
+ *= require static
+ *= require users
  */

@@ -1,4 +1,5 @@
 Morph::Application.routes.draw do
+  ActiveAdmin.routes(self)
   # Owner.table_exists? is workaround to allow migration to add STI Owner/User table to run
   if Owner.table_exists?
     devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
@@ -32,17 +33,19 @@ Morph::Application.routes.draw do
   post '/settings/reset_key', to: "users#reset_key", as: :user_reset_key
 
   # TODO: Don't allow a user to be called "scrapers"
-  resources :scrapers, path: '/scrapers', only: [:new, :create] do
+  resources :scrapers, path: '/scrapers', only: [:new, :create, :index] do
+    get 'page/:page', :action => :index, :on => :collection
     get 'github', on: :new
     post 'github', to: "scrapers#create_github", on: :collection
     get 'github_form', on: :collection
     get 'scraperwiki', on: :new
     post 'scraperwiki', to: "scrapers#create_scraperwiki", on: :collection
   end
-  resources :owners, path: "/", only: :show
-  post '/:id/watch', to: "owners#watch", as: :owner_watch
   # This url begins with /users so that we don't stop users have scrapers called watching
   get '/users/:id/watching', to: "users#watching", as: :user_watching
+  get '/users', to: "users#index"
+  resources :owners, path: "/", only: :show
+  post '/:id/watch', to: "owners#watch", as: :owner_watch
   resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
   # TODO: Hmm would be nice if this could be tidier

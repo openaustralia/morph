@@ -1,9 +1,15 @@
 namespace :app do
   desc "Run scrapers that need to run once per day (this task should be called from a cron job)"
   task :auto_run_scrapers => :environment do
-    scrapers = Scraper.where(auto_run: true)
-    scrapers.each {|scraper| scraper.queue!(true)}
-    puts "Queued #{scrapers.count} scrapers to run now"
+    # All the scrapers that need running in a random order
+    scraper_ids = Scraper.where(auto_run: true).map{|s| s.id}.shuffle
+    interval = 24.hours / scraper_ids.count
+    time = 0
+    scraper_ids.each do |scraper_id|
+      ScraperAutoRunWorker.perform_in(time, scraper_id)
+      time += interval
+    end
+    puts "Queued #{scraper_ids.count} scrapers to run over the next 24 hours"
   end
 
   desc "Send out alerts for all users (Run once per day with a cron job)"
