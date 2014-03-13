@@ -27,3 +27,6 @@ SECRET_KEY_BASE=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # For deployment to a Digital Ocean
 DIGITAL_OCEAN_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DIGITAL_OCEAN_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Secret for authenticating sync / faye
+SYNC_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
