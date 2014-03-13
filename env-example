@@ -13,6 +13,11 @@ GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DOCKER_URL=http://localhost:4243
 DOCKER_TCP=localhost:4243
 
+# This secret key is used for verifying the integrity of signed cookies.
+# If you change this key, all old signed cookies will become invalid!
+# You can use `rake secret` to generate a secure secret key.
+SECRET_KEY_BASE=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 # Google Analytics (leave commented out to disable)
 #GOOGLE_ANALYTICS_TRACKING_ID=xx-xxxxxxx-xx
 
