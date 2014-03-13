@@ -123,11 +123,9 @@ class User < Owner
 
   def self.find_for_github_oauth(auth, signed_in_resource=nil)
     user = User.find_or_create_by(:provider => auth.provider, :uid => auth.uid)
-    user.update_attributes(nickname: auth.info.nickname, name:auth.info.name,
-      access_token: auth.credentials.token,
-      gravatar_url: auth.info.image,
-      blog: auth.extra.raw_info.blog,
-      company: auth.extra.raw_info.company, email:auth.info.email)
+    user.update_attributes(nickname: auth.info.nickname,
+      access_token: auth.credentials.token)
+    user.refresh_info_from_github!
     # Also every time you login it should update the list of organizations that the user is attached to
     user.refresh_organizations!
     user
