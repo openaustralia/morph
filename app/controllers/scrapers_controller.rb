@@ -100,7 +100,7 @@ class ScrapersController < ApplicationController
     # It will just get stuck later
 
     # Should do this with validation
-    if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github && scraperwiki.exists? && !scraperwiki.private_scraper?
+    if !Scraper.exists?(full_name: @scraper.full_name) && !exists_on_github && scraperwiki.exists? && !scraperwiki.private_scraper? && !scraperwiki.view?
       if @scraper.save
         ForkScraperwikiWorker.perform_async(@scraper.id)
         #flash[:notice] = "Forking in action..."
@@ -114,6 +114,9 @@ class ScrapersController < ApplicationController
       end
       if scraperwiki.private_scraper?
         @scraper.errors.add(:scraperwiki_shortname, "needs to be a public scraper on ScraperWiki")
+      end
+      if scraperwiki.view?
+        @scraper.errors.add(:scraperwiki_shortname, "can't be a ScraperWiki view")
       end
       if Scraper.exists?(full_name: @scraper.full_name) || exists_on_github
         @scraper.errors.add(:name, "is already taken")

@@ -36,8 +36,12 @@ module Morph
       !!info
     end
 
+    def view?
+      language == :html
+    end
+
     def private_scraper?
-      info["error"] == "Invalid API Key"
+      info && info.has_key?("error") && info["error"] == "Invalid API Key"
     end
 
     def code
@@ -53,7 +57,9 @@ module Morph
     end
 
     def language
-      info["language"].to_sym
+      if info && info.has_key?("language")
+        info["language"].to_sym
+      end
     end
 
     def self.content(url)
