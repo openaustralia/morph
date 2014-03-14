@@ -15,4 +15,10 @@
 //= require twitter/bootstrap
 //= require zeroclipboard
 //= require rails-timeago
-//= require_tree .
+//= require api
+//= require bootstrap
+//= require documentation
+//= require scrapers
+//= require scraperwiki_forks
+//= require static
+//= require users
