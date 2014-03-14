@@ -45,7 +45,26 @@ module Morph
       db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: readonly)
       # If database is busy wait 5s
       db.busy_timeout(5000)
-      db.execute(query)
+      Database.clean_utf8_query_result(db.execute(query))
+    end
+
+    def self.clean_utf8_query_result(array)
+      array.map{|row| clean_utf8_query_row(row)}
+    end
+
+    def self.clean_utf8_query_row(row)
+      result = {}
+      row.each {|k,v| result[clean_utf8_string(k)] = clean_utf8_string(v)}
+      result
+    end
+
+    # Removes bits of strings that are invalid UTF8
+    def self.clean_utf8_string(string)
+      if string.respond_to?(:encode)
+        string.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+      else
+        string
+      end
     end
 
     def sql_query_safe(query, readonly = true)
