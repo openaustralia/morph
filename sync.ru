@@ -11,7 +11,4 @@ Sync.load_config(
   ENV["RAILS_ENV"] || "development"
 )
 
-# Override auth_token from an environment variable
-Sync.config[:auth_token] = ENV["SYNC_AUTH_TOKEN"] if ENV["SYNC_AUTH_TOKEN"]
-
 run Sync.pubsub_app

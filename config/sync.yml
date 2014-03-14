@@ -2,7 +2,7 @@
 development:
   server: "http://localhost:9292/faye"
   adapter_javascript_url: "http://localhost:9292/faye/faye.js"
-  # auth_token is set to the environment variable SYNC_AUTH_TOKEN in sync.ru
+  auth_token: <%= ENV['SYNC_AUTH_TOKEN'] %>
   adapter: "Faye"
   async: true
 
