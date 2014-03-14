@@ -15,3 +15,6 @@ class Sync.LogLineLogLine extends Sync.View
 
 class Sync.ScraperShowPartial extends Sync.View
   afterUpdate: -> console_scroll_to_bottom()
+
+class Sync.ScraperShowPartial extends Sync.View
+  afterUpdate: -> $('time[data-time-ago]').timeago()
