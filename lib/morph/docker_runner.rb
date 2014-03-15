@@ -22,12 +22,8 @@ module Morph
       end
 
       # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
-      # HACK to detect vagrant installation in crude way
-      if Rails.root.to_s =~ /\/var\/www/
-        local_root_path = Rails.root
-      else
-        local_root_path = "/vagrant"
-      end
+      # HACK on OS X we're expecting to use Vagrant
+      local_root_path = RUBY_PLATFORM =~ /darwin/ ? "/vagrant" : Rails.root
 
       begin
         c.start("Binds" => [
