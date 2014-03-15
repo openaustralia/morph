@@ -23,7 +23,11 @@ module Morph
 
       # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
       # HACK to detect vagrant installation in crude way
-      local_root_path = Dir.exists?("/vagrant") ? "/vagrant" : Rails.root
+      if Rails.root.to_s =~ /\/var\/www/
+        local_root_path = Rails.root
+      else
+        local_root_path = "/vagrant"
+      end
 
       begin
         c.start("Binds" => [
