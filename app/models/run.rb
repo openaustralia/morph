@@ -101,7 +101,9 @@ class Run < ActiveRecord::Base
   def go_with_logging
     puts "Starting...\n"
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
+
     FileUtils.mkdir_p data_path
+    FileUtils.chmod 0777, data_path
 
     unless Morph::Language.language_supported?(language)
       yield "stderr", "Can't find scraper code"
