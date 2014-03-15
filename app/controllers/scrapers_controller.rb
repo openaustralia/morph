@@ -1,5 +1,5 @@
 class ScrapersController < ApplicationController
-  before_filter :authenticate_user!, except: [:show, :data]
+  before_filter :authenticate_user!, except: [:index, :show, :data]
 
   def settings
     @scraper = Scraper.find(params[:id])
