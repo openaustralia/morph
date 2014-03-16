@@ -1,7 +1,7 @@
 class AlertMailer < ActionMailer::Base
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::AssetUrlHelper
-  default from: "contact@morph.io"
+  default from: "Morph <contact@morph.io>"
 
   def alert_email(user, broken_runs, successful_count)
     count = broken_runs.count
