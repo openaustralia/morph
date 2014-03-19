@@ -4,7 +4,7 @@ describe Morph::Scraperwiki do
   describe "#sqlite_database" do
     it "should get the scraperwiki sqlite database via their api" do
       result = double
-      Morph::Scraperwiki.should_receive(:content).with("https://classic.scraperwiki.com/scrapers/export_sqlite/blue-mountains/").and_return(result)
+      Morph::Scraperwiki.should_receive(:content).with("https://classic.scraperwiki.com/scrapers/export_sqlite/blue-mountains.sqlite").and_return(result)
 
       s = Morph::Scraperwiki.new("blue-mountains")
       s.sqlite_database.should == result
@@ -12,7 +12,7 @@ describe Morph::Scraperwiki do
 
     it "should raise an exception if the dataproxy connection time out" do
       result = "The dataproxy connection timed out, please retry. This is why."
-      Morph::Scraperwiki.should_receive(:content).with("https://classic.scraperwiki.com/scrapers/export_sqlite/blue-mountains/").and_return(result)
+      Morph::Scraperwiki.should_receive(:content).with("https://classic.scraperwiki.com/scrapers/export_sqlite/blue-mountains.sqlite").and_return(result)
 
       s = Morph::Scraperwiki.new("blue-mountains")
       expect { s.sqlite_database }.to raise_error result
