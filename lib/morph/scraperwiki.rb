@@ -17,7 +17,7 @@ module Morph
 
     def info
       if @info.nil?
-        url ="https://classic.scraperwiki.com/scrapers/#{short_name}/info"
+        url = "https://classic.scraperwiki.com/scrapers/#{short_name}/info"
         v = JSON.parse(Morph::Scraperwiki.content(url))
         if v.kind_of?(Hash) && v["error"] == "Sorry, this scraper does not exist"
           @info = nil
