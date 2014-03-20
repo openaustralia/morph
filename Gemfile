@@ -71,6 +71,9 @@ group :development do
   #gem "bullet"
   #gem 'rack-mini-profiler'
   #gem "flamegraph"
+
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :development, :test do
