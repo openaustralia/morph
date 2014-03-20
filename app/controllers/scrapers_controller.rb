@@ -118,9 +118,10 @@ class ScrapersController < ApplicationController
       if scraperwiki.view?
         @scraper.errors.add(:scraperwiki_shortname, "can't be a ScraperWiki view")
       end
-      if Scraper.exists?(full_name: @scraper.full_name) || exists_on_github
-        @scraper.errors.add(:name, "is already taken")
+      if Scraper.exists?(full_name: @scraper.full_name)
+        @scraper.errors.add(:name, "is already taken on Morph")
       end
+      @scraper.errors.add(:name, "is already taken on GitHub") if exists_on_github
       render :scraperwiki
     end
   end
