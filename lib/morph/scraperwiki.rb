@@ -33,7 +33,7 @@ module Morph
     end
 
     def exists?
-      !!info
+      !short_name.nil? && !!info
     end
 
     def view?
@@ -41,7 +41,7 @@ module Morph
     end
 
     def private_scraper?
-      info && info.has_key?("error") && info["error"] == "Invalid API Key"
+      exists? && info && info.has_key?("error") && info["error"] == "Invalid API Key"
     end
 
     def code
@@ -57,7 +57,7 @@ module Morph
     end
 
     def language
-      if info && info.has_key?("language")
+      if exists? && info && info.has_key?("language")
         info["language"].to_sym
       end
     end
