@@ -2,14 +2,17 @@ require 'new_relic/agent/method_tracer'
 
 class Scraper < ActiveRecord::Base
   belongs_to :owner, inverse_of: :scrapers
+  belongs_to :forked_by, class_name: "User"
+
   has_many :runs, inverse_of: :scraper
   has_many :metrics, through: :runs
-  belongs_to :forked_by, class_name: "User"
-  validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
-  validates :name, uniqueness: { message: 'is already taken on Morph' }
-  has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
   has_many :contributors, through: :contributions, source: :user
   has_many :contributions
+
+  has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
+
+  validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
+  validates :name, uniqueness: { message: 'is already taken on Morph' }
 
   extend FriendlyId
   friendly_id :full_name, use: :finders
