@@ -27,4 +27,9 @@ describe Morph::Scraperwiki do
       Morph::Scraperwiki.content("http://foo.com").should == data
     end
   end
+
+  describe '#exists?' do
+    it { Morph::Scraperwiki.new(nil).exists?.should_not be_true }
+    it { Morph::Scraperwiki.new('').exists?.should_not be_true }
+  end
 end
