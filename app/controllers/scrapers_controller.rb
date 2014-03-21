@@ -90,17 +90,13 @@ class ScrapersController < ApplicationController
     # TODO Should we really store full_name in the db?
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
 
-    # As quickly as possible check if it's possible to create the repository. If it isn't possible then allow
-    # the user to choose another name
-    exists_on_github = Morph::Github.in_public_use?(@scraper.full_name)
-
     scraperwiki = Morph::Scraperwiki.new(@scraper.scraperwiki_shortname)
 
     # TODO should really check here that this user has the permissions to write to the owner_id owner
     # It will just get stuck later
 
     # Should do this with validation
-    if @scraper.valid? && !exists_on_github && scraperwiki.exists? && !scraperwiki.private_scraper? && !scraperwiki.view?
+    if @scraper.valid? && scraperwiki.exists? && !scraperwiki.private_scraper? && !scraperwiki.view?
       if @scraper.save
         ForkScraperwikiWorker.perform_async(@scraper.id)
         #flash[:notice] = "Forking in action..."
@@ -118,7 +114,6 @@ class ScrapersController < ApplicationController
       if scraperwiki.view?
         @scraper.errors.add(:scraperwiki_shortname, "can't be a ScraperWiki view")
       end
-      @scraper.errors.add(:name, "is already taken on GitHub") if exists_on_github
       render :scraperwiki
     end
   end

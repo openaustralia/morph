@@ -13,6 +13,7 @@ class Scraper < ActiveRecord::Base
 
   validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
   validates :name, uniqueness: { message: 'is already taken on Morph' }
+  validate :not_used_on_github, on: :create, unless: :github_id
 
   extend FriendlyId
   friendly_id :full_name, use: :finders
@@ -334,5 +335,11 @@ class Scraper < ActiveRecord::Base
 
 
     # TODO Add repo link
+  end
+
+  private
+
+  def not_used_on_github
+    errors.add(:name, "is already taken on GitHub") if Morph::Github.in_public_use?(full_name)
   end
 end
