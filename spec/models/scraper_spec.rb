@@ -82,4 +82,9 @@ describe Scraper do
       end
     end
   end
+
+  it 'should have a unique name' do
+    create :scraper, name: 'my_scraper'
+    build(:scraper, name: 'my_scraper').should_not be_valid
+  end
 end

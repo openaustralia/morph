@@ -6,6 +6,7 @@ class Scraper < ActiveRecord::Base
   has_many :metrics, through: :runs
   belongs_to :forked_by, class_name: "User"
   validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
+  validates :name, uniqueness: true
   has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
   has_many :contributors, through: :contributions, source: :user
   has_many :contributions
