@@ -14,6 +14,7 @@ class Scraper < ActiveRecord::Base
   validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
   validates :name, uniqueness: { message: 'is already taken on Morph' }
   validate :not_used_on_github, on: :create, unless: :github_id
+  validate :exists_on_scraperwiki, on: :create, if: :scraperwiki_shortname
 
   extend FriendlyId
   friendly_id :full_name, use: :finders
@@ -341,5 +342,9 @@ class Scraper < ActiveRecord::Base
 
   def not_used_on_github
     errors.add(:name, "is already taken on GitHub") if Morph::Github.in_public_use?(full_name)
+  end
+
+  def exists_on_scraperwiki
+    errors.add(:scraperwiki_shortname, "doesn't exist on ScraperWiki") unless Morph::Scraperwiki.new(scraperwiki_shortname).exists?
   end
 end

@@ -101,7 +101,7 @@ describe ScrapersController do
 
     it "should error if the scraper doesn't exist on ScraperWiki" do
       scraperwiki_double = double("Morph::Scraperwiki", exists?: false, private_scraper?: false, view?: false)
-      Morph::Scraperwiki.should_receive(:new).and_return(scraperwiki_double)
+      Morph::Scraperwiki.should_receive(:new).twice.and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'missing_scraper' }
@@ -112,7 +112,7 @@ describe ScrapersController do
 
     it "should error if the ScraperWiki scraper is private" do
       scraperwiki_double = double("Morph::Scraperwiki", exists?: true, private_scraper?: true, view?: false)
-      Morph::Scraperwiki.should_receive(:new).and_return(scraperwiki_double)
+      Morph::Scraperwiki.should_receive(:new).twice.and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'private_scraper' }
@@ -123,7 +123,7 @@ describe ScrapersController do
 
     it "should error if the ScraperWiki scraper is private" do
       scraperwiki_double = double("Morph::Scraperwiki", exists?: true, private_scraper?: false, view?: true)
-      Morph::Scraperwiki.should_receive(:new).and_return(scraperwiki_double)
+      Morph::Scraperwiki.should_receive(:new).twice.and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'some_view' }
