@@ -16,6 +16,7 @@ class Scraper < ActiveRecord::Base
   validate :not_used_on_github, on: :create, unless: :github_id
   validate :exists_on_scraperwiki, on: :create, if: :scraperwiki_shortname
   validate :public_on_scraperwiki, on: :create, if: :scraperwiki_shortname
+  validate :not_scraperwiki_view, on: :create, if: :scraperwiki_shortname
 
   extend FriendlyId
   friendly_id :full_name, use: :finders
@@ -351,5 +352,9 @@ class Scraper < ActiveRecord::Base
 
   def public_on_scraperwiki
     errors.add(:scraperwiki_shortname, "needs to be a public scraper on ScraperWiki") if Morph::Scraperwiki.new(scraperwiki_shortname).private_scraper?
+  end
+
+  def not_scraperwiki_view
+    errors.add(:scraperwiki_shortname, "can't be a ScraperWiki view") if Morph::Scraperwiki.new(scraperwiki_shortname).view?
   end
 end

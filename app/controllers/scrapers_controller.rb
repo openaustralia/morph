@@ -90,13 +90,11 @@ class ScrapersController < ApplicationController
     # TODO Should we really store full_name in the db?
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
 
-    scraperwiki = Morph::Scraperwiki.new(@scraper.scraperwiki_shortname)
-
     # TODO should really check here that this user has the permissions to write to the owner_id owner
     # It will just get stuck later
 
     # Should do this with validation
-    if @scraper.valid? && !scraperwiki.view?
+    if @scraper.valid?
       if @scraper.save
         ForkScraperwikiWorker.perform_async(@scraper.id)
         #flash[:notice] = "Forking in action..."
@@ -105,9 +103,6 @@ class ScrapersController < ApplicationController
         render :scraperwiki
       end
     else
-      if scraperwiki.view?
-        @scraper.errors.add(:scraperwiki_shortname, "can't be a ScraperWiki view")
-      end
       render :scraperwiki
     end
   end
