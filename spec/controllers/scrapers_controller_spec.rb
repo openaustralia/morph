@@ -71,11 +71,20 @@ describe ScrapersController do
   end
 
   describe '#create_scraperwiki' do
-    it 'should error when the scraper already exists on Morph' do
+    before :each do
       sign_in user
+    end
+
+    it 'should error if the scraper already exists on Morph' do
       create :scraper, full_name: "#{user.nickname}/my_scraper"
       post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
       assigns(:scraper).errors[:name].should == ['is already taken on Morph']
+    end
+
+    it 'should error if the scraper already exists on GitHub' do
+      Morph::Github.stub(:in_public_use?).and_return(true)
+      post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
+      assigns(:scraper).errors[:name].should == ['is already taken on GitHub']
     end
   end
 end
