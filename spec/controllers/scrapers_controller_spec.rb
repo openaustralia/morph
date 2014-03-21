@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe ScrapersController do
-  describe "#destroy" do
-    let(:user) { User.create(nickname: "mlandauer") }
-    let(:organization) do
-      o = Organization.create(nickname: "org")
-      o.users << user
-      o
-    end
+  let(:user) { create(:user, nickname: "mlandauer") }
+  let(:organization) do
+    o = create(:organization, nickname: "org")
+    o.users << user
+    o
+  end
 
+  describe "#destroy" do
     context "not signed in" do
       it "should not allow you to delete a scraper" do
-        scraper = Scraper.create(owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
+        create(:scraper, owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
         delete :destroy, id: "mlandauer/a_scraper"
         Scraper.count.should == 1
       end
