@@ -98,5 +98,16 @@ describe ScrapersController do
       post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
       assigns(:scraper).errors[:name].should == ['is already taken on GitHub']
     end
+
+    it "should error if the scraper doesn't exist on ScraperWiki" do
+      scraperwiki_double = double("Morph::Scraperwiki", exists?: false, private_scraper?: false, view?: false)
+      Morph::Scraperwiki.should_receive(:new).and_return(scraperwiki_double)
+
+      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
+      end
+
+      assigns(:scraper).errors[:scraperwiki_shortname].should == ["doesn't exist on ScraperWiki"]
+    end
   end
 end
