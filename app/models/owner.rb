@@ -75,7 +75,7 @@ class Owner < ActiveRecord::Base
     if url =~ /^https:\/\/(identicons.github.com|avatars.githubusercontent.com)/
       # Can't seem to change the size for the github images
       url
-    else
+    elsif url
       url + "&s=#{size}"
     end
   end
