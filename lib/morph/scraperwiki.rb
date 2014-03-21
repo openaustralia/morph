@@ -33,7 +33,7 @@ module Morph
     end
 
     def exists?
-      !short_name.nil? && !!info
+      !short_name.blank? && !!info
     end
 
     def view?
