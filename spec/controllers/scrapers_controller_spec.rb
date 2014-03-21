@@ -11,7 +11,9 @@ describe ScrapersController do
   describe "#destroy" do
     context "not signed in" do
       it "should not allow you to delete a scraper" do
-        create(:scraper, owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
+        VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+          create(:scraper, owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
+        end
         delete :destroy, id: "mlandauer/a_scraper"
         Scraper.count.should == 1
       end
@@ -24,7 +26,9 @@ describe ScrapersController do
 
       context "you own the scraper" do
         before :each do
-          Scraper.create(owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
+          VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+            Scraper.create(owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
+          end
         end
 
         it "should allow you to delete the scraper" do
@@ -40,7 +44,9 @@ describe ScrapersController do
 
       context "an organisation you're part of owns the scraper" do
         before :each do
-          Scraper.create(owner: organization, name: "a_scraper", full_name: "org/a_scraper")
+          VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+            Scraper.create(owner: organization, name: "a_scraper", full_name: "org/a_scraper")
+          end
         end
 
         it "should allow you to delete a scraper if it's owner by an organisation you're part of" do
@@ -56,14 +62,18 @@ describe ScrapersController do
 
       it "should not allow you to delete a scraper if you don't own the scraper" do
         other_user = User.create(nickname: "otheruser")
-        scraper = Scraper.create(owner: other_user, name: "a_scraper", full_name: "otheruser/a_scraper")
+        VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+          scraper = Scraper.create(owner: other_user, name: "a_scraper", full_name: "otheruser/a_scraper")
+        end
         delete :destroy, id: "otheruser/a_scraper"
         Scraper.count.should == 1
       end
 
       it "should not allow you to delete a scraper if it's owner is an organisation your're not part of" do
         other_organisation = Organization.create(nickname: "otherorg")
-        scraper = Scraper.create(owner: other_organisation, name: "a_scraper", full_name: "otherorg/a_scraper")
+        VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+          scraper = Scraper.create(owner: other_organisation, name: "a_scraper", full_name: "otherorg/a_scraper")
+        end
         delete :destroy, id: "otherorg/a_scraper"
         Scraper.count.should == 1
       end
@@ -76,8 +86,10 @@ describe ScrapersController do
     end
 
     it 'should error if the scraper already exists on Morph' do
-      create :scraper, full_name: "#{user.nickname}/my_scraper"
-      post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
+      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        create :scraper, full_name: "#{user.nickname}/my_scraper"
+        post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
+      end
       assigns(:scraper).errors[:name].should == ['is already taken on Morph']
     end
 

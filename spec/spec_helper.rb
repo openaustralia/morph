@@ -54,7 +54,7 @@ RSpec.configure do |config|
   config.before(:suite) do
     begin
       DatabaseCleaner.start
-      FactoryGirl.lint
+      VCR.use_cassette('scraper_validations') { FactoryGirl.lint }
     ensure
       DatabaseCleaner.clean
     end
