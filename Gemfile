@@ -82,6 +82,10 @@ end
 
 group :test do
   gem 'simplecov', :require => false
+  gem 'factory_girl_rails', '~> 4.0'
+  gem 'database_cleaner'
+  gem 'vcr'
+  gem 'webmock'
 end
 
 # For our javascript runtime on production we don't want to use therubyracer because it uses too
