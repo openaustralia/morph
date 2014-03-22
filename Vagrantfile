@@ -140,6 +140,10 @@ Vagrant.configure("2") do |config|
     local.vm.network :forwarded_port, guest: 4443, host: 4443
     local.vm.synced_folder ".", "/vagrant", disabled: true
 
+    local.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+    end
+
     local.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/playbook.yml"
       ansible.extra_vars = { server_name: "dev.morph.io", env_file: "env.local.secure", backups: false,
