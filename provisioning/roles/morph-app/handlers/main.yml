@@ -1,6 +1,6 @@
 ---
-- name: Restart Apache
-  service: name=apache2 state=restarted
+# - name: Restart Apache
+#   service: name=apache2 state=restarted
 - name: restart nginx
   service: name=nginx state=restarted
 - name: Update timezone
