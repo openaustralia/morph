@@ -2,5 +2,7 @@
   group: name=deploy gid=4243 
 - name: Ensure we have a deploy user with uid 4243
   user: name=deploy comment="Deploy user" shell=/bin/bash uid=4243 group=deploy
-- name: Ensure that mlandauer can ssh as deploy user
-  authorized_key: user=deploy key="{{ lookup('file', '/Users/matthew/.ssh/id_rsa.pub') }}"
+- name: Ensure that administrators can ssh as deploy user
+  authorized_key: user=deploy key="{{ lookup('file', item) }}"
+  with_fileglob:
+    - ../public_keys/*.pub
