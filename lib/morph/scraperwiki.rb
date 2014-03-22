@@ -8,7 +8,7 @@ module Morph
 
     def sqlite_database
       if @sqlite_database.nil?
-        content = Morph::Scraperwiki.content("https://classic.scraperwiki.com/scrapers/export_sqlite/#{short_name}/")
+        content = Morph::Scraperwiki.content("https://classic.scraperwiki.com/scrapers/export_sqlite/#{short_name}.sqlite")
         raise content if content =~ /The dataproxy connection timed out, please retry/
         @sqlite_database = content
       end
@@ -17,7 +17,7 @@ module Morph
 
     def info
       if @info.nil?
-        url = "https://api.scraperwiki.com/api/1.0/scraper/getinfo?format=jsondict&name=#{short_name}&version=-1&quietfields=runevents%7Chistory%7Cdatasummary%7Cuserroles"
+        url = "https://classic.scraperwiki.com/scrapers/#{short_name}/info"
         v = JSON.parse(Morph::Scraperwiki.content(url))
         if v.kind_of?(Hash) && v["error"] == "Sorry, this scraper does not exist"
           @info = nil
@@ -33,7 +33,7 @@ module Morph
     end
 
     def exists?
-      !!info
+      !short_name.blank? && !!info
     end
 
     def view?
@@ -41,7 +41,7 @@ module Morph
     end
 
     def private_scraper?
-      info && info.has_key?("error") && info["error"] == "Invalid API Key"
+      exists? && info && info.has_key?("error") && info["error"] == "Invalid API Key"
     end
 
     def code
@@ -57,7 +57,7 @@ module Morph
     end
 
     def language
-      if info && info.has_key?("language")
+      if exists? && info && info.has_key?("language")
         info["language"].to_sym
       end
     end

@@ -82,11 +82,13 @@ VBOX_SCRIPT
 
 
 Vagrant.configure("2") do |config|
-  # Note that this is a configuration for two different VMs
-  # server: A deployed server
+  # Note that this is a configuration for different VMs
+  # production2: The current live server
+  # production: A defunct production server
+  # local: A local machine that mimics a production deployment
   # dev: A VM that has docker on it - used for development on OS X
 
-  # Both VMs are based on Ubuntu Precise 64 bit
+  # All VMs are based on Ubuntu Precise 64 bit
   config.vm.box = "ubuntu"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
