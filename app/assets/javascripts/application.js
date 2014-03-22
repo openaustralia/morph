@@ -23,4 +23,3 @@
 //= require static
 //= require users
 //= require sync
-//= require_tree .
