@@ -1,5 +1,5 @@
 %h1 All Scrapers
 
 = paginate @scrapers
-= render @scrapers
+= render partial: "sync/scrapers/scraper", collection: @scrapers
 = paginate @scrapers
