@@ -17,6 +17,9 @@
 - name: untar redis
   command: tar zxf /tmp/redis-stable.tar.gz -C /tmp
 
+- name: ensure redis is clean before we build it
+  command: make -C /tmp/redis-stable distclean
+
 - name: build redis and install
   command: make -C /tmp/redis-stable install
 
