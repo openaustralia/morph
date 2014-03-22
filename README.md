@@ -78,7 +78,24 @@ By default in development mails are sent to [Mailcatcher](http://mailcatcher.me/
 
 This section will not be relevant to most people. It will however be relevant if you're deploying to a production server.
 
-We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt certain files, like the private key for the SSL certificate. To make this work you have to do some [special things](https://github.com/shadowhand/git-encrypt#decrypting-clones) _before_ you clone the morph repository. 
+#### git-encrypt
+
+We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt certain files, like the private key for the SSL certificate. To make this work you have to do some [special things](https://github.com/shadowhand/git-encrypt#decrypting-clones) _before_ you clone the morph repository.
+
+#### Production devops development
+
+Install [Vagrant](http://www.vagrantup.com/) and [Ansible](http://www.ansible.com/) and run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io` (which you'll need to add to your `/etc/hosts` file).
+
+To access that box you need to forward HTTP and HTTPS privileged ports.
+
+**OS X**: There's a script to do this via the firewall `./local_port_forward_os_x.sh`.
+
+**Linux**: On Linux the quickest way is to install the `redir` utility (`sudo aptitude install redir`) and then run these commands in separate terminals:
+
+    sudo redir --lport 80 --cport 8000
+    sudo redir --lport 443 --cport 8001
+
+Now visit https://dev.morph.io/
 
 ### Running tests
 
