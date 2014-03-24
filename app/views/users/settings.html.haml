@@ -1,7 +1,8 @@
-%h1 Your special key is #{@user.api_key}
+.container
+  %h1 Your special key is #{@user.api_key}
 
-%p You will need this if you use the Morph command line client
+  %p You will need this if you use the Morph command line client
 
-%p This key is just for you. Don't give it to anyone else.
+  %p This key is just for you. Don't give it to anyone else.
 
-= button_to "Reset key", user_reset_key_path, class: "btn btn-danger"
+  = button_to "Reset key", user_reset_key_path, class: "btn btn-danger"

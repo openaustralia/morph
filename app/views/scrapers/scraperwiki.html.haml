@@ -1,41 +1,42 @@
-- if @name_set
-  %h1 Fork ScraperWiki scraper #{@scraper.scraperwiki_shortname}
+.container
+  - if @name_set
+    %h1 Fork ScraperWiki scraper #{@scraper.scraperwiki_shortname}
 
-  %p Choose a name for the scraper on GitHub
-- else
-  %h1 Fork ScraperWiki scraper
+    %p Choose a name for the scraper on GitHub
+  - else
+    %h1 Fork ScraperWiki scraper
 
-  %p This is where you can pick a ScraperWiki scraper, optionally choose a name for it on GitHub and fork away!
+    %p This is where you can pick a ScraperWiki scraper, optionally choose a name for it on GitHub and fork away!
 
-  %p
-    = link_to "Browse and Search", "https://classic.scraperwiki.com/browse/", target: "_blank"
-    for a scraper on ScraperWiki Classic that you want to fork. Then paste the name of the scraper below.
+    %p
+      = link_to "Browse and Search", "https://classic.scraperwiki.com/browse/", target: "_blank"
+      for a scraper on ScraperWiki Classic that you want to fork. Then paste the name of the scraper below.
 
-= semantic_form_for @scraper, url: scraperwiki_scrapers_path do |f|
-  = f.inputs do
-    .row
-      .col-sm-8
-        - if @name_set
-          = f.hidden_field :scraperwiki_shortname
-        - else
-          .string.input.optional.stringish.form-group#scraper_scraperwiki_shortname_input{class: ("error has-error" unless @scraper.errors[:scraperwiki_shortname].empty?)}
-            %label.control-label(for="scraper_scraperwiki_shortname") Name of ScraperWiki scraper
-            %input.form-control#scraper_scraperwiki_shortname{maxlength: "255", name:"scraper[scraperwiki_shortname]", placeholder:"city_of_sydney_development_applications", type:"text", value:"#{@scraper.scraperwiki_shortname}", class:("error" unless @scraper.errors[:scraperwiki_shortname].empty?)}
-            - @scraper.errors.full_messages_for(:scraperwiki_shortname).each do |m|
+  = semantic_form_for @scraper, url: scraperwiki_scrapers_path do |f|
+    = f.inputs do
+      .row
+        .col-sm-8
+          - if @name_set
+            = f.hidden_field :scraperwiki_shortname
+          - else
+            .string.input.optional.stringish.form-group#scraper_scraperwiki_shortname_input{class: ("error has-error" unless @scraper.errors[:scraperwiki_shortname].empty?)}
+              %label.control-label(for="scraper_scraperwiki_shortname") Name of ScraperWiki scraper
+              %input.form-control#scraper_scraperwiki_shortname{maxlength: "255", name:"scraper[scraperwiki_shortname]", placeholder:"city_of_sydney_development_applications", type:"text", value:"#{@scraper.scraperwiki_shortname}", class:("error" unless @scraper.errors[:scraperwiki_shortname].empty?)}
+              - @scraper.errors.full_messages_for(:scraperwiki_shortname).each do |m|
+                .alert.alert-warning= m
+              %span.help-block The name (as it's shown in a url) of the ScraperWiki Classic scraper that you want to fork
+      .row
+        .col-sm-2
+          = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.id]}, include_blank: false
+        .col-sm-6
+          .string.input.optional.stringish.form-group#scraper_name_input{class: ("error has-error" unless @scraper.errors[:name].empty?)}
+            %label.control-label(for="scraper_name") Name
+            .input-group
+              %span.input-group-addon /
+              %input.form-control#scraper_name{maxlength: "255", name:"scraper[name]", placeholder:"city_of_sydney_development_applications", type:"text", value:"#{@scraper.name}", class:("error" unless @scraper.errors[:name].empty?)}
+            - @scraper.errors.full_messages_for(:name).each do |m|
               .alert.alert-warning= m
-            %span.help-block The name (as it's shown in a url) of the ScraperWiki Classic scraper that you want to fork
-    .row
-      .col-sm-2
-        = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.id]}, include_blank: false
-      .col-sm-6
-        .string.input.optional.stringish.form-group#scraper_name_input{class: ("error has-error" unless @scraper.errors[:name].empty?)}
-          %label.control-label(for="scraper_name") Name
-          .input-group
-            %span.input-group-addon /
-            %input.form-control#scraper_name{maxlength: "255", name:"scraper[name]", placeholder:"city_of_sydney_development_applications", type:"text", value:"#{@scraper.name}", class:("error" unless @scraper.errors[:name].empty?)}
-          - @scraper.errors.full_messages_for(:name).each do |m|
-            .alert.alert-warning= m
-          %span.help-block Name to give the scraper here and on GitHub
+            %span.help-block Name to give the scraper here and on GitHub
 
-  = f.actions do
-    = f.action :submit, label: "Fork ScraperWiki scraper"
+    = f.actions do
+      = f.action :submit, label: "Fork ScraperWiki scraper"

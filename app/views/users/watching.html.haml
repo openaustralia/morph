@@ -1,51 +1,52 @@
-- if @user == current_user
-  %h1 Scrapers watched by you
-- else
-  %h1 Scrapers watched by #{@user.nickname}
-
-%p
-  For scrapers in this list that are set to run automatically, if any error then
+.container
   - if @user == current_user
-    you
+    %h1 Scrapers watched by you
   - else
-    = @user.nickname
-  will receive an email alert at most once per day.
-  This makes it very easy to fix any problems quickly.
+    %h1 Scrapers watched by #{@user.nickname}
 
-- unless @user.scrapers_watched.empty?
-  %h2 Individual scrapers
-  .list-group
-    - @user.scrapers_watched.each do |scraper|
-      .row
-        .col-md-11= render partial: "sync/scrapers/scraper", locals: {scraper: scraper}
-        .col-md-1
-          - if @user == current_user
-            = render partial: "scrapers/watch_button", locals: {scraper: scraper}
+  %p
+    For scrapers in this list that are set to run automatically, if any error then
+    - if @user == current_user
+      you
+    - else
+      = @user.nickname
+    will receive an email alert at most once per day.
+    This makes it very easy to fix any problems quickly.
 
-- @user.users_watched.each do |user|
-  .row
-    .col-md-11
-      %h2= link_to user.nickname, user
-    .col-md-1
-      - if @user == current_user
-        .button_title_adjust= render partial: "owners/watch_button", locals: {owner: user}
-  .row
-    .col-md-11
-      - if user.scrapers.empty?
-        %p Has no scrapers
-      - else
-        .list-group= render partial: "sync/scrapers/scraper", collection: user.scrapers
+  - unless @user.scrapers_watched.empty?
+    %h2 Individual scrapers
+    .list-group
+      - @user.scrapers_watched.each do |scraper|
+        .row
+          .col-md-11= render partial: "sync/scrapers/scraper", locals: {scraper: scraper}
+          .col-md-1
+            - if @user == current_user
+              = render partial: "scrapers/watch_button", locals: {scraper: scraper}
 
-- @user.organizations_watched.each do |organization|
-  .row
-    .col-md-11
-      %h2= link_to organization.nickname, organization
-    .col-md-1
-      - if @user == current_user
-        .button_title_adjust= render partial: "owners/watch_button", locals: {owner: organization}
-  .row
-    .col-md-11
-      - if organization.scrapers.empty?
-        %p Has no scrapers
-      - else
-        .list-group= render partial: "sync/scrapers/scraper", collection: organization.scrapers
+  - @user.users_watched.each do |user|
+    .row
+      .col-md-11
+        %h2= link_to user.nickname, user
+      .col-md-1
+        - if @user == current_user
+          .button_title_adjust= render partial: "owners/watch_button", locals: {owner: user}
+    .row
+      .col-md-11
+        - if user.scrapers.empty?
+          %p Has no scrapers
+        - else
+          .list-group= render partial: "sync/scrapers/scraper", collection: user.scrapers
+
+  - @user.organizations_watched.each do |organization|
+    .row
+      .col-md-11
+        %h2= link_to organization.nickname, organization
+      .col-md-1
+        - if @user == current_user
+          .button_title_adjust= render partial: "owners/watch_button", locals: {owner: organization}
+    .row
+      .col-md-11
+        - if organization.scrapers.empty?
+          %p Has no scrapers
+        - else
+          .list-group= render partial: "sync/scrapers/scraper", collection: organization.scrapers

@@ -1,9 +1,11 @@
 - content_for :title, "Settings for #{@scraper.full_name}"
-%h1
-  Settings for
-  = full_name_with_links(@scraper)
 
-%p= link_to "Back to the scraper", @scraper
+.container
+  %h1
+    Settings for
+    = full_name_with_links(@scraper)
 
-= render "settings"
-= render "danger"
+  %p= link_to "Back to the scraper", @scraper
+
+  = render "settings"
+  = render "danger"

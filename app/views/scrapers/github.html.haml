@@ -1,20 +1,21 @@
-%h1 Add scraper from your Github repository
+.container
+  %h1 Add scraper from your Github repository
 
-:markdown
-  Scrapers can be written in Ruby, PHP or Python. For Ruby They need to have a file in the root
-  directory called `scraper.rb`, for PHP `scraper.php` and for Python `scraper.py`.
-  They should create an sqlite database in the current working directory called `#{Morph::Database.sqlite_db_filename}`.
-  The main data should be written into a table called `#{Morph::Database.sqlite_table_name}`.
-  The code needs to live in the master branch of the repository.
+  :markdown
+    Scrapers can be written in Ruby, PHP or Python. For Ruby They need to have a file in the root
+    directory called `scraper.rb`, for PHP `scraper.php` and for Python `scraper.py`.
+    They should create an sqlite database in the current working directory called `#{Morph::Database.sqlite_db_filename}`.
+    The main data should be written into a table called `#{Morph::Database.sqlite_table_name}`.
+    The code needs to live in the master branch of the repository.
 
--# TODO Don't show repos that we've already added
+  -# TODO Don't show repos that we've already added
 
-#github_form
-  %h3
-    %i.icon-github.icon-2x.icon-spin
-    Hang on. Getting your repositories from GitHub&hellip;
+  #github_form
+    %h3
+      %i.icon-github.icon-2x.icon-spin
+      Hang on. Getting your repositories from GitHub&hellip;
 
-:javascript
-  $(document).ready(function(){
-    $("#github_form").load("#{github_form_scrapers_path}")
-  });
+  :javascript
+    $(document).ready(function(){
+      $("#github_form").load("#{github_form_scrapers_path}")
+    });

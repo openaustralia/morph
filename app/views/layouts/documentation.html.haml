@@ -1,11 +1,12 @@
 - content_for :content do
-  %h1 Documentation
-  %hr
-  .row
-    .col-md-2
-      %ul.nav.nav-pills.nav-stacked#sidebar
-        %li{class: ("active" if current_page?(documentation_index_path))}= link_to "Main documentation", documentation_index_path
-        %li{class: ("active" if current_page?(api_documentation_index_path))}= link_to "How to use the API", api_documentation_index_path
-    .col-md-10
-      = yield
+  .container
+    %h1 Documentation
+    %hr
+    .row
+      .col-md-2
+        %ul.nav.nav-pills.nav-stacked#sidebar
+          %li{class: ("active" if current_page?(documentation_index_path))}= link_to "Main documentation", documentation_index_path
+          %li{class: ("active" if current_page?(api_documentation_index_path))}= link_to "How to use the API", api_documentation_index_path
+      .col-md-10
+        = yield
 = render template: "layouts/application"

@@ -1,88 +1,89 @@
 - content_for :title, @owner.nickname
-.row
-  .col-md-11
-    - if @owner.name
-      %h1= @owner.name
-      %h4= @owner.nickname
-    - else
-      %h1= @owner.nickname
-  .col-md-1
-    - if signed_in?
-      .button_title_adjust= render partial: "watch_button", locals: {owner: @owner}
-%hr
-.row
-  .col-md-3
-    = image_tag @owner.gravatar_url, class: "img-responsive img-thumbnail"
-    %ul.list-unstyled
-      - unless @owner.company.blank?
-        %li= @owner.company
-      - unless @owner.blog.blank?
-        %li= link_to @owner.blog, @owner.blog
-    %p
-      = link_to @owner.github_url, target: "_blank" do
-        %i.icon-github-sign.icon-large
-        = @owner.nickname
-        on GitHub
-    - unless @owner.organizations.empty?
-      %h4 Organizations
+.container
+  .row
+    .col-md-11
+      - if @owner.name
+        %h1= @owner.name
+        %h4= @owner.nickname
+      - else
+        %h1= @owner.nickname
+    .col-md-1
+      - if signed_in?
+        .button_title_adjust= render partial: "watch_button", locals: {owner: @owner}
+  %hr
+  .row
+    .col-md-3
+      = image_tag @owner.gravatar_url, class: "img-responsive img-thumbnail"
+      %ul.list-unstyled
+        - unless @owner.company.blank?
+          %li= @owner.company
+        - unless @owner.blog.blank?
+          %li= link_to @owner.blog, @owner.blog
       %p
-        - @owner.organizations.each do |org|
-          = link_to org do
-            = image_tag org.gravatar_url(30), size: "30x30", class: "has-tooltip", data: {placement: "bottom", title: org.nickname}
-    - unless @owner.users.empty?
-      %h4 Members
-      %p
-        - @owner.users.each do |user|
-          = link_to user do
-            = image_tag user.gravatar_url(30), size: "30x30", class: "has-tooltip", data: {placement: "bottom", title: user.nickname}
-    - if @owner == current_user
-      %div
-        = button_link_to "Show your key", user_settings_path
-    %hr
-    %h3 Statistics
-    - if @owner.user?
-      %p
-        Watching:
-        - if @owner.alerts.empty?
-          no scrapers
-        - else
-          = link_to "#{pluralize(@owner.all_scrapers_watched.count, 'scrapers')}", user_watching_path(@owner)
-    - unless @scrapers.empty?
-      %p
-        Total run time used:
-        = duration_of_time_in_words(@owner.wall_time)
-      %p
-        Total cpu time used:
-        = duration_of_time_in_words(@owner.cpu_time)
-      %p
-        Total disk space used:
-        = number_to_human_size(@owner.total_disk_usage)
+        = link_to @owner.github_url, target: "_blank" do
+          %i.icon-github-sign.icon-large
+          = @owner.nickname
+          on GitHub
+      - unless @owner.organizations.empty?
+        %h4 Organizations
+        %p
+          - @owner.organizations.each do |org|
+            = link_to org do
+              = image_tag org.gravatar_url(30), size: "30x30", class: "has-tooltip", data: {placement: "bottom", title: org.nickname}
+      - unless @owner.users.empty?
+        %h4 Members
+        %p
+          - @owner.users.each do |user|
+            = link_to user do
+              = image_tag user.gravatar_url(30), size: "30x30", class: "has-tooltip", data: {placement: "bottom", title: user.nickname}
+      - if @owner == current_user
+        %div
+          = button_link_to "Show your key", user_settings_path
+      %hr
+      %h3 Statistics
+      - if @owner.user?
+        %p
+          Watching:
+          - if @owner.alerts.empty?
+            no scrapers
+          - else
+            = link_to "#{pluralize(@owner.all_scrapers_watched.count, 'scrapers')}", user_watching_path(@owner)
+      - unless @scrapers.empty?
+        %p
+          Total run time used:
+          = duration_of_time_in_words(@owner.wall_time)
+        %p
+          Total cpu time used:
+          = duration_of_time_in_words(@owner.cpu_time)
+        %p
+          Total disk space used:
+          = number_to_human_size(@owner.total_disk_usage)
 
-  .col-md-9
+    .col-md-9
 
-    - if @scrapers.empty?
-      %h3 Has no scrapers
+      - if @scrapers.empty?
+        %h3 Has no scrapers
 
-    - else
-      %h3= pluralize(@scrapers.count, "scraper")
-      .list-group= sync partial: "scraper", collection: @running_scrapers
-      .list-group= sync partial: "scraper", collection: @erroring_scrapers
-      .list-group= sync partial: "scraper", collection: @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
+      - else
+        %h3= pluralize(@scrapers.count, "scraper")
+        .list-group= sync partial: "scraper", collection: @running_scrapers
+        .list-group= sync partial: "scraper", collection: @erroring_scrapers
+        .list-group= sync partial: "scraper", collection: @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
 
-    - if @owner == current_user
-      .btn-group
-        = button_link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
-          Add Scraper
-          %b.caret
-        %ul.dropdown-menu
-          %li= link_to "New scraper", new_scraper_path
-          %li.divider
-          %li= link_to "Add scraper from GitHub", github_new_scraper_path
-          %li= link_to "Fork scraper from ScraperWiki", scraperwiki_new_scraper_path
+      - if @owner == current_user
+        .btn-group
+          = button_link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
+            Add Scraper
+            %b.caret
+          %ul.dropdown-menu
+            %li= link_to "New scraper", new_scraper_path
+            %li.divider
+            %li= link_to "Add scraper from GitHub", github_new_scraper_path
+            %li= link_to "Fork scraper from ScraperWiki", scraperwiki_new_scraper_path
 
-    - if @owner.user? && !@owner.other_scrapers_contributed_to.empty?
-      %h3
-        Contributed to
-        = pluralize(@owner.other_scrapers_contributed_to.count, "scraper")
-      .list-group= sync partial: "scraper", collection: @owner.other_scrapers_contributed_to
-  .col-md-1
+      - if @owner.user? && !@owner.other_scrapers_contributed_to.empty?
+        %h3
+          Contributed to
+          = pluralize(@owner.other_scrapers_contributed_to.count, "scraper")
+        .list-group= sync partial: "scraper", collection: @owner.other_scrapers_contributed_to
+    .col-md-1

@@ -1,3 +1,4 @@
 - content_for :title, @scraper.full_name
 
-= sync partial: "show_partial", resource: @scraper, refetch: true
+.container
+  = sync partial: "show_partial", resource: @scraper, refetch: true
