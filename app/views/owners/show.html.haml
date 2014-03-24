@@ -45,7 +45,7 @@
             = button_link_to "Show your key", user_settings_path
       .col-md-2
         - if signed_in?
-          .button_title_adjust= render partial: "watch_button", locals: {owner: @owner}
+          .pull-right= render partial: "watch_button", locals: {owner: @owner}
 
 .container
   - if @scrapers.empty?
