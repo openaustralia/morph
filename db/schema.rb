@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 20140312045946) do
   end
 
   create_table "scrapers", force: true do |t|
-    t.string   "name",                              null: false
+    t.string   "name",              default: "",    null: false
     t.string   "description"
     t.integer  "github_id"
     t.integer  "owner_id",                          null: false
