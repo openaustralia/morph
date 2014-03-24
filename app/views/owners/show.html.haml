@@ -1,8 +1,11 @@
 - content_for :title, @owner.nickname
 .row
   .col-md-11
-    %h1= @owner.nickname
-    %h4= @owner.name
+    - if @owner.name
+      %h1= @owner.name
+      %h4= @owner.nickname
+    - else
+      %h1= @owner.nickname
   .col-md-1
     - if signed_in?
       .button_title_adjust= render partial: "watch_button", locals: {owner: @owner}
