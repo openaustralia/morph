@@ -4,9 +4,9 @@
     .row
       .col-md-3
         - if @owner.user?
-          = image_tag @owner.gravatar_url, class: "img-responsive img-circle"
+          = image_tag @owner.gravatar_url, class: "img-circle", size: "213x213"
         - else
-          = image_tag @owner.gravatar_url, class: "img-responsive img-thumbnail"
+          = image_tag @owner.gravatar_url, class: "img-thumbnail", size: "213x213"
 
       .col-md-7
         - if @owner.name
