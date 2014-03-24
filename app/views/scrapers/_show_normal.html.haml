@@ -32,7 +32,7 @@
         Contributors
         - scraper.contributors.each do |contributor|
           = link_to contributor do
-            = image_tag contributor.gravatar_url(20), size: "20x20", class: "has-tooltip", data: {placement: "bottom", title: contributor.nickname}
+            = image_tag contributor.gravatar_url(30), size: "30x30", class: "has-tooltip img-circle", data: {placement: "bottom", title: contributor.nickname}
 
     = render partial: "scrapers/status", locals: {scraper: scraper}
     = render partial: "scrapers/console", locals: {scraper: scraper}

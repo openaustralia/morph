@@ -2,7 +2,11 @@
 .container
   .row
     .col-md-3
-      = image_tag @owner.gravatar_url, class: "img-responsive img-thumbnail"
+      - if @owner.user?
+        = image_tag @owner.gravatar_url, class: "img-responsive img-circle"
+      - else
+        = image_tag @owner.gravatar_url, class: "img-responsive img-thumbnail"
+
     .col-md-7
       - if @owner.name
         %h1= @owner.name
@@ -34,7 +38,7 @@
             %p
               - @owner.users.each do |user|
                 = link_to user do
-                  = image_tag user.gravatar_url(30), size: "30x30", class: "has-tooltip", data: {placement: "bottom", title: user.nickname}
+                  = image_tag user.gravatar_url(30), size: "30x30", class: "has-tooltip img-circle", data: {placement: "bottom", title: user.nickname}
       - if @owner == current_user
         %div
           = button_link_to "Show your key", user_settings_path

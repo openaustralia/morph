@@ -9,7 +9,7 @@
       %ul.list-unstyled
         - User.all.order(created_at: :desc).limit(10).each do |user|
           %li
-            = image_tag user.gravatar_url(20), width: 20
+            = image_tag user.gravatar_url(20), width: 20, class: "img-circle"
             = link_to user.nickname, user
             - if user.name
               &mdash;
