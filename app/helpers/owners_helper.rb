@@ -6,7 +6,9 @@ module OwnersHelper
     end
     if show_tooltip
       options[:class] += " has-tooltip"
-      options[:data] = {placement: "bottom", title: owner.nickname}
+      # Trying container: 'body' as a workaround for a bug where gravatars move when
+      # tooltips are activated
+      options[:data] = {placement: "bottom", title: owner.nickname, container: 'body'}
     end
     image_tag owner.gravatar_url(size), options
   end
