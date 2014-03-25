@@ -162,6 +162,9 @@ class ScrapersController < ApplicationController
     query = params[:query] || scraper.database.select_all
 
     # Check authentication
+    request.headers.each do |k,v|
+      logger.info("headers: #{k}=#{v}")
+    end
     api_key = request.headers["HTTP_X_API_KEY"]
     if api_key.nil?
       authenticate_user!
