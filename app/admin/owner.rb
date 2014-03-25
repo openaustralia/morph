@@ -3,6 +3,7 @@ ActiveAdmin.register Owner do
 
   index do
     column :gravatar do |owner|
+      # Can't style the images using bootstrap because we're in the admin interface
       image_tag owner.gravatar_url, size: "50x50"
     end
     column :type

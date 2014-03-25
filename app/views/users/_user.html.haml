@@ -1,7 +1,7 @@
 = link_to user, class: "list-group-item" do
   .row
     .col-md-2
-      = image_tag user.gravatar_url(80), size: "80x80", class: "img-circle"
+      = owner_image(user, 80, false)
     .col-md-7
       %div= user.nickname
       - if user.name

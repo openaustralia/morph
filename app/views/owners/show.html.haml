@@ -3,10 +3,7 @@
   .container
     .row
       .col-md-3.owner-box
-        - if @owner.user?
-          = image_tag @owner.gravatar_url, class: "img-circle", size: "213x213"
-        - else
-          = image_tag @owner.gravatar_url, class: "img-thumbnail", size: "213x213"
+        = owner_image(@owner, 213, false)
 
       .col-md-7.owner-box
         - if @owner.name
@@ -32,14 +29,12 @@
               %h4 Organizations
               %p
                 - @owner.organizations.each do |org|
-                  = link_to org do
-                    = image_tag org.gravatar_url(30), size: "30x30", class: "has-tooltip", data: {placement: "bottom", title: org.nickname}
+                  = link_to owner_image(org, 30), org
             - unless @owner.users.empty?
               %h4 Members
               %p
                 - @owner.users.each do |user|
-                  = link_to user do
-                    = image_tag user.gravatar_url(30), size: "30x30", class: "has-tooltip img-circle", data: {placement: "bottom", title: user.nickname}
+                  = link_to owner_image(user, 30), user
         - if @owner == current_user
           %div
             = button_link_to "Show your key", user_settings_path
