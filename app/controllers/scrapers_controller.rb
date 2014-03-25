@@ -187,14 +187,10 @@ class ScrapersController < ApplicationController
           bench = Benchmark.measure do
             send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite"
           end
-          size = scraper.database.sqlite_db_size
-          type = "database"
-          format = "sqlite"
-
-          ApiQuery.create!(query: params[:query], scraper_id: scraper.id,
-          owner_id: owner.id, utime: (bench.cutime + bench.utime), stime: (bench.cstime + bench.stime),
-          wall_time: bench.real, size: size, type: type, format: format)
+          ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
+            size: scraper.database.sqlite_db_size, type: "database", format: "sqlite")
         end
+
         format.json do
           size = nil
           bench = Benchmark.measure do
@@ -202,13 +198,10 @@ class ScrapersController < ApplicationController
             render :json => result, callback: params[:callback]
             size = result.to_json.size
           end
-          type = "sql"
-          format = "json"
-
-          ApiQuery.create!(query: params[:query], scraper_id: scraper.id,
-          owner_id: owner.id, utime: (bench.cutime + bench.utime), stime: (bench.cstime + bench.stime),
-          wall_time: bench.real, size: size, type: type, format: format)
+          ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
+            size: size, type: "sql", format: "json")
         end
+
         format.csv do
           size = nil
           bench = Benchmark.measure do
@@ -222,12 +215,8 @@ class ScrapersController < ApplicationController
             send_data csv_string, :filename => "#{scraper.name}.csv"
             size = csv_string.size
           end
-          type = "sql"
-          format = "csv"
-
-          ApiQuery.create!(query: params[:query], scraper_id: scraper.id,
-          owner_id: owner.id, utime: (bench.cutime + bench.utime), stime: (bench.cstime + bench.stime),
-          wall_time: bench.real, size: size, type: type, format: format)
+          ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
+            size: size, type: "sql", format: "csv")
         end
       end
 
