@@ -72,7 +72,7 @@
 %pre
   %code
     - if current_user
-      = curl_command(content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, current_user.api_key, class: "api_key"), content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
+      = curl_command(content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, CGI::escape(current_user.api_key), class: "api_key"), content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
     - else
       = curl_command(content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, "[api_key]", class: "api_key"), content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
 
@@ -89,7 +89,7 @@
     function update_api_key() {
       api_key = $("#owner").val();
       $("#api_key").html(api_key);
-      $("code span.api_key").html(api_key);
+      $("code span.api_key").html(encodeURIComponent(api_key));
     }
 
     function update_format() {
