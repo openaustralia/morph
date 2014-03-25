@@ -167,6 +167,7 @@ class ScrapersController < ApplicationController
     if api_key.nil?
       authenticate_user!
       # TODO Log usage against current_user
+      owner = current_user
     else
       owner = Owner.find_by_api_key(api_key)
       if owner.nil?
@@ -180,24 +181,56 @@ class ScrapersController < ApplicationController
       # TODO Log usage against owner
     end
 
-    if params[:query]
-      result = scraper.database.sql_query(params[:query])
-    end
-
     begin
       respond_to do |format|
-        format.sqlite { send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite" }
-        format.json { render :json => result, callback: params[:callback] }
-        format.csv do
-          csv_string = CSV.generate do |csv|
-            csv << result.first.keys unless result.empty?
-            result.each do |row|
-              csv << row.values
-            end
+        format.sqlite do
+          bench = Benchmark.measure do
+            send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite"
           end
-          send_data csv_string, :filename => "#{scraper.name}.csv"
+          size = scraper.database.sqlite_db_size
+          type = "database"
+          format = "sqlite"
+
+          ApiQuery.create!(query: params[:query], scraper_id: scraper.id,
+          owner_id: owner.id, utime: (bench.cutime + bench.utime), stime: (bench.cstime + bench.stime),
+          wall_time: bench.real, size: size, type: type, format: format)
+        end
+        format.json do
+          size = nil
+          bench = Benchmark.measure do
+            result = scraper.database.sql_query(params[:query])
+            render :json => result, callback: params[:callback]
+            size = result.to_json.size
+          end
+          type = "sql"
+          format = "json"
+
+          ApiQuery.create!(query: params[:query], scraper_id: scraper.id,
+          owner_id: owner.id, utime: (bench.cutime + bench.utime), stime: (bench.cstime + bench.stime),
+          wall_time: bench.real, size: size, type: type, format: format)
+        end
+        format.csv do
+          size = nil
+          bench = Benchmark.measure do
+            result = scraper.database.sql_query(params[:query])
+            csv_string = CSV.generate do |csv|
+              csv << result.first.keys unless result.empty?
+              result.each do |row|
+                csv << row.values
+              end
+            end
+            send_data csv_string, :filename => "#{scraper.name}.csv"
+            size = csv_string.size
+          end
+          type = "sql"
+          format = "csv"
+
+          ApiQuery.create!(query: params[:query], scraper_id: scraper.id,
+          owner_id: owner.id, utime: (bench.cutime + bench.utime), stime: (bench.cstime + bench.stime),
+          wall_time: bench.real, size: size, type: type, format: format)
         end
       end
+
     rescue SQLite3::Exception => e
       respond_to do |format|
         format.json { render :json => {error: e.to_s} }
