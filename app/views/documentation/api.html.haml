@@ -5,13 +5,7 @@
 
 %pre
   %code
-    GET #{api_url_in_html(content_tag(:em, "[scraper]"), content_tag(:em, "[format]"), content_tag(:em, "[sql]"), "")}
-
-%p With a simple header for authentication
-
-%pre
-  %code
-    = api_header(content_tag(:em, "[api_key]"))
+    GET #{api_url_in_html(content_tag(:em, "[scraper]"), content_tag(:em, "[format]"), content_tag(:em, "[api_key]"), content_tag(:em, "[sql]"), "")}
 
 %h2 Parameters
 
@@ -73,7 +67,7 @@
 %pre
   %code
     - if current_user
-      = curl_command(content_tag(:span, current_user.api_key, class: "api_key"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
+      = curl_command(content_tag(:span, current_user.api_key, class: "api_key"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, current_user.api_key, class: "api_key"), content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
     - else
       = curl_command(content_tag(:em, "[api_key]"), content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
 
