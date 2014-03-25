@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140312045946) do
+ActiveRecord::Schema.define(version: 20140325184058) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -32,6 +32,20 @@ ActiveRecord::Schema.define(version: 20140312045946) do
     t.integer  "user_id"
     t.integer  "watch_id"
     t.string   "watch_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "api_queries", force: true do |t|
+    t.string   "type"
+    t.string   "query"
+    t.integer  "scraper_id"
+    t.integer  "owner_id"
+    t.float    "utime"
+    t.float    "stime"
+    t.float    "wall_time"
+    t.integer  "size"
+    t.string   "format"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
