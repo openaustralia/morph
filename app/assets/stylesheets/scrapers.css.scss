@@ -144,5 +144,11 @@ h1.full_name {
 }
 
 .log_line {
-  white-space: pre;  
+  white-space: pre;
+}
+
+.watch-button {
+  form, .badge {
+    display: inline-block;
+  }
 }
