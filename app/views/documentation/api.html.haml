@@ -1,4 +1,9 @@
 - content_for :title, "How to use the API"
+
+%div.alert.alert-info
+  Heads up! On Tuesday, 25 March the API changed. The api key is now given in the URL rather than the headers.
+  The original authentication method will still work but please change things at your end as soon as possible.
+
 %h1= yield :title
 
 %p The API allows you to programatically retrieve data from any public scraper using an SQL query. It's all pretty easy.
