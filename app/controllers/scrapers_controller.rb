@@ -1,5 +1,5 @@
 class ScrapersController < ApplicationController
-  before_filter :authenticate_user!, except: [:index, :show, :data]
+  before_filter :authenticate_user!, except: [:index, :show, :data, :watchers]
 
   def settings
     @scraper = Scraper.friendly.find(params[:id])
@@ -231,5 +231,9 @@ class ScrapersController < ApplicationController
     scraper = Scraper.friendly.find(params[:id])
     current_user.toggle_watch(scraper)
     redirect_to :back
+  end
+
+  def watchers
+    @scraper = Scraper.friendly.find(params[:id])
   end
 end

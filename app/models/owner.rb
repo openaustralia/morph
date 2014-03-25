@@ -7,6 +7,8 @@ class Owner < ActiveRecord::Base
   has_many :scrapers, inverse_of: :owner
   has_many :runs
   before_create :set_api_key
+  has_many :watches, class_name: "Alert", foreign_key: :watch_id
+  has_many :watchers, through: :watches, source: :user
 
   def name
     # If nickname and name are identical return nil

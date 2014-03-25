@@ -1,0 +1,25 @@
+.container
+  .row
+    .col-md-10
+      %h1.full_name
+        = full_name_with_links(@scraper)
+        .large-icon-box.pull-right
+          - if @scraper.can_write?(current_user)
+            = link_to scraper_settings_path(@scraper) do
+              = render partial: "scrapers/auto_clock", locals: {scraper: @scraper}
+          - else
+            = render partial: "scrapers/auto_clock", locals: {scraper: @scraper}
+        .large-icon-box.pull-right
+          = render partial: "scrapers/running_indicator", locals: {scraper: @scraper}
+        %h4= @scraper.description
+    .col-md-2
+      - if signed_in?
+        .button_title_adjust= render partial: "scrapers/watch_button", locals: {scraper: @scraper}
+  %hr
+
+  - if @scraper.all_watchers.empty?
+    %h3 Has no watchers
+  - else
+    %h3 Watchers
+
+    = render @scraper.all_watchers

@@ -10,6 +10,8 @@ class Scraper < ActiveRecord::Base
   has_many :metrics, through: :runs
   has_many :contributors, through: :contributions, source: :user
   has_many :contributions
+  has_many :watches, class_name: "Alert", foreign_key: :watch_id
+  has_many :watchers, through: :watches, source: :user
 
   has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 
@@ -26,6 +28,10 @@ class Scraper < ActiveRecord::Base
   friendly_id :full_name
 
   delegate :queued?, :running?, to: :last_run, allow_nil: true
+
+  def all_watchers
+    (watchers + owner.watchers).uniq
+  end
 
   # Given a scraper name on github populates the fields for a morph scraper but doesn't save it
   def self.new_from_github(full_name)
