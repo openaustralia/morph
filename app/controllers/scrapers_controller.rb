@@ -165,7 +165,9 @@ class ScrapersController < ApplicationController
     request.headers.each do |k,v|
       logger.info("headers: #{k}=#{v}")
     end
-    api_key = request.headers["HTTP_X_API_KEY"]
+    # We're still allowing authentication via header so that old users
+    # of the api don't have to change anything
+    api_key = request.headers["HTTP_X_API_KEY"] || params[:key]
     if api_key.nil?
       authenticate_user!
       # TODO Log usage against current_user
