@@ -180,15 +180,18 @@ class ScrapersController < ApplicationController
       # TODO Log usage against owner
     end
 
+    if params[:query]
+      result = scraper.database.sql_query(params[:query])
+    end
+
     begin
       respond_to do |format|
         format.sqlite { send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite" }
-        format.json { render :json => scraper.database.sql_query(params[:query]), callback: params[:callback] }
+        format.json { render :json => result, callback: params[:callback] }
         format.csv do
-          rows = scraper.database.sql_query(params[:query])
           csv_string = CSV.generate do |csv|
-            csv << rows.first.keys unless rows.empty?
-            rows.each do |row|
+            csv << result.first.keys unless result.empty?
+            result.each do |row|
               csv << row.values
             end
           end
