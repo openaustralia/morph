@@ -99,6 +99,20 @@ To access that box you need to forward HTTP and HTTPS privileged ports.
 
 Now visit https://dev.morph.io/
 
+#### Production provisioning and deployment
+
+To deploy Morph to production, normally you'll just want to deploy using Capistrano:
+
+    cap production deploy
+
+When you've changed the Ansible playbooks to modify the infrastructure you'll want to run:
+
+    ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
+
+And only if you're creating a _new production instance_, the first time you'll want to provision a new machine on Digital Ocean with:
+
+    vagrant up production2
+
 ### Running tests
 
 If you're running guard (see above) the tests will also automatically run when you change a file. By default it's setup to use [Zeus](https://github.com/burke/zeus) which speeds things up considerably. You'll need to install this with
