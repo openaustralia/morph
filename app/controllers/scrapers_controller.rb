@@ -166,7 +166,6 @@ class ScrapersController < ApplicationController
     api_key = request.headers["HTTP_X_API_KEY"] || params[:key]
     if api_key.nil?
       authenticate_user!
-      # TODO Log usage against current_user
       owner = current_user
     else
       owner = Owner.find_by_api_key(api_key)
@@ -178,7 +177,6 @@ class ScrapersController < ApplicationController
         end
         return
       end
-      # TODO Log usage against owner
     end
 
     begin
