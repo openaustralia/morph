@@ -16,7 +16,7 @@ ExceptionNotification.configure do |config|
 
   # Email notifier sends notifications by email.
   config.add_notifier :email, {
-    :email_prefix         => "[ERROR] ",
+    :email_prefix         => "[Morph ERROR] ",
     :sender_address       => %{"Notifier" <notifier@morph.io>},
     :exception_recipients => %w{web-administrators@openaustraliafoundation.org.au}
   }
