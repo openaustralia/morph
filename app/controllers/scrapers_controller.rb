@@ -159,7 +159,6 @@ class ScrapersController < ApplicationController
 
   def data
     scraper = Scraper.friendly.find(params[:id])
-    query = params[:query] || scraper.database.select_all
 
     # Check authentication
     # We're still allowing authentication via header so that old users
@@ -184,9 +183,9 @@ class ScrapersController < ApplicationController
     begin
       respond_to do |format|
         format.sqlite { send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite" }
-        format.json { render :json => scraper.database.sql_query(query), callback: params[:callback] }
+        format.json { render :json => scraper.database.sql_query(params[:query]), callback: params[:callback] }
         format.csv do
-          rows = scraper.database.sql_query(query)
+          rows = scraper.database.sql_query(params[:query])
           csv_string = CSV.generate do |csv|
             csv << rows.first.keys unless rows.empty?
             rows.each do |row|
