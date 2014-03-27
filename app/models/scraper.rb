@@ -121,7 +121,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def self.can_write?(user, owner)
-    user && (owner == user || user.organizations.include?(owner))
+    user && (owner == user || user.organizations.include?(owner) || user.admin?)
   end
 
   def can_write?(user)
