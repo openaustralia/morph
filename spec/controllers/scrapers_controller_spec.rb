@@ -139,5 +139,16 @@ describe ScrapersController do
 
       assigns(:scraper).errors[:scraperwiki_shortname].should == ["can't be a ScraperWiki view"]
     end
+
+    it "should call ForkScraperwikiWorker if all looks good" do
+      scraperwiki_double = double("Morph::Scraperwiki", exists?: true, private_scraper?: false, view?: false)
+      Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
+
+      ForkScraperwikiWorker.should_receive(:perform_async)
+
+      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'missing_scraper' }
+      end
+    end
   end
 end
