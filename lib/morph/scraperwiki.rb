@@ -16,6 +16,7 @@ module Morph
     end
 
     def info
+      raise 'short_name not set' if short_name.blank?
       if @info.nil?
         url = "https://classic.scraperwiki.com/scrapers/#{short_name}/info"
         v = JSON.parse(Morph::Scraperwiki.content(url))
