@@ -85,10 +85,22 @@ describe Scraper do
     end
   end
 
-  it 'should have a unique name' do
-    VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-      create :scraper, name: 'my_scraper'
-      build(:scraper, name: 'my_scraper').should_not be_valid
+  describe 'unique names' do
+    it 'should not allow duplicate scraper names for a user' do
+      user = create :user
+      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        create :scraper, name: 'my_scraper', owner: user
+        build(:scraper, name: 'my_scraper', owner: user).should_not be_valid
+      end
+    end
+
+    it 'should allow the same scraper name for a different user' do
+      user1 = create :user
+      user2 = create :user
+      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        create :scraper, name: 'my_scraper', owner: user1
+        build(:scraper, name: 'my_scraper', owner: user2).should be_valid
+      end
     end
   end
 end

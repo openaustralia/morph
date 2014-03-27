@@ -16,7 +16,8 @@ class Scraper < ActiveRecord::Base
   has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 
   validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
-  validates :name, uniqueness: { message: 'is already taken on Morph' }
+  validates :owner, presence: true
+  validates :name, uniqueness: { scope: :owner, message: 'is already taken on Morph' }
   validate :not_used_on_github, on: :create, unless: :github_id
   with_options if: :scraperwiki_shortname, on: :create do |s|
     s.validate :exists_on_scraperwiki

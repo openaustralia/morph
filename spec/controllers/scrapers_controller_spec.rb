@@ -87,7 +87,7 @@ describe ScrapersController do
 
     it 'should error if the scraper already exists on Morph' do
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-        create :scraper, full_name: "#{user.nickname}/my_scraper"
+        create :scraper, owner: user
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
       end
       assigns(:scraper).errors[:name].should == ['is already taken on Morph']
