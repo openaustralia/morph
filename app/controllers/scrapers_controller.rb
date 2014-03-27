@@ -93,7 +93,7 @@ class ScrapersController < ApplicationController
     # TODO should really check here that this user has the permissions to write to the owner_id owner
     # It will just get stuck later
 
-    if @scraper.save
+    if @scraper.scraperwiki_shortname && @scraper.save
       ForkScraperwikiWorker.perform_async(@scraper.id)
       #flash[:notice] = "Forking in action..."
       redirect_to @scraper

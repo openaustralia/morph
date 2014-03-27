@@ -86,16 +86,24 @@ describe ScrapersController do
     end
 
     it 'should error if the scraper already exists on Morph' do
+      scraperwiki_double = double("Morph::Scraperwiki", exists?: true, private_scraper?: false, view?: false)
+      Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
+
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         create :scraper, owner: user
-        post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
+        post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'my_scraper' }
       end
+
       assigns(:scraper).errors[:name].should == ['is already taken on Morph']
     end
 
     it 'should error if the scraper already exists on GitHub' do
+      scraperwiki_double = double("Morph::Scraperwiki", exists?: true, private_scraper?: false, view?: false)
+      Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
       Morph::Github.stub(:in_public_use?).and_return(true)
-      post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
+
+      post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'my_scraper' }
+
       assigns(:scraper).errors[:name].should == ['is already taken on GitHub']
     end
 
