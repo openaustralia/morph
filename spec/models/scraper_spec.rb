@@ -44,6 +44,11 @@ describe Scraper do
         @scraper.scraperwiki_shortname = nil
         @scraper.scraperwiki_url.should be_nil
       end
+
+      it do
+        @scraper.scraperwiki_shortname = ''
+        @scraper.scraperwiki_url.should be_nil
+      end
     end
 
     describe "#latest_successful_run_time" do

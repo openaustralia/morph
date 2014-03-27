@@ -230,7 +230,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def scraperwiki_shortname=(shortname)
-    self.scraperwiki_url = "https://classic.scraperwiki.com/scrapers/#{shortname}/" if shortname
+    self.scraperwiki_url = "https://classic.scraperwiki.com/scrapers/#{shortname}/" unless shortname.blank?
   end
 
   def current_revision_from_repo
