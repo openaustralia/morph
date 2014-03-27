@@ -43,8 +43,8 @@ Now you'll need to build the Docker container that scrapers run in.
 
 Now you can start the server
 
-    bundle exec rake db:setup
-    bundle exec foreman start
+    bundle exec dotenv rake db:setup
+    bundle exec dotenv foreman start
 
 and point your browser at [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
