@@ -19,7 +19,7 @@ class Scraper < ActiveRecord::Base
   validates :owner, presence: true
   validates :name, uniqueness: { scope: :owner, message: 'is already taken on Morph' }
   validate :not_used_on_github, on: :create, unless: :github_id
-  with_options if: :scraperwiki_shortname, on: :create do |s|
+  with_options if: :scraperwiki_shortname, if: :scraperwiki_url, on: :create do |s|
     s.validate :exists_on_scraperwiki
     s.validate :public_on_scraperwiki
     s.validate :not_scraperwiki_view

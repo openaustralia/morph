@@ -108,4 +108,12 @@ describe Scraper do
       end
     end
   end
+
+  describe 'ScraperWiki validations' do
+    it 'should be invalid if the scraperwiki shortname is not set' do
+      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        build(:scraper, scraperwiki_url: 'foobar').should_not be_valid
+      end
+    end
+  end
 end
