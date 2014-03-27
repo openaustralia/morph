@@ -150,5 +150,13 @@ describe ScrapersController do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'missing_scraper' }
       end
     end
+
+    it "should not attempt to fork if ScraperWiki shortname is not set" do
+      ForkScraperwikiWorker.should_not_receive(:perform_async)
+
+      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
+      end
+    end
   end
 end
