@@ -72,28 +72,51 @@ describe Morph::Database do
 
     describe ".diffstat" do
       it "should show that nothing has changed" do
-        Morph::Database.diffstat(@db1, @db2).should == {tables_added: 0, tables_removed: 0, tables_changed: 0}
+        Morph::Database.diffstat(@db1, @db2).should == {
+          records_added: 0, records_removed: 0, records_changed: 0,
+          tables_added: 0, tables_removed: 0, tables_changed: 0
+        }
       end
 
       it "should show a new table" do
         @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
-        Morph::Database.diffstat(@db1, @db2).should == {tables_added: 1, tables_removed: 0, tables_changed: 0}
+        Morph::Database.diffstat(@db1, @db2).should == {
+          records_added: 0, records_removed: 0, records_changed: 0,
+          tables_added: 1, tables_removed: 0, tables_changed: 0
+        }
       end
 
       it "should show a deleted table" do
         @db2.execute("DROP TABLE foo")
-        Morph::Database.diffstat(@db1, @db2).should == {tables_added: 0, tables_removed: 1, tables_changed: 0}
+        Morph::Database.diffstat(@db1, @db2).should == {
+          records_added: 0, records_removed: 0, records_changed: 0,
+          tables_added: 0, tables_removed: 1, tables_changed: 0
+        }
       end
 
       it "should show an added and a deleted table" do
         @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
         @db2.execute("DROP TABLE foo")
-        Morph::Database.diffstat(@db1, @db2).should == {tables_added: 1, tables_removed: 1, tables_changed: 0}
+        Morph::Database.diffstat(@db1, @db2).should == {
+          records_added: 0, records_removed: 0, records_changed: 0,
+          tables_added: 1, tables_removed: 1, tables_changed: 0
+        }
       end
 
       it "should show a changed table (because of a schema change)" do
         @db2.execute("ALTER TABLE foo ADD v3 text")
-        Morph::Database.diffstat(@db1, @db2).should == {tables_added: 0, tables_removed: 0, tables_changed: 1}
+        Morph::Database.diffstat(@db1, @db2).should == {
+          records_added: 0, records_removed: 0, records_changed: 0,
+          tables_added: 0, tables_removed: 0, tables_changed: 1
+        }
+      end
+
+      it "should show a new record on an unchanged table" do
+        @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
+        Morph::Database.diffstat(@db1, @db2).should == {
+          records_added: 1, records_removed: 0, records_changed: 0,
+          tables_added: 0, tables_removed: 0, tables_changed: 0
+        }
       end
     end
   end

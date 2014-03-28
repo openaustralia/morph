@@ -165,8 +165,10 @@ module Morph
       added = ids2 - ids1
       removed = ids1 - ids2
       possibly_changed = ids1 - removed
-      changed = yield(possibly_changed).select{|t| t[1] != t[2]}.map{|t| t[0]}
-      {added: added, removed: removed, changed: changed}
+      unchanged, changed = yield(possibly_changed).partition{|t| t[1] == t[2]}
+      unchanged = unchanged.map{|t| t[0]}
+      changed = changed.map{|t| t[0]}
+      {added: added, removed: removed, changed: changed, unchanged: unchanged}
     end
 
     def self.changes(db1, db2, ids_query)
@@ -194,7 +196,17 @@ module Morph
 
     def self.diffstat(db1, db2)
       r = table_changes(db1, db2)
-      {tables_added: r[:added].count, tables_removed: r[:removed].count, tables_changed: r[:changed].count}
+      records_added, records_removed, records_changed = 0, 0, 0
+      r[:unchanged].each do |table|
+        records = diffstat_table(table, db1, db2)
+        records_added += records[:added]
+        records_removed += records[:removed]
+        records_changed += records[:changed]
+      end
+      {
+        records_added: records_added, records_removed: records_removed, records_changed: records_changed,
+        tables_added: r[:added].count, tables_removed: r[:removed].count, tables_changed: r[:changed].count
+      }
     end
 
     private
