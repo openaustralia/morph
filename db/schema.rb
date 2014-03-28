@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140325184058) do
+ActiveRecord::Schema.define(version: 20140328092932) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -116,10 +116,18 @@ ActiveRecord::Schema.define(version: 20140325184058) do
     t.datetime "updated_at"
     t.integer  "status_code"
     t.datetime "queued_at"
-    t.boolean  "auto",         default: false, null: false
+    t.boolean  "auto",              default: false, null: false
     t.string   "git_revision"
     t.integer  "owner_id"
-    t.float    "wall_time",    default: 0.0,   null: false
+    t.float    "wall_time",         default: 0.0,   null: false
+    t.integer  "tables_added"
+    t.integer  "tables_removed"
+    t.integer  "tables_changed"
+    t.integer  "tables_unchanged"
+    t.integer  "records_added"
+    t.integer  "records_removed"
+    t.integer  "records_changed"
+    t.integer  "records_unchanged"
   end
 
   create_table "scrapers", force: true do |t|
