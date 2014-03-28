@@ -129,7 +129,7 @@ module Morph
       Database.tidy_data_path(data_path)
     end
 
-    # Page is the maximum number of records that is read into memory at once
+    # Page is the maximum number of records that are read into memory at once
     def self.diffstat_table(table, db1, db2, page = 1000)
       # Find the ROWID range that covers both databases
       v1 = db1.execute("SELECT MIN(ROWID), MAX(ROWID) from #{table}")
@@ -157,6 +157,14 @@ module Morph
       end
 
       {added: added, removed: removed, changed: changed}
+    end
+
+    def self.diffstat(db1, db2)
+      tables1 = db1.execute("select name from sqlite_master where type='table'").map{|r| r.first}
+      tables2 = db2.execute("select name from sqlite_master where type='table'").map{|r| r.first}
+      tables_removed = tables1 - tables2
+      tables_added = tables2 - tables1
+      {tables_added: tables_added.count, tables_removed: tables_removed.count, tables_changed: 0}
     end
 
     private
