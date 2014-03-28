@@ -24,8 +24,14 @@ describe Morph::Database do
     end
 
     it "should show a deleted record" do
-      @db2.execute("DELETE FROM foo")
+      @db2.execute("DELETE FROM foo where v1='hello'")
       Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 1, changed: 0}
+    end
+
+    it "should show adding a record and deleting a record" do
+      @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
+      @db2.execute("DELETE FROM foo where v1='hello'")
+      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 1, removed: 1, changed: 0}
     end
   end
 end

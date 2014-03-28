@@ -130,15 +130,12 @@ module Morph
     end
 
     def self.diffstat_table(table, db1, db2)
-      # Going to do the dumbest thing first and just count the number of records
-      # This is obviously not the way to do this in general
-      count1 = db1.execute("SELECT COUNT(*) FROM #{table}").first.first
-      count2 = db2.execute("SELECT COUNT(*) FROM #{table}").first.first
-      if count2 > count1
-        {added: (count2 - count1), removed: 0, changed: 0}
-      else
-        {added: 0, removed: (count1 - count2), changed: 0}
-      end
+      # TODO Don't read all the ROWIDs in at once
+      records1 = db1.execute("SELECT ROWID from #{table}").map{|r| r.first}
+      records2 = db2.execute("SELECT ROWID from #{table}").map{|r| r.first}
+      added_records = records2 - records1
+      removed_records = records1 - records2
+      {added: added_records.count, removed: removed_records.count, changed: 0}
     end
   end
 end
