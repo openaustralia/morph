@@ -160,20 +160,20 @@ module Morph
     end
 
     def self.table_changes(db1, db2)
-      v1, v2 = execute2(db1, db2, "select name from sqlite_master where type='table'")
-      tables1 = v1.map{|r| r.first}
-      tables2 = v2.map{|r| r.first}
+      ids_query = "select name from sqlite_master where type='table'"
 
-      removed = tables1 - tables2
-      added = tables2 - tables1
-      possibly_changed = tables1 - removed
-      quoted_names = possibly_changed.map{|n| "'#{n}'"}.join(",")
-      schemas1, schemas2 = execute2(db1, db2, "select sql, name from sqlite_master where type='table' AND name IN (#{quoted_names})")
+      v1, v2 = execute2(db1, db2, ids_query)
+      ids1 = v1.map{|r| r.first}
+      ids2 = v2.map{|r| r.first}
+
+      added = ids2 - ids1
+      removed = ids1 - ids2
+      possibly_changed = ids1 - removed
+      quoted_ids = possibly_changed.map{|n| "'#{n}'"}.join(",")
+      values1, values2 = execute2(db1, db2, "select name,sql from sqlite_master where type='table' AND name IN (#{quoted_ids})")
       changed = []
-      schemas1.each_index do |i|
-        schema1, name1 = schemas1[i]
-        schema2, name2 = schemas2[i]
-        changed << name1 if schema1 != schema2
+      values1.each_index do |i|
+        changed << values1[i].first if values1[i] != values2[i]
       end
       {added: added, removed: removed, changed: changed}
     end
@@ -190,18 +190,20 @@ module Morph
     end
 
     def self.rows_changed_in_range(table, min, max, db1, db2)
-      v1, v2 = execute2(db1, db2, "SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}")
-      records1 = v1.map{|r| r.first}
-      records2 = v2.map{|r| r.first}
+      ids_query = "SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}"
 
-      added = records2 - records1
-      removed = records1 - records2
-      possibly_changed = records1 - removed
-      r1, r2 = execute2(db1, db2, "SELECT ROWID, * from #{table} WHERE ROWID IN (#{possibly_changed.join(',')})")
+      v1, v2 = execute2(db1, db2, ids_query)
+      ids1 = v1.map{|r| r.first}
+      ids2 = v2.map{|r| r.first}
+
+      added = ids2 - ids1
+      removed = ids1 - ids2
+      possibly_changed = ids1 - removed
+      quoted_ids = possibly_changed.map{|n| "'#{n}'"}.join(',')
+      values1, values2 = execute2(db1, db2, "SELECT ROWID, * from #{table} WHERE ROWID IN (#{quoted_ids})")
       changed = []
-      r1.each_index do |i|
-        rowid = r1[i].first
-        changed << rowid if r1[i] != r2[i]
+      values1.each_index do |i|
+        changed << values1[i].first if values1[i] != values2[i]
       end
 
       {added: added, removed: removed, changed: changed}
