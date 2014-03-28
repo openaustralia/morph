@@ -129,8 +129,14 @@ module Morph
       Database.tidy_data_path(data_path)
     end
 
-    def self.diffstat(db1, db2)
-      {added: 0, removed: 0, changed: 0}
+    def self.diffstat(file1, file2)
+      # Going to do the dumbest thing first and just count the number of records
+      # This is obviously not the way to do this in general
+      db1 = SQLite3::Database.new(file1, results_as_hash: true, type_translation: true)
+      db2 = SQLite3::Database.new(file2, results_as_hash: true, type_translation: true)
+      count1 = db1.execute("SELECT COUNT(*) FROM foo").first.values.first
+      count2 = db2.execute("SELECT COUNT(*) FROM foo").first.values.first
+      {added: (count2 - count1), removed: 0, changed: 0}
     end
   end
 end
