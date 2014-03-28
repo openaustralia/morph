@@ -4,12 +4,12 @@ describe Morph::Database do
   before(:each) do
     FileUtils::rm_f(["tmp_db1.sqlite", "tmp_db2.sqlite"])
     # Create an sqlite database
-    @db1 = SQLite3::Database.new("tmp_db1.sqlite", results_as_hash: true, type_translation: true)
+    @db1 = SQLite3::Database.new("tmp_db1.sqlite")
     @db1.execute("CREATE TABLE foo (v1 text, v2 real);")
     @db1.execute("INSERT INTO foo VALUES ('hello', 2.3)")
     # Make an identical version
     FileUtils::cp("tmp_db1.sqlite", "tmp_db2.sqlite")
-    @db2 = SQLite3::Database.new("tmp_db2.sqlite", results_as_hash: true, type_translation: true)
+    @db2 = SQLite3::Database.new("tmp_db2.sqlite")
   end
   after(:each) { FileUtils::rm(["tmp_db1.sqlite", "tmp_db2.sqlite"]) }
 

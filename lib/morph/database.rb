@@ -132,8 +132,8 @@ module Morph
     def self.diffstat_table(table, db1, db2)
       # Going to do the dumbest thing first and just count the number of records
       # This is obviously not the way to do this in general
-      count1 = db1.execute("SELECT COUNT(*) FROM #{table}").first.values.first
-      count2 = db2.execute("SELECT COUNT(*) FROM #{table}").first.values.first
+      count1 = db1.execute("SELECT COUNT(*) FROM #{table}").first.first
+      count2 = db2.execute("SELECT COUNT(*) FROM #{table}").first.first
       if count2 > count1
         {added: (count2 - count1), removed: 0, changed: 0}
       else
