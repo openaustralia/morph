@@ -10,6 +10,19 @@ describe Morph::Database do
     end
   end
 
+  describe '#backup' do
+    it "should backup the database file" do
+      # Create a fake database file
+      File.open("data.sqlite", "w") do |f|
+        f.write("This is a fake sqlite file")
+      end
+      d = Morph::Database.new(double(data_path: "."))
+      d.backup
+      File.read("data.sqlite.backup").should == "This is a fake sqlite file"
+      FileUtils.rm(["data.sqlite", "data.sqlite.backup"])
+    end
+  end
+
   describe "differencing databases" do
 
     before(:each) do

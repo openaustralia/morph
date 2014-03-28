@@ -11,12 +11,24 @@ module Morph
       "data.sqlite"
     end
 
+    def self.sqlite_db_backup_filename
+      "#{sqlite_db_filename}.backup"
+    end
+
     def self.sqlite_table_name
       "data"
     end
 
     def sqlite_db_path
       File.join(data_path, Database.sqlite_db_filename)
+    end
+
+    def sqlite_db_backup_path
+      File.join(data_path, Database.sqlite_db_backup_filename)
+    end
+
+    def backup
+      FileUtils.cp(sqlite_db_path, sqlite_db_backup_path)
     end
 
     # The actual table names in the current db
