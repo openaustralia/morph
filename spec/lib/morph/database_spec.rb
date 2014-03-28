@@ -90,6 +90,11 @@ describe Morph::Database do
         @db2.execute("DROP TABLE foo")
         Morph::Database.diffstat(@db1, @db2).should == {tables_added: 1, tables_removed: 1, tables_changed: 0}
       end
+
+      it "should show a changed table (because of a schema change)" do
+        @db2.execute("ALTER TABLE foo ADD v3 text")
+        Morph::Database.diffstat(@db1, @db2).should == {tables_added: 0, tables_removed: 0, tables_changed: 1}
+      end
     end
   end
 end

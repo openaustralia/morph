@@ -164,7 +164,16 @@ module Morph
       tables2 = db2.execute("select name from sqlite_master where type='table'").map{|r| r.first}
       tables_removed = tables1 - tables2
       tables_added = tables2 - tables1
-      {tables_added: tables_added.count, tables_removed: tables_removed.count, tables_changed: 0}
+      possibly_changed_tables = tables1 - tables_removed
+      quoted_names = possibly_changed_tables.map{|n| "'#{n}'"}.join(",")
+      schemas1 = db1.execute("select sql from sqlite_master where type='table' AND name IN (#{quoted_names})").map{|r| r.first}
+      schemas2 = db2.execute("select sql from sqlite_master where type='table' AND name IN (#{quoted_names})").map{|r| r.first}
+      changed = 0
+      schemas1.each_index do |i|
+        changed += 1 if schemas1[i] != schemas2[i]
+      end
+
+      {tables_added: tables_added.count, tables_removed: tables_removed.count, tables_changed: changed}
     end
 
     private
