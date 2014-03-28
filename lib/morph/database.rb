@@ -168,10 +168,12 @@ module Morph
       removed = ids1 - ids2
       possibly_changed = ids1 - removed
       values1, values2 = execute2(db1, db2, yield(possibly_changed))
-      changed = []
+      transformed = []
       values1.each_index do |i|
-        changed << values1[i].first if values1[i] != values2[i]
+        t = [values1[i].first, values1[i][1..-1], values2[i][1..-1]]
+        transformed << t
       end
+      changed = transformed.select{|t| t[1] != t[2]}.map{|t| t[0]}
       {added: added, removed: removed, changed: changed}
     end
 
