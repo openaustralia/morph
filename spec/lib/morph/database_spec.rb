@@ -106,7 +106,7 @@ describe Morph::Database do
       it "should show a changed table (because of a schema change)" do
         @db2.execute("ALTER TABLE foo ADD v3 text")
         Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 0, removed: 0, changed: 0},
+          records: {added: 0, removed: 0, changed: 1},
           tables:  {added: 0, removed: 0, changed: 1}
         }
       end
