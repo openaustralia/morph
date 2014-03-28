@@ -207,7 +207,10 @@ module Morph
       end
     end
 
-    def self.diffstat(db1, db2)
+    def self.diffstat(file1, file2)
+      db1 = SQLite3::Database.new(file1)
+      db2 = SQLite3::Database.new(file2)
+
       r = table_changes(db1, db2)
       result = {
         tables: {
