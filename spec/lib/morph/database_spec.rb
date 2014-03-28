@@ -89,7 +89,7 @@ describe Morph::Database do
       it "should show a deleted table" do
         @db2.execute("DROP TABLE foo")
         Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 0, removed: 0, changed: 0},
+          records: {added: 0, removed: 1, changed: 0},
           tables:  {added: 0, removed: 1, changed: 0}
         }
       end
@@ -98,7 +98,7 @@ describe Morph::Database do
         @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
         @db2.execute("DROP TABLE foo")
         Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 0, removed: 0, changed: 0},
+          records: {added: 0, removed: 1, changed: 0},
           tables:  {added: 1, removed: 1, changed: 0}
         }
       end

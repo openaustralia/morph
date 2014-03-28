@@ -206,6 +206,9 @@ module Morph
       r[:added].each do |table|
         records_added += db2.execute("SELECT COUNT(*) FROM #{table}").first.first
       end
+      r[:removed].each do |table|
+        records_removed += db1.execute("SELECT COUNT(*) FROM #{table}").first.first
+      end
       {
         records: {added: records_added, removed: records_removed, changed: records_changed},
         tables:  {added: r[:added].count, removed: r[:removed].count, changed: r[:changed].count}
