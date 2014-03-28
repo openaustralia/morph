@@ -159,9 +159,7 @@ module Morph
       {added: added, removed: removed, changed: changed}
     end
 
-    def self.table_changes(db1, db2)
-      ids_query = "select name from sqlite_master where type='table'"
-
+    def self.changes(db1, db2, ids_query)
       v1, v2 = execute2(db1, db2, ids_query)
       ids1 = v1.map{|r| r.first}
       ids2 = v2.map{|r| r.first}
@@ -169,13 +167,19 @@ module Morph
       added = ids2 - ids1
       removed = ids1 - ids2
       possibly_changed = ids1 - removed
-      quoted_ids = possibly_changed.map{|n| "'#{n}'"}.join(",")
-      values1, values2 = execute2(db1, db2, "select name,sql from sqlite_master where type='table' AND name IN (#{quoted_ids})")
+      values1, values2 = execute2(db1, db2, yield(possibly_changed))
       changed = []
       values1.each_index do |i|
         changed << values1[i].first if values1[i] != values2[i]
       end
       {added: added, removed: removed, changed: changed}
+    end
+
+    def self.table_changes(db1, db2)
+      changes(db1, db2, "select name from sqlite_master where type='table'") do |possibly_changed|
+        quoted_ids = possibly_changed.map{|n| "'#{n}'"}.join(",")
+        "select name,sql from sqlite_master where type='table' AND name IN (#{quoted_ids})"
+      end
     end
 
     def self.diffstat(db1, db2)
@@ -190,23 +194,10 @@ module Morph
     end
 
     def self.rows_changed_in_range(table, min, max, db1, db2)
-      ids_query = "SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}"
-
-      v1, v2 = execute2(db1, db2, ids_query)
-      ids1 = v1.map{|r| r.first}
-      ids2 = v2.map{|r| r.first}
-
-      added = ids2 - ids1
-      removed = ids1 - ids2
-      possibly_changed = ids1 - removed
-      quoted_ids = possibly_changed.map{|n| "'#{n}'"}.join(',')
-      values1, values2 = execute2(db1, db2, "SELECT ROWID, * from #{table} WHERE ROWID IN (#{quoted_ids})")
-      changed = []
-      values1.each_index do |i|
-        changed << values1[i].first if values1[i] != values2[i]
+      changes(db1, db2, "SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}") do |possibly_changed|
+        quoted_ids = possibly_changed.map{|n| "'#{n}'"}.join(',')
+        "SELECT ROWID, * from #{table} WHERE ROWID IN (#{quoted_ids})"
       end
-
-      {added: added, removed: removed, changed: changed}
     end
 
     # Find the difference within a range of rowids
