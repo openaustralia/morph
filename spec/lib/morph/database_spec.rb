@@ -98,171 +98,171 @@ describe Morph::Database do
         end
         Morph::Database.diffstat_table("foo", @db1, @db2, 100).should == {added: 200, removed: 200, changed: 100, unchanged: 700}
       end
+    end
 
-      describe ".diffstat" do
-        it "should show that nothing has changed" do
-          Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
-            tables: {
-              added: [],
-              removed: [],
-              changed: [],
-              unchanged: [
-                {
-                  name: "foo",
-                  records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
-                }
-              ],
-              counts: { added: 0, removed: 0, changed: 0, unchanged: 1}
-            },
-            records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
-          }
-        end
+    describe ".diffstat" do
+      it "should show that nothing has changed" do
+        Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
+          tables: {
+            added: [],
+            removed: [],
+            changed: [],
+            unchanged: [
+              {
+                name: "foo",
+                records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
+              }
+            ],
+            counts: { added: 0, removed: 0, changed: 0, unchanged: 1}
+          },
+          records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
+        }
+      end
 
-        it "should show a new table" do
-          @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
-          Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
-            tables: {
-              added: [
-                {
-                  name: "bar",
-                  records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
-                }
-              ],
-              removed: [],
-              changed: [],
-              unchanged: [
-                {
-                  name: "foo",
-                  records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
-                }
-              ],
-              counts: {added: 1, removed: 0, changed: 0, unchanged: 1}
-            },
-            records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
-          }
-        end
-
-        it "should show a deleted table" do
-          @db2.execute("DROP TABLE foo")
-          Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
-            tables: {
-              added: [],
-              removed: [
-                {
-                  name: "foo",
-                  records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
-                }
-              ],
-              changed: [],
-              unchanged: [],
-              counts: {added: 0, removed: 1, changed: 0, unchanged: 0}
-            },
-            records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}},
-          }
-        end
-
-        it "should show an added and a deleted table" do
-          @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
-          @db2.execute("DROP TABLE foo")
-          Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
-            tables: {
-              added: [
-                {
-                  name: "bar",
-                  records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
-                }
-              ],
-              removed: [
-                {
-                  name: "foo",
-                  records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
-                }
-              ],
-              changed: [],
-              unchanged: [],
-              counts: {added: 1, removed: 1, changed: 0, unchanged: 0}
-            },
-            records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
-          }
-        end
-
-        it "should show a changed table (because of a schema change)" do
-          @db2.execute("ALTER TABLE foo ADD v3 text")
-          Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
-            tables: {
-              added: [],
-              removed: [],
-              changed: [
-                {
-                  name: "foo",
-                  records: {counts: {added: 0, removed: 0, changed: 1, unchanged: 0}}
-                }
-              ],
-              unchanged: [],
-              counts: {added: 0, removed: 0, changed: 1, unchanged: 0}
-            },
-            records: {counts: {added: 0, removed: 0, changed: 1, unchanged: 0}}
-          }
-        end
-
-        it "should show a new record on an unchanged table" do
-          @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
-          Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
-            tables: {
-              added: [],
-              removed: [],
-              changed: [],
-              unchanged: [
-                {
-                  name: "foo",
-                  records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
-                }
-              ],
-              counts: {added: 0, removed: 0, changed: 0, unchanged: 1}
-            },
-            records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
-          }
-        end
-
-        it "should show a new record on a new table" do
-          @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
-          @db2.execute("INSERT INTO bar VALUES ('goodbye', 3.1)")
-          Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
-            tables: {
-              added: [
+      it "should show a new table" do
+        @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
+        Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
+          tables: {
+            added: [
+              {
                 name: "bar",
-                records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
-              ],
-              removed: [],
-              changed: [],
-              unchanged: [
+                records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+              }
+            ],
+            removed: [],
+            changed: [],
+            unchanged: [
+              {
                 name: "foo",
                 records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
-              ],
-              counts: {added: 1, removed: 0, changed: 0, unchanged: 1}
-            },
-            records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
-          }
-        end
+              }
+            ],
+            counts: {added: 1, removed: 0, changed: 0, unchanged: 1}
+          },
+          records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
+        }
+      end
 
-        it "should show everything as added when there was no database to start with" do
-          Morph::Database.diffstat("non_existent_file.sqlite", "tmp_db2.sqlite").should == {
-            tables: {
-              added: [
-                {
-                  name: "foo",
-                  records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
-                }
-              ],
-              removed: [],
-              changed: [],
-              unchanged: [],
-              counts: {added: 1, removed: 0, changed: 0, unchanged: 0}
-            },
-            records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
-          }
-          FileUtils.rm("non_existent_file.sqlite")
-        end
+      it "should show a deleted table" do
+        @db2.execute("DROP TABLE foo")
+        Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
+          tables: {
+            added: [],
+            removed: [
+              {
+                name: "foo",
+                records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
+              }
+            ],
+            changed: [],
+            unchanged: [],
+            counts: {added: 0, removed: 1, changed: 0, unchanged: 0}
+          },
+          records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}},
+        }
+      end
+
+      it "should show an added and a deleted table" do
+        @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
+        @db2.execute("DROP TABLE foo")
+        Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
+          tables: {
+            added: [
+              {
+                name: "bar",
+                records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+              }
+            ],
+            removed: [
+              {
+                name: "foo",
+                records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
+              }
+            ],
+            changed: [],
+            unchanged: [],
+            counts: {added: 1, removed: 1, changed: 0, unchanged: 0}
+          },
+          records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
+        }
+      end
+
+      it "should show a changed table (because of a schema change)" do
+        @db2.execute("ALTER TABLE foo ADD v3 text")
+        Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
+          tables: {
+            added: [],
+            removed: [],
+            changed: [
+              {
+                name: "foo",
+                records: {counts: {added: 0, removed: 0, changed: 1, unchanged: 0}}
+              }
+            ],
+            unchanged: [],
+            counts: {added: 0, removed: 0, changed: 1, unchanged: 0}
+          },
+          records: {counts: {added: 0, removed: 0, changed: 1, unchanged: 0}}
+        }
+      end
+
+      it "should show a new record on an unchanged table" do
+        @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
+        Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
+          tables: {
+            added: [],
+            removed: [],
+            changed: [],
+            unchanged: [
+              {
+                name: "foo",
+                records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
+              }
+            ],
+            counts: {added: 0, removed: 0, changed: 0, unchanged: 1}
+          },
+          records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
+        }
+      end
+
+      it "should show a new record on a new table" do
+        @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
+        @db2.execute("INSERT INTO bar VALUES ('goodbye', 3.1)")
+        Morph::Database.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").should == {
+          tables: {
+            added: [
+              name: "bar",
+              records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
+            ],
+            removed: [],
+            changed: [],
+            unchanged: [
+              name: "foo",
+              records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
+            ],
+            counts: {added: 1, removed: 0, changed: 0, unchanged: 1}
+          },
+          records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
+        }
+      end
+
+      it "should show everything as added when there was no database to start with" do
+        Morph::Database.diffstat("non_existent_file.sqlite", "tmp_db2.sqlite").should == {
+          tables: {
+            added: [
+              {
+                name: "foo",
+                records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
+              }
+            ],
+            removed: [],
+            changed: [],
+            unchanged: [],
+            counts: {added: 1, removed: 0, changed: 0, unchanged: 0}
+          },
+          records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
+        }
+        FileUtils.rm("non_existent_file.sqlite")
       end
     end
   end
