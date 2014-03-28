@@ -244,6 +244,25 @@ describe Morph::Database do
             records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
           }
         end
+
+        it "should show everything as added when there was no database to start with" do
+          Morph::Database.diffstat("non_existent_file.sqlite", "tmp_db2.sqlite").should == {
+            tables: {
+              added: [
+                {
+                  name: "foo",
+                  records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
+                }
+              ],
+              removed: [],
+              changed: [],
+              unchanged: [],
+              counts: {added: 1, removed: 0, changed: 0, unchanged: 0}
+            },
+            records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
+          }
+          FileUtils.rm("non_existent_file.sqlite")
+        end
       end
     end
   end
