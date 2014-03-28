@@ -161,7 +161,7 @@ module Morph
 
     # Needs to be called with a block that given an array of ids
     # returns an array of triplets of the form [id, value1, value2]
-    def self.data_changes(db1, db2, ids1, ids2)
+    def self.data_changes(ids1, ids2)
       added = ids2 - ids1
       removed = ids1 - ids2
       possibly_changed = ids1 - removed
@@ -174,7 +174,7 @@ module Morph
       ids1 = v1.map{|r| r.first}
       ids2 = v2.map{|r| r.first}
 
-      data_changes(db1, db2, ids1, ids2) do |possibly_changed|
+      data_changes(ids1, ids2) do |possibly_changed|
         values1, values2 = execute2(db1, db2, yield(possibly_changed))
         transformed = []
         values1.each_index do |i|
