@@ -275,6 +275,20 @@ describe Morph::Database do
         }
         FileUtils.rm("non_existent_file.sqlite")
       end
+
+      it "should show no difference when comparing two non-existent databases" do
+        Morph::Database.diffstat("non_existent_file1.sqlite", "non_existent_file2.sqlite").should == {
+          tables: {
+            added: [],
+            removed: [],
+            changed: [],
+            unchanged: [],
+            counts: {added: 0, removed: 0, changed: 0, unchanged: 0}
+          },
+          records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+        }
+        FileUtils.rm(["non_existent_file1.sqlite", "non_existent_file2.sqlite"])
+      end
     end
   end
 end
