@@ -202,7 +202,8 @@ module Morph
           added: [],
           removed: [],
           changed: [],
-          unchanged: []
+          unchanged: [],
+          counts: {added: 0, removed: 0, changed: 0, unchanged: 0}
         },
         records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
       }
@@ -233,18 +234,22 @@ module Morph
         added = db2.execute("SELECT COUNT(*) FROM #{table}").first.first
         result[:tables][:added] << {
           name: table,
-          records: {count: {added: added, removed: 0, changed: 0, unchanged: 0}}
+          records: {counts: {added: added, removed: 0, changed: 0, unchanged: 0}}
         }
         result[:records][:counts][:added] += added
       end
       r[:removed].each do |table|
         removed = db1.execute("SELECT COUNT(*) FROM #{table}").first.first
-        result[:table][:removed] << {
+        result[:tables][:removed] << {
           name: table,
-          records: {count: {added: 0, removed: removed, changed: 0, unchanged: 0}}
+          records: {counts: {added: 0, removed: removed, changed: 0, unchanged: 0}}
         }
         result[:records][:counts][:removed] += removed
       end
+      result[:tables][:counts][:added] = result[:tables][:added].count
+      result[:tables][:counts][:removed] = result[:tables][:removed].count
+      result[:tables][:counts][:changed] = result[:tables][:changed].count
+      result[:tables][:counts][:unchanged] = result[:tables][:unchanged].count
       result
     end
 

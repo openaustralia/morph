@@ -83,6 +83,7 @@ describe Morph::Database do
                 records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
               }
             ],
+            counts: { added: 0, removed: 0, changed: 0, unchanged: 1}
           },
           records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
         }
@@ -95,7 +96,7 @@ describe Morph::Database do
             added: [
               {
                 name: "bar",
-                records: {count: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+                records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
               }
             ],
             removed: [],
@@ -105,7 +106,8 @@ describe Morph::Database do
                 name: "foo",
                 records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
               }
-            ]
+            ],
+            counts: {added: 1, removed: 0, changed: 0, unchanged: 1}
           },
           records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
         }
@@ -113,9 +115,20 @@ describe Morph::Database do
 
       it "should show a deleted table" do
         @db2.execute("DROP TABLE foo")
-        Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 0, removed: 1, changed: 0},
-          tables:  {added: 0, removed: 1, changed: 0}
+        Morph::Database.diffstat2(@db1, @db2).should == {
+          tables: {
+            added: [],
+            removed: [
+              {
+                name: "foo",
+                records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
+              }
+            ],
+            changed: [],
+            unchanged: [],
+            counts: {added: 0, removed: 1, changed: 0, unchanged: 0}
+          },
+          records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}},
         }
       end
 
