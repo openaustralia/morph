@@ -143,26 +143,60 @@ describe Morph::Database do
 
       it "should show a changed table (because of a schema change)" do
         @db2.execute("ALTER TABLE foo ADD v3 text")
-        Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 0, removed: 0, changed: 1},
-          tables:  {added: 0, removed: 0, changed: 1}
+        Morph::Database.diffstat2(@db1, @db2).should == {
+          tables: {
+            added: [],
+            removed: [],
+            changed: [
+              {
+                name: "foo",
+                records: {counts: {added: 0, removed: 0, changed: 1, unchanged: 0}}
+              }
+            ],
+            unchanged: [],
+            counts: {added: 0, removed: 0, changed: 1, unchanged: 0}
+          },
+          records: {counts: {added: 0, removed: 0, changed: 1, unchanged: 0}}
         }
       end
 
       it "should show a new record on an unchanged table" do
         @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
-        Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 1, removed: 0, changed: 0},
-          tables:  {added: 0, removed: 0, changed: 0}
+        Morph::Database.diffstat2(@db1, @db2).should == {
+          tables: {
+            added: [],
+            removed: [],
+            changed: [],
+            unchanged: [
+              {
+                name: "foo",
+                records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
+              }
+            ],
+            counts: {added: 0, removed: 0, changed: 0, unchanged: 1}
+          },
+          records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
         }
       end
 
       it "should show a new record on a new table" do
         @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
         @db2.execute("INSERT INTO bar VALUES ('goodbye', 3.1)")
-        Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 1, removed: 0, changed: 0},
-          tables:  {added: 1, removed: 0, changed: 0}
+        Morph::Database.diffstat2(@db1, @db2).should == {
+          tables: {
+            added: [
+              name: "bar",
+              records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
+            ],
+            removed: [],
+            changed: [],
+            unchanged: [
+              name: "foo",
+              records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
+            ],
+            counts: {added: 1, removed: 0, changed: 0, unchanged: 1}
+          },
+          records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
         }
       end
     end

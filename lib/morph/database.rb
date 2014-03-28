@@ -223,7 +223,7 @@ module Morph
         records = diffstat_table(table, db1, db2)
         result[:tables][:changed] << {
           name: table,
-          records: {count: records}
+          records: {counts: records}
         }
         result[:records][:counts][:added] += records[:added]
         result[:records][:counts][:removed] += records[:removed]
