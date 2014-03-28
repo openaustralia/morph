@@ -159,22 +159,30 @@ module Morph
       {added: added, removed: removed, changed: changed}
     end
 
+    # Needs to be called with a block that given an array of ids
+    # returns an array of triplets of the form [id, value1, value2]
+    def self.data_changes(db1, db2, ids1, ids2)
+      added = ids2 - ids1
+      removed = ids1 - ids2
+      possibly_changed = ids1 - removed
+      changed = yield(possibly_changed).select{|t| t[1] != t[2]}.map{|t| t[0]}
+      {added: added, removed: removed, changed: changed}
+    end
+
     def self.changes(db1, db2, ids_query)
       v1, v2 = execute2(db1, db2, ids_query)
       ids1 = v1.map{|r| r.first}
       ids2 = v2.map{|r| r.first}
 
-      added = ids2 - ids1
-      removed = ids1 - ids2
-      possibly_changed = ids1 - removed
-      values1, values2 = execute2(db1, db2, yield(possibly_changed))
-      transformed = []
-      values1.each_index do |i|
-        t = [values1[i].first, values1[i][1..-1], values2[i][1..-1]]
-        transformed << t
+      data_changes(db1, db2, ids1, ids2) do |possibly_changed|
+        values1, values2 = execute2(db1, db2, yield(possibly_changed))
+        transformed = []
+        values1.each_index do |i|
+          t = [values1[i].first, values1[i][1..-1], values2[i][1..-1]]
+          transformed << t
+        end
+        transformed
       end
-      changed = transformed.select{|t| t[1] != t[2]}.map{|t| t[0]}
-      {added: added, removed: removed, changed: changed}
     end
 
     def self.table_changes(db1, db2)
