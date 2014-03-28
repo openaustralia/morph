@@ -135,7 +135,15 @@ module Morph
       records2 = db2.execute("SELECT ROWID from #{table}").map{|r| r.first}
       added_records = records2 - records1
       removed_records = records1 - records2
-      {added: added_records.count, removed: removed_records.count, changed: 0}
+      possibly_changed_records = records1 - removed_records
+      r1 = db1.execute("SELECT * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
+      r2 = db2.execute("SELECT * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
+      changed = 0
+      r1.each_index do |i|
+        changed += 1 if r1[i] != r2[i]
+      end
+
+      {added: added_records.count, removed: removed_records.count, changed: changed}
     end
   end
 end

@@ -33,5 +33,10 @@ describe Morph::Database do
       @db2.execute("DELETE FROM foo where v1='hello'")
       Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 1, removed: 1, changed: 0}
     end
+
+    it "should show a record being changed" do
+      @db2.execute("UPDATE foo SET v1='different' WHERE v1='hello'")
+      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 0, changed: 1}
+    end
   end
 end
