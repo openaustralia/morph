@@ -163,23 +163,24 @@ module Morph
       v1, v2 = execute2(db1, db2, "select name from sqlite_master where type='table'")
       tables1 = v1.map{|r| r.first}
       tables2 = v2.map{|r| r.first}
-      tables_removed = tables1 - tables2
-      tables_added = tables2 - tables1
-      possibly_changed_tables = tables1 - tables_removed
-      quoted_names = possibly_changed_tables.map{|n| "'#{n}'"}.join(",")
+
+      removed = tables1 - tables2
+      added = tables2 - tables1
+      possibly_changed = tables1 - removed
+      quoted_names = possibly_changed.map{|n| "'#{n}'"}.join(",")
       schemas1, schemas2 = execute2(db1, db2, "select sql, name from sqlite_master where type='table' AND name IN (#{quoted_names})")
-      tables_changed = []
-      tables_unchanged = []
+      changed = []
+      unchanged = []
       schemas1.each_index do |i|
         schema1, name1 = schemas1[i]
         schema2, name2 = schemas2[i]
         if schema1 == schema2
-          tables_unchanged << name1
+          unchanged << name1
         else
-          tables_changed << name1
+          changed << name1
         end
       end
-      {added: tables_added, removed: tables_removed, changed: tables_changed, unchanged: tables_unchanged}
+      {added: added, removed: removed, changed: changed, unchanged: unchanged}
     end
 
     def self.diffstat(db1, db2)
@@ -197,22 +198,23 @@ module Morph
       v1, v2 = execute2(db1, db2, "SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}")
       records1 = v1.map{|r| r.first}
       records2 = v2.map{|r| r.first}
-      added_records = records2 - records1
-      removed_records = records1 - records2
-      possibly_changed_records = records1 - removed_records
-      r1, r2 = execute2(db1, db2, "SELECT ROWID, * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
-      changed_records = []
-      unchanged_records = []
+
+      added = records2 - records1
+      removed = records1 - records2
+      possibly_changed = records1 - removed
+      r1, r2 = execute2(db1, db2, "SELECT ROWID, * from #{table} WHERE ROWID IN (#{possibly_changed.join(',')})")
+      changed = []
+      unchanged = []
       r1.each_index do |i|
         rowid = r1[i].first
         if r1[i] == r2[i]
-          unchanged_records << rowid
+          unchanged << rowid
         else
-          changed_records << rowid
+          changed << rowid
         end
       end
 
-      {added: added_records, removed: removed_records, changed: changed_records, unchanged: unchanged_records}
+      {added: added, removed: removed, changed: changed, unchanged: unchanged}
     end
 
     # Find the difference within a range of rowids
