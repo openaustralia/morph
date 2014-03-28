@@ -72,17 +72,42 @@ describe Morph::Database do
 
     describe ".diffstat" do
       it "should show that nothing has changed" do
-        Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 0, removed: 0, changed: 0},
-          tables:  {added: 0, removed: 0, changed: 0}
+        Morph::Database.diffstat2(@db1, @db2).should == {
+          tables: {
+            added: [],
+            removed: [],
+            changed: [],
+            unchanged: [
+              {
+                name: "foo",
+                records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
+              }
+            ],
+          },
+          records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
         }
       end
 
       it "should show a new table" do
         @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
-        Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 0, removed: 0, changed: 0},
-          tables:  {added: 1, removed: 0, changed: 0}
+        Morph::Database.diffstat2(@db1, @db2).should == {
+          tables: {
+            added: [
+              {
+                name: "bar",
+                records: {count: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+              }
+            ],
+            removed: [],
+            changed: [],
+            unchanged: [
+              {
+                name: "foo",
+                records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
+              }
+            ]
+          },
+          records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
         }
       end
 
