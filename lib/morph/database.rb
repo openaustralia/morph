@@ -159,21 +159,32 @@ module Morph
       {added: added, removed: removed, changed: changed}
     end
 
-    def self.diffstat(db1, db2)
+    def self.table_changes(db1, db2)
       tables1 = db1.execute("select name from sqlite_master where type='table'").map{|r| r.first}
       tables2 = db2.execute("select name from sqlite_master where type='table'").map{|r| r.first}
       tables_removed = tables1 - tables2
       tables_added = tables2 - tables1
       possibly_changed_tables = tables1 - tables_removed
       quoted_names = possibly_changed_tables.map{|n| "'#{n}'"}.join(",")
-      schemas1 = db1.execute("select sql from sqlite_master where type='table' AND name IN (#{quoted_names})").map{|r| r.first}
-      schemas2 = db2.execute("select sql from sqlite_master where type='table' AND name IN (#{quoted_names})").map{|r| r.first}
-      changed = 0
+      schemas1 = db1.execute("select sql, name from sqlite_master where type='table' AND name IN (#{quoted_names})")
+      schemas2 = db2.execute("select sql, name from sqlite_master where type='table' AND name IN (#{quoted_names})")
+      tables_changed = []
+      tables_unchanged = []
       schemas1.each_index do |i|
-        changed += 1 if schemas1[i] != schemas2[i]
+        schema1, name1 = schemas1[i]
+        schema2, name2 = schemas2[i]
+        if schema1 == schema2
+          tables_unchanged << name1
+        else
+          tables_changed << name1
+        end
       end
+      {added: tables_added, removed: tables_removed, changed: tables_changed, unchanged: tables_unchanged}
+    end
 
-      {tables_added: tables_added.count, tables_removed: tables_removed.count, tables_changed: changed}
+    def self.diffstat(db1, db2)
+      r = table_changes(db1, db2)
+      {tables_added: r[:added].count, tables_removed: r[:removed].count, tables_changed: r[:changed].count}
     end
 
     private
