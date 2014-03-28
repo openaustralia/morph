@@ -148,7 +148,9 @@ module Morph
       v2 = db2.execute("SELECT MIN(ROWID), MAX(ROWID) from #{table}")
       min1, max1 = v1.first
       min2, max2 = v2.first
-      if min1.nil? && max1.nil?
+      if min1.nil? && max1.nil? && min2.nil? && max2.nil?
+        min, max = 1, 1
+      elsif min1.nil? && max1.nil?
         min, max = min2, max2
       elsif min2.nil? && max2.nil?
         min, max = min1, max1

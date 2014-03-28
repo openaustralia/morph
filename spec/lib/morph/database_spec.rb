@@ -98,6 +98,17 @@ describe Morph::Database do
         end
         Morph::Database.diffstat_table("foo", @db1, @db2, 100).should == {added: 200, removed: 200, changed: 100, unchanged: 700}
       end
+
+      it "should compare two empty dbs" do
+        FileUtils::rm_f(["tmp_db1.sqlite", "tmp_db2.sqlite"])
+        # Create an sqlite database
+        @db1 = SQLite3::Database.new("tmp_db1.sqlite")
+        @db1.execute("CREATE TABLE foo (v1 text, v2 real);")
+        # Make an identical version
+        FileUtils::cp("tmp_db1.sqlite", "tmp_db2.sqlite")
+        @db2 = SQLite3::Database.new("tmp_db2.sqlite")
+        Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 0, changed: 0, unchanged: 0}
+      end
     end
 
     describe ".diffstat" do
