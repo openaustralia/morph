@@ -197,11 +197,14 @@ module Morph
     def self.diffstat(db1, db2)
       r = table_changes(db1, db2)
       records_added, records_removed, records_changed = 0, 0, 0
-      r[:unchanged].each do |table|
+      (r[:unchanged]).each do |table|
         records = diffstat_table(table, db1, db2)
         records_added += records[:added]
         records_removed += records[:removed]
         records_changed += records[:changed]
+      end
+      r[:added].each do |table|
+        records_added += db2.execute("SELECT COUNT(*) FROM #{table}").first.first
       end
       {
         records: {added: records_added, removed: records_removed, changed: records_changed},
