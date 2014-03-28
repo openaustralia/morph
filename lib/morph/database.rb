@@ -90,7 +90,7 @@ module Morph
     end
 
     def clear
-      FileUtils.rm sqlite_db_path
+      FileUtils.rm sqlite_db_path if File.exists?(sqlite_db_path)
     end
 
     def write_sqlite_database(content)
