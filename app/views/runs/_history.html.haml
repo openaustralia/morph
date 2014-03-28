@@ -1,4 +1,4 @@
-- cache ["v3", run] do
+- cache ["v4", run] do
   %li.list-group-item{class: run.finished_successfully? ? "alert-success" : "alert-danger"}
     - if run.auto?
       Auto
@@ -13,7 +13,11 @@
       completed successfully
     - else
       failed
-    = timeago_tag(run.finished_at, force: true)
+    #{timeago_tag(run.finished_at, force: true)}.
+
     .pull-right.hidden-xs
-      run time
-      = "%.1f s" % run.wall_time
+      %div
+        run time
+        = "%.1f s" % run.wall_time
+      %div
+    %div= database_changes_in_words(run)
