@@ -129,10 +129,42 @@ module Morph
       Database.tidy_data_path(data_path)
     end
 
-    def self.diffstat_table(table, db1, db2)
-      # TODO Don't read all the ROWIDs in at once
-      records1 = db1.execute("SELECT ROWID from #{table}").map{|r| r.first}
-      records2 = db2.execute("SELECT ROWID from #{table}").map{|r| r.first}
+    # Page is the maximum number of records that is read into memory at once
+    def self.diffstat_table(table, db1, db2, page = 100)
+      # Find the ROWID range that covers both databases
+      v1 = db1.execute("SELECT MIN(ROWID), MAX(ROWID) from #{table}")
+      v2 = db2.execute("SELECT MIN(ROWID), MAX(ROWID) from #{table}")
+      min1, max1 = v1.first
+      min2, max2 = v2.first
+      if min1.nil? && max1.nil?
+        min, max = min2, max2
+      elsif min2.nil? && max2.nil?
+        min, max = min1, max1
+      else
+        min = [min1, min2].min
+        max = [max1, max2].max
+      end
+      page_min = min
+      page_max = min + page - 1
+      added, removed, changed = 0, 0, 0
+      while page_min <= max
+        result = diffstat_table_rowid_range(table, page_min, page_max, db1, db2)
+        added += result[:added]
+        removed += result[:removed]
+        changed += result[:changed]
+        page_min += page
+        page_max += page
+      end
+
+      {added: added, removed: removed, changed: changed}
+    end
+
+    private
+
+    # Find the difference within a range of rowids
+    def self.diffstat_table_rowid_range(table, min, max, db1, db2)
+      records1 = db1.execute("SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}").map{|r| r.first}
+      records2 = db2.execute("SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}").map{|r| r.first}
       added_records = records2 - records1
       removed_records = records1 - records2
       possibly_changed_records = records1 - removed_records
