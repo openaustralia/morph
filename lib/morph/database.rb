@@ -189,21 +189,32 @@ module Morph
 
     private
 
-    # Find the difference within a range of rowids
-    def self.diffstat_table_rowid_range(table, min, max, db1, db2)
+    def self.rows_changed_in_range(table, min, max, db1, db2)
       records1 = db1.execute("SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}").map{|r| r.first}
       records2 = db2.execute("SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}").map{|r| r.first}
       added_records = records2 - records1
       removed_records = records1 - records2
       possibly_changed_records = records1 - removed_records
-      r1 = db1.execute("SELECT * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
-      r2 = db2.execute("SELECT * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
-      changed = 0
+      r1 = db1.execute("SELECT ROWID, * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
+      r2 = db2.execute("SELECT ROWID, * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
+      changed_records = []
+      unchanged_records = []
       r1.each_index do |i|
-        changed += 1 if r1[i] != r2[i]
+        rowid = r1[i].first
+        if r1[i] == r2[i]
+          unchanged_records << rowid
+        else
+          changed_records << rowid
+        end
       end
 
-      {added: added_records.count, removed: removed_records.count, changed: changed}
+      {added: added_records, removed: removed_records, changed: changed_records, unchanged: unchanged_records}
+    end
+
+    # Find the difference within a range of rowids
+    def self.diffstat_table_rowid_range(table, min, max, db1, db2)
+      r = rows_changed_in_range(table, min, max, db1, db2)
+      {added: r[:added].count, removed: r[:removed].count, changed: r[:changed].count}
     end
   end
 end
