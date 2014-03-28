@@ -128,5 +128,9 @@ module Morph
     def tidy_data_path
       Database.tidy_data_path(data_path)
     end
+
+    def self.diffstat(db1, db2)
+      {added: 0, removed: 0, changed: 0}
+    end
   end
 end
