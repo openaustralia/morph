@@ -146,17 +146,18 @@ module Morph
       end
       page_min = min
       page_max = min + page - 1
-      added, removed, changed = 0, 0, 0
+      added, removed, changed, unchanged = 0, 0, 0, 0
       while page_min <= max
         result = diffstat_table_rowid_range(table, page_min, page_max, db1, db2)
         added += result[:added]
         removed += result[:removed]
         changed += result[:changed]
+        unchanged += result[:unchanged]
         page_min += page
         page_max += page
       end
 
-      {added: added, removed: removed, changed: changed}
+      {added: added, removed: removed, changed: changed, unchanged: unchanged}
     end
 
     # Needs to be called with a block that given an array of ids
@@ -231,7 +232,7 @@ module Morph
     # Find the difference within a range of rowids
     def self.diffstat_table_rowid_range(table, min, max, db1, db2)
       r = rows_changed_in_range(table, min, max, db1, db2)
-      {added: r[:added].count, removed: r[:removed].count, changed: r[:changed].count}
+      {added: r[:added].count, removed: r[:removed].count, changed: r[:changed].count, unchanged: r[:unchanged].count}
     end
   end
 end

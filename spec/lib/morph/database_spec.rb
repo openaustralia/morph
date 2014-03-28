@@ -15,28 +15,28 @@ describe Morph::Database do
 
   describe ".diffstat_table" do
     it "should show no change for two identical sqlite databases" do
-      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 0, changed: 0}
+      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 0, changed: 0, unchanged: 1}
     end
 
     it "should show a new record" do
       @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
-      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 1, removed: 0, changed: 0}
+      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 1, removed: 0, changed: 0, unchanged: 1}
     end
 
     it "should show a deleted record" do
       @db2.execute("DELETE FROM foo where v1='hello'")
-      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 1, changed: 0}
+      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 1, changed: 0, unchanged: 0}
     end
 
     it "should show adding a record and deleting a record" do
       @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
       @db2.execute("DELETE FROM foo where v1='hello'")
-      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 1, removed: 1, changed: 0}
+      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 1, removed: 1, changed: 0, unchanged: 0}
     end
 
     it "should show a record being changed" do
       @db2.execute("UPDATE foo SET v1='different' WHERE v1='hello'")
-      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 0, changed: 1}
+      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 0, changed: 1, unchanged: 0}
     end
 
     it "should be able to handle a large number of records" do
@@ -67,7 +67,7 @@ describe Morph::Database do
       (1..200).each do |i|
         @db2.execute("INSERT INTO foo VALUES ('hello#{i}', #{r.rand})")
       end
-      Morph::Database.diffstat_table("foo", @db1, @db2, 100).should == {added: 200, removed: 200, changed: 100}
+      Morph::Database.diffstat_table("foo", @db1, @db2, 100).should == {added: 200, removed: 200, changed: 100, unchanged: 700}
     end
 
     describe ".diffstat" do
