@@ -72,7 +72,7 @@ describe Morph::Database do
 
     describe ".diffstat" do
       it "should show that nothing has changed" do
-        Morph::Database.diffstat2(@db1, @db2).should == {
+        Morph::Database.diffstat(@db1, @db2).should == {
           tables: {
             added: [],
             removed: [],
@@ -91,7 +91,7 @@ describe Morph::Database do
 
       it "should show a new table" do
         @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
-        Morph::Database.diffstat2(@db1, @db2).should == {
+        Morph::Database.diffstat(@db1, @db2).should == {
           tables: {
             added: [
               {
@@ -115,7 +115,7 @@ describe Morph::Database do
 
       it "should show a deleted table" do
         @db2.execute("DROP TABLE foo")
-        Morph::Database.diffstat2(@db1, @db2).should == {
+        Morph::Database.diffstat(@db1, @db2).should == {
           tables: {
             added: [],
             removed: [
@@ -136,14 +136,30 @@ describe Morph::Database do
         @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
         @db2.execute("DROP TABLE foo")
         Morph::Database.diffstat(@db1, @db2).should == {
-          records: {added: 0, removed: 1, changed: 0},
-          tables:  {added: 1, removed: 1, changed: 0}
+          tables: {
+            added: [
+              {
+                name: "bar",
+                records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+              }
+            ],
+            removed: [
+              {
+                name: "foo",
+                records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
+              }
+            ],
+            changed: [],
+            unchanged: [],
+            counts: {added: 1, removed: 1, changed: 0, unchanged: 0}
+          },
+          records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
         }
       end
 
       it "should show a changed table (because of a schema change)" do
         @db2.execute("ALTER TABLE foo ADD v3 text")
-        Morph::Database.diffstat2(@db1, @db2).should == {
+        Morph::Database.diffstat(@db1, @db2).should == {
           tables: {
             added: [],
             removed: [],
@@ -162,7 +178,7 @@ describe Morph::Database do
 
       it "should show a new record on an unchanged table" do
         @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
-        Morph::Database.diffstat2(@db1, @db2).should == {
+        Morph::Database.diffstat(@db1, @db2).should == {
           tables: {
             added: [],
             removed: [],
@@ -182,7 +198,7 @@ describe Morph::Database do
       it "should show a new record on a new table" do
         @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
         @db2.execute("INSERT INTO bar VALUES ('goodbye', 3.1)")
-        Morph::Database.diffstat2(@db1, @db2).should == {
+        Morph::Database.diffstat(@db1, @db2).should == {
           tables: {
             added: [
               name: "bar",
