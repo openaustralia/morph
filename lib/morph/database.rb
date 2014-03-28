@@ -160,14 +160,14 @@ module Morph
     end
 
     def self.table_changes(db1, db2)
-      tables1 = db1.execute("select name from sqlite_master where type='table'").map{|r| r.first}
-      tables2 = db2.execute("select name from sqlite_master where type='table'").map{|r| r.first}
+      v1, v2 = execute2(db1, db2, "select name from sqlite_master where type='table'")
+      tables1 = v1.map{|r| r.first}
+      tables2 = v2.map{|r| r.first}
       tables_removed = tables1 - tables2
       tables_added = tables2 - tables1
       possibly_changed_tables = tables1 - tables_removed
       quoted_names = possibly_changed_tables.map{|n| "'#{n}'"}.join(",")
-      schemas1 = db1.execute("select sql, name from sqlite_master where type='table' AND name IN (#{quoted_names})")
-      schemas2 = db2.execute("select sql, name from sqlite_master where type='table' AND name IN (#{quoted_names})")
+      schemas1, schemas2 = execute2(db1, db2, "select sql, name from sqlite_master where type='table' AND name IN (#{quoted_names})")
       tables_changed = []
       tables_unchanged = []
       schemas1.each_index do |i|
@@ -189,14 +189,18 @@ module Morph
 
     private
 
+    def self.execute2(db1, db2, query)
+      [db1.execute(query), db2.execute(query)]
+    end
+
     def self.rows_changed_in_range(table, min, max, db1, db2)
-      records1 = db1.execute("SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}").map{|r| r.first}
-      records2 = db2.execute("SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}").map{|r| r.first}
+      v1, v2 = execute2(db1, db2, "SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}")
+      records1 = v1.map{|r| r.first}
+      records2 = v2.map{|r| r.first}
       added_records = records2 - records1
       removed_records = records1 - records2
       possibly_changed_records = records1 - removed_records
-      r1 = db1.execute("SELECT ROWID, * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
-      r2 = db2.execute("SELECT ROWID, * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
+      r1, r2 = execute2(db1, db2, "SELECT ROWID, * from #{table} WHERE ROWID IN (#{possibly_changed_records.join(',')})")
       changed_records = []
       unchanged_records = []
       r1.each_index do |i|
