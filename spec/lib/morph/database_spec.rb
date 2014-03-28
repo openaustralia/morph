@@ -62,7 +62,7 @@ describe Morph::Database do
       (1..200).each do |i|
         @db2.execute("INSERT INTO foo VALUES ('hello#{i}', #{r.rand})")
       end
-      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 200, removed: 200, changed: 100}
+      Morph::Database.diffstat_table("foo", @db1, @db2, 100).should == {added: 200, removed: 200, changed: 100}
     end
   end
 end

@@ -130,7 +130,7 @@ module Morph
     end
 
     # Page is the maximum number of records that is read into memory at once
-    def self.diffstat_table(table, db1, db2, page = 100)
+    def self.diffstat_table(table, db1, db2, page = 1000)
       # Find the ROWID range that covers both databases
       v1 = db1.execute("SELECT MIN(ROWID), MAX(ROWID) from #{table}")
       v2 = db2.execute("SELECT MIN(ROWID), MAX(ROWID) from #{table}")
