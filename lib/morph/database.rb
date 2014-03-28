@@ -134,7 +134,11 @@ module Morph
       # This is obviously not the way to do this in general
       count1 = db1.execute("SELECT COUNT(*) FROM #{table}").first.values.first
       count2 = db2.execute("SELECT COUNT(*) FROM #{table}").first.values.first
-      {added: (count2 - count1), removed: 0, changed: 0}
+      if count2 > count1
+        {added: (count2 - count1), removed: 0, changed: 0}
+      else
+        {added: 0, removed: (count1 - count2), changed: 0}
+      end
     end
   end
 end

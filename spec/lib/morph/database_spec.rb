@@ -15,14 +15,17 @@ describe Morph::Database do
 
   describe ".diffstat_table" do
     it "should show no change for two identical sqlite databases" do
-      # Now ask for the difference between the two
       Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 0, changed: 0}
     end
 
     it "should show a new record" do
       @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
-      # Now ask for the difference between the two
       Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 1, removed: 0, changed: 0}
+    end
+
+    it "should show a deleted record" do
+      @db2.execute("DELETE FROM foo")
+      Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 1, changed: 0}
     end
   end
 end
