@@ -170,17 +170,12 @@ module Morph
       quoted_names = possibly_changed.map{|n| "'#{n}'"}.join(",")
       schemas1, schemas2 = execute2(db1, db2, "select sql, name from sqlite_master where type='table' AND name IN (#{quoted_names})")
       changed = []
-      unchanged = []
       schemas1.each_index do |i|
         schema1, name1 = schemas1[i]
         schema2, name2 = schemas2[i]
-        if schema1 == schema2
-          unchanged << name1
-        else
-          changed << name1
-        end
+        changed << name1 if schema1 != schema2
       end
-      {added: added, removed: removed, changed: changed, unchanged: unchanged}
+      {added: added, removed: removed, changed: changed}
     end
 
     def self.diffstat(db1, db2)
@@ -204,17 +199,12 @@ module Morph
       possibly_changed = records1 - removed
       r1, r2 = execute2(db1, db2, "SELECT ROWID, * from #{table} WHERE ROWID IN (#{possibly_changed.join(',')})")
       changed = []
-      unchanged = []
       r1.each_index do |i|
         rowid = r1[i].first
-        if r1[i] == r2[i]
-          unchanged << rowid
-        else
-          changed << rowid
-        end
+        changed << rowid if r1[i] != r2[i]
       end
 
-      {added: added, removed: removed, changed: changed, unchanged: unchanged}
+      {added: added, removed: removed, changed: changed}
     end
 
     # Find the difference within a range of rowids
