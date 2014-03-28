@@ -28,7 +28,7 @@ module Morph
     end
 
     def backup
-      FileUtils.cp(sqlite_db_path, sqlite_db_backup_path)
+      FileUtils.cp(sqlite_db_path, sqlite_db_backup_path) if File.exists?(sqlite_db_path)
     end
 
     # The actual table names in the current db

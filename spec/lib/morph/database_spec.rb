@@ -21,6 +21,11 @@ describe Morph::Database do
       File.read("data.sqlite.backup").should == "This is a fake sqlite file"
       FileUtils.rm(["data.sqlite", "data.sqlite.backup"])
     end
+
+    it "shouldn't do anything if the database file isn't there" do
+      d = Morph::Database.new(double(data_path: "."))
+      d.backup
+    end
   end
 
   describe "differencing databases" do
