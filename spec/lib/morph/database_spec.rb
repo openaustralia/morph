@@ -52,12 +52,17 @@ describe Morph::Database do
       # Make an identical version
       FileUtils::cp("tmp_db1.sqlite", "tmp_db2.sqlite")
       @db2 = SQLite3::Database.new("tmp_db2.sqlite")
-      # Remove 200 random records
-      ids = @db2.execute("SELECT ROWID FROM foo ORDER BY RANDOM() LIMIT 200").map{|r| r.first}
+      # Remove 200 random records (but ensure we don't remove the last)
+      ids = @db2.execute("SELECT ROWID FROM foo ORDER BY RANDOM() LIMIT 201").map{|r| r.first}
+      if ids.include?(1000)
+        ids.delete(1000)
+      else
+        ids.delete(ids.first)
+      end
       @db2.execute("DELETE FROM foo WHERE ROWID IN (#{ids.join(',')})")
       # Update 100 random records
       ids = @db2.execute("SELECT ROWID FROM foo ORDER BY RANDOM() LIMIT 100").map{|r| r.first}
-      @db2.execute("UPDATE foo SET v2=#{r.rand} WHERE ROWID IN (#{ids.join(',')})")
+      @db2.execute("UPDATE foo SET v2=10 WHERE ROWID IN (#{ids.join(',')})")
       # Add 200 new records to that
       (1..200).each do |i|
         @db2.execute("INSERT INTO foo VALUES ('hello#{i}', #{r.rand})")
