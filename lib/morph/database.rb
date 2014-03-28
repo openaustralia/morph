@@ -204,8 +204,8 @@ module Morph
         records_changed += records[:changed]
       end
       {
-        records_added: records_added, records_removed: records_removed, records_changed: records_changed,
-        tables_added: r[:added].count, tables_removed: r[:removed].count, tables_changed: r[:changed].count
+        records: {added: records_added, removed: records_removed, changed: records_changed},
+        tables:  {added: r[:added].count, removed: r[:removed].count, changed: r[:changed].count}
       }
     end
 
