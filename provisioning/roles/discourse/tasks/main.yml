@@ -1,0 +1,9 @@
+---
+- name: Ensure git is installed
+  apt: pkg=git
+- name: Ensure that /var/docker exists
+  file: path=/var/docker owner=deploy group=deploy state=directory
+- name: Get the official discourse docker image
+  command: git clone https://github.com/discourse/discourse_docker.git /var/docker creates=/var/docker/README.md
+- name: Copy over app configuration
+  copy: src=app.yml dest=/var/docker/containers/app.yml
