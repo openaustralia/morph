@@ -7,3 +7,7 @@
   command: git clone https://github.com/discourse/discourse_docker.git /var/docker creates=/var/docker/README.md
 - name: Copy over app configuration
   template: src=app.yml dest=/var/docker/containers/app.yml owner=deploy group=deploy
+- name: Bootstrap discourse app
+  command: ./launcher bootstrap app chdir=/var/docker creates=/var/docker/shared/standalone/log/rails/production.log
+- name: Start discourse app
+  command: ./launcher start app chdir=/var/docker
