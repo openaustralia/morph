@@ -8,7 +8,7 @@ templates:
 
 # which ports to expose?
 expose:
-  - "80:80"   # fwd host port 80   to container port 80 (http)
+  - "8000:80" # fwd host port 8000 to container port 80 (http)
   - "2222:22" # fwd host port 2222 to container port 22 (ssh)
 
 params:

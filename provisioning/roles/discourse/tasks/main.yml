@@ -6,4 +6,4 @@
 - name: Get the official discourse docker image
   command: git clone https://github.com/discourse/discourse_docker.git /var/docker creates=/var/docker/README.md
 - name: Copy over app configuration
-  copy: src=app.yml dest=/var/docker/containers/app.yml
+  template: src=app.yml dest=/var/docker/containers/app.yml owner=deploy group=deploy
