@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140328092932) do
+ActiveRecord::Schema.define(version: 20140331064636) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20140328092932) do
 
   create_table "api_queries", force: true do |t|
     t.string   "type"
-    t.string   "query"
+    t.text     "query"
     t.integer  "scraper_id"
     t.integer  "owner_id"
     t.float    "utime"
