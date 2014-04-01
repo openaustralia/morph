@@ -8,3 +8,4 @@ dependencies:
   - { role: postfix }
   - { role: redis }
   - { role: newrelic-sysmond }
+  - { role: discourse }
