@@ -1,25 +1,27 @@
 ---
-- name: Add ngninx apt key
-  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
-- name: Add nginx binary repo
-  apt_repository: repo='deb http://nginx.org/packages/mainline/ubuntu/ precise nginx'
-- name: Ensure latest stable nginx is installed (we need recent version for websockets tunneling support)
-  apt: pkg=nginx
-# Don't know why but nginx keeps getting reinstalled (I think) and nginx needs a kick
-- name: Ensure nginx is running
-  service: name=nginx state=started
 - name: Ensure we have the Passenger key added
   apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x561F9B9CAC40B2F7 id=AC40B2F7
+
 - name: Ensure we have HTTPS support for APT
   apt: pkg=apt-transport-https
+
 - name: Ensure we have certificates too
   apt: pkg=ca-certificates
+
 - name: Ensure we have the passenger repository
   apt_repository: repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger precise main'
-- name: Install ngninx extras (compiled with Passenger stuff)
-  apt: pkg=nginx-extras
-# Don't know why but nginx-extras keeps getting reinstalled (I think) and nginx needs a kick
-- name: Ensure nginx is running
-  service: name=nginx state=started
+
 - name: Install passenger
   apt: pkg=passenger
+
+- name: Add ngninx apt key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+
+- name: Add nginx binary repo
+  apt_repository: repo='deb http://nginx.org/packages/mainline/ubuntu/ precise nginx'
+
+- name: Install ngninx extras (compiled with Passenger stuff)
+  apt: pkg=nginx-extras
+
+- name: Ensure nginx is running
+  service: name=nginx state=started
