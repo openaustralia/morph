@@ -22,7 +22,7 @@ env:
   DISCOURSE_HOSTNAME: 'discourse.{{ server_name }}'
   # SET ME to your smtp server eg mandrill
   # don't forget to set mail
-  DISCOURSE_SMTP_ADDRESS: localhost          # (mandatory)
+  DISCOURSE_SMTP_ADDRESS: {{ ansible_default_ipv4['address'] }} # (mandatory)
   # DISCOURSE_SMTP_PORT: 587                        # (optional)
   # DISCOURSE_SMTP_USER_NAME: user@example.com      # (optional)
   # DISCOURSE_SMTP_PASSWORD: p@ssword               # (optional)
