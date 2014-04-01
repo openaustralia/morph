@@ -11,3 +11,11 @@
   command: ./launcher bootstrap app chdir=/var/docker creates=/var/docker/shared/standalone/log/rails/production.log
 - name: Start discourse app
   command: ./launcher start app chdir=/var/docker
+
+- name: Generate the nginx config for the app
+  template: src=discourse.morph.io dest=/etc/nginx/sites-available/ owner=root group=root mode=644
+  notify: restart nginx
+
+- name: Make the nginx site active
+  command: ln -s /etc/nginx/sites-available/discourse.morph.io /etc/nginx/sites-enabled/discourse.morph.io creates=/etc/nginx/sites-enabled/discourse.morph.io
+  notify: restart nginx

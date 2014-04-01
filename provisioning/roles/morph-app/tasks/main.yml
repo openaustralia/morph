@@ -27,8 +27,15 @@
   template: src=nginx.conf dest=/etc/nginx/nginx.conf
   notify: restart nginx
 - name: Generate the nginx config for the app
-  template: src=sites/default dest=/etc/nginx/sites-available/default
+  template: src={{ item }} dest=/etc/nginx/sites-available/ owner=root group=root mode=644
   notify: restart nginx
+  with_fileglob:
+    - ../templates/sites/*
+- name: Make the separate nginx sites active
+  command: ln -s /etc/nginx/sites-available/{{ item | basename }} /etc/nginx/sites-enabled/{{ item | basename }} creates=/etc/nginx/sites-enabled/{{ item | basename }}
+  notify: restart nginx
+  with_fileglob:
+    - ../templates/sites/*
 - name: Ensure that /var/www/shared exists
   file: path=/var/www/shared owner=deploy group=deploy state=directory
 - name: Ensure that .env exists
