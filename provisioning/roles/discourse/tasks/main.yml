@@ -7,8 +7,20 @@
   command: git clone https://github.com/discourse/discourse_docker.git /var/docker creates=/var/docker/README.md
 - name: Copy over app configuration
   template: src=app.yml dest=/var/docker/containers/app.yml owner=deploy group=deploy
+
+# launcher bootstrap needs a key pair at /home/vagrant/.ssh/id_rsa otherwise it waits
+- name: Ensure vagrant .ssh directory exists
+  file: path=/home/vagrant/.ssh owner=vagrant group=vagrant state=directory
+- name: Generate vagrant keypair
+  command: ssh-keygen -f /home/vagrant/.ssh/id_rsa -t rsa -N '' creates=/home/vagrant/.ssh/id_rsa
+- name: Ensure private key has correct permissions and ownership
+  file: path=/home/vagrant/.ssh/id_rsa owner=vagrant group=vagrant
+- name: Ensure public key has correct permissions and ownership
+  file: path=/home/vagrant/.ssh/id_rsa.pub owner=vagrant group=vagrant
+
 - name: Bootstrap discourse app
   command: ./launcher bootstrap app chdir=/var/docker creates=/var/docker/shared/standalone/log/rails/production.log
+
 - name: Start discourse app
   command: ./launcher start app chdir=/var/docker
 
