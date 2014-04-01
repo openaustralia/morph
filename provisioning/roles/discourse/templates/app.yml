@@ -17,7 +17,7 @@ params:
 
 env:
   # comma-separated emails
-  DISCOURSE_DEVELOPER_EMAILS: 'contact@oaf.org.au'
+  DISCOURSE_DEVELOPER_EMAILS: 'matthew@oaf.org.au'
   # CHANGE ME to your hostname
   DISCOURSE_HOSTNAME: 'discourse.{{ server_name }}'
   # SET ME to your smtp server eg mandrill
