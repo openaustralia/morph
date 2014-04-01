@@ -27,7 +27,7 @@
   template: src=nginx.conf dest=/etc/nginx/nginx.conf
   notify: restart nginx
 - name: Generate the nginx config for the app
-  template: src=default.nginx dest=/etc/nginx/sites-available/default
+  template: src=sites/default dest=/etc/nginx/sites-available/default
   notify: restart nginx
 - name: Ensure that /var/www/shared exists
   file: path=/var/www/shared owner=deploy group=deploy state=directory
