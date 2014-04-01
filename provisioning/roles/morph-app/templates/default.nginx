@@ -44,6 +44,19 @@ server {
 
 }
 
+upstream discourse_backend {
+  server 127.0.0.1:8000;
+}
+
+server {
+  listen 80;
+  server_name discourse.{{ server_name }};
+
+  location / {
+    proxy_pass http://discourse_backend;
+  }
+}
+
 # For everything else redirect to ssl site
 server {
   listen 80 default_server;
