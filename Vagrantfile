@@ -141,14 +141,14 @@ Vagrant.configure("2") do |config|
     local.vm.synced_folder ".", "/vagrant", disabled: true
 
     local.vm.provider "virtualbox" do |v|
-      v.memory = 1024
+      v.memory = 2048
     end
 
     local.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/playbook.yml"
       ansible.extra_vars = { server_name: "dev.morph.io", env_file: "env.local.secure", backups: false,
         cron_jobs: false}
-      #ansible.verbose = 'vvv'
+      ansible.verbose = 'v'
     end
   end
 
