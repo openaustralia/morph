@@ -5,7 +5,7 @@ describe Morph::Database do
     it "should attempt to remove the file if it's not there" do
       FileUtils.should_not_receive(:rm)
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-        Morph::Database.new(create(:scraper)).clear
+        Morph::Database.new(create(:scraper).data_path).clear
       end
     end
   end
@@ -16,14 +16,14 @@ describe Morph::Database do
       File.open("data.sqlite", "w") do |f|
         f.write("This is a fake sqlite file")
       end
-      d = Morph::Database.new(double(data_path: "."))
+      d = Morph::Database.new(".")
       d.backup
       File.read("data.sqlite.backup").should == "This is a fake sqlite file"
       FileUtils.rm(["data.sqlite", "data.sqlite.backup"])
     end
 
     it "shouldn't do anything if the database file isn't there" do
-      d = Morph::Database.new(double(data_path: "."))
+      d = Morph::Database.new(".")
       d.backup
     end
   end

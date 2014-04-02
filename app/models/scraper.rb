@@ -192,7 +192,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def database
-    Morph::Database.new(self)
+    Morph::Database.new(data_path)
   end
 
   # It seems silly implementing this

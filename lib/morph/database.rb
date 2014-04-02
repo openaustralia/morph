@@ -1,10 +1,7 @@
 module Morph
   class Database
-    attr_reader :scraper
-    delegate :data_path, to: :scraper
-
-    def initialize(scraper)
-      @scraper = scraper
+    def initialize(data_path)
+      @data_path = data_path
     end
 
     def self.sqlite_db_filename
@@ -20,11 +17,11 @@ module Morph
     end
 
     def sqlite_db_path
-      File.join(data_path, Database.sqlite_db_filename)
+      File.join(@data_path, Database.sqlite_db_filename)
     end
 
     def sqlite_db_backup_path
-      File.join(data_path, Database.sqlite_db_backup_filename)
+      File.join(@data_path, Database.sqlite_db_backup_filename)
     end
 
     def backup
@@ -106,7 +103,7 @@ module Morph
     end
 
     def write_sqlite_database(content)
-      FileUtils.mkdir_p data_path
+      FileUtils.mkdir_p @data_path
       File.open(sqlite_db_path, 'wb') {|file| file.write(content) }
     end
 
@@ -138,7 +135,7 @@ module Morph
 
     # Remove any files or directories in the data_path that are not the actual database
     def tidy_data_path
-      Database.tidy_data_path(data_path)
+      Database.tidy_data_path(@data_path)
     end
 
     # Page is the maximum number of records that are read into memory at once
