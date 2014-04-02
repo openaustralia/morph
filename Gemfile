@@ -54,7 +54,7 @@ gem "rails-timeago", "~> 2.0"
 # Rails 4 compatibility isn't released yet. So tracking HEAD.
 gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'faye'
-gem 'thin', require: false
+gem "puma"
 gem 'sync'
 
 group :production do
@@ -62,8 +62,6 @@ group :production do
 end
 
 group :development do
-  gem "puma"
-
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
   gem 'guard'
