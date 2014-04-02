@@ -25,9 +25,9 @@
   command: ./launcher start app chdir=/var/docker
 
 - name: Generate the nginx config for the app
-  template: src=discourse.morph.io dest=/etc/nginx/sites-available/ owner=root group=root mode=644
+  template: src=discourse.nginx dest=/etc/nginx/sites-available/{{ discourse_server_name }} owner=root group=root mode=644
   notify: restart nginx
 
 - name: Make the nginx site active
-  command: ln -s /etc/nginx/sites-available/discourse.morph.io /etc/nginx/sites-enabled/discourse.morph.io creates=/etc/nginx/sites-enabled/discourse.morph.io
+  command: ln -s /etc/nginx/sites-available/{{ discourse_server_name }} /etc/nginx/sites-enabled/{{ discourse_server_name }} creates=/etc/nginx/sites-enabled/{{ discourse_server_name }}
   notify: restart nginx
