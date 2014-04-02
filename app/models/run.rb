@@ -107,7 +107,7 @@ class Run < ActiveRecord::Base
     puts "Starting...\n"
     database.backup
     update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
-    sync_update scraper
+    sync_update scraper if scraper
     FileUtils.mkdir_p data_path
     FileUtils.chmod 0777, data_path
 
@@ -143,9 +143,11 @@ class Run < ActiveRecord::Base
       records_unchanged: records[:unchanged]
     )
     Morph::Database.tidy_data_path(data_path)
-    scraper.update_sqlite_db_size
-    scraper.reload
-    sync_update scraper
+    if scraper
+      scraper.update_sqlite_db_size
+      scraper.reload
+      sync_update scraper
+    end
   end
 
   def log(stream, text)
