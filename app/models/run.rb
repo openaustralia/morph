@@ -5,9 +5,13 @@ class Run < ActiveRecord::Base
   has_many :log_lines
   has_one :metric
 
-  delegate :git_url, :full_name, :database, to: :scraper
+  delegate :git_url, :full_name, to: :scraper
   delegate :current_revision_from_repo, to: :scraper, allow_nil: true
   delegate :utime, :stime, to: :metric
+
+  def database
+    Morph::Database.new(data_path)
+  end
 
   def cpu_time
     utime + stime
