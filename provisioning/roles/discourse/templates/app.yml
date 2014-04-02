@@ -19,7 +19,7 @@ env:
   # comma-separated emails
   DISCOURSE_DEVELOPER_EMAILS: 'matthew@oaf.org.au'
   # CHANGE ME to your hostname
-  DISCOURSE_HOSTNAME: 'discourse.{{ server_name }}'
+  DISCOURSE_HOSTNAME: '{{ discourse_server_name }}'
   # SET ME to your smtp server eg mandrill
   # don't forget to set mail
   DISCOURSE_SMTP_ADDRESS: {{ ansible_default_ipv4['address'] }} # (mandatory)
