@@ -24,6 +24,17 @@
 - name: Start discourse app
   command: ./launcher start app chdir=/var/docker
 
+- name: Ensure that ssl/discourse directory exist
+  file: path=/etc/nginx/ssl/discourse owner=deploy group=deploy state=directory
+
+- name: Add {{ discourse_server_name }} SSL certificate (public)
+  copy: src=ssl/{{ discourse_server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/discourse/cert.pem owner=deploy group=deploy mode=0600
+  notify: restart nginx
+
+- name: Add {{ discourse_server_name }} SSL certificate (private)
+  copy: src=ssl/{{ discourse_server_name }}/ssl.key.secure dest=/etc/nginx/ssl/discourse/cert.key owner=deploy group=deploy mode=0600
+  notify: restart nginx
+
 - name: Generate the nginx config for the app
   template: src=discourse.nginx dest=/etc/nginx/sites-available/{{ discourse_server_name }} owner=root group=root mode=644
   notify: restart nginx
