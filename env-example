@@ -30,3 +30,7 @@ DIGITAL_OCEAN_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Secret for authenticating sync / faye
 SYNC_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Secret for single sign on authentication for Discourse
+DISCOURSE_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
+DISCOURSE_URL=http://discuss.dev.morph.io
