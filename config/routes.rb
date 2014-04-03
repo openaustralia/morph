@@ -5,6 +5,8 @@ Morph::Application.routes.draw do
     devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   end
 
+  get "/discourse/sso", to: "discourse_sso#sso"
+
   # The sync refetch route is being added after this stuff. We need it added before so repeating
   get 'sync/refetch', controller: 'sync/refetches', action: 'show'
 
