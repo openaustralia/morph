@@ -165,7 +165,10 @@ class Run < ActiveRecord::Base
 
   # The main section of the scraper running that is run in the background
   def synch_and_go!
-    Morph::Github.synchronise_repo(repo_path, git_url)
-    go!
+    # If this run belongs to a scraper that has just been deleted then don't do anything
+    if scraper
+      Morph::Github.synchronise_repo(repo_path, git_url)
+      go!
+    end
   end
 end
