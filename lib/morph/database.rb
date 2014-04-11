@@ -86,7 +86,7 @@ module Morph
 
     # Returns 0 if table doesn't exists (or there is some other problem)
     def no_rows(table = table_names.first)
-      q = sql_query_safe("select count(*) from #{table}")
+      q = sql_query_safe("select count(*) from '#{table}'")
       q ? q.first.values.first : 0
     end
 
@@ -108,15 +108,15 @@ module Morph
     end
 
     def standardise_table_name(table_name)
-      sql_query_safe("ALTER TABLE #{table_name} RENAME TO #{Database.sqlite_table_name}", false)
+      sql_query_safe("ALTER TABLE '#{table_name}' RENAME TO '#{Database.sqlite_table_name}'", false)
     end
 
     def select_first_ten(table = table_names.first)
-      "select * from #{table} limit 10"
+      "select * from '#{table}' limit 10"
     end
 
     def select_all(table = table_names.first)
-      "select * from #{table}"
+      "select * from '#{table}'"
     end
 
     def first_ten_rows(table = table_names.first)
@@ -141,8 +141,8 @@ module Morph
     # Page is the maximum number of records that are read into memory at once
     def self.diffstat_table(table, db1, db2, page = 1000)
       # Find the ROWID range that covers both databases
-      v1 = db1.execute("SELECT MIN(ROWID), MAX(ROWID) from #{table}")
-      v2 = db2.execute("SELECT MIN(ROWID), MAX(ROWID) from #{table}")
+      v1 = db1.execute("SELECT MIN(ROWID), MAX(ROWID) from '#{table}'")
+      v2 = db2.execute("SELECT MIN(ROWID), MAX(ROWID) from '#{table}'")
       min1, max1 = v1.first
       min2, max2 = v2.first
       if min1.nil? && max1.nil? && min2.nil? && max2.nil?
@@ -245,7 +245,7 @@ module Morph
         result[:records][:counts][:unchanged] += records[:unchanged]
       end
       r[:added].each do |table|
-        added = db2.execute("SELECT COUNT(*) FROM #{table}").first.first
+        added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         result[:tables][:added] << {
           name: table,
           records: {counts: {added: added, removed: 0, changed: 0, unchanged: 0}}
@@ -253,7 +253,7 @@ module Morph
         result[:records][:counts][:added] += added
       end
       r[:removed].each do |table|
-        removed = db1.execute("SELECT COUNT(*) FROM #{table}").first.first
+        removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         result[:tables][:removed] << {
           name: table,
           records: {counts: {added: 0, removed: removed, changed: 0, unchanged: 0}}
@@ -274,9 +274,9 @@ module Morph
     end
 
     def self.rows_changed_in_range(table, min, max, db1, db2)
-      changes(db1, db2, "SELECT ROWID from #{table} WHERE ROWID BETWEEN #{min} AND #{max}") do |possibly_changed|
+      changes(db1, db2, "SELECT ROWID from '#{table}' WHERE ROWID BETWEEN #{min} AND #{max}") do |possibly_changed|
         quoted_ids = possibly_changed.map{|n| "'#{n}'"}.join(',')
-        "SELECT ROWID, * from #{table} WHERE ROWID IN (#{quoted_ids})"
+        "SELECT ROWID, * from '#{table}' WHERE ROWID IN (#{quoted_ids})"
       end
     end
 
