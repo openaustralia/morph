@@ -24,12 +24,6 @@ class ScrapersController < ApplicationController
     if !Scraper.can_write?(current_user, @scraper.owner)
       @scraper.errors.add(:owner_id, "doesn't belong to you")
       render :new
-    elsif Scraper.exists?(full_name: @scraper.full_name)
-      @scraper.errors.add(:name, "is already taken on Morph")
-      render :new
-    elsif Morph::Github.in_public_use?(@scraper.full_name)
-      @scraper.errors.add(:name, "is already taken on GitHub")
-      render :new
     elsif !@scraper.valid?
       render :new
     else
