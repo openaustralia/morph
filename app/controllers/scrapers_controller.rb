@@ -30,6 +30,8 @@ class ScrapersController < ApplicationController
     elsif Morph::Github.in_public_use?(@scraper.full_name)
       @scraper.errors.add(:name, "is already taken on GitHub")
       render :new
+    elsif !@scraper.valid?
+      render :new
     else
       repo = Morph::Github.create_repository(current_user, @scraper.owner, @scraper.name)
       # TODO Populate it with a default scraper in the chosen language
