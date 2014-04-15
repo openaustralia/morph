@@ -70,7 +70,7 @@ group :development do
   gem 'guard-rspec', require: false
   gem 'growl'
   #gem "bullet"
-  #gem 'rack-mini-profiler'
+  gem 'rack-mini-profiler'
   #gem "flamegraph"
 
   gem 'better_errors'
