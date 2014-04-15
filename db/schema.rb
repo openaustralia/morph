@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140331064636) do
+ActiveRecord::Schema.define(version: 20140415221908) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -36,6 +36,10 @@ ActiveRecord::Schema.define(version: 20140331064636) do
     t.datetime "updated_at"
   end
 
+  add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
+  add_index "alerts", ["watch_id"], name: "index_alerts_on_watch_id", using: :btree
+  add_index "alerts", ["watch_type"], name: "index_alerts_on_watch_type", using: :btree
+
   create_table "api_queries", force: true do |t|
     t.string   "type"
     t.text     "query"
@@ -50,12 +54,18 @@ ActiveRecord::Schema.define(version: 20140331064636) do
     t.datetime "updated_at"
   end
 
+  add_index "api_queries", ["owner_id"], name: "index_api_queries_on_owner_id", using: :btree
+  add_index "api_queries", ["scraper_id"], name: "index_api_queries_on_scraper_id", using: :btree
+
   create_table "contributions", force: true do |t|
     t.integer  "scraper_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "contributions", ["scraper_id"], name: "index_contributions_on_scraper_id", using: :btree
+  add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
 
   create_table "log_lines", force: true do |t|
     t.integer  "run_id"
@@ -65,6 +75,9 @@ ActiveRecord::Schema.define(version: 20140331064636) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "log_lines", ["number"], name: "index_log_lines_on_number", using: :btree
+  add_index "log_lines", ["run_id"], name: "index_log_lines_on_run_id", using: :btree
 
   create_table "metrics", force: true do |t|
     t.float    "wall_time"
@@ -82,10 +95,15 @@ ActiveRecord::Schema.define(version: 20140331064636) do
     t.integer  "run_id"
   end
 
+  add_index "metrics", ["run_id"], name: "index_metrics_on_run_id", using: :btree
+
   create_table "organizations_users", force: true do |t|
     t.integer "organization_id"
     t.integer "user_id"
   end
+
+  add_index "organizations_users", ["organization_id"], name: "index_organizations_users_on_organization_id", using: :btree
+  add_index "organizations_users", ["user_id"], name: "index_organizations_users_on_user_id", using: :btree
 
   create_table "owners", force: true do |t|
     t.integer  "sign_in_count",      default: 0, null: false
@@ -107,6 +125,9 @@ ActiveRecord::Schema.define(version: 20140331064636) do
     t.string   "gravatar_url"
     t.string   "api_key"
   end
+
+  add_index "owners", ["api_key"], name: "index_owners_on_api_key", using: :btree
+  add_index "owners", ["nickname"], name: "index_owners_on_nickname", using: :btree
 
   create_table "runs", force: true do |t|
     t.integer  "scraper_id"
@@ -130,6 +151,9 @@ ActiveRecord::Schema.define(version: 20140331064636) do
     t.integer  "records_unchanged"
   end
 
+  add_index "runs", ["owner_id"], name: "index_runs_on_owner_id", using: :btree
+  add_index "runs", ["scraper_id"], name: "index_runs_on_scraper_id", using: :btree
+
   create_table "scrapers", force: true do |t|
     t.string   "name",              default: "",    null: false
     t.string   "description"
@@ -150,5 +174,8 @@ ActiveRecord::Schema.define(version: 20140331064636) do
     t.integer  "repo_size",         default: 0,     null: false
     t.integer  "sqlite_db_size",    default: 0,     null: false
   end
+
+  add_index "scrapers", ["full_name"], name: "index_scrapers_on_full_name", using: :btree
+  add_index "scrapers", ["owner_id"], name: "index_scrapers_on_owner_id", using: :btree
 
 end
