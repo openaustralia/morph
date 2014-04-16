@@ -73,14 +73,8 @@ class Run < ActiveRecord::Base
     log_lines.where(stream: "stderr").order(:number).map{|l| l.text}.join
   end
 
-  def errors_in_logs?
-    log_lines.to_a.count{|l| l.stream == "stderr"} > 0
-  end
-
   def finished_successfully?
-    # PHP doesn't seem to set the exit status to non-zero if there is a warning.
-    # So, will say that things are successful if there are no errors in the log as well
-    finished? && status_code == 0 && !errors_in_logs?
+    finished? && status_code == 0
   end
 
   def self.time_output_filename
