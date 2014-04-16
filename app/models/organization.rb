@@ -28,6 +28,6 @@ class Organization < Owner
 
   # All organizations that have scrapers
   def self.all_with_scrapers
-    Organization.includes(:scrapers).select{|u| !u.scrapers.empty?}
+    Organization.joins(:scrapers).group(:owner_id)
   end
 end
