@@ -66,7 +66,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def successful_runs
-    runs.includes(:log_lines).order(finished_at: :desc).select{|r| r.finished_successfully?}
+    runs.order(finished_at: :desc).select{|r| r.finished_successfully?}
   end
 
   def latest_successful_run_time
