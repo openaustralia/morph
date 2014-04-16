@@ -18,5 +18,13 @@ namespace :app do
         end
       end
     end
+
+    desc "Reset all user github access tokens (Needed after heartbleed)"
+    task :reset_github_access_tokens => :environment do
+      User.all.each do |user|
+        puts user.nickname
+        user.reset_authorization!
+      end
+    end
   end
 end

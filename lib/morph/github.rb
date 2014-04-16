@@ -55,5 +55,20 @@ module Morph
         nil
       end
     end
+
+    # Return a new github access token for a user given their old one. Useful after #heartbleed.
+    # No support for this method yet in octokit (it's brand new) so do it ourselves
+    def self.reset_authorization(access_token)
+      # POST https://api.github.com/applications/:client_id/tokens/:access_token
+      client_id = ENV["GITHUB_APP_CLIENT_ID"]
+      client_secret = ENV["GITHUB_APP_CLIENT_SECRET"]
+
+      conn = Faraday.new(url: 'https://api.github.com') do |faraday|
+        faraday.request :basic_auth, client_id, client_secret
+        faraday.adapter Faraday.default_adapter  # make requests with Net::HTTP
+      end
+      res = conn.post("/applications/#{client_id}/tokens/#{access_token}")
+      JSON.parse(res.body)["token"]
+    end
   end
 end

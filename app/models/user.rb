@@ -26,6 +26,10 @@ class User < Owner
     [self] + organizations
   end
 
+  def reset_authorization!
+    update_attributes(access_token: Morph::Github.reset_authorization(access_token))
+  end
+
   def github_public_org_repos
     Octokit.auto_paginate = true
     repos = []
