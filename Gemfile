@@ -56,6 +56,7 @@ gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'faye'
 gem "puma"
 gem 'sync'
+gem 'rack-mini-profiler'
 
 group :production do
   gem "dalli"
@@ -70,8 +71,6 @@ group :development do
   gem 'guard-rspec', require: false
   gem 'growl'
   #gem "bullet"
-  gem 'rack-mini-profiler'
-  #gem "flamegraph"
 
   gem 'better_errors'
   gem 'binding_of_caller'
