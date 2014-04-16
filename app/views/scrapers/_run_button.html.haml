@@ -1,1 +1,1 @@
-= button_to "Run it now!", run_scraper_path(scraper), class: ("btn btn-primary " + (scraper.runnable? ? "" : "disabled")), id: "run_button", disabled: !scraper.runnable?, remote: true
+= button_to "Run scraper", run_scraper_path(scraper), class: ("btn btn-primary " + (scraper.runnable? ? "" : "disabled")), id: "run_button", disabled: !scraper.runnable?, remote: true

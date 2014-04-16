@@ -11,6 +11,10 @@
       .large-icon-box.pull-right
         = render partial: "scrapers/running_indicator", locals: {scraper: scraper}
       %h4= scraper.description
+      - if signed_in? && scraper.can_write?(current_user)
+        #scraper_run
+          = render partial: "scrapers/run_button", locals: {scraper: scraper}
+
   .col-md-2
     - if signed_in?
       .button_title_adjust= render partial: "scrapers/watch_button", locals: {scraper: scraper}
@@ -40,14 +44,11 @@
     = render partial: "scrapers/statistics", locals: {scraper: scraper}
     = render partial: "scrapers/history", locals: {scraper: scraper}
   .col-md-2
-    - if signed_in?
-      - if scraper.can_write?(current_user)
-        #scraper_run
-          = render partial: "scrapers/run_button", locals: {scraper: scraper}
-        #scraper_settings
-          = button_link_to scraper_settings_path(scraper) do
-            %i.icon-wrench
-            Settings
+    - if signed_in? && scraper.can_write?(current_user)
+      #scraper_settings
+        = button_link_to scraper_settings_path(scraper) do
+          %i.icon-wrench
+          Settings
 
     #scraper_code
       %h4
