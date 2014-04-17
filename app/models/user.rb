@@ -44,11 +44,6 @@ class User < Owner
     (github_public_user_repos + github_public_org_repos).sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
   end
 
-  # For the time being just hardcode a couple of people as admins
-  def admin?
-    ["mlandauer", "henare"].include?(nickname)
-  end
-
   # Send all alerts. This method should be run from a daily cron job
   def self.process_alerts
     User.all.each do |user|
