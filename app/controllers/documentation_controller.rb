@@ -11,4 +11,7 @@ class DocumentationController < ApplicationController
   def pricing
     render layout: "application"
   end
+
+  def what_is_new
+  end
 end

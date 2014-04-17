@@ -27,6 +27,7 @@ Morph::Application.routes.draw do
   get "/api", to: redirect {|params, req| "/documentation/api?#{req.query_string}"}
   resources :documentation, only: :index do
     get "api", on: :collection
+    get "what_is_new", on: :collection
   end
   get "/pricing", to: "documentation#pricing"
   # Hmm not totally sure about this url.

@@ -6,6 +6,7 @@
       .col-md-2
         %ul.nav.nav-pills.nav-stacked#sidebar
           %li{class: ("active" if current_page?(documentation_index_path))}= link_to "Main documentation", documentation_index_path
+          %li{class: ("active" if current_page?(what_is_new_documentation_index_path))}= link_to "What's New", what_is_new_documentation_index_path
           %li{class: ("active" if current_page?(api_documentation_index_path))}= link_to "How to use the API", api_documentation_index_path
       .col-md-10
         = yield

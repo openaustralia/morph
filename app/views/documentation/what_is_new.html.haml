@@ -1,0 +1,44 @@
+:markdown
+  ## What's New
+  Here we show you the changes that you can see. There's also lots of stuff that changes under the
+  hood. If you're interested in seeing those too, look at the
+  [full list of commits](https://github.com/openaustralia/morph/commits/master).
+
+  ### April 17
+  * Morph now only needs to ask you for public repository read/write permissions for GitHub.
+    This is what we previously said:
+
+    > Why do you ask for read/write access to all my GitHub repositories, even the private ones?
+
+    > We don't in fact access your private repositories at all. Unfortunately because of a limitation
+    > in the GitHub API we have to ask for write permissions to private repositories to be able to
+    > create public repositories. I know it seems crazy but that's how they're doing things. We're
+    > hoping that soon GitHub will provide more fine-grained access control which will solve this.
+    > To see in detail what's happened so far see the
+    > [issue on GitHub](https://github.com/openaustralia/morph/issues/230).
+
+    This is **no longer the case**. Thank you Github for
+    [changing your API](https://developer.github.com/changes/2014-04-04-create-public-repo-without-repo-scope/).
+
+  * You might have heard about the [heartbleed bug](http://heartbleed.com/). On the day heartbleed was
+    announced we patched the morph server. This stops anyone from exploiting the bug to gain
+    access to the SSL private key. No passwords are stored on our server because we authenticate
+    against GitHub using oauth. To be safe we've refreshed everyone's github oauth access token.
+
+  ### April 16
+  * Made the scraper run button more prominent
+  * Speedup up the home page and the scraper pages
+  * Changed the scraper error behaviour. We used to consider any output to standard error from
+    a scraper as an "error". This was put in place to catch certain types of errors in PHP
+    which did not cause a non-zero exit status. We've realised the error in our way as it does
+    mean in other languages legitimate warnings are causing scraper "errors" which isn't good.
+    So, now only the exit status is used to determine whether the scraper has errored or not.
+
+  ### April 12
+  * Small content tweaks
+  * Fixed some ScraperWiki URLs that had changed in ScraperWiki becoming read-only.
+
+  ### April 11
+  * Fix problem caused by table names with spaces in SQLite
+
+  ### Mar 31
