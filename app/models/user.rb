@@ -118,7 +118,7 @@ class User < Owner
   end
 
   def refresh_organizations!
-    self.organizations = octokit_client.organizations.map {|data| Organization.find_or_create(data.id, data.login) }
+    self.organizations = octokit_client.organizations.map {|data| Organization.find_or_create(data.id, data.login, octokit_client) }
   end
 
   def octokit_client
