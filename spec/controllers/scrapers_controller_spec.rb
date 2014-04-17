@@ -167,4 +167,43 @@ describe ScrapersController do
       end
     end
   end
+
+  describe '#data' do
+    render_views
+
+    before :each do
+      sign_in user
+
+      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        Scraper.create(owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
+      end
+
+      Scraper.any_instance.stub_chain(:database, :sql_query) do
+        [
+          {
+            "title" => "Foo",
+            "content" => "Bar",
+            "link" => "http://example.com",
+            "date" => "2013-01-01"
+          }
+        ]
+      end
+    end
+    it "should return an atom feed" do
+      get :data, id: "mlandauer/a_scraper", format: :atom
+
+      response.should be_success
+      body = Nokogiri::XML(response.body)
+
+      body.css("title").first.text.should == "Morph: mlandauer/a_scraper"
+      body.css("author name").first.text.should == "mlandauer"
+      body.css("link").first[:href].should == "http://test.host/mlandauer/a_scraper"
+
+      body.css("entry").count.should == 1
+      body.css("entry > title").first.text.should == "Foo"
+      body.css("entry > content").first.text.should == "Bar"
+      body.css("entry > link").first[:href].should == "http://example.com"
+      body.css("entry > updated").first.text.should == DateTime.parse("2013-01-01").rfc3339
+    end
+  end
 end
