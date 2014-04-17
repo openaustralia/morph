@@ -136,7 +136,7 @@ class User < Owner
   end
 
   def refresh_info_from_github!
-    user = Octokit.user(nickname)
+    user = octokit_client.user(nickname)
     update_attributes(name:user.name,
         gravatar_url: user._rels[:avatar].href,
         blog: user.blog,
