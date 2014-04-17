@@ -37,7 +37,7 @@ class ScrapersController < ApplicationController
       files["README.md"] = "This is a scraper that runs on [Morph](https://morph.io). To get started [see the documentation](https://morph.io/documentation)"
       @scraper.add_commit_to_root_on_github(current_user, files, "Add template for Morph scraper")
 
-      @scraper = Scraper.new_from_github(repo.full_name)
+      @scraper = Scraper.new_from_github(repo.full_name, current_user.octokit_client)
       if @scraper.save
         # TODO This could be a long running task shouldn't really be in the request cycle
         repo = current_user.octokit_client.edit_repository(@scraper.full_name, homepage: scraper_url(@scraper))
@@ -60,7 +60,7 @@ class ScrapersController < ApplicationController
   end
 
   def create_github
-    @scraper = Scraper.new_from_github(params[:scraper][:full_name])
+    @scraper = Scraper.new_from_github(params[:scraper][:full_name], current_user.octokit_client)
     if !@scraper.can_write?(current_user)
       @scraper.errors.add(:full_name, "is not one of your scrapers")
       render :github
