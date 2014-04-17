@@ -32,7 +32,7 @@
       %label.control-label.col-sm-1(for="format") [format]
       .col-sm-3
         %select.form-control#format(name="format")
-          = options_for_select(["json", "csv"])
+          = options_for_select(["json", "csv", "atom"])
         %span.help-block
           Format of outputted data
     .string.input.optional.stringish.form-group#callback_input
@@ -41,6 +41,37 @@
         %input.form-control#callback(maxlength="255" name="query" type="text")
         %span.help-block
           (Optional) To return JSONP set "callback" to the name of your javascript callback function.
+    #atom_notes
+      %p
+        %strong
+          A note on atom feeds
+      %p
+        If you are returning an atom feed, you must configure your SQL query to return a <code>title</code>,
+        <code>content</code>, <code>link</code> and <code>date</code>.
+      %p
+        To make it easier, you can specify mappings below, and this will update your query above. You can link
+        fields together with the double pipe (<code>||</code>) operator.
+
+      .string.input.optional.stringish.form-group#query_input
+        %label.control-label.col-sm-1(for="title") title
+        .col-sm-5
+          %input.form-control#title(maxlength="255" name="title" type="text")
+
+      .string.input.optional.stringish.form-group#query_input
+        %label.control-label.col-sm-1(for="content") content
+        .col-sm-5
+          %input.form-control#content(maxlength="255" name="content" type="text")
+
+      .string.input.optional.stringish.form-group#query_input
+        %label.control-label.col-sm-1(for="link") link
+        .col-sm-5
+          %input.form-control#link(maxlength="255" name="link" type="text")
+
+      .string.input.optional.stringish.form-group#query_input
+        %label.control-label.col-sm-1(for="date") date
+        .col-sm-5
+          %input.form-control#date(maxlength="255" name="date" type="text")
+
     - if current_user
       .row
         .col-sm-6
@@ -78,6 +109,8 @@
 
 :javascript
   $(function() {
+    var selects = {}
+
     function update_full_name() {
       $("code span.full_name").html($("#scraper_full_name").val());
     }
@@ -108,6 +141,12 @@
         $("#callback").val("");
         update_callback();
       }
+
+      if (format == "atom") {
+        $("#atom_notes").show("fast");
+      } else {
+        $("#atom_notes").hide("fast");
+      }
     }
 
     function update_callback() {
@@ -118,6 +157,20 @@
       else {
         $("code span.callback").html("&callback=" + v);
       }
+    }
+
+    function update_atom_query(string) {
+      var v = $(this).val();
+      var n = $(this).attr('name');
+      selects[n] = v + " as " + n
+
+      query = $("#query").val();
+      queryItems = $.map(selects, function (value, key) { return value; });
+
+      newQuery = query.replace(/select (.+) from/i, "select " + queryItems.join(", ") + " from");
+
+      $("#query").val(newQuery);
+      update_query();
     }
 
     update_full_name();
@@ -134,4 +187,9 @@
     $("#format").change(update_format);
     $("#callback").change(update_callback);
     $("#callback").keyup(update_callback);
+    $("#title").change(update_atom_query);
+    $("#content").change(update_atom_query);
+    $("#link").change(update_atom_query);
+    $("#date").change(update_atom_query);
+
   });
