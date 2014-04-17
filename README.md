@@ -20,6 +20,8 @@ On Linux your user account should be able to manipulate Docker (just add your us
 
 ### To Install
 
+Running this on OSX? Read the [OSX instructions](#installing-docker-on-osx) below BEFORE doing any of this.
+
     bundle install
     cp config/database.yml.example config/database.yml
     cp env-example .env
@@ -52,13 +54,15 @@ and point your browser at [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 If you're doing your development on Linux you're in luck because installing Docker is pretty straightforward. Just follow the instructions on the [Docker site](http://www.docker.io/gettingstarted/#h_installation).
 
-If you're on OSX you could follow the instructions on the [Docker site](http://www.docker.io/gettingstarted/#h_installation) as well. However there will be some extra configuration you will need to do to make it work with Morph. 
+If you're on OSX you could follow the instructions on the [Docker site](http://www.docker.io/gettingstarted/#h_installation) as well. However there will be some extra configuration you will need to do to make it work with Morph.
 
 We've made it easier by providing a Vagrantfile that sets up a VM, installs docker on it and makes sure that your development box can talk to docker on the VM.
 
 First install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads). Then,
 
     vagrant up dev
+
+When the Vagrant vm is built, make sure you run `vagrant halt dev` and then `vagrant up dev` again to make sure the shared folders are correctly set up. Then you can continue with the [installation steps above](#to-install).
 
 Just recently the Docker folks have released a version of the docker client that works on OS X. The first build is [available to download](http://test.docker.io/builds/Darwin/x86_64/docker-0.7.3.tgz). You might find this helpful later but isn't essential.
 
@@ -132,7 +136,7 @@ If you want to contribute an enhancement or a fix:
 * Fork the project on GitHub.
 * Make your changes with tests.
 * Commit the changes without making changes to any files that aren't related to your enhancement or fix.
-* Send a pull request.    
+* Send a pull request.
 
 ### Copyright & License
 
@@ -141,4 +145,3 @@ Copyright OpenAustralia Foundation Limited 2013 - 2014. Licensed under the Affer
 ### Authors
 
 Matthew Landauer
-
