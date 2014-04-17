@@ -5,7 +5,6 @@
 
   * [What languages can scrapers be written in?](#languages)
   * [In what format do I write out the data I've scraped?](#format)
-  * [Why do you ask for read/write access to all my GitHub repositories, even the private ones?](#github_private)
   * [What version of the language and what libraries do I have access to?](#libraries)
   * [What if I want to install a library that isn't currently installed?](#install)
   * [How do I run a scraper on my own machine?](#run_locally)
@@ -23,13 +22,6 @@
   <h3 id="format" class="section">In what format do I write out the data I've scraped?</h3>
   Write to a table `#{Morph::Database.sqlite_table_name}` in an sqlite database in the current
   working directory called `#{Morph::Database.sqlite_db_filename}`. How you do that and what fields you include is entirely up to you.
-
-  <h3 id="github_private" class="section">Why do you ask for read/write access to all my GitHub repositories, even the private ones?</h3>
-  We don't in fact access your private repositories at all. Unfortunately because of a limitation in the GitHub API we
-  have to ask for write permissions to private repositories to be able to create public repositories. I know
-  it seems crazy but that's how they're doing things. We're hoping that soon GitHub will provide more fine-grained
-  access control which will solve this. To see in detail what's happened so far see the
-  [issue on GitHub](https://github.com/openaustralia/morph/issues/230).
 
   <h3 id="libraries" class="section">What version of the language and what libraries do I have access to?</h3>
   The language versions and libraries available are intended as close as possible to those available on
