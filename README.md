@@ -4,7 +4,7 @@
 
 * A [Heroku](https://www.heroku.com/) for [Scrapers](https://en.wikipedia.org/wiki/Web_scraping)
 * All code and collaboration through [GitHub](https://github.com/)
-* Write your scrapers in Ruby, Python or PHP
+* Write your scrapers in Ruby, Python, PHP or Perl
 * Simple API to grab data
 * Schedule scrapers or run manually
 * Process isolation via [Docker](http://www.docker.io/)

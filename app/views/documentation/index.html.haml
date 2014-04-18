@@ -12,12 +12,13 @@
   * [Your responsibility](#responsibility)
 
   <h3 id="languages" class="section">What languages can scrapers be written in?</h3>
-  Scrapers can be written in [Ruby](https://www.ruby-lang.org/en/), [PHP](http://www.php.net/) or [Python](https://www.python.org/).
-  Simply follow the naming convention:
+  Scrapers can be written in [Ruby](https://www.ruby-lang.org/en/), [PHP](http://www.php.net/), [Python](https://www.python.org/),
+  or [Perl](http://www.perl.org/). Simply follow the naming convention:
 
   * Ruby - `scraper.rb`
   * PHP - `scraper.php`
   * Python - `scraper.py`
+  * Perl - `scraper.pl`
 
   <h3 id="format" class="section">In what format do I write out the data I've scraped?</h3>
   Write to a table `#{Morph::Database.sqlite_table_name}` in an sqlite database in the current
@@ -39,6 +40,9 @@
   #### Python 2.7.3
   This version of Python is very slightly more recent than the one on ScraperWiki Classic (2.7.1). It is a bug fix release.
   To see in detail what libraries are installed see the [docker source on Github](https://github.com/openaustralia/morph-docker-python).
+
+  #### Perl 5.14.2
+  For list of packages that are installed see the [docker source on Github](https://github.com/openaustralia/morph-docker-perl).
 
   <h3 id="install" class="section">What if I want to install a library that isn't currently installed?</h3>
   Right now you have to either [ask us to do it for you](mailto:contact@oaf.org.au) or make a pull request against one of the
