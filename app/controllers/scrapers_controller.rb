@@ -173,6 +173,7 @@ class ScrapersController < ApplicationController
           format.sqlite { render :text => "API key is not valid", status: 401 }
           format.json { render :json => {error: "API key is not valid"}, status: 401 }
           format.csv { render :text => "API key is not valid", status: 401 }
+          format.atom { render :text => "API key is not valid", status: 401 }
         end
         return
       end
@@ -215,12 +216,26 @@ class ScrapersController < ApplicationController
           ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
             size: size, type: "sql", format: "csv")
         end
+
+        format.atom do
+          size = nil
+          bench = Benchmark.measure do
+            @scraper = scraper
+            @result = scraper.database.sql_query(params[:query])
+            render :data
+            # TODO Find some more consistent way of measuring size across different formats
+            size = @result.to_json.size
+          end
+          ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
+            size: size, type: "sql", format: "atom")
+        end
       end
 
     rescue SQLite3::Exception => e
       respond_to do |format|
         format.json { render :json => {error: e.to_s} }
-        format.csv { send_data "error: #{e}", :filename => "#{scraper.name}.csv" }
+        format.csv { render :text => "error: #{e}" }
+        format.atom { render :text => "error: #{e}" }
       end
     end
   end
