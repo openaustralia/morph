@@ -162,12 +162,15 @@
     function update_atom_query(string) {
       var v = $(this).val();
       var n = $(this).attr('name');
-      selects[n] = v + " as " + n
+      if(v == "")
+        selects[n] = null;
+      else
+        selects[n] = v + " as " + n;
 
       query = $("#query").val();
       queryItems = $.map(selects, function (value, key) { return value; });
-
-      newQuery = query.replace(/select (.+) from/i, "select " + queryItems.join(", ") + " from");
+      var selectString = (queryItems.length == 0) ? "*" : queryItems.join(", ");
+      newQuery = query.replace(/select (.+) from/i, "select " + selectString + " from");
 
       $("#query").val(newQuery);
       update_query();
