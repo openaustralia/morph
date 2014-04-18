@@ -313,9 +313,12 @@ class Scraper < ActiveRecord::Base
 
     # Copy the sqlite database across from Scraperwiki
     fork_progress("Forking sqlite database", 40)
-    database.write_sqlite_database(scraperwiki.sqlite_database)
-    # Rename the main table in the sqlite database
-    database.standardise_table_name("swdata")
+    sqlite_data = scraperwiki.sqlite_database
+    if sqlite_data
+      database.write_sqlite_database(sqlite_data)
+      # Rename the main table in the sqlite database
+      database.standardise_table_name("swdata")
+    end
 
     fork_progress("Forking code", 60)
 

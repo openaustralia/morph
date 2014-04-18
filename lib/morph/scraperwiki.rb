@@ -64,7 +64,8 @@ module Morph
     end
 
     def self.content(url)
-      Faraday.get(url).body
+      a = Faraday.get(url)
+      a.body if a.success?
     end
   end
 end
