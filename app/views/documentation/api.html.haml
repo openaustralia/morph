@@ -179,17 +179,13 @@
     update_format();
     update_callback();
 
-    $("#scraper_full_name").change(update_full_name);
-    $("#scraper_full_name").keyup(update_full_name);
-    $("#query").change(update_query);
-    $("#query").keyup(update_query);
+    $("#scraper_full_name").change(update_full_name).keyup(update_full_name);
+    $("#query").change(update_query).keyup(update_query);
     $("#owner").change(update_api_key);
     $("#format").change(update_format);
-    $("#callback").change(update_callback);
-    $("#callback").keyup(update_callback);
-    $("#title").change(update_atom_query);
-    $("#content").change(update_atom_query);
-    $("#link").change(update_atom_query);
-    $("#date").change(update_atom_query);
-
+    $("#callback").change(update_callback).keyup(update_callback);
+    $("#title").change(update_atom_query).keyup(update_atom_query);
+    $("#content").change(update_atom_query).keyup(update_atom_query);
+    $("#link").change(update_atom_query).keyup(update_atom_query);
+    $("#date").change(update_atom_query).keyup(update_atom_query);
   });
