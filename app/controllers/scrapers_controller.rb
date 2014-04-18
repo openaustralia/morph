@@ -223,6 +223,7 @@ class ScrapersController < ApplicationController
             @scraper = scraper
             @result = scraper.database.sql_query(params[:query])
             render :data
+            # TODO Find some more consistent way of measuring size across different formats
             size = @result.to_json.size
           end
           ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
