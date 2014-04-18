@@ -24,6 +24,7 @@ describe Morph::Scraperwiki do
       response, data = double, double
       Faraday.should_receive(:get).with("http://foo.com").and_return(response)
       response.should_receive(:body).and_return(data)
+      response.should_receive(:success?).and_return(true)
       Morph::Scraperwiki.content("http://foo.com").should == data
     end
   end
