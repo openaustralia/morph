@@ -1,7 +1,7 @@
 module Morph
   class Language
     def self.languages_supported
-      [:ruby, :php, :python]
+      [:ruby, :php, :python, :perl]
     end
 
     def self.human(language)
