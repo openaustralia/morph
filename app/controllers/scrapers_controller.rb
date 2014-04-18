@@ -233,8 +233,8 @@ class ScrapersController < ApplicationController
     rescue SQLite3::Exception => e
       respond_to do |format|
         format.json { render :json => {error: e.to_s} }
-        format.csv { send_data "error: #{e}", :filename => "#{scraper.name}.csv" }
-        format.atom { send_data "error: #{e}", :filename => "#{scraper.name}.csv" }
+        format.csv { render :text => "error: #{e}" }
+        format.atom { render :text => "error: #{e}" }
       end
     end
   end
