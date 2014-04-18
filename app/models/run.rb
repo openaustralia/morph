@@ -106,7 +106,11 @@ class Run < ActiveRecord::Base
     FileUtils.chmod 0777, data_path
 
     unless Morph::Language.language_supported?(language)
-      yield "stderr", "Can't find scraper code"
+      supported_scraper_files = Morph::Language.languages_supported.map do |l|
+        Morph::Language.language_to_scraper_filename(l)
+      end.to_sentence(last_word_connector: ", or ")
+      yield "stderr", "Can't find scraper code. Expected to find a file called " +
+         supported_scraper_files + " in the root directory"
       update_attributes(status_code: 999, finished_at: Time.now)
       return
     end
