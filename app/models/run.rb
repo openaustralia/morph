@@ -124,6 +124,10 @@ class Run < ActiveRecord::Base
       data_path: data_path
     ) do |on|
         on.log { |s,c| yield s, c}
+        on.ip_address do |ip|
+          # Store the ip address of the container for this run
+          update_attributes(ip_address: ip)
+        end
     end
 
     # Now collect and save the metrics

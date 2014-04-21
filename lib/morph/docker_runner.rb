@@ -35,6 +35,8 @@ module Morph
           "#{local_root_path}/#{options[:data_path]}:/data"
         ])
         puts "Running docker container..."
+        # Let parent know about ip address of running container
+        wrapper.call(:ip_address, c.json["NetworkSettings"]["IPAddress"])
         c.attach(logs: true) do |s,c|
           wrapper.call(:log, s, c)
         end
