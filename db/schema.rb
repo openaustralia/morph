@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140421073531) do
+ActiveRecord::Schema.define(version: 20140421221600) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -56,6 +56,18 @@ ActiveRecord::Schema.define(version: 20140421073531) do
 
   add_index "api_queries", ["owner_id"], name: "index_api_queries_on_owner_id", using: :btree
   add_index "api_queries", ["scraper_id"], name: "index_api_queries_on_scraper_id", using: :btree
+
+  create_table "connection_logs", force: true do |t|
+    t.integer  "run_id"
+    t.string   "method"
+    t.string   "scheme"
+    t.string   "host"
+    t.string   "path"
+    t.integer  "request_size"
+    t.integer  "response_size"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "contributions", force: true do |t|
     t.integer  "scraper_id"
