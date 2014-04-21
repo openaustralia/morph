@@ -238,6 +238,7 @@ GEM
     mini_portile (0.5.2)
     minitest (4.7.5)
     multi_json (1.9.0)
+    multiblock (0.2.1)
     multipart-post (1.2.0)
     mysql2 (0.3.14)
     net-scp (1.1.2)
@@ -446,6 +447,7 @@ DEPENDENCIES
   jquery-rails
   kaminari
   kaminari-bootstrap (~> 3.0.1)
+  multiblock
   mysql2
   newrelic_rpm
   nokogiri

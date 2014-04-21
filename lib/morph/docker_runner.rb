@@ -1,6 +1,9 @@
 module Morph
   class DockerRunner
     def self.run(options)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
       # Open up a special interactive connection to Docker
       # TODO Cache connection
       conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {chunk_size: 1, read_timeout: 4.hours})
@@ -17,8 +20,8 @@ module Morph
           # On a 1G machine we're allowing a max of 10 containers to run at a time. So, 100M
           "Memory" => 100 * 1024 * 1024}, conn_interactive)
       rescue Excon::Errors::SocketError => e
-        yield :internal, "Morph internal error: Could not connect to Docker server: #{e}\n"
-        yield :internal, "Requeueing...\n"
+        wrapper.call(:log, :internal, "Morph internal error: Could not connect to Docker server: #{e}\n")
+        wrapper.call(:log, :internal, "Requeueing...\n")
         raise "Could not connect to Docker server: #{e}"
       end
 
@@ -33,13 +36,13 @@ module Morph
         ])
         puts "Running docker container..."
         c.attach(logs: true) do |s,c|
-          yield s,c
+          wrapper.call(:log, s, c)
         end
         status_code = c.json["State"]["ExitCode"]
         puts "Docker container finished..."
       rescue Exception => e
-        yield :internal, "Morph internal error: #{e}\n"
-        yield :internal, "Stopping current container and requeueing\n"
+        wrapper.call(:log,  :internal, "Morph internal error: #{e}\n")
+        wrapper.call(:log, :internal, "Stopping current container and requeueing\n")
         c.kill
         raise e
       ensure

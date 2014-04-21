@@ -116,9 +116,14 @@ class Run < ActiveRecord::Base
     end
 
     command = Metric.command(Morph::Language.scraper_command(language), Run.time_output_filename)
-    status_code = Morph::DockerRunner.run(command: command, image_name: docker_image, container_name: docker_container_name,
-      repo_path: repo_path, data_path: data_path) do |s,c|
-        yield s, c
+    status_code = Morph::DockerRunner.run(
+      command: command,
+      image_name: docker_image,
+      container_name: docker_container_name,
+      repo_path: repo_path,
+      data_path: data_path
+    ) do |on|
+        on.log { |s,c| yield s, c}
     end
 
     # Now collect and save the metrics

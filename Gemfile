@@ -56,6 +56,7 @@ gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'faye'
 gem "puma"
 gem 'sync'
+gem 'multiblock'
 
 group :production do
   gem "dalli"
