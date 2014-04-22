@@ -34,3 +34,6 @@ SYNC_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # Secret for single sign on authentication for Discourse
 DISCOURSE_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
 DISCOURSE_URL=http://discuss.dev.morph.io
+
+# Used by mitmproxy to communicate via the api back to morph
+MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx

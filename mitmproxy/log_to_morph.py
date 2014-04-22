@@ -1,6 +1,7 @@
-# Run this with mitmdump -q -s morph_proxy.py
+# Run this with dotenv mitmdump -q -s mitmproxy/log_to_morph.py
 
 import urllib
+import os
 from libmproxy.script import concurrent
 
 @concurrent
@@ -15,6 +16,7 @@ def response(context, flow):
     'host': flow.request.host,
     'path': flow.request.path,
     'request_size': len(flow.request.content),
-    'response_size': len(flow.response.content)
+    'response_size': len(flow.response.content),
+    'key': os.environ['MITMPROXY_SECRET']
   })
   urllib.urlopen(url, params)
