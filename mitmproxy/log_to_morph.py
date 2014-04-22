@@ -1,4 +1,4 @@
-# Run this with dotenv mitmdump -q -a -s mitmproxy/log_to_morph.py --cert mitmproxy/mitmproxy-ca.pem
+# Run this with dotenv mitmdump -q -a -s mitmproxy/log_to_morph.py --confdir mitmproxy
 
 import urllib
 import os
