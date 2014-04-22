@@ -1,0 +1,12 @@
+- name: Install python
+  apt: pkg=python
+- name: Install development headers for python
+  apt: pkg=python-dev
+- name: Install build-essential
+  apt: pkg=build-essential
+- name: Install libxslt1-dev
+  apt: pkg=libxslt1-dev
+- name: Install pip (required to install mitmproxy)
+  apt: pkg=python-pip
+- name: Install mitmproxy
+  pip: name=mitmproxy

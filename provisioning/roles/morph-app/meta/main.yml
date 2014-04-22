@@ -9,3 +9,4 @@ dependencies:
   - { role: redis }
   - { role: newrelic-sysmond }
   - { role: discourse }
+  - { role: mitmproxy }
