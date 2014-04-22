@@ -1,4 +1,4 @@
-# Run this with dotenv mitmdump -q -s mitmproxy/log_to_morph.py
+# Run this with dotenv mitmdump -q -a -s mitmproxy/log_to_morph.py
 
 import urllib
 import os
