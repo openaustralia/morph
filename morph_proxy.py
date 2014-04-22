@@ -15,6 +15,4 @@ def response(context, flow):
     'request_size': len(flow.request.content),
     'response_size': len(flow.response.content)
   })
-  u = urllib.urlopen(url, params)
-  data = u.read()
-  print data
+  urllib.urlopen(url, params)
