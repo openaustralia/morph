@@ -6,7 +6,7 @@ from libmproxy.script import concurrent
 
 @concurrent
 def response(context, flow):
-  url = "http://localhost:3000/connection_logs"
+  url = os.environ['MORPH_URL'] + "/connection_logs"
   params = urllib.urlencode({
   	'ip_address': flow.request.client_conn.address[0],
   	'method': flow.request.method,
