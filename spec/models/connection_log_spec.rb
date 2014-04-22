@@ -18,5 +18,10 @@ describe ConnectionLog do
       a = ConnectionLog.create(ip_address: "10.0.1.15", run_id: 40, host: "foo.com")
       a.run_id.should == 40
     end
+
+    it "should leave the run_id empty if ip address isn't recognised" do
+      a = ConnectionLog.create(ip_address: "10.0.1.23", host: "foo.com")
+      a.run_id.should be_nil
+    end
   end
 end

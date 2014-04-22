@@ -5,7 +5,8 @@ class ConnectionLog < ActiveRecord::Base
 
   def update_run_id_from_ip_address
     if run_id.nil?
-      self.run_id = Run.where(ip_address: self.ip_address).order(started_at: :desc).first.id
+      run = Run.where(ip_address: self.ip_address).order(started_at: :desc).first
+      self.run_id = run.id if run
     end
   end
 end
