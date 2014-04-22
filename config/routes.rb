@@ -61,6 +61,8 @@ Morph::Application.routes.draw do
     end
   }
 
+  resources :connection_logs, only: :create
+
   #resources "scraperwiki_forks", only: [:new, :create]
 
   get '/*id/data', to: "scrapers#data", as: :scraper_data
