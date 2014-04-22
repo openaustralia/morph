@@ -1,0 +1,2 @@
+class ConnectionLogsController < ApplicationController
+end
