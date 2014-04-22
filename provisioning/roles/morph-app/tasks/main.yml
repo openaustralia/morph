@@ -110,3 +110,5 @@
   lineinfile: dest=/etc/hosts line="127.0.0.1 {{ server_name }}" owner=root group=root mode=0644
 - name: Add faye server name to /etc/hosts
   lineinfile: dest=/etc/hosts line="127.0.0.1 faye.{{ server_name }}" owner=root group=root mode=0644
+- name: Add firewall rules on boot
+  copy: src=interfaces dest=/etc/network/interfaces
