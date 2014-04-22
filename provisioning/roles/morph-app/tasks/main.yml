@@ -40,6 +40,7 @@
   file: path=/var/www/shared owner=deploy group=deploy state=directory
 - name: Ensure that .env exists
   template: src={{ env_file }} dest=/var/www/shared/.env owner=deploy group=deploy
+  # TODO If this changes we should rerun foreman as well
 # TODO This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
 - name: Install foreman
