@@ -3,7 +3,7 @@ class ConnectionLogsController < ApplicationController
 
   def create
     if ConnectionLogsController.key == params[:key]
-      ConnectionLog.create(
+      ConnectionLog.create!(
         ip_address: params[:ip_address],
         method: params[:method],
         scheme: params[:scheme],
