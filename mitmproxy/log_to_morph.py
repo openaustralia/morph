@@ -18,7 +18,8 @@ def response(context, flow):
     'key': os.environ['MITMPROXY_SECRET']
   })
   try:
-    urllib.urlopen(url, params)
+    s = urllib.urlopen(url, params)
+    s.close()
   # If we can't contact the morph server still handle this request.
   # If we let this exception pass up the chain the request would get dropped
   except IOError, e:
