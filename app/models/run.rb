@@ -4,6 +4,7 @@ class Run < ActiveRecord::Base
   belongs_to :scraper, inverse_of: :runs, touch: true
   has_many :log_lines
   has_one :metric
+  has_many :connection_logs
 
   delegate :git_url, :full_name, to: :scraper
   delegate :current_revision_from_repo, to: :scraper, allow_nil: true
