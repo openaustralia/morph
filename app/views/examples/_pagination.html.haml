@@ -1,17 +1,42 @@
 .results-pagination
   .page-controls
     %ul
-      %li.button.first.inactive
-        %span First
-      %li.button.prev.inactive
-        %span Back
+      - if @page == 1
+        %li.button.first.inactive
+          %span First
+      - else
+        %li.button.first
+          = link_to "First", {page: nil}, title: "First page"
+      - if @page == 1
+        %li.button.prev.inactive
+          %span Back
+      - else
+        %li.button.prev
+          = link_to "Back", {page: (@page == 2 ? nil : (@page - 1))}, title: "Back page"
       %li
-        %strong 1
+        - if @page == 1
+          %strong 1
+        - else
+          = link_to "1", {page: nil}, title: "Page 1"
       %li
-        = link_to "2", "?page=2", title: "Page 2"
+        - if @page == 2
+          %strong 2
+        - else
+          = link_to "2", {page: 2}, title: "Page 2"
       %li
-        = link_to "3", "?page=3", title: "Page 3"
-      %li.button.next
-        = link_to "Next", "?page=2", title: "Next page"
-      %li.button.last
-        = link_to "Last", "?page=3", title: "Last page"
+        - if @page == 3
+          %strong 3
+        - else
+          = link_to "3", {page: 3}, title: "Page 3"
+      - if @page == 3
+        %li.button.next.inactive
+          %span Next
+      - else
+        %li.button.next
+          = link_to "Next", {page: @page + 1}, title: "Next page"
+      - if @page == 3
+        %li.button.last.inactive
+          %span Last
+      - else
+        %li.button.last
+          = link_to "Last", {page: 3}, title: "Last page"

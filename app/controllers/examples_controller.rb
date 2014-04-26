@@ -18,7 +18,15 @@ class ExamplesController < ApplicationController
       }
     end
     @members = all.select{|p| p[:house] == "representatives"}
-    @members = @members[0..49]
+    @page = params[:page]
+    @page = @page ? @page.to_i : 1
+    if @page == 1
+      @members = @members[0..49]
+    elsif @page == 2
+      @members = @members[50..99]
+    else
+      @members = @members[100..149]
+    end
     render layout: nil
   end
 end
