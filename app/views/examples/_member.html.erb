@@ -1,0 +1,33 @@
+<li>
+  <p class="title">
+    <a href="<%= member[:profile_page] %>">
+      <%= member[:full_name]%>
+    </a>
+  </p>
+  <p class="thumbnail">
+    <a href="<% member[:profile_page] %>">
+      <img src="<%=  member[:photo_url] %>" alt="Photo of <%= member[:full_name] %>" width="80" />
+    </a>
+  </p>
+  <dl>
+    <dt>Member for</dt>
+    <dd><%= member[:electorate] %></dd>
+    <dt>Party</dt>
+    <dd><%= member[:party] %></dd>
+    <dt>Connect</dt>
+    <dd>
+      <% if member[:email] %>
+      <a href="mailto:<%= member[:email] %>" class="social mail" target="_blank">Email</a>
+      <% end %>
+      <% if member[:facebook] %>
+      <a href="<%= member[:facebook] %>" class="social facebook" target="_blank">Facebook</a>
+      <% end %>
+      <% if member[:twitter] %>
+      <a href="<%= member[:twitter] %>" class="social twitter" target="_blank">Twitter</a>
+      <% end %>
+      <% if member[:contact_page] && member[:email].nil? %>
+      <a href="<%= member[:contact_page] %>" class="button btn-contact-form">Contact form</a>
+      <% end %>
+    </dd>
+  </dl>
+</li>
