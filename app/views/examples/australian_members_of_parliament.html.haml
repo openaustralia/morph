@@ -2,28 +2,19 @@
 %html(lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml")
 	%head
 		%meta(charset="utf-8")
-		%meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
 		%title Senators & Members Search Results &ndash; Parliament of Australia
 		= stylesheet_link_tag "examples/style.css"
-	%body#body
-		#bgimagewrapper
-			#container
-				%a(name="top")
-				#top-nav
-				#main-wrapper
-					#secondary-nav
-					#content
-						%h1 Senators & Members Search Results
-						%h2
-							This page is a simplified version of the
-							#{link_to "official list of Australian federal members of parliament", "http://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=&mem=1&par=-1&gen=0&ps=0"}.
-							It exists so that you can scrape it with morph.io!
-						.box
-							#main_0_content_1_updateSearchParam
-							%p#main_0_content_1_pTotalResults
-								%strong TOTAL RESULTS: 150
-							= render "pagination"
-							%ul.search-filter-results.search-filter-results-thumbnails
-								- @members.each do |member|
-									= render partial: "member", locals: {member: member}
-							= render "pagination"
+	%body
+		#content
+			%h1 Senators & Members Search Results
+			%h2
+				This page is a simplified version of the
+				#{link_to "official list of Australian federal members of parliament", "http://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=&mem=1&par=-1&gen=0&ps=0"}.
+				It exists so that you can scrape it with morph.io!
+			%p
+				%strong TOTAL RESULTS: 150
+			= render "pagination"
+			%ul.search-filter-results.search-filter-results-thumbnails
+				- @members.each do |member|
+					= render partial: "member", locals: {member: member}
+			= render "pagination"
