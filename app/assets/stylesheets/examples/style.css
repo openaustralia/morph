@@ -392,7 +392,6 @@ a.rssfeed {background:url(/images/template/rss.gif) no-repeat left top;padding-l
 /************************
 	PAGE CONSTRAINTS
 ************************/
-
 #bgimagewrapper {width:100%;margin:0 auto;background-position:center top;background-repeat:no-repeat;}
 #container {width:982px;margin:0 auto;}
 
@@ -431,7 +430,6 @@ a.rssfeed {background:url(/images/template/rss.gif) no-repeat left top;padding-l
 	NAVIGATION
 ************************/
 
-#top-nav {width: 100%; float: left;display:inline; background: url(/images/template/top-nav-bg-bottom.png) bottom left no-repeat; margin: 0 0 8px 0;color: #ffffff;font-size:1.1em;}
 #top-nav .bg {background: url(/images/template/top-nav-bg-top.png) top left no-repeat;min-height: 42px;width: 100%; float: left;display:inline;}
 #top-nav .house-nav {float:left;display:inline;width:429px;position: relative;padding:11px 0 9px 62px;}
 #top-nav .house-nav .live-button, #top-nav .house-nav .live-button-off {position:absolute; top:13px; left:14px;width:35px;height:16px;background:url(/images/template/live-indicators.png) no-repeat left top;}
@@ -472,8 +470,6 @@ a.rssfeed {background:url(/images/template/rss.gif) no-repeat left top;padding-l
 #main-nav ul li ul li a {background:none;display:block;width:auto !important;float:none;height:auto;padding:5px 15px;color:#444;border-bottom:1px solid #a2a2a2;}
 #main-nav ul li ul li.last a {border:0;}
 #main-nav ul li ul li a:hover {background:#fff;color:#000;text-decoration: none;}
-
-#main-wrapper {border:1px solid #fff; background: url(/images/template/main-shadow.png) repeat-x left top #dedede;float:left;display:inline;width:978px;margin:0 1px;padding:0 0 15px 0;}
 
 #secondary-nav {margin: 20px 0 20px 19px; width: 160px; float: left;display:inline;}
 #secondary-nav ul {margin:0;padding:0;list-style: none;}
@@ -715,7 +711,7 @@ a.button {text-indent: -9999px;overflow:hidden;float:left;display:inline;/* outl
 a.button:hover {}
 a.button:active {position: relative;top:1px;left:1px;}
 
-.btn-contact-form {background:url(/images/template/buttons/contact.png) no-repeat left top;width:78px;}
+.btn-contact-form {background:url(/assets/examples/contact.png) no-repeat left top;width:78px;}
 .btn-contact-form:hover {background-position: 0 -20px;}
 .btn-track-this-senator {width:112px;background:url(/images/template/buttons/track-this-senator-onred.png) no-repeat left top;}
 .btn-search {background:url(/images/template/buttons/search.png) no-repeat left top;width:78px;}
@@ -724,9 +720,7 @@ a.button:active {position: relative;top:1px;left:1px;}
 .btn-search:hover {background-position: 0 -20px;}
 .btn-question-mark {background:url(/images/template/buttons/question-mark.png) no-repeat left top;width:20px;}
 .btn-send {background:url(/images/template/buttons/send-ongray.png) no-repeat left top;width:58px;}
-.btn-track {background:url(/images/template/buttons/track.png) no-repeat left top;width:78px;}
 .btn-track:hover {background-position: 0 -20px;}
-.btn-untrack {background:url(/images/template/buttons/track.png) no-repeat -78px top;width:78px;}
 .btn-untrack:hover {background-position: -78px -20px;}
 .btn-book {background:url(/images/template/buttons/book.png) no-repeat left top;width:78px;}
 .btn-book:hover {background-position: 0 -20px;}
@@ -864,7 +858,7 @@ a.facebook {background-position: -60px 0;}
 .narrow-content .results-pagination {width:498px;position:relative;left:-10px;}
 .results-pagination {position: relative;margin:0 0 1em 0;}
 
-.results-pagination .page-controls {background:#E8E8E8;padding:8px 10px;position: relative;margin:0 0 1px 0;}
+.results-pagination .page-controls {padding:8px 10px;position: relative;margin:0 0 1px 0;}
 .results-pagination .page-controls .position {text-align:center;margin:0;}
 .results-pagination .page-controls .result-number {/* position: absolute;top:8px;left:10px; */margin:0;}
 .results-pagination .page-controls .result-number label {text-transform: uppercase;font-weight: bold;color:#333;font-size:0.9em;margin:0 5px 0 0;}
