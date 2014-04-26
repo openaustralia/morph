@@ -1,113 +1,79 @@
-
-
-
 <!doctype html>
-<html class="no-js" lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-
-<head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>
-	Senators & Members Search Results
-
-     &ndash; Parliament of Australia
-</title>
-		<%= stylesheet_link_tag "examples/style.css" %>
-</head>
-<body id="body">
-
-        <div id="bgimagewrapper"">
-            <div id="container">
-
-<a name="top"></a>
-
-
-
-<div id="top-nav">
-</div><!-- top nav -->
-
-
-
-<div id="main-wrapper">
-    <div id="secondary-nav">
+	<html class="no-js" lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<meta charset="utf-8" />
+			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+			<title>Senators & Members Search Results &ndash; Parliament of Australia</title>
+			<%= stylesheet_link_tag "examples/style.css" %>
+		</head>
+		<body id="body">
+    	<div id="bgimagewrapper">
+        <div id="container">
+					<a name="top"></a>
+					<div id="top-nav">
+					</div><!-- top nav -->
+					<div id="main-wrapper">
+    				<div id="secondary-nav">
+    				</div>
+    				<div id="content">
+							<h1>Senators & Members Search Results</h1>
+							<h2>
+								This page is a simplified version of the
+								<a href="http://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=&mem=1&par=-1&gen=0&ps=0">
+									official list of Australian federal members of parliament
+								</a>.
+								It exists so that you can scrape it with morph.io!
+							</h2>
+							<div class="box" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;btnSubmit&#39;)">
+    						<div id="main_0_content_1_updateSearchParam">
+								</div>
+    						<p id="main_0_content_1_pTotalResults">
+									<strong>TOTAL RESULTS: 150</strong>
+								</p>
+								<%= render "pagination" %>
+        				<ul class="search-filter-results search-filter-results-thumbnails">
+									<% @members.each do |member| %>
+										<li>
+        							<p class="title">
+												<a href="<%= member[:profile_page] %>">
+													<%= member[:full_name]%>
+												</a>
+											</p>
+        							<p class="thumbnail">
+												<a href="<% member[:profile_page] %>">
+													<img src="<%=  member[:photo_url] %>" alt="Photo of <%= member[:full_name] %>" width="80" />
+												</a>
+											</p>
+        							<dl>
+            						<dt>Member for</dt>
+												<dd><%= member[:electorate] %></dd>
+												<dt>Party</dt>
+												<dd><%= member[:party] %></dd>
+                				<dt>Connect</dt>
+                				<dd>
+													<% if member[:email] %>
+													<a href="mailto:<%= member[:email] %>" class="social mail" target="_blank">Email</a>
+													<% end %>
+													<% if member[:facebook] %>
+													<a href="<%= member[:facebook] %>" class="social facebook" target="_blank">Facebook</a>
+													<% end %>
+													<% if member[:twitter] %>
+													<a href="<%= member[:twitter] %>" class="social twitter" target="_blank">Twitter</a>
+													<% end %>
+													<% if member[:contact_page] && member[:email].nil? %>
+													<a href="<%= member[:contact_page] %>" class="button btn-contact-form">Contact form</a>
+													<% end %>
+                				</dd>
+        							</dl>
+    								</li>
+									<% end %>
+								</ul>
+								<%= render "pagination" %>
+							</div>
+    				</div>
+					</div>
+				</div>
+    	</div>
     </div>
-    <div id="content">
-
-
-<h1>Senators & Members Search Results</h1>
-
-<h2>This page is a simplified version of the <a href="http://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=&mem=1&par=-1&gen=0&ps=0">official list of Australian federal members of parliament</a>. It exists so that you can scrape it with morph.io! </h2>
-
-
-<div class="box" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;btnSubmit&#39;)">
-
-
-
-    <div id="main_0_content_1_updateSearchParam">
-
-
-
-
-
-	</div>
-
-    <p id="main_0_content_1_pTotalResults"><strong>TOTAL RESULTS: 150</strong></p>
-
-
-
-
-
-				<%= render "pagination" %>
-
-
-        <ul class="search-filter-results search-filter-results-thumbnails">
-<% @members.each do |member| %>
-<li>
-        <p class="title"><a href="<%= member[:profile_page] %>"><%= member[:full_name]%></a></p>
-        <p class="thumbnail"><a href="<% member[:profile_page] %>"><img src="<%=  member[:photo_url] %>" alt="Photo of <%= member[:full_name] %>" width="80" /></a></p>
-
-        <dl>
-            <dt>Member for</dt>
-            <dd><%= member[:electorate] %></dd>
-
-<dt>Party</dt><dd><%= member[:party] %></dd>
-                <dt>Connect</dt>
-                <dd>
-
-<% if member[:email] %>
-<a href="mailto:<%= member[:email] %>" class="social mail" target="_blank">Email</a>
-<% end %>
-<% if member[:facebook] %>
-<a href="<%= member[:facebook] %>" class="social facebook" target="_blank">Facebook</a>
-<% end %>
-<% if member[:twitter] %>
-<a href="<%= member[:twitter] %>" class="social twitter" target="_blank">Twitter</a>
-<% end %>
-<% if member[:contact_page] && member[:email].nil? %>
-<a href="<%= member[:contact_page] %>" class="button btn-contact-form">Contact form</a>
-<% end %>
-                </dd>
-        </dl>
-    </li>
-<% end %>
-
-</ul>
-
-				<%= render "pagination" %>
-
-
-</div>
-
-
-    </div>
-</div>
-
-                <!-- end container -->
-
-</div>
-
-            </div>
-        </div>
-
-
-</form>
-
-</body>
+	</body>
 </html>
