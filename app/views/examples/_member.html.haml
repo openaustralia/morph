@@ -1,0 +1,21 @@
+%li
+  %p.title
+    = link_to member[:full_name], member[:profile_page]
+  %p.thumbnail
+    = link_to member[:profile_page] do
+      = image_tag member[:photo_url], alt: "Photo of #{member[:full_name]}", width: 80
+  %dl
+    %dt Member for
+    %dd= member[:electorate]
+    %dt Party
+    %dd= member[:party]
+    %dt Connect
+    %dd
+      - if member[:email]
+        = mail_to member[:email], "Email", class: "social mail", target: "_blank"
+      - if member[:facebook]
+        = link_to "Facebook", member[:facebook], class: "social facebook", target: "_blank"
+      - if member[:twitter]
+        = link_to "Twitter", member[:twitter], class: "social twitter", target: "_blank"
+      - if member[:contact_page] && member[:email].nil?
+        = link_to "Contact form", member[:contact_page], class: "button btn-contact-form"
