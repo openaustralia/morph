@@ -1,0 +1,17 @@
+.results-pagination
+  .page-controls
+    %ul
+      %li.button.first.inactive
+        %span First
+      %li.button.prev.inactive
+        %span Back
+      %li
+        %strong 1
+      %li
+        = link_to "2", "?page=2", title: "Page 2"
+      %li
+        = link_to "3", "?page=3", title: "Page 3"
+      %li.button.next
+        = link_to "Next", "?page=2", title: "Next page"
+      %li.button.last
+        = link_to "Last", "?page=3", title: "Last page"
