@@ -28,6 +28,7 @@ Morph::Application.routes.draw do
   resources :documentation, only: :index do
     get "api", on: :collection
     get "what_is_new", on: :collection
+    get "examples/australian_members_of_parliament", on: :collection
   end
   get "/pricing", to: "documentation#pricing"
   # Hmm not totally sure about this url.
