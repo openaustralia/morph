@@ -871,13 +871,13 @@ a.facebook {background-position: -60px 0;}
 .results-pagination .page-controls ul {list-style: none;padding:0;position: absolute;top:8px;right:10px;}
 .results-pagination .page-controls ul li {display: inline;float:left;margin:0 0 0 7px;}
 .results-pagination .page-controls ul li.button a, .results-pagination .page-controls ul li.inactive span {width:11px;height:11px;text-indent: -9999px;overflow: hidden;display:block;position: relative;top:3px;}
-.results-pagination .page-controls ul li.prev a, .results-pagination .page-controls ul li.prev span {background:url(/images/template/buttons/position-arrows.png) no-repeat -11px 0;}
+.results-pagination .page-controls ul li.prev a, .results-pagination .page-controls ul li.prev span {background:url(/assets/examples/position-arrows.png) no-repeat -11px 0;}
 .results-pagination .page-controls ul li.prev a:hover {background-position:-11px -11px;}
-.results-pagination .page-controls ul li.next a, .results-pagination .page-controls ul li.next span {background:url(/images/template/buttons/position-arrows.png) no-repeat -22px 0;}
+.results-pagination .page-controls ul li.next a, .results-pagination .page-controls ul li.next span {background:url(/assets/examples/position-arrows.png) no-repeat -22px 0;}
 .results-pagination .page-controls ul li.next a:hover {background-position: -22px -11px;}
-.results-pagination .page-controls ul li.first a, .results-pagination .page-controls ul li.first span {background:url(/images/template/buttons/position-arrows.png) no-repeat 0 0;}
+.results-pagination .page-controls ul li.first a, .results-pagination .page-controls ul li.first span {background:url(/assets/examples/position-arrows.png) no-repeat 0 0;}
 .results-pagination .page-controls ul li.first a:hover {background-position: 0 -11px;}
-.results-pagination .page-controls ul li.last a, .results-pagination .page-controls ul li.last span {background:url(/images/template/buttons/position-arrows.png) no-repeat -33px 0;}
+.results-pagination .page-controls ul li.last a, .results-pagination .page-controls ul li.last span {background:url(/assets/examples/position-arrows.png) no-repeat -33px 0;}
 .results-pagination .page-controls ul li.last a:hover {background-position: -33px -11px;}
 
 .results-pagination .sort-controls {background:#E8E8E8;padding:8px 10px;position: relative;overflow: hidden;}
@@ -1157,7 +1157,7 @@ ul.dash li {background:url(/images/template/dash.png) no-repeat left center;padd
 .document-section-control ul li.start a {position: absolute;top:0;left:0px;}
 .document-section-control ul li.end a {position: absolute;top:0;right:0px;}
 
-.document-section-control ul li a span {width:11px;height:11px;position: absolute;top:3px;left:10px;text-indent: -9999px;overflow: hidden;background:url(/images/template/buttons/position-arrows.png) no-repeat 0 0;}
+.document-section-control ul li a span {width:11px;height:11px;position: absolute;top:3px;left:10px;text-indent: -9999px;overflow: hidden;background:url(/assets/examples/position-arrows.png) no-repeat 0 0;}
 
 .document-section-control ul li.prev a span {background-position: -11px 0;left:10px;}
 .document-section-control ul li.prev a:hover span {background-position: -11px -11px;}
