@@ -55,51 +55,8 @@
 
 
 
+				<%= render "pagination" %>
 
-        <div class="results-pagination">
-	        <div class="page-controls">
-
-
-<ul>
-
-            <li class="button first inactive">
-                <span>First</span>
-            </li>
-
-
-            <li class="button prev inactive">
-                <span>Back</span>
-            </li>
-
-
-            <li>
-                <strong>1</strong>
-            </li>
-
-            <li>
-                <a href="?page=2&expand=1&q=&mem=1&par=-1&gen=0&ps=50&st=1" title="Page 2">2</a>
-            </li>
-
-            <li>
-                <a href="?page=3&expand=1&q=&mem=1&par=-1&gen=0&ps=50&st=1" title="Page 3">3</a>
-            </li>
-
-
-            <li class="button next">
-                <a href="?page=2&expand=1&q=&mem=1&par=-1&gen=0&ps=50&st=1" title="Next page">Next</a>
-            </li>
-
-
-            <li class="button last">
-                <a href="?page=3&expand=1&q=&mem=1&par=-1&gen=0&ps=50&st=1" title="Last page">Last</a>
-            </li>
-
-</ul>
-
-	        </div>
-            <!-- end page-controls -->
-            <!-- end sort-controls -->
-        </div>
 
         <ul class="search-filter-results search-filter-results-thumbnails">
 <% @members.each do |member| %>
@@ -134,48 +91,7 @@
 
 </ul>
 
-
-        <div class="results-pagination">
-	        <div class="page-controls">
-
-<ul>
-
-            <li class="button first inactive">
-                <span>First</span>
-            </li>
-
-
-            <li class="button prev inactive">
-                <span>Back</span>
-            </li>
-
-
-            <li>
-                <strong>1</strong>
-            </li>
-
-            <li>
-                <a href="?page=2&expand=1&q=&mem=1&par=-1&gen=0&ps=50&st=1" title="Page 2">2</a>
-            </li>
-
-            <li>
-                <a href="?page=3&expand=1&q=&mem=1&par=-1&gen=0&ps=50&st=1" title="Page 3">3</a>
-            </li>
-
-
-            <li class="button next">
-                <a href="?page=2&expand=1&q=&mem=1&par=-1&gen=0&ps=50&st=1" title="Next page">Next</a>
-            </li>
-
-
-            <li class="button last">
-                <a href="?page=3&expand=1&q=&mem=1&par=-1&gen=0&ps=50&st=1" title="Last page">Last</a>
-            </li>
-
-</ul>
-
-	        </div>
-        </div>
+				<%= render "pagination" %>
 
 
 </div>
