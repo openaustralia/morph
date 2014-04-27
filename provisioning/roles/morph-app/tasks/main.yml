@@ -114,4 +114,4 @@
 - name: Add firewall rules
   copy: src=iptables.rules dest=/etc/iptables.rules
 - name: Add firewall rules on boot
-  copy: src=interfaces dest=/etc/network/interfaces
+  copy: src=iptablesload dest=/etc/network/if-pre-up.d/iptablesload
