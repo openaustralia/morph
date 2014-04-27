@@ -1,3 +1,4 @@
 ---
 dependencies:
-  - { role: swap }
+  # Commenting out swap for the time being as linode seems to have swap already set up
+  #- { role: swap }
