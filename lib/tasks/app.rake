@@ -30,5 +30,20 @@ namespace :app do
   desc "Synchronise all repositories"
   task :synchronise_repos => :environment do
     Scraper.all.each{|s| s.synchronise_repo}
+    end
+
+  desc "Promote user to admin"
+  task :promote_to_admin => :environment do
+    puts "Which github nickname do you want to promote to admin?"
+    nickname = $stdin.gets.chomp
+    user = User.find_by_nickname(nickname)
+    if user
+      user.admin = true
+      user.save!
+      puts "Done!"
+    else
+      puts "Couldn't find user with nickname '#{nickname}'"
+      exit 1
+    end
   end
 end
