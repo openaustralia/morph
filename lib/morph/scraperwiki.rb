@@ -19,8 +19,9 @@ module Morph
       raise 'short_name not set' if short_name.blank?
       if @info.nil?
         url = "https://classic.scraperwiki.com/scrapers/#{short_name}/info.json"
-        v = JSON.parse(Morph::Scraperwiki.content(url))
-        if v.kind_of?(Hash) && v["error"] == "Sorry, this scraper does not exist"
+        content = Morph::Scraperwiki.content(url)
+        v = JSON.parse(content) unless content.blank?
+        if v.nil? || (v.kind_of?(Hash) && v["error"] == "Sorry, this scraper does not exist")
           @info = nil
         else
           @info = v.first
