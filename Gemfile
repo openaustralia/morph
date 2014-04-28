@@ -57,6 +57,7 @@ gem 'faye'
 gem "puma"
 gem 'sync'
 gem 'multiblock'
+gem 'honeybadger'
 
 group :production do
   gem "dalli"
