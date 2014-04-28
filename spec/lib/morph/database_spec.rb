@@ -28,6 +28,12 @@ describe Morph::Database do
     end
   end
 
+  describe "#sql_query" do
+    let(:database) { Morph::Database.new(".") }
+    it { expect { database.sql_query("") }.to raise_error SQLite3::Exception, "No query specified" }
+    it { expect { database.sql_query(nil) }.to raise_error SQLite3::Exception, "No query specified" }
+  end
+
   describe "differencing databases" do
 
     before(:each) do
