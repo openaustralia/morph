@@ -151,4 +151,12 @@ class User < Owner
   def users
     []
   end
+
+  def active_for_authentication?
+    !suspended?
+  end
+
+  def inactive_message
+    'Your account has been suspended. Please contact us if you think this is in error.'
+  end
 end
