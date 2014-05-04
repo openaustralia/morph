@@ -7,8 +7,6 @@
     - else
       manually
     #{timeago_tag(run.queued_at, force: true)}.
-    %span.muted
-      (Refresh page for the latest)
 - elsif run.running?
   .alert.alert-info
     The scraper is <strong>running</strong>.
@@ -18,8 +16,6 @@
     - else
       manually
     #{timeago_tag(run.queued_at, force: true)}.
-    %span.muted
-      (Refresh page for the latest)
 - elsif run.finished_successfully?
   .alert.alert-success
     Last run completed successfully
