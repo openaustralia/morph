@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140504212436) do
+ActiveRecord::Schema.define(version: 20140504213906) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -180,24 +180,25 @@ ActiveRecord::Schema.define(version: 20140504212436) do
   add_index "runs", ["scraper_id"], name: "index_runs_on_scraper_id", using: :btree
 
   create_table "scrapers", force: true do |t|
-    t.string   "name",              default: "",    null: false
+    t.string   "name",                       default: "",    null: false
     t.string   "description"
     t.integer  "github_id"
-    t.integer  "owner_id",                          null: false
+    t.integer  "owner_id",                                   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "full_name"
     t.string   "github_url"
     t.string   "git_url"
-    t.boolean  "auto_run",          default: false, null: false
+    t.boolean  "auto_run",                   default: false, null: false
     t.string   "scraperwiki_url"
-    t.boolean  "forking",           default: false, null: false
+    t.boolean  "forking",                    default: false, null: false
     t.integer  "forked_by_id"
     t.string   "forking_message"
     t.integer  "forking_progress"
     t.string   "original_language"
-    t.integer  "repo_size",         default: 0,     null: false
-    t.integer  "sqlite_db_size",    default: 0,     null: false
+    t.integer  "repo_size",                  default: 0,     null: false
+    t.integer  "sqlite_db_size",             default: 0,     null: false
+    t.integer  "create_scraper_progress_id"
   end
 
   add_index "scrapers", ["full_name"], name: "index_scrapers_on_full_name", using: :btree
