@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140501011439) do
+ActiveRecord::Schema.define(version: 20140504212436) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -81,6 +81,13 @@ ActiveRecord::Schema.define(version: 20140501011439) do
 
   add_index "contributions", ["scraper_id"], name: "index_contributions_on_scraper_id", using: :btree
   add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
+
+  create_table "create_scraper_progresses", force: true do |t|
+    t.string   "message"
+    t.integer  "progress"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "log_lines", force: true do |t|
     t.integer  "run_id"
