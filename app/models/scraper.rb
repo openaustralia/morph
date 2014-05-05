@@ -12,6 +12,7 @@ class Scraper < ActiveRecord::Base
   has_many :contributions
   has_many :watches, class_name: "Alert", foreign_key: :watch_id
   has_many :watchers, through: :watches, source: :user
+  belongs_to :create_scraper_progress
 
   has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 
@@ -281,8 +282,12 @@ class Scraper < ActiveRecord::Base
 
   # progress should be between 0 and 100
   def fork_progress(message, progress)
+    if create_scraper_progress
+      create_scraper_progress.update_attributes(message: message, progress: progress)
+    else
       update_attributes(forking_message: message, forking_progress: progress)
-      sync_update self
+    end
+    sync_update self
   end
 
   def synchronise_repo
@@ -346,7 +351,12 @@ class Scraper < ActiveRecord::Base
 
     # Forking has finished
     fork_progress(nil, 100)
-    update_attributes(forking: false)
+    if create_scraper_progress
+      create_scraper_progress.destroy
+    else
+      update_attributes(forking: false)
+    end
+
 
     sync_update self
 
