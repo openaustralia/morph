@@ -27,23 +27,9 @@ class ScrapersController < ApplicationController
     elsif !@scraper.valid?
       render :new
     else
-      repo = Morph::Github.create_repository(current_user, @scraper.owner, @scraper.name)
-      # TODO Populate it with a default scraper in the chosen language
-      files = {
-        Morph::Language.language_to_scraper_filename(@scraper.original_language.to_sym) => Morph::Language.default_scraper(@scraper.original_language.to_sym),
-        ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
-      }
-      # TODO Don't use hardcoded urls
-      files["README.md"] = "This is a scraper that runs on [Morph](https://morph.io). To get started [see the documentation](https://morph.io/documentation)"
-      @scraper.add_commit_to_root_on_github(current_user, files, "Add template for Morph scraper")
-
-      scraper2 = Scraper.new_from_github(repo.full_name, current_user.octokit_client)
-      # Copy the new data across
-      @scraper.update_attributes(description: scraper2.description, github_id: scraper2.github_id,
-        owner_id: scraper2.owner_id, github_url: scraper2.github_url, git_url: scraper2.git_url)
-      # TODO This could be a long running task shouldn't really be in the request cycle
-      repo = current_user.octokit_client.edit_repository(@scraper.full_name, homepage: scraper_url(@scraper))
-      @scraper.synchronise_repo
+      @scraper.create_create_scraper_progress!(heading: "New scraper", message: "Queuing", progress: 5)
+      @scraper.save
+      CreateScraperWorker.perform_async(@scraper.id, current_user.id, scraper_url(@scraper))
       redirect_to @scraper
     end
   end
