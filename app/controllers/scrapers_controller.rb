@@ -37,15 +37,14 @@ class ScrapersController < ApplicationController
       files["README.md"] = "This is a scraper that runs on [Morph](https://morph.io). To get started [see the documentation](https://morph.io/documentation)"
       @scraper.add_commit_to_root_on_github(current_user, files, "Add template for Morph scraper")
 
-      @scraper = Scraper.new_from_github(repo.full_name, current_user.octokit_client)
-      if @scraper.save
-        # TODO This could be a long running task shouldn't really be in the request cycle
-        repo = current_user.octokit_client.edit_repository(@scraper.full_name, homepage: scraper_url(@scraper))
-        @scraper.synchronise_repo
-        redirect_to @scraper
-      else
-        render :new
-      end
+      scraper2 = Scraper.new_from_github(repo.full_name, current_user.octokit_client)
+      # Copy the new data across
+      @scraper.update_attributes(description: scraper2.description, github_id: scraper2.github_id,
+        owner_id: scraper2.owner_id, github_url: scraper2.github_url, git_url: scraper2.git_url)
+      # TODO This could be a long running task shouldn't really be in the request cycle
+      repo = current_user.octokit_client.edit_repository(@scraper.full_name, homepage: scraper_url(@scraper))
+      @scraper.synchronise_repo
+      redirect_to @scraper
     end
   end
 
