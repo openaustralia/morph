@@ -60,7 +60,11 @@ class User < Owner
     successful_runs = auto_runs.select {|r| r.finished_successfully?}
 
     unless broken_runs.empty?
-      AlertMailer.alert_email(self, broken_runs, successful_runs.count).deliver
+      begin
+        AlertMailer.alert_email(self, broken_runs, successful_runs.count).deliver
+      rescue Net::SMTPSyntaxError
+        puts "Warning: user #{nickname} has invalid email address #{email} (tried to send alert)"
+      end
     end
   end
 
