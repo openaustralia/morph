@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140504213906) do
+ActiveRecord::Schema.define(version: 20140505010028) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -191,10 +191,7 @@ ActiveRecord::Schema.define(version: 20140504213906) do
     t.string   "git_url"
     t.boolean  "auto_run",                   default: false, null: false
     t.string   "scraperwiki_url"
-    t.boolean  "forking",                    default: false, null: false
     t.integer  "forked_by_id"
-    t.string   "forking_message"
-    t.integer  "forking_progress"
     t.string   "original_language"
     t.integer  "repo_size",                  default: 0,     null: false
     t.integer  "sqlite_db_size",             default: 0,     null: false

@@ -1,9 +1,7 @@
 %h1.full_name= full_name_with_links(scraper)
 %h2 Forking!
 .progress.progress-striped.active
-  - p = scraper.create_scraper_progress ? scraper.create_scraper_progress.progress : scraper.forking_progress
-  .progress-bar(style="width: #{p == 0 ? 5 : p}%")
-    - m = scraper.create_scraper_progress ? scraper.create_scraper_progress.message : scraper.forking_message
-    - if m
-      = m
+  .progress-bar(style="width: #{scraper.create_scraper_progress.progress == 0 ? 5 : scraper.create_scraper_progress.progress}%")
+    - if scraper.create_scraper_progress.message
+      = scraper.create_scraper_progress.message
       &hellip;

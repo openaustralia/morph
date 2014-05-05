@@ -282,11 +282,7 @@ class Scraper < ActiveRecord::Base
 
   # progress should be between 0 and 100
   def fork_progress(message, progress)
-    if create_scraper_progress
-      create_scraper_progress.update_attributes(message: message, progress: progress)
-    else
-      update_attributes(forking_message: message, forking_progress: progress)
-    end
+    create_scraper_progress.update_attributes(message: message, progress: progress)
     sync_update self
   end
 
@@ -351,12 +347,7 @@ class Scraper < ActiveRecord::Base
 
     # Forking has finished
     fork_progress(nil, 100)
-    if create_scraper_progress
-      create_scraper_progress.destroy
-    else
-      update_attributes(forking: false)
-    end
-
+    create_scraper_progress.destroy
 
     sync_update self
 
