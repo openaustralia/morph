@@ -67,8 +67,9 @@ class ScrapersController < ApplicationController
     elsif !@scraper.save
       render :github
     else
-      # TODO This could be a long running task shouldn't really be in the request cycle
-      @scraper.synchronise_repo
+      @scraper.create_create_scraper_progress!(heading: "Adding from Github", message: "Queuing", progress: 5)
+      @scraper.save
+      CreateFromGithubWorker.perform_async(@scraper.id)
       redirect_to @scraper
     end
   end
