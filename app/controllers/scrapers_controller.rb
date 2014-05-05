@@ -93,7 +93,7 @@ class ScrapersController < ApplicationController
       @scraper.errors.add(:scraperwiki_shortname, 'cannot be blank')
       render :scraperwiki
     elsif @scraper.save
-      @scraper.create_create_scraper_progress!(message: "Queuing", progress: 10)
+      @scraper.create_create_scraper_progress!(message: "Queuing", progress: 5)
       @scraper.save
       ForkScraperwikiWorker.perform_async(@scraper.id)
       #flash[:notice] = "Forking in action..."
