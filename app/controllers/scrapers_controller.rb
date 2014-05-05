@@ -83,8 +83,6 @@ class ScrapersController < ApplicationController
   def create_scraperwiki
     @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_shortname: params[:scraper][:scraperwiki_shortname],
       owner_id: params[:scraper][:owner_id], forked_by_id: current_user.id)
-    # TODO Should we only create the progress object after scraper has been successfully created?
-    @scraper.create_create_scraper_progress(message: "Queuing", progress: 10)
     # TODO Should we really store full_name in the db?
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
 
@@ -95,6 +93,8 @@ class ScrapersController < ApplicationController
       @scraper.errors.add(:scraperwiki_shortname, 'cannot be blank')
       render :scraperwiki
     elsif @scraper.save
+      @scraper.create_create_scraper_progress!(message: "Queuing", progress: 10)
+      @scraper.save
       ForkScraperwikiWorker.perform_async(@scraper.id)
       #flash[:notice] = "Forking in action..."
       redirect_to @scraper
