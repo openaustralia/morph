@@ -280,12 +280,6 @@ class Scraper < ActiveRecord::Base
     client.update_ref(full_name, "heads/master", commit.sha)
   end
 
-  # progress should be between 0 and 100
-  def fork_progress(message, progress)
-    create_scraper_progress.update_attributes(message: message, progress: progress)
-    sync_update self
-  end
-
   def synchronise_repo
     Morph::Github.synchronise_repo(repo_path, git_url)
     update_repo_size
@@ -303,7 +297,7 @@ class Scraper < ActiveRecord::Base
     # We need to set auto_init so that we can create a commit later. The API doesn't support
     # adding a commit to an empty repository
     begin
-      fork_progress("Creating GitHub repository", 20)
+      create_scraper_progress.update("Creating GitHub repository", 20)
       repo = Morph::Github.create_repository(forked_by, owner, name)
       update_attributes(github_id: repo.id, github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
     rescue Octokit::UnprocessableEntity
@@ -314,7 +308,7 @@ class Scraper < ActiveRecord::Base
     scraperwiki = Morph::Scraperwiki.new(scraperwiki_shortname)
 
     # Copy the sqlite database across from Scraperwiki
-    fork_progress("Forking sqlite database", 40)
+    create_scraper_progress.update("Forking sqlite database", 40)
     sqlite_data = scraperwiki.sqlite_database
     if sqlite_data
       database.write_sqlite_database(sqlite_data)
@@ -322,7 +316,7 @@ class Scraper < ActiveRecord::Base
       database.standardise_table_name("swdata")
     end
 
-    fork_progress("Forking code", 60)
+    create_scraper_progress.update("Forking code", 60)
 
     # Fill in description
     repo = client.edit_repository(full_name, description: scraperwiki.title,
@@ -342,14 +336,11 @@ class Scraper < ActiveRecord::Base
         "Automatic update to make ScraperWiki scraper work on Morph")
     end
 
-    fork_progress("Synching repository", 80)
+    create_scraper_progress.update("Synching repository", 80)
     synchronise_repo
 
     # Forking has finished
-    fork_progress(nil, 100)
-    create_scraper_progress.destroy
-
-    sync_update self
+    create_scraper_progress.finished
 
     # TODO Add repo link
   end
