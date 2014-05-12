@@ -25,9 +25,6 @@ gem "formtastic-bootstrap", git: "https://github.com/mikowitz/formtastic-bootstr
 gem "formtastic", "2.3.0.rc2"
 gem "grit"
 gem 'docker-api', :require => 'docker'
-# Using this branch of excon because it has a feature needed for better realtime streaming with docker-api
-# and hasn't been merged into the project yet. See https://github.com/geemus/excon/pull/378
-gem "excon", git: "https://github.com/arlimus/excon.git", branch: "chunky-response"
 gem "sidekiq"
 gem "foreman"
 gem "faraday"
