@@ -6,7 +6,7 @@ module Morph
 
       # Open up a special interactive connection to Docker
       # TODO Cache connection
-      conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {chunk_size: 1, read_timeout: 4.hours})
+      conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
 
       # This will fail if there is another container with the same name
       begin
