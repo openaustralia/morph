@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140505012745) do
+ActiveRecord::Schema.define(version: 20140516233913) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -193,13 +193,21 @@ ActiveRecord::Schema.define(version: 20140505012745) do
     t.boolean  "auto_run",                   default: false, null: false
     t.string   "scraperwiki_url"
     t.integer  "forked_by_id"
-    t.string   "original_language"
     t.integer  "repo_size",                  default: 0,     null: false
     t.integer  "sqlite_db_size",             default: 0,     null: false
     t.integer  "create_scraper_progress_id"
+    t.string   "original_language"
   end
 
   add_index "scrapers", ["full_name"], name: "index_scrapers_on_full_name", using: :btree
   add_index "scrapers", ["owner_id"], name: "index_scrapers_on_owner_id", using: :btree
+
+  create_table "variables", force: true do |t|
+    t.string   "name"
+    t.string   "value"
+    t.integer  "scraper_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
