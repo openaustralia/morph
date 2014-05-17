@@ -10,15 +10,7 @@
         .col-sm-2
           = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.id]}, include_blank: false
         .col-sm-6
-          -# TODO Extract common layout code between this and scraperwiki.html.haml
-          .string.input.optional.stringish.form-group#scraper_name_input{class: ("error has-error" unless @scraper.errors[:name].empty?)}
-            %label.control-label(for="scraper_name") Name
-            .input-group
-              %span.input-group-addon /
-              %input.form-control#scraper_name{maxlength: "255", name:"scraper[name]", placeholder:"city_of_sydney_development_applications", type:"text", value:"#{@scraper.name}", class:("error" unless @scraper.errors[:name].empty?)}
-            - @scraper.errors.full_messages_for(:name).each do |m|
-              .alert.alert-warning= m
-            %span.help-block Name to give the scraper here and on GitHub
+          = f.input :name, prepend: "/", hint: "Name to give the scraper here and on GitHub", placeholder:"city_of_sydney_development_applications"
 
     = f.actions do
       = f.action :submit
