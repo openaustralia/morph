@@ -30,7 +30,7 @@ class User < Owner
     update_attributes(access_token: Morph::Github.reset_authorization(access_token))
   end
 
-  def github_public_org_repos
+  def github_all_public_org_repos
     Octokit.auto_paginate = true
     repos = []
     octokit_client.organizations(nickname).each do |org|
@@ -41,7 +41,7 @@ class User < Owner
   end
 
   def github_all_public_repos
-    (github_public_user_repos + github_public_org_repos).sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
+    (github_public_user_repos + github_all_public_org_repos).sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
   end
 
   # Send all alerts. This method should be run from a daily cron job
