@@ -122,7 +122,8 @@ class Run < ActiveRecord::Base
       image_name: docker_image,
       container_name: docker_container_name,
       repo_path: repo_path,
-      data_path: data_path
+      data_path: data_path,
+      env_variables: scraper.variables.map{|v| [v.name, v.value]}
     ) do |on|
         on.log { |s,c| yield s, c}
         on.ip_address do |ip|
