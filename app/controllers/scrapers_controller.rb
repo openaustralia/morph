@@ -241,6 +241,6 @@ class ScrapersController < ApplicationController
   private
 
   def scraper_params
-    params.require(:scraper).permit(:auto_run)
+    params.require(:scraper).permit(:auto_run, variables_attributes: [:id, :name, :value, :_destroy])
   end
 end

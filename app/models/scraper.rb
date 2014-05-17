@@ -13,6 +13,8 @@ class Scraper < ActiveRecord::Base
   has_many :watches, class_name: "Alert", foreign_key: :watch_id
   has_many :watchers, through: :watches, source: :user
   belongs_to :create_scraper_progress
+  has_many :variables
+  accepts_nested_attributes_for :variables, allow_destroy: true
 
   has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 
