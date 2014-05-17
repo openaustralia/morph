@@ -1,3 +1,3 @@
 class Variable < ActiveRecord::Base
-  validates :name, format: {with: /MORPH_[A-Z_]+/, message: "should look something like MORPH_SEAGULL"}
+  validates :name, format: {with: /\AMORPH_[A-Z_]+\z/, message: "should look something like MORPH_SEAGULL"}
 end
