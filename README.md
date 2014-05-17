@@ -144,6 +144,9 @@ If you want to contribute an enhancement or a fix:
 * Commit the changes without making changes to any files that aren't related to your enhancement or fix.
 * Send a pull request.
 
+We maintain a list of [issues that are easy fixes](https://github.com/openaustralia/morph/issues?labels=easy+fix&milestone=&page=1&state=open). Fixing
+one of these is a great way to get started while you get familiar with the codebase.
+
 ### Copyright & License
 
 Copyright OpenAustralia Foundation Limited 2013 - 2014. Licensed under the Affero GPL. See LICENSE file for more details.
