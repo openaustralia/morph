@@ -18,3 +18,24 @@ class Sync.ScraperShowPartial extends Sync.View
 
 class Sync.ScraperShowPartial extends Sync.View
   afterUpdate: -> $('time[data-time-ago]').timeago()
+
+bindCapitalise = (j) ->
+  j.on "input", ->
+    input = $(this)
+    start = input[0].selectionStart
+    val = input.val()
+    val = val.toUpperCase()
+    if val[0..5] != "MORPH_"
+      val = "MORPH_"
+      start = 6
+    input.val(val)
+    input[0].selectionStart = start
+    input[0].selectionEnd = start
+
+
+$ ->
+  bindCapitalise($("form.scraper .nested-fields .name"))
+  $('#variables').on 'cocoon:before-insert', (e, insertedItem) ->
+    name = insertedItem.find(".name")
+    name.val("MORPH_")
+    bindCapitalise(name)
