@@ -110,8 +110,7 @@ class ScrapersController < ApplicationController
   def update
     @scraper = Scraper.friendly.find(params[:id])
     if @scraper.can_write?(current_user)
-      # TODO This is definitely the dumb and long winded way to do things
-      if @scraper.update_attributes(auto_run: params[:scraper][:auto_run])
+      if @scraper.update_attributes(scraper_params)
         flash[:notice] = "Scraper settings successfully updated"
         sync_update @scraper
       end
@@ -237,5 +236,11 @@ class ScrapersController < ApplicationController
 
   def watchers
     @scraper = Scraper.friendly.find(params[:id])
+  end
+
+  private
+
+  def scraper_params
+    params.require(:scraper).permit(:auto_run)
   end
 end
