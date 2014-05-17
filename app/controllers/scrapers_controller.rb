@@ -19,7 +19,7 @@ class ScrapersController < ApplicationController
 
   def create
     @scraper = Scraper.new(original_language: params[:scraper][:original_language],
-      owner_id: params[:scraper][:owner_id], name: params[:scraper][:name])
+      owner_id: params[:scraper][:owner_id], name: params[:scraper][:name], description: params[:scraper][:description])
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
     if !Scraper.can_write?(current_user, @scraper.owner)
       @scraper.errors.add(:owner_id, "doesn't belong to you")

@@ -11,6 +11,7 @@
           = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.id]}, include_blank: false
         .col-sm-6
           = f.input :name, prepend: "/", hint: "Name to give the scraper here and on GitHub", placeholder:"city_of_sydney_development_applications"
+      = f.input :description, label: "Description (optional)"
 
     = f.actions do
       = f.action :submit

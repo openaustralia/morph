@@ -2,8 +2,6 @@ class CreateScraperWorker
   include Sidekiq::Worker
 
   def perform(scraper_id, current_user_id, scraper_url)
-    # TODO Handle this failing half way through and rerunning
-
     scraper = Scraper.find(scraper_id)
     current_user = User.find(current_user_id)
 
@@ -12,7 +10,7 @@ class CreateScraperWorker
     # TODO Do this in a less hacky and more general way
     if scraper.create_scraper_progress.progress <= 20
       scraper.create_scraper_progress.update("Creating Github repository", 20)
-      repo = Morph::Github.create_repository(current_user, scraper.owner, scraper.name)
+      repo = Morph::Github.create_repository(current_user, scraper.owner, scraper.name, description: scraper.description)
     end
 
     # This block should happily run several times (after failures)
