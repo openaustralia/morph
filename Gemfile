@@ -23,6 +23,7 @@ gem "formtastic-bootstrap", git: "https://github.com/mikowitz/formtastic-bootstr
 # This release candidate of formtastic has a fix for:
 # undefined method `check_box_checked?' for ActionView::Helpers::InstanceTag:Class
 gem "formtastic", "2.3.0.rc2"
+gem "cocoon"
 gem "grit"
 gem 'docker-api', :require => 'docker'
 gem "sidekiq"

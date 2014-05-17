@@ -16,6 +16,7 @@
 //= require zeroclipboard
 //= require rails-timeago
 //= require sync
+//= require cocoon
 //= require api
 //= require bootstrap
 //= require documentation
