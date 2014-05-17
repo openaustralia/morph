@@ -113,6 +113,9 @@ class ScrapersController < ApplicationController
       if @scraper.update_attributes(scraper_params)
         flash[:notice] = "Scraper settings successfully updated"
         sync_update @scraper
+      else
+        render :settings
+        return
       end
     else
       flash[:alert] = "Can't update someone else's scraper"

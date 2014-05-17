@@ -15,6 +15,7 @@ class Scraper < ActiveRecord::Base
   belongs_to :create_scraper_progress
   has_many :variables
   accepts_nested_attributes_for :variables, allow_destroy: true
+  validates_associated :variables
 
   has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 
