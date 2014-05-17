@@ -8,9 +8,17 @@
   %h3 Secret environment variables
   %p
     Environment variables can be used to pass secret values to your scraper such as API keys.
+  .row
+    .col-sm-3
+      %label Name
+    .col-sm-8
+      %label Value
   #variables
     = f.semantic_fields_for :variables do |variable|
       = render "variable_fields", f: variable
-    = link_to_add_association 'add secret environment variable', f, :variables
+    .links
+      = link_to_add_association f, :variables do
+        %i.icon-plus-sign.icon-2x
+        Add variable
   = f.actions do
     = f.action :submit, :label => "Update"

@@ -1,5 +1,10 @@
 .nested-fields
   = f.inputs do
-    = f.input :name
-    = f.input :value
-    = link_to_remove_association "remove secret environment variable", f
+    .row
+      .col-sm-3
+        = f.input :name
+      .col-sm-8
+        = f.input :value
+      .col-sm-1
+        = link_to_remove_association f do
+          %i.icon-remove-sign.icon-2x

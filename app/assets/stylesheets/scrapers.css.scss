@@ -155,3 +155,16 @@ h1.full_name {
      margin-left: 0.5em;
   }
 }
+
+form.scraper {
+  .nested-fields label {
+    display: none;
+  }
+  .links {
+    margin-bottom: 1em;
+  }
+}
+
+a i[class^="icon-"] {
+  text-decoration: none;
+}
