@@ -17,13 +17,6 @@ GIT
       sass-rails
 
 GIT
-  remote: https://github.com/mikowitz/formtastic-bootstrap.git
-  revision: 63f2aa97428ce2edca06b7e3de3b3a3f80602a22
-  specs:
-    formtastic-bootstrap (3.0.0.rc.2)
-      formtastic (>= 2.2)
-
-GIT
   remote: https://github.com/seyhunak/twitter-bootstrap-rails.git
   revision: 4d0bd4271f7f01d79bbb2b72c04f30a5766db0ef
   branch: bootstrap3
@@ -166,8 +159,10 @@ GEM
       dotenv (>= 0.7)
       thor (>= 0.13.6)
     formatador (0.2.4)
-    formtastic (2.3.0.rc2)
+    formtastic (2.3.0.rc3)
       actionpack (>= 3.0)
+    formtastic-bootstrap (3.0.0)
+      formtastic (>= 2.2)
     friendly_id (5.0.2)
       activerecord (~> 4.0.0)
     github-markup (1.0.2)
@@ -436,8 +431,8 @@ DEPENDENCIES
   faraday
   faye
   foreman
-  formtastic (= 2.3.0.rc2)
-  formtastic-bootstrap!
+  formtastic
+  formtastic-bootstrap
   friendly_id
   github-markup
   grit
