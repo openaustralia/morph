@@ -35,7 +35,12 @@ bindCapitalise = (j) ->
 
 $ ->
   bindCapitalise($("form.scraper .nested-fields .name"))
-  $('#variables').on 'cocoon:before-insert', (e, insertedItem) ->
-    name = insertedItem.find(".name")
-    name.val("MORPH_")
-    bindCapitalise(name)
+  $('#variables')
+    .on 'cocoon:before-insert', (e, insertedItem) ->
+      name = insertedItem.find(".name")
+      name.val("MORPH_")
+      bindCapitalise(name)
+      insertedItem.fadeIn('fast')
+    .on 'cocoon:before-remove', (e, removedItem) ->
+      $(this).data('remove-timeout', 500)
+      removedItem.fadeOut('fast')
