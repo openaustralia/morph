@@ -39,14 +39,6 @@ class User < Owner
     [nickname] + octokit_client.organizations(nickname).map{|org| org.login}
   end
 
-  def github_all_public_repos
-    repos = []
-    all_nicknames.each do |n|
-      repos += github_public_repos(n)
-    end
-    repos
-  end
-
   # Send all alerts. This method should be run from a daily cron job
   def self.process_alerts
     User.all.each do |user|
