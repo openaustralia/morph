@@ -2,7 +2,7 @@
   %h3= nickname
   = semantic_form_for @scraper, url: github_scrapers_path do |f|
     = f.inputs do
-      = f.input :full_name, as: :radio, collection: current_user.github_public_repos(nickname).map{|r| [radio_description(r), r.full_name]}, label: "GitHub Repository", include_blank: false
+      = f.input :full_name, as: :radio, collection: current_user.github_public_repos(nickname).map{|r| [radio_description(r), r.full_name]}, label: false, include_blank: false
     = f.actions do
       = f.action :submit, label: "Add Scraper"
 
