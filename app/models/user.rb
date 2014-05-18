@@ -34,13 +34,14 @@ class User < Owner
     end
   end
 
-  def github_all_public_orgs
-    octokit_client.organizations(nickname).map{|org| org.login}
+  # Nickname of this user and all organizations that this user is a public member of
+  def all_nicknames
+    [nickname] + octokit_client.organizations(nickname).map{|org| org.login}
   end
 
   def github_all_public_repos
     repos = []
-    ([nickname] + github_all_public_orgs).each do |n|
+    all_nicknames.each do |n|
       repos += github_public_repos(n)
     end
     repos
