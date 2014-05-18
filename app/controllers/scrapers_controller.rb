@@ -39,10 +39,7 @@ class ScrapersController < ApplicationController
 
   # For rendering ajax partial in github action
   def github_form
-    @repos = []
-    current_user.all_nicknames.each do |n|
-      @repos += current_user.github_public_repos(n)
-    end
+    @nicknames = current_user.all_nicknames
     @scraper = Scraper.new
     render partial: "github_form"
   end
