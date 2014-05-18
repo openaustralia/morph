@@ -37,16 +37,20 @@ class User < Owner
     repos.sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
   end
 
+  def github_all_public_orgs
+    octokit_client.organizations(nickname).map{|org| org.login}
+  end
+
   def github_all_public_org_repos
     repos = []
-    octokit_client.organizations(nickname).each do |org|
-      repos += github_public_org_repos(org.login)
+    github_all_public_orgs.each do |org_nickname|
+      repos += github_public_org_repos(org_nickname)
     end
     repos
   end
 
   def github_all_public_repos
-    (github_public_user_repos + github_all_public_org_repos)
+    github_public_user_repos + github_all_public_org_repos
   end
 
   # Send all alerts. This method should be run from a daily cron job
