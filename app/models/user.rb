@@ -12,15 +12,6 @@ class User < Owner
     scrapers_contributed_to - scrapers
   end
 
-  # All repos in github for this user in their personal area
-  # It does not include organizations that they are part of
-  # Also doesn't include private repos
-  def github_public_user_repos
-    # TODO Move this to an initializer
-    Octokit.auto_paginate = true
-    octokit_client.repositories(nickname, sort: :pushed, type: :public)
-  end
-
   # A list of all owners thst this user can write to. Includes itself
   def all_owners
     [self] + organizations
@@ -30,18 +21,16 @@ class User < Owner
     update_attributes(access_token: Morph::Github.reset_authorization(access_token))
   end
 
-  def github_public_org_repos(org_nickname)
-    Octokit.auto_paginate = true
-    # This call doesn't seem to support sort by pushed. So, doing it ourselves
-    repos = octokit_client.organization_repositories(org_nickname, type: :public)
-    repos.sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
-  end
-
   def github_public_repos(owner_nickname)
+    # TODO Move this to an initializer
+    Octokit.auto_paginate = true
+
     if nickname == owner_nickname
-      github_public_user_repos
+      octokit_client.repositories(nickname, sort: :pushed, type: :public)
     else
-      github_public_org_repos(owner_nickname)
+      # This call doesn't seem to support sort by pushed. So, doing it ourselves
+      repos = octokit_client.organization_repositories(owner_nickname, type: :public)
+      repos.sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
     end
   end
 
