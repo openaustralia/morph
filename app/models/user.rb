@@ -37,20 +37,24 @@ class User < Owner
     repos.sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
   end
 
+  def github_public_repos(owner_nickname)
+    if nickname == owner_nickname
+      github_public_user_repos
+    else
+      github_public_org_repos(owner_nickname)
+    end
+  end
+
   def github_all_public_orgs
     octokit_client.organizations(nickname).map{|org| org.login}
   end
 
-  def github_all_public_org_repos
+  def github_all_public_repos
     repos = []
-    github_all_public_orgs.each do |org_nickname|
-      repos += github_public_org_repos(org_nickname)
+    ([nickname] + github_all_public_orgs).each do |n|
+      repos += github_public_repos(n)
     end
     repos
-  end
-
-  def github_all_public_repos
-    github_public_user_repos + github_all_public_org_repos
   end
 
   # Send all alerts. This method should be run from a daily cron job
