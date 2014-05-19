@@ -38,9 +38,9 @@ class ScrapersController < ApplicationController
   end
 
   # For rendering ajax partial in github action
-  def github_form
+  def github_forms
     @scraper = Scraper.new
-    render partial: "github_form"
+    render partial: "github_forms"
   end
 
   def create_github

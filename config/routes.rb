@@ -42,7 +42,7 @@ Morph::Application.routes.draw do
     get 'page/:page', :action => :index, :on => :collection
     get 'github', on: :new
     post 'github', to: "scrapers#create_github", on: :collection
-    get 'github_form', on: :collection
+    get 'github_forms', on: :collection
     get 'scraperwiki', on: :new
     post 'scraperwiki', to: "scrapers#create_scraperwiki", on: :collection
   end

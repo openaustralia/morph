@@ -10,12 +10,12 @@
 
   -# TODO Don't show repos that we've already added
 
-  #github_form
+  #github_forms
     %h3
       %i.icon-github.icon-2x.icon-spin
       Hang on. Getting your repositories from GitHub&hellip;
 
   :javascript
     $(document).ready(function(){
-      $("#github_form").load("#{github_form_scrapers_path}")
+      $("#github_forms").load("#{github_forms_scrapers_path}")
     });
