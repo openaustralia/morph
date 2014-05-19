@@ -1,10 +1,33 @@
-- @nicknames.each do |nickname|
-  %h3= nickname
-  = semantic_form_for @scraper, url: github_scrapers_path do |f|
-    = f.inputs do
-      = f.input :full_name, as: :radio, collection: current_user.github_public_repos(nickname).map{|r| [radio_description(r), r.full_name]}, label: false, include_blank: false
-    = f.actions do
-      = f.action :submit, label: "Add Scraper"
+%ul.nav.nav-tabs
+  %li.active= link_to current_user.nickname, "#user", data: {toggle: "tab"}
+  - current_user.org_names.each do |name|
+    %li= link_to name, "#org_#{name}", data: {toggle: "tab"}
+
+.tab-content
+  .tab-pane.active#user
+    %h3= current_user.nickname
+    = semantic_form_for @scraper, url: github_scrapers_path do |f|
+      = f.inputs do
+        = f.input :full_name, as: :radio, collection: current_user.github_public_repos(current_user.nickname).map{|r| [radio_description(r), r.full_name]}, label: false, include_blank: false
+      = f.actions do
+        = f.action :submit, label: "Add Scraper"
+  - current_user.org_names.each do |name|
+    .tab-pane{id: "org_#{name}"}
+      %h3= name
+      = semantic_form_for @scraper, url: github_scrapers_path do |f|
+        = f.inputs do
+          = f.input :full_name, as: :radio, collection: current_user.github_public_repos(name).map{|r| [radio_description(r), r.full_name]}, label: false, include_blank: false
+        = f.actions do
+          = f.action :submit, label: "Add Scraper"
+
+-#
+  - @nicknames.each do |nickname|
+    %h3= nickname
+    = semantic_form_for @scraper, url: github_scrapers_path do |f|
+      = f.inputs do
+        = f.input :full_name, as: :radio, collection: current_user.github_public_repos(nickname).map{|r| [radio_description(r), r.full_name]}, label: false, include_blank: false
+      = f.actions do
+        = f.action :submit, label: "Add Scraper"
 
 :javascript
   $("#scraper_submit_action").attr("disabled", true);
