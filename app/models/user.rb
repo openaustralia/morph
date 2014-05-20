@@ -21,19 +21,6 @@ class User < Owner
     update_attributes(access_token: Morph::Github.reset_authorization(access_token))
   end
 
-  def github_public_repos(owner)
-    # TODO Move this to an initializer
-    Octokit.auto_paginate = true
-
-    if self == owner
-      octokit_client.repositories(owner.nickname, sort: :pushed, type: :public)
-    else
-      # This call doesn't seem to support sort by pushed. So, doing it ourselves
-      repos = octokit_client.organization_repositories(owner.nickname, type: :public)
-      repos.sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
-    end
-  end
-
   # Send all alerts. This method should be run from a daily cron job
   def self.process_alerts
     User.all.each do |user|

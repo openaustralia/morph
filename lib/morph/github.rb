@@ -41,6 +41,21 @@ module Morph
       end
     end
 
+    # Returns a list of all public repos. Works for both an individual and an organization.
+    # List is sorted by push date
+    def self.public_repos(user, owner)
+      # TODO Move this to an initializer
+      Octokit.auto_paginate = true
+
+      if user == owner
+        user.octokit_client.repositories(owner.nickname, sort: :pushed, type: :public)
+      else
+        # This call doesn't seem to support sort by pushed. So, doing it ourselves
+        repos = user.octokit_client.organization_repositories(owner.nickname, type: :public)
+        repos.sort{|a,b| b.pushed_at.to_i <=> a.pushed_at.to_i}
+      end
+    end
+
     def self.primary_email(user)
       # TODO If email isn't verified probably should not send email to it
       emails(user).find{|u| u.primary}.email
