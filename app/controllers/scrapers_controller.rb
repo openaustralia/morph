@@ -43,6 +43,11 @@ class ScrapersController < ApplicationController
     render partial: "github_forms"
   end
 
+  def github_form
+    @scraper = Scraper.new
+    render partial: "github_form", locals: {nickname: params[:nickname]}
+  end
+
   def create_github
     @scraper = Scraper.new_from_github(params[:scraper][:full_name], current_user.octokit_client)
     if !@scraper.can_write?(current_user)
