@@ -1,4 +1,7 @@
-%h3= owner.nickname
+%h3
+  = owner_image(owner, 30)
+  = owner.nickname
+
 %div{id: "owner_#{owner.nickname}_content"}
   %p
     %i.icon-github.icon-2x.icon-spin
