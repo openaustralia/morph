@@ -17,10 +17,10 @@
 
   .tab-content
     .tab-pane.active{id: "owner_#{@user.nickname}"}
-      = render partial: "github_form_loader", locals: {nickname: @user.nickname}
+      = render partial: "github_form_loader", locals: {owner: @user}
     - @organizations.each do |org|
       .tab-pane{id: "owner_#{org.nickname}"}
-        = render partial: "github_form_loader", locals: {nickname: org.nickname}
+        = render partial: "github_form_loader", locals: {owner: org}
 
   :javascript
     $("#scraper_submit_action").attr("disabled", true);
