@@ -34,11 +34,6 @@ class User < Owner
     end
   end
 
-  # names of all organizations that this user is a public member of
-  def org_names
-    octokit_client.organizations(nickname).map{|org| org.login}
-  end
-
   # Send all alerts. This method should be run from a daily cron job
   def self.process_alerts
     User.all.each do |user|

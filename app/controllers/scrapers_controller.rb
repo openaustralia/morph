@@ -35,6 +35,8 @@ class ScrapersController < ApplicationController
   end
 
   def github
+    @user = current_user
+    @organizations = current_user.organizations
   end
 
   # For rendering ajax partial in github action
