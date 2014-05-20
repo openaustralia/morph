@@ -1,0 +1,9 @@
+%h3= nickname
+%div{id: "owner_#{nickname}_content"}
+  %p
+    %i.icon-github.icon-2x.icon-spin
+    Hang on. Getting your repositories from GitHub&hellip;
+:javascript
+  $(document).ready(function(){
+    $("#owner_#{nickname}_content").load("#{github_form_scrapers_path(nickname: nickname)}")
+  });

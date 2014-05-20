@@ -17,26 +17,10 @@
 
   .tab-content
     .tab-pane.active{id: "owner_#{current_user.nickname}"}
-      %h3= current_user.nickname
-      %div{id: "owner_#{current_user.nickname}_content"}
-        %p
-          %i.icon-github.icon-2x.icon-spin
-          Hang on. Getting your repositories from GitHub&hellip;
-      :javascript
-        $(document).ready(function(){
-          $("#owner_#{current_user.nickname}_content").load("#{github_form_scrapers_path(nickname: current_user.nickname)}")
-        });
+      = render partial: "github_form_loader", locals: {nickname: current_user.nickname}
     - current_user.org_names.each do |nickname|
       .tab-pane{id: "owner_#{nickname}"}
-        %h3= nickname
-        %div{id: "owner_#{nickname}_content"}
-          %p
-            %i.icon-github.icon-2x.icon-spin
-            Hang on. Getting your repositories from GitHub&hellip;
-        :javascript
-          $(document).ready(function(){
-            $("#owner_#{nickname}_content").load("#{github_form_scrapers_path(nickname: nickname)}")
-          });
+        = render partial: "github_form_loader", locals: {nickname: nickname}
 
   :javascript
     $("#scraper_submit_action").attr("disabled", true);
