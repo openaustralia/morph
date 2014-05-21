@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe Morph::Database do
+  describe ".clean_utf8_string" do
+    it { Morph::Database.clean_utf8_string("This is valid UTF8").should == "This is valid UTF8" }
+    it { Morph::Database.clean_utf8_string("Rodolfo Moisés Castañón Fuentes").should == "Rodolfo Moisés Castañón Fuentes" }
+    it { Morph::Database.clean_utf8_string("foo\xA2bar").should == "foobar" }
+    it { Morph::Database.clean_utf8_string("Casta\xC3\xB1\xC3\xB3n").should == "Castañón" }
+  end
+
   describe '#clear' do
     it "should not attempt to remove the file if it's not there" do
       FileUtils.should_not_receive(:rm)

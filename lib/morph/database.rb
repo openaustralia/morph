@@ -71,7 +71,11 @@ module Morph
     # Removes bits of strings that are invalid UTF8
     def self.clean_utf8_string(string)
       if string.respond_to?(:encode)
-        string.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+        if string.valid_encoding?
+          string
+        else
+          string.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+        end
       else
         string
       end
