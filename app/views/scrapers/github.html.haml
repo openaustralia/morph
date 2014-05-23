@@ -21,9 +21,3 @@
     - @organizations.each do |org|
       .tab-pane{id: "owner_#{org.nickname}"}
         = render partial: "github_form_loader", locals: {owner: org}
-
-  :javascript
-    $("#scraper_submit_action").attr("disabled", true);
-    $("input[type=radio]").change(function(){
-      $("#scraper_submit_action").attr("disabled", false);
-    });
