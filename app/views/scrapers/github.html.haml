@@ -8,8 +8,6 @@
     The main data should be written into a table called `#{Morph::Database.sqlite_table_name}`.
     The code needs to live in the master branch of the repository.
 
-  -# TODO Don't show repos that we've already added
-
   %ul.nav.nav-tabs
     %li.active= link_to @user.nickname, "#owner_#{@user.nickname}", data: {toggle: "tab"}
     - @organizations.each do |org|
