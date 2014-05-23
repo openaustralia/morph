@@ -159,6 +159,10 @@ class Run < ActiveRecord::Base
     end
   end
 
+  def stop!
+    Morph::DockerRunner.stop(docker_container_name)
+  end
+
   def log(stream, text)
     puts "#{stream}: #{text}"
     number = log_lines.maximum(:number) || 0

@@ -1,1 +1,4 @@
-= button_to "Run scraper", run_scraper_path(scraper), class: ("btn btn-primary " + (scraper.runnable? ? "" : "disabled")), id: "run_button", disabled: !scraper.runnable?, remote: true
+- if scraper.runnable?
+  = button_to "Run scraper", run_scraper_path(scraper), class: "btn btn-primary", id: "run_button", remote: true
+- else
+  = button_to "Stop scraper", stop_scraper_path(scraper), class: "btn btn-warning", id: "stop_button", remote: true

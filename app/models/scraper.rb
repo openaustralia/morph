@@ -180,6 +180,10 @@ class Scraper < ActiveRecord::Base
     end
   end
 
+  def stop!
+    last_run.stop! if last_run.running?
+  end
+
   def github_url_for_file(file)
     github_url + "/blob/master/" + file
   end

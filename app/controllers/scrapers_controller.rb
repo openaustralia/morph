@@ -136,6 +136,18 @@ class ScrapersController < ApplicationController
     redirect_to scraper
   end
 
+  def stop
+    scraper = Scraper.friendly.find(params[:id])
+    if scraper.can_write?(current_user)
+      scraper.stop!
+      scraper.reload
+      sync_update scraper
+    else
+      flash[:alert] = "Can't stop someone else's scraper!"
+    end
+    redirect_to scraper
+  end
+
   # TODO Extract checking of who owns the scraper
   def clear
     scraper = Scraper.friendly.find(params[:id])
