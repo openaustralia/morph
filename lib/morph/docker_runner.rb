@@ -28,9 +28,15 @@ module Morph
             "Env" => env_variables.map{|k,v| "#{k}=#{v}"}
           }, conn_interactive)
       rescue Excon::Errors::SocketError => e
-        wrapper.call(:log, :internal, "Morph internal error: Could not connect to Docker server: #{e}\n")
+        text = "Could not connect to Docker server: #{e}"
+        wrapper.call(:log, :internal, "Morph internal error: #{text}\n")
         wrapper.call(:log, :internal, "Requeueing...\n")
-        raise "Could not connect to Docker server: #{e}"
+        raise text
+      rescue Docker::Error::NotFoundError => e
+        text = "Could not find docker image #{options[:image_name]}"
+        wrapper.call(:log, :internal, "Morph internal error: #{text}\n")
+        wrapper.call(:log, :internal, "Requeueing...\n")
+        raise text
       end
 
       # TODO the local path will be different if docker isn't running through Vagrant (i.e. locally)
