@@ -1,5 +1,7 @@
 module Morph
   class DockerRunner
+    # Mandatory: command, image_name, container_name, repo_path, data_path
+    # Optional: env_variables
     def self.run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
