@@ -151,6 +151,13 @@ class Scraper < ActiveRecord::Base
     system("#{docker_command} pull openaustralia/morph-php")
     system("#{docker_command} pull openaustralia/morph-python")
     system("#{docker_command} pull openaustralia/morph-perl")
+    # It would be nice and easy if we could download this from the docker index
+    # It doesn't seem to be working right now - hence it's commented out
+    # Instead do this to build it yourself:
+    # git clone https://github.com/progrium/buildstep.git
+    # cd buildstep
+    # make
+    #system("#{docker_command} pull progrium/buildstep")
   end
 
   def readme
