@@ -139,6 +139,14 @@ class Run < ActiveRecord::Base
     result
   end
 
+  def self.all_config_paths(directory)
+    all_paths(directory) & ["Gemfile", "Gemfile.lock", "Procfile"]
+  end
+
+  def self.all_run_paths(directory)
+    all_paths(directory) - all_config_paths(directory)
+  end
+
   def go_with_logging
     puts "Starting...\n"
     database.backup
