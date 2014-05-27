@@ -186,24 +186,36 @@ class Run < ActiveRecord::Base
     i = Docker::Image.get('progrium/buildstep')
     # Insert the configuration part of the application code into the container
     tar_path = tar_config_files
-    i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
-    i2.tag('repo' => 'compiled')
-    FileUtils.rm(tar_path)
+    hash = Digest::SHA2.hexdigest(File.read(tar_path))
 
-    c = Morph::DockerRunner.run_no_cleanup(
-      command: "/build/builder",
-      user: "root",
-      image_name: "compiled",
-      container_name: "compiled",
-      env_variables: {CURL_TIMEOUT: 180}
-    ) do |on|
-      on.log { |s,c| yield s, c}
+    # Check if compiled image already exists
+    begin
+      i = Docker::Image.get("compiled_#{hash}")
+      exists = true
+    rescue Docker::Error::NotFoundError
+      exists = false
     end
-    c.commit('repo' => 'compiled')
-    c.delete
+
+    unless exists
+      i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
+      i2.tag('repo' => "compiled_#{hash}")
+      FileUtils.rm(tar_path)
+
+      c = Morph::DockerRunner.run_no_cleanup(
+        command: "/build/builder",
+        user: "root",
+        image_name: "compiled_#{hash}",
+        container_name: "compiled_#{hash}",
+        env_variables: {CURL_TIMEOUT: 180}
+      ) do |on|
+        on.log { |s,c| yield s, c}
+      end
+      c.commit('repo' => "compiled_#{hash}")
+      c.delete
+    end
 
     # Insert the actual code into the container
-    i = Docker::Image.get('compiled')
+    i = Docker::Image.get("compiled_#{hash}")
     tar_path = tar_run_files
     i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
     i2.tag('repo' => 'compiled2')
