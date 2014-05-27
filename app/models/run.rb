@@ -98,6 +98,47 @@ class Run < ActiveRecord::Base
     "https://github.com/#{full_name}/commit/#{git_revision}"
   end
 
+  def self.in_directory(directory)
+    cwd = FileUtils.pwd
+    FileUtils.cd(directory)
+    yield
+  ensure
+    FileUtils.cd(cwd)
+  end
+
+  # Returns the filename of the tar
+  def self.create_tar(directory)
+    tempfile = Tempfile.new('morph_tar')
+
+    in_directory(directory) do
+      begin
+        tar = Archive::Tar::Minitar::Output.new(tempfile.path)
+        all_paths(directory).each do |entry|
+          Archive::Tar::Minitar.pack_file(entry, tar)
+        end
+      ensure
+        tar.close
+      end
+    end
+    tempfile.path
+  end
+
+  # Relative paths to all the files in the given directory (recursive)
+  # (except for anything below a directory starting with ".")
+  def self.all_paths(directory)
+    result = []
+    Find.find(directory) do |path|
+      if FileTest.directory?(path)
+        if File.basename(path)[0] == ?.
+          Find.prune
+        end
+      else
+        result << Pathname.new(path).relative_path_from(Pathname.new(directory)).to_s
+      end
+    end
+    result
+  end
+
   def go_with_logging
     puts "Starting...\n"
     database.backup
