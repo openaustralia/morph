@@ -157,13 +157,34 @@ class Run < ActiveRecord::Base
       return
     end
 
-    command = Metric.command(Morph::Language.scraper_command(language), Run.time_output_filename)
+    # Compile the container
+    i = Docker::Image.get('progrium/buildstep')
+    # Insert the application code into the container
+    # Tar up the scraper code
+    r = File.join(Rails.root, repo_path)
+    tar_path = Run.create_tar(r)
+    i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
+    i2.tag('repo' => 'compiled')
+    FileUtils.rm(tar_path)
+
+    c = Morph::DockerRunner.run_no_cleanup(
+      command: "/build/builder",
+      user: "root",
+      image_name: "compiled",
+      container_name: "compiled",
+      env_variables: {CURL_TIMEOUT: 180}
+    ) do |on|
+      on.log { |s,c| yield s, c}
+    end
+    c.commit('repo' => 'compiled')
+    c.delete
+
+    command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
     status_code = Morph::DockerRunner.run(
       command: command,
-      user: "scraper",
-      image_name: docker_image,
+      user: "root",
+      image_name: 'compiled',
       container_name: docker_container_name,
-      repo_path: repo_path,
       data_path: data_path,
       env_variables: scraper.variables.map{|v| [v.name, v.value]}
     ) do |on|
