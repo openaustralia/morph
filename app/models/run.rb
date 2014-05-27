@@ -205,7 +205,6 @@ class Run < ActiveRecord::Base
         command: "/build/builder",
         user: "root",
         image_name: "compiled_#{hash}",
-        container_name: "compiled_#{hash}",
         env_variables: {CURL_TIMEOUT: 180}
       ) do |on|
         on.log { |s,c| yield s, c}

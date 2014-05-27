@@ -1,5 +1,7 @@
 module Morph
   class DockerRunner
+    # Mandatory: command, image_name, user
+    # Optional: env_variables, repo_path, data_path, container_name
     def self.run_no_cleanup(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
@@ -10,21 +12,22 @@ module Morph
       # TODO Cache connection
       conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {chunk_size: 1, read_timeout: 4.hours})
 
+      container_options = {
+        "Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
+        "User" => options[:user],
+        "Image" => options[:image_name],
+        # See explanation in https://github.com/openaustralia/morph/issues/242
+        "CpuShares" => 307,
+        # Memory limit (in bytes)
+        # On a 1G machine we're allowing a max of 10 containers to run at a time. So, 100M
+        "Memory" => 100 * 1024 * 1024,
+        "Env" => env_variables.map{|k,v| "#{k}=#{v}"}
+      }
+      container_options["name"] = options[:container_name] if options[:container_name]
+
       # This will fail if there is another container with the same name
       begin
-        c = Docker::Container.create(
-          {
-            "Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
-            "User" => options[:user],
-            "Image" => options[:image_name],
-            "name" => options[:container_name],
-            # See explanation in https://github.com/openaustralia/morph/issues/242
-            "CpuShares" => 307,
-            # Memory limit (in bytes)
-            # On a 1G machine we're allowing a max of 10 containers to run at a time. So, 100M
-            "Memory" => 100 * 1024 * 1024,
-            "Env" => env_variables.map{|k,v| "#{k}=#{v}"}
-          }, conn_interactive)
+        c = Docker::Container.create(container_options, conn_interactive)
       rescue Excon::Errors::SocketError => e
         text = "Could not connect to Docker server: #{e}"
         wrapper.call(:log, :internal, "Morph internal error: #{text}\n")
@@ -63,8 +66,6 @@ module Morph
       c
     end
 
-    # Mandatory: command, image_name, container_name, user
-    # Optional: env_variables, repo_path, data_path
     def self.run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
