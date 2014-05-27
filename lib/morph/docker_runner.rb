@@ -1,7 +1,7 @@
 module Morph
   class DockerRunner
-    # Mandatory: command, image_name, container_name, repo_path, data_path, user
-    # Optional: env_variables
+    # Mandatory: command, image_name, container_name, user
+    # Optional: env_variables, repo_path, data_path
     def self.run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
@@ -44,10 +44,10 @@ module Morph
       local_root_path = RUBY_PLATFORM.downcase.include?('darwin') ? "/vagrant" : Rails.root
 
       begin
-        c.start("Binds" => [
-          "#{local_root_path}/#{options[:repo_path]}:/repo:ro",
-          "#{local_root_path}/#{options[:data_path]}:/data"
-        ])
+        binds = []
+        binds << "#{local_root_path}/#{options[:repo_path]}:/repo:ro" if options[:repo_path]
+        binds << "#{local_root_path}/#{options[:data_path]}:/data" if options[:data_path]
+        c.start("Binds" => binds)
         puts "Running docker container..."
         # Let parent know about ip address of running container
         wrapper.call(:ip_address, c.json["NetworkSettings"]["IPAddress"])
