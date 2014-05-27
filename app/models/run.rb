@@ -160,6 +160,7 @@ class Run < ActiveRecord::Base
     command = Metric.command(Morph::Language.scraper_command(language), Run.time_output_filename)
     status_code = Morph::DockerRunner.run(
       command: command,
+      user: "scraper",
       image_name: docker_image,
       container_name: docker_container_name,
       repo_path: repo_path,

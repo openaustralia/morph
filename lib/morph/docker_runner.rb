@@ -1,6 +1,6 @@
 module Morph
   class DockerRunner
-    # Mandatory: command, image_name, container_name, repo_path, data_path
+    # Mandatory: command, image_name, container_name, repo_path, data_path, user
     # Optional: env_variables
     def self.run(options)
       wrapper = Multiblock.wrapper
@@ -17,7 +17,7 @@ module Morph
         c = Docker::Container.create(
           {
             "Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
-            "User" => "scraper",
+            "User" => options[:user],
             "Image" => options[:image_name],
             "name" => options[:container_name],
             # See explanation in https://github.com/openaustralia/morph/issues/242
