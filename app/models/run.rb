@@ -200,7 +200,7 @@ class Run < ActiveRecord::Base
       # TODO insert_local produces a left-over container. Fix this.
       i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
       i2.tag('repo' => "compiled_#{hash}")
-      FileUtils.rm(tar_path)
+      FileUtils.rm_f(tar_path)
 
       c = Morph::DockerRunner.run_no_cleanup(
         command: "/build/builder",
@@ -220,7 +220,7 @@ class Run < ActiveRecord::Base
     # TODO insert_local produces a left-over container. Fix this.
     i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
     i2.tag('repo' => "compiled2_#{id}")
-    FileUtils.rm(tar_path)
+    FileUtils.rm_f(tar_path)
 
     command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
     status_code = Morph::DockerRunner.run(
