@@ -218,14 +218,14 @@ class Run < ActiveRecord::Base
     i = Docker::Image.get("compiled_#{hash}")
     tar_path = tar_run_files
     i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
-    i2.tag('repo' => 'compiled2')
+    i2.tag('repo' => "compiled2_#{id}")
     FileUtils.rm(tar_path)
 
     command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
     status_code = Morph::DockerRunner.run(
       command: command,
       user: "root",
-      image_name: 'compiled2',
+      image_name: "compiled2_#{id}",
       container_name: docker_container_name,
       data_path: data_path,
       env_variables: scraper.variables.map{|v| [v.name, v.value]}
@@ -236,6 +236,9 @@ class Run < ActiveRecord::Base
           update_attributes(ip_address: ip)
         end
     end
+
+    i = Docker::Image.get("compiled2_#{id}")
+    i.delete
 
     # Now collect and save the metrics
     metric = Metric.read_from_file(time_output_path)
