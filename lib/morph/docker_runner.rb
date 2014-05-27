@@ -1,8 +1,6 @@
 module Morph
   class DockerRunner
-    # Mandatory: command, image_name, container_name, user
-    # Optional: env_variables, repo_path, data_path
-    def self.run(options)
+    def self.run_no_cleanup(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
@@ -61,6 +59,22 @@ module Morph
         wrapper.call(:log, :internal, "Stopping current container and requeueing\n")
         c.kill
         raise e
+      end
+      c
+    end
+
+    # Mandatory: command, image_name, container_name, user
+    # Optional: env_variables, repo_path, data_path
+    def self.run(options)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
+      begin
+        c = run_no_cleanup(options) do |on|
+          on.log { |s,c| wrapper.call(:log, s, c) }
+          on.ip_address { |ip| wrapper.call(:ip_address, ip) }
+        end
+        status_code = c.json["State"]["ExitCode"]
       ensure
         # Wait until container has definitely stopped
         c.wait
