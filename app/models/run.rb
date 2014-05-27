@@ -224,6 +224,7 @@ class Run < ActiveRecord::Base
     command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
     status_code = Morph::DockerRunner.run(
       command: command,
+      # TODO Need to run this as the user scraper again
       user: "root",
       image_name: "compiled2_#{id}",
       container_name: docker_container_name,
