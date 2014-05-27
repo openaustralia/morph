@@ -197,6 +197,7 @@ class Run < ActiveRecord::Base
     end
 
     unless exists
+      # TODO insert_local produces a left-over container. Fix this.
       i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
       i2.tag('repo' => "compiled_#{hash}")
       FileUtils.rm(tar_path)
@@ -216,6 +217,7 @@ class Run < ActiveRecord::Base
     # Insert the actual code into the container
     i = Docker::Image.get("compiled_#{hash}")
     tar_path = tar_run_files
+    # TODO insert_local produces a left-over container. Fix this.
     i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
     i2.tag('repo' => "compiled2_#{id}")
     FileUtils.rm(tar_path)
