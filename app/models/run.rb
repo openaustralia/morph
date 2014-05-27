@@ -107,13 +107,14 @@ class Run < ActiveRecord::Base
   end
 
   # Returns the filename of the tar
-  def self.create_tar(directory)
+  # The directory needs to be an absolute path name
+  def self.create_tar(directory, paths)
     tempfile = Tempfile.new('morph_tar')
 
     in_directory(directory) do
       begin
         tar = Archive::Tar::Minitar::Output.new(tempfile.path)
-        all_paths(directory).each do |entry|
+        paths.each do |entry|
           Archive::Tar::Minitar.pack_file(entry, tar)
         end
       ensure
@@ -147,6 +148,22 @@ class Run < ActiveRecord::Base
     all_paths(directory) - all_config_paths(directory)
   end
 
+  # A path to a tarfile that contains configuration type files
+  # like Gemfile, requirements.txt, etc..
+  # This comes from a whitelisted list
+  # You must clean up this file yourself after you're finished with it
+  def tar_config_files
+    absolute_path = File.join(Rails.root, repo_path)
+    Run.create_tar(absolute_path, Run.all_config_paths(absolute_path))
+  end
+
+  # A path to a tarfile that contains everything that isn't a configuration file
+  # You must clean up this file yourself after you're finished with it
+  def tar_run_files
+    absolute_path = File.join(Rails.root, repo_path)
+    Run.create_tar(absolute_path, Run.all_run_paths(absolute_path))
+  end
+
   def go_with_logging
     puts "Starting...\n"
     database.backup
@@ -167,10 +184,8 @@ class Run < ActiveRecord::Base
 
     # Compile the container
     i = Docker::Image.get('progrium/buildstep')
-    # Insert the application code into the container
-    # Tar up the scraper code
-    r = File.join(Rails.root, repo_path)
-    tar_path = Run.create_tar(r)
+    # Insert the configuration part of the application code into the container
+    tar_path = tar_config_files
     i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
     i2.tag('repo' => 'compiled')
     FileUtils.rm(tar_path)
@@ -187,11 +202,18 @@ class Run < ActiveRecord::Base
     c.commit('repo' => 'compiled')
     c.delete
 
+    # Insert the actual code into the container
+    i = Docker::Image.get('compiled')
+    tar_path = tar_run_files
+    i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
+    i2.tag('repo' => 'compiled2')
+    FileUtils.rm(tar_path)
+
     command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
     status_code = Morph::DockerRunner.run(
       command: command,
       user: "root",
-      image_name: 'compiled',
+      image_name: 'compiled2',
       container_name: docker_container_name,
       data_path: data_path,
       env_variables: scraper.variables.map{|v| [v.name, v.value]}
