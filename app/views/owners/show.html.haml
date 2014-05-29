@@ -37,7 +37,7 @@
                   = link_to owner_image(user, 30), user
         - if @owner == current_user
           %div
-            = button_link_to "Show your key", user_settings2_path(current_user)
+            = button_link_to "Show your key", user_settings_path(current_user)
       .col-md-2.owner-box
         - if signed_in?
           .pull-right= render partial: "watch_button", locals: {owner: @owner}

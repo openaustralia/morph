@@ -13,14 +13,14 @@ class UsersController < ApplicationController
         return
       end
     else
-      redirect_to user_settings2_url(current_user)
+      redirect_to user_settings_url(current_user)
     end
   end
 
   def reset_key
     current_user.set_api_key
     current_user.save!
-    redirect_to user_settings2_url(current_user)
+    redirect_to user_settings_url(current_user)
   end
 
   def watching
