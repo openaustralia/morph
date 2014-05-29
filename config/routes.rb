@@ -53,7 +53,7 @@ Morph::Application.routes.draw do
   get '/users', to: "users#index"
   resources :owners, path: "/", only: :show
   post '/:id/watch', to: "owners#watch", as: :owner_watch
-  resources :users, path: "/", only: :show
+  resources :users, path: "/", only: [:show, :update]
   resources :organizations, path: "/", only: :show
   # TODO: Hmm would be nice if this could be tidier
   get '/scraperwiki_forks/new', to: redirect {|params, req|
