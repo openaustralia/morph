@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   def reset_key
     current_user.set_api_key
     current_user.save!
-    redirect_to :user_settings
+    redirect_to user_settings2_url(current_user)
   end
 
   def watching

@@ -16,4 +16,5 @@
   %p
     This key is just for #{@user == current_user ? "you" : "them"}. Don't give it to anyone else.
 
-  = button_to "Reset key", user_reset_key_path, class: "btn btn-danger"
+  - if @user == current_user
+    = button_to "Reset key", user_reset_key_path, class: "btn btn-danger"
