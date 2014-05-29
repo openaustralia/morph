@@ -1,8 +1,19 @@
 .container
-  %h1 Your special key is #{@user.api_key}
+  %h1
+    - if @user == current_user
+      Your
+    - else
+      #{@user.nickname}'s
+    special key is #{@user.api_key}
 
-  %p You will need this if you use the Morph command line client
+  %p
+    - if @user == current_user
+      You
+    - else
+      They
+    will need this for the Morph command line client
 
-  %p This key is just for you. Don't give it to anyone else.
+  %p
+    This key is just for #{@user == current_user ? "you" : "them"}. Don't give it to anyone else.
 
   = button_to "Reset key", user_reset_key_path, class: "btn btn-danger"

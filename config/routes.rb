@@ -48,6 +48,7 @@ Morph::Application.routes.draw do
   end
   # This url begins with /users so that we don't stop users have scrapers called watching
   get '/users/:id/watching', to: "users#watching", as: :user_watching
+  get '/users/:id/settings', to: 'users#settings', as: :user_settings2
   get '/users', to: "users#index"
   resources :owners, path: "/", only: :show
   post '/:id/watch', to: "owners#watch", as: :owner_watch

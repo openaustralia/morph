@@ -6,7 +6,15 @@ class UsersController < ApplicationController
   end
 
   def settings
-    @user = current_user
+    if params[:id]
+      @user = User.friendly.find(params[:id])
+      if @user != current_user && !current_user.admin?
+        render text: "You are not authorised to view this page", status: :unauthorized
+        return
+      end
+    else
+      redirect_to user_settings2_url(current_user)
+    end
   end
 
   def reset_key
