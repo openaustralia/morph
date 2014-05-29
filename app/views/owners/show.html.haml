@@ -35,7 +35,7 @@
               %p
                 - @owner.users.each do |user|
                   = link_to owner_image(user, 30), user
-        - if @owner == current_user || (@owner.user? && current_user.admin?)
+        - if @owner == current_user || (@owner.user? && current_user && current_user.admin?)
           %div
             = button_link_to "Settings", user_settings_path(@owner)
       .col-md-2.owner-box
