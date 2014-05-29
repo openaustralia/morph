@@ -20,7 +20,7 @@
     = button_to "Reset key", user_reset_key_path(@user), class: "btn btn-danger"
 
   - if current_user.admin?
-    %h2 Feature settings
+    %h2 Feature settings (admin only)
     %p
       Feature settings are special features that can be enabled by administrators. They are used to
       test out experimental features or otherwise only enable things for certain users.
