@@ -19,13 +19,14 @@
   - if @user == current_user
     = button_to "Reset key", user_reset_key_path(@user), class: "btn btn-danger"
 
-  %h2 Feature settings
-  %p
-    Feature settings are special features that can be enabled by administrators. They are used to
-    test out experimental features or otherwise only enable things for certain users.
+  - if current_user.admin?
+    %h2 Feature settings
+    %p
+      Feature settings are special features that can be enabled by administrators. They are used to
+      test out experimental features or otherwise only enable things for certain users.
 
-  = semantic_form_for @user do |f|
-    = f.inputs do
-      = f.input :buildpacks, as: :boolean, hint: "Add experimental support for Heroku buildpacks. Allows the installation of custom libraries, etc.."
-    = f.actions do
-      = f.action :submit, label: "Update feature settings"
+    = semantic_form_for @user do |f|
+      = f.inputs do
+        = f.input :buildpacks, as: :boolean, hint: "Add experimental support for Heroku buildpacks. Allows the installation of custom libraries, etc.."
+      = f.actions do
+        = f.action :submit, label: "Update feature settings"

@@ -33,8 +33,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.friendly.find(params[:id])
-    @user.update_attributes(buildpacks: params[:user][:buildpacks])
+    if current_user.admin?
+      @user = User.friendly.find(params[:id])
+      @user.update_attributes(buildpacks: params[:user][:buildpacks])
+    end
     redirect_to @user
   end
 end
