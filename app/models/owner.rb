@@ -10,6 +10,8 @@ class Owner < ActiveRecord::Base
   has_many :watches, class_name: "Alert", foreign_key: :watch_id
   has_many :watchers, through: :watches, source: :user
 
+  serialize :feature_switches
+
   def name
     # If nickname and name are identical return nil
     if read_attribute(:name) != nickname
