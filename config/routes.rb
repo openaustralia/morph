@@ -49,7 +49,7 @@ Morph::Application.routes.draw do
   # This url begins with /users so that we don't stop users have scrapers called watching
   get '/users/:id/watching', to: "users#watching", as: :user_watching
   get '/owners/:id/settings', to: 'owners#settings', as: :owner_settings
-  post '/users/:id/settings/reset_key', to: "users#reset_key", as: :user_reset_key
+  post '/owners/:id/settings/reset_key', to: "owners#reset_key", as: :owner_reset_key
   get '/users', to: "users#index"
   resources :owners, path: "/", only: :show
   post '/:id/watch', to: "owners#watch", as: :owner_watch

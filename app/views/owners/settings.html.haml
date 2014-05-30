@@ -17,7 +17,7 @@
     This key is just for #{@user == current_user ? "you" : "them"}. Don't give it to anyone else.
 
   - if @user == current_user
-    = button_to "Reset key", user_reset_key_path(@user), class: "btn btn-danger"
+    = button_to "Reset key", owner_reset_key_path(@user), class: "btn btn-danger"
 
   - if current_user.admin?
     %h2 Feature settings (admin only)
