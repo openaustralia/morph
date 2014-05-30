@@ -258,7 +258,7 @@ class Run < ActiveRecord::Base
     end
 
     # Compile the container
-    i = Docker::Image.get('progrium/buildstep')
+    i = Docker::Image.get('openaustralia/buildstep')
     # Insert the configuration part of the application code into the container
     tar_path = tar_config_files
     hash = Digest::SHA2.hexdigest(File.read(tar_path))
