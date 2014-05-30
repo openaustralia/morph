@@ -35,7 +35,7 @@ Morph::Application.routes.draw do
   post "/run", to: "api#run_remote"
   get "/test", to: "api#test"
   # This just gets redirected elsewhere
-  get '/settings', to: "users#settings"
+  get '/settings', to: "owners#settings"
 
   # TODO: Don't allow a user to be called "scrapers"
   resources :scrapers, path: '/scrapers', only: [:new, :create, :index] do
@@ -48,7 +48,7 @@ Morph::Application.routes.draw do
   end
   # This url begins with /users so that we don't stop users have scrapers called watching
   get '/users/:id/watching', to: "users#watching", as: :user_watching
-  get '/users/:id/settings', to: 'users#settings', as: :user_settings
+  get '/owners/:id/settings', to: 'owners#settings', as: :owner_settings
   post '/users/:id/settings/reset_key', to: "users#reset_key", as: :user_reset_key
   get '/users', to: "users#index"
   resources :owners, path: "/", only: :show
