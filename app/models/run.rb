@@ -165,15 +165,18 @@ class Run < ActiveRecord::Base
   end
 
   def go_with_logging
-    # go_with_logging_with_buildpacks do |s,c|
-    #   yield s,c
-    # end
-
-    go_with_logging_original do |s,c|
-      yield s,c
+    if owner.buildpacks
+      go_with_logging_with_buildpacks do |s,c|
+        yield s,c
+      end
+    else
+      go_with_logging_original do |s,c|
+        yield s,c
+      end
     end
   end
 
+  # TODO Factor out the common code between go_with_logging_original and go_with_logging_with_buildpacks
   def go_with_logging_original
     puts "Starting...\n"
     database.backup

@@ -6,8 +6,9 @@ class User < Owner
   has_many :contributions
   has_many :scrapers_contributed_to, through: :contributions, source: :scraper
 
+  # TODO Fix up type conversion
   def buildpacks
-    feature_switches[:buildpacks] if feature_switches.respond_to?(:has_key?)
+    feature_switches[:buildpacks] == "1" if feature_switches.respond_to?(:has_key?)
   end
 
   def buildpacks=(value)
