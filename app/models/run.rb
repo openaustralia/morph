@@ -165,8 +165,13 @@ class Run < ActiveRecord::Base
   end
 
   def go_with_logging
-    go_with_logging_with_buildpacks
-    #go_with_logging_original
+    # go_with_logging_with_buildpacks do |s,c|
+    #   yield s,c
+    # end
+
+    go_with_logging_original do |s,c|
+      yield s,c
+    end
   end
 
   def go_with_logging_original
@@ -190,6 +195,7 @@ class Run < ActiveRecord::Base
     command = Metric.command(Morph::Language.scraper_command(language), Run.time_output_filename)
     status_code = Morph::DockerRunner.run(
       command: command,
+      user: "scraper",
       image_name: docker_image,
       container_name: docker_container_name,
       repo_path: repo_path,

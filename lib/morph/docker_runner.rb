@@ -70,18 +70,15 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      begin
-        c = run_no_cleanup(options) do |on|
-          on.log { |s,c| wrapper.call(:log, s, c) }
-          on.ip_address { |ip| wrapper.call(:ip_address, ip) }
-        end
-        status_code = c.json["State"]["ExitCode"]
-      ensure
-        # Wait until container has definitely stopped
-        c.wait
-        # Clean up after ourselves
-        c.delete
+      c = run_no_cleanup(options) do |on|
+        on.log { |s,c| wrapper.call(:log, s, c) }
+        on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
+      status_code = c.json["State"]["ExitCode"]
+      # Wait until container has definitely stopped
+      c.wait
+      # Clean up after ourselves
+      c.delete
 
       status_code
     end
