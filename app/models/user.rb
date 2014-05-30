@@ -6,17 +6,6 @@ class User < Owner
   has_many :contributions
   has_many :scrapers_contributed_to, through: :contributions, source: :scraper
 
-  # TODO Fix up type conversion
-  def buildpacks
-    feature_switches[:buildpacks] == "1" if feature_switches.respond_to?(:has_key?)
-  end
-
-  def buildpacks=(value)
-    s = feature_switches || {}
-    s[:buildpacks] = value
-    self.feature_switches = s
-  end
-
   # In most cases people have contributed to the scrapers that they own so we really don't
   # want to see these twice. This method just removes their own scrapers from the list
   def other_scrapers_contributed_to

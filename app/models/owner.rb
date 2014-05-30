@@ -12,6 +12,17 @@ class Owner < ActiveRecord::Base
 
   serialize :feature_switches
 
+  # TODO Fix up type conversion
+  def buildpacks
+    feature_switches[:buildpacks] == "1" if feature_switches.respond_to?(:has_key?)
+  end
+
+  def buildpacks=(value)
+    s = feature_switches || {}
+    s[:buildpacks] = value
+    self.feature_switches = s
+  end
+
   def name
     # If nickname and name are identical return nil
     if read_attribute(:name) != nickname
