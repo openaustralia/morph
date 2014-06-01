@@ -46,15 +46,22 @@ Morph::Application.routes.draw do
     get 'scraperwiki', on: :new
     post 'scraperwiki', to: "scrapers#create_scraperwiki", on: :collection
   end
-  # This url begins with /users so that we don't stop users have scrapers called watching
-  get '/users/:id/watching', to: "users#watching", as: :user_watching
-  get '/owners/:id/settings', to: 'owners#settings', as: :owner_settings
-  post '/owners/:id/settings/reset_key', to: "owners#reset_key", as: :owner_reset_key
-  get '/users', to: "users#index"
-  resources :owners, path: "/", only: :show
-  post '/:id/watch', to: "owners#watch", as: :owner_watch
+
+  resources :users, only: :index do
+    # This url begins with /users so that we don't stop users have scrapers called watching
+    get 'watching'
+  end
+  resources :owners, only: [] do
+    get 'settings'
+    post 'reset_key', path: 'settings/reset_key'
+  end
+
+  resources :owners, path: "/", only: :show do
+    post 'watch'
+  end
   resources :users, path: "/", only: [:show, :update]
   resources :organizations, path: "/", only: :show
+
   # TODO: Hmm would be nice if this could be tidier
   get '/scraperwiki_forks/new', to: redirect {|params, req|
     if req.query_string.empty?

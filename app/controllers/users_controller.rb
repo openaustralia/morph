@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   end
 
   def watching
-    @user = User.friendly.find(params[:id])
+    @user = User.friendly.find(params[:user_id])
   end
 
   def update
