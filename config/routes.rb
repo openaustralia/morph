@@ -36,9 +36,11 @@ Morph::Application.routes.draw do
 
   root 'static#index'
   resources :documentation, only: :index do
-    get "api", on: :collection
-    get "what_is_new", on: :collection
-    get "examples/australian_members_of_parliament", on: :collection
+    collection do
+      get "api"
+      get "what_is_new"
+      get "examples/australian_members_of_parliament"
+    end
   end
   get "/pricing", to: "documentation#pricing"
   # Hmm not totally sure about this url.
