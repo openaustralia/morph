@@ -1,4 +1,17 @@
 Morph::Application.routes.draw do
+  # Old urls getting redirected to new ones
+  get "/api", to: redirect {|params, req| "/documentation/api?#{req.query_string}"}
+  # This just gets redirected elsewhere
+  get '/settings', to: "owners#settings"
+  # TODO: Hmm would be nice if this could be tidier
+  get '/scraperwiki_forks/new', to: redirect {|params, req|
+    if req.query_string.empty?
+      "/scrapers/new/scraperwiki"
+    else
+      "/scrapers/new/scraperwiki?#{req.query_string}"
+    end
+  }
+
   ActiveAdmin.routes(self)
   # Owner.table_exists? is workaround to allow migration to add STI Owner/User table to run
   if Owner.table_exists?
@@ -14,8 +27,6 @@ Morph::Application.routes.draw do
     get 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
     get 'sign_in', :to => 'devise/sessions#new', :as => :new_user_session
   end
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
 
   # TODO: Put this in a path where it won't conflict
   require 'sidekiq/web'
@@ -24,7 +35,6 @@ Morph::Application.routes.draw do
   end
 
   root 'static#index'
-  get "/api", to: redirect {|params, req| "/documentation/api?#{req.query_string}"}
   resources :documentation, only: :index do
     get "api", on: :collection
     get "what_is_new", on: :collection
@@ -34,8 +44,6 @@ Morph::Application.routes.draw do
   # Hmm not totally sure about this url.
   post "/run", to: "api#run_remote"
   get "/test", to: "api#test"
-  # This just gets redirected elsewhere
-  get '/settings', to: "owners#settings"
 
   # TODO: Don't allow a user to be called "scrapers"
   resources :scrapers, only: [:new, :create, :index] do
@@ -60,15 +68,6 @@ Morph::Application.routes.draw do
   resources :owners, path: "/", only: :show
   resources :users, path: "/", only: [:show, :update]
   resources :organizations, path: "/", only: :show
-
-  # TODO: Hmm would be nice if this could be tidier
-  get '/scraperwiki_forks/new', to: redirect {|params, req|
-    if req.query_string.empty?
-      "/scrapers/new/scraperwiki"
-    else
-      "/scrapers/new/scraperwiki?#{req.query_string}"
-    end
-  }
 
   resources :connection_logs, only: :create
 
