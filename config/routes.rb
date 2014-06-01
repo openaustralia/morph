@@ -73,6 +73,7 @@ Morph::Application.routes.draw do
 
   resources :connection_logs, only: :create
 
+  # These routes involve route globbing so they should go at the end
   get '/*id/data', to: "scrapers#data", as: :scraper_data
   post '/*id/watch', to: "scrapers#watch", as: :scraper_watch
   get '/*id/watchers', to: "scrapers#watchers", as: :scraper_watchers
