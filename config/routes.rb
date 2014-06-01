@@ -54,11 +54,10 @@ Morph::Application.routes.draw do
   resources :owners, only: [] do
     get 'settings'
     post 'reset_key', path: 'settings/reset_key'
-  end
-
-  resources :owners, path: "/", only: :show do
     post 'watch'
   end
+
+  resources :owners, path: "/", only: :show
   resources :users, path: "/", only: [:show, :update]
   resources :organizations, path: "/", only: :show
 
