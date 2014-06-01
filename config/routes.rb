@@ -38,7 +38,7 @@ Morph::Application.routes.draw do
   get '/settings', to: "owners#settings"
 
   # TODO: Don't allow a user to be called "scrapers"
-  resources :scrapers, path: '/scrapers', only: [:new, :create, :index] do
+  resources :scrapers, only: [:new, :create, :index] do
     get 'page/:page', :action => :index, :on => :collection
     get 'github', on: :new
     post 'github', to: "scrapers#create_github", on: :collection
