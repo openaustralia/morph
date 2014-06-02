@@ -43,19 +43,12 @@ Morph::Application.routes.draw do
     end
   end
   get "/pricing", to: "documentation#pricing"
+
   # Hmm not totally sure about this url.
   post "/run", to: "api#run_remote"
   get "/test", to: "api#test"
 
-  # TODO: Don't allow a user to be called "scrapers"
-  resources :scrapers, only: [:new, :create, :index] do
-    get 'page/:page', :action => :index, :on => :collection
-    get 'github', on: :new
-    post 'github', to: "scrapers#create_github", on: :collection
-    get 'github_form', on: :collection
-    get 'scraperwiki', on: :new
-    post 'scraperwiki', to: "scrapers#create_scraperwiki", on: :collection
-  end
+  resources :connection_logs, only: :create
 
   resources :users, only: :index do
     # This url begins with /users so that we don't stop users have scrapers called watching
@@ -67,17 +60,26 @@ Morph::Application.routes.draw do
     post 'watch'
   end
 
+  # TODO: Don't allow a user to be called "scrapers"
+  resources :scrapers, only: [:new, :create, :index] do
+    get 'page/:page', :action => :index, :on => :collection
+    get 'github', on: :new
+    post 'github', to: "scrapers#create_github", on: :collection
+    get 'github_form', on: :collection
+    get 'scraperwiki', on: :new
+    post 'scraperwiki', to: "scrapers#create_scraperwiki", on: :collection
+  end
+
+  # These routes with path: "/" need to be at the end
   resources :owners, path: "/", only: :show
   resources :users, path: "/", only: [:show, :update]
   resources :organizations, path: "/", only: :show
-
-  resources :connection_logs, only: :create
-
   resources :scrapers, path: "/", id: /[^\/]+\/[^\/]+/, only: [:show, :update, :destroy] do
     get 'data'
-    post 'watch'
     get 'watchers'
     get 'settings'
+
+    post 'watch'
     post 'run'
     post 'stop'
     post 'clear'
