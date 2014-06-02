@@ -73,15 +73,13 @@ Morph::Application.routes.draw do
 
   resources :connection_logs, only: :create
 
-  # These routes involve route globbing so they should go at the end
-  get '/*id/data', to: "scrapers#data", as: :scraper_data
-  post '/*id/watch', to: "scrapers#watch", as: :scraper_watch
-  get '/*id/watchers', to: "scrapers#watchers", as: :scraper_watchers
-  get '/*id/settings', to: "scrapers#settings", as: :scraper_settings
-  get "/*id", to: "scrapers#show", as: :scraper
-  delete "/*id", to: "scrapers#destroy"
-  patch "/*id", to: "scrapers#update"
-  post "/*id/run", to: "scrapers#run", as: :run_scraper
-  post "/*id/stop", to: "scrapers#stop", as: :stop_scraper
-  post "/*id/clear", to: "scrapers#clear", as: :clear_scraper
+  resources :scrapers, path: "/", id: /[^\/]+\/[^\/]+/, only: [:show, :update, :destroy] do
+    get 'data'
+    post 'watch'
+    get 'watchers'
+    get 'settings'
+    post 'run'
+    post 'stop'
+    post 'clear'
+  end
 end
