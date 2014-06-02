@@ -103,18 +103,14 @@ class ScrapersController < ApplicationController
 
   def update
     @scraper = Scraper.friendly.find(params[:id])
-    if @scraper.can_write?(current_user)
-      if @scraper.update_attributes(scraper_params)
-        flash[:notice] = "Scraper settings successfully updated"
-        sync_update @scraper
-      else
-        render :settings
-        return
-      end
+    authorize! :update, @scraper
+    if @scraper.update_attributes(scraper_params)
+      flash[:notice] = "Scraper settings successfully updated"
+      sync_update @scraper
+      redirect_to @scraper
     else
-      flash[:alert] = "Can't update someone else's scraper"
+      render :settings
     end
-    redirect_to @scraper
   end
 
   def run

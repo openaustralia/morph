@@ -4,11 +4,11 @@ class Ability
   def initialize(user)
     user ||= User.new # guest user (not logged in)
     # user can view settings of scrapers it owns
-    can [:settings, :destroy], Scraper, owner_id: user.id
+    can [:settings, :destroy, :update], Scraper, owner_id: user.id
 
     # user can view settings of scrapers belonging to an org they are a member of
     user.organizations.each do |org|
-      can [:settings, :destroy], Scraper, owner_id: org.id
+      can [:settings, :destroy, :update], Scraper, owner_id: org.id
     end
     # Define abilities for the passed in user here. For example:
     #
