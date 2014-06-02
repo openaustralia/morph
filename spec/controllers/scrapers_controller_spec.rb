@@ -38,7 +38,7 @@ describe ScrapersController do
 
         it "should redirect to the owning user" do
           delete :destroy, id: "mlandauer/a_scraper"
-          response.should redirect_to user_url(user)     
+          response.should redirect_to user_url(user)
         end
       end
 
@@ -56,7 +56,7 @@ describe ScrapersController do
 
         it "should redirect to the owning organisation" do
           delete :destroy, id: "org/a_scraper"
-          response.should redirect_to organization_url(organization)     
+          response.should redirect_to organization_url(organization)
         end
       end
 
@@ -191,7 +191,7 @@ describe ScrapersController do
     end
 
     it "should return json" do
-      get :data, id: "mlandauer/a_scraper", format: :json
+      get :data, scraper_id: "mlandauer/a_scraper", format: :json
       response.should be_success
       JSON.parse(response.body).should == [
         {
@@ -204,14 +204,14 @@ describe ScrapersController do
     end
 
     it "should return csv" do
-      get :data, id: "mlandauer/a_scraper", format: :csv
+      get :data, scraper_id: "mlandauer/a_scraper", format: :csv
       response.should be_success
 
       response.body.should == "title,content,link,date\nFoo,Bar,http://example.com,2013-01-01\n"
     end
 
     it "should return an atom feed" do
-      get :data, id: "mlandauer/a_scraper", format: :atom
+      get :data, scraper_id: "mlandauer/a_scraper", format: :atom
 
       response.should be_success
       body = Nokogiri::XML(response.body)
