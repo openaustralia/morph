@@ -17,8 +17,8 @@
               To download data
               = button_link_to "sign in with GitHub", user_omniauth_authorize_path(:github)
             .btn-group
-              = button_link_to "Download table (as CSV)", scraper_data_path(scraper, format: :csv, query: scraper.database.select_all(table)), disabled: !signed_in?
-              = button_link_to "Download SQLite database", scraper_data_path(scraper, :format => :sqlite), disabled: !signed_in?
+              = button_link_to "Download table (as CSV)", data_scraper_path(scraper, format: :csv, query: scraper.database.select_all(table)), disabled: !signed_in?
+              = button_link_to "Download SQLite database", data_scraper_path(scraper, :format => :sqlite), disabled: !signed_in?
               = button_link_to "Use the API", api_documentation_index_path(scraper: scraper.full_name)
           %p rows #{[10, scraper.database.no_rows(table)].min} / #{scraper.database.no_rows(table)} (#{number_to_human_size scraper.database.sqlite_db_size})
           .table-responsive.scraper-data

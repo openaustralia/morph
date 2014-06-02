@@ -75,13 +75,15 @@ Morph::Application.routes.draw do
   resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
   resources :scrapers, path: "/", id: /[^\/]+\/[^\/]+/, only: [:show, :update, :destroy] do
-    get 'data'
-    get 'watchers'
-    get 'settings'
+    member do
+      get 'data'
+      get 'watchers'
+      get 'settings'
 
-    post 'watch'
-    post 'run'
-    post 'stop'
-    post 'clear'
+      post 'watch'
+      post 'run'
+      post 'stop'
+      post 'clear'
+    end
   end
 end

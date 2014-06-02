@@ -4,7 +4,7 @@
       = full_name_with_links(scraper)
       .large-icon-box.pull-right
         - if can? :settings, scraper
-          = link_to scraper_settings_path(scraper) do
+          = link_to settings_scraper_path(scraper) do
             = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
         - else
           = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
@@ -46,7 +46,7 @@
   .col-md-2
     - if can? :settings, scraper
       #scraper_settings
-        = button_link_to scraper_settings_path(scraper) do
+        = button_link_to settings_scraper_path(scraper) do
           %i.icon-wrench
           Settings
 

@@ -2,7 +2,7 @@ class ScrapersController < ApplicationController
   before_filter :authenticate_user!, except: [:index, :show, :data, :watchers]
 
   def settings
-    @scraper = Scraper.friendly.find(params[:scraper_id])
+    @scraper = Scraper.friendly.find(params[:id])
     authorize! :settings, @scraper
   end
 
@@ -112,7 +112,7 @@ class ScrapersController < ApplicationController
   end
 
   def run
-    scraper = Scraper.friendly.find(params[:scraper_id])
+    scraper = Scraper.friendly.find(params[:id])
     authorize! :run, scraper
     scraper.queue!
     scraper.reload
@@ -121,7 +121,7 @@ class ScrapersController < ApplicationController
   end
 
   def stop
-    scraper = Scraper.friendly.find(params[:scraper_id])
+    scraper = Scraper.friendly.find(params[:id])
     authorize! :stop, scraper
     scraper.stop!
     scraper.reload
@@ -131,14 +131,14 @@ class ScrapersController < ApplicationController
 
   # TODO Extract checking of who owns the scraper
   def clear
-    scraper = Scraper.friendly.find(params[:scraper_id])
+    scraper = Scraper.friendly.find(params[:id])
     authorize! :clear, scraper
     scraper.database.clear
     redirect_to scraper
   end
 
   def data
-    scraper = Scraper.friendly.find(params[:scraper_id])
+    scraper = Scraper.friendly.find(params[:id])
 
     # Check authentication
     # We're still allowing authentication via header so that old users
@@ -223,13 +223,13 @@ class ScrapersController < ApplicationController
 
   # Toggle whether we're watching this scraper
   def watch
-    scraper = Scraper.friendly.find(params[:scraper_id])
+    scraper = Scraper.friendly.find(params[:id])
     current_user.toggle_watch(scraper)
     redirect_to :back
   end
 
   def watchers
-    @scraper = Scraper.friendly.find(params[:scraper_id])
+    @scraper = Scraper.friendly.find(params[:id])
     authorize! :watchers, @scraper
   end
 

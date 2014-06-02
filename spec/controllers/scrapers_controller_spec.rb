@@ -191,7 +191,7 @@ describe ScrapersController do
     end
 
     it "should return json" do
-      get :data, scraper_id: "mlandauer/a_scraper", format: :json
+      get :data, id: "mlandauer/a_scraper", format: :json
       response.should be_success
       JSON.parse(response.body).should == [
         {
@@ -204,14 +204,14 @@ describe ScrapersController do
     end
 
     it "should return csv" do
-      get :data, scraper_id: "mlandauer/a_scraper", format: :csv
+      get :data, id: "mlandauer/a_scraper", format: :csv
       response.should be_success
 
       response.body.should == "title,content,link,date\nFoo,Bar,http://example.com,2013-01-01\n"
     end
 
     it "should return an atom feed" do
-      get :data, scraper_id: "mlandauer/a_scraper", format: :atom
+      get :data, id: "mlandauer/a_scraper", format: :atom
 
       response.should be_success
       body = Nokogiri::XML(response.body)
