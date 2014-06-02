@@ -65,7 +65,7 @@ describe ScrapersController do
         VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
           scraper = Scraper.create(owner: other_user, name: "a_scraper", full_name: "otheruser/a_scraper")
         end
-        delete :destroy, id: "otheruser/a_scraper"
+        expect{delete :destroy, id: "otheruser/a_scraper"}.to raise_error(CanCan::AccessDenied)
         Scraper.count.should == 1
       end
 
@@ -74,7 +74,7 @@ describe ScrapersController do
         VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
           scraper = Scraper.create(owner: other_organisation, name: "a_scraper", full_name: "otherorg/a_scraper")
         end
-        delete :destroy, id: "otherorg/a_scraper"
+        expect{delete :destroy, id: "otherorg/a_scraper"}.to raise_error(CanCan::AccessDenied)
         Scraper.count.should == 1
       end
     end
