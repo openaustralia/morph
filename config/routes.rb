@@ -71,8 +71,8 @@ Morph::Application.routes.draw do
   end
 
   # These routes with path: "/" need to be at the end
-  resources :owners, path: "/", only: :show
-  resources :users, path: "/", only: [:show, :update]
+  resources :owners, path: "/", only: [:show, :update]
+  resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
   resources :scrapers, path: "/", id: /[^\/]+\/[^\/]+/, only: [:show, :update, :destroy] do
     get 'data'

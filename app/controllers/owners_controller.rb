@@ -28,6 +28,14 @@ class OwnersController < ApplicationController
     end
   end
 
+  def update
+    if current_user.admin?
+      @user = User.friendly.find(params[:id])
+      @user.update_attributes(buildpacks: params[:user][:buildpacks])
+    end
+    redirect_to @user
+  end
+
   def reset_key
     # TODO In future we will allow admins to reset other people's keys
     # That's why we're doing this in this slightly roundabout way

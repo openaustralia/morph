@@ -8,12 +8,4 @@ class UsersController < ApplicationController
   def watching
     @user = User.friendly.find(params[:user_id])
   end
-
-  def update
-    if current_user.admin?
-      @user = User.friendly.find(params[:id])
-      @user.update_attributes(buildpacks: params[:user][:buildpacks])
-    end
-    redirect_to @user
-  end
 end
