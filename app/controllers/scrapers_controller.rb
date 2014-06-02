@@ -7,7 +7,7 @@ class ScrapersController < ApplicationController
   end
 
   def index
-    @scrapers = Scraper.order(:updated_at => :desc).page(params[:page])
+    @scrapers = Scraper.accessible_by(current_ability).order(:updated_at => :desc).page(params[:page])
   end
 
   def new
@@ -85,6 +85,7 @@ class ScrapersController < ApplicationController
 
   def show
     @scraper = Scraper.friendly.find(params[:id])
+    authorize! :show, @scraper
   end
 
   def destroy

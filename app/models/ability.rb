@@ -10,6 +10,9 @@ class Ability
     user.organizations.each do |org|
       can [:settings, :destroy, :update, :run, :stop, :clear, :create, :create_github], Scraper, owner_id: org.id
     end
+
+    # Everyone can list all the scrapers
+    can [:index, :show], Scraper
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
