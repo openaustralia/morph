@@ -56,6 +56,7 @@ gem "puma"
 gem 'sync'
 gem 'multiblock'
 gem 'honeybadger'
+gem 'cancan'
 
 group :production do
   gem "dalli"
