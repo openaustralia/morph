@@ -3,10 +3,7 @@ class ScrapersController < ApplicationController
 
   def settings
     @scraper = Scraper.friendly.find(params[:scraper_id])
-    unless @scraper.can_write?(current_user)
-      redirect_to @scraper
-      return
-    end
+    authorize! :settings, @scraper
   end
 
   def index

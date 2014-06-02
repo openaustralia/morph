@@ -4,7 +4,7 @@
       %h1.full_name
         = full_name_with_links(@scraper)
         .large-icon-box.pull-right
-          - if @scraper.can_write?(current_user)
+          - if can? :settings, @scraper
             = link_to scraper_settings_path(@scraper) do
               = render partial: "scrapers/auto_clock", locals: {scraper: @scraper}
           - else
