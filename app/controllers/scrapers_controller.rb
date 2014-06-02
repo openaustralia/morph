@@ -93,16 +93,12 @@ class ScrapersController < ApplicationController
 
   def destroy
     @scraper = Scraper.friendly.find(params[:id])
-    if @scraper.can_write?(current_user)
-      flash[:notice] = "Scraper #{@scraper.name} deleted"
-      @scraper.destroy
-      # TODO Make this done by default after calling Scraper#destroy
-      @scraper.destroy_repo_and_data
-      redirect_to @scraper.owner
-    else
-      flash[:alert] = "Can't delete someone else's scraper!"
-      redirect_to @scraper
-    end
+    authorize! :destroy, @scraper
+    flash[:notice] = "Scraper #{@scraper.name} deleted"
+    @scraper.destroy
+    # TODO Make this done by default after calling Scraper#destroy
+    @scraper.destroy_repo_and_data
+    redirect_to @scraper.owner
   end
 
   def update

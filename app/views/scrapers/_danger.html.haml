@@ -1,4 +1,4 @@
-- if @scraper.can_write?(current_user)
+- if can? :destroy, @scraper
   .panel.panel-danger
     .panel-heading
       %h3.panel-title Here be dragons!
