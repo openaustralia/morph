@@ -18,16 +18,14 @@ class ScrapersController < ApplicationController
     @scraper = Scraper.new(original_language: params[:scraper][:original_language],
       owner_id: params[:scraper][:owner_id], name: params[:scraper][:name], description: params[:scraper][:description])
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
-    if !Scraper.can_write?(current_user, @scraper.owner)
-      @scraper.errors.add(:owner_id, "doesn't belong to you")
-      render :new
-    elsif !@scraper.valid?
-      render :new
-    else
+    authorize! :create, @scraper
+    if @scraper.valid?
       @scraper.create_create_scraper_progress!(heading: "New scraper", message: "Queuing", progress: 5)
       @scraper.save
       CreateScraperWorker.perform_async(@scraper.id, current_user.id, scraper_url(@scraper))
       redirect_to @scraper
+    else
+      render :new
     end
   end
 
