@@ -12,6 +12,7 @@ class ScrapersController < ApplicationController
 
   def new
     @scraper = Scraper.new
+    authorize! :new, @scraper
   end
 
   def create

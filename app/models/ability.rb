@@ -12,7 +12,7 @@ class Ability
     end
 
     # Everyone can list all the scrapers
-    can [:index, :show, :watchers], Scraper
+    can [:index, :show, :watchers, :new], Scraper
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
