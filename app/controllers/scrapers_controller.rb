@@ -134,11 +134,8 @@ class ScrapersController < ApplicationController
   # TODO Extract checking of who owns the scraper
   def clear
     scraper = Scraper.friendly.find(params[:scraper_id])
-    if scraper.can_write?(current_user)
-      scraper.database.clear
-    else
-      flash[:alert] = "Can't clear someone else's scraper!"
-    end
+    authorize! :clear, scraper
+    scraper.database.clear
     redirect_to scraper
   end
 
