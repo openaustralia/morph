@@ -1,23 +1,30 @@
 .container
   %h1
-    - if @user == current_user
+    - if @owner == current_user
       Your
     - else
-      #{@user.nickname}'s
-    special key is #{@user.api_key}
+      #{@owner.nickname}'s
+    special key is #{@owner.api_key}
 
-  %p
-    - if @user == current_user
-      You
-    - else
-      They
-    will need this for the Morph command line client
+  - if @owner.user?
+    %p
+      - if @owner == current_user
+        You
+      - else
+        They
+      will need this to use the API and the Morph command line client
+    %p
+      This key is just for #{@owner == current_user ? "you" : "them"}. Don't give it to anyone else.
+  - else
+    %p
+      Use this API key if you want the usage to be recorded against the organization #{@owner.nickname}.
+    %p
+      This key is just for the organization. Don't give it to anyone that shouldn't have access to it.
+    %p
+      Take extra care if resetting the api key as it will effect everyone else who is part of the organization.
 
-  %p
-    This key is just for #{@user == current_user ? "you" : "them"}. Don't give it to anyone else.
-
-  - if @user == current_user
-    = button_to "Reset key", owner_reset_key_path(@user), class: "btn btn-danger"
+  - if Scraper.can_write?(current_user, @owner)
+    = button_to "Reset key", owner_reset_key_path(@owner), class: "btn btn-danger"
 
   - if current_user.admin?
     %h2 Feature settings (admin only)
@@ -25,7 +32,7 @@
       Feature settings are special features that can be enabled by administrators. They are used to
       test out experimental features or otherwise only enable things for certain users.
 
-    = semantic_form_for @user do |f|
+    = semantic_form_for @owner do |f|
       = f.inputs do
         = f.input :buildpacks, as: :boolean, hint: "Add experimental support for Heroku buildpacks. Allows the installation of custom libraries, etc.."
       = f.actions do
