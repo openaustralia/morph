@@ -229,6 +229,7 @@ class ScrapersController < ApplicationController
 
   def watchers
     @scraper = Scraper.friendly.find(params[:scraper_id])
+    authorize! :watchers, @scraper
   end
 
   private
