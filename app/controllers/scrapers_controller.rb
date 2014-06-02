@@ -124,13 +124,10 @@ class ScrapersController < ApplicationController
 
   def stop
     scraper = Scraper.friendly.find(params[:scraper_id])
-    if scraper.can_write?(current_user)
-      scraper.stop!
-      scraper.reload
-      sync_update scraper
-    else
-      flash[:alert] = "Can't stop someone else's scraper!"
-    end
+    authorize! :stop, scraper
+    scraper.stop!
+    scraper.reload
+    sync_update scraper
     redirect_to scraper
   end
 
