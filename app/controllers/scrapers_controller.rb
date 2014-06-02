@@ -42,16 +42,14 @@ class ScrapersController < ApplicationController
 
   def create_github
     @scraper = Scraper.new_from_github(params[:scraper][:full_name], current_user.octokit_client)
-    if !@scraper.can_write?(current_user)
-      @scraper.errors.add(:full_name, "is not one of your scrapers")
-      render :github
-    elsif !@scraper.save
-      render :github
-    else
+    authorize! :create_github, @scraper
+    if @scraper.save
       @scraper.create_create_scraper_progress!(heading: "Adding from Github", message: "Queuing", progress: 5)
       @scraper.save
       CreateFromGithubWorker.perform_async(@scraper.id)
       redirect_to @scraper
+    else
+      render :github
     end
   end
 
