@@ -11,7 +11,7 @@
       .large-icon-box.pull-right
         = render partial: "scrapers/running_indicator", locals: {scraper: scraper}
       %h4= scraper.description
-      - if signed_in? && scraper.can_write?(current_user)
+      - if can? :run, scraper
         #scraper_run
           = render partial: "scrapers/run_button", locals: {scraper: scraper}
 
