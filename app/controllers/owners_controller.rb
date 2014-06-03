@@ -1,4 +1,5 @@
 class OwnersController < ApplicationController
+  before_filter :authenticate_user!, except: :show
   before_filter :load_resource, except: :settings_redirect
 
   def show
