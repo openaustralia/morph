@@ -102,24 +102,6 @@ class Run < ActiveRecord::Base
     FileUtils.cd(cwd)
   end
 
-  # Returns the filename of the tar
-  # The directory needs to be an absolute path name
-  def self.create_tar(directory, paths)
-    tempfile = Tempfile.new('morph_tar')
-
-    in_directory(directory) do
-      begin
-        tar = Archive::Tar::Minitar::Output.new(tempfile.path)
-        paths.each do |entry|
-          Archive::Tar::Minitar.pack_file(entry, tar)
-        end
-      ensure
-        tar.close
-      end
-    end
-    tempfile.path
-  end
-
   # Relative paths to all the files in the given directory (recursive)
   # (except for anything below a directory starting with ".")
   def self.all_paths(directory)
