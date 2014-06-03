@@ -144,15 +144,6 @@ class Run < ActiveRecord::Base
     all_paths(directory) - all_config_paths(directory)
   end
 
-  # A path to a tarfile that contains configuration type files
-  # like Gemfile, requirements.txt, etc..
-  # This comes from a whitelisted list
-  # You must clean up this file yourself after you're finished with it
-  def tar_config_files
-    absolute_path = File.join(Rails.root, repo_path)
-    Run.create_tar(absolute_path, Run.all_config_paths(absolute_path))
-  end
-
   # A path to a tarfile that contains everything that isn't a configuration file
   # You must clean up this file yourself after you're finished with it
   def tar_run_files
