@@ -26,15 +26,14 @@ class OwnersController < ApplicationController
   end
 
   def update
-    if current_user.admin?
-      owner = Owner.friendly.find(params[:id])
-      if owner.user?
-        owner.update_attributes(buildpacks: params[:user][:buildpacks])
-      elsif owner.organization?
-        owner.update_attributes(buildpacks: params[:organization][:buildpacks])
-      else
-        raise "Hmm?"
-      end
+    @owner = Owner.friendly.find(params[:id])
+    authorize! :update, @owner
+    if @owner.user?
+      @owner.update_attributes(buildpacks: params[:user][:buildpacks])
+    elsif @owner.organization?
+      @owner.update_attributes(buildpacks: params[:organization][:buildpacks])
+    else
+      raise "Hmm?"
     end
     redirect_to owner
   end

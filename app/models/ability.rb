@@ -20,9 +20,9 @@ class Ability
     user.organizations.each do |org|
       can :settings, Owner, id: org.id
     end
-    # Admins can look at all owner settings
+    # Admins can look at all owner settings and update
     if user.admin?
-      can :settings, Owner
+      can [:settings, :update], Owner
     end
     # Define abilities for the passed in user here. For example:
     #

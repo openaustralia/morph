@@ -26,7 +26,7 @@
   - if Scraper.can_write?(current_user, @owner)
     = button_to "Reset key", reset_key_owner_path(@owner), class: "btn btn-danger"
 
-  - if current_user.admin?
+  - if can? :update, @owner
     %h2 Feature settings (admin only)
     %p
       Feature settings are special features that can be enabled by administrators. They are used to
