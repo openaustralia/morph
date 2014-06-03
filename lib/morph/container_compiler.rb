@@ -1,11 +1,15 @@
 module Morph
   class ContainerCompiler
+    def self.docker_image(language)
+      "openaustralia/morph-#{language}"
+    end
+
     def self.compile_and_run_original(run)
       command = Metric.command(Morph::Language.scraper_command(run.language), Run.time_output_filename)
       status_code = Morph::DockerRunner.run(
         command: command,
         user: "scraper",
-        image_name: run.docker_image,
+        image_name: docker_image(run.language),
         container_name: run.docker_container_name,
         repo_path: run.repo_path,
         data_path: run.data_path,

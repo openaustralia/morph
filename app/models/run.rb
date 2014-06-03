@@ -90,10 +90,6 @@ class Run < ActiveRecord::Base
     "#{owner.to_param}_#{name}_#{id}"
   end
 
-  def docker_image
-    "openaustralia/morph-#{language}"
-  end
-
   def git_revision_github_url
     "https://github.com/#{full_name}/commit/#{git_revision}"
   end
