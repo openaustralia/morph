@@ -102,20 +102,8 @@ class Run < ActiveRecord::Base
     FileUtils.cd(cwd)
   end
 
-  # Relative paths to all the files in the given directory (recursive)
-  # (except for anything below a directory starting with ".")
   def self.all_paths(directory)
-    result = []
-    Find.find(directory) do |path|
-      if FileTest.directory?(path)
-        if File.basename(path)[0] == ?.
-          Find.prune
-        end
-      else
-        result << Pathname.new(path).relative_path_from(Pathname.new(directory)).to_s
-      end
-    end
-    result
+    Morph::ContainerCompiler.all_paths(directory)
   end
 
   def self.all_config_paths(directory)
