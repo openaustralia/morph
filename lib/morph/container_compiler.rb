@@ -47,8 +47,7 @@ module Morph
       end
 
       unless exists
-        # TODO insert_local produces a left-over container. Fix this.
-        i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
+        i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
         i2.tag('repo' => "compiled_#{hash}")
         FileUtils.rm_f(tar_path)
 
@@ -67,8 +66,7 @@ module Morph
       # Insert the actual code into the container
       i = Docker::Image.get("compiled_#{hash}")
       tar_path = tar_run_files(run.repo_path)
-      # TODO insert_local produces a left-over container. Fix this.
-      i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
+      i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
       i2.tag('repo' => "compiled2_#{run.id}")
       FileUtils.rm_f(tar_path)
 
