@@ -66,12 +66,14 @@ Morph::Application.routes.draw do
 
   # TODO: Don't allow a user to be called "scrapers"
   resources :scrapers, only: [:new, :create, :index] do
-    get 'page/:page', :action => :index, :on => :collection
     get 'github', on: :new
-    post 'github', to: "scrapers#create_github", on: :collection
-    get 'github_form', on: :collection
     get 'scraperwiki', on: :new
-    post 'scraperwiki', to: "scrapers#create_scraperwiki", on: :collection
+    collection do
+      get 'page/:page', :action => :index
+      post 'github', to: "scrapers#create_github"
+      get 'github_form'
+      post 'scraperwiki', to: "scrapers#create_scraperwiki"
+    end
   end
 
   # These routes with path: "/" need to be at the end
