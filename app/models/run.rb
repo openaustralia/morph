@@ -114,11 +114,11 @@ class Run < ActiveRecord::Base
 
     # Only try using buildpacks with ruby for the time being
     if owner.buildpacks && language == :ruby
-      Morph::ContainerCompiler.compile_and_run_with_buildpacks(self) do |s,c|
+      status_code = Morph::ContainerCompiler.compile_and_run_with_buildpacks(self) do |s,c|
         yield s,c
       end
     else
-      Morph::ContainerCompiler.compile_and_run_original(self) do |s,c|
+      status_code = Morph::ContainerCompiler.compile_and_run_original(self) do |s,c|
         yield s,c
       end
     end

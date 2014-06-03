@@ -25,6 +25,7 @@ module Morph
             run.update_attributes(ip_address: ip)
           end
       end
+      status_code
     end
 
     def self.compile_and_run_with_buildpacks(run)
@@ -87,6 +88,7 @@ module Morph
 
       i = Docker::Image.get("compiled2_#{run.id}")
       i.delete
+      status_code
     end
 
     # A path to a tarfile that contains configuration type files
