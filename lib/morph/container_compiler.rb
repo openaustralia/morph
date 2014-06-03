@@ -4,13 +4,17 @@ module Morph
       "openaustralia/morph-#{language}"
     end
 
+    def self.docker_container_name(run)
+      "#{run.owner.to_param}_#{run.name}_#{run.id}"
+    end
+
     def self.compile_and_run_original(run)
       command = Metric.command(Morph::Language.scraper_command(run.language), Run.time_output_filename)
       status_code = Morph::DockerRunner.run(
         command: command,
         user: "scraper",
         image_name: docker_image(run.language),
-        container_name: run.docker_container_name,
+        container_name: docker_container_name(run),
         repo_path: run.repo_path,
         data_path: run.data_path,
         env_variables: run.scraper.variables.map{|v| [v.name, v.value]}
