@@ -28,6 +28,9 @@ class Ability
     # Everyone can show and watch anyone
     can [:show, :watch], Owner
 
+    # Everybody can look at all the users and see who they are watching
+    can [:index, :watching], User
+
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
