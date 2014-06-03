@@ -62,7 +62,7 @@ module Morph
 
       # Insert the actual code into the container
       i = Docker::Image.get("compiled_#{hash}")
-      tar_path = run.tar_run_files
+      tar_path = tar_run_files(run.repo_path)
       # TODO insert_local produces a left-over container. Fix this.
       i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app')
       i2.tag('repo' => "compiled2_#{run.id}")
@@ -97,5 +97,12 @@ module Morph
   def self.tar_config_files(repo_path)
     absolute_path = File.join(Rails.root, repo_path)
     Run.create_tar(absolute_path, Run.all_config_paths(absolute_path))
+  end
+
+  # A path to a tarfile that contains everything that isn't a configuration file
+  # You must clean up this file yourself after you're finished with it
+  def self.tar_run_files(repo_path)
+    absolute_path = File.join(Rails.root, repo_path)
+    Run.create_tar(absolute_path, Run.all_run_paths(absolute_path))
   end
 end
