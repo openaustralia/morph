@@ -146,5 +146,13 @@ module Morph
       end
       result
     end
+
+    def self.in_directory(directory)
+      cwd = FileUtils.pwd
+      FileUtils.cd(directory)
+      yield
+    ensure
+      FileUtils.cd(cwd)
+    end
   end
 end

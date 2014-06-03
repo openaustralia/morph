@@ -94,14 +94,6 @@ class Run < ActiveRecord::Base
     "https://github.com/#{full_name}/commit/#{git_revision}"
   end
 
-  def self.in_directory(directory)
-    cwd = FileUtils.pwd
-    FileUtils.cd(directory)
-    yield
-  ensure
-    FileUtils.cd(cwd)
-  end
-
   def go_with_logging
     puts "Starting...\n"
     database.backup
