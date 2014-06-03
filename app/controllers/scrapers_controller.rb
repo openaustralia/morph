@@ -1,8 +1,13 @@
 class ScrapersController < ApplicationController
   before_filter :authenticate_user!, except: [:index, :show, :data, :watchers]
+  before_filter :load_resource, only: [:settings, :show, :destroy, :update, :run, :stop, :clear,
+    :data, :watch, :watchers]
+
+  # All methods
+  # :settings, :index, :new, :create, :github, :github_form, :create_github, :scraperwiki,
+  # :create_scraperwiki, :show, :destroy, :update, :run, :stop, :clear, :data, :watch, :watchers
 
   def settings
-    @scraper = Scraper.friendly.find(params[:id])
     authorize! :settings, @scraper
   end
 
@@ -85,12 +90,10 @@ class ScrapersController < ApplicationController
   end
 
   def show
-    @scraper = Scraper.friendly.find(params[:id])
     authorize! :show, @scraper
   end
 
   def destroy
-    @scraper = Scraper.friendly.find(params[:id])
     authorize! :destroy, @scraper
     flash[:notice] = "Scraper #{@scraper.name} deleted"
     @scraper.destroy
@@ -100,7 +103,6 @@ class ScrapersController < ApplicationController
   end
 
   def update
-    @scraper = Scraper.friendly.find(params[:id])
     authorize! :update, @scraper
     if @scraper.update_attributes(scraper_params)
       flash[:notice] = "Scraper settings successfully updated"
@@ -112,34 +114,28 @@ class ScrapersController < ApplicationController
   end
 
   def run
-    scraper = Scraper.friendly.find(params[:id])
-    authorize! :run, scraper
-    scraper.queue!
-    scraper.reload
-    sync_update scraper
-    redirect_to scraper
+    authorize! :run, @scraper
+    @scraper.queue!
+    @scraper.reload
+    sync_update @scraper
+    redirect_to @scraper
   end
 
   def stop
-    scraper = Scraper.friendly.find(params[:id])
-    authorize! :stop, scraper
-    scraper.stop!
-    scraper.reload
-    sync_update scraper
-    redirect_to scraper
+    authorize! :stop, @scraper
+    @scraper.stop!
+    @scraper.reload
+    sync_update @scraper
+    redirect_to @scraper
   end
 
-  # TODO Extract checking of who owns the scraper
   def clear
-    scraper = Scraper.friendly.find(params[:id])
-    authorize! :clear, scraper
-    scraper.database.clear
-    redirect_to scraper
+    authorize! :clear, @scraper
+    @scraper.database.clear
+    redirect_to @scraper
   end
 
   def data
-    scraper = Scraper.friendly.find(params[:id])
-
     # Check authentication
     # We're still allowing authentication via header so that old users
     # of the api don't have to change anything
@@ -164,50 +160,49 @@ class ScrapersController < ApplicationController
       respond_to do |format|
         format.sqlite do
           bench = Benchmark.measure do
-            send_file scraper.database.sqlite_db_path, filename: "#{scraper.name}.sqlite"
+            send_file @scraper.database.sqlite_db_path, filename: "#{@scraper.name}.sqlite"
           end
-          ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
-            size: scraper.database.sqlite_db_size, type: "database", format: "sqlite")
+          ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
+            size: @scraper.database.sqlite_db_size, type: "database", format: "sqlite")
         end
 
         format.json do
           size = nil
           bench = Benchmark.measure do
-            result = scraper.database.sql_query(params[:query])
+            result = @scraper.database.sql_query(params[:query])
             render :json => result, callback: params[:callback]
             size = result.to_json.size
           end
-          ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
+          ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
             size: size, type: "sql", format: "json")
         end
 
         format.csv do
           size = nil
           bench = Benchmark.measure do
-            result = scraper.database.sql_query(params[:query])
+            result = @scraper.database.sql_query(params[:query])
             csv_string = CSV.generate do |csv|
               csv << result.first.keys unless result.empty?
               result.each do |row|
                 csv << row.values
               end
             end
-            send_data csv_string, :filename => "#{scraper.name}.csv"
+            send_data csv_string, :filename => "#{@scraper.name}.csv"
             size = csv_string.size
           end
-          ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
+          ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
             size: size, type: "sql", format: "csv")
         end
 
         format.atom do
           size = nil
           bench = Benchmark.measure do
-            @scraper = scraper
-            @result = scraper.database.sql_query(params[:query])
+            @result = @scraper.database.sql_query(params[:query])
             render :data
             # TODO Find some more consistent way of measuring size across different formats
             size = @result.to_json.size
           end
-          ApiQuery.log!(query: params[:query], scraper: scraper, owner: owner, benchmark: bench,
+          ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
             size: size, type: "sql", format: "atom")
         end
       end
@@ -223,17 +218,19 @@ class ScrapersController < ApplicationController
 
   # Toggle whether we're watching this scraper
   def watch
-    scraper = Scraper.friendly.find(params[:id])
-    current_user.toggle_watch(scraper)
+    current_user.toggle_watch(@scraper)
     redirect_to :back
   end
 
   def watchers
-    @scraper = Scraper.friendly.find(params[:id])
     authorize! :watchers, @scraper
   end
 
   private
+
+  def load_resource
+    @scraper = Scraper.friendly.find(params[:id])
+  end
 
   def scraper_params
     params.require(:scraper).permit(:auto_run, variables_attributes: [:id, :name, :value, :_destroy])
