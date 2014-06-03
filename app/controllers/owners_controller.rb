@@ -1,6 +1,7 @@
 class OwnersController < ApplicationController
+  before_filter :load_resource, except: :settings_redirect
+
   def show
-    @owner = Owner.friendly.find(params[:id])
     authorize! :show, @owner
     @scrapers = @owner.scrapers.includes(:last_run => :log_lines)
 
@@ -22,12 +23,10 @@ class OwnersController < ApplicationController
   end
 
   def settings
-    @owner = Owner.friendly.find(params[:id])
     authorize! :settings, @owner
   end
 
   def update
-    @owner = Owner.friendly.find(params[:id])
     authorize! :update, @owner
     if @owner.user?
       @owner.update_attributes(buildpacks: params[:user][:buildpacks])
@@ -42,7 +41,6 @@ class OwnersController < ApplicationController
   def reset_key
     # TODO In future we will allow admins to reset other people's keys
     # That's why we're doing this in this slightly roundabout way
-    @owner = Owner.friendly.find(params[:id])
     authorize :reset_key, @owner
     @owner.set_api_key
     @owner.save!
@@ -51,9 +49,14 @@ class OwnersController < ApplicationController
 
   # Toggle whether we're watching this user / organization
   def watch
-    @owner = Owner.friendly.find(params[:id])
     authorize! :watch, @owner
     current_user.toggle_watch(@owner)
     redirect_to :back
+  end
+
+  private
+
+  def load_resource
+    @owner = Owner.friendly.find(params[:id])
   end
 end
