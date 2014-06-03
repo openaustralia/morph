@@ -31,7 +31,7 @@ module Morph
       # Compile the container
       i = Docker::Image.get('openaustralia/buildstep')
       # Insert the configuration part of the application code into the container
-      tar_path = tar_config_files(run)
+      tar_path = tar_config_files(run.repo_path)
       hash = Digest::SHA2.hexdigest(File.read(tar_path))
 
       # Check if compiled image already exists
@@ -94,8 +94,8 @@ module Morph
   # like Gemfile, requirements.txt, etc..
   # This comes from a whitelisted list
   # You must clean up this file yourself after you're finished with it
-  def self.tar_config_files(run)
-    absolute_path = File.join(Rails.root, run.repo_path)
+  def self.tar_config_files(repo_path)
+    absolute_path = File.join(Rails.root, repo_path)
     Run.create_tar(absolute_path, Run.all_config_paths(absolute_path))
   end
 end
