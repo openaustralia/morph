@@ -126,5 +126,9 @@ module Morph
     def self.all_config_paths(directory)
       Run.all_paths(directory) & ["Gemfile", "Gemfile.lock", "Procfile"]
     end
+
+    def self.all_run_paths(directory)
+      Run.all_paths(directory) - all_config_paths(directory)
+    end
   end
 end

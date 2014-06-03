@@ -123,7 +123,7 @@ class Run < ActiveRecord::Base
   end
 
   def self.all_run_paths(directory)
-    all_paths(directory) - all_config_paths(directory)
+    Morph::ContainerCompiler.all_run_paths(directory)
   end
 
   def go_with_logging
