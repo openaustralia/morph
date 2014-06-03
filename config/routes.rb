@@ -52,7 +52,9 @@ Morph::Application.routes.draw do
 
   resources :users, only: :index do
     # This url begins with /users so that we don't stop users have scrapers called watching
-    get 'watching'
+    member do
+      get 'watching'
+    end
   end
   resources :owners, only: [] do
     member do

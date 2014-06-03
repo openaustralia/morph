@@ -20,5 +20,5 @@ Fix it: <%= scraper_url(run.scraper, @analytics_params) %>
 <%= pluralize(@successful_count, "other scraper") %> you are watching finished successfully
 
 -----
-Annoyed by these emails? Then change what you're watching - <%= user_watching_url(@user, @analytics_params) %>
+Annoyed by these emails? Then change what you're watching - <%= watching_user_url(@user, @analytics_params) %>
 Morph.io - <%= root_url(@analytics_params) %>
