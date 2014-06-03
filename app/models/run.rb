@@ -165,7 +165,8 @@ class Run < ActiveRecord::Base
   end
 
   def go_with_logging
-    if owner.buildpacks
+    # Only try using buildpacks with ruby for the time being
+    if owner.buildpacks && language == :ruby
       go_with_logging_with_buildpacks do |s,c|
         yield s,c
       end
