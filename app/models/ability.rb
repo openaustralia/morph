@@ -13,6 +13,17 @@ class Ability
 
     # Everyone can list all the scrapers
     can [:index, :show, :watchers, :new], Scraper
+
+    # You can look at your own settings
+    can :settings, Owner, id: user.id
+    # user should be able to see settings for an org they're part of
+    user.organizations.each do |org|
+      can :settings, Owner, id: org.id
+    end
+    # Admins can look at all owner settings
+    if user.admin?
+      can :settings, Owner
+    end
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

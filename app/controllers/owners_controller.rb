@@ -19,10 +19,7 @@ class OwnersController < ApplicationController
   def settings
     if params[:id]
       @owner = Owner.friendly.find(params[:id])
-      if @owner != current_user && !current_user.admin?
-        render text: "You are not authorised to view this page", status: :unauthorized
-        return
-      end
+      authorize! :settings, @owner
     else
       redirect_to settings_owner_url(current_user)
     end

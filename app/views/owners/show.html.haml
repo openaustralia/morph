@@ -35,7 +35,7 @@
               %p
                 - @owner.users.each do |user|
                   = link_to owner_image(user, 30), user
-        - if Scraper.can_write?(current_user, @owner) || (current_user && current_user.admin?)
+        - if can? :settings, @owner
           %div
             = button_link_to "Settings", settings_owner_path(@owner)
       .col-md-2.owner-box
