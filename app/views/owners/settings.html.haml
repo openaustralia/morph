@@ -23,7 +23,7 @@
     %p
       Take extra care if resetting the api key as it will effect everyone else who is part of the organization.
 
-  - if Scraper.can_write?(current_user, @owner)
+  - if can? :reset_key, @owner
     = button_to "Reset key", reset_key_owner_path(@owner), class: "btn btn-danger"
 
   - if can? :update, @owner

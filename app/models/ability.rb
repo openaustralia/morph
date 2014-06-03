@@ -15,10 +15,10 @@ class Ability
     can [:index, :show, :watchers, :new], Scraper
 
     # You can look at your own settings
-    can :settings, Owner, id: user.id
+    can [:settings, :reset_key], Owner, id: user.id
     # user should be able to see settings for an org they're part of
     user.organizations.each do |org|
-      can :settings, Owner, id: org.id
+      can [:settings, :reset_key], Owner, id: org.id
     end
     # Admins can look at all owner settings and update
     if user.admin?
