@@ -35,7 +35,7 @@ class OwnersController < ApplicationController
     else
       raise "Hmm?"
     end
-    redirect_to owner
+    redirect_to @owner
   end
 
   def reset_key
