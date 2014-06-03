@@ -17,14 +17,14 @@ class OwnersController < ApplicationController
   end
 
   def settings
-    if params[:owner_id]
-      @owner = Owner.friendly.find(params[:owner_id])
+    if params[:id]
+      @owner = Owner.friendly.find(params[:id])
       if @owner != current_user && !current_user.admin?
         render text: "You are not authorised to view this page", status: :unauthorized
         return
       end
     else
-      redirect_to owner_settings_url(current_user)
+      redirect_to settings_owner_url(current_user)
     end
   end
 
@@ -45,17 +45,17 @@ class OwnersController < ApplicationController
   def reset_key
     # TODO In future we will allow admins to reset other people's keys
     # That's why we're doing this in this slightly roundabout way
-    owner = Owner.friendly.find(params[:owner_id])
+    owner = Owner.friendly.find(params[:id])
     if Scraper.can_write?(current_user, owner)
       owner.set_api_key
       owner.save!
     end
-    redirect_to owner_settings_url(owner)
+    redirect_to settings_owner_url(owner)
   end
 
   # Toggle whether we're watching this user / organization
   def watch
-    owner = Owner.friendly.find(params[:owner_id])
+    owner = Owner.friendly.find(params[:id])
     current_user.toggle_watch(owner)
     redirect_to :back
   end

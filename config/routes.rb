@@ -55,9 +55,11 @@ Morph::Application.routes.draw do
     get 'watching'
   end
   resources :owners, only: [] do
-    get 'settings'
-    post 'reset_key', path: 'settings/reset_key'
-    post 'watch'
+    member do
+      get 'settings'
+      post 'reset_key', path: 'settings/reset_key'
+      post 'watch'
+    end
   end
 
   # TODO: Don't allow a user to be called "scrapers"
