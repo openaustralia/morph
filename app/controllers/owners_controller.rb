@@ -1,6 +1,7 @@
 class OwnersController < ApplicationController
   def show
     @owner = Owner.friendly.find(params[:id])
+    authorize! :show, @owner
     @scrapers = @owner.scrapers.includes(:last_run => :log_lines)
 
     # Split out scrapers into different groups
