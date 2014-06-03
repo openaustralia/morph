@@ -165,6 +165,23 @@ class Run < ActiveRecord::Base
   end
 
   def go_with_logging
+    puts "Starting...\n"
+    database.backup
+    update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
+    sync_update scraper if scraper
+    FileUtils.mkdir_p data_path
+    FileUtils.chmod 0777, data_path
+
+    unless Morph::Language.language_supported?(language)
+      supported_scraper_files = Morph::Language.languages_supported.map do |l|
+        Morph::Language.language_to_scraper_filename(l)
+      end.to_sentence(last_word_connector: ", or ")
+      yield "stderr", "Can't find scraper code. Expected to find a file called " +
+         supported_scraper_files + " in the root directory"
+      update_attributes(status_code: 999, finished_at: Time.now)
+      return
+    end
+
     # Only try using buildpacks with ruby for the time being
     if owner.buildpacks && language == :ruby
       go_with_logging_with_buildpacks do |s,c|
@@ -175,108 +192,35 @@ class Run < ActiveRecord::Base
         yield s,c
       end
     end
+
+    # Now collect and save the metrics
+    metric = Metric.read_from_file(time_output_path)
+    metric.update_attributes(run_id: self.id)
+
+    update_attributes(status_code: status_code, finished_at: Time.now)
+    # Update information about what changed in the database
+    diffstat = Morph::Database.diffstat(database.sqlite_db_backup_path, database.sqlite_db_path)
+    tables = diffstat[:tables][:counts]
+    records = diffstat[:records][:counts]
+    update_attributes(
+      tables_added: tables[:added],
+      tables_removed: tables[:removed],
+      tables_changed: tables[:changed],
+      tables_unchanged: tables[:unchanged],
+      records_added: records[:added],
+      records_removed: records[:removed],
+      records_changed: records[:changed],
+      records_unchanged: records[:unchanged]
+    )
+    Morph::Database.tidy_data_path(data_path)
+    if scraper
+      scraper.update_sqlite_db_size
+      scraper.reload
+      sync_update scraper
+    end
   end
 
-  # TODO Factor out the common code between go_with_logging_original and go_with_logging_with_buildpacks
   def go_with_logging_original
-    puts "Starting...\n"
-    database.backup
-    update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
-    sync_update scraper if scraper
-    FileUtils.mkdir_p data_path
-    FileUtils.chmod 0777, data_path
-
-    unless Morph::Language.language_supported?(language)
-      supported_scraper_files = Morph::Language.languages_supported.map do |l|
-        Morph::Language.language_to_scraper_filename(l)
-      end.to_sentence(last_word_connector: ", or ")
-      yield "stderr", "Can't find scraper code. Expected to find a file called " +
-         supported_scraper_files + " in the root directory"
-      update_attributes(status_code: 999, finished_at: Time.now)
-      return
-    end
-
-    go_with_logging_original2 do |s,c|
-      yield s,c
-    end
-
-    # Now collect and save the metrics
-    metric = Metric.read_from_file(time_output_path)
-    metric.update_attributes(run_id: self.id)
-
-    update_attributes(status_code: status_code, finished_at: Time.now)
-    # Update information about what changed in the database
-    diffstat = Morph::Database.diffstat(database.sqlite_db_backup_path, database.sqlite_db_path)
-    tables = diffstat[:tables][:counts]
-    records = diffstat[:records][:counts]
-    update_attributes(
-      tables_added: tables[:added],
-      tables_removed: tables[:removed],
-      tables_changed: tables[:changed],
-      tables_unchanged: tables[:unchanged],
-      records_added: records[:added],
-      records_removed: records[:removed],
-      records_changed: records[:changed],
-      records_unchanged: records[:unchanged]
-    )
-    Morph::Database.tidy_data_path(data_path)
-    if scraper
-      scraper.update_sqlite_db_size
-      scraper.reload
-      sync_update scraper
-    end
-  end
-
-  def go_with_logging_with_buildpacks
-    puts "Starting...\n"
-    database.backup
-    update_attributes(started_at: Time.now, git_revision: current_revision_from_repo)
-    sync_update scraper if scraper
-    FileUtils.mkdir_p data_path
-    FileUtils.chmod 0777, data_path
-
-    unless Morph::Language.language_supported?(language)
-      supported_scraper_files = Morph::Language.languages_supported.map do |l|
-        Morph::Language.language_to_scraper_filename(l)
-      end.to_sentence(last_word_connector: ", or ")
-      yield "stderr", "Can't find scraper code. Expected to find a file called " +
-         supported_scraper_files + " in the root directory"
-      update_attributes(status_code: 999, finished_at: Time.now)
-      return
-    end
-
-    go_with_logging_with_buildpacks2 do |s,c|
-      yield s,c
-    end
-
-    # Now collect and save the metrics
-    metric = Metric.read_from_file(time_output_path)
-    metric.update_attributes(run_id: self.id)
-
-    update_attributes(status_code: status_code, finished_at: Time.now)
-    # Update information about what changed in the database
-    diffstat = Morph::Database.diffstat(database.sqlite_db_backup_path, database.sqlite_db_path)
-    tables = diffstat[:tables][:counts]
-    records = diffstat[:records][:counts]
-    update_attributes(
-      tables_added: tables[:added],
-      tables_removed: tables[:removed],
-      tables_changed: tables[:changed],
-      tables_unchanged: tables[:unchanged],
-      records_added: records[:added],
-      records_removed: records[:removed],
-      records_changed: records[:changed],
-      records_unchanged: records[:unchanged]
-    )
-    Morph::Database.tidy_data_path(data_path)
-    if scraper
-      scraper.update_sqlite_db_size
-      scraper.reload
-      sync_update scraper
-    end
-  end
-
-  def go_with_logging_original2
     command = Metric.command(Morph::Language.scraper_command(language), Run.time_output_filename)
     status_code = Morph::DockerRunner.run(
       command: command,
@@ -295,7 +239,7 @@ class Run < ActiveRecord::Base
     end
   end
 
-  def go_with_logging_with_buildpacks2
+  def go_with_logging_with_buildpacks
     # Compile the container
     i = Docker::Image.get('openaustralia/buildstep')
     # Insert the configuration part of the application code into the container
