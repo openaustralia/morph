@@ -17,13 +17,13 @@ class OwnersController < ApplicationController
     end
   end
 
+  def settings_redirect
+    redirect_to settings_owner_url(current_user)
+  end
+
   def settings
-    if params[:id]
-      @owner = Owner.friendly.find(params[:id])
-      authorize! :settings, @owner
-    else
-      redirect_to settings_owner_url(current_user)
-    end
+    @owner = Owner.friendly.find(params[:id])
+    authorize! :settings, @owner
   end
 
   def update

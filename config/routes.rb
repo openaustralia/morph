@@ -2,7 +2,7 @@ Morph::Application.routes.draw do
   # Old urls getting redirected to new ones
   get "/api", to: redirect {|params, req| "/documentation/api?#{req.query_string}"}
   # This just gets redirected elsewhere
-  get '/settings', to: "owners#settings"
+  get '/settings', to: "owners#settings_redirect"
   # TODO: Hmm would be nice if this could be tidier
   get '/scraperwiki_forks/new', to: redirect {|params, req|
     if req.query_string.empty?
