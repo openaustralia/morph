@@ -119,7 +119,7 @@ class Run < ActiveRecord::Base
   end
 
   def self.all_config_paths(directory)
-    all_paths(directory) & ["Gemfile", "Gemfile.lock", "Procfile"]
+    Morph::ContainerCompiler.all_config_paths(directory)
   end
 
   def self.all_run_paths(directory)

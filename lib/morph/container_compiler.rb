@@ -88,39 +88,43 @@ module Morph
       i = Docker::Image.get("compiled2_#{run.id}")
       i.delete
     end
-  end
 
-  # A path to a tarfile that contains configuration type files
-  # like Gemfile, requirements.txt, etc..
-  # This comes from a whitelisted list
-  # You must clean up this file yourself after you're finished with it
-  def self.tar_config_files(repo_path)
-    absolute_path = File.join(Rails.root, repo_path)
-    create_tar(absolute_path, Run.all_config_paths(absolute_path))
-  end
-
-  # A path to a tarfile that contains everything that isn't a configuration file
-  # You must clean up this file yourself after you're finished with it
-  def self.tar_run_files(repo_path)
-    absolute_path = File.join(Rails.root, repo_path)
-    create_tar(absolute_path, Run.all_run_paths(absolute_path))
-  end
-
-  # Returns the filename of the tar
-  # The directory needs to be an absolute path name
-  def self.create_tar(directory, paths)
-    tempfile = Tempfile.new('morph_tar')
-
-    in_directory(directory) do
-      begin
-        tar = Archive::Tar::Minitar::Output.new(tempfile.path)
-        paths.each do |entry|
-          Archive::Tar::Minitar.pack_file(entry, tar)
-        end
-      ensure
-        tar.close
-      end
+    # A path to a tarfile that contains configuration type files
+    # like Gemfile, requirements.txt, etc..
+    # This comes from a whitelisted list
+    # You must clean up this file yourself after you're finished with it
+    def self.tar_config_files(repo_path)
+      absolute_path = File.join(Rails.root, repo_path)
+      create_tar(absolute_path, Run.all_config_paths(absolute_path))
     end
-    tempfile.path
+
+    # A path to a tarfile that contains everything that isn't a configuration file
+    # You must clean up this file yourself after you're finished with it
+    def self.tar_run_files(repo_path)
+      absolute_path = File.join(Rails.root, repo_path)
+      create_tar(absolute_path, Run.all_run_paths(absolute_path))
+    end
+
+    # Returns the filename of the tar
+    # The directory needs to be an absolute path name
+    def self.create_tar(directory, paths)
+      tempfile = Tempfile.new('morph_tar')
+
+      in_directory(directory) do
+        begin
+          tar = Archive::Tar::Minitar::Output.new(tempfile.path)
+          paths.each do |entry|
+            Archive::Tar::Minitar.pack_file(entry, tar)
+          end
+        ensure
+          tar.close
+        end
+      end
+      tempfile.path
+    end
+
+    def self.all_config_paths(directory)
+      Run.all_paths(directory) & ["Gemfile", "Gemfile.lock", "Procfile"]
+    end
   end
 end
