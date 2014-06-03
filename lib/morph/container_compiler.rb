@@ -9,6 +9,9 @@ module Morph
     end
 
     def self.compile_and_run_original(run)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
       command = Metric.command(Morph::Language.scraper_command(run.language), Run.time_output_filename)
       status_code = Morph::DockerRunner.run(
         command: command,
@@ -19,16 +22,16 @@ module Morph
         data_path: run.data_path,
         env_variables: run.scraper.variables.map{|v| [v.name, v.value]}
       ) do |on|
-          on.log { |s,c| yield s, c}
-          on.ip_address do |ip|
-            # Store the ip address of the container for this run
-            run.update_attributes(ip_address: ip)
-          end
+          on.log {|s,c| wrapper.call(:log, s, c)}
+          on.ip_address {|ip| wrapper.call(:ip_address, ip)}
       end
       status_code
     end
 
     def self.compile_and_run_with_buildpacks(run)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
       # Compile the container
       i = Docker::Image.get('openaustralia/buildstep')
       # Insert the configuration part of the application code into the container
@@ -55,7 +58,7 @@ module Morph
           image_name: "compiled_#{hash}",
           env_variables: {CURL_TIMEOUT: 180}
         ) do |on|
-          on.log { |s,c| yield s, c}
+          on.log {|s,c| wrapper.call(:log, s, c)}
         end
         c.commit('repo' => "compiled_#{hash}")
         c.delete
@@ -79,11 +82,8 @@ module Morph
         data_path: run.data_path,
         env_variables: run.scraper.variables.map{|v| [v.name, v.value]}
       ) do |on|
-          on.log { |s,c| yield s, c}
-          on.ip_address do |ip|
-            # Store the ip address of the container for this run
-            run.update_attributes(ip_address: ip)
-          end
+          on.log { |s,c| wrapper.call(:log, s, c)}
+          on.ip_address {|ip| wrapper.call(:ip_address, ip)}
       end
 
       i = Docker::Image.get("compiled2_#{run.id}")

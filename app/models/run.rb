@@ -114,12 +114,20 @@ class Run < ActiveRecord::Base
 
     # Only try using buildpacks with ruby for the time being
     if owner.buildpacks && language == :ruby
-      status_code = Morph::ContainerCompiler.compile_and_run_with_buildpacks(self) do |s,c|
-        yield s,c
+      status_code = Morph::ContainerCompiler.compile_and_run_with_buildpacks(self) do |on|
+        on.log {|s,c| yield s,c}
+        on.ip_address do |ip|
+          # Store the ip address of the container for this run
+          update_attributes(ip_address: ip)
+        end
       end
     else
-      status_code = Morph::ContainerCompiler.compile_and_run_original(self) do |s,c|
-        yield s,c
+      status_code = Morph::ContainerCompiler.compile_and_run_original(self) do |on|
+        on.log {|s,c| yield s,c}
+        on.ip_address do |ip|
+          # Store the ip address of the container for this run
+          update_attributes(ip_address: ip)
+        end
       end
     end
 
