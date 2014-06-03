@@ -50,8 +50,9 @@ class OwnersController < ApplicationController
 
   # Toggle whether we're watching this user / organization
   def watch
-    owner = Owner.friendly.find(params[:id])
-    current_user.toggle_watch(owner)
+    @owner = Owner.friendly.find(params[:id])
+    authorize! :watch, @owner
+    current_user.toggle_watch(@owner)
     redirect_to :back
   end
 end
