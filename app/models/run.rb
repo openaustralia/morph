@@ -196,21 +196,8 @@ class Run < ActiveRecord::Base
       return
     end
 
-    command = Metric.command(Morph::Language.scraper_command(language), Run.time_output_filename)
-    status_code = Morph::DockerRunner.run(
-      command: command,
-      user: "scraper",
-      image_name: docker_image,
-      container_name: docker_container_name,
-      repo_path: repo_path,
-      data_path: data_path,
-      env_variables: scraper.variables.map{|v| [v.name, v.value]}
-    ) do |on|
-        on.log { |s,c| yield s, c}
-        on.ip_address do |ip|
-          # Store the ip address of the container for this run
-          update_attributes(ip_address: ip)
-        end
+    go_with_logging_original2 do |s,c|
+      yield s,c
     end
 
     # Now collect and save the metrics
@@ -258,6 +245,57 @@ class Run < ActiveRecord::Base
       return
     end
 
+    go_with_logging_with_buildpacks2 do |s,c|
+      yield s,c
+    end
+
+    # Now collect and save the metrics
+    metric = Metric.read_from_file(time_output_path)
+    metric.update_attributes(run_id: self.id)
+
+    update_attributes(status_code: status_code, finished_at: Time.now)
+    # Update information about what changed in the database
+    diffstat = Morph::Database.diffstat(database.sqlite_db_backup_path, database.sqlite_db_path)
+    tables = diffstat[:tables][:counts]
+    records = diffstat[:records][:counts]
+    update_attributes(
+      tables_added: tables[:added],
+      tables_removed: tables[:removed],
+      tables_changed: tables[:changed],
+      tables_unchanged: tables[:unchanged],
+      records_added: records[:added],
+      records_removed: records[:removed],
+      records_changed: records[:changed],
+      records_unchanged: records[:unchanged]
+    )
+    Morph::Database.tidy_data_path(data_path)
+    if scraper
+      scraper.update_sqlite_db_size
+      scraper.reload
+      sync_update scraper
+    end
+  end
+
+  def go_with_logging_original2
+    command = Metric.command(Morph::Language.scraper_command(language), Run.time_output_filename)
+    status_code = Morph::DockerRunner.run(
+      command: command,
+      user: "scraper",
+      image_name: docker_image,
+      container_name: docker_container_name,
+      repo_path: repo_path,
+      data_path: data_path,
+      env_variables: scraper.variables.map{|v| [v.name, v.value]}
+    ) do |on|
+        on.log { |s,c| yield s, c}
+        on.ip_address do |ip|
+          # Store the ip address of the container for this run
+          update_attributes(ip_address: ip)
+        end
+    end
+  end
+
+  def go_with_logging_with_buildpacks2
     # Compile the container
     i = Docker::Image.get('openaustralia/buildstep')
     # Insert the configuration part of the application code into the container
@@ -317,32 +355,6 @@ class Run < ActiveRecord::Base
 
     i = Docker::Image.get("compiled2_#{id}")
     i.delete
-
-    # Now collect and save the metrics
-    metric = Metric.read_from_file(time_output_path)
-    metric.update_attributes(run_id: self.id)
-
-    update_attributes(status_code: status_code, finished_at: Time.now)
-    # Update information about what changed in the database
-    diffstat = Morph::Database.diffstat(database.sqlite_db_backup_path, database.sqlite_db_path)
-    tables = diffstat[:tables][:counts]
-    records = diffstat[:records][:counts]
-    update_attributes(
-      tables_added: tables[:added],
-      tables_removed: tables[:removed],
-      tables_changed: tables[:changed],
-      tables_unchanged: tables[:unchanged],
-      records_added: records[:added],
-      records_removed: records[:removed],
-      records_changed: records[:changed],
-      records_unchanged: records[:unchanged]
-    )
-    Morph::Database.tidy_data_path(data_path)
-    if scraper
-      scraper.update_sqlite_db_size
-      scraper.reload
-      sync_update scraper
-    end
   end
 
   def stop!
