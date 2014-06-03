@@ -102,18 +102,6 @@ class Run < ActiveRecord::Base
     FileUtils.cd(cwd)
   end
 
-  def self.all_paths(directory)
-    Morph::ContainerCompiler.all_paths(directory)
-  end
-
-  def self.all_config_paths(directory)
-    Morph::ContainerCompiler.all_config_paths(directory)
-  end
-
-  def self.all_run_paths(directory)
-    Morph::ContainerCompiler.all_run_paths(directory)
-  end
-
   def go_with_logging
     puts "Starting...\n"
     database.backup

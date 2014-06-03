@@ -95,14 +95,14 @@ module Morph
     # You must clean up this file yourself after you're finished with it
     def self.tar_config_files(repo_path)
       absolute_path = File.join(Rails.root, repo_path)
-      create_tar(absolute_path, Run.all_config_paths(absolute_path))
+      create_tar(absolute_path, all_config_paths(absolute_path))
     end
 
     # A path to a tarfile that contains everything that isn't a configuration file
     # You must clean up this file yourself after you're finished with it
     def self.tar_run_files(repo_path)
       absolute_path = File.join(Rails.root, repo_path)
-      create_tar(absolute_path, Run.all_run_paths(absolute_path))
+      create_tar(absolute_path, all_run_paths(absolute_path))
     end
 
     # Returns the filename of the tar
@@ -124,11 +124,11 @@ module Morph
     end
 
     def self.all_config_paths(directory)
-      Run.all_paths(directory) & ["Gemfile", "Gemfile.lock", "Procfile"]
+      all_paths(directory) & ["Gemfile", "Gemfile.lock", "Procfile"]
     end
 
     def self.all_run_paths(directory)
-      Run.all_paths(directory) - all_config_paths(directory)
+      all_paths(directory) - all_config_paths(directory)
     end
 
     # Relative paths to all the files in the given directory (recursive)
