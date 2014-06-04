@@ -67,7 +67,6 @@ module Morph
       i = Docker::Image.get("compiled_#{hash}")
       tar_path = tar_run_files(run.repo_path)
       i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
-      i2.tag('repo' => "compiled2_#{run.id}")
       FileUtils.rm_f(tar_path)
 
       command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
@@ -75,7 +74,7 @@ module Morph
         command: command,
         # TODO Need to run this as the user scraper again
         user: "root",
-        image_name: "compiled2_#{run.id}",
+        image_name: i2.id,
         container_name: run.docker_container_name,
         data_path: run.data_path,
         env_variables: run.scraper.variables.map{|v| [v.name, v.value]}
@@ -84,8 +83,7 @@ module Morph
           on.ip_address {|ip| wrapper.call(:ip_address, ip)}
       end
 
-      i = Docker::Image.get("compiled2_#{run.id}")
-      i.delete
+      i2.delete
       status_code
     end
 
