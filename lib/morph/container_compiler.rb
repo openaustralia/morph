@@ -28,14 +28,14 @@ module Morph
       status_code
     end
 
-    def self.compile(run)
+    def self.compile(repo_path)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
       # Compile the container
       i = Docker::Image.get('openaustralia/buildstep')
       # Insert the configuration part of the application code into the container
-      tar_path = tar_config_files(run.repo_path)
+      tar_path = tar_config_files(repo_path)
       hash = Digest::SHA2.hexdigest(File.read(tar_path))
 
       # Check if compiled image already exists
@@ -65,7 +65,7 @@ module Morph
 
       # Insert the actual code into the container
       i = Docker::Image.get("compiled_#{hash}")
-      tar_path = tar_run_files(run.repo_path)
+      tar_path = tar_run_files(repo_path)
       i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
       FileUtils.rm_f(tar_path)
       i2
@@ -75,7 +75,7 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i2 = compile(run) do |on|
+      i2 = compile(run.repo_path) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
       end
 
