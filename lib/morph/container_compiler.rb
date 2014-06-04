@@ -46,7 +46,7 @@ module Morph
         exists = false
       end
 
-      unless exists
+      #unless exists
         i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
         i2.tag('repo' => "compiled_#{hash}")
         FileUtils.rm_f(tar_path)
@@ -61,7 +61,7 @@ module Morph
         end
         c.commit('repo' => "compiled_#{hash}")
         c.delete
-      end
+      #end
 
       # Insert the actual code into the container
       i = Docker::Image.get("compiled_#{hash}")
