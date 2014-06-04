@@ -47,7 +47,27 @@ module Morph
       end
 
       #unless exists
-        i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
+        #i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
+        # Instead of doing the above we're going to make a Dockerfile by hand here and
+        # watch the result of the build
+        dir = Dir.mktmpdir("morph")
+        FileUtils::cp(tar_path, File.join(dir, "config_tar"))
+        File.open(File.join(dir, "Dockerfile"), "w") do |file|
+          file.write "from #{i.id}\n"
+          file.write "add config_tar /app\n"
+        end
+        system("ls #{dir}")
+        system("cat #{dir}/Dockerfile")
+        begin
+          i2 = Docker::Image.build_from_dir(dir) do |chunk|
+            wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
+          end
+        rescue Errno::ENOENT
+          # Just skip this for the time being
+        end
+        # TODO Clean up temporary directory
+        return(i2)
+
         i2.tag('repo' => "compiled_#{hash}")
         FileUtils.rm_f(tar_path)
 
