@@ -28,7 +28,7 @@ module Morph
       status_code
     end
 
-    def self.compile_and_run_with_buildpacks(run)
+    def self.compile(run)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
@@ -68,6 +68,16 @@ module Morph
       tar_path = tar_run_files(run.repo_path)
       i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
       FileUtils.rm_f(tar_path)
+      i2
+    end
+
+    def self.compile_and_run_with_buildpacks(run)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
+      i2 = compile(run) do |on|
+        on.log {|s,c| wrapper.call(:log, s, c)}
+      end
 
       command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
       status_code = Morph::DockerRunner.run(
