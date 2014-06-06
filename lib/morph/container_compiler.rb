@@ -28,6 +28,35 @@ module Morph
       status_code
     end
 
+    # file_environment is a hash of files (and their contents) to put in the same directory
+    # as the Dockerfile created to contain the command
+    # Returns the new image
+    def self.docker_build_command(image, command, file_environment)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
+      result = nil
+      dir = Dir.mktmpdir("morph")
+      begin
+        file_environment["Dockerfile"] = "from #{image.id}\n#{command}\n"
+        file_environment.each do |file, content|
+          path = File.join(dir, file)
+          File.open(path, "w") {|f| f.write content}
+          # Set an arbitrary & fixed modification time on the files so that if
+          # content is the same it will cache
+          #FileUtils.touch(path, mtime: Time.new(2000,1,1))
+        end
+        # Set the same modification time on the directory
+        #FileUtils.touch(dir, mtime: Time.new(2000,1,1))
+        result = Docker::Image.build_from_dir(dir) do |chunk|
+          wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
+        end
+      ensure
+        FileUtils.remove_entry_secure dir
+      end
+      result
+    end
+
     def self.compile(repo_path)
       wrapper = Multiblock.wrapper
       yield(wrapper)
@@ -47,26 +76,10 @@ module Morph
       end
 
       #unless exists
-        #i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
-        # Instead of doing the above we're going to make a Dockerfile by hand here and
-        # watch the result of the build
-        dir = Dir.mktmpdir("morph")
-        FileUtils::cp(tar_path, File.join(dir, "config_tar"))
-        File.open(File.join(dir, "Dockerfile"), "w") do |file|
-          file.write "from #{i.id}\n"
-          file.write "add config_tar /app\n"
+        i2 = docker_build_command(i, "add config_tar /app", "config_tar" => File.read(tar_path)) do |on|
+          on.log {|s,c| wrapper.call(:log, s, c)}
         end
-        system("ls #{dir}")
-        system("cat #{dir}/Dockerfile")
-        begin
-          i2 = Docker::Image.build_from_dir(dir) do |chunk|
-            wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
-          end
-        rescue Errno::ENOENT
-          # Just skip this for the time being
-        end
-        # TODO Clean up temporary directory
-        return(i2)
+        return (i2)
 
         i2.tag('repo' => "compiled_#{hash}")
         FileUtils.rm_f(tar_path)
