@@ -44,10 +44,8 @@ module Morph
           File.open(path, "w") {|f| f.write content}
           # Set an arbitrary & fixed modification time on the files so that if
           # content is the same it will cache
-          #FileUtils.touch(path, mtime: Time.new(2000,1,1))
+          FileUtils.touch(path, mtime: Time.new(2000,1,1))
         end
-        # Set the same modification time on the directory
-        #FileUtils.touch(dir, mtime: Time.new(2000,1,1))
         result = Docker::Image.build_from_dir(dir) do |chunk|
           wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
         end
@@ -126,7 +124,7 @@ module Morph
           on.ip_address {|ip| wrapper.call(:ip_address, ip)}
       end
 
-      i2.delete
+      #i2.delete
       status_code
     end
 
