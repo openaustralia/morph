@@ -73,13 +73,10 @@ module Morph
 
       i = Docker::Image.get('openaustralia/buildstep')
       # Insert the configuration part of the application code into the container and build
-      tar_path = tar_config_files(repo_path)
       commands = ["add code_config.tar /app", "run /build/builder"]
-      i2 = docker_build_command(i, commands, "code_config.tar" => File.read(tar_path)) do |on|
+      docker_build_command(i, commands, "code_config.tar" => tar_config_files(repo_path)) do |on|
         on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
-      FileUtils.rm_f(tar_path)
-      i2
     end
 
     def self.compile_and_run_with_buildpacks(run)
@@ -91,11 +88,9 @@ module Morph
       end
 
       # Insert the actual code into the container
-      tar_path = tar_run_files(run.repo_path)
-      i2 = docker_build_command(i1, "add code.tar /app", "code.tar" => File.read(tar_path)) do |on|
+      i2 = docker_build_command(i1, "add code.tar /app", "code.tar" => tar_run_files(run.repo_path)) do |on|
         on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
-      FileUtils.rm_f(tar_path)
 
       command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
       status_code = Morph::DockerRunner.run(
@@ -115,23 +110,21 @@ module Morph
       status_code
     end
 
-    # A path to a tarfile that contains configuration type files
+    # Contents of a tarfile that contains configuration type files
     # like Gemfile, requirements.txt, etc..
     # This comes from a whitelisted list
-    # You must clean up this file yourself after you're finished with it
     def self.tar_config_files(repo_path)
       absolute_path = File.join(Rails.root, repo_path)
       create_tar(absolute_path, all_config_paths(absolute_path))
     end
 
-    # A path to a tarfile that contains everything that isn't a configuration file
-    # You must clean up this file yourself after you're finished with it
+    # Contents of a tarfile that contains everything that isn't a configuration file
     def self.tar_run_files(repo_path)
       absolute_path = File.join(Rails.root, repo_path)
       create_tar(absolute_path, all_run_paths(absolute_path))
     end
 
-    # Returns the filename of the tar
+    # Returns the contents of the tar
     # The directory needs to be an absolute path name
     def self.create_tar(directory, paths)
       tempfile = Tempfile.new('morph_tar')
@@ -146,7 +139,9 @@ module Morph
           tar.close
         end
       end
-      tempfile.path
+      content = File.read(tempfile.path)
+      FileUtils.rm_f(tempfile.path)
+      content
     end
 
     def self.all_config_paths(directory)
