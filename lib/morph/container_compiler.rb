@@ -46,7 +46,7 @@ module Morph
           # content is the same it will cache
           FileUtils.touch(path, mtime: Time.new(2000,1,1))
         end
-        result = Docker::Image.build_from_dir(dir) do |chunk|
+        result = Docker::Image.build_from_dir(dir, 'rm' => 1) do |chunk|
           wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
         end
       ensure
