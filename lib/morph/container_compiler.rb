@@ -55,11 +55,13 @@ module Morph
     # file_environment is a hash of files (and their contents) to put in the same directory
     # as the Dockerfile created to contain the command
     # Returns the new image
-    def self.docker_build_command(image, command, file_environment)
+    def self.docker_build_command(image, commands, file_environment)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      file_environment["Dockerfile"] = "from #{image.id}\n#{command}\n"
+      commands = [commands] unless commands.kind_of?(Array)
+
+      file_environment["Dockerfile"] = "from #{image.id}\n" + commands.map{|c| c + "\n"}.join
       docker_build_from_files(file_environment) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
       end
@@ -69,18 +71,15 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      # Compile the container
       i = Docker::Image.get('openaustralia/buildstep')
-      # Insert the configuration part of the application code into the container
+      # Insert the configuration part of the application code into the container and build
       tar_path = tar_config_files(repo_path)
-      i2 = docker_build_command(i, "add code_config.tar /app", "code_config.tar" => File.read(tar_path)) do |on|
+      commands = ["add code_config.tar /app", "run /build/builder"]
+      i2 = docker_build_command(i, commands, "code_config.tar" => File.read(tar_path)) do |on|
         on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
       FileUtils.rm_f(tar_path)
-
-      docker_build_command(i2, "run /build/builder", {}) do |on|
-        on.log {|s,c| wrapper.call(:log, :internalout, c)}
-      end
+      i2
     end
 
     def self.compile_and_run_with_buildpacks(run)
