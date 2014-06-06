@@ -112,7 +112,7 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
     docile (1.1.2)
-    docker-api (1.11.0)
+    docker-api (1.11.1)
       archive-tar-minitar
       excon (>= 0.34.0)
       json
@@ -132,7 +132,7 @@ GEM
       http_parser.rb (~> 0.5.3)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.35.0)
+    excon (0.36.0)
     execjs (2.0.2)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
