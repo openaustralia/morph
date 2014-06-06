@@ -64,18 +64,18 @@ module Morph
       # Insert the configuration part of the application code into the container
       tar_path = tar_config_files(repo_path)
       i2 = docker_build_command(i, "add code_config.tar /app", "code_config.tar" => File.read(tar_path)) do |on|
-        on.log {|s,c| wrapper.call(:log, s, c)}
+        on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
       FileUtils.rm_f(tar_path)
 
       i3 = docker_build_command(i2, "run /build/builder", {}) do |on|
-        on.log {|s,c| wrapper.call(:log, s, c)}
+        on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
 
       # Insert the actual code into the container
       tar_path = tar_run_files(repo_path)
       i4 = docker_build_command(i3, "add code.tar /app", "code.tar" => File.read(tar_path)) do |on|
-        on.log {|s,c| wrapper.call(:log, s, c)}
+        on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
       FileUtils.rm_f(tar_path)
       i4
