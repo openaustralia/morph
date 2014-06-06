@@ -111,7 +111,7 @@ module Morph
           on.ip_address {|ip| wrapper.call(:ip_address, ip)}
       end
 
-      #i2.delete
+      i2.delete("noprune" => 1)
       status_code
     end
 
