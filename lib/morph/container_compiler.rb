@@ -68,26 +68,25 @@ module Morph
       end
       FileUtils.rm_f(tar_path)
 
-      i3 = docker_build_command(i2, "run /build/builder", {}) do |on|
+      docker_build_command(i2, "run /build/builder", {}) do |on|
         on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
-
-      # Insert the actual code into the container
-      tar_path = tar_run_files(repo_path)
-      i4 = docker_build_command(i3, "add code.tar /app", "code.tar" => File.read(tar_path)) do |on|
-        on.log {|s,c| wrapper.call(:log, :internalout, c)}
-      end
-      FileUtils.rm_f(tar_path)
-      i4
     end
 
     def self.compile_and_run_with_buildpacks(run)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i2 = compile(run.repo_path) do |on|
+      i1 = compile(run.repo_path) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
       end
+
+      # Insert the actual code into the container
+      tar_path = tar_run_files(run.repo_path)
+      i2 = docker_build_command(i1, "add code.tar /app", "code.tar" => File.read(tar_path)) do |on|
+        on.log {|s,c| wrapper.call(:log, :internalout, c)}
+      end
+      FileUtils.rm_f(tar_path)
 
       command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
       status_code = Morph::DockerRunner.run(
