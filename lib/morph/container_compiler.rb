@@ -28,17 +28,14 @@ module Morph
       status_code
     end
 
-    # file_environment is a hash of files (and their contents) to put in the same directory
-    # as the Dockerfile created to contain the command
-    # Returns the new image
-    def self.docker_build_command(image, command, file_environment)
+    # file_environment needs to also include a Dockerfile with content
+    def self.docker_build_from_files(file_environment)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
       result = nil
       dir = Dir.mktmpdir("morph")
       begin
-        file_environment["Dockerfile"] = "from #{image.id}\n#{command}\n"
         file_environment.each do |file, content|
           path = File.join(dir, file)
           File.open(path, "w") {|f| f.write content}
@@ -53,6 +50,19 @@ module Morph
         FileUtils.remove_entry_secure dir
       end
       result
+    end
+
+    # file_environment is a hash of files (and their contents) to put in the same directory
+    # as the Dockerfile created to contain the command
+    # Returns the new image
+    def self.docker_build_command(image, command, file_environment)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
+      file_environment["Dockerfile"] = "from #{image.id}\n#{command}\n"
+      docker_build_from_files(file_environment) do |on|
+        on.log {|s,c| wrapper.call(:log, s, c)}
+      end
     end
 
     def self.compile(repo_path)
