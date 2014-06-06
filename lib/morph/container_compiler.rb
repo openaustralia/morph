@@ -63,7 +63,7 @@ module Morph
       i = Docker::Image.get('openaustralia/buildstep')
       # Insert the configuration part of the application code into the container
       tar_path = tar_config_files(repo_path)
-      i2 = docker_build_command(i, "add config_tar /app", "config_tar" => File.read(tar_path)) do |on|
+      i2 = docker_build_command(i, "add code_config.tar /app", "code_config.tar" => File.read(tar_path)) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
       end
       FileUtils.rm_f(tar_path)
@@ -74,9 +74,11 @@ module Morph
 
       # Insert the actual code into the container
       tar_path = tar_run_files(repo_path)
-      i2 = i3.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
+      i4 = docker_build_command(i3, "add code.tar /app", "code.tar" => File.read(tar_path)) do |on|
+        on.log {|s,c| wrapper.call(:log, s, c)}
+      end
       FileUtils.rm_f(tar_path)
-      i2
+      i4
     end
 
     def self.compile_and_run_with_buildpacks(run)
