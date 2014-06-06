@@ -63,40 +63,18 @@ module Morph
       i = Docker::Image.get('openaustralia/buildstep')
       # Insert the configuration part of the application code into the container
       tar_path = tar_config_files(repo_path)
-      hash = Digest::SHA2.hexdigest(File.read(tar_path))
+      i2 = docker_build_command(i, "add config_tar /app", "config_tar" => File.read(tar_path)) do |on|
+        on.log {|s,c| wrapper.call(:log, s, c)}
+      end
+      FileUtils.rm_f(tar_path)
 
-      # Check if compiled image already exists
-      begin
-        i = Docker::Image.get("compiled_#{hash}")
-        exists = true
-      rescue Docker::Error::NotFoundError
-        exists = false
+      i3 = docker_build_command(i2, "run /build/builder", {}) do |on|
+        on.log {|s,c| wrapper.call(:log, s, c)}
       end
 
-      #unless exists
-        i2 = docker_build_command(i, "add config_tar /app", "config_tar" => File.read(tar_path)) do |on|
-          on.log {|s,c| wrapper.call(:log, s, c)}
-        end
-
-        i2.tag('repo' => "compiled_#{hash}")
-        FileUtils.rm_f(tar_path)
-
-        c = Morph::DockerRunner.run_no_cleanup(
-          command: "/build/builder",
-          user: "root",
-          image_name: "compiled_#{hash}",
-          env_variables: {CURL_TIMEOUT: 180}
-        ) do |on|
-          on.log {|s,c| wrapper.call(:log, s, c)}
-        end
-        c.commit('repo' => "compiled_#{hash}")
-        c.delete
-      #end
-
       # Insert the actual code into the container
-      i = Docker::Image.get("compiled_#{hash}")
       tar_path = tar_run_files(repo_path)
-      i2 = i.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
+      i2 = i3.insert_local('localPath' => tar_path, 'outputPath' => '/app', 'rm' => 1)
       FileUtils.rm_f(tar_path)
       i2
     end
