@@ -77,7 +77,6 @@ module Morph
         i2 = docker_build_command(i, "add config_tar /app", "config_tar" => File.read(tar_path)) do |on|
           on.log {|s,c| wrapper.call(:log, s, c)}
         end
-        return (i2)
 
         i2.tag('repo' => "compiled_#{hash}")
         FileUtils.rm_f(tar_path)
