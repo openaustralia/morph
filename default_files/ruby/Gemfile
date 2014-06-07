@@ -1,6 +1,11 @@
 source 'https://rubygems.org'
 
-ruby '1.9.2'
+# Scraperwiki used ruby 1.9.2 - we want the default to be as similar as possible
+# buildstep doesn't seem to work with ruby 1.9.2 - it can't find rubygems
+# So we're using ruby 1.9.3 for the time being instead
+# TODO Use ruby 1.9.2
+
+ruby '1.9.3'
 
 # These specific gems and versions are those installed on ScraperWiki "classic" as of 22 Jan 2014
 # These gems were installed in /var/lib/gems/1.9.1/gems/ on ScraperWiki
