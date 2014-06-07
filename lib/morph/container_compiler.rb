@@ -115,23 +115,21 @@ module Morph
     # This comes from a whitelisted list
     def self.tar_config_files(repo_path)
       absolute_path = File.join(Rails.root, repo_path)
-      create_tar(absolute_path, all_config_paths(absolute_path))
+      create_tar_from_paths(all_config_hash(absolute_path))
     end
 
     # Contents of a tarfile that contains everything that isn't a configuration file
     def self.tar_run_files(repo_path)
       absolute_path = File.join(Rails.root, repo_path)
-      create_tar(absolute_path, all_run_paths(absolute_path))
+      create_tar_from_paths(all_run_hash(absolute_path))
     end
 
-    # Returns the contents of the tar
-    # The directory needs to be an absolute path name
-    def self.create_tar(directory, paths)
+    def self.paths_to_hash(directory, paths)
       hash = {}
       paths.each do |path|
         hash[path] = File.read(File.join(directory, path))
       end
-      create_tar_from_paths(hash)
+      hash
     end
 
     def self.create_tar_from_paths(hash)
@@ -167,6 +165,14 @@ module Morph
       content = File.read(tempfile.path)
       FileUtils.rm_f(tempfile.path)
       content
+    end
+
+    def self.all_run_hash(directory)
+      paths_to_hash(directory, all_run_paths(directory))
+    end
+
+    def self.all_config_hash(directory)
+      paths_to_hash(directory, all_config_paths(directory))
     end
 
     def self.all_config_paths(directory)
