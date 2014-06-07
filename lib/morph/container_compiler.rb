@@ -127,13 +127,27 @@ module Morph
     # Returns the contents of the tar
     # The directory needs to be an absolute path name
     def self.create_tar(directory, paths)
+      dir = Dir.mktmpdir("morph")
+      begin
+        paths.each do |path|
+          FileUtils.cp(File.join(directory, path), File.join(dir, path), preserve: true)
+        end
+        create_tar2(dir)
+      ensure
+        FileUtils.remove_entry_secure dir
+      end
+    end
+
+    def self.create_tar2(directory)
       tempfile = Tempfile.new('morph_tar')
 
       in_directory(directory) do
         begin
           tar = Archive::Tar::Minitar::Output.new(tempfile.path)
-          paths.each do |entry|
-            Archive::Tar::Minitar.pack_file(entry, tar)
+          Find.find(".") do |entry|
+            if entry != "."
+              Archive::Tar::Minitar.pack_file(entry, tar)
+            end
           end
         ensure
           tar.close
