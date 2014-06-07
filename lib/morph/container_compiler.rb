@@ -114,14 +114,12 @@ module Morph
     # like Gemfile, requirements.txt, etc..
     # This comes from a whitelisted list
     def self.tar_config_files(repo_path)
-      absolute_path = File.join(Rails.root, repo_path)
-      create_tar_from_paths(all_config_hash(absolute_path))
+      create_tar_from_paths(all_config_hash(File.join(Rails.root, repo_path)))
     end
 
     # Contents of a tarfile that contains everything that isn't a configuration file
     def self.tar_run_files(repo_path)
-      absolute_path = File.join(Rails.root, repo_path)
-      create_tar_from_paths(all_run_hash(absolute_path))
+      create_tar_from_paths(all_run_hash(File.join(Rails.root, repo_path)))
     end
 
     def self.paths_to_hash(directory, paths)
@@ -141,13 +139,13 @@ module Morph
           # content is the same it will cache
           FileUtils.touch(File.join(dir, path), mtime: Time.new(2000,1,1))
         end
-        create_tar2(dir)
+        create_tar(dir)
       ensure
         FileUtils.remove_entry_secure dir
       end
     end
 
-    def self.create_tar2(directory)
+    def self.create_tar(directory)
       tempfile = Tempfile.new('morph_tar')
 
       in_directory(directory) do
@@ -168,32 +166,27 @@ module Morph
     end
 
     def self.all_run_hash(directory)
-      paths_to_hash(directory, all_run_paths(directory))
+      paths = all_hash(directory).keys - all_config_hash(directory).keys
+      all_hash(directory).select{|path,content| paths.include?(path)}
     end
 
     def self.all_config_hash(directory)
-      paths_to_hash(directory, all_config_paths(directory))
-    end
-
-    def self.all_config_paths(directory)
-      all_paths(directory) & ["Gemfile", "Gemfile.lock", "Procfile"]
-    end
-
-    def self.all_run_paths(directory)
-      all_paths(directory) - all_config_paths(directory)
+      paths = all_hash(directory).keys & ["Gemfile", "Gemfile.lock", "Procfile"]
+      all_hash(directory).select{|path,content| paths.include?(path)}
     end
 
     # Relative paths to all the files in the given directory (recursive)
     # (except for anything below a directory starting with ".")
-    def self.all_paths(directory)
-      result = []
+    def self.all_hash(directory)
+      result = {}
       Find.find(directory) do |path|
         if FileTest.directory?(path)
           if File.basename(path)[0] == ?.
             Find.prune
           end
         else
-          result << Pathname.new(path).relative_path_from(Pathname.new(directory)).to_s
+          result_path = Pathname.new(path).relative_path_from(Pathname.new(directory)).to_s
+          result[result_path] = File.read(path)
         end
       end
       result
