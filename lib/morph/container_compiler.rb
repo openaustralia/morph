@@ -127,10 +127,21 @@ module Morph
     # Returns the contents of the tar
     # The directory needs to be an absolute path name
     def self.create_tar(directory, paths)
+      hash = {}
+      paths.each do |path|
+        hash[path] = File.read(File.join(directory, path))
+      end
+      create_tar_from_paths(hash)
+    end
+
+    def self.create_tar_from_paths(hash)
       dir = Dir.mktmpdir("morph")
       begin
-        paths.each do |path|
-          FileUtils.cp(File.join(directory, path), File.join(dir, path), preserve: true)
+        hash.each do |path, content|
+          File.open(File.join(dir, path), "w") {|f| f.write(content)}
+          # Set an arbitrary & fixed modification time on the files so that if
+          # content is the same it will cache
+          FileUtils.touch(File.join(dir, path), mtime: Time.new(2000,1,1))
         end
         create_tar2(dir)
       ensure
