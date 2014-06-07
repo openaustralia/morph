@@ -73,7 +73,7 @@ module Morph
 
       i = Docker::Image.get('openaustralia/buildstep')
       # Insert the configuration part of the application code into the container and build
-      commands = ["add code_config.tar /app", "run /build/builder"]
+      commands = ["ADD code_config.tar /app", "ENV CURL_TIMEOUT 180", "RUN /build/builder"]
       docker_build_command(i, commands, "code_config.tar" => tar_config_files(repo_path)) do |on|
         on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
@@ -114,7 +114,7 @@ module Morph
     # like Gemfile, requirements.txt, etc..
     # This comes from a whitelisted list
     def self.tar_config_files(repo_path)
-      create_tar_from_paths(all_config_hash(File.join(Rails.root, repo_path)))
+      create_tar_from_paths(all_config_hash_with_defaults(File.join(Rails.root, repo_path)))
     end
 
     # Contents of a tarfile that contains everything that isn't a configuration file
@@ -168,6 +168,24 @@ module Morph
     def self.all_run_hash(directory)
       paths = all_hash(directory).keys - all_config_hash(directory).keys
       all_hash(directory).select{|path,content| paths.include?(path)}
+    end
+
+    # Take all_config_hash and fill in with default files and contents
+    # if some things are not available
+    def self.all_config_hash_with_defaults(directory)
+      hash = all_config_hash(directory)
+      language = Morph::Language.language(directory)
+      if language == :ruby
+        # Do some special Ruby magic
+        if hash["Gemfile"].nil? && hash["Gemfile.lock"].nil?
+          hash["Gemfile"] = File.read("default_files/ruby/Gemfile")
+          hash["Gemfile.lock"] = File.read("default_files/ruby/Gemfile.lock")
+        end
+        if hash["Procfile"].nil?
+          hash["Procfile"] = File.read("default_files/ruby/Procfile")
+        end
+      end
+      hash
     end
 
     def self.all_config_hash(directory)
