@@ -43,8 +43,14 @@ module Morph
           # content is the same it will cache
           FileUtils.touch(path, mtime: Time.new(2000,1,1))
         end
-        result = Docker::Image.build_from_dir(dir, 'rm' => 1) do |chunk|
-          wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
+        conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
+        result = Docker::Image.build_from_dir(dir, {'rm' => 1}, conn_interactive) do |chunk|
+          # TODO Do this properly
+          begin
+            wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
+          rescue JSON::ParserError
+            # Workaround until we handle this properly
+          end
         end
       ensure
         FileUtils.remove_entry_secure dir
