@@ -1,4 +1,8 @@
-numpy==1.6.1
+# numpy, gemsim, matplotlib, pandas, scipy are commented out because
+# all those libraries require numpy
+# it looks like the python heroku buildpack doesn't support the installation of numpy
+
+#numpy==1.6.1
 BeautifulSoup==3.2.0
 Creoleparser==0.7.4
 Genshi==0.6
@@ -80,13 +84,13 @@ yql==0.7.2
 zope.interface==3.8.0
 lxml==2.3.3
 chromium-compact-language-detector==0.031415
-distribute==0.6.21
-gensim==0.8.3
+#distribute==0.6.21
+#gensim==0.8.3
 icalendar==3.0.1b1
-matplotlib==1.0.1
-pandas==0.4.3
+#matplotlib==1.0.1
+#pandas==0.4.3
 pyquery==1.0
-scipy==0.10.0
+#scipy==0.10.0
 scrapely==0.9
 
 # These are ones where the original version wasn't available. So we went to the next
