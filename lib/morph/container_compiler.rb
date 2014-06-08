@@ -184,12 +184,19 @@ module Morph
         if hash["Procfile"].nil?
           hash["Procfile"] = File.read("default_files/ruby/Procfile")
         end
+      elsif language == :python
+        if hash["requirements.txt"].nil?
+          hash["requirements.txt"] = File.read("default_files/python/requirements.txt")
+        end
+        if hash["runtime.txt"].nil?
+          hash["runtime.txt"] = File.read("default_files/python/runtime.txt")
+        end
       end
       hash
     end
 
     def self.all_config_hash(directory)
-      paths = all_hash(directory).keys & ["Gemfile", "Gemfile.lock", "Procfile"]
+      paths = all_hash(directory).keys & ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt"]
       all_hash(directory).select{|path,content| paths.include?(path)}
     end
 
