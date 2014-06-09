@@ -1,3 +1,6 @@
+# Install custom version of scraperwiki library
+-e git+http://github.com/openaustralia/scraperwiki-python.git@morph_defaults#egg=scraperwiki
+
 # numpy, gemsim, matplotlib, pandas, scipy are commented out because
 # all those libraries require numpy
 # it looks like the python heroku buildpack doesn't support the installation of numpy
