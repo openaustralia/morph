@@ -77,7 +77,7 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i = Docker::Image.get('openaustralia/buildstep')
+      i = Docker::Image.get('openaustralia/buildstep2')
       # Insert the configuration part of the application code into the container and build
       commands = ["ADD code_config.tar /app", "ENV CURL_TIMEOUT 180", "RUN /build/builder"]
       docker_build_command(i, commands, "code_config.tar" => tar_config_files(repo_path)) do |on|
