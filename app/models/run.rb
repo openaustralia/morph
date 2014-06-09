@@ -131,9 +131,12 @@ class Run < ActiveRecord::Base
       end
     end
 
-    # Now collect and save the metrics
-    metric = Metric.read_from_file(time_output_path)
-    metric.update_attributes(run_id: self.id)
+    # Hack to not try to get metric if the compile failed
+    if status_code != 255
+      # Now collect and save the metrics
+      metric = Metric.read_from_file(time_output_path)
+      metric.update_attributes(run_id: self.id)
+    end
 
     update_attributes(status_code: status_code, finished_at: Time.now)
     # Update information about what changed in the database

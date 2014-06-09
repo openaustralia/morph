@@ -44,13 +44,17 @@ module Morph
           FileUtils.touch(path, mtime: Time.new(2000,1,1))
         end
         conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
-        result = Docker::Image.build_from_dir(dir, {'rm' => 1}, conn_interactive) do |chunk|
-          # TODO Do this properly
-          begin
-            wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
-          rescue JSON::ParserError
-            # Workaround until we handle this properly
+        begin
+          result = Docker::Image.build_from_dir(dir, {'rm' => 1}, conn_interactive) do |chunk|
+            # TODO Do this properly
+            begin
+              wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
+            rescue JSON::ParserError
+              # Workaround until we handle this properly
+            end
           end
+        rescue Docker::Error::UnexpectedResponseError
+          result = nil
         end
       ensure
         FileUtils.remove_entry_secure dir
@@ -91,6 +95,12 @@ module Morph
 
       i1 = compile(run.repo_path) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
+      end
+
+      # If something went wrong during the compile and it couldn't finish
+      if i1.nil?
+        # TODO: Return the status for a compile error
+        return 255;
       end
 
       # Insert the actual code into the container
