@@ -43,8 +43,13 @@
   # TODO If this changes we should rerun foreman as well
 # TODO This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
+# We're using a specific version of foreman here as after 0.63 the way environment variables
+# is set changes (probably for the better)
+# TODO Update to more recent version of foreman
 - name: Install foreman
-  gem: name=foreman state=present user_install=no
+  gem: name=foreman version=0.63.0 state=present user_install=no
+- name: Create log directory
+  file: path=/var/log/morph owner=deploy group=deploy state=directory
 - name: Ensure Procfile.production copied
   copy: src=../Procfile.production dest=/home/deploy/Procfile.production
   notify: Export to upstart
