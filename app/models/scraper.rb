@@ -151,7 +151,7 @@ class Scraper < ActiveRecord::Base
     system("#{docker_command} pull openaustralia/morph-php")
     system("#{docker_command} pull openaustralia/morph-python")
     system("#{docker_command} pull openaustralia/morph-perl")
-    system("#{docker_command} pull openaustralia/buildstep2")
+    system("#{docker_command} pull openaustralia/buildstep")
   end
 
   def readme
