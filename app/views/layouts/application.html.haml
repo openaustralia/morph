@@ -70,6 +70,11 @@
                 = link_to "Sign out", destroy_user_session_path
 
     .container
+      - if signed_in? && SiteSetting.read_only_mode
+        .alert.alert-warning.read-only-mode
+          %i.icon-bell.icon-large
+          The site is currently <strong>read-only</strong> because we're doing some essential maintenance.
+          Scrapers can not be created or run. The good news is you can continue to browse the site.
       = bootstrap_flash
     = content_for?(:content) ? yield(:content) : yield
     = render "heap_analytics_identify"
