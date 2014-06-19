@@ -31,6 +31,9 @@ class Ability
     # Everybody can look at all the users and see who they are watching
     can [:index, :watching], User
 
+    if user.admin?
+      can :toggle_read_only_mode, SiteSetting
+    end
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

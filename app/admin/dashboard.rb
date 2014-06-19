@@ -4,6 +4,13 @@ ActiveAdmin.register_page "Dashboard" do
 
   content title: proc{ I18n.t("active_admin.dashboard") } do
     div class: "blank_slate_container", id: "dashboard_default_message" do
+      para do
+        if SiteSetting.read_only_mode
+          button_to "Switch off site-wide read-only mode", toggle_read_only_mode_admin_site_settings_path
+        else
+          button_to "Go into site-wide read-only mode", toggle_read_only_mode_admin_site_settings_path
+        end
+      end
       span class: "blank_slate" do
         span I18n.t("active_admin.dashboard_welcome.welcome")
         small I18n.t("active_admin.dashboard_welcome.call_to_action")

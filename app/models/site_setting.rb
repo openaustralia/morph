@@ -9,6 +9,10 @@ class SiteSetting < ActiveRecord::Base
     write_setting("read_only_mode", mode)
   end
 
+  def self.toggle_read_only_mode!
+    self.read_only_mode = !read_only_mode
+  end
+
   private
   
   def self.record
