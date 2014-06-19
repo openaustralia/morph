@@ -24,18 +24,30 @@ class Ability
     end
 
     # You can look at your own settings
-    can [:settings, :reset_key], Owner, id: user.id
+    can :settings, Owner, id: user.id
+    unless SiteSetting.read_only_mode
+      can :reset_key, Owner, id: user.id
+    end
     # user should be able to see settings for an org they're part of
     user.organizations.each do |org|
-      can [:settings, :reset_key], Owner, id: org.id
+      can :settings, Owner, id: org.id
+      unless SiteSetting.read_only_mode
+        can :reset_key, Owner, id: org.id
+      end
     end
     # Admins can look at all owner settings and update
     if user.admin?
-      can [:settings, :update], Owner
+      can :settings, Owner
+      unless SiteSetting.read_only_mode
+        can :update, Owner
+      end
     end
 
     # Everyone can show and watch anyone
-    can [:show, :watch], Owner
+    can :show, Owner
+    unless SiteSetting.read_only_mode
+      can :watch, Owner
+    end
 
     # Everybody can look at all the users and see who they are watching
     can [:index, :watching], User

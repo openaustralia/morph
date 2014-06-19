@@ -1,29 +1,29 @@
 .container
-  - if can? :reset_key, @owner
-    %h1
-      - if @owner == current_user
-        Your
-      - else
-        #{@owner.nickname}'s
-      special key is #{@owner.api_key}
-
-    - if @owner.user?
-      %p
-        - if @owner == current_user
-          You
-        - else
-          They
-        will need this to use the API and the Morph command line client
-      %p
-        This key is just for #{@owner == current_user ? "you" : "them"}. Don't give it to anyone else.
+  %h1
+    - if @owner == current_user
+      Your
     - else
-      %p
-        Use this API key if you want the usage to be recorded against the organization #{@owner.nickname}.
-      %p
-        This key is just for the organization. Don't give it to anyone that shouldn't have access to it.
-      %p
-        Take extra care if resetting the api key as it will effect everyone else who is part of the organization.
+      #{@owner.nickname}'s
+    special key is #{@owner.api_key}
 
+  - if @owner.user?
+    %p
+      - if @owner == current_user
+        You
+      - else
+        They
+      will need this to use the API and the Morph command line client
+    %p
+      This key is just for #{@owner == current_user ? "you" : "them"}. Don't give it to anyone else.
+  - else
+    %p
+      Use this API key if you want the usage to be recorded against the organization #{@owner.nickname}.
+    %p
+      This key is just for the organization. Don't give it to anyone that shouldn't have access to it.
+    %p
+      Take extra care if resetting the api key as it will effect everyone else who is part of the organization.
+
+  - if can? :reset_key, @owner
     = button_to "Reset key", reset_key_owner_path(@owner), class: "btn btn-danger"
 
   - if can? :update, @owner
