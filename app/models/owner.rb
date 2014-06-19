@@ -104,4 +104,8 @@ class Owner < ActiveRecord::Base
   def data_root
     "db/scrapers/data/#{to_param}"
   end
+
+  def ability
+    @ability ||= Ability.new(self)
+  end
 end
