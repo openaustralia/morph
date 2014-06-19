@@ -45,7 +45,7 @@ class ApiController < ApplicationController
 
       # Cleanup run
       FileUtils.rm_rf(run.data_path)
-      FileUtils.rm_rf(run.repo_path)      
+      FileUtils.rm_rf(run.repo_path)
     end
   end
 end
