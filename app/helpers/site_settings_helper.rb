@@ -1,0 +1,2 @@
+module SiteSettingsHelper
+end

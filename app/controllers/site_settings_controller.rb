@@ -1,0 +1,2 @@
+class SiteSettingsController < ApplicationController
+end
