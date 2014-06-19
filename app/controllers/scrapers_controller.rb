@@ -36,6 +36,7 @@ class ScrapersController < ApplicationController
   end
 
   def github
+    authorize! :github, Scraper
     @user = current_user
     @organizations = current_user.organizations
   end
@@ -60,6 +61,7 @@ class ScrapersController < ApplicationController
   end
 
   def scraperwiki
+    authorize! :scraperwiki, Scraper
     @name_set = !!params[:scraperwiki_shortname]
     @scraper = Scraper.new(scraperwiki_shortname: params[:scraperwiki_shortname],
       name: params[:scraperwiki_shortname])

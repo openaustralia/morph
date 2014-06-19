@@ -4,15 +4,24 @@ class Ability
   def initialize(user)
     user ||= User.new # guest user (not logged in)
     # user can view settings of scrapers it owns
-    can [:settings, :destroy, :update, :run, :stop, :clear, :create, :create_github], Scraper, owner_id: user.id
+    can :settings, Scraper, owner_id: user.id
+    unless SiteSetting.read_only_mode
+      can [:destroy, :update, :run, :stop, :clear, :create, :create_github], Scraper, owner_id: user.id
+    end
 
     # user can view settings of scrapers belonging to an org they are a member of
     user.organizations.each do |org|
-      can [:settings, :destroy, :update, :run, :stop, :clear, :create, :create_github], Scraper, owner_id: org.id
+      can :settings, Scraper, owner_id: org.id
+      unless SiteSetting.read_only_mode
+        can [:destroy, :update, :run, :stop, :clear, :create, :create_github], Scraper, owner_id: org.id
+      end
     end
 
     # Everyone can list all the scrapers
-    can [:index, :show, :watchers, :new], Scraper
+    can [:index, :show, :watchers], Scraper
+    unless SiteSetting.read_only_mode
+      can [:new, :github, :scraperwiki], Scraper
+    end
 
     # You can look at your own settings
     can [:settings, :reset_key], Owner, id: user.id

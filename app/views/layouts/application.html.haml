@@ -35,8 +35,8 @@
         .collapse.navbar-collapse#bs-example-navbar-collapse-1
           %ul.nav.navbar-nav
             -# TODO set class to "active" when this is the current page
-            %li(class="dropdown")
-              %a(href="#" class="dropdown-toggle" data-toggle="dropdown")
+            %li{class: "dropdown " + ("disabled" unless can? :new, Scraper)}
+              = link_to "#", class: "dropdown-toggle", data: {toggle: ("dropdown" if can? :new, Scraper)} do
                 Add Scraper
                 %b(class="caret")
               %ul(class="dropdown-menu")

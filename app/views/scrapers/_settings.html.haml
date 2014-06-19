@@ -4,7 +4,7 @@
     -# Workaround for bug (I think in formtastic)
     -# TODO: Fix this in Formtastic (or wherever it's coming from)
     %input(name="scraper[auto_run]" type="hidden" value="0")
-    = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !@scraper.can_write?(current_user)}
+    = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !(can? :update, @scraper)}
   %h3 Secret environment variables
   %p
     Environment variables can be used to pass secret values to your scraper such as API keys.
@@ -17,8 +17,10 @@
     = f.semantic_fields_for :variables do |variable|
       = render "variable_fields", f: variable
     .links
-      = link_to_add_association f, :variables do
-        %i.icon-plus-sign.icon-2x
-        Add variable
-  = f.actions do
-    = f.action :submit, :label => "Update"
+      - if can? :update, @scraper
+        = link_to_add_association f, :variables do
+          %i.icon-plus-sign.icon-2x
+          Add variable
+  - if can? :update, @scraper
+    = f.actions do
+      = f.action :submit, :label => "Update"
