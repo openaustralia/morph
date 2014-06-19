@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140606055020) do
+ActiveRecord::Schema.define(version: 20140619013750) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -202,6 +202,12 @@ ActiveRecord::Schema.define(version: 20140606055020) do
 
   add_index "scrapers", ["full_name"], name: "index_scrapers_on_full_name", using: :btree
   add_index "scrapers", ["owner_id"], name: "index_scrapers_on_owner_id", using: :btree
+
+  create_table "site_settings", force: true do |t|
+    t.string   "settings"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "variables", force: true do |t|
     t.string   "name"
