@@ -14,7 +14,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   private
-  
+
   def self.record
     SiteSetting.first || SiteSetting.create(settings: defaults)
   end
