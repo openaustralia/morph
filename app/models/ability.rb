@@ -55,6 +55,10 @@ class Ability
     if user.admin?
       can :toggle_read_only_mode, SiteSetting
     end
+
+    unless SiteSetting.read_only_mode
+      can :create, Run
+    end
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

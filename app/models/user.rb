@@ -140,4 +140,8 @@ class User < Owner
   def inactive_message
     'Your account has been suspended. Please contact us if you think this is in error.'
   end
+
+  def ability
+    @ability ||= Ability.new(self)
+  end
 end
