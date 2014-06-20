@@ -84,7 +84,7 @@ module Morph
     private
 
     def self.redis_directory
-      "/usr/local/var/db/redis"
+      "/var/lib/redis"
     end
 
     def self.mysql_configuration
