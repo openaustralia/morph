@@ -16,7 +16,7 @@ module Morph
     end
 
     def self.backup_mysql
-      puts "Removing any previous backup..."
+      puts "Removing any previous MySQL backup..."
       FileUtils.rm_f("db/backups/mysql_backup.sql")
       FileUtils.rm_f("db/backups/mysql_backup.sql.bz2")
       FileUtils.mkdir_p("db/backups")
@@ -35,6 +35,9 @@ module Morph
     end
 
     def self.backup_sqlite
+      puts "Removing any previous SQLite backup..."
+      FileUtils.rm_f("db/backups/sqlite_backup.tar")
+      FileUtils.rm_f("db/backups/sqlite_backup.tar.bz2")
       puts "Backup up SQLite..."
       # TODO How shall we maintain permissions?
       system("tar cf db/backups/sqlite_backup.tar db/scrapers/data")
@@ -51,7 +54,12 @@ module Morph
     end
 
     def self.backup_redis
-      # TODO Take snapshot now
+      puts "Removing any previous Redis backup..."
+      FileUtils.rm_f("db/backups/redis_backup.rdb")
+      FileUtils.rm_f("db/backups/redis_backup.rdb.bz2")
+      puts "Redis taking snapshot..."
+      redis = Redis.new
+      redis.save
       puts "Backing up Redis..."
       system("cp #{redis_directory}/dump.rdb db/backups/redis_backup.rdb")
       puts "Compressing Redis backup..."
