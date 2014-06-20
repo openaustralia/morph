@@ -53,7 +53,7 @@ module Morph
     def self.backup_redis
       # TODO Take snapshot now
       puts "Backing up Redis..."
-      system("cp /usr/local/var/db/redis/dump.rdb db/backups/redis_backup.rdb")
+      system("cp #{redis_directory}/dump.rdb db/backups/redis_backup.rdb")
       puts "Compressing Redis backup..."
       system("bzip2 db/backups/redis_backup.rdb")
     end
@@ -62,10 +62,14 @@ module Morph
       puts "Uncompressing Redis backup..."
       system("bunzip2 -k db/backups/redis_backup.rdb.bz2")
       puts "Restore from Redis backup..."
-      system("mv db/backups/redis_backup.rdb /usr/local/var/db/redis/dump.rdb")
+      system("mv db/backups/redis_backup.rdb #{redis_directory}/dump.rdb")
     end
 
     private
+
+    def self.redis_directory
+      "/usr/local/var/db/redis"
+    end
 
     def self.mysql_configuration
       Rails.configuration.database_configuration[Rails.env]
