@@ -1,6 +1,9 @@
 module Morph
   module Backup
     def self.backup_mysql
+      unless SiteSetting.read_only_mode
+        puts "WARNING: The site is NOT in read-only mode. So, things might get updated during the backup."
+      end
       FileUtils.mkdir_p("db/backups")
       puts "Backing up MySQL..."
       system("mysqldump -u scraping -pscraping scraping_development > db/backups/mysql_backup.sql")
