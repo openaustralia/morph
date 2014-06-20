@@ -7,12 +7,20 @@ module Morph
       backup_mysql
       backup_sqlite
       backup_redis
+      system("tar cf db/backups/morph_backup.tar db/backups/*.bz2")
+      FileUtils.rm_f("db/backups/mysql_backup.sql.bz2")
+      FileUtils.rm_f("db/backups/sqlite_backup.tar.bz2")
+      FileUtils.rm_f("db/backups/redis_backup.rdb.bz2")
     end
 
     def self.restore
+      system("tar xf db/backups/morph_backup.tar")
       restore_mysql
       restore_sqlite
       restore_redis
+      FileUtils.rm_f("db/backups/mysql_backup.sql.bz2")
+      FileUtils.rm_f("db/backups/sqlite_backup.tar.bz2")
+      FileUtils.rm_f("db/backups/redis_backup.rdb.bz2")
     end
 
     def self.backup_mysql
