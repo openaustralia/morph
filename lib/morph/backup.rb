@@ -1,9 +1,17 @@
 module Morph
   module Backup
-    def self.backup_mysql
+    def self.backup
       unless SiteSetting.read_only_mode
         puts "WARNING: The site is NOT in read-only mode. So, things might get updated during the backup."
       end
+      backup_mysql
+    end
+
+    def self.restore
+      restore_mysql
+    end
+
+    def self.backup_mysql
       puts "Removing any previous backup..."
       FileUtils.rm_f("db/backups/mysql_backup.sql")
       FileUtils.rm_f("db/backups/mysql_backup.sql.bz2")

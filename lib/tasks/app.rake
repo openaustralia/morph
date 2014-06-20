@@ -47,18 +47,14 @@ namespace :app do
     end
   end
 
-  namespace :backup do
-    desc "Backup mysql database to db/backups"
-    task :mysql => :environment do
-      Morph::Backup.backup_mysql
-    end
+  desc "Backup databases to db/backups"
+  task :backup => :environment do
+    Morph::Backup.backup
   end
 
-  namespace :restore do
-    desc "Restore mysql database from db/backups"
-    task :mysql => :environment do
-      Morph::Backup.restore_mysql if confirm("Are you sure? This will overwrite the mysql database")
-    end
+  desc "Restore databases from db/backups"
+  task :restore => :environment do
+    Morph::Backup.restore if confirm("Are you sure? This will overwrite the databases")
   end
 
   def confirm(message)
