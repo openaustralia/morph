@@ -46,4 +46,13 @@ namespace :app do
       exit 1
     end
   end
+
+  desc "Backup mysql database to db/backups"
+  task :backup_mysql => :environment do
+    FileUtils.mkdir_p("db/backups")
+    puts "Backing up MySQL..."
+    system("mysqldump -u scraping -pscraping scraping_development > db/backups/mysql_backup.sql")
+    puts "Compressing MySQL backup..."
+    system("bzip2 db/backups/mysql_backup.sql")
+  end
 end
