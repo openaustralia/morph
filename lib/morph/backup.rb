@@ -6,11 +6,13 @@ module Morph
       end
       backup_mysql
       backup_sqlite
+      backup_redis
     end
 
     def self.restore
       restore_mysql
       restore_sqlite
+      restore_redis
     end
 
     def self.backup_mysql
@@ -46,6 +48,21 @@ module Morph
       puts "Restoring from SQLite backup..."
       system("tar xf db/backups/sqlite_backup.tar")
       FileUtils.rm_f("db/backups/sqlite_backup.tar")
+    end
+
+    def self.backup_redis
+      # TODO Take snapshot now
+      puts "Backing up Redis..."
+      system("cp /usr/local/var/db/redis/dump.rdb db/backups/redis_backup.rdb")
+      puts "Compressing Redis backup..."
+      system("bzip2 db/backups/redis_backup.rdb")
+    end
+
+    def self.restore_redis
+      puts "Uncompressing Redis backup..."
+      system("bunzip2 -k db/backups/redis_backup.rdb.bz2")
+      puts "Restore from Redis backup..."
+      system("mv db/backups/redis_backup.rdb /usr/local/var/db/redis/dump.rdb")
     end
 
     private

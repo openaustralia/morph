@@ -54,7 +54,7 @@ namespace :app do
 
   desc "Restore databases from db/backups"
   task :restore => :environment do
-    Morph::Backup.restore if confirm("Are you sure? This will overwrite the databases")
+    Morph::Backup.restore if confirm("Are you sure? This will overwrite the databases and Redis needs to be shutdown.")
   end
 
   def confirm(message)
