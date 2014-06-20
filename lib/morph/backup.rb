@@ -5,10 +5,12 @@ module Morph
         puts "WARNING: The site is NOT in read-only mode. So, things might get updated during the backup."
       end
       backup_mysql
+      backup_sqlite
     end
 
     def self.restore
       restore_mysql
+      restore_sqlite
     end
 
     def self.backup_mysql
@@ -28,6 +30,22 @@ module Morph
       puts "Restoring from MySQL backup..."
       system("mysql -u #{mysql_username} -p#{mysql_password} #{mysql_database} < db/backups/mysql_backup.sql")
       FileUtils.rm_f("db/backups/mysql_backup.sql")
+    end
+
+    def self.backup_sqlite
+      puts "Backup up SQLite..."
+      # TODO How shall we maintain permissions?
+      system("tar cf db/backups/sqlite_backup.tar db/scrapers/data")
+      puts "Compressing SQLite backup..."
+      system("bzip2 db/backups/sqlite_backup.tar")
+    end
+
+    def self.restore_sqlite
+      puts "Uncompressing SQLite backup..."
+      system("bunzip2 -k db/backups/sqlite_backup.tar.bz2")
+      puts "Restoring from SQLite backup..."
+      system("tar xf db/backups/sqlite_backup.tar")
+      FileUtils.rm_f("db/backups/sqlite_backup.tar")
     end
 
     private
