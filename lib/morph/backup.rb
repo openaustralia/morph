@@ -89,7 +89,7 @@ module Morph
 
     def self.mysql_auth
       if mysql_username.blank? && mysql_password.blank?
-        ""
+        "-u root"
       else
         "-u #{mysql_username} -p#{mysql_password}"
       end
