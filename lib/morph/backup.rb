@@ -29,7 +29,7 @@ module Morph
       FileUtils.rm_f("db/backups/mysql_backup.sql.bz2")
       FileUtils.mkdir_p("db/backups")
       puts "Backing up MySQL..."
-      system("mysqldump -u #{mysql_username} -p#{mysql_password} #{mysql_database} > db/backups/mysql_backup.sql")
+      system("mysqldump #{mysql_auth} #{mysql_database} > db/backups/mysql_backup.sql")
       puts "Compressing MySQL backup..."
       system("bzip2 db/backups/mysql_backup.sql")
     end
@@ -38,7 +38,7 @@ module Morph
       puts "Uncompressing MySQL backup..."
       system("bunzip2 -k db/backups/mysql_backup.sql.bz2")
       puts "Restoring from MySQL backup..."
-      system("mysql -u #{mysql_username} -p#{mysql_password} #{mysql_database} < db/backups/mysql_backup.sql")
+      system("mysql #{mysql_auth} #{mysql_database} < db/backups/mysql_backup.sql")
       FileUtils.rm_f("db/backups/mysql_backup.sql")
     end
 
@@ -85,6 +85,14 @@ module Morph
 
     def self.redis_directory
       "/var/lib/redis"
+    end
+
+    def self.mysql_auth
+      if mysql_username.blank? && mysql_password.blank?
+        ""
+      else
+        "-u #{mysql_username} -p#{mysql_password}"
+      end
     end
 
     def self.mysql_configuration
