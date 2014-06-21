@@ -29,8 +29,14 @@ namespace :app do
 
   desc "Synchronise all repositories"
   task :synchronise_repos => :environment do
-    Scraper.all.each{|s| s.synchronise_repo}
+    total = Scraper.all.count
+    i = 1
+    Scraper.all.each do |s|
+      puts "#{i}/#{total}"
+      s.synchronise_repo
+      i += 1
     end
+  end
 
   desc "Promote user to admin"
   task :promote_to_admin => :environment do
