@@ -58,7 +58,7 @@ module Morph
 
     def self.primary_email(user)
       # TODO If email isn't verified probably should not send email to it
-      emails(user).find{|u| u.primary}.email
+      (emails(user) || []).find{|u| u.primary}.email
     end
 
     # Needs user:email oauth scope for this to work
