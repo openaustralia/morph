@@ -1,8 +1,14 @@
 ---
+# This playbook is for provisioning on a Linode box. It should be at least a Linode 2048 box and have
+# 64 bit Ubuntu 12.04 LTS with 256 MB swap (I think).
+# To run:
+# cd provisioning
+# ansible-playbook -i hosts playbook.yml
+#
 - hosts: all
   sudo: true
 # Uncomment the user line below if you are using this playbook directly from ansible using "ansible-playbook"
 # rather than running it through vagrant
-#  user: ubuntu
+  user: root
   roles:
     - morph-app
