@@ -60,8 +60,14 @@ class Scraper < ActiveRecord::Base
   def update_contributors
     # We can't use unauthenticated requests because we will go over our rate limit
     begin
-      c = related_user.octokit_client.contributors(full_name).map do |c|
-        User.find_or_create_by_nickname(c["login"])
+      contributors = related_user.octokit_client.contributors(full_name)
+      # contributors will return nill if the git repo is completely empty
+      if contributors.nil?
+        c = []
+      else
+        c = contributors.map do |c|
+          User.find_or_create_by_nickname(c["login"])
+        end
       end
     rescue Octokit::NotFound
       c = []
