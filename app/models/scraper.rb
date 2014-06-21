@@ -289,9 +289,14 @@ class Scraper < ActiveRecord::Base
   end
 
   def synchronise_repo
-    Morph::Github.synchronise_repo(repo_path, git_url)
-    update_repo_size
-    update_contributors
+    begin
+      Morph::Github.synchronise_repo(repo_path, git_url)
+      update_repo_size
+      update_contributors
+    rescue Grit::Git::CommandFailed => e
+      puts "git command failed: #{e}"
+      puts "Ignoring and moving onto the next one..."
+    end
   end
 
   # Return the https version of the git clone url (git_url)
