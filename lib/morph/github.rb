@@ -66,7 +66,7 @@ module Morph
     def self.emails(user)
       begin
         user.octokit_client.emails(accept: 'application/vnd.github.v3')
-      rescue Octokit::NotFound
+      rescue Octokit::NotFound, Octokit::Unauthorized
         nil
       end
     end
