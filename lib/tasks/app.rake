@@ -30,8 +30,8 @@ namespace :app do
   desc "Synchronise all repositories"
   task :synchronise_repos => :environment do
     total = Scraper.all.count
-    i = 1
-    Scraper.all.each do |s|
+    i = 500
+    Scraper.all[500..-1].each do |s|
       puts "#{i}/#{total}"
       s.synchronise_repo
       i += 1
