@@ -112,7 +112,7 @@ class Run < ActiveRecord::Base
       return
     end
 
-    # Only try using buildpacks with ruby for the time being
+    # Only try using buildpacks with Ruby or Python for the time being
     if owner.buildpacks && (language == :ruby || language == :python)
       status_code = Morph::ContainerCompiler.compile_and_run_with_buildpacks(self) do |on|
         on.log {|s,c| yield s,c}
