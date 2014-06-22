@@ -3,6 +3,22 @@ ActiveAdmin.register_page "Dashboard" do
   menu priority: 1, label: proc{ I18n.t("active_admin.dashboard") }
 
   content title: proc{ I18n.t("active_admin.dashboard") } do
+    columns do
+      column do
+        panel "Users" do
+          para "#{User.where("created_at > ?", 7.days.ago).count} new users in last 7 days"
+          para "#{User.count} users total"
+        end
+      end
+
+      column do
+        panel "Scrapers" do
+          para "#{Scraper.where("created_at > ?", 7.days.ago).count} new scrapers in last 7 days"
+          para "#{Scraper.count} scrapers total"
+        end
+      end
+    end
+
     div class: "blank_slate_container", id: "dashboard_default_message" do
       para do
         if SiteSetting.read_only_mode
