@@ -193,19 +193,17 @@ module Morph
       language = Morph::Language.language(directory)
       if language == :ruby
         hash = insert_default_files_if_all_absent(hash, language, ["Gemfile", "Gemfile.lock"])
-        hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       elsif language == :python
         hash = insert_default_files_if_all_absent(hash, language, ["requirements.txt"])
         hash = insert_default_files_if_all_absent(hash, language, ["runtime.txt"])
-        hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       elsif language == :php
         hash = insert_default_files_if_all_absent(hash, language, ["composer.json", "composer.lock"])
-        hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       elsif language == :perl
         hash = insert_default_files_if_all_absent(hash, language, ["app.psgi"])
         hash = insert_default_files_if_all_absent(hash, language, ["cpanfile"])
-        hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       end
+      # We always need a Procfile
+      hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       hash
     end
 
