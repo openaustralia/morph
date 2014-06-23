@@ -112,8 +112,7 @@ class Run < ActiveRecord::Base
       return
     end
 
-    # Only try using buildpacks with Ruby, Python, or PHP for the time being
-    if owner.buildpacks && (language == :ruby || language == :python || language == :php)
+    if owner.buildpacks
       status_code = Morph::ContainerCompiler.compile_and_run_with_buildpacks(self) do |on|
         on.log {|s,c| yield s,c}
         on.ip_address do |ip|

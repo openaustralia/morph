@@ -200,6 +200,9 @@ module Morph
       elsif language == :php
         hash = insert_default_files_if_all_absent(hash, language, ["composer.json", "composer.lock"])
         hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
+      elsif language == :perl
+        hash = insert_default_files_if_all_absent(hash, language, ["app.psgi"])
+        hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       end
       hash
     end
@@ -220,7 +223,7 @@ module Morph
     end
 
     def self.all_config_hash(directory)
-      paths = all_hash(directory).keys & ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock"]
+      paths = all_hash(directory).keys & ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
       all_hash(directory).select{|path,content| paths.include?(path)}
     end
 
