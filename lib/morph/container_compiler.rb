@@ -192,30 +192,30 @@ module Morph
       hash = all_config_hash(directory)
       language = Morph::Language.language(directory)
       if language == :ruby
-        # Do some special Ruby magic
-        if hash["Gemfile"].nil? && hash["Gemfile.lock"].nil?
-          hash["Gemfile"] = File.read("default_files/ruby/Gemfile")
-          hash["Gemfile.lock"] = File.read("default_files/ruby/Gemfile.lock")
-        end
-        if hash["Procfile"].nil?
-          hash["Procfile"] = File.read("default_files/ruby/Procfile")
-        end
+        hash = insert_default_files_if_all_absent(hash, language, ["Gemfile", "Gemfile.lock"])
+        hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       elsif language == :python
-        if hash["requirements.txt"].nil?
-          hash["requirements.txt"] = File.read("default_files/python/requirements.txt")
-        end
-        if hash["runtime.txt"].nil?
-          hash["runtime.txt"] = File.read("default_files/python/runtime.txt")
-        end
+        hash = insert_default_files_if_all_absent(hash, language, ["requirements.txt"])
+        hash = insert_default_files_if_all_absent(hash, language, ["runtime.txt"])
       elsif language == :php
-        if hash["composer.json"].nil? && hash["composer.lock"].nil?
-          hash["composer.json"] = File.read("default_files/php/composer.json")
-          hash["composer.lock"] = File.read("default_files/php/composer.lock")
-        end
-        if hash["Procfile"].nil?
-          hash["Procfile"] = File.read("default_files/php/Procfile")
+        hash = insert_default_files_if_all_absent(hash, language, ["composer.json", "composer.lock"])
+        hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
+      end
+      hash
+    end
+
+    # If all the files are absent insert them
+    def self.insert_default_files_if_all_absent(hash, language, files)
+      if files.all?{|file| hash[file].nil?}
+        files.each do |file|
+          hash = insert_default_file(hash, language, file)
         end
       end
+      hash
+    end
+
+    def self.insert_default_file(hash, language, file)
+      hash[file] = File.read("default_files/#{language}/#{file}")
       hash
     end
 
