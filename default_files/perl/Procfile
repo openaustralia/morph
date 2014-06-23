@@ -1,1 +1,1 @@
-scraper: perl scraper.pl
+scraper: perl -Mlib=/app/local/lib/perl5 scraper.pl
