@@ -202,6 +202,7 @@ module Morph
         hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       elsif language == :perl
         hash = insert_default_files_if_all_absent(hash, language, ["app.psgi"])
+        hash = insert_default_files_if_all_absent(hash, language, ["cpanfile"])
         hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       end
       hash
