@@ -207,6 +207,10 @@ module Morph
         if hash["runtime.txt"].nil?
           hash["runtime.txt"] = File.read("default_files/python/runtime.txt")
         end
+      elsif language == :php
+        if hash["composer.json"].nil?
+          hash["composer.json"] = File.read("default_files/php/composer.json")
+        end
       end
       hash
     end
