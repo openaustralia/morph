@@ -197,6 +197,7 @@ module Morph
       elsif language == :python
         hash = insert_default_files_if_all_absent(hash, language, ["requirements.txt"])
         hash = insert_default_files_if_all_absent(hash, language, ["runtime.txt"])
+        hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
       elsif language == :php
         hash = insert_default_files_if_all_absent(hash, language, ["composer.json", "composer.lock"])
         hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
