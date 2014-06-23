@@ -211,6 +211,9 @@ module Morph
         if hash["composer.json"].nil?
           hash["composer.json"] = File.read("default_files/php/composer.json")
         end
+        if hash["Procfile"].nil?
+          hash["Procfile"] = File.read("default_files/php/Procfile")
+        end
       end
       hash
     end
