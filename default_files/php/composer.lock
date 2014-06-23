@@ -1,0 +1,42 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "1b01646b12a298ab5222bc12a7d4b7bf",
+    "packages": [
+        {
+            "name": "openaustralia/scraperwiki",
+            "version": "dev-morph_defaults",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/openaustralia/scraperwiki-php.git",
+                "reference": "e996fe0253bb50330690f5d2bafb66f094dbacb8"
+            },
+            "require": {
+                "ext-pdo_sqlite": "*"
+            },
+            "type": "library",
+            "time": "2014-06-23 01:47:45"
+        }
+    ],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "openaustralia/scraperwiki": 20
+    },
+    "platform": {
+        "ext-sqlite3": "*",
+        "ext-pdo_sqlite": "*",
+        "ext-gd": "*"
+    },
+    "platform-dev": [
+
+    ]
+}
