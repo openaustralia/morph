@@ -14,4 +14,7 @@ class DocumentationController < ApplicationController
 
   def what_is_new
   end
+
+  def buildpacks
+  end
 end

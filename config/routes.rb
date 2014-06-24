@@ -45,6 +45,7 @@ Morph::Application.routes.draw do
     collection do
       get "api"
       get "what_is_new"
+      get 'buildpacks'
       get "examples/australian_members_of_parliament"
     end
   end
