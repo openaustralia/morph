@@ -1,2 +1,6 @@
-:markdown
-  #{render partial: "what_is_new.md"}
+.row
+  .col-sm-10
+    :markdown
+      #{render partial: "what_is_new.md"}
+  .col-sm-2
+    = link_to "Improve this page", "https://github.com/openaustralia/morph/blob/master/app/views/documentation/_what_is_new.md", class: "btn btn-default"
