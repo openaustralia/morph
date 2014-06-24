@@ -11,24 +11,49 @@ is specific to each language. For the details of your language see below
 
 ## Ruby
 
-References
+### Installing gems
+To install specific gems add a `Gemfile` to your repository. For instance to install the `mechanize` and `sqlite3` gem.
 
+```
+source 'https://rubygems.org'
+
+gem "mechanize"
+gem "sqlite3"
+```
+
+Then run `bundle update` which will work out which specific versions of each gem will be installed and it writes the result of that to `Gemfile.lock`
+
+Make sure that you add *both* `Gemfile` and `Gemfile.lock` to your repository.
+
+### Selecting Ruby version
+
+You can also use the `Gemfile` to control which version of Ruby is run. For instance to ensure that your scraper is run with Ruby 1.9.3 add this to your `Gemfile`
+
+```
+ruby '1.9.3'
+```
+
+For the full list of support ruby versions see [the Heroku documentation for its Ruby support](https://devcenter.heroku.com/articles/ruby-support#ruby-versions).
+
+### No Gemfile
+
+When there is no `Gemfile` and `Gemfile.lock` in the scraper repository, a default version of those files is installed which is as close as possible to the ScraperWiki environment as it was in January 2014. This is done to make migration from ScraperWiki as easy as possible.
+
+### References
 * [Heroku Ruby Support](https://devcenter.heroku.com/articles/ruby-support)
+* [Bundler](http://bundler.io/)
 
 ## PHP
 
-References
-
+### References
 * [Heroku PHP Support](https://devcenter.heroku.com/articles/php-support)
 
 ## Perl
 
-References
-
+### References
 * [Third-party Heroku Perl Buildpack](https://github.com/miyagawa/heroku-buildpack-perl)
 
 ## Python
 
-References
-
+### References
 * [Heroku Python Support](https://devcenter.heroku.com/articles/python-support)
