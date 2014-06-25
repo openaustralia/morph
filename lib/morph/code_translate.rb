@@ -27,7 +27,7 @@ module Morph
       def self.add_require(code)
         if code =~ /require ['"]scraperwiki.php['"]/
           code
-        else      
+        else
           code.sub(/<\?php/, "<?php\nrequire 'scraperwiki.php';")
         end
       end
@@ -43,7 +43,7 @@ module Morph
       def self.translate(code)
         code
       end
-    end    
+    end
 
     module Ruby
       def self.translate(code)
