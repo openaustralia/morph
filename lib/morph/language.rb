@@ -11,12 +11,19 @@ module Morph
       @language = language
     end
 
-    def self.languages_supported
-      [:ruby, :php, :python, :perl]
+    # Find the language of the code in the given directory
+    def self.language(repo_path)
+      languages_supported.find do |language|
+        File.exists?(File.join(repo_path, language_to_scraper_filename(language)))
+      end
     end
 
     def self.languages_supported2
       languages_supported.map{|l| Language.new(l)}
+    end
+
+    def self.main_scraper_filename(repo_path)
+      language_to_scraper_filename(language(repo_path))
     end
 
     def human
@@ -49,6 +56,12 @@ module Morph
 
     def default_scraper
       Language.default_scraper(@language)
+    end
+
+    private
+
+    def self.languages_supported
+      [:ruby, :php, :python, :perl]
     end
 
     def self.human(language)
@@ -98,17 +111,6 @@ module Morph
 
     def self.language_to_scraper_filename(language)
       "scraper.#{language_to_file_extension(language)}" if language
-    end
-
-    # Find the language of the code in the given directory
-    def self.language(repo_path)
-      languages_supported.find do |language|
-        File.exists?(File.join(repo_path, language_to_scraper_filename(language)))
-      end
-    end
-
-    def self.main_scraper_filename(repo_path)
-      language_to_scraper_filename(language(repo_path))
     end
 
     def self.scraper_command(language)
