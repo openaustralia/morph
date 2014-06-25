@@ -10,6 +10,10 @@ module Morph
       t
     end
 
+    def self.image_path(language)
+      "languages/#{language}.png"
+    end
+
     # Defines our naming convention for the scraper of each language
     def self.language_to_file_extension(language)
       case language

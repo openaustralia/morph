@@ -5,7 +5,15 @@
     = f.inputs do
       .row
         .col-sm-6
-          = f.input :original_language, collection: Morph::Language.languages_supported.map{|l| [Morph::Language.human(l), l]}, label: "Language", include_blank: false, hint: "The language you would like to write your scraper in. You can change this later."
+          .select.input.optional.form-group#scraper_original_language_input
+            %label.control-label(for="scraper_original_language")
+              Language
+            %span.form-wrapper
+              %select.form-control#scraper_original_language(name="scraper[original_language]")
+                - Morph::Language.languages_supported.each do |l|
+                  %option{value: l, data:{content: "#{image_tag(Morph::Language.image_path(l), size: '20x20')} #{Morph::Language.human(l)}"}} #{Morph::Language.human(l)}
+              %span.help-block
+                The language you would like to write your scraper in. You can change this later.
       .row
         .col-sm-2
           = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.id]}, include_blank: false
