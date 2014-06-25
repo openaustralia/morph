@@ -1,11 +1,7 @@
 module Morph
   class ContainerCompiler
     def self.docker_image(language)
-      "openaustralia/morph-#{language}"
-    end
-
-    def self.docker_image2(language)
-      docker_image(language.key)
+      "openaustralia/morph-#{language.key}"
     end
 
     def self.docker_container_name(run)
@@ -20,7 +16,7 @@ module Morph
       status_code = Morph::DockerRunner.run(
         command: command,
         user: "scraper",
-        image_name: docker_image2(run.language),
+        image_name: docker_image(run.language),
         container_name: docker_container_name(run),
         repo_path: run.repo_path,
         data_path: run.data_path,
