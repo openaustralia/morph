@@ -13,6 +13,16 @@ module Morph
 
     FILE_EXTENSIONS = {ruby: "rb", php: "php", python: "py", perl: "pl"}
 
+    BINARY_NAMES = {
+      # Run a special script of ours before anything else which switches off
+      # buffering on stdout and stderr
+      ruby: "ruby -r/usr/local/lib/prerun.rb",
+      php: "php",
+      # -u turns off buffering for stdout and stderr
+      python: "python -u",
+      perl: "perl"
+    }
+
     attr_reader :key
 
     def initialize(key)
@@ -49,7 +59,7 @@ module Morph
     end
 
     def scraper_command
-      Language.scraper_command(@key)
+      "#{language.binary_name} /repo/#{language.scraper_filename}"
     end
 
     def supported?
@@ -60,31 +70,14 @@ module Morph
       Language.default_scraper(@key)
     end
 
-    private
-
-    # Name of the binary for running scripts of a particular language
-    def self.binary_name(language)
-      case language
-      when :ruby
-        # Run a special script of ours before anything else which switches off
-        # buffering on stdout and stderr
-        "ruby -r/usr/local/lib/prerun.rb"
-      when :php
-        "php"
-      when :python
-        # -u turns off buffering for stdout and stderr
-        "python -u"
-      when :perl
-        "perl"
-      end
+    def binary_name
+      BINARY_NAMES[key]
     end
+
+    private
 
     def self.language_to_scraper_filename(language)
       "scraper.#{FILE_EXTENSIONS[language]}" if language
-    end
-
-    def self.scraper_command(language)
-      "#{binary_name(language)} /repo/#{language_to_scraper_filename(language)}"
     end
 
     def self.default_scraper(language)
