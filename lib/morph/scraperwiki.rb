@@ -39,7 +39,7 @@ module Morph
     end
 
     def view?
-      language2.key == :html
+      language.key == :html
     end
 
     def private_scraper?
@@ -58,7 +58,7 @@ module Morph
       info["description"]
     end
 
-    def language2
+    def language
       if exists? && info && info.has_key?("language")
         Morph::Language.new(info["language"].to_sym)
       else

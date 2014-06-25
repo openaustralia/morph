@@ -30,13 +30,13 @@ module Morph
     end
 
     # Find the language of the code in the given directory
-    def self.language2(repo_path)
-      languages_supported2.find do |language|
+    def self.language(repo_path)
+      languages_supported.find do |language|
         File.exists?(File.join(repo_path, language.scraper_filename))
       end
     end
 
-    def self.languages_supported2
+    def self.languages_supported
       LANGUAGES_SUPPORTED.map{|l| Language.new(l)}
     end
 

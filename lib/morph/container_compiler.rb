@@ -16,11 +16,11 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      command = Metric.command(run.language2.scraper_command, Run.time_output_filename)
+      command = Metric.command(run.language.scraper_command, Run.time_output_filename)
       status_code = Morph::DockerRunner.run(
         command: command,
         user: "scraper",
-        image_name: docker_image2(run.language2),
+        image_name: docker_image2(run.language),
         container_name: docker_container_name(run),
         repo_path: run.repo_path,
         data_path: run.data_path,
@@ -194,7 +194,7 @@ module Morph
     # if some things are not available
     def self.all_config_hash_with_defaults(directory)
       hash = all_config_hash(directory)
-      language = Morph::Language.language2(directory).key
+      language = Morph::Language.language(directory).key
       if language == :ruby
         hash = insert_default_files_if_all_absent(hash, language, ["Gemfile", "Gemfile.lock"])
       elsif language == :python

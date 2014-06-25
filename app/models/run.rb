@@ -18,8 +18,8 @@ class Run < ActiveRecord::Base
     utime + stime
   end
 
-  def language2
-    Morph::Language.language2(repo_path)
+  def language
+    Morph::Language.language(repo_path)
   end
 
   def finished_at=(time)
@@ -102,8 +102,8 @@ class Run < ActiveRecord::Base
     FileUtils.mkdir_p data_path
     FileUtils.chmod 0777, data_path
 
-    unless language2.supported?
-      supported_scraper_files = Morph::Language.languages_supported2.map {|l| l.scraper_filename}
+    unless language.supported?
+      supported_scraper_files = Morph::Language.languages_supported.map {|l| l.scraper_filename}
       yield "stderr", "Can't find scraper code. Expected to find a file called " +
          supported_scraper_files.to_sentence(last_word_connector: ", or ") +
          " in the root directory"

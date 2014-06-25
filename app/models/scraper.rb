@@ -57,7 +57,7 @@ class Scraper < ActiveRecord::Base
     end
   end
 
-  def original_language2
+  def original_language
     Morph::Language.new(original_language.to_sym)
   end
 
@@ -199,12 +199,12 @@ class Scraper < ActiveRecord::Base
     github_url + "/blob/master/" + file
   end
 
-  def language2
-    Morph::Language.language2(repo_path)
+  def language
+    Morph::Language.language(repo_path)
   end
 
   def main_scraper_filename
-    language2.scraper_filename
+    language.scraper_filename
   end
 
   def github_url_main_scraper_file
@@ -347,7 +347,7 @@ class Scraper < ActiveRecord::Base
     self.update_attributes(description: scraperwiki.title)
 
     files = {
-      scraperwiki.language2.scraper_filename => scraperwiki.code,
+      scraperwiki.language.scraper_filename => scraperwiki.code,
       ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
     }
     files["README.textile"] = scraperwiki.description unless scraperwiki.description.blank?
@@ -355,7 +355,7 @@ class Scraper < ActiveRecord::Base
 
     # Add another commit (but only if necessary) to translate the code so it runs here
     unless scraperwiki.translated_code == scraperwiki.code
-      add_commit_to_master_on_github(forked_by, {scraperwiki.language2.scraper_filename => scraperwiki.translated_code},
+      add_commit_to_master_on_github(forked_by, {scraperwiki.language.scraper_filename => scraperwiki.translated_code},
         "Automatic update to make ScraperWiki scraper work on Morph")
     end
 
