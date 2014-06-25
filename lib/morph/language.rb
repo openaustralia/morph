@@ -1,5 +1,12 @@
 module Morph
   class Language
+    WEBSITES = {
+      ruby: "https://www.ruby-lang.org/en/",
+      php: "http://www.php.net/",
+      python: "https://www.python.org/",
+      perl: "http://www.perl.org/"
+    }
+
     def self.languages_supported
       [:ruby, :php, :python, :perl]
     end
@@ -12,6 +19,10 @@ module Morph
 
     def self.image_path(language)
       "languages/#{language}.png"
+    end
+
+    def self.website(language)
+      WEBSITES[language]
     end
 
     # Defines our naming convention for the scraper of each language
