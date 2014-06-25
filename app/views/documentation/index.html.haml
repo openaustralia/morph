@@ -2,36 +2,43 @@
 
 .row
   .col-sm-10
+    %h1 A joyful birth of some documentation!
+    %ul
+      %li= link_to "What languages can scrapers be written in?", "#languages"
+      %li= link_to "In what format do I write out the data I've scraped?", "#format"
+      %li= link_to "What version of the language and what libraries do I have access to?", "#libraries"
+      %li= link_to "What if I want to install a library that isn't currently installed?", "#install"
+      %li= link_to "How do I run a scraper on my own machine?", "#run_locally"
+      %li= link_to "What limits are there on numbers of scrapers, usage, etc.?", "#limits"
+      %li= link_to "Your responsibility", "#responsibility"
+
+    %h3.section#languages What languages can scrapers be written in?
     :markdown
-      # A joyful birth of some documentation!
-
-      * [What languages can scrapers be written in?](#languages)
-      * [In what format do I write out the data I've scraped?](#format)
-      * [What version of the language and what libraries do I have access to?](#libraries)
-      * [What if I want to install a library that isn't currently installed?](#install)
-      * [How do I run a scraper on my own machine?](#run_locally)
-      * [What limits are there on numbers of scrapers, usage, etc.?](#limits)
-      * [Your responsibility](#responsibility)
-
-      <h3 id="languages" class="section">What languages can scrapers be written in?</h3>
       #{render "documentation/faq/languages.md"}
 
-      <h3 id="format" class="section">In what format do I write out the data I've scraped?</h3>
+    %h3.section#format In what format do I write out the data I've scraped?
+    :markdown
       #{render "documentation/faq/format.md"}
 
-      <h3 id="libraries" class="section">What version of the language and what libraries do I have access to?</h3>
+    %h3.section#libraries What version of the language and what libraries do I have access to?
+    :markdown
       #{render "documentation/faq/libraries.md"}
 
-      <h3 id="install" class="section">What if I want to install a library that isn't currently installed?</h3>
+    %h3.section#install What if I want to install a library that isn't currently installed?
+    :markdown
       #{render "documentation/faq/install.md"}
 
-      <h3 id="run_locally" class="section">How do I run a scraper on my own machine?</h3>
+    %h3.section#run_locally How do I run a scraper on my own machine?
+    :markdown
       #{render "documentation/faq/run_locally.md"}
 
-      <h3 id="limits" class="section">What limits are there on numbers of scrapers, usage, etc.?</h3>
+    %h3.section#limits What limits are there on numbers of scrapers, usage, etc.?
+    :markdown
       #{render "documentation/faq/limits.md"}
 
-      <h3 id="responsibility" class="section">Your responsibility</h3>
+    %h3.section#responsibility Your responsibility
+    :markdown
       #{render "documentation/faq/responsibility.md"}
+
   .col-sm-2
     = link_to "Improve this page", "https://github.com/openaustralia/morph/blob/master/app/views/documentation/_index.md", class: "btn btn-default"
