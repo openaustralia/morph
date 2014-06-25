@@ -77,5 +77,9 @@ module Morph
     def binary_name
       BINARY_NAMES[key]
     end
+
+    def docker_image
+      "openaustralia/morph-#{key}"
+    end
   end
 end
