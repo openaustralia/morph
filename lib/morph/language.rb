@@ -7,8 +7,32 @@ module Morph
       perl: "http://www.perl.org/"
     }
 
+    def initialize(language)
+      @language = language
+    end
+
     def self.languages_supported
       [:ruby, :php, :python, :perl]
+    end
+
+    def self.languages_supported2
+      languages_supported.map{|l| Language.new(l)}
+    end
+
+    def human
+      Language.human(@language)
+    end
+
+    def website
+      Language.website(@language)
+    end
+
+    def image_path
+      Language.image_path(@language)
+    end
+
+    def scraper_filename
+      Language.language_to_scraper_filename(@language)
     end
 
     def self.human(language)

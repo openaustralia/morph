@@ -1,13 +1,13 @@
 %p
   Scrapers can be written in
-  #{Morph::Language.languages_supported.map{|l| link_to Morph::Language.human(l), Morph::Language.website(l)}.to_sentence(last_word_connector: " or ").html_safe}.
+  #{Morph::Language.languages_supported2.map{|l| link_to l.human, l.website}.to_sentence(last_word_connector: " or ").html_safe}.
   Simply follow the naming convention:
 
 %ul
-  - Morph::Language.languages_supported.each do |l|
+  - Morph::Language.languages_supported2.each do |l|
     %li
-      = image_tag(Morph::Language.image_path(l), size: "20x20")
-      = Morph::Language.human(l)
+      = image_tag(l.image_path, size: "20x20")
+      = l.human
       \-
       %code
-        = Morph::Language.language_to_scraper_filename(l)
+        = l.scraper_filename
