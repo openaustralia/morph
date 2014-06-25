@@ -31,7 +31,7 @@ module Morph
     end
 
     def translated_code
-      Morph::CodeTranslate.translate(language, code)
+      Morph::CodeTranslate.translate(language.key, code)
     end
 
     def exists?
