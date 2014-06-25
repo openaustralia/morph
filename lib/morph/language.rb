@@ -35,6 +35,10 @@ module Morph
       Language.language_to_scraper_filename(@language)
     end
 
+    def to_s
+      @language
+    end
+
     def self.human(language)
       t = {ruby: "Ruby", php: "PHP", python: "Python", perl: "Perl" }[language]
       raise "Unsupported language" if t.nil?

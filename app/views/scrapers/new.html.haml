@@ -10,8 +10,8 @@
               Language
             %span.form-wrapper
               %select.form-control#scraper_original_language(name="scraper[original_language]")
-                - Morph::Language.languages_supported.each do |l|
-                  %option{value: l, data:{content: "#{image_tag(Morph::Language.image_path(l), size: '20x20')} #{Morph::Language.human(l)}"}} #{Morph::Language.human(l)}
+                - Morph::Language.languages_supported2.each do |l|
+                  %option{value: l.to_s, data:{content: "#{image_tag(l.image_path, size: '20x20')} #{l.human}"}} #{l.human}
               %span.help-block
                 The language you would like to write your scraper in. You can change this later.
       .row
