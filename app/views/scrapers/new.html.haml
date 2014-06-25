@@ -5,11 +5,11 @@
     = f.inputs do
       .row
         .col-sm-6
-          .select.input.optional.form-group#scraper_original_language_input
-            %label.control-label(for="scraper_original_language")
+          .select.input.optional.form-group#scraper_original_language_key_input
+            %label.control-label(for="scraper_original_language_key")
               Language
             %span.form-wrapper
-              %select.form-control#scraper_original_language(name="scraper[original_language]")
+              %select.form-control#scraper_original_language_key(name="scraper[original_language_key]")
                 - Morph::Language.languages_supported.each do |l|
                   %option{value: l.key, data:{content: "#{image_tag(l.image_path, size: '20x20')} #{l.human}"}} #{l.human}
               %span.help-block

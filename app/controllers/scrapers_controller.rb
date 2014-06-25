@@ -21,7 +21,7 @@ class ScrapersController < ApplicationController
   end
 
   def create
-    @scraper = Scraper.new(original_language: params[:scraper][:original_language],
+    @scraper = Scraper.new(original_language_key: params[:scraper][:original_language_key],
       owner_id: params[:scraper][:owner_id], name: params[:scraper][:name], description: params[:scraper][:description])
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
     authorize! :create, @scraper

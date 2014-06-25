@@ -57,8 +57,8 @@ class Scraper < ActiveRecord::Base
     end
   end
 
-  def original_language2
-    Morph::Language.new(original_language.to_sym)
+  def original_language
+    Morph::Language.new(original_language_key.to_sym)
   end
 
   def update_contributors
