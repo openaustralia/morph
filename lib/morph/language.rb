@@ -1,5 +1,7 @@
 module Morph
   class Language
+    LANGUAGES_SUPPORTED = [:ruby, :php, :python, :perl]
+
     WEBSITES = {
       ruby: "https://www.ruby-lang.org/en/",
       php: "http://www.php.net/",
@@ -7,13 +9,15 @@ module Morph
       perl: "http://www.perl.org/"
     }
 
-    def initialize(language)
-      @language = language
+    attr_reader :key
+
+    def initialize(key)
+      @key = key
     end
 
     # Find the language of the code in the given directory
     def self.language(repo_path)
-      languages_supported.find do |language|
+      LANGUAGES_SUPPORTED.find do |language|
         File.exists?(File.join(repo_path, language_to_scraper_filename(language)))
       end
     end
@@ -23,7 +27,7 @@ module Morph
     end
 
     def self.languages_supported2
-      languages_supported.map{|l| Language.new(l)}
+      LANGUAGES_SUPPORTED.map{|l| Language.new(l)}
     end
 
     def self.main_scraper_filename(repo_path)
@@ -31,42 +35,34 @@ module Morph
     end
 
     def human
-      Language.human(@language)
+      Language.human(@key)
     end
 
     def website
-      Language.website(@language)
+      Language.website(@key)
     end
 
     def image_path
-      Language.image_path(@language)
+      Language.image_path(@key)
     end
 
     def scraper_filename
-      Language.language_to_scraper_filename(@language)
-    end
-
-    def key
-      @language
+      Language.language_to_scraper_filename(@key)
     end
 
     def scraper_command
-      Language.scraper_command(@language)
+      Language.scraper_command(@key)
     end
 
     def supported?
-      Language.language_supported?(@language)
+      Language.language_supported?(@key)
     end
 
     def default_scraper
-      Language.default_scraper(@language)
+      Language.default_scraper(@key)
     end
 
     private
-
-    def self.languages_supported
-      [:ruby, :php, :python, :perl]
-    end
 
     def self.human(language)
       t = {ruby: "Ruby", php: "PHP", python: "Python", perl: "Perl" }[language]
@@ -122,7 +118,7 @@ module Morph
     end
 
     def self.language_supported?(language)
-      languages_supported.include?(language)
+      LANGUAGES_SUPPORTED.include?(language)
     end
 
     def self.default_scraper(language)
