@@ -23,6 +23,13 @@ module Morph
       perl: "perl"
     }
 
+    DEFAULT_FILES_TO_INSERT = {
+      ruby: [["Gemfile", "Gemfile.lock"], "Procfile"],
+      python: ["requirements.txt", "runtime.txt", "Procfile"],
+      php: [["composer.json", "composer.lock"], "Procfile"],
+      perl: ["app.psgi", "cpanfile", "Procfile"]
+    }
+
     attr_reader :key
 
     def initialize(key)
@@ -38,6 +45,10 @@ module Morph
 
     def self.languages_supported
       LANGUAGES_SUPPORTED.map{|l| Language.new(l)}
+    end
+
+    def default_files_to_insert
+      DEFAULT_FILES_TO_INSERT[key]
     end
 
     def human

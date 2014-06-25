@@ -186,25 +186,19 @@ module Morph
     # if some things are not available
     def self.all_config_hash_with_defaults(directory)
       hash = all_config_hash(directory)
-      language = Morph::Language.language(directory).key
-      if language == :ruby
-        hash = insert_default_files_if_all_absent(hash, language, ["Gemfile", "Gemfile.lock"])
-      elsif language == :python
-        hash = insert_default_files_if_all_absent(hash, language, ["requirements.txt"])
-        hash = insert_default_files_if_all_absent(hash, language, ["runtime.txt"])
-      elsif language == :php
-        hash = insert_default_files_if_all_absent(hash, language, ["composer.json", "composer.lock"])
-      elsif language == :perl
-        hash = insert_default_files_if_all_absent(hash, language, ["app.psgi"])
-        hash = insert_default_files_if_all_absent(hash, language, ["cpanfile"])
+      language = Morph::Language.language(directory)
+      insert_default_files_if_all_absent2(hash, language, language.default_files_to_insert)
+    end
+
+    def self.insert_default_files_if_all_absent2(hash, language, files_array)
+      files_array.each do |files|
+        hash = insert_default_files_if_all_absent(hash, language, files)
       end
-      # We always need a Procfile
-      hash = insert_default_files_if_all_absent(hash, language, ["Procfile"])
-      hash
     end
 
     # If all the files are absent insert them
     def self.insert_default_files_if_all_absent(hash, language, files)
+      files = [files] unless files.kind_of?(Array)
       if files.all?{|file| hash[file].nil?}
         files.each do |file|
           hash = insert_default_file(hash, language, file)
@@ -214,7 +208,7 @@ module Morph
     end
 
     def self.insert_default_file(hash, language, file)
-      hash[file] = File.read("default_files/#{language}/#{file}")
+      hash[file] = File.read("default_files/#{language.key}/#{file}")
       hash
     end
 
