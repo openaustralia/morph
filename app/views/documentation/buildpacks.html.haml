@@ -8,18 +8,21 @@
 :markdown
   #{render "buildpacks.md"}
 
-  ## Ruby
-
-  #{render "buildpacks_ruby.md"}
-
-  ## PHP
-
-  #{render "buildpacks_php.md"}
-
-  ## Perl
-
-  #{render "buildpacks_perl.md"}
-
-  ## Python
-
-  #{render "buildpacks_python.md"}
+%ul.nav.nav-tabs
+  %li.active= link_to "Ruby", "#ruby", data: {toggle: "tab"}
+  %li= link_to "PHP", "#php", data: {toggle: "tab"}
+  %li= link_to "Perl", "#perl", data: {toggle: "tab"}
+  %li= link_to "Python", "#python", data: {toggle: "tab"}
+.tab-content
+  .tab-pane.fade.in.active#ruby
+    :markdown
+      #{render "buildpacks_ruby.md"}
+  .tab-pane.fade#php
+    :markdown
+      #{render "buildpacks_php.md"}
+  .tab-pane.fade#perl
+    :markdown
+      #{render "buildpacks_perl.md"}
+  .tab-pane.fade#python
+    :markdown
+      #{render "buildpacks_python.md"}
