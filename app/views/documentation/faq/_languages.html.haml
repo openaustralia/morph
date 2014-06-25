@@ -1,0 +1,30 @@
+%p
+  Scrapers can be written in
+  #{link_to "Ruby", "https://www.ruby-lang.org/en/"},
+  #{link_to "PHP", "http://www.php.net/"},
+  #{link_to "Python", "https://www.python.org/"},
+  or
+  #{link_to "Perl", "http://www.perl.org/"}.
+  Simply follow the naming convention:
+
+%ul
+  %li
+    = image_tag("languages/ruby.png", size: "20x20")
+    Ruby -
+    %code
+      scraper.rb
+  %li
+    = image_tag("languages/php.png", size: "20x20")
+    PHP -
+    %code
+      scraper.php
+  %li
+    = image_tag("languages/python.png", size: "20x20")
+    Python -
+    %code
+      scraper.py
+  %li
+    = image_tag("languages/perl.png", size: "20x20")
+    Perl -
+    %code
+      scraper.pl
