@@ -47,7 +47,7 @@ module Morph
     end
 
     def image_path
-      Language.image_path(@key)
+      "languages/#{key}.png"
     end
 
     def scraper_filename
@@ -67,10 +67,6 @@ module Morph
     end
 
     private
-
-    def self.image_path(language)
-      "languages/#{language}.png"
-    end
 
     def self.website(language)
       WEBSITES[language]
