@@ -16,4 +16,5 @@
  *= require scrapers
  *= require static
  *= require users
+ *= require bootstrap-select
  */

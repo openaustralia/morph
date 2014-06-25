@@ -17,6 +17,12 @@ GIT
       sass-rails
 
 GIT
+  remote: https://github.com/Slashek/bootstrap-select-rails.git
+  revision: 88cb015dc92c3f932310afaaaa44b0ea2dcba58d
+  specs:
+    bootstrap-select-rails (1.5.4)
+
+GIT
   remote: https://github.com/seyhunak/twitter-bootstrap-rails.git
   revision: 1d93c5a77049b3d21d17c847ad0531d7714fa229
   branch: bootstrap3
@@ -415,6 +421,7 @@ DEPENDENCIES
   archive-tar-minitar
   better_errors
   binding_of_caller
+  bootstrap-select-rails!
   cancan
   capistrano-rails
   capistrano-rvm

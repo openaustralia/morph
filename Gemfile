@@ -14,6 +14,7 @@ gem 'mysql2'
 
 gem "haml-rails"
 gem "twitter-bootstrap-rails", git: "https://github.com/seyhunak/twitter-bootstrap-rails.git", branch: "bootstrap3"
+gem "bootstrap-select-rails", git: "https://github.com/Slashek/bootstrap-select-rails.git"
 gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
