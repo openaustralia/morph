@@ -53,7 +53,7 @@ module Morph
     end
 
     def supported?
-      Language.language_supported?(@key)
+      LANGUAGES_SUPPORTED.include?(key)
     end
 
     def default_scraper
@@ -85,10 +85,6 @@ module Morph
 
     def self.scraper_command(language)
       "#{binary_name(language)} /repo/#{language_to_scraper_filename(language)}"
-    end
-
-    def self.language_supported?(language)
-      LANGUAGES_SUPPORTED.include?(language)
     end
 
     def self.default_scraper(language)
