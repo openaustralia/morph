@@ -22,6 +22,10 @@ class Run < ActiveRecord::Base
     Morph::Language.language(repo_path)
   end
 
+  def language2
+    Morph::Language.new(language)
+  end
+
   def finished_at=(time)
     write_attribute(:finished_at, time)
     update_wall_time
@@ -102,12 +106,11 @@ class Run < ActiveRecord::Base
     FileUtils.mkdir_p data_path
     FileUtils.chmod 0777, data_path
 
-    unless Morph::Language.language_supported?(language)
-      supported_scraper_files = Morph::Language.languages_supported.map do |l|
-        Morph::Language.language_to_scraper_filename(l)
-      end.to_sentence(last_word_connector: ", or ")
+    unless language2.supported?
+      supported_scraper_files = Morph::Language.languages_supported2.map {|l| l.scraper_filename}
       yield "stderr", "Can't find scraper code. Expected to find a file called " +
-         supported_scraper_files + " in the root directory"
+         supported_scraper_files.to_sentence(last_word_connector: ", or ") +
+         " in the root directory"
       update_attributes(status_code: 999, finished_at: Time.now)
       return
     end

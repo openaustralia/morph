@@ -57,6 +57,10 @@ class Scraper < ActiveRecord::Base
     end
   end
 
+  def original_language2
+    Morph::Language.new(original_language.to_sym)
+  end
+
   def update_contributors
     # We can't use unauthenticated requests because we will go over our rate limit
     begin
@@ -197,6 +201,10 @@ class Scraper < ActiveRecord::Base
 
   def language
     l = Morph::Language.language(repo_path)
+  end
+
+  def language2
+    Morph::Language.new(language)
   end
 
   def main_scraper_filename
@@ -343,7 +351,7 @@ class Scraper < ActiveRecord::Base
     self.update_attributes(description: scraperwiki.title)
 
     files = {
-      Morph::Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.code,
+      scraperwiki.language2.scraper_filename => scraperwiki.code,
       ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
     }
     files["README.textile"] = scraperwiki.description unless scraperwiki.description.blank?
@@ -351,7 +359,7 @@ class Scraper < ActiveRecord::Base
 
     # Add another commit (but only if necessary) to translate the code so it runs here
     unless scraperwiki.translated_code == scraperwiki.code
-      add_commit_to_master_on_github(forked_by, {Morph::Language.language_to_scraper_filename(scraperwiki.language) => scraperwiki.translated_code},
+      add_commit_to_master_on_github(forked_by, {scraperwiki.language2.scraper_filename => scraperwiki.translated_code},
         "Automatic update to make ScraperWiki scraper work on Morph")
     end
 

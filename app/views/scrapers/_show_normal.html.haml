@@ -69,7 +69,7 @@
             %h5 Main scraper
             #{link_to scraper.main_scraper_filename, scraper.github_url_main_scraper_file, target: "_blank"}
             &mdash;
-            written in #{Morph::Language.human(scraper.language)}
+            written in #{scraper.language2.human}
     %p
       .form-group
         %label(for="git_url") git clone URL

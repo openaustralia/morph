@@ -64,6 +64,10 @@ module Morph
       end
     end
 
+    def language2
+      Morph::Language.new(language)
+    end
+
     def self.content(url)
       a = Faraday.get(url)
       a.body if a.success?

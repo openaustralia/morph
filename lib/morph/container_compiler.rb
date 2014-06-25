@@ -12,7 +12,7 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      command = Metric.command(Morph::Language.scraper_command(run.language), Run.time_output_filename)
+      command = Metric.command(run.language2.scraper_command, Run.time_output_filename)
       status_code = Morph::DockerRunner.run(
         command: command,
         user: "scraper",

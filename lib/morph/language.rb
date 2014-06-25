@@ -39,6 +39,18 @@ module Morph
       @language
     end
 
+    def scraper_command
+      Language.scraper_command(@language)
+    end
+
+    def supported?
+      Language.language_supported?(@language)
+    end
+
+    def default_scraper
+      Language.default_scraper(@language)
+    end
+
     def self.human(language)
       t = {ruby: "Ruby", php: "PHP", python: "Python", perl: "Perl" }[language]
       raise "Unsupported language" if t.nil?
