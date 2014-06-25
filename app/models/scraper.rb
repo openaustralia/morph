@@ -57,7 +57,7 @@ class Scraper < ActiveRecord::Base
     end
   end
 
-  def original_language
+  def original_language2
     Morph::Language.new(original_language.to_sym)
   end
 
