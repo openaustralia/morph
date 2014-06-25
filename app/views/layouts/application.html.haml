@@ -28,9 +28,7 @@
         .navbar-header
           %button.navbar-toggle(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1")
             %span.sr-only Toggle navigation
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
+            %span.fa.fa-bars
           = link_to "Morph", root_path, class: "navbar-brand"
         .collapse.navbar-collapse#bs-example-navbar-collapse-1
           %ul.nav.navbar-nav
@@ -72,7 +70,7 @@
     .container
       - if signed_in? && SiteSetting.read_only_mode
         .alert.alert-warning.read-only-mode
-          %i.icon-bell.icon-large
+          %i.fa.fa-bell-o.fa-lg
           The site is currently <strong>read-only</strong> because we're doing some essential maintenance.
           Scrapers can not be created or run. The good news is you can continue to browse the site.
       = bootstrap_flash
@@ -83,17 +81,17 @@
       .container
         %p
           Made with
-          %i.icon-heart.icon-large
+          %i.fa.fa-heart-o.fa-lg
           by the
           = link_to "OpenAustralia Foundation", "https://www.openaustraliafoundation.org.au"
           for you
         %ul.list-unstyled
           %li
-            %i.icon-github-sign
+            %i.fa.fa-github-sign
             = link_to "Source code on GitHub", "https://github.com/openaustralia/morph"
           %li
-            %i.icon-bug
+            %i.fa.fa-bug
             = link_to "Report an issue or suggest a feature", "https://github.com/openaustralia/morph/issues?state=open", target: "_blank"
           %li
-            %i.icon-bug
+            %i.fa.fa-bug
             = link_to "Development priorities on waffle.io", "https://waffle.io/openaustralia/morph", target: "_blank"

@@ -52,12 +52,12 @@
     - if can? :settings, scraper
       #scraper_settings
         = button_link_to settings_scraper_path(scraper) do
-          %i.icon-wrench
+          %i.fa.fa-wrench
           Settings
 
     #scraper_code
       %h4
-        %i.icon-github-sign.icon-large
+        %i.fa.fa-github-square.fa-lg
         Scraper code
       - if scraper.github_url
         %p
@@ -77,7 +77,7 @@
           %input.form-control#git_url{type: "text", value: scraper.git_url_https, disabled: true}
           %span.input-group-btn
             %button.btn.btn-default#copy_to_clipboard_button{type: "button", data: {"clipboard-target" => "git_url"}}
-              %i.icon-copy
+              %i.fa.fa-copy
     :javascript
       $(document).ready(function() {
         var clip = new ZeroClipboard($("#copy_to_clipboard_button"));

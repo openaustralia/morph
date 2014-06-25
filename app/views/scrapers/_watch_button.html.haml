@@ -1,15 +1,15 @@
 .watch-button
   - if current_user.indirectly_watching?(scraper)
     = button_to "#", class: "btn btn-default", disabled: "disabled" do
-      %i.icon-eye-close
+      %i.fa.fa-eye-slash
       Unwatch
   - elsif current_user.watching?(scraper)
     = button_to watch_scraper_path(scraper), class: "btn btn-default has-tooltip", data: {placement: "bottom", title: "Stop receiving alerts for this scraper"} do
-      %i.icon-eye-close
+      %i.fa.fa-eye-slash
       Unwatch
   - else
     = button_to watch_scraper_path(scraper), class: "btn btn-default has-tooltip", data: {placement: "bottom", title: "Receive alerts when this scraper errors"} do
-      %i.icon-eye-open
+      %i.fa.fa-eye
       Watch
   = link_to watchers_scraper_path(scraper) do
     %span.badge= scraper.all_watchers.count
