@@ -194,6 +194,7 @@ module Morph
       files_array.each do |files|
         hash = insert_default_files_if_all_absent(hash, language, files)
       end
+      hash
     end
 
     # If all the files are absent insert them

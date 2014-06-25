@@ -70,7 +70,7 @@ module Morph
     end
 
     def scraper_command
-      "#{language.binary_name} /repo/#{language.scraper_filename}"
+      "#{binary_name} /repo/#{scraper_filename}"
     end
 
     def supported?
