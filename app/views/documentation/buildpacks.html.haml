@@ -11,10 +11,22 @@
   #{render "buildpacks.md"}
 
 %ul.nav.nav-tabs
-  %li.active= link_to "Ruby", "#ruby", data: {toggle: "tab"}
-  %li= link_to "PHP", "#php", data: {toggle: "tab"}
-  %li= link_to "Perl", "#perl", data: {toggle: "tab"}
-  %li= link_to "Python", "#python", data: {toggle: "tab"}
+  %li.active
+    = link_to "#ruby", data: {toggle: "tab"} do
+      = image_tag("languages/ruby.png", size: "30x30")
+      Ruby
+  %li
+    = link_to "#php", data: {toggle: "tab"} do
+      = image_tag("languages/php.png", size: "30x30")
+      PHP
+  %li
+    = link_to "#perl", data: {toggle: "tab"} do
+      = image_tag("languages/perl.png", size: "30x30")
+      Perl
+  %li
+    = link_to "#python", data: {toggle: "tab"} do
+      = image_tag("languages/python.png", size: "30x30")
+      Python
 .tab-content
   .tab-pane.fade.in.active#ruby
     :markdown
