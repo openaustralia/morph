@@ -67,16 +67,6 @@ module Morph
     end
 
     def default_scraper
-      Language.default_scraper(@key)
-    end
-
-    def binary_name
-      BINARY_NAMES[key]
-    end
-
-    private
-
-    def self.default_scraper(key)
       if key == :ruby
         File.read("default_files/ruby/scraper.rb")
       elsif key == :php
@@ -88,6 +78,10 @@ module Morph
       else
         raise "Not yet supported"
       end
+    end
+
+    def binary_name
+      BINARY_NAMES[key]
     end
   end
 end

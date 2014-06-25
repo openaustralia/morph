@@ -1,16 +1,21 @@
 require 'spec_helper'
 
 describe Morph::Language do
+  let(:ruby) { Morph::Language.new(:ruby) }
+  let(:python) { Morph::Language.new(:python)}
+  let(:php) { Morph::Language.new(:php) }
+  let(:perl) { Morph::Language.new(:perl) }
+
   describe "#human" do
-    it { Morph::Language.new(:ruby).human.should == "Ruby" }
-    it { Morph::Language.new(:python).human.should == "Python" }
-    it { Morph::Language.new(:php).human.should == "PHP" }
-    it { Morph::Language.new(:perl).human.should == "Perl" }
+    it { ruby.human.should == "Ruby" }
+    it { python.human.should == "Python" }
+    it { php.human.should == "PHP" }
+    it { perl.human.should == "Perl" }
   end
 
-  describe ".default_scraper" do
+  describe "#default_scraper" do
     it do
-      Morph::Language.default_scraper(:ruby).should == <<-EOF
+      ruby.default_scraper.should == <<-EOF
 # This is a template for a Ruby scraper on Morph (https://morph.io)
 # including some code snippets below that you should find helpful
 
@@ -39,7 +44,7 @@ describe Morph::Language do
     end
 
     it do
-      Morph::Language.default_scraper(:php).should == <<-EOF
+      php.default_scraper.should == <<-EOF
 <?
 // This is a template for a PHP scraper on Morph (https://morph.io)
 // including some code snippets below that you should find helpful
@@ -70,7 +75,7 @@ describe Morph::Language do
     end
 
     it do
-      Morph::Language.default_scraper(:python).should == <<-EOF
+      python.default_scraper.should == <<-EOF
 # This is a template for a Python scraper on Morph (https://morph.io)
 # including some code snippets below that you should find helpful
 
@@ -98,7 +103,7 @@ describe Morph::Language do
     end
 
     it do
-      Morph::Language.default_scraper(:perl).should == <<-EOF
+      perl.default_scraper.should == <<-EOF
 # This is a template for a Perl scraper on Morph (https://morph.io)
 # including some code snippets below that you should find helpful
 
