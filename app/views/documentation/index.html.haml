@@ -3,6 +3,35 @@
 .row
   .col-sm-10
     :markdown
-      #{render "index.md"}
+      # A joyful birth of some documentation!
+
+      * [What languages can scrapers be written in?](#languages)
+      * [In what format do I write out the data I've scraped?](#format)
+      * [What version of the language and what libraries do I have access to?](#libraries)
+      * [What if I want to install a library that isn't currently installed?](#install)
+      * [How do I run a scraper on my own machine?](#run_locally)
+      * [What limits are there on numbers of scrapers, usage, etc.?](#limits)
+      * [Your responsibility](#responsibility)
+
+      <h3 id="languages" class="section">What languages can scrapers be written in?</h3>
+      #{render "documentation/faq/languages.md"}
+
+      <h3 id="format" class="section">In what format do I write out the data I've scraped?</h3>
+      #{render "documentation/faq/format.md"}
+
+      <h3 id="libraries" class="section">What version of the language and what libraries do I have access to?</h3>
+      #{render "documentation/faq/libraries.md"}
+
+      <h3 id="install" class="section">What if I want to install a library that isn't currently installed?</h3>
+      #{render "documentation/faq/install.md"}
+
+      <h3 id="run_locally" class="section">How do I run a scraper on my own machine?</h3>
+      #{render "documentation/faq/run_locally.md"}
+
+      <h3 id="limits" class="section">What limits are there on numbers of scrapers, usage, etc.?</h3>
+      #{render "documentation/faq/limits.md"}
+
+      <h3 id="responsibility" class="section">Your responsibility</h3>
+      #{render "documentation/faq/responsibility.md"}
   .col-sm-2
     = link_to "Improve this page", "https://github.com/openaustralia/morph/blob/master/app/views/documentation/_index.md", class: "btn btn-default"
