@@ -67,14 +67,8 @@ module Morph
     end
 
     def default_scraper
-      if key == :ruby
-        File.read("default_files/ruby/scraper.rb")
-      elsif key == :php
-        File.read("default_files/php/scraper.php")
-      elsif key == :python
-        File.read("default_files/python/scraper.py")
-      elsif key == :perl
-        File.read("default_files/perl/scraper.pl")
+      if supported?
+        File.read("default_files/#{key}/#{scraper_filename}")
       else
         raise "Not yet supported"
       end
