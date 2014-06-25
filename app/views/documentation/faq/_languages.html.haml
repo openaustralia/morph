@@ -3,11 +3,17 @@
   #{Morph::Language.languages_supported2.map{|l| link_to l.human, l.website}.to_sentence(last_word_connector: " or ").html_safe}.
   Simply follow the naming convention:
 
-%ul
-  - Morph::Language.languages_supported2.each do |l|
-    %li
-      = image_tag(l.image_path, size: "20x20")
-      = l.human
-      \-
-      %code
-        = l.scraper_filename
+%table.table
+  %thead
+    %tr
+      %th Language
+      %th What to call the main scraper file
+  %tbody
+    - Morph::Language.languages_supported2.each do |l|
+      %tr
+        %td
+          = image_tag(l.image_path, size: "20x20")
+          = l.human
+        %td
+          %code
+            = l.scraper_filename
