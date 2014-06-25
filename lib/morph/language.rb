@@ -46,7 +46,7 @@ module Morph
       Language.language_to_scraper_filename(@language)
     end
 
-    def to_s
+    def key
       @language
     end
 
