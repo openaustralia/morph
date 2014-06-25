@@ -8,7 +8,7 @@
           = f.input :original_language_key, collection: Morph::Language.languages_supported.map{|l| [l.human, l.key, {"data-content" => "#{image_tag(l.image_path, size: '20x20')} #{l.human}"}]}, include_blank: false, hint: "The language you would like to write your scraper in. You can change this later.", label: "Language"
       .row
         .col-sm-2
-          = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.id]}, include_blank: false
+          = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false
         .col-sm-6
           = f.input :name, prepend: "/", hint: "Name to give the scraper here and on GitHub", placeholder:"city_of_sydney_development_applications"
       = f.input :description, label: "Description (optional)"
