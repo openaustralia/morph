@@ -2,8 +2,10 @@
 
 .alert.alert-info
   %i.fa.fa-flask.fa-3x.pull-left
-  N.B. Buildpacks are currently experimental and not available to everyone. If you would like access
-  to Buildpacks and agree to give us feedback please contact us and we'll enable the feature for you.
+  Buildpacks are currently <strong>experimental</strong> and not available to everyone. If you would like access
+  to Buildpacks and agree to give us feedback please
+  = mail_to "contact@oaf.org.au", "contact us"
+  (letting us know which user or organisation you would like it for) and we'll enable the feature for you.
 
 :markdown
   #{render "buildpacks.md"}
