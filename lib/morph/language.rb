@@ -79,7 +79,7 @@ module Morph
 
     def default_scraper
       if supported?
-        File.read("default_files/#{key}/#{scraper_filename}")
+        default_file(scraper_filename)
       else
         raise "Not yet supported"
       end
@@ -91,6 +91,10 @@ module Morph
 
     def docker_image
       "openaustralia/morph-#{key}"
+    end
+
+    def default_file(file)
+      File.read("default_files/#{key}/#{file}")
     end
   end
 end

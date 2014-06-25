@@ -201,14 +201,9 @@ module Morph
       files = [files] unless files.kind_of?(Array)
       if files.all?{|file| hash[file].nil?}
         files.each do |file|
-          hash = insert_default_file(hash, language, file)
+          hash[file] = language.default_file(file)
         end
       end
-      hash
-    end
-
-    def self.insert_default_file(hash, language, file)
-      hash[file] = File.read("default_files/#{language.key}/#{file}")
       hash
     end
 
