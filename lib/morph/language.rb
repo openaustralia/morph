@@ -11,6 +11,8 @@ module Morph
 
     HUMAN = {ruby: "Ruby", php: "PHP", python: "Python", perl: "Perl" }
 
+    FILE_EXTENSIONS = {ruby: "rb", php: "php", python: "py", perl: "pl"}
+
     attr_reader :key
 
     def initialize(key)
@@ -43,7 +45,7 @@ module Morph
     end
 
     def website
-      Language.website(@key)
+      WEBSITES[key]
     end
 
     def image_path
@@ -68,24 +70,6 @@ module Morph
 
     private
 
-    def self.website(language)
-      WEBSITES[language]
-    end
-
-    # Defines our naming convention for the scraper of each language
-    def self.language_to_file_extension(language)
-      case language
-      when :ruby
-        "rb"
-      when :php
-        "php"
-      when :python
-        "py"
-      when :perl
-        "pl"
-      end
-    end
-
     # Name of the binary for running scripts of a particular language
     def self.binary_name(language)
       case language
@@ -104,7 +88,7 @@ module Morph
     end
 
     def self.language_to_scraper_filename(language)
-      "scraper.#{language_to_file_extension(language)}" if language
+      "scraper.#{FILE_EXTENSIONS[language]}" if language
     end
 
     def self.scraper_command(language)
