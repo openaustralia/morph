@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe Morph::Language do
-  describe ".human" do
-    it { Morph::Language.human(:ruby).should == "Ruby" }
-    it { Morph::Language.human(:python).should == "Python" }
-    it { Morph::Language.human(:php).should == "PHP" }
-    it { Morph::Language.human(:perl).should == "Perl" }
+  describe "#human" do
+    it { Morph::Language.new(:ruby).human.should == "Ruby" }
+    it { Morph::Language.new(:python).human.should == "Python" }
+    it { Morph::Language.new(:php).human.should == "PHP" }
+    it { Morph::Language.new(:perl).human.should == "Perl" }
   end
 
   describe ".default_scraper" do

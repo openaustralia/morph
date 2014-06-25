@@ -9,6 +9,8 @@ module Morph
       perl: "http://www.perl.org/"
     }
 
+    HUMAN = {ruby: "Ruby", php: "PHP", python: "Python", perl: "Perl" }
+
     attr_reader :key
 
     def initialize(key)
@@ -35,7 +37,9 @@ module Morph
     end
 
     def human
-      Language.human(@key)
+      t = HUMAN[key]
+      raise "Unsupported language" if t.nil?
+      t
     end
 
     def website
@@ -63,12 +67,6 @@ module Morph
     end
 
     private
-
-    def self.human(language)
-      t = {ruby: "Ruby", php: "PHP", python: "Python", perl: "Perl" }[language]
-      raise "Unsupported language" if t.nil?
-      t
-    end
 
     def self.image_path(language)
       "languages/#{language}.png"
