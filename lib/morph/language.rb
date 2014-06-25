@@ -55,7 +55,7 @@ module Morph
     end
 
     def scraper_filename
-      Language.language_to_scraper_filename(@key)
+      "scraper.#{FILE_EXTENSIONS[key]}" if key
     end
 
     def scraper_command
@@ -75,10 +75,6 @@ module Morph
     end
 
     private
-
-    def self.language_to_scraper_filename(language)
-      "scraper.#{FILE_EXTENSIONS[language]}" if language
-    end
 
     def self.default_scraper(language)
       if language == :ruby
