@@ -23,7 +23,7 @@ class Run < ActiveRecord::Base
   end
 
   def language2
-    Morph::Language.new(language)
+    Morph::Language.language2(repo_path)
   end
 
   def finished_at=(time)

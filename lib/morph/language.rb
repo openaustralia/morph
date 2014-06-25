@@ -18,12 +18,16 @@ module Morph
       end
     end
 
+    def self.language2(repo_path)
+      Language.new(language)
+    end
+
     def self.languages_supported2
       languages_supported.map{|l| Language.new(l)}
     end
 
     def self.main_scraper_filename(repo_path)
-      language_to_scraper_filename(language(repo_path))
+      language2(repo_path).scraper_filename
     end
 
     def human
