@@ -204,7 +204,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def main_scraper_filename
-    Morph::Language.main_scraper_filename(repo_path)
+    language2.scraper_filename
   end
 
   def github_url_main_scraper_file

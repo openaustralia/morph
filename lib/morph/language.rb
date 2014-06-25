@@ -30,10 +30,6 @@ module Morph
       LANGUAGES_SUPPORTED.map{|l| Language.new(l)}
     end
 
-    def self.main_scraper_filename(repo_path)
-      language2(repo_path).scraper_filename
-    end
-
     def human
       t = HUMAN[key]
       raise "Unsupported language" if t.nil?
