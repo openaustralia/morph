@@ -4,6 +4,10 @@ module Morph
       "openaustralia/morph-#{language}"
     end
 
+    def self.docker_image2(language)
+      docker_image(language.key)
+    end
+
     def self.docker_container_name(run)
       "#{run.owner.to_param}_#{run.name}_#{run.id}"
     end
@@ -16,7 +20,7 @@ module Morph
       status_code = Morph::DockerRunner.run(
         command: command,
         user: "scraper",
-        image_name: docker_image(run.language),
+        image_name: docker_image2(run.language2),
         container_name: docker_container_name(run),
         repo_path: run.repo_path,
         data_path: run.data_path,
@@ -190,7 +194,7 @@ module Morph
     # if some things are not available
     def self.all_config_hash_with_defaults(directory)
       hash = all_config_hash(directory)
-      language = Morph::Language.language(directory)
+      language = Morph::Language.language2(directory).key
       if language == :ruby
         hash = insert_default_files_if_all_absent(hash, language, ["Gemfile", "Gemfile.lock"])
       elsif language == :python
