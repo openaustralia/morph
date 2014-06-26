@@ -1,7 +1,7 @@
 - content_for :title, "Documentation"
 
 .row
-  .col-sm-10
+  .col-sm-9
     %h1 A joyful birth of some documentation!
     %ul
       %li= link_to "What languages can scrapers be written in?", "#languages"
@@ -11,32 +11,59 @@
       %li= link_to "How do I run a scraper on my own machine?", "#run_locally"
       %li= link_to "What limits are there on numbers of scrapers, usage, etc.?", "#limits"
       %li= link_to "Your responsibility", "#responsibility"
+  .col-sm-3
+    = improve_button "Improve this page", "index.html.haml"
 
+.row
+  .col-sm-9
     %h3.section#languages What languages can scrapers be written in?
     = render "documentation/faq/languages"
+  .col-sm-3
+    = improve_button "Improve this section", "faq/_languages.html.haml"
 
+.row
+  .col-sm-9
     %h3.section#format In what format do I write out the data I've scraped?
     = render "documentation/faq/format"
+  .col-sm-3
+    = improve_button "Improve this section", "faq/_format.html.haml"
 
+.row
+  .col-sm-9
     %h3.section#libraries What version of the language and what libraries do I have access to?
     :markdown
       #{render "documentation/faq/libraries.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "faq/_libraries.md"
 
+.row
+  .col-sm-9
     %h3.section#install What if I want to install a library that isn't currently installed?
     :markdown
       #{render "documentation/faq/install.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "faq/_install.md"
 
+.row
+  .col-sm-9
     %h3.section#run_locally How do I run a scraper on my own machine?
     :markdown
       #{render "documentation/faq/run_locally.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "faq/_run_locally.md"
 
+.row
+  .col-sm-9
     %h3.section#limits What limits are there on numbers of scrapers, usage, etc.?
     :markdown
       #{render "documentation/faq/limits.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "faq/_limits.md"
 
+.row
+  .col-sm-9
     %h3.section#responsibility Your responsibility
     :markdown
       #{render "documentation/faq/responsibility.md"}
-
-  .col-sm-2
-    = link_to "Improve this page", "https://github.com/openaustralia/morph/blob/master/app/views/documentation/_index.md", class: "btn btn-default"
+  .col-sm-3
+    = improve_button "Improve this section", "faq/_responsibility.md"
