@@ -172,8 +172,6 @@ describe ScrapersController do
     render_views
 
     before :each do
-      sign_in user
-
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         Scraper.create(owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
       end
@@ -188,43 +186,170 @@ describe ScrapersController do
           }
         ]
       end
+      Scraper.any_instance.stub_chain(:database, :sqlite_db_path).and_return("/path/to/db.sqlite")
+      Scraper.any_instance.stub_chain(:database, :sqlite_db_size).and_return(12)
     end
 
-    it "should return json" do
-      get :data, id: "mlandauer/a_scraper", format: :json
-      response.should be_success
-      JSON.parse(response.body).should == [
-        {
-          "title" => "Foo",
-          "content" => "Bar",
-          "link" => "http://example.com",
-          "date" => "2013-01-01"
+    context "user not signed in and no key provided" do
+      it "should return an error in json" do
+        get :data, id: "mlandauer/a_scraper", format: :json
+        response.code.should == "401"
+        JSON.parse(response.body).should == {
+          "error"=>"You need to sign in with GitHub before continuing."
         }
-      ]
+        response.content_type.should == "application/json; charset=utf-8"
+      end
+
+      it "should return csv error as text" do
+        get :data, id: "mlandauer/a_scraper", format: :csv
+        response.code.should == "401"
+        response.body.should == "You need to sign in with GitHub before continuing."
+        #response.content_type.should == "text"
+      end
+
+      it "should return atom feed error as text" do
+        get :data, id: "mlandauer/a_scraper", format: :atom
+        response.code.should == "401"
+        response.body.should == "You need to sign in with GitHub before continuing."
+        #response.content_type.should == "text"
+      end
+
+      it "should return sqlite error as text" do
+        get :data, id: "mlandauer/a_scraper", format: :sqlite
+        response.code.should == "401"
+        response.body.should == "You need to sign in with GitHub before continuing."
+        #response.content_type.should == "text"
+      end
     end
 
-    it "should return csv" do
-      get :data, id: "mlandauer/a_scraper", format: :csv
-      response.should be_success
+    context "user not signed in and incorrect key provided" do
+      it "should return an error in json" do
+        get :data, id: "mlandauer/a_scraper", key: "foo", format: :json
+        response.code.should == "401"
+        JSON.parse(response.body).should == {
+          "error"=>"API key is not valid"
+        }
+        response.content_type.should == "application/json"
+      end
 
-      response.body.should == "title,content,link,date\nFoo,Bar,http://example.com,2013-01-01\n"
+      it "should return csv error as text" do
+        get :data, id: "mlandauer/a_scraper", key: "foo", format: :csv
+        response.code.should == "401"
+        response.body.should == "API key is not valid"
+        response.content_type.should == "text"
+      end
+
+      it "should return atom feed error as text" do
+        get :data, id: "mlandauer/a_scraper", key: "foo", format: :atom
+        response.code.should == "401"
+        response.body.should == "API key is not valid"
+        response.content_type.should == "text"
+      end
+
+      it "should return sqlite error as text" do
+        get :data, id: "mlandauer/a_scraper", key: "foo", format: :sqlite
+        response.code.should == "401"
+        response.body.should == "API key is not valid"
+        response.content_type.should == "text"
+      end
     end
 
-    it "should return an atom feed" do
-      get :data, id: "mlandauer/a_scraper", format: :atom
+    context "user not signed in and correct key provided" do
+      before :each do
+        user.update_attributes(api_key: "1234")
+      end
 
-      response.should be_success
-      body = Nokogiri::XML(response.body)
+      it "should return json" do
+        get :data, id: "mlandauer/a_scraper", key: "1234", format: :json
+        response.should be_success
+        JSON.parse(response.body).should == [
+          {
+            "title" => "Foo",
+            "content" => "Bar",
+            "link" => "http://example.com",
+            "date" => "2013-01-01"
+          }
+        ]
+      end
 
-      body.css("title").first.text.should == "Morph: mlandauer/a_scraper"
-      body.css("author name").first.text.should == "mlandauer"
-      body.css("link").first[:href].should == "http://test.host/mlandauer/a_scraper"
+      it "should return csv" do
+        get :data, id: "mlandauer/a_scraper", key: "1234", format: :csv
+        response.should be_success
 
-      body.css("entry").count.should == 1
-      body.css("entry > title").first.text.should == "Foo"
-      body.css("entry > content").first.text.should == "Bar"
-      body.css("entry > link").first[:href].should == "http://example.com"
-      body.css("entry > updated").first.text.should == DateTime.parse("2013-01-01").rfc3339
+        response.body.should == "title,content,link,date\nFoo,Bar,http://example.com,2013-01-01\n"
+      end
+
+      it "should return an atom feed" do
+        get :data, id: "mlandauer/a_scraper", key: "1234", format: :atom
+
+        response.should be_success
+        body = Nokogiri::XML(response.body)
+
+        body.css("title").first.text.should == "Morph: mlandauer/a_scraper"
+        body.css("author name").first.text.should == "mlandauer"
+        body.css("link").first[:href].should == "http://test.host/mlandauer/a_scraper"
+
+        body.css("entry").count.should == 1
+        body.css("entry > title").first.text.should == "Foo"
+        body.css("entry > content").first.text.should == "Bar"
+        body.css("entry > link").first[:href].should == "http://example.com"
+        body.css("entry > updated").first.text.should == DateTime.parse("2013-01-01").rfc3339
+      end
+
+      it "should return sqlite" do
+        controller.should_receive(:send_file).with("/path/to/db.sqlite", filename: "a_scraper.sqlite").and_return{controller.render nothing: true}
+        get :data, id: "mlandauer/a_scraper", key: "1234", format: :sqlite
+        response.should be_success
+      end
+    end
+
+    context "user signed in and no key provided" do
+      before :each do
+        sign_in user
+      end
+
+      it "should return json" do
+        get :data, id: "mlandauer/a_scraper", format: :json
+        response.should be_success
+        JSON.parse(response.body).should == [
+          {
+            "title" => "Foo",
+            "content" => "Bar",
+            "link" => "http://example.com",
+            "date" => "2013-01-01"
+          }
+        ]
+      end
+
+      it "should return csv" do
+        get :data, id: "mlandauer/a_scraper", format: :csv
+        response.should be_success
+
+        response.body.should == "title,content,link,date\nFoo,Bar,http://example.com,2013-01-01\n"
+      end
+
+      it "should return an atom feed" do
+        get :data, id: "mlandauer/a_scraper", format: :atom
+
+        response.should be_success
+        body = Nokogiri::XML(response.body)
+
+        body.css("title").first.text.should == "Morph: mlandauer/a_scraper"
+        body.css("author name").first.text.should == "mlandauer"
+        body.css("link").first[:href].should == "http://test.host/mlandauer/a_scraper"
+
+        body.css("entry").count.should == 1
+        body.css("entry > title").first.text.should == "Foo"
+        body.css("entry > content").first.text.should == "Bar"
+        body.css("entry > link").first[:href].should == "http://example.com"
+        body.css("entry > updated").first.text.should == DateTime.parse("2013-01-01").rfc3339
+      end
+
+      it "should return sqlite" do
+        controller.should_receive(:send_file).with("/path/to/db.sqlite", filename: "a_scraper.sqlite").and_return{controller.render nothing: true}
+        get :data, id: "mlandauer/a_scraper", format: :sqlite
+        response.should be_success
+      end
     end
   end
 end

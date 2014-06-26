@@ -149,10 +149,10 @@ class ScrapersController < ApplicationController
       owner = Owner.find_by_api_key(api_key)
       if owner.nil?
         respond_to do |format|
-          format.sqlite { render :text => "API key is not valid", status: 401 }
+          format.sqlite { render :text => "API key is not valid", status: 401, content_type: :text }
           format.json { render :json => {error: "API key is not valid"}, status: 401 }
-          format.csv { render :text => "API key is not valid", status: 401 }
-          format.atom { render :text => "API key is not valid", status: 401 }
+          format.csv { render text: "API key is not valid", status: 401, content_type: :text }
+          format.atom { render :text => "API key is not valid", status: 401, content_type: :text }
         end
         return
       end
