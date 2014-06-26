@@ -1,14 +1,20 @@
 %h1 Buildpacks
 
-.alert.alert-info
-  %i.fa.fa-flask.fa-3x.pull-left
-  Buildpacks are currently <strong>experimental</strong> and not available to everyone. If you would like access
-  to Buildpacks and <strong>agree to give us feedback</strong> please
-  = mail_to "contact@oaf.org.au", "contact us"
-  (letting us know which user or organisation you would like it for) and we'll enable the feature for you.
+.row
+  .col-sm-9
+    .alert.alert-info
+      %i.fa.fa-flask.fa-3x.pull-left
+      Buildpacks are currently <strong>experimental</strong> and not available to everyone. If you would like access
+      to Buildpacks and <strong>agree to give us feedback</strong> please
+      = mail_to "contact@oaf.org.au", "contact us"
+      (letting us know which user or organisation you would like it for) and we'll enable the feature for you.
 
-:markdown
-  #{render "buildpacks.md"}
+.row
+  .col-sm-9
+    :markdown
+      #{render "buildpacks.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "_buildpacks.md", spacer: false
 
 %ul.nav.nav-tabs
   %li.active
@@ -29,14 +35,31 @@
       Python
 .tab-content
   .tab-pane.fade.in.active#ruby
-    :markdown
-      #{render "buildpacks_ruby.md"}
+    .row
+      .col-sm-9
+        :markdown
+          #{render "buildpacks_ruby.md"}
+      .col-sm-3
+        = improve_button "Improve this section", "_buildpacks_ruby.md"
+
   .tab-pane.fade#php
-    :markdown
-      #{render "buildpacks_php.md"}
+    .row
+      .col-sm-9
+        :markdown
+          #{render "buildpacks_php.md"}
+      .col-sm-3
+        = improve_button "Improve this section", "_buildpacks_php.md"
   .tab-pane.fade#perl
-    :markdown
-      #{render "buildpacks_perl.md"}
+    .row
+      .col-sm-9
+        :markdown
+          #{render "buildpacks_perl.md"}
+      .col-sm-3
+        = improve_button "Improve this section", "_buildpacks_perl.md"
   .tab-pane.fade#python
-    :markdown
-      #{render "buildpacks_python.md"}
+    .row
+      .col-sm-9
+        :markdown
+          #{render "buildpacks_python.md"}
+      .col-sm-3
+        = improve_button "Improve this section", "_buildpacks_python.md"
