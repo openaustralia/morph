@@ -79,19 +79,31 @@
 
     %footer
       .container.text-muted
-        %p
-          Made with
-          %i.fa.fa-heart-o.fa-lg
-          by the
-          = link_to "OpenAustralia Foundation", "https://www.openaustraliafoundation.org.au"
-          for you
-        %ul.list-unstyled
-          %li
-            %i.fa.fa-github-sign
-            = link_to "Source code on GitHub", "https://github.com/openaustralia/morph"
-          %li
-            %i.fa.fa-bug
-            = link_to "Report an issue or suggest a feature", "https://github.com/openaustralia/morph/issues?state=open", target: "_blank"
-          %li
-            %i.fa.fa-bug
-            = link_to "Development priorities on waffle.io", "https://waffle.io/openaustralia/morph", target: "_blank"
+        .row
+          .col-md-4.text-center.col-md-push-4
+            %p
+              Made with
+              %i.fa.fa-heart-o.fa-lg
+              by the
+              = link_to "OpenAustralia&nbsp;Foundation".html_safe, "https://www.openaustraliafoundation.org.au"
+              for you
+          .col-md-4.col-md-pull-4.col-sm-6
+            %h4 contact us
+            %ul.list-unstyled
+              %li= link_to "@morph_io on Twitter", "https://twitter.com/morph_io"
+              %li
+                Email us at
+                = mail_to "contact@oaf.org.au"
+              %li= link_to "GitHub issues", "https://github.com/openaustralia/morph/issues?state=open"
+          .col-md-4.text-right.col-sm-6
+            %h4 morph.io is open source
+            %ul.list-unstyled
+              %li
+                %i.fa.fa-github-sign
+                = link_to "Source code on GitHub", "https://github.com/openaustralia/morph"
+              %li
+                %i.fa.fa-bug
+                = link_to "Report an issue or suggest a feature", "https://github.com/openaustralia/morph/issues?state=open", target: "_blank"
+              %li
+                %i.fa.fa-bug
+                = link_to "Development priorities on waffle.io", "https://waffle.io/openaustralia/morph", target: "_blank"

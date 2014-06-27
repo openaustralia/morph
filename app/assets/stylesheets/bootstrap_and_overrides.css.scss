@@ -13,16 +13,21 @@ html {
 
 body {
   padding-top: 52px;
-  margin-bottom: 170px;
+  @media (min-width: 768px) {
+    margin-bottom: 170px;
+  }
+  margin-bottom: 259px;
 }
 
 footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  text-align: center;
-  height: 150px;
-  padding: 30px 0;
+  @media (min-width: 768px) {
+    height: 150px
+  }
+  height: 239px;
+  padding: 1em 0;
   background-color: #f5f5f5;
 }
 
