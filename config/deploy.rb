@@ -73,5 +73,6 @@ namespace :foreman do
   end
 end
 
+after 'deploy:publishing', 'deploy:restart'
 before "deploy:restart", "deploy:docker"
 after "deploy:docker", "foreman:restart"
