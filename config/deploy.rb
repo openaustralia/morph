@@ -5,7 +5,7 @@ set :rvm_ruby_version, '2.0.0-p353'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
-# set :deploy_to, '/var/www/my_app'
+set :deploy_to, '/var/www'
 # set :scm, :git
 
 # set :format, :pretty
@@ -50,9 +50,6 @@ namespace :deploy do
   end
 end
 
-before "deploy:restart", "deploy:docker"
-after "deploy:docker", "foreman:restart"
-
 namespace :foreman do
   desc "Start the application services"
   task :start do
@@ -75,3 +72,6 @@ namespace :foreman do
     end
   end
 end
+
+before "deploy:restart", "deploy:docker"
+after "deploy:docker", "foreman:restart"
