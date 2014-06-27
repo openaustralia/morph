@@ -10,6 +10,7 @@ module OwnersHelper
       # tooltips are activated
       options[:data] = {placement: "bottom", title: owner.nickname, container: 'body'}
     end
+    options[:alt] = owner.nickname
     image_tag owner.gravatar_url(size), options
   end
 end
