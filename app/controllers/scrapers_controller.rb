@@ -143,22 +143,12 @@ class ScrapersController < ApplicationController
     # of the api don't have to change anything
     api_key = request.headers["HTTP_X_API_KEY"] || params[:key]
     if api_key.nil?
-      respond_to do |format|
-        format.sqlite { render :text => "API key is missing", status: 401, content_type: :text }
-        format.json { render :json => {error: "API key is missing"}, status: 401 }
-        format.csv { render text: "API key is missing", status: 401, content_type: :text }
-        format.atom { render :text => "API key is missing", status: 401, content_type: :text }
-      end
+      render_error "API key is missing"
       return
     else
       owner = Owner.find_by_api_key(api_key)
       if owner.nil?
-        respond_to do |format|
-          format.sqlite { render :text => "API key is not valid", status: 401, content_type: :text }
-          format.json { render :json => {error: "API key is not valid"}, status: 401 }
-          format.csv { render text: "API key is not valid", status: 401, content_type: :text }
-          format.atom { render :text => "API key is not valid", status: 401, content_type: :text }
-        end
+        render_error "API key is not valid"
         return
       end
     end
@@ -222,11 +212,7 @@ class ScrapersController < ApplicationController
       end
 
     rescue SQLite3::Exception => e
-      respond_to do |format|
-        format.json { render :json => {error: e.to_s} }
-        format.csv { render :text => "error: #{e}" }
-        format.atom { render :text => "error: #{e}" }
-      end
+      render_error e.to_s
     end
   end
 
@@ -241,6 +227,15 @@ class ScrapersController < ApplicationController
   end
 
   private
+
+  def render_error(message)
+    respond_to do |format|
+      format.sqlite { render :text => message, status: 401, content_type: :text }
+      format.json { render :json => {error: message}, status: 401 }
+      format.csv { render text: message, status: 401, content_type: :text }
+      format.atom { render :text => message, status: 401, content_type: :text }
+    end
+  end
 
   def load_resource
     @scraper = Scraper.friendly.find(params[:id])
