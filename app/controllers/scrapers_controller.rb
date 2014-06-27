@@ -143,8 +143,16 @@ class ScrapersController < ApplicationController
     # of the api don't have to change anything
     api_key = request.headers["HTTP_X_API_KEY"] || params[:key]
     if api_key.nil?
-      authenticate_user!
       owner = current_user
+      if owner.nil?
+        respond_to do |format|
+          format.sqlite { render :text => "You need to sign in with GitHub before continuing.", status: 401, content_type: :text }
+          format.json { render :json => {error: "You need to sign in with GitHub before continuing."}, status: 401 }
+          format.csv { render text: "You need to sign in with GitHub before continuing.", status: 401, content_type: :text }
+          format.atom { render :text => "You need to sign in with GitHub before continuing.", status: 401, content_type: :text }
+        end
+        return
+      end
     else
       owner = Owner.find_by_api_key(api_key)
       if owner.nil?

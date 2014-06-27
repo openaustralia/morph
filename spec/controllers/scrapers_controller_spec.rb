@@ -197,28 +197,28 @@ describe ScrapersController do
         JSON.parse(response.body).should == {
           "error"=>"You need to sign in with GitHub before continuing."
         }
-        response.content_type.should == "application/json; charset=utf-8"
+        response.content_type.should == "application/json"
       end
 
       it "should return csv error as text" do
         get :data, id: "mlandauer/a_scraper", format: :csv
         response.code.should == "401"
         response.body.should == "You need to sign in with GitHub before continuing."
-        #response.content_type.should == "text"
+        response.content_type.should == "text"
       end
 
       it "should return atom feed error as text" do
         get :data, id: "mlandauer/a_scraper", format: :atom
         response.code.should == "401"
         response.body.should == "You need to sign in with GitHub before continuing."
-        #response.content_type.should == "text"
+        response.content_type.should == "text"
       end
 
       it "should return sqlite error as text" do
         get :data, id: "mlandauer/a_scraper", format: :sqlite
         response.code.should == "401"
         response.body.should == "You need to sign in with GitHub before continuing."
-        #response.content_type.should == "text"
+        response.content_type.should == "text"
       end
     end
 
