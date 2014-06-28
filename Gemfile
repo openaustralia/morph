@@ -62,6 +62,7 @@ gem 'cancan'
 gem 'searchkick'
 # Polyfill for String#scrub for Ruby 1.9 and 2.0
 gem "scrub_rb"
+gem 'backstretch-rails'
 
 group :production do
   gem "dalli"

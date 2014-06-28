@@ -18,6 +18,7 @@
 //= require rails-timeago
 //= require sync
 //= require cocoon
+//= require 'jquery.backstretch'
 //= require api
 //= require bootstrap
 //= require documentation
