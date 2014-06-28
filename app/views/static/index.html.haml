@@ -1,5 +1,4 @@
-.container
-  - if signed_in?
-    = render "signed_in_index"
-  - else
-    = render "signed_out_index"
+- if signed_in?
+  = render "signed_in_index"
+- else
+  = render "signed_out_index"
