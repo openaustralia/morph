@@ -2,28 +2,4 @@
   - unless signed_in?
     = render "marketing"
 
-  .row
-    .col-md-6
-      %h2 Recent New Users
-      %p= link_to "See More&hellip;".html_safe, users_path
-      %ul.list-unstyled
-        - User.all.order(created_at: :desc).limit(10).each do |user|
-          %li
-            = owner_image(user, 20)
-            = link_to user.nickname, user
-            - unless user.name.blank?
-              &mdash;
-              = user.name
-      %h2 Organizations with Scrapers
-      %ul.list-unstyled
-        - Organization.all_with_scrapers.each do |org|
-          %li
-            = owner_image(org, 20)
-            = link_to org.nickname, org
-            - unless org.name.blank?
-              &mdash;
-              = org.name
-    .col-md-6
-      %h2 Recently Active Scrapers
-      %p= link_to "See More&hellip;".html_safe, scrapers_path
-      .list-group= sync partial: "scraper", collection: Scraper.order(:updated_at => :desc).limit(10)
+  = render "signed_in_index"
