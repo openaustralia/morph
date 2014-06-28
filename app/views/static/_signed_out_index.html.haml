@@ -1,55 +1,56 @@
-.jumbotron
-  .row
-    .col-md-4
-      = image_tag "logo.png", size: "300x300", class: "img-responsive"
-    .col-md-8
-      %h1
-        Morph
-        %small
-          -# A scraping platform
-          A
-          = link_to "Heroku", "https://www.heroku.com/"
-          for
-          = link_to "Scrapers", "https://en.wikipedia.org/wiki/Web_scraping"
-      %h2 Get structured data out of the web
-      %ul.list-unstyled
-        %li
-          All code and collaboration through
-          = link_to "GitHub", "https://github.com/"
-        %li
-          Write your scrapers in #{link_to "Ruby", "https://www.ruby-lang.org"},
-          #{link_to "Python", "http://www.python.org"}, #{link_to "PHP", "http://www.php.net"}
-          or #{link_to "Perl", "http://www.perl.org/"}
-        %li
-          Simple API to grab data
-        %li
-          Schedule scrapers or run manually
-        %li
-          Process isolation via
-          = link_to "Docker", "http://www.docker.io/"
-        %li
-          Trivial to move scraper code and data from
-          = link_to "ScraperWiki Classic", "https://classic.scraperwiki.com/"
-        %li
-          Email alerts for broken scrapers
-        = link_to "Get started", user_omniauth_authorize_path(:github), class: "btn btn-success btn-lg", id: "get_started_btn"
+.container
+  .jumbotron
+    .row
+      .col-md-4
+        = image_tag "logo.png", size: "300x300", class: "img-responsive"
+      .col-md-8
+        %h1
+          Morph
+          %small
+            -# A scraping platform
+            A
+            = link_to "Heroku", "https://www.heroku.com/"
+            for
+            = link_to "Scrapers", "https://en.wikipedia.org/wiki/Web_scraping"
+        %h2 Get structured data out of the web
+        %ul.list-unstyled
+          %li
+            All code and collaboration through
+            = link_to "GitHub", "https://github.com/"
+          %li
+            Write your scrapers in #{link_to "Ruby", "https://www.ruby-lang.org"},
+            #{link_to "Python", "http://www.python.org"}, #{link_to "PHP", "http://www.php.net"}
+            or #{link_to "Perl", "http://www.perl.org/"}
+          %li
+            Simple API to grab data
+          %li
+            Schedule scrapers or run manually
+          %li
+            Process isolation via
+            = link_to "Docker", "http://www.docker.io/"
+          %li
+            Trivial to move scraper code and data from
+            = link_to "ScraperWiki Classic", "https://classic.scraperwiki.com/"
+          %li
+            Email alerts for broken scrapers
+          = link_to "Get started", user_omniauth_authorize_path(:github), class: "btn btn-success btn-lg", id: "get_started_btn"
 
-%ul.list-inline
-  %li
-    %blockquote
-      %p Allow me to be the first to say amazeballs!
-      %small
-        = image_tag "https://www.gravatar.com/avatar/1d9536edb482e9e1f56b86459abb06c4?s=30", size: "30x30"
-        = link_to "Henare Degan", "https://twitter.com/henaredegan"
-  %li
-    %blockquote
-      %p I like it but then I would say that
-      %small
-        = image_tag "https://www.gravatar.com/avatar/30e5eec125c81e549294137a3ddd6c74?s=30", size: "30x30"
-        = link_to "Matthew Landauer", "https://twitter.com/matthewlandauer"
-  %li
-    %blockquote
-      %p Does it come with plasticine?
-      %small
-        = image_tag "https://www.gravatar.com/avatar/87bb46366f13106c2deebf655af73b38?s=30", size: "30x30"
-        = link_to "Kat Szuminska", "https://twitter.com/katska"
+  %ul.list-inline
+    %li
+      %blockquote
+        %p Allow me to be the first to say amazeballs!
+        %small
+          = image_tag "https://www.gravatar.com/avatar/1d9536edb482e9e1f56b86459abb06c4?s=30", size: "30x30"
+          = link_to "Henare Degan", "https://twitter.com/henaredegan"
+    %li
+      %blockquote
+        %p I like it but then I would say that
+        %small
+          = image_tag "https://www.gravatar.com/avatar/30e5eec125c81e549294137a3ddd6c74?s=30", size: "30x30"
+          = link_to "Matthew Landauer", "https://twitter.com/matthewlandauer"
+    %li
+      %blockquote
+        %p Does it come with plasticine?
+        %small
+          = image_tag "https://www.gravatar.com/avatar/87bb46366f13106c2deebf655af73b38?s=30", size: "30x30"
+          = link_to "Kat Szuminska", "https://twitter.com/katska"
