@@ -58,6 +58,7 @@ gem 'sync'
 gem 'multiblock'
 gem 'honeybadger'
 gem 'cancan'
+gem 'backstretch-rails'
 
 group :production do
   gem "dalli"

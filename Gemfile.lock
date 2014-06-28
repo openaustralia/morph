@@ -66,6 +66,8 @@ GEM
       activesupport (>= 3.0.0)
     archive-tar-minitar (0.5.2)
     arel (4.0.2)
+    backstretch-rails (2.0.4)
+      railties (> 3.1)
     bcrypt-ruby (3.1.2)
     better_errors (1.1.0)
       coderay (>= 1.0.0)
@@ -417,6 +419,7 @@ DEPENDENCIES
   RedCloth
   activeadmin!
   archive-tar-minitar
+  backstretch-rails
   better_errors
   binding_of_caller
   bootstrap-select-rails!
