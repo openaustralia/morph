@@ -49,16 +49,17 @@ footer {
   color: #777;
 }
 
+.navbar-brand {
+  font-family: 'Comfortaa', cursive;
+}
+
 .container#banner {
-  h1 {
-    .brand {
-      font-family: 'Comfortaa', cursive;
-      text-shadow: -3px 0 black, 0 3px black, 3px 0 black, 0 -3px black;
-    }
-    font-size: 5em;
-  }
+ 
   h2 {
     font-size: 4em;
+ 	@media (min-width: 768px) {
+		margin-top: 70px;
+	}
   }
   .lower {
       position: absolute;
