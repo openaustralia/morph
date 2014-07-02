@@ -1,14 +1,7 @@
 %footer
 	.container.text-muted
 		.row
-			.col-md-4.text-center.col-md-push-4
-				%p
-					Made with
-					%i.fa.fa-heart-o.fa-lg
-					by the
-					= link_to "OpenAustralia&nbsp;Foundation".html_safe, "https://www.openaustraliafoundation.org.au"
-					for you
-			.col-md-4.col-md-pull-4.col-sm-6
+			.col-sm-6
 				%h4 contact us
 				%ul.list-unstyled
 					%li
@@ -20,7 +13,7 @@
 					%li
 						%i.fa.fa-github-alt
 						= link_to "GitHub", "https://github.com/openaustralia/morph"
-			.col-md-4.text-right.col-sm-6
+			.col-sm-6.text-right
 				%h4 morph.io is open source
 				%ul.list-unstyled
 					%li
@@ -38,3 +31,10 @@
 						%i.fa.fa-flag
 				%p
 					%small= link_to APP_VERSION, "https://github.com/openaustralia/morph/commit/#{APP_VERSION}"
+		.row.text-center
+			%p
+				Made with
+				%i.fa.fa-heart-o.fa-lg
+				by the
+				= link_to "OpenAustralia&nbsp;Foundation".html_safe, "https://www.openaustraliafoundation.org.au"
+				for you
