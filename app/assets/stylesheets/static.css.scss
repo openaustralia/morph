@@ -6,3 +6,15 @@
   font-size: 1.25em;
   margin-top: 40px;
 }
+
+.container#benefits {
+  text-align: center;
+  padding-top: 40px; 
+  .col-md-4 {
+    p {
+      padding-top: 25px;
+    }
+    padding-top: 30px;
+  }
+  padding-bottom: 40px;
+}
