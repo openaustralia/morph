@@ -9,7 +9,7 @@
 
 .container#benefits {
   width: 100%;
-  background-color: #F5FFE7;
+  background-color: #FAFAFA;
   text-align: center;
   padding-top: 40px; 
   .col-md-4 {
@@ -21,6 +21,13 @@
   padding-bottom: 60px;
 }
 
-.container#jumbotron {
+.container#introducing {
   width: 100%;
+  background-color: #b1d05f;
+  padding-top: 100px;
+}
+
+.container#quotes {
+  width: 100%;
+  padding-top: 100px;
 }
