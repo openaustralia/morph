@@ -40,25 +40,24 @@
 
 .container#quotes
   .container
-    .col-md-4 
-      %ul.list-inline
-        %li
-          %blockquote
-            %p Allow me to be the first to say amazeballs!
-            %small
-              = image_tag "https://www.gravatar.com/avatar/1d9536edb482e9e1f56b86459abb06c4?s=30", size: "50x50" , class: "img-circle"
-              = link_to "Henare Degan", "https://twitter.com/henaredegan"
-        %li
-          %blockquote
-            %p I like it but then I would say that
-            %small
-              = image_tag "https://www.gravatar.com/avatar/30e5eec125c81e549294137a3ddd6c74?s=30", size: "50x50", class: "img-circle"
-              = link_to "Matthew Landauer", "https://twitter.com/matthewlandauer"
-        %li
-          %blockquote
-            %p Does it come with plasticine?
-            %small
-              = image_tag "https://www.gravatar.com/avatar/87bb46366f13106c2deebf655af73b38?s=30", size: "50x50", class: "img-circle"
-              = link_to "Kat Szuminska", "https://twitter.com/katska"
+    .row
+      .col-md-4 
+        %blockquote
+          %p Allow me to be the first to say amazeballs!
+          %small
+            = image_tag "https://www.gravatar.com/avatar/1d9536edb482e9e1f56b86459abb06c4?s=30", size: "50x50" , class: "img-circle"
+            = link_to "Henare Degan", "https://twitter.com/henaredegan"
+      .col-md-8 
+        %blockquote
+          %p I like it but then I would say that
+          %small
+            = image_tag "https://www.gravatar.com/avatar/30e5eec125c81e549294137a3ddd6c74?s=30", size: "50x50", class: "img-circle"
+            = link_to "Matthew Landauer", "https://twitter.com/matthewlandauer"
+      .col-md-12 
+        %blockquote
+          %p Does it come with plasticine?
+          %small
+            = image_tag "https://www.gravatar.com/avatar/87bb46366f13106c2deebf655af73b38?s=30", size: "50x50", class: "img-circle"
+            = link_to "Kat Szuminska", "https://twitter.com/katska"
 
 
