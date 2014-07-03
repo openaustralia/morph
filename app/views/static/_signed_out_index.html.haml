@@ -29,49 +29,36 @@
           Your scraper runs in the cloud to your schedule and emails you if there are any problems
           
     
-.container
-  .jumbotron
+
+.container#introducing
+  .container
     .row
       .col-md-4
         = image_tag "logo.png", size: "300x300", class: "img-responsive"
       .col-md-8
-        %ul.list-unstyled
-          %li
-            All code and collaboration through
-            = link_to "GitHub", "https://github.com/"
-          %li
-            Write your scrapers in #{link_to "Ruby", "https://www.ruby-lang.org"},
-            #{link_to "Python", "http://www.python.org"}, #{link_to "PHP", "http://www.php.net"}
-            or #{link_to "Perl", "http://www.perl.org/"}
-          %li
-            Simple API to grab data
-          %li
-            Schedule scrapers or run manually
-          %li
-            Process isolation via
-            = link_to "Docker", "http://www.docker.io/"
-          %li
-            Trivial to move scraper code and data from
-            = link_to "ScraperWiki Classic", "https://classic.scraperwiki.com/"
-          %li
-            Email alerts for broken scrapers
+      %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-  %ul.list-inline
-    %li
-      %blockquote
-        %p Allow me to be the first to say amazeballs!
-        %small
-          = image_tag "https://www.gravatar.com/avatar/1d9536edb482e9e1f56b86459abb06c4?s=30", size: "30x30"
-          = link_to "Henare Degan", "https://twitter.com/henaredegan"
-    %li
-      %blockquote
-        %p I like it but then I would say that
-        %small
-          = image_tag "https://www.gravatar.com/avatar/30e5eec125c81e549294137a3ddd6c74?s=30", size: "30x30"
-          = link_to "Matthew Landauer", "https://twitter.com/matthewlandauer"
-    %li
-      %blockquote
-        %p Does it come with plasticine?
-        %small
-          = image_tag "https://www.gravatar.com/avatar/87bb46366f13106c2deebf655af73b38?s=30", size: "30x30"
-          = link_to "Kat Szuminska", "https://twitter.com/katska"
+.container#quotes
+  .container
+    .col-md-4 
+      %ul.list-inline
+        %li
+          %blockquote
+            %p Allow me to be the first to say amazeballs!
+            %small
+              = image_tag "https://www.gravatar.com/avatar/1d9536edb482e9e1f56b86459abb06c4?s=30", size: "50x50" , class: "img-circle"
+              = link_to "Henare Degan", "https://twitter.com/henaredegan"
+        %li
+          %blockquote
+            %p I like it but then I would say that
+            %small
+              = image_tag "https://www.gravatar.com/avatar/30e5eec125c81e549294137a3ddd6c74?s=30", size: "50x50", class: "img-circle"
+              = link_to "Matthew Landauer", "https://twitter.com/matthewlandauer"
+        %li
+          %blockquote
+            %p Does it come with plasticine?
+            %small
+              = image_tag "https://www.gravatar.com/avatar/87bb46366f13106c2deebf655af73b38?s=30", size: "50x50", class: "img-circle"
+              = link_to "Kat Szuminska", "https://twitter.com/katska"
+
+
