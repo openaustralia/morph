@@ -14,9 +14,9 @@ html {
 body {
   padding-top: 52px;
   @media (min-width: 768px) {
-    margin-bottom: 170px;
+    margin-bottom: 220px;
   }
-  margin-bottom: 259px;
+  margin-bottom: 309px;
 }
 
 footer {
@@ -24,12 +24,11 @@ footer {
   bottom: 0;
   width: 100%;
   @media (min-width: 768px) {
-    height: 150px
+    height: 200px
   }
-  height: 239px;
+  height: 289px;
   padding: 1em 0;
-  background-color: #2E3B0B;
-  colour: #FAFAFA;
+  background-color: #f5f5f5;
 }
 
 .sign_in {
