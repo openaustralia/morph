@@ -41,3 +41,7 @@ MORPH_URL=http://localhost:3000
 
 # Error reporting to Honeybadger
 HONEYBADGER_API_KEY=xxxxxxxx
+
+# We're using Cuttlefish to send mail
+CUTTLEFISH_USERNAME=xxxxxxx
+CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx
