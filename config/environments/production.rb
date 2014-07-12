@@ -78,6 +78,18 @@ Morph::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
+  # Send Morph mails to Cuttlefish (see http://cuttlefish.io)
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address => "cuttlefish.io",
+    :port => 2525,
+    :user_name => ENV["CUTTLEFISH_USERNAME"],
+    :password => ENV["CUTTLEFISH_PASSWORD"],
+    # Server is currently using a self-signed certificate
+    :openssl_verify_mode => "none",
+    :authentication => :plain
+   }
+
   config.action_mailer.default_url_options = { :host => 'morph.io', protocol: "https" }
 end
 
