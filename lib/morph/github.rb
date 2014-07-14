@@ -11,7 +11,7 @@ module Morph
         # So falling back to shelling out to the git command
         #gritty = Grit::Repo.new(repo_path).git
         #puts gritty.pull({:raise => true}, "origin", "master")
-        system("cd #{repo_path}; git pull")
+        system("cd #{repo_path} && git fetch && git reset --hard FETCH_HEAD")
       else
         puts "Cloning git repo #{git_url}..."
         puts gritty.clone({:verbose => true, :progress => true, :raise => true}, git_url, repo_path)
