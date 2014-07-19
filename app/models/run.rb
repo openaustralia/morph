@@ -160,8 +160,12 @@ class Run < ActiveRecord::Base
   end
 
   def stop!
-    Morph::DockerRunner.stop(docker_container_name)
-    update_attributes(status_code: 130, finished_at: Time.now)
+    if queued?
+      update_attributes(status_code: 130, started_at: Time.now, finished_at: Time.now)
+    else
+      Morph::DockerRunner.stop(docker_container_name)
+      update_attributes(status_code: 130, finished_at: Time.now)
+    end
   end
 
   def log(stream, text)

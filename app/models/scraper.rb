@@ -192,7 +192,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def stop!
-    last_run.stop! if last_run.running?
+    last_run.stop!
   end
 
   def github_url_for_file(file)
