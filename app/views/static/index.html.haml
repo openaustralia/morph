@@ -11,7 +11,7 @@
           %li
             = owner_image(user, 20)
             = link_to user.nickname, user
-            - if user.name
+            - unless user.name.blank?
               &mdash;
               = user.name
       %h2 Organizations with Scrapers
@@ -20,7 +20,7 @@
           %li
             = owner_image(org, 20)
             = link_to org.nickname, org
-            - if org.name
+            - unless org.name.blank?
               &mdash;
               = org.name
     .col-md-6
