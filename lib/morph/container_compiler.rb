@@ -146,10 +146,13 @@ module Morph
       dir = Dir.mktmpdir("morph")
       begin
         hash.each do |path, content|
-          File.open(File.join(dir, path), "w") {|f| f.write(content)}
+          new_path = File.join(dir, path)
+          # Ensure the directory exists (for files in subdirectories)
+          FileUtils.mkdir_p(File.dirname(new_path))
+          File.open(new_path, "w") {|f| f.write(content)}
           # Set an arbitrary & fixed modification time on the files so that if
           # content is the same it will cache
-          FileUtils.touch(File.join(dir, path), mtime: Time.new(2000,1,1))
+          FileUtils.touch(new_path, mtime: Time.new(2000,1,1))
         end
         create_tar(dir)
       ensure
