@@ -55,7 +55,7 @@ class Run < ActiveRecord::Base
   end
 
   def queued?
-    queued_at && started_at.nil?
+    queued_at && started_at.nil? && finished_at.nil?
   end
 
   def running?
@@ -161,6 +161,7 @@ class Run < ActiveRecord::Base
 
   def stop!
     Morph::DockerRunner.stop(docker_container_name)
+    update_attributes(status_code: 130, finished_at: Time.now)
   end
 
   def log(stream, text)
