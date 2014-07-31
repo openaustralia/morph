@@ -93,6 +93,10 @@ class ScrapersController < ApplicationController
 
   def show
     authorize! :show, @scraper
+
+    if !@scraper.exists?
+      raise ActiveRecord::RecordNotFound
+    end
   end
 
   def destroy
