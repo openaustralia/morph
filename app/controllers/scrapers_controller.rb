@@ -93,6 +93,13 @@ class ScrapersController < ApplicationController
 
   def show
     authorize! :show, @scraper
+
+    if !@scraper.exists? && @scraper.can_write?(current_user)
+      flash[:error] = "Scraper repo not found - delete and recreate this scraper, or contact us."
+      redirect_to settings_scraper_path(@scraper)
+    elsif !@scraper.exists?
+      raise ActiveRecord::RecordNotFound
+    end
   end
 
   def destroy

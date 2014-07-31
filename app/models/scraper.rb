@@ -215,6 +215,10 @@ class Scraper < ActiveRecord::Base
     Morph::Database.new(data_path)
   end
 
+  def exists?
+    File.exists?(repo_path)
+  end
+
   # It seems silly implementing this
   def Scraper.directory_size(directory)
     r = 0
