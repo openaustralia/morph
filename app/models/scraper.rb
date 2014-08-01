@@ -204,7 +204,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def main_scraper_filename
-    language.scraper_filename
+    language.scraper_filename if language
   end
 
   def github_url_main_scraper_file
