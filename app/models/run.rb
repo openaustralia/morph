@@ -102,7 +102,7 @@ class Run < ActiveRecord::Base
     FileUtils.mkdir_p data_path
     FileUtils.chmod 0777, data_path
 
-    unless language.supported?
+    unless language && language.supported?
       supported_scraper_files = Morph::Language.languages_supported.map {|l| l.scraper_filename}
       yield "stderr", "Can't find scraper code. Expected to find a file called " +
          supported_scraper_files.to_sentence(last_word_connector: ", or ") +
