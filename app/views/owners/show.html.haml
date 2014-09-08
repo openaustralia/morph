@@ -26,7 +26,7 @@
                 on GitHub
           .col-md-6
             - unless @owner.organizations.empty?
-              %h4 Organizations
+              %h4 Public Organizations
               %p
                 - @owner.organizations.each do |org|
                   = link_to owner_image(org, 30), org
