@@ -9,6 +9,7 @@ module Morph
       yield(wrapper)
 
       command = Metric.command(run.language.scraper_command, Run.time_output_filename)
+      env_variables = run.scraper ? run.scraper.variables.map{|v| [v.name, v.value]} : []
       status_code = Morph::DockerRunner.run(
         command: command,
         user: "scraper",
@@ -16,7 +17,7 @@ module Morph
         container_name: docker_container_name(run),
         repo_path: run.repo_path,
         data_path: run.data_path,
-        env_variables: run.scraper.variables.map{|v| [v.name, v.value]}
+        env_variables: env_variables
       ) do |on|
           on.log {|s,c| wrapper.call(:log, s, c)}
           on.ip_address {|ip| wrapper.call(:ip_address, ip)}
