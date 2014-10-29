@@ -40,9 +40,6 @@ gem 'RedCloth'
 
 # For sidekiq ui
 gem 'sinatra', '>= 1.3.0', :require => nil
-gem 'premailer-rails'
-# nokogiri required by premailer-rails
-gem 'nokogiri'
 gem "rails_autolink"
 gem 'zeroclipboard-rails'
 gem 'newrelic_rpm'
@@ -89,6 +86,7 @@ group :test do
   gem 'database_cleaner'
   gem 'vcr'
   gem 'webmock'
+  gem 'nokogiri'
 end
 
 # For our javascript runtime on production we don't want to use therubyracer because it uses too
