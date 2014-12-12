@@ -81,7 +81,7 @@ Morph::Application.configure do
   # Send Morph mails to Cuttlefish (see http://cuttlefish.io)
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address => "cuttlefish.io",
+    :address => (ENV["CUTTLEFISH_SERVER"] || "cuttlefish.io"),
     :port => 2525,
     :user_name => ENV["CUTTLEFISH_USERNAME"],
     :password => ENV["CUTTLEFISH_PASSWORD"],
