@@ -85,8 +85,6 @@ Morph::Application.configure do
     :port => 2525,
     :user_name => ENV["CUTTLEFISH_USERNAME"],
     :password => ENV["CUTTLEFISH_PASSWORD"],
-    # Server is currently using a self-signed certificate
-    :openssl_verify_mode => "none",
     :authentication => :plain
    }
 
