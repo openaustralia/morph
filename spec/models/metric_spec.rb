@@ -59,6 +59,10 @@ Page size (bytes): 4096
         Metric.should_receive(:read_from_string).and_return(result)
         Metric.read_from_file(filename).should == result
       end
+
+      it "should return nil if there's no file" do
+        Metric.read_from_file("#{Rails.root}/tmp/a_missing_file").should be_nil
+      end
     end
   end
 
