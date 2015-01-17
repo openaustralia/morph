@@ -7,8 +7,6 @@
 #
 - hosts: all
   sudo: true
-# Uncomment the user line below if you are using this playbook directly from ansible using "ansible-playbook"
-# rather than running it through vagrant
   user: root
   roles:
     - morph-app
