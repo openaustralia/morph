@@ -6,11 +6,8 @@ module Morph
       Grit::Git.git_timeout = 60
       gritty = Grit::Git.new(repo_path)
       if gritty.exist?
-        puts "Pulling git repo #{repo_path}..."
-        # TODO Fix this. Using grit seems to do a pull but not update the working directory
-        # So falling back to shelling out to the git command
-        #gritty = Grit::Repo.new(repo_path).git
-        #puts gritty.pull({:raise => true}, "origin", "master")
+        # TODO Use grit for this instead of shelling out
+        puts "Updating git repo #{repo_path}..."
         system("cd #{repo_path} && git fetch && git reset --hard FETCH_HEAD")
       else
         puts "Cloning git repo #{git_url}..."
