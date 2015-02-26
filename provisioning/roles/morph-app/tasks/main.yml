@@ -9,11 +9,11 @@
   file: path=/etc/nginx/ssl/www owner=deploy group=deploy state=directory
 - name: Ensure that ssl/faye directory exist
   file: path=/etc/nginx/ssl/faye owner=deploy group=deploy state=directory
-- name: Add {{ server_name }} SSL certificate (public)
-  copy: src=ssl/{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/www/cert.pem owner=deploy group=deploy mode=0600
+- name: Add api.{{ server_name }} SSL certificate (public)
+  copy: src=ssl/api.{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/www/cert.pem owner=deploy group=deploy mode=0600
   notify: restart nginx
-- name: Add {{ server_name }} SSL certificate (private)
-  copy: src=ssl/{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/www/cert.key owner=deploy group=deploy mode=0600
+- name: Add api.{{ server_name }} SSL certificate (private)
+  copy: src=ssl/api.{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/www/cert.key owner=deploy group=deploy mode=0600
   notify: restart nginx
 - name: Add faye.{{ server_name }} SSL certificate (public)
   copy: src=ssl/faye.{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/faye/cert.pem owner=deploy group=deploy mode=0600
