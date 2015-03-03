@@ -13,7 +13,7 @@ expose:
 
 params:
   # git revision to run
-  version: HEAD
+  version: tests-passed
 
 env:
   # comma-separated emails
