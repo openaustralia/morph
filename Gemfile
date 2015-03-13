@@ -24,7 +24,9 @@ gem "formtastic-bootstrap"
 gem "formtastic"
 gem "cocoon"
 gem "grit"
-gem 'docker-api', :require => 'docker'
+# version 1.20.0 of the docker-api gem is causing the compile step in buildstep
+# to not get cached
+gem 'docker-api', "< 1.20.0", :require => 'docker'
 gem "sidekiq"
 gem "foreman"
 gem "faraday"
