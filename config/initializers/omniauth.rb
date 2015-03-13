@@ -1,2 +1,4 @@
 # HACK Temporary workaround until I figure out the root cause
-OmniAuth.config.full_host = "https://morph.io"
+if Rails.env.production?
+  OmniAuth.config.full_host = "https://morph.io"
+end
