@@ -10,7 +10,6 @@ BeautifulSoup==3.2.0
 Creoleparser==0.7.4
 Genshi==0.6
 Jinja2==2.6
-M2Crypto==0.21.1
 Markdown==2.2.0
 Pygments==1.4
 SQLAlchemy==0.6.6
@@ -110,6 +109,9 @@ adspygoogle.adwords==15.6.2
 nltk==3.0.2
 # Changed this from 1.0.25 to 1.0.2
 pydot==1.0.2
+# Changed this from 0.21.1 to 0.22.3
+M2Crypto==0.22.3
+
 
 # TODO Need to install parsley
 #-e git+http://github.com/fizx/pyparsley.git@0eea1362bc38c5e0e3a1caa2358c472c8f6eb3bd#egg=pyparsley-dev
