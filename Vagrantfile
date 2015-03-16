@@ -162,6 +162,7 @@ Vagrant.configure("2") do |config|
     dev.vm.synced_folder ".", "/source"
 
     dev.vm.provider :virtualbox do |vb, override|
+      vb.memory = 1024
       override.vm.provision :shell, :inline => $vbox_script
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
