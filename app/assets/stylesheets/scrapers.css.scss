@@ -145,6 +145,8 @@ h1.full_name {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   height: 15em;
   overflow-y: scroll;
+  resize: both;
+  overflow: auto;
 }
 
 .log_line {
