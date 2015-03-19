@@ -18,6 +18,26 @@ On OS X for development also Vagrant & VirtualBox to host a VM with Docker - see
 
 On Linux your user account should be able to manipulate Docker (just add your user to the `docker` group).
 
+### Repositories
+
+User-facing:
+
+* [openaustralia/morph](https://github.com/openaustralia/morph) - Main application
+* [openaustralia/morph-cli](https://github.com/openaustralia/morph-cli) - Command-line morph tool
+* [openaustralia/scraperwiki-python](https://github.com/openaustralia/scraperwiki-python) - Fork of [scraperwiki/scraperwiki-python](https://github.com/scraperwiki/scraperwiki-python) updated to use morph.io naming conventions
+* [openaustralia/scraperwiki-ruby](https://github.com/openaustralia/scraperwiki-ruby) - Fork of [scraperwiki/scraperwiki-ruby](https://github.com/scraperwiki/scraperwiki-ruby) updated to use morph.io naming conventions
+
+Buildstep docker images:
+* [openaustralia/morph-docker-buildstep-base](https://github.com/openaustralia/morph-docker-buildstep-base) - Base image for buildstep
+* [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Fork of [progrium/buildstep](https://github.com/progrium/buildstep) which uses the image openaustralia/morph-docker-buildstep-base as its base
+
+Original docker images:
+* [openaustralia/morph-docker-base](https://github.com/openaustralia/morph-docker-base) - Base image
+* [openaustralia/morph-docker-python](https://github.com/openaustralia/morph-docker-python) - Python
+* [openaustralia/morph-docker-ruby](https://github.com/openaustralia/morph-docker-ruby) - Ruby
+* [openaustralia/morph-docker-perl](https://github.com/openaustralia/morph-docker-perl) - Perl
+* [openaustralia/morph-docker-php](https://github.com/openaustralia/morph-docker-php) - PHP
+
 ### To Install
 
 Running this on OSX? Read the [OSX instructions](#installing-docker-on-osx) below BEFORE doing any of this.
