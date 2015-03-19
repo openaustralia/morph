@@ -1,6 +1,11 @@
 ---
 - name: Ensure curl is installed
   apt: pkg=curl
+
+- name: Install gpg key for rvm
+  shell: gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+  sudo_user: deploy
+
 # TODO Maybe install rvm by installing the package ruby-rvm?
 - name: Ensure rvm installed in deploy user
   shell: curl -sSL https://get.rvm.io | bash -s stable creates=/home/deploy/.rvm
