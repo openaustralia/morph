@@ -118,5 +118,5 @@
   lineinfile: dest=/etc/hosts line="127.0.0.1 faye.{{ server_name }}" owner=root group=root mode=0644
 - name: Add firewall rules
   copy: src=iptables.rules dest=/etc/iptables.rules
-- name: Add firewall rules on boot
-  copy: src=iptablesload dest=/etc/network/if-pre-up.d/iptablesload
+- name: Add firewall rules on boot and make sure they're executable
+  copy: src=iptablesload dest=/etc/network/if-pre-up.d/iptablesload mode=0755
