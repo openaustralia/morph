@@ -7,6 +7,7 @@
 #
 - hosts: all
   sudo: true
+  # Comment the line below out when deploying via vagrant (for local development VM)
   user: root
   roles:
     - morph-app
