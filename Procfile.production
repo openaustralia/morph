@@ -1,2 +1,3 @@
 worker: NEW_RELIC_APP_NAME=morph-bg rvm . do bundle exec sidekiq --concurrency 5 -q default -q low -e production
 faye: RAILS_ENV=production rvm . do bundle exec dotenv rackup sync.ru -E production
+mitmproxy: mitmdump -q -T -s mitmproxy/log_to_morph.py
