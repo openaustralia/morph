@@ -1,9 +1,0 @@
-#!/bin/sh
-# Set up firewall rules for routing outbound http requests from docker
-# containers to a local proxy
-
-# Only run this for the eth0 interface
-# [ "$IFACE" == "eth0" ] || exit 0
-
-# iptables-restore --noflush < /etc/iptables.rules
-# exit 0
