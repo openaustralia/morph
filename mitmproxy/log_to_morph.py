@@ -3,11 +3,9 @@
 import urllib
 import os
 
-# Temporarily commenting out concurrent decorator until a bug in mitmproxy
-# is resolved. See https://github.com/mitmproxy/mitmproxy/issues/267
-#from libmproxy.script import concurrent
+from libmproxy.script import concurrent
 
-#@concurrent
+@concurrent
 def response(context, flow):
   url = os.environ['MORPH_URL'] + "/connection_logs"
   params = urllib.urlencode({
