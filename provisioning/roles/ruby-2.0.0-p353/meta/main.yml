@@ -1,3 +1,4 @@
 ---
 dependencies:
-  - { role: deploy-user }
+  - role: deploy-user
+    github_users: ['mlandauer', 'henare']
