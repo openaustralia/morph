@@ -122,7 +122,7 @@
   copy: src=iptablesload dest=/etc/network/if-pre-up.d/iptablesload mode=0755
 
 - name: iptables add script
-  copy: src=add_iptables_rules.sh dest=/usr/local/bin mode=0755
+  copy: src=add_iptables_rules.sh dest=/usr/local/sbin mode=0755
 
 - name: iptables remove script
-  copy: src=remove_iptables_rules.sh dest=/usr/local/bin mode=0755
+  copy: src=remove_iptables_rules.sh dest=/usr/local/sbin mode=0755
