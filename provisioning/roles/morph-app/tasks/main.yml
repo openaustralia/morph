@@ -122,3 +122,6 @@
 
 - name: iptables remove script
   copy: src=iptables-mitmproxy-remove.sh dest=/usr/local/sbin mode=0755
+
+- name: run iptables mitmproxy setup script at boot
+  copy: src=interfaces dest=/etc/network/interfaces
