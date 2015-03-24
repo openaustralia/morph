@@ -11,7 +11,7 @@ import os
 def response(context, flow):
   url = os.environ['MORPH_URL'] + "/connection_logs"
   params = urllib.urlencode({
-  	'ip_address': flow.request.host,
+  	'ip_address': flow.client_conn.address.host,
   	'method': flow.request.method,
   	'scheme': flow.request.scheme,
     'host': flow.request.headers["Host"][0],
