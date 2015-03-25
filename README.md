@@ -139,10 +139,6 @@ When you've changed the Ansible playbooks to modify the infrastructure you'll wa
 
     ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
 
-And only if you're creating a _new production instance_, the first time you'll want to provision a new machine on Digital Ocean with:
-
-    vagrant up production2
-
 ### Running tests
 
 If you're running guard (see above) the tests will also automatically run when you change a file. By default it's setup to use [Zeus](https://github.com/burke/zeus) which speeds things up considerably. You'll need to install this with
