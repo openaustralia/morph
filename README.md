@@ -116,8 +116,6 @@ We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt 
 
 Install [Vagrant](http://www.vagrantup.com/) and [Ansible](http://www.ansible.com/). Comment out the user line in [`provisioning/playbook.yml`](https://github.com/openaustralia/morph/blob/17e05ed5bc540be683e5fdf90d1fefaa0f81c56f/provisioning/playbook.yml#L10-L11) and run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`. You'll need to add `dev.morph.io` to your `/etc/hosts` file as being localhost (since its ports are forwarded to your local machine).
 
-Note: if Ansible fails installing nginx for the first time log on to the box (`vagrant ssh local`), remove nginx (`sudo aptitude remove nginx`), and rerun provisioning (`vagrant provision local`).
-
 To access that box you need to forward HTTP and HTTPS privileged ports.
 
 **OS X**: There's a script to do this via the firewall `./local_port_forward_os_x.sh`.
