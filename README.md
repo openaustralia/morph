@@ -114,7 +114,7 @@ We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt 
 
 #### Production devops development
 
-Install [Vagrant](http://www.vagrantup.com/) and [Ansible](http://www.ansible.com/) and run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io` (which you'll need to add to your `/etc/hosts` file).
+Install [Vagrant](http://www.vagrantup.com/) and [Ansible](http://www.ansible.com/). Comment out the user line in [`provisioning/playbook.yml`](https://github.com/openaustralia/morph/blob/17e05ed5bc540be683e5fdf90d1fefaa0f81c56f/provisioning/playbook.yml#L10-L11) and run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io` (which you'll need to add to your `/etc/hosts` file).
 
 Note: if Ansible fails installing nginx for the first time log on to the box (`vagrant ssh local`), remove nginx (`sudo aptitude remove nginx`), and rerun provisioning (`vagrant provision local`).
 
