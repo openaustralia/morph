@@ -83,8 +83,6 @@ VBOX_SCRIPT
 
 Vagrant.configure("2") do |config|
   # Note that this is a configuration for different VMs
-  # production2: The current live server
-  # production: A defunct production server
   # local: A local machine that mimics a production deployment
   # dev: A VM that has docker on it - used for development on OS X
 
