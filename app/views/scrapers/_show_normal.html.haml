@@ -10,8 +10,13 @@
           = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
       .large-icon-box.pull-right
         = render partial: "scrapers/running_indicator", locals: {scraper: scraper}
-    
+
     %h4= scraper.description
+
+    - if scraper.last_run && !scraper.last_run.scraped_domains.empty?
+      %p
+        Scrapes
+        = scraped_domains_list(scraper.last_run)
 
     - if scraper.owner.buildpacks
       %p.text-warning
