@@ -2,6 +2,7 @@ require 'new_relic/agent/method_tracer'
 
 class Scraper < ActiveRecord::Base
   include Sync::Actions
+  searchkick
 
   belongs_to :owner, inverse_of: :scrapers
   belongs_to :forked_by, class_name: "User"
