@@ -22,6 +22,8 @@ gem "octokit"
 # There's a bugfix for showing errors here. Hopefully it will get merged soon
 gem "formtastic-bootstrap"
 gem "formtastic"
+# We're moving from using formtastic to the more popular simple_form
+gem "simple_form"
 gem "cocoon"
 gem "grit"
 # version 1.20.0 of the docker-api gem is causing the compile step in buildstep
