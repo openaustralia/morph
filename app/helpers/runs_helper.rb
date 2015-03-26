@@ -18,4 +18,13 @@ module RunsHelper
       sections.join(", ") + " in the database"
     end
   end
+
+  def scraped_domains_list(run)
+    d = run.scraped_domains
+    # If there are more than 3 in the list then summarise
+    if d.count > 3
+      d = d[0..2] + ["#{d[3..-1].count} other"]
+    end
+    d.to_sentence
+  end
 end
