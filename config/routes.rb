@@ -41,6 +41,8 @@ Morph::Application.routes.draw do
   end
 
   root 'static#index'
+  get 'search', to: "static#search"
+
   resources :documentation, only: :index do
     collection do
       get "api"
