@@ -1,10 +1,6 @@
 %h3 Settings
-= semantic_form_for @scraper do |f|
-  = f.inputs do
-    -# Workaround for bug (I think in formtastic)
-    -# TODO: Fix this in Formtastic (or wherever it's coming from)
-    %input(name="scraper[auto_run]" type="hidden" value="0")
-    = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !(can? :update, @scraper)}
+= simple_form_for @scraper do |f|
+  = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !(can? :update, @scraper)}
   %h3 Secret environment variables
   %p
     Environment variables can be used to pass secret values to your scraper such as API keys.
@@ -14,7 +10,7 @@
     .col-sm-8
       %label Value
   #variables
-    = f.semantic_fields_for :variables do |variable|
+    = f.fields_for :variables do |variable|
       = render "variable_fields", f: variable
     .links
       - if can? :update, @scraper
@@ -22,5 +18,4 @@
           %i.fa.fa-plus-circle.fa-2x
           Add variable
   - if can? :update, @scraper
-    = f.actions do
-      = f.action :submit, :label => "Update"
+    = f.button :submit, "Update"
