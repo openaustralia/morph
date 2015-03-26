@@ -23,7 +23,7 @@ module RunsHelper
     d = run.scraped_domains.map{|d| link_to h(d), h("http://#{d}")}
     # If there are more than 3 in the list then summarise
     if d.count > 3
-      d = d[0..2] + ["#{d[3..-1].count} other".html_safe]
+      d = d[0..2] + [pluralize(d[3..-1].count, "other domain".html_safe)]
     end
     d.to_sentence.html_safe
   end
