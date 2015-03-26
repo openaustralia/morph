@@ -20,7 +20,7 @@ module RunsHelper
   end
 
   def scraped_domains_list(run)
-    d = run.scraped_domains
+    d = run.scraped_domains.map{|d| link_to d, "http://#{d}"}
     # If there are more than 3 in the list then summarise
     if d.count > 3
       d = d[0..2] + ["#{d[3..-1].count} other"]
