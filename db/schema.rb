@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140625211335) do
+ActiveRecord::Schema.define(version: 20150326072730) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -129,7 +129,7 @@ ActiveRecord::Schema.define(version: 20140625211335) do
   add_index "organizations_users", ["user_id"], name: "index_organizations_users_on_user_id", using: :btree
 
   create_table "owners", force: true do |t|
-    t.integer  "sign_in_count",      default: 0,     null: false
+    t.integer  "sign_in_count",       default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -147,9 +147,11 @@ ActiveRecord::Schema.define(version: 20140625211335) do
     t.string   "type"
     t.string   "gravatar_url"
     t.string   "api_key"
-    t.boolean  "admin",              default: false, null: false
-    t.boolean  "suspended",          default: false, null: false
+    t.boolean  "admin",               default: false, null: false
+    t.boolean  "suspended",           default: false, null: false
     t.string   "feature_switches"
+    t.datetime "remember_created_at"
+    t.string   "remember_token"
   end
 
   add_index "owners", ["api_key"], name: "index_owners_on_api_key", using: :btree
@@ -194,10 +196,10 @@ ActiveRecord::Schema.define(version: 20140625211335) do
     t.boolean  "auto_run",                   default: false, null: false
     t.string   "scraperwiki_url"
     t.integer  "forked_by_id"
+    t.string   "original_language_key"
     t.integer  "repo_size",                  default: 0,     null: false
     t.integer  "sqlite_db_size",             default: 0,     null: false
     t.integer  "create_scraper_progress_id"
-    t.string   "original_language_key"
   end
 
   add_index "scrapers", ["full_name"], name: "index_scrapers_on_full_name", using: :btree
