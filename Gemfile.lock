@@ -124,6 +124,14 @@ GEM
     dotenv (0.9.0)
     dotenv-rails (0.9.0)
       dotenv (= 0.9.0)
+    elasticsearch (1.0.8)
+      elasticsearch-api (= 1.0.7)
+      elasticsearch-transport (= 1.0.7)
+    elasticsearch-api (1.0.7)
+      multi_json
+    elasticsearch-transport (1.0.7)
+      faraday
+      multi_json
     em-http-request (1.0.3)
       addressable (>= 2.2.3)
       cookiejar
@@ -202,7 +210,7 @@ GEM
     honeybadger (1.13.0)
       json
     http_parser.rb (0.5.3)
-    i18n (0.6.11)
+    i18n (0.7.0)
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
       responders (~> 1.0.0.rc)
@@ -346,6 +354,10 @@ GEM
     sdoc (0.4.0)
       json (~> 1.8)
       rdoc (~> 4.0, < 5.0)
+    searchkick (0.8.7)
+      activemodel
+      elasticsearch (>= 1)
+      hashie
     sidekiq (3.0.1)
       celluloid (>= 0.15.2)
       connection_pool (>= 2.0.0)
@@ -380,10 +392,10 @@ GEM
     sync (0.2.7)
       em-http-request
     thor (0.19.1)
-    thread_safe (0.3.4)
+    thread_safe (0.3.5)
     tilt (1.4.1)
     timers (1.1.0)
-    tzinfo (0.3.42)
+    tzinfo (0.3.43)
     uglifier (2.4.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
@@ -453,6 +465,7 @@ DEPENDENCIES
   rspec-rails (~> 2.0)
   sass-rails (~> 4.0.0)
   sdoc
+  searchkick
   sidekiq
   simplecov
   sinatra (>= 1.3.0)

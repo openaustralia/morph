@@ -57,6 +57,7 @@ gem 'sync'
 gem 'multiblock'
 gem 'honeybadger'
 gem 'cancan'
+gem 'searchkick'
 
 group :production do
   gem "dalli"
