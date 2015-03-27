@@ -25,3 +25,9 @@
 - name: Update grub
   command: update-grub
   when: docker_grub_change|changed
+
+- name: Configure docker to disable inter-container communication
+  copy:
+    src: docker
+    dest: /etc/default/docker
+  notify: restart docker
