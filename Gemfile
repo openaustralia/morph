@@ -13,7 +13,7 @@ gem 'openaustralia-sqlite3', require: "sqlite3"
 gem 'mysql2'
 
 gem "haml-rails"
-gem "twitter-bootstrap-rails", git: "https://github.com/seyhunak/twitter-bootstrap-rails.git", branch: "bootstrap3"
+gem "twitter-bootstrap-rails"
 gem "bootstrap-select-rails", git: "https://github.com/Slashek/bootstrap-select-rails.git"
 gem "devise"
 gem "omniauth-github"
