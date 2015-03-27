@@ -1,4 +1,4 @@
-Morph::Application.routes.draw do
+Rails.application.routes.draw do
   # Old urls getting redirected to new ones
   get "/api", to: redirect {|params, req| "/documentation/api?#{req.query_string}"}
   # This just gets redirected elsewhere
@@ -87,16 +87,29 @@ Morph::Application.routes.draw do
   resources :owners, path: "/", only: [:show, :update]
   resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
-  resources :scrapers, path: "/", id: /[^\/]+\/[^\/]+/, only: [:show, :update, :destroy] do
-    member do
-      get 'data'
-      get 'watchers'
-      get 'settings'
 
-      post 'watch'
-      post 'run'
-      post 'stop'
-      post 'clear'
-    end
-  end
+  # Escaping of params with "/" in them changed in Rails 4.1
+  #
+  # resources :scrapers, path: "/", id: /[^\/]+\/[^\/]+/, only: [:show, :update, :destroy] do
+  #   member do
+  #     get 'data'
+  #     get 'watchers'
+  #     get 'settings'
+  #
+  #     post 'watch'
+  #     post 'run'
+  #     post 'stop'
+  #     post 'clear'
+  #   end
+  # end
+  get '*id/data', to: "scrapers#data", as: :data_scraper, id: /[^\/]+\/[^\/]+/
+  get '*id/watchers', to: "scrapers#watchers", as: :watchers_scraper, id: /[^\/]+\/[^\/]+/
+  get '*id/settings', to: "scrapers#settings", as: :settings_scraper, id: /[^\/]+\/[^\/]+/
+  post '*id/watch', to: "scrapers#watch", as: :watch_scraper, id: /[^\/]+\/[^\/]+/
+  post '*id/run', to: "scrapers#run", as: :run_scraper, id: /[^\/]+\/[^\/]+/
+  post '*id/stop', to: "scrapers#stop", as: :stop_scraper, id: /[^\/]+\/[^\/]+/
+  post '*id/clear', to: "scrapers#clear", as: :clear_scraper, id: /[^\/]+\/[^\/]+/
+  get '*id', to: "scrapers#show", as: :scraper, id: /[^\/]+\/[^\/]+/
+  put '*id', to: "scrapers#update", id: /[^\/]+\/[^\/]+/
+  delete '*id', to: "scrapers#destroy", id: /[^\/]+\/[^\/]+/
 end
