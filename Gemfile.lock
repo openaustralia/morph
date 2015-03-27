@@ -164,8 +164,6 @@ GEM
     formatador (0.2.4)
     formtastic (2.3.0.rc3)
       actionpack (>= 3.0)
-    formtastic-bootstrap (3.0.0)
-      formtastic (>= 2.2)
     friendly_id (5.0.2)
       activerecord (~> 4.0.0)
     github-markup (1.0.2)
@@ -424,8 +422,6 @@ DEPENDENCIES
   faraday
   faye
   foreman
-  formtastic
-  formtastic-bootstrap
   friendly_id
   github-markup
   grit

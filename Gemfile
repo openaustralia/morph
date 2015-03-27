@@ -19,10 +19,6 @@ gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
 gem "octokit"
-# There's a bugfix for showing errors here. Hopefully it will get merged soon
-gem "formtastic-bootstrap"
-gem "formtastic"
-# We're moving from using formtastic to the more popular simple_form
 gem "simple_form"
 gem "cocoon"
 gem "grit"
