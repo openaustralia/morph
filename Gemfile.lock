@@ -361,6 +361,10 @@ GEM
       rspec-core (~> 2.99.0)
       rspec-expectations (~> 2.99.0)
       rspec-mocks (~> 2.99.0)
+    rspec-activemodel-mocks (1.0.1)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      rspec-mocks (>= 2.99, < 4.0)
     rspec-collection_matchers (1.1.2)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (2.99.2)
@@ -497,6 +501,7 @@ DEPENDENCIES
   rails-timeago (~> 2.0)
   rails_autolink
   redcarpet
+  rspec-activemodel-mocks
   rspec-rails (~> 2.0)
   sass-rails (~> 4.0.0)
   sdoc
