@@ -118,10 +118,10 @@
   lineinfile: dest=/etc/hosts line="127.0.0.1 faye.{{ server_name }}" owner=root group=root mode=0644
 
 - name: iptables add script
-  copy: src=iptables-mitmproxy-add dest=/usr/local/sbin mode=0755
+  copy: src=iptables-morph-add dest=/usr/local/sbin mode=0755
 
 - name: iptables remove script
-  copy: src=iptables-mitmproxy-remove dest=/usr/local/sbin mode=0755
+  copy: src=iptables-morph-remove dest=/usr/local/sbin mode=0755
 
-- name: run iptables mitmproxy setup script at boot
+- name: run iptables morph setup script at boot
   copy: src=interfaces dest=/etc/network/interfaces
