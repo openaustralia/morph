@@ -78,7 +78,7 @@
             %span.help-block
               Don't tell anyone else what the api key is
       .col-sm-3
-        = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.api_key, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false, hint: "Choose which api key you want to use", label: false
+        = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.api_key, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false, hint: "Choose which api key you want to use", label: false
   - else
     .row
       .col-sm-6
@@ -118,7 +118,7 @@
     }
 
     function update_api_key() {
-      api_key = $("#scraper_owner").val();
+      api_key = $("#scraper_owner_id").val();
       $("#api_key").html(api_key);
       $("code span.api_key").html(encodeURIComponent(api_key));
       update_link_url();
@@ -185,7 +185,7 @@
 
     $("#scraper_full_name").change(update_full_name).keyup(update_full_name);
     $("#query").change(update_query).keyup(update_query);
-    $("#scraper_owner").change(update_api_key);
+    $("#scraper_owner_id").change(update_api_key);
     $("#format").change(update_format);
     $("#callback").change(update_callback).keyup(update_callback);
     $("#title").change(update_atom_query).keyup(update_atom_query);

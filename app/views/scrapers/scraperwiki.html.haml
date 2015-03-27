@@ -25,7 +25,7 @@
           = f.input :scraperwiki_shortname, label: "Name of ScraperWiki scraper", hint: "The name (as it's shown in a url) of the ScraperWiki Classic scraper that you want to fork", placeholder:"city_of_sydney_development_applications"
     .row
       .col-sm-2
-        = f.input :owner, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false
+        = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false
 
       .col-sm-6
         -# Using long-winded form here because simple_form doesn't directly support prepends
