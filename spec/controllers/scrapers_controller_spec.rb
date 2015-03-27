@@ -297,7 +297,7 @@ describe ScrapersController do
       end
 
       it "should return sqlite" do
-        controller.should_receive(:send_file).with("/path/to/db.sqlite", filename: "a_scraper.sqlite").and_return{controller.render nothing: true}
+        controller.should_receive(:send_file).with("/path/to/db.sqlite", filename: "a_scraper.sqlite") {controller.render nothing: true}
         get :data, id: "mlandauer/a_scraper", key: "1234", format: :sqlite
         response.should be_success
       end
