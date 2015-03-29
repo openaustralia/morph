@@ -112,8 +112,6 @@ GEM
     dotenv (2.0.0)
     dotenv-rails (2.0.0)
       dotenv (= 2.0.0)
-    em-http-request (1.1.2)
-      addressable (>= 2.3.4)
     elasticsearch (1.0.8)
       elasticsearch-api (= 1.0.7)
       elasticsearch-transport (= 1.0.7)
@@ -122,6 +120,8 @@ GEM
     elasticsearch-transport (1.0.7)
       faraday
       multi_json
+    em-http-request (1.1.2)
+      addressable (>= 2.3.4)
       cookiejar
       em-socksify (>= 0.3)
       eventmachine (>= 1.0.3)
@@ -371,11 +371,11 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    sexp_processor (4.5.0)
     searchkick (0.8.7)
       activemodel
       elasticsearch (>= 1)
       hashie
+    sexp_processor (4.5.0)
     shellany (0.0.1)
     sidekiq (3.3.3)
       celluloid (>= 0.16.0)
@@ -431,10 +431,10 @@ GEM
     vcr (2.9.3)
     warden (1.2.3)
       rack (>= 1.0)
-    webmock (1.20.4)
+    webmock (1.21.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-    websocket-driver (0.5.3)
+    websocket-driver (0.5.4)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
     zeroclipboard-rails (0.1.0)
