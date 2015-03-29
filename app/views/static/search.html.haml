@@ -1,1 +1,8 @@
-%h1 This will be the search page
+.container
+  %h1
+    Search:
+    = @q
+
+  = paginate @scrapers
+  = render partial: "sync/scrapers/scraper", collection: @scrapers
+  = paginate @scrapers
