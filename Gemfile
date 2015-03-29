@@ -18,7 +18,9 @@ gem "bootstrap-select-rails"
 gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
-gem "octokit"
+# Version 3.0 of octokit has a couple of breaking changes. See
+# https://github.com/octokit/octokit.rb#upgrading-guide
+gem "octokit", "~> 2.0"
 gem "simple_form"
 gem "cocoon"
 gem "grit"
