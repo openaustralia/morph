@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'dotenv-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.1'
+gem 'rails', '4.1.10'
 
 # Use sqlite3 as the database for Active Record
 # This is a patched version of the gem at https://github.com/openaustralia/sqlite3-ruby/tree/openaustralia-sqlite3
@@ -18,7 +18,9 @@ gem "bootstrap-select-rails"
 gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
-gem "octokit"
+# Version 3.0 of octokit has a couple of breaking changes. See
+# https://github.com/octokit/octokit.rb#upgrading-guide
+gem "octokit", "~> 2.0"
 gem "simple_form"
 gem "cocoon"
 gem "grit"
@@ -53,7 +55,9 @@ gem 'faye'
 gem "puma"
 gem 'sync'
 gem 'multiblock'
-gem 'honeybadger'
+# Lock honeybadger to version 1 for the time being as version 2 requires a change to
+# the configuration
+gem 'honeybadger', "~> 1.0"
 gem 'cancan'
 gem 'searchkick'
 
