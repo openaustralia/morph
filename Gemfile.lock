@@ -202,7 +202,7 @@ GEM
     hashie (3.4.0)
     hike (1.2.3)
     hitimes (1.2.2)
-    honeybadger (1.13.0)
+    honeybadger (1.16.7)
       json
     http_parser.rb (0.5.3)
     i18n (0.7.0)
@@ -471,7 +471,7 @@ DEPENDENCIES
   guard-livereload
   guard-rspec
   haml-rails
-  honeybadger
+  honeybadger (~> 1.0)
   jbuilder (~> 1.2)
   jquery-rails
   kaminari

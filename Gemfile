@@ -55,7 +55,9 @@ gem 'faye'
 gem "puma"
 gem 'sync'
 gem 'multiblock'
-gem 'honeybadger'
+# Lock honeybadger to version 1 for the time being as version 2 requires a change to
+# the configuration
+gem 'honeybadger', "~> 1.0"
 gem 'cancan'
 
 group :production do
