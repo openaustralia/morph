@@ -3,5 +3,6 @@ class StaticController < ApplicationController
   end
 
   def search
+    @q = params[:q]
   end
 end
