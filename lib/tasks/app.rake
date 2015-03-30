@@ -63,6 +63,23 @@ namespace :app do
     Morph::Backup.restore if confirm("Are you sure? This will overwrite the databases and Redis needs to be shutdown.")
   end
 
+  desc "Show stopped containers"
+  task :stopped_containers => :environment do
+    containers = Docker::Container.all(:all => true)
+    containers = containers.select do |c|
+      running = c.json["State"]["Running"]
+      # Time ago in seconds that this finished
+      finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
+      # Only show containers that have been stopped for 5 minutes
+      !running && finished_ago >= 5 * 60
+    end
+    containers.each do |c|
+      id = c.id[0..11]
+      name = c.info["Names"].first
+      finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
+    end
+  end
+
   def confirm(message)
     STDOUT.puts "#{message} (y/n)"
     STDIN.gets.strip == "y"
