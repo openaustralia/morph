@@ -77,6 +77,7 @@ namespace :app do
       id = c.id[0..11]
       name = c.info["Names"].first
       finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
+      puts "id: #{id}, name: #{name}, finished: #{finished_ago} seconds ago"
     end
   end
 
