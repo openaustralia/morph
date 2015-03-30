@@ -2,7 +2,9 @@ require 'new_relic/agent/method_tracer'
 
 class Scraper < ActiveRecord::Base
   include Sync::Actions
-  searchkick
+  # Using smaller batch_size than the default for the time being because reindexing
+  # causes elasticsearch on the local VM to run out of memory
+  searchkick batch_size: 200 # defaults to 1000
 
   belongs_to :owner, inverse_of: :scrapers
   belongs_to :forked_by, class_name: "User"
