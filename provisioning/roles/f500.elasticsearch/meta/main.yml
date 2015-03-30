@@ -15,5 +15,5 @@ galaxy_info:
   categories:
     - "database:nosql"
 
-  dependencies:
-    - geerlingguy.java
+dependencies:
+  - geerlingguy.java
