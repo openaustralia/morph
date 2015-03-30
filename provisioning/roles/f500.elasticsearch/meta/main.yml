@@ -1,0 +1,19 @@
+---
+
+galaxy_info:
+  author: "Jasper N. Brouwer, Ramon de la Fuente"
+  description: Install and configure Elasticsearch
+  company: Future500
+  license: LGPLv3
+  min_ansible_version: 1.4
+
+  platforms:
+    - name: Debian
+      versions:
+        - wheezy
+
+  categories:
+    - "database:nosql"
+
+  dependencies:
+    - geerlingguy.java
