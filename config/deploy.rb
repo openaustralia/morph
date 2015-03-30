@@ -73,6 +73,19 @@ namespace :foreman do
   end
 end
 
+namespace :searchkick do
+  namespace :reindex do
+    desc "Reindex all models"
+    task :all do
+      on roles(:app) do
+        within release_path do
+          execute :bundle, "exec rake searchkick:reindex:all RAILS_ENV=production"
+        end
+      end
+    end
+  end
+end
+
 after 'deploy:publishing', 'deploy:restart'
 before "deploy:restart", "deploy:docker"
 after "deploy:docker", "foreman:restart"
