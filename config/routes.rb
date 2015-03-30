@@ -113,5 +113,6 @@ Rails.application.routes.draw do
   post '*id/clear', to: "scrapers#clear", as: :clear_scraper, id: /[^\/]+\/[^\/]+/
   get '*id', to: "scrapers#show", as: :scraper, id: /[^\/]+\/[^\/]+/
   put '*id', to: "scrapers#update", id: /[^\/]+\/[^\/]+/
+  patch '*id', to: "scrapers#update", id: /[^\/]+\/[^\/]+/
   delete '*id', to: "scrapers#destroy", id: /[^\/]+\/[^\/]+/
 end
