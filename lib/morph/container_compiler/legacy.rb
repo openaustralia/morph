@@ -10,7 +10,7 @@ module Morph
         status_code = Morph::DockerRunner.run(
           command: command,
           user: "scraper",
-          image_name: run.language.docker_image,
+          image_name: docker_image(run.language),
           container_name: docker_container_name(run),
           repo_path: run.repo_path,
           data_path: run.data_path,
@@ -20,6 +20,10 @@ module Morph
             on.ip_address {|ip| wrapper.call(:ip_address, ip)}
         end
         status_code
+      end
+
+      def self.docker_image(language)
+        language.docker_image
       end
     end
   end
