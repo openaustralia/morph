@@ -2,7 +2,7 @@ module Morph
   module ContainerCompilerNew
     class Legacy
       def self.docker_container_name(run)
-        "#{run.owner.to_param}_#{run.name}_#{run.id}"
+        Morph::ContainerCompiler.docker_container_name(run)
       end
 
       def self.compile_and_run(run)
