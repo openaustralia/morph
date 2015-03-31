@@ -1,10 +1,6 @@
 module Morph
   module ContainerCompilerNew
-    class Legacy
-      def self.docker_container_name(run)
-        Morph::ContainerCompiler.docker_container_name(run)
-      end
-
+    class Legacy < Base
       def self.compile_and_run(run)
         wrapper = Multiblock.wrapper
         yield(wrapper)

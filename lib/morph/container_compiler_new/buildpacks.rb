@@ -1,6 +1,6 @@
 module Morph
   module ContainerCompilerNew
-    class Buildpacks
+    class Buildpacks < Base
       def self.compile_and_run(run)
         wrapper = Multiblock.wrapper
         yield(wrapper)
@@ -36,10 +36,6 @@ module Morph
 
         i2.delete("noprune" => 1)
         status_code
-      end
-
-      def self.docker_container_name(run)
-        Morph::ContainerCompiler.docker_container_name(run)
       end
 
       # file_environment needs to also include a Dockerfile with content
