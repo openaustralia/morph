@@ -1,5 +1,5 @@
 module Morph
-  module ContainerCompilerNew
+  module ContainerCompiler
     class Base
       def self.docker_container_name(run)
         "#{run.owner.to_param}_#{run.name}_#{run.id}"
@@ -8,9 +8,9 @@ module Morph
       def self.create(type)
         case type
         when :legacy
-          Morph::ContainerCompilerNew::Legacy
+          Morph::ContainerCompiler::Legacy
         when :buildpacks
-          Morph::ContainerCompilerNew::Buildpacks
+          Morph::ContainerCompiler::Buildpacks
         else
           raise "Invalid type #{type}"
         end

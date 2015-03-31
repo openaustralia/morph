@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Morph::ContainerCompilerNew::Buildpacks do
+describe Morph::ContainerCompiler::Buildpacks do
   context "a set of files" do
     before :each do
       FileUtils.mkdir_p("test/foo")
@@ -17,18 +17,18 @@ describe Morph::ContainerCompilerNew::Buildpacks do
     end
 
     describe ".all_hash" do
-      it {Morph::ContainerCompilerNew::Buildpacks.all_hash("test").should == {
+      it {Morph::ContainerCompiler::Buildpacks.all_hash("test").should == {
         "Gemfile" => "", "Gemfile.lock" => "", "Procfile" => "",
         "foo/three.txt" => "", "one.txt" => "", "two.txt" => ""}}
     end
 
     describe ".all_config_hash" do
-      it {Morph::ContainerCompilerNew::Buildpacks.all_config_hash("test").should == {
+      it {Morph::ContainerCompiler::Buildpacks.all_config_hash("test").should == {
         "Gemfile" => "", "Gemfile.lock" => "", "Procfile" => ""}}
     end
 
     describe ".all_run_hash" do
-      it {Morph::ContainerCompilerNew::Buildpacks.all_run_hash("test").should == {
+      it {Morph::ContainerCompiler::Buildpacks.all_run_hash("test").should == {
         "foo/three.txt" => "", "one.txt" => "", "two.txt" => ""}}
     end
   end
@@ -47,18 +47,18 @@ describe Morph::ContainerCompilerNew::Buildpacks do
     end
 
     describe ".all_hash" do
-      it {Morph::ContainerCompilerNew::Buildpacks.all_hash("test").should == {
+      it {Morph::ContainerCompiler::Buildpacks.all_hash("test").should == {
         "Gemfile" => "", "Gemfile.lock" => "", "foo/three.txt" => "", "one.txt" => ""
       }}
     end
 
     describe ".all_config_hash" do
-      it {Morph::ContainerCompilerNew::Buildpacks.all_config_hash("test").should == {
+      it {Morph::ContainerCompiler::Buildpacks.all_config_hash("test").should == {
         "Gemfile" => "", "Gemfile.lock" => ""}}
     end
 
     describe ".all_run_hash" do
-      it {Morph::ContainerCompilerNew::Buildpacks.all_run_hash("test").should == {
+      it {Morph::ContainerCompiler::Buildpacks.all_run_hash("test").should == {
         "foo/three.txt" => "", "one.txt" => ""}}
     end
   end

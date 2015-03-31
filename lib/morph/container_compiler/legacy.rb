@@ -1,5 +1,5 @@
 module Morph
-  module ContainerCompilerNew
+  module ContainerCompiler
     class Legacy < Base
       def self.compile_and_run(run)
         wrapper = Multiblock.wrapper

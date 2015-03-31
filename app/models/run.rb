@@ -87,7 +87,7 @@ class Run < ActiveRecord::Base
   end
 
   def docker_container_name
-    Morph::ContainerCompilerNew::Base.docker_container_name(self)
+    Morph::ContainerCompiler::Base.docker_container_name(self)
   end
 
   def git_revision_github_url
@@ -111,7 +111,7 @@ class Run < ActiveRecord::Base
       return
     end
 
-    status_code = Morph::ContainerCompilerNew::Base.create(owner.buildpacks ? :buildpacks : :legacy).compile_and_run(self) do |on|
+    status_code = Morph::ContainerCompiler::Base.create(owner.buildpacks ? :buildpacks : :legacy).compile_and_run(self) do |on|
       on.log {|s,c| yield s,c}
       on.ip_address do |ip|
         # Store the ip address of the container for this run
