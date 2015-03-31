@@ -4,7 +4,7 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      Morph::ContainerCompilerNew::Legacy.compile_and_run(run) do |on|
+      Morph::ContainerCompilerNew::Base.create(:legacy).compile_and_run(run) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
         on.ip_address {|ip| wrapper.call(:ip_address, ip)}
       end
@@ -14,7 +14,7 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      Morph::ContainerCompilerNew::Buildpacks.compile_and_run(run) do |on|
+      Morph::ContainerCompilerNew::Base.create(:buildpacks).compile_and_run(run) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
         on.ip_address {|ip| wrapper.call(:ip_address, ip)}
       end
