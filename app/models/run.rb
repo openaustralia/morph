@@ -112,7 +112,7 @@ class Run < ActiveRecord::Base
     end
 
     if owner.buildpacks
-      status_code = Morph::ContainerCompiler.compile_and_run_with_buildpacks(self) do |on|
+      status_code = Morph::ContainerCompilerNew::Base.create(:buildpacks).compile_and_run(self) do |on|
         on.log {|s,c| yield s,c}
         on.ip_address do |ip|
           # Store the ip address of the container for this run
@@ -120,7 +120,7 @@ class Run < ActiveRecord::Base
         end
       end
     else
-      status_code = Morph::ContainerCompiler.compile_and_run_original(self) do |on|
+      status_code = Morph::ContainerCompilerNew::Base.create(:legacy).compile_and_run(self) do |on|
         on.log {|s,c| yield s,c}
         on.ip_address do |ip|
           # Store the ip address of the container for this run
