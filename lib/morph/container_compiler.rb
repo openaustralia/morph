@@ -19,9 +19,5 @@ module Morph
         on.ip_address {|ip| wrapper.call(:ip_address, ip)}
       end
     end
-
-    def self.docker_container_name(run)
-      Morph::ContainerCompilerNew::Base.docker_container_name(run)
-    end
   end
 end
