@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Morph::ContainerCompiler do
+describe Morph::ContainerCompilerNew::Buildpacks do
   context "a set of files" do
     before :each do
       FileUtils.mkdir_p("test/foo")
