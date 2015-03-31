@@ -23,7 +23,7 @@ module Morph
       end
 
       def self.docker_image(language)
-        language.docker_image
+        "openaustralia/morph-#{language.key}"
       end
     end
   end
