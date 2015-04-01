@@ -63,7 +63,7 @@ hiddenmenu
 ## e.g. kopt=root=/dev/hda1 ro
 ##      kopt_2_6_8=root=/dev/hdc1 ro
 ##      kopt_2_6_8_2_686=root=/dev/hdc2 ro
-kopt=root=/dev/xvda console=hvc0 ro quiet
+# kopt=root=UUID=f9c76f9a-87b8-4734-88ef-aa615c7c51d7 ro
 
 ## default grub root device
 ## e.g. groot=(hd0,0)

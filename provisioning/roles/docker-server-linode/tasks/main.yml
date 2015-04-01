@@ -48,11 +48,14 @@
 - name: Ensure that the docker package is installed
   apt: pkg=lxc-docker
 
-# This isn't the right way to do things on Linode
-#
-# - name: Enable memory and swap accounting
-#   lineinfile:
-#     dest: /etc/default/grub
-#     regexp: GRUB_CMDLINE_LINUX=
-#     line: GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"
-#   register: docker_grub_change
+- name: Enable memory and swap accounting
+  lineinfile:
+    dest: /etc/default/grub
+    regexp: GRUB_CMDLINE_LINUX=
+    line: GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"
+  register: docker_grub_change
+
+# TODO Reboot server
+- name: Update grub
+  command: update-grub -y
+  when: docker_grub_change|changed
