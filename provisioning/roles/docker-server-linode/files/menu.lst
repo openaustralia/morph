@@ -11,7 +11,7 @@
 # is the entry saved with the command 'savedefault'.
 # WARNING: If you are using dmraid do not use 'savedefault' or your
 # array will desync and will not let you boot your system.
-default		0
+default         0
 
 ## timeout sec
 # Set a timeout, in SEC seconds, before automatically booting the default entry
@@ -63,7 +63,7 @@ hiddenmenu
 ## e.g. kopt=root=/dev/hda1 ro
 ##      kopt_2_6_8=root=/dev/hdc1 ro
 ##      kopt_2_6_8_2_686=root=/dev/hdc2 ro
-# kopt=root=UUID=f9c76f9a-87b8-4734-88ef-aa615c7c51d7 ro
+# kopt=root=/dev/xvda console=hvc0 ro quiet
 
 ## default grub root device
 ## e.g. groot=(hd0,0)
