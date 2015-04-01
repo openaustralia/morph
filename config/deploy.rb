@@ -90,4 +90,4 @@ end
 after 'deploy:publishing', 'deploy:restart'
 before "deploy:restart", "deploy:docker"
 after "deploy:docker", "foreman:restart"
-after "foreman:restart", "searchkick:reindex:all"
+#after "foreman:restart", "searchkick:reindex:all"
