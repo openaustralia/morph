@@ -23,7 +23,7 @@
 
 # TODO Reboot server
 - name: Update grub
-  command: update-grub
+  command: update-grub -y
   when: docker_grub_change|changed
 
 # Now you need to make some changes on the Linode console
