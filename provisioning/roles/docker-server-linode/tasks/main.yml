@@ -32,14 +32,21 @@
 # 3. Save changes
 # 4. Reboot from the Dashboard tab
 
-#- name: Ensure that we have the Docker repository key
-#  apt_key: url=https://get.docker.io/gpg id=A88D21E9
-#- name: Ensure that pycurl is installed (for ansible)
-#  apt: pkg=python-pycurl
-#- name: Ensure that we have the docker repository
-#  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
-#- name: Ensure that the docker package is installed
-#  apt: pkg=lxc-docker
+- name: Ensure that we have the Docker repository key
+  apt_key: url=https://get.docker.io/gpg id=A88D21E9
+
+- name: Ensure that pycurl is installed (for ansible)
+  apt: pkg=python-pycurl
+
+- name: Ensure that we have the docker repository
+  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
+
+# docker needs apparmor but it's not a dependency in the package for some reason
+- name: Install apparmor
+  apt: pkg=apparmor state=present
+
+- name: Ensure that the docker package is installed
+  apt: pkg=lxc-docker
 
 # This isn't the right way to do things on Linode
 #
