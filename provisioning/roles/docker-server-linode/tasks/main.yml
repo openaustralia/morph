@@ -1,4 +1,10 @@
 ---
+- name: Remove old linux kernel
+  apt: pkg=linux-image-generic-lts-raring state=absent
+
+- name: Remove old linux kernel header
+  apt: pkg=linux-headers-generic-lts-raring state=absent
+
 - name: Ensure that we're running Linux kernel 3.8
   apt: pkg=linux-image-generic-lts-trusty update_cache=yes cache_valid_time=3600
   notify:
