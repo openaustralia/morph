@@ -16,7 +16,7 @@ default		0
 ## timeout sec
 # Set a timeout, in SEC seconds, before automatically booting the default entry
 # (normally the first entry defined).
-timeout		3
+timeout		10
 
 ## hiddenmenu
 # Hides the menu by default (press ESC to see the menu)
@@ -63,11 +63,11 @@ hiddenmenu
 ## e.g. kopt=root=/dev/hda1 ro
 ##      kopt_2_6_8=root=/dev/hdc1 ro
 ##      kopt_2_6_8_2_686=root=/dev/hdc2 ro
-# kopt=root=UUID=f9c76f9a-87b8-4734-88ef-aa615c7c51d7 ro
+kopt=root=/dev/xvda console=hvc0 ro quiet
 
 ## default grub root device
 ## e.g. groot=(hd0,0)
-# groot=(hd0,0)
+# groot=(hd0)
 
 ## should update-grub create alternative automagic boot options
 ## e.g. alternative=true
