@@ -2,6 +2,9 @@ require 'new_relic/agent/method_tracer'
 
 class Scraper < ActiveRecord::Base
   include Sync::Actions
+  # Using smaller batch_size than the default for the time being because reindexing
+  # causes elasticsearch on the local VM to run out of memory
+  searchkick batch_size: 100 # defaults to 1000
 
   belongs_to :owner, inverse_of: :scrapers
   belongs_to :forked_by, class_name: "User"
@@ -213,10 +216,6 @@ class Scraper < ActiveRecord::Base
 
   def database
     Morph::Database.new(data_path)
-  end
-
-  def repo_exists_or_being_created?
-    File.exists?(repo_path) || create_scraper_progress
   end
 
   # It seems silly implementing this

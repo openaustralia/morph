@@ -34,7 +34,7 @@ bindCapitalise = (j) ->
 
 
 $ ->
-  bindCapitalise($("form.scraper .nested-fields .name"))
+  bindCapitalise($("form.edit_scraper .nested-fields .name"))
   $('#variables')
     .on 'cocoon:before-insert', (e, insertedItem) ->
       name = insertedItem.find(".name")

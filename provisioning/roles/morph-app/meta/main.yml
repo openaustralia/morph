@@ -9,3 +9,5 @@ dependencies:
   - { role: newrelic-sysmond }
   - { role: discourse }
   - { role: mitmproxy }
+  - role: f500.elasticsearch
+    elasticsearch_network_host: localhost

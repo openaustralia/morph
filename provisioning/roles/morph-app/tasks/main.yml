@@ -88,6 +88,10 @@
   cron: name="xml sitemaps" hour=16 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake sitemap:refresh RAILS_ENV=production"
   when: cron_jobs
 
+- name: Cron job to clean out stopped containers every 5 minutes
+  cron: name="stopped container" minute="*/5" user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:remove_stopped_containers RAILS_ENV=production"
+  when: cron_jobs
+
 - name: Install nodejs for asset precompiling
   apt: pkg=nodejs
 - name: Install memcached
@@ -118,10 +122,10 @@
   lineinfile: dest=/etc/hosts line="127.0.0.1 faye.{{ server_name }}" owner=root group=root mode=0644
 
 - name: iptables add script
-  copy: src=iptables-mitmproxy-add dest=/usr/local/sbin mode=0755
+  copy: src=iptables-morph-add dest=/usr/local/sbin mode=0755
 
 - name: iptables remove script
-  copy: src=iptables-mitmproxy-remove dest=/usr/local/sbin mode=0755
+  copy: src=iptables-morph-remove dest=/usr/local/sbin mode=0755
 
-- name: run iptables mitmproxy setup script at boot
+- name: run iptables morph setup script at boot
   copy: src=interfaces dest=/etc/network/interfaces

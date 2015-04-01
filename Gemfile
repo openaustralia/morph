@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'dotenv-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.12'
+gem 'rails', '4.1.10'
 
 # Use sqlite3 as the database for Active Record
 # This is a patched version of the gem at https://github.com/openaustralia/sqlite3-ruby/tree/openaustralia-sqlite3
@@ -13,15 +13,15 @@ gem 'openaustralia-sqlite3', require: "sqlite3"
 gem 'mysql2'
 
 gem "haml-rails"
-gem "twitter-bootstrap-rails", git: "https://github.com/seyhunak/twitter-bootstrap-rails.git", branch: "bootstrap3"
-gem "bootstrap-select-rails", git: "https://github.com/Slashek/bootstrap-select-rails.git"
+gem "twitter-bootstrap-rails"
+gem "bootstrap-select-rails"
 gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
-gem "octokit"
-# There's a bugfix for showing errors here. Hopefully it will get merged soon
-gem "formtastic-bootstrap"
-gem "formtastic"
+# Version 3.0 of octokit has a couple of breaking changes. See
+# https://github.com/octokit/octokit.rb#upgrading-guide
+gem "octokit", "~> 2.0"
+gem "simple_form"
 gem "cocoon"
 gem "grit"
 # version 1.20.0 of the docker-api gem is causing the compile step in buildstep
@@ -50,13 +50,16 @@ gem 'kaminari'
 gem 'kaminari-bootstrap', '~> 3.0.1'
 gem "rails-timeago", "~> 2.0"
 # Rails 4 compatibility isn't released yet. So tracking HEAD.
-gem 'activeadmin', github: 'gregbell/active_admin'
+gem 'activeadmin', github: 'activeadmin'
 gem 'faye'
 gem "puma"
 gem 'sync'
 gem 'multiblock'
-gem 'honeybadger'
+# Lock honeybadger to version 1 for the time being as version 2 requires a change to
+# the configuration
+gem 'honeybadger', "~> 1.0"
 gem 'cancan'
+gem 'searchkick'
 
 group :production do
   gem "dalli"
@@ -89,6 +92,7 @@ group :test do
   gem 'vcr'
   gem 'webmock'
   gem 'nokogiri'
+  gem 'rspec-activemodel-mocks'
 end
 
 # For our javascript runtime on production we don't want to use therubyracer because it uses too

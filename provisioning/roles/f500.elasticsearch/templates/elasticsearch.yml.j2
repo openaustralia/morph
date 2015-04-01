@@ -1,0 +1,183 @@
+################################### Cluster ###################################
+
+cluster.name: {{ elasticsearch_cluster_name }}
+
+#################################### Node #####################################
+
+{% if elasticsearch_node_name %}
+node.name: "{{ elasticsearch_node_name }}"
+{% endif %}
+{% if elasticsearch_node_master %}
+node.master: true
+{% else %}
+node.master: false
+{% endif %}
+{% if elasticsearch_node_data %}
+node.data: true
+{% else %}
+node.data: false
+{% endif %}
+{% if elasticsearch_node_rack %}
+node.rack: {{ elasticsearch_node_rack }}
+{% endif %}
+{% if elasticsearch_node_max_local_storage_nodes %}
+node.max_local_storage_nodes: {{ elasticsearch_node_max_local_storage_nodes }}
+{% endif %}
+
+#################################### Index ####################################
+
+index.number_of_shards: {{ elasticsearch_index_number_of_shards }}
+index.number_of_replicas: {{ elasticsearch_index_number_of_replicas }}
+
+#################################### Paths ####################################
+
+{% if elasticsearch_path_conf %}
+path.conf: {{ elasticsearch_path_conf }}
+{% endif %}
+{% if elasticsearch_path_data %}
+path.data: {{ elasticsearch_path_data }}
+{% endif %}
+{% if elasticsearch_path_work %}
+path.work: {{ elasticsearch_path_work }}
+{% endif %}
+{% if elasticsearch_path_logs %}
+path.logs: {{ elasticsearch_path_logs }}
+{% endif %}
+{% if elasticsearch_path_plugins %}
+path.plugins: {{ elasticsearch_path_plugins }}
+{% endif %}
+
+#################################### Plugin ###################################
+
+{% if elasticsearch_plugin_mandatory %}
+plugin.mandatory: {{ elasticsearch_plugin_mandatory }}
+{% endif %}
+
+################################### Memory ####################################
+
+{% if elasticsearch_bootstrap_mlockall %}
+bootstrap.mlockall: true
+{% else %}
+bootstrap.mlockall: false
+{% endif %}
+
+############################## Network And HTTP ###############################
+
+{% if elasticsearch_network_host %}
+network.host: {{ elasticsearch_network_host }}
+{% else %}
+{% if elasticsearch_network_bind_host %}
+network.bind_host: {{ elasticsearch_network_bind_host }}
+{% endif %}
+{% if elasticsearch_network_publish_host %}
+network.publish_host: {{ elasticsearch_network_publish_host }}
+{% endif %}
+{% endif %}
+
+transport.tcp.port: {{ elasticsearch_transport_tcp_port }}
+transport.tcp.compress: {{ elasticsearch_transport_tcp_compress }}
+
+{% if elasticsearch_http_enabled %}
+http.enabled: true
+http.port: {{ elasticsearch_http_port }}
+http.max_content_length: {{ elasticsearch_http_max_content_length }}
+{% else %}
+http.enabled: false
+{% endif %}
+
+################################### Gateway ###################################
+
+gateway.type: {{ elasticsearch_gateway_type }}
+gateway.recover_after_nodes: {{ elasticsearch_gateway_recover_after_nodes }}
+gateway.recover_after_time: {{ elasticsearch_gateway_recover_after_time }}
+gateway.expected_nodes: {{ elasticsearch_gateway_expected_nodes }}
+
+############################# Recovery Throttling #############################
+
+{% if elasticsearch_cluster_routing_allocation_node_initial_primaries_recoveries %}
+cluster.routing.allocation.node_initial_primaries_recoveries: {{ elasticsearch_cluster_routing_allocation_node_initial_primaries_recoveries }}
+{% endif %}
+{% if elasticsearch_cluster_routing_allocation_node_concurrent_recoveries %}
+cluster.routing.allocation.node_concurrent_recoveries: {{ elasticsearch_cluster_routing_allocation_node_concurrent_recoveries }}
+{% endif %}
+{% if elasticsearch_indices_recovery_max_bytes_per_sec %}
+indices.recovery.max_bytes_per_sec: {{ elasticsearch_indices_recovery_max_bytes_per_sec }}
+{% endif %}
+{% if elasticsearch_indices_recovery_concurrent_streams %}
+indices.recovery.concurrent_streams: {{ elasticsearch_indices_recovery_concurrent_streams }}
+{% endif %}
+
+################################## Discovery ##################################
+
+{% if elasticsearch_discovery_zen_minimum_master_nodes %}
+discovery.zen.minimum_master_nodes: {{ elasticsearch_discovery_zen_minimum_master_nodes }}
+{% endif %}
+{% if elasticsearch_discovery_zen_ping_timeout %}
+discovery.zen.ping.timeout: {{ elasticsearch_discovery_zen_ping_timeout }}
+{% endif %}
+{% if elasticsearch_discovery_zen_ping_multicast_enabled %}
+discovery.zen.ping.multicast.enabled: true
+{% endif %}
+{% if elasticsearch_discovery_zen_ping_unicast_hosts %}
+discovery.zen.ping.unicast.hosts: {{ elasticsearch_discovery_zen_ping_unicast_hosts }}
+{% endif %}
+
+################################## Slow Log ##################################
+
+{% if elasticsearch_index_search_slowlog_threshold_query_warn %}
+index.search.slowlog.threshold.query.warn: {{ elasticsearch_index_search_slowlog_threshold_query_warn }}
+{% endif%}
+{% if elasticsearch_index_search_slowlog_threshold_query_info %}
+index.search.slowlog.threshold.query.info: {{ elasticsearch_index_search_slowlog_threshold_query_info }}
+{% endif%}
+{% if elasticsearch_index_search_slowlog_threshold_query_debug %}
+index.search.slowlog.threshold.query.debug: {{ elasticsearch_index_search_slowlog_threshold_query_debug }}
+{% endif%}
+{% if elasticsearch_index_search_slowlog_threshold_query_trace %}
+index.search.slowlog.threshold.query.trace: {{ elasticsearch_index_search_slowlog_threshold_query_trace }}
+{% endif%}
+{% if elasticsearch_index_search_slowlog_threshold_fetch_warn %}
+index.search.slowlog.threshold.fetch.warn: {{ elasticsearch_index_search_slowlog_threshold_fetch_warn }}
+{% endif%}
+{% if elasticsearch_index_search_slowlog_threshold_fetch_info %}
+index.search.slowlog.threshold.fetch.info: {{ elasticsearch_index_search_slowlog_threshold_fetch_info }}
+{% endif%}
+{% if elasticsearch_index_search_slowlog_threshold_fetch_debug %}
+index.search.slowlog.threshold.fetch.debug: {{ elasticsearch_index_search_slowlog_threshold_fetch_debug }}
+{% endif%}
+{% if elasticsearch_index_search_slowlog_threshold_fetch_trace %}
+index.search.slowlog.threshold.fetch.trace: {{ elasticsearch_index_search_slowlog_threshold_fetch_trace }}
+{% endif%}
+{% if elasticsearch_index_indexing_slowlog_threshold_index_warn %}
+index.indexing.slowlog.threshold.index.warn: {{ elasticsearch_index_indexing_slowlog_threshold_index_warn }}
+{% endif%}
+{% if elasticsearch_index_indexing_slowlog_threshold_index_info %}
+index.indexing.slowlog.threshold.index.info: {{ elasticsearch_index_indexing_slowlog_threshold_index_info }}
+{% endif%}
+{% if elasticsearch_index_indexing_slowlog_threshold_index_debug %}
+index.indexing.slowlog.threshold.index.debug: {{ elasticsearch_index_indexing_slowlog_threshold_index_debug }}
+{% endif%}
+{% if elasticsearch_index_indexing_slowlog_threshold_index_trace %}
+index.indexing.slowlog.threshold.index.trace: {{ elasticsearch_index_indexing_slowlog_threshold_index_trace }}
+{% endif%}
+
+################################## GC Logging ################################
+
+{% if monitor_jvm_gc_young_warn %}
+monitor.jvm.gc.young.warn: {{ monitor_jvm_gc_young_warn }}
+{% endif %}
+{% if monitor_jvm_gc_young_info %}
+monitor.jvm.gc.young.info: {{ monitor_jvm_gc_young_info }}
+{% endif %}
+{% if monitor_jvm_gc_young_debug %}
+monitor.jvm.gc.young.debug: {{ monitor_jvm_gc_young_debug }}
+{% endif %}
+{% if monitor_jvm_gc_old_warn %}
+monitor.jvm.gc.old.warn: {{ monitor_jvm_gc_old_warn }}
+{% endif %}
+{% if monitor_jvm_gc_old_info %}
+monitor.jvm.gc.old.info: {{ monitor_jvm_gc_old_info }}
+{% endif %}
+{% if monitor_jvm_gc_old_debug %}
+monitor.jvm.gc.old.debug: {{ monitor_jvm_gc_old_debug }}
+{% endif %}

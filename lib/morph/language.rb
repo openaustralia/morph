@@ -89,10 +89,6 @@ module Morph
       BINARY_NAMES[key]
     end
 
-    def docker_image
-      "openaustralia/morph-#{key}"
-    end
-
     def default_file(file)
       File.read("default_files/#{key}/#{file}")
     end

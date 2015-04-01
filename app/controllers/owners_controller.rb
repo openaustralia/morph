@@ -5,7 +5,7 @@ class OwnersController < ApplicationController
   skip_authorize_resource only: :settings_redirect
 
   def show
-    @scrapers = @owner.scrapers.includes(:last_run => :log_lines)
+    @scrapers = @owner.scrapers.includes(:last_run)
 
     # Split out scrapers into different groups
     @running_scrapers, @erroring_scrapers, @other_scrapers = [], [], []
