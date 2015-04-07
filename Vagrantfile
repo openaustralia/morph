@@ -91,6 +91,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
   config.vm.define "local" do |local|
+    local.vm.network :private_network, ip: "192.168.11.2"
     local.vm.network :forwarded_port, guest: 80, host: 8000
     local.vm.network :forwarded_port, guest: 443, host: 8001
     local.vm.network :forwarded_port, guest: 22, host: 2200
