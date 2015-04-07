@@ -82,7 +82,9 @@ xlrd==0.7.1
 xlutils==1.4.1
 xlwt==0.7.2
 xmltodict==0.4
-yql==0.7.2
+# Temporarily commenting out ygl because it's gone missing from
+# https://pypi.python.org/pypi/yql/0.7.2
+#yql==0.7.2
 zope.interface==3.8.0
 lxml==2.3.3
 chromium-compact-language-detector==0.031415
