@@ -7,12 +7,12 @@
 # Need to run this as root
 
 # Allow established sessions
-iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -i eth0 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 # Allow incoming connections on ssh, http, https
-iptables -A INPUT -p tcp --dport ssh -j ACCEPT
-iptables -A INPUT -p tcp --dport http -j ACCEPT
-iptables -A INPUT -p tcp --dport https -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp --dport ssh -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp --dport http -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp --dport https -j ACCEPT
 
 # Block all other traffic on eth0
 iptables -A INPUT -i eth0 -j DROP
