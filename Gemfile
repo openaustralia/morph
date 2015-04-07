@@ -60,6 +60,8 @@ gem 'multiblock'
 gem 'honeybadger', "~> 1.0"
 gem 'cancan'
 gem 'searchkick'
+# Polyfill for String#scrub for Ruby 1.9 and 2.0
+gem "scrub_rb"
 
 group :production do
   gem "dalli"

@@ -368,6 +368,7 @@ GEM
     sawyer (0.5.5)
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
+    scrub_rb (1.0.1)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -494,6 +495,7 @@ DEPENDENCIES
   rspec-activemodel-mocks
   rspec-rails (~> 2.0)
   sass-rails (~> 4.0.0)
+  scrub_rb
   sdoc
   searchkick
   sidekiq
