@@ -7,8 +7,8 @@
 # Need to run this as root
 
 # Redirect HTTP and HTTPS to mitmproxy
-iptables -t nat -A PREROUTING -i docker0 -p tcp --dport 80 -j REDIRECT --to-ports 8080
-iptables -t nat -A PREROUTING -i docker0 -p tcp --dport 443 -j REDIRECT --to-ports 8080
+#iptables -t nat -A PREROUTING -i docker0 -p tcp --dport 80 -j REDIRECT --to-ports 8080
+#iptables -t nat -A PREROUTING -i docker0 -p tcp --dport 443 -j REDIRECT --to-ports 8080
 
 # Allow DNS, HTTP and HTTPS
 #iptables -A DOCKER -p tcp --sport domain -j ACCEPT
