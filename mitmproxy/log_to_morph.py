@@ -12,7 +12,7 @@ def response(context, flow):
   	'ip_address': flow.client_conn.address.host,
   	'method': flow.request.method,
   	'scheme': flow.request.scheme,
-    'host': flow.request.headers["Host"][0],
+    'host': flow.request.pretty_host(hostheader=True),
     'path': flow.request.path,
     'request_size': len(flow.request.content),
     'response_size': len(flow.response.content),

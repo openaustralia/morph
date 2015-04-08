@@ -8,6 +8,9 @@
 # use strict;
 # use warnings;
 
+# # Turn off output buffering
+# $| = 1;
+
 # # Read out and parse a web page
 # my $tb = HTML::TreeBuilder->new_from_content(get('http://example.com/'));
 

@@ -15,4 +15,8 @@ class ApplicationController < ActionController::Base
     redirect_to current_user, :alert => exception.message
   end
 
+  # Handle omniauth failure. See https://github.com/plataformatec/devise/wiki/OmniAuth%3A-Overview#using-omniauth-without-other-authentications
+  def new_session_path(scope)
+   new_user_session_path
+  end
 end

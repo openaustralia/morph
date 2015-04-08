@@ -19,3 +19,8 @@
   when: elasticsearch_logging_template is defined and elasticsearch_logging_template|length
   notify:
     - restart elasticsearch
+
+- name: Ensure Elasticsearch is configured to start on boot
+  service:
+    name: elasticsearch
+    enabled: yes
