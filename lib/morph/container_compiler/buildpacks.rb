@@ -87,11 +87,29 @@ module Morph
         end
       end
 
+      # If image is present locally use that. If it isn't then pull it from the hub
+      # This makes initial setup easier
+      def self.get_or_pull_image(name)
+        wrapper = Multiblock.wrapper
+        yield(wrapper)
+
+        begin
+          Docker::Image.get(name)
+        rescue Docker::Error::NotFoundError
+          Docker::Image.create('fromImage' => name) do |chunk|
+            data = JSON.parse(chunk)
+            wrapper.call(:log, :internalout, "#{data['status']} #{data['id']} #{data['progress']}\n")
+          end
+        end
+      end
+
       def self.compile(repo_path)
         wrapper = Multiblock.wrapper
         yield(wrapper)
 
-        i = Docker::Image.get('openaustralia/buildstep')
+        i = get_or_pull_image('openaustralia/buildstep') do |on|
+          on.log {|s,c| wrapper.call(:log, :internalout, c)}
+        end
         # Insert the configuration part of the application code into the container and build
         commands = ["ADD code_config.tar /app", "ENV CURL_TIMEOUT 180", "RUN /build/builder"]
         docker_build_command(i, commands, "code_config.tar" => tar_config_files(repo_path)) do |on|
