@@ -88,7 +88,7 @@ First install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox
 
     vagrant up dev
 
-When the Vagrant vm is built, make sure you run `vagrant halt dev` and then `vagrant up dev` again to make sure the shared folders are correctly set up. Then you can continue with the [installation steps above](#to-install).
+After the Vagrant vm is built, **run `vagrant halt dev` and then `vagrant up dev` again** to make sure the shared folders are correctly set up. Then you can continue with the [installation steps above](#to-install).
 
 Just recently the Docker folks have released a version of the docker client that works on OS X. The first build is [available to download](http://test.docker.io/builds/Darwin/x86_64/docker-0.7.3.tgz). You might find this helpful later but isn't essential.
 
