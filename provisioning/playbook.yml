@@ -1,13 +1,15 @@
 ---
 # This playbook is for provisioning on a Linode box. It should be at least a Linode 2048 box and have
 # 64 bit Ubuntu 12.04 LTS with 256 MB swap (I think).
-# To run:
+#
+# To run in development:
+# vagrant provision local
+#
+# To run in production:
 # cd provisioning
-# ansible-playbook -i hosts playbook.yml
+# ansible-playbook --user=root -i hosts playbook.yml
 #
 - hosts: all
   sudo: true
-  # Comment the line below out when deploying via vagrant (for local development VM)
-  user: root
   roles:
     - morph-app
