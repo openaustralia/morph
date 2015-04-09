@@ -74,7 +74,7 @@ Now you can start the server
 and point your browser at [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 To get started, log in with Github. There is a simple admin interface
-accessible at [http://127.0.0.1:3000](http://127.0.0.1:3000). To
+accessible at [http://127.0.0.1:3000/admin](http://127.0.0.1:3000/admin). To
 access this, run the following to give your account admin rights:
 
     bundle exec rake app:promote_to_admin
