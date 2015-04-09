@@ -158,13 +158,19 @@ class Scraper < ActiveRecord::Base
     "#{owner.data_root}/#{name}"
   end
 
+  def self.pull_docker_image(image)
+    Docker::Image.create('fromImage' => image) do |chunk|
+      data = JSON.parse(chunk)
+      puts "#{data['status']} #{data['id']} #{data['progress']}"
+    end
+  end
+
   def self.update_docker_image!
-    docker_command = "docker #{ENV['DOCKER_TCP'] ? "-H #{ENV['DOCKER_TCP']}" : ""}"
-    exec("#{docker_command} pull openaustralia/morph-ruby")
-    exec("#{docker_command} pull openaustralia/morph-php")
-    exec("#{docker_command} pull openaustralia/morph-python")
-    exec("#{docker_command} pull openaustralia/morph-perl")
-    exec("#{docker_command} pull openaustralia/buildstep")
+    pull_docker_image("openaustralia/morph-ruby")
+    pull_docker_image("openaustralia/morph-php")
+    pull_docker_image("openaustralia/morph-python")
+    pull_docker_image("openaustralia/morph-perl")
+    pull_docker_image("openaustralia/buildstep")
   end
 
   def readme
