@@ -63,10 +63,6 @@ Now setup the databases:
 
     bundle exec dotenv rake db:setup
 
-Now you'll need to build the Docker container that scrapers run in.
-
-    bundle exec dotenv rake app:update_docker_image
-
 Now you can start the server
 
     bundle exec dotenv foreman start
