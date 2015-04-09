@@ -57,7 +57,7 @@ Create an [application on GitHub](https://github.com/settings/applications/new) 
 
 Note the use of 127.0.0.1 rather than localhost. Use this or it won't work.
 
-Edit `.env` with the details of the application you've just created
+In the `.env` file, fill in the *Client ID* and *Client Secret* details provided by Github for the application you've just created.
 
 Now you'll need to build the Docker container that scrapers run in.
 
