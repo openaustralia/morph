@@ -59,13 +59,16 @@ Note the use of 127.0.0.1 rather than localhost. Use this or it won't work.
 
 In the `.env` file, fill in the *Client ID* and *Client Secret* details provided by Github for the application you've just created.
 
+Now setup the databases:
+
+    bundle exec dotenv rake db:setup
+
 Now you'll need to build the Docker container that scrapers run in.
 
     bundle exec dotenv rake app:update_docker_image
 
 Now you can start the server
 
-    bundle exec dotenv rake db:setup
     bundle exec dotenv foreman start
 
 and point your browser at [http://127.0.0.1:3000](http://127.0.0.1:3000)
