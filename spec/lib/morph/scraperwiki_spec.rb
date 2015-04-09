@@ -30,12 +30,12 @@ describe Morph::Scraperwiki do
   end
 
   describe '#exists?' do
-    it { Morph::Scraperwiki.new(nil).exists?.should_not be_true }
-    it { Morph::Scraperwiki.new('').exists?.should_not be_true }
+    it { Morph::Scraperwiki.new(nil).exists?.should_not be_truthy }
+    it { Morph::Scraperwiki.new('').exists?.should_not be_truthy }
 
     it "should say non existent scrapers don't exist" do
       VCR.use_cassette('scraperwiki') do
-        Morph::Scraperwiki.new('non_existent_scraper').exists?.should_not be_true
+        Morph::Scraperwiki.new('non_existent_scraper').exists?.should_not be_truthy
       end
     end
   end

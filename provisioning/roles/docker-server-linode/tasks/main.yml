@@ -1,0 +1,61 @@
+---
+- name: Remove old linux kernel
+  apt: pkg=linux-image-generic-lts-raring state=absent
+
+- name: Remove old linux kernel header
+  apt: pkg=linux-headers-generic-lts-raring state=absent
+
+- name: Ensure that we're running Linux kernel 3.8
+  apt: pkg=linux-image-generic-lts-trusty update_cache=yes cache_valid_time=3600
+  notify:
+  - reboot the server
+
+- name: Ensure that new Linux headers are installed
+  apt: pkg=linux-headers-generic-lts-trusty
+
+# For Linode we need to do some special stuff to get this kernel to be used
+- name: Remove grub2
+  apt: pkg=grub2 state=absent
+
+- name: Remove grub-pc
+  apt: pkg=grub-pc state=absent
+
+- name: Install grub
+  apt: pkg=grub state=present
+
+- name: Add grub menu
+  copy: src=menu.lst dest=/boot/grub/menu.lst
+  register: docker_grub_change
+
+# TODO Reboot server
+- name: Update grub
+  command: update-grub -y
+  when: docker_grub_change|changed
+
+# Now you need to make some changes on the Linode console
+# 1. change the Linode configuration profile to use pv-grub-x86_64
+# 2. In Filesystem/Boot Helpers section disable the Xenify distro option
+# 3. Save changes
+# 4. Reboot from the Dashboard tab
+
+- name: Ensure that we have the Docker repository key
+  apt_key: url=https://get.docker.io/gpg id=A88D21E9
+
+- name: Ensure that pycurl is installed (for ansible)
+  apt: pkg=python-pycurl
+
+- name: Ensure that we have the docker repository
+  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
+
+# docker needs apparmor but it's not a dependency in the package for some reason
+- name: Install apparmor
+  apt: pkg=apparmor state=present
+
+- name: Ensure that the docker package is installed
+  apt: pkg=lxc-docker
+
+- name: Configure docker to disable inter-container communication
+  copy:
+    src: docker
+    dest: /etc/default/docker
+  notify: restart docker

@@ -9,6 +9,7 @@
         "openaustralia/scraperwiki": "dev-morph_defaults",
         "ext-sqlite3": "*",
         "ext-pdo_sqlite": "*",
-        "ext-gd": "*"
+        "ext-gd": "*",
+        "ext-mbstring": "*"
     }
 }

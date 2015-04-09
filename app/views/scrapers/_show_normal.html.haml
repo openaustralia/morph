@@ -10,15 +10,23 @@
           = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
       .large-icon-box.pull-right
         = render partial: "scrapers/running_indicator", locals: {scraper: scraper}
-      %h4= scraper.description
-      - if scraper.owner.buildpacks
-        %p.text-warning
-          This scraper runs with the experimental buildpacks support.
-          - if can? :update, scraper.owner
-            = link_to "Change settings", settings_owner_path(scraper.owner)
-      - if can? :run, scraper
-        #scraper_run
-          = render partial: "scrapers/run_button", locals: {scraper: scraper}
+
+    %h4= scraper.description
+
+    - if scraper.last_run && !scraper.last_run.scraped_domains.empty?
+      %p
+        Scrapes
+        = scraped_domains_list(scraper.last_run)
+
+    - if scraper.owner.buildpacks
+      %p.text-warning
+        This scraper runs with the experimental buildpacks support.
+        - if can? :update, scraper.owner
+          = link_to "Change settings", settings_owner_path(scraper.owner)
+
+    - if can? :run, scraper
+      #scraper_run
+        = render partial: "scrapers/run_button", locals: {scraper: scraper}
 
   .col-md-2
     - if signed_in?

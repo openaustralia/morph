@@ -18,6 +18,26 @@ On OS X for development also Vagrant & VirtualBox to host a VM with Docker - see
 
 On Linux your user account should be able to manipulate Docker (just add your user to the `docker` group).
 
+### Repositories
+
+User-facing:
+
+* [openaustralia/morph](https://github.com/openaustralia/morph) - Main application
+* [openaustralia/morph-cli](https://github.com/openaustralia/morph-cli) - Command-line morph tool
+* [openaustralia/scraperwiki-python](https://github.com/openaustralia/scraperwiki-python) - Fork of [scraperwiki/scraperwiki-python](https://github.com/scraperwiki/scraperwiki-python) updated to use morph.io naming conventions
+* [openaustralia/scraperwiki-ruby](https://github.com/openaustralia/scraperwiki-ruby) - Fork of [scraperwiki/scraperwiki-ruby](https://github.com/scraperwiki/scraperwiki-ruby) updated to use morph.io naming conventions
+
+Buildstep docker images:
+* [openaustralia/morph-docker-buildstep-base](https://github.com/openaustralia/morph-docker-buildstep-base) - Base image for buildstep
+* [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Fork of [progrium/buildstep](https://github.com/progrium/buildstep) which uses the image openaustralia/morph-docker-buildstep-base as its base
+
+Original docker images:
+* [openaustralia/morph-docker-base](https://github.com/openaustralia/morph-docker-base) - Base image
+* [openaustralia/morph-docker-python](https://github.com/openaustralia/morph-docker-python) - Python
+* [openaustralia/morph-docker-ruby](https://github.com/openaustralia/morph-docker-ruby) - Ruby
+* [openaustralia/morph-docker-perl](https://github.com/openaustralia/morph-docker-perl) - Perl
+* [openaustralia/morph-docker-php](https://github.com/openaustralia/morph-docker-php) - PHP
+
 ### To Install
 
 Running this on OSX? Read the [OSX instructions](#installing-docker-on-osx) below BEFORE doing any of this.
@@ -37,7 +57,11 @@ Create an [application on GitHub](https://github.com/settings/applications/new) 
 
 Note the use of 127.0.0.1 rather than localhost. Use this or it won't work.
 
-Edit `.env` with the details of the application you've just created
+In the `.env` file, fill in the *Client ID* and *Client Secret* details provided by Github for the application you've just created.
+
+Now setup the databases:
+
+    bundle exec dotenv rake db:setup
 
 Now you'll need to build the Docker container that scrapers run in.
 
@@ -45,13 +69,12 @@ Now you'll need to build the Docker container that scrapers run in.
 
 Now you can start the server
 
-    bundle exec dotenv rake db:setup
     bundle exec dotenv foreman start
 
 and point your browser at [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 To get started, log in with Github. There is a simple admin interface
-accessible at [http://127.0.0.1:3000](http://127.0.0.1:3000). To
+accessible at [http://127.0.0.1:3000/admin](http://127.0.0.1:3000/admin). To
 access this, run the following to give your account admin rights:
 
     bundle exec rake app:promote_to_admin
@@ -60,7 +83,7 @@ access this, run the following to give your account admin rights:
 
 If you're doing your development on Linux you're in luck because installing Docker is pretty straightforward. Just follow the instructions on the [Docker site](http://www.docker.io/gettingstarted/#h_installation).
 
-If you're on OSX you could follow the instructions on the [Docker site](http://www.docker.io/gettingstarted/#h_installation) as well. However there will be some extra configuration you will need to do to make it work with Morph.
+If you're on OSX you could follow the [instructions on the Docker site](https://docs.docker.com/installation/mac/). Docker encourage OSX users to install their [Kitematic](https://kitematic.com/) application, a [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface) for running Docker, that works with Morph. However there will be some extra configuration you will need to do to make it work with Morph.
 
 We've made it easier by providing a Vagrantfile that sets up a VM, installs docker on it and makes sure that your development box can talk to docker on the VM.
 
@@ -68,7 +91,7 @@ First install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox
 
     vagrant up dev
 
-When the Vagrant vm is built, make sure you run `vagrant halt dev` and then `vagrant up dev` again to make sure the shared folders are correctly set up. Then you can continue with the [installation steps above](#to-install).
+After the Vagrant vm is built, **run `vagrant halt dev` and then `vagrant up dev` again** to make sure the shared folders are correctly set up. Then you can continue with the [installation steps above](#to-install).
 
 Just recently the Docker folks have released a version of the docker client that works on OS X. The first build is [available to download](http://test.docker.io/builds/Darwin/x86_64/docker-0.7.3.tgz). You might find this helpful later but isn't essential.
 
@@ -94,11 +117,18 @@ We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt 
 
 #### Production devops development
 
-Install [Vagrant](http://www.vagrantup.com/) and [Ansible](http://www.ansible.com/) and run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io` (which you'll need to add to your `/etc/hosts` file).
+Install [Vagrant](http://www.vagrantup.com/) and [Ansible](http://www.ansible.com/). Comment out the user line in [`provisioning/playbook.yml`](https://github.com/openaustralia/morph/blob/17e05ed5bc540be683e5fdf90d1fefaa0f81c56f/provisioning/playbook.yml#L10-L11) and run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
 
-Note: if Ansible fails installing nginx for the first time log on to the box (`vagrant ssh local`), remove nginx (`sudo aptitude remove nginx`), and rerun provisioning (`vagrant provision local`).
+Add these lines to your `/etc/hosts` file:
 
-To access that box you need to forward HTTP and HTTPS privileged ports.
+    127.0.0.1  dev.morph.io
+    127.0.0.1  faye.dev.morph.io
+
+Once the box is created and provisioned, deploy the application to your Vagrant box:
+
+    cap local deploy
+
+To access the application you need to forward HTTP and HTTPS privileged ports.
 
 **OS X**: There's a script to do this via the firewall `./local_port_forward_os_x.sh`.
 
@@ -118,10 +148,6 @@ To deploy Morph to production, normally you'll just want to deploy using Capistr
 When you've changed the Ansible playbooks to modify the infrastructure you'll want to run:
 
     ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
-
-And only if you're creating a _new production instance_, the first time you'll want to provision a new machine on Digital Ocean with:
-
-    vagrant up production2
 
 ### Running tests
 

@@ -30,9 +30,7 @@
 
 - name: Bootstrap discourse app
   command: ./launcher bootstrap app chdir=/var/docker creates=/var/docker/shared/standalone/log/rails/production.log
-
-- name: Start discourse app
-  command: ./launcher start app chdir=/var/docker
+  notify: start discourse
 
 - name: Ensure that ssl/discourse directory exist
   file: path=/etc/nginx/ssl/discourse owner=deploy group=deploy state=directory

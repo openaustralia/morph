@@ -55,7 +55,7 @@ class Run < ActiveRecord::Base
   end
 
   def queued?
-    queued_at && started_at.nil?
+    queued_at && started_at.nil? && finished_at.nil?
   end
 
   def running?
@@ -87,7 +87,7 @@ class Run < ActiveRecord::Base
   end
 
   def docker_container_name
-    Morph::ContainerCompiler.docker_container_name(self)
+    Morph::ContainerCompiler::Base.docker_container_name(self)
   end
 
   def git_revision_github_url
@@ -102,7 +102,7 @@ class Run < ActiveRecord::Base
     FileUtils.mkdir_p data_path
     FileUtils.chmod 0777, data_path
 
-    unless language.supported?
+    unless language && language.supported?
       supported_scraper_files = Morph::Language.languages_supported.map {|l| l.scraper_filename}
       yield "stderr", "Can't find scraper code. Expected to find a file called " +
          supported_scraper_files.to_sentence(last_word_connector: ", or ") +
@@ -111,30 +111,17 @@ class Run < ActiveRecord::Base
       return
     end
 
-    if owner.buildpacks
-      status_code = Morph::ContainerCompiler.compile_and_run_with_buildpacks(self) do |on|
-        on.log {|s,c| yield s,c}
-        on.ip_address do |ip|
-          # Store the ip address of the container for this run
-          update_attributes(ip_address: ip)
-        end
-      end
-    else
-      status_code = Morph::ContainerCompiler.compile_and_run_original(self) do |on|
-        on.log {|s,c| yield s,c}
-        on.ip_address do |ip|
-          # Store the ip address of the container for this run
-          update_attributes(ip_address: ip)
-        end
+    status_code = Morph::ContainerCompiler::Base.create(owner.buildpacks ? :buildpacks : :legacy).compile_and_run(self) do |on|
+      on.log {|s,c| yield s,c}
+      on.ip_address do |ip|
+        # Store the ip address of the container for this run
+        update_attributes(ip_address: ip)
       end
     end
 
-    # Hack to not try to get metric if the compile failed
-    if status_code != 255
-      # Now collect and save the metrics
-      metric = Metric.read_from_file(time_output_path)
-      metric.update_attributes(run_id: self.id)
-    end
+    # Now collect and save the metrics
+    metric = Metric.read_from_file(time_output_path)
+    metric.update_attributes(run_id: self.id) if metric
 
     update_attributes(status_code: status_code, finished_at: Time.now)
     # Update information about what changed in the database
@@ -161,6 +148,7 @@ class Run < ActiveRecord::Base
 
   def stop!
     Morph::DockerRunner.stop(docker_container_name)
+    update_attributes(status_code: 130, finished_at: Time.now)
   end
 
   def log(stream, text)
@@ -183,5 +171,11 @@ class Run < ActiveRecord::Base
       Morph::Github.synchronise_repo(repo_path, git_url)
       go!
     end
+  end
+
+  # List of domains that this scraper run has scraped
+  # Note that these are not urls, just domain names
+  def scraped_domains
+    connection_logs.group(:host).order(:host).pluck(:host)
   end
 end

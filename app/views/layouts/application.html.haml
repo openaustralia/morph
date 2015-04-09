@@ -24,55 +24,7 @@
 
   %body
     = render "google_analytics"
-    %nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
-      .container
-        .navbar-header
-          %button.navbar-toggle(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1")
-            %span.sr-only Toggle navigation
-            %span.fa.fa-bars
-          = link_to "morph.io", root_path, class: "navbar-brand"
-        .collapse.navbar-collapse#bs-example-navbar-collapse-1
-          %ul.nav.navbar-nav
-            -# TODO set class to "active" when this is the current page
-            %li.dropdown{class: ("disabled" unless can? :new, Scraper)}
-              = link_to "#", class: "dropdown-toggle", data: {toggle: ("dropdown" if can? :new, Scraper)} do
-                Add Scraper
-                %b(class="caret")
-              %ul(class="dropdown-menu")
-                %li= link_to "New scraper", new_scraper_path
-                %li(class="divider")
-                %li= link_to "Add scraper from GitHub", github_new_scraper_path
-                %li= link_to "Fork scraper from ScraperWiki", scraperwiki_new_scraper_path
-            %li.dropdown
-              = link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
-                Browse
-                %b.caret
-              %ul.dropdown-menu
-                %li= link_to "Scrapers", scrapers_path
-                %li= link_to "Users", users_path
-            %li= link_to "Pricing", pricing_path
-            %li= link_to "Documentation", documentation_index_path
-            - if user_signed_in? && current_user.admin?
-              %li(class="dropdown hidden-sm")
-                %a(href="#" class="dropdown-toggle" data-toggle="dropdown")
-                  Admin
-                  %b(class="caret")
-                %ul(class="dropdown-menu")
-                  %li= link_to "Dashboard", admin_dashboard_path
-                  %li= link_to "Owner Metrics", admin_owners_path
-                  %li= link_to "Background queue", "/admin/jobs", data: {"no-turbolink" => true}
-
-          %ul.nav.navbar-nav.navbar-right
-            %li
-              - if user_signed_in?
-                = link_to current_user do
-                  = owner_image(current_user, 20, false)
-                  = current_user.nickname
-              - else
-                = link_to "Sign in with GitHub", user_omniauth_authorize_path(:github)
-            %li
-              - if user_signed_in?
-                = link_to "Sign out", destroy_user_session_path
+    = render "shared/nav"
 
     .container
       - if signed_in? && SiteSetting.read_only_mode

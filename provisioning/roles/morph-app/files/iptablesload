@@ -1,5 +1,0 @@
-#!/bin/sh
-# Set up firewall rules for routing outbound http requests from docker
-# containers to a local proxy
-#iptables-restore --noflush < /etc/iptables.rules
-#exit 0

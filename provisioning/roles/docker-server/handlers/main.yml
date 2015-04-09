@@ -1,3 +1,0 @@
----
-- name: reboot the server
-  command: /sbin/reboot -f

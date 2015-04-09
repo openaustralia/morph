@@ -1,0 +1,52 @@
+%nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+  .container
+    .navbar-header
+      %button.navbar-toggle(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1")
+        %span.sr-only Toggle navigation
+        %span.fa.fa-bars
+      = link_to "Morph", root_path, class: "navbar-brand"
+    .collapse.navbar-collapse#bs-example-navbar-collapse-1
+      %ul.nav.navbar-nav
+        -# TODO set class to "active" when this is the current page
+        %li.dropdown{class: ("disabled" unless can? :new, Scraper)}
+          = link_to "#", class: "dropdown-toggle", data: {toggle: ("dropdown" if can? :new, Scraper)} do
+            Add Scraper
+            %b(class="caret")
+          %ul(class="dropdown-menu")
+            %li= link_to "New scraper", new_scraper_path
+            %li(class="divider")
+            %li= link_to "Add scraper from GitHub", github_new_scraper_path
+            %li= link_to "Fork scraper from ScraperWiki", scraperwiki_new_scraper_path
+        %li= link_to "Browse", scrapers_path
+        %li= link_to "Pricing", pricing_path
+        %li= link_to "Documentation", documentation_index_path
+        - if user_signed_in? && current_user.admin?
+          %li(class="dropdown hidden-sm")
+            %a(href="#" class="dropdown-toggle" data-toggle="dropdown")
+              Admin
+              %b(class="caret")
+            %ul(class="dropdown-menu")
+              %li= link_to "Dashboard", admin_dashboard_path
+              %li= link_to "Owner Metrics", admin_owners_path
+              %li= link_to "Background queue", "/admin/jobs", data: {"no-turbolink" => true}
+
+      %ul.nav.navbar-nav.navbar-right
+        %li
+          = form_tag search_path, method: "get", role: "search", class: "navbar-form" do
+            .input-group
+              = label_tag :query, "Search", class: 'sr-only'
+              = search_field_tag :q, @q, maxlength: "256", name: "q", type: "search", placeholder: "Search", class: "form-control"
+              .input-group-btn
+                = button_tag value: 'Submit', class: 'btn btn-default', name: nil do
+                  %span.sr-only Submit
+                  %i.fa.fa-search
+        %li
+          - if user_signed_in?
+            = link_to current_user do
+              = owner_image(current_user, 20, false)
+              = current_user.nickname
+          - else
+            = link_to "Sign in with GitHub", user_omniauth_authorize_path(:github)
+        %li
+          - if user_signed_in?
+            = link_to "Sign out", destroy_user_session_path

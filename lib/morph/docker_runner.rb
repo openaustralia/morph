@@ -53,6 +53,10 @@ module Morph
         # Let parent know about ip address of running container
         wrapper.call(:ip_address, c.json["NetworkSettings"]["IPAddress"])
         c.attach(logs: true) do |s,c|
+          # We're going to assume (somewhat rashly, I might add) that the console
+          # output from the scraper is always encoded as UTF-8.
+          c.force_encoding("UTF-8")
+          c.scrub!
           wrapper.call(:log, s, c)
         end
         status_code = c.json["State"]["ExitCode"]
@@ -84,8 +88,10 @@ module Morph
     end
 
     def self.stop(container_name)
-      c = Docker::Container.get(container_name)
-      c.kill
+      if container_exists?(container_name)
+        c = Docker::Container.get(container_name)
+        c.kill
+      end
     end
 
     def self.container_exists?(name)

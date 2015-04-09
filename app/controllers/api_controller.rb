@@ -30,7 +30,6 @@ class ApiController < ApplicationController
       response.stream.write({stream: "stdout", text: "You currently can't start a scraper run. See https://morph.io for more details"}.to_json + "\n")
       response.stream.close
     else
-      author
       run = Run.create(queued_at: Time.now, auto: false, owner_id: user.id)
 
       Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)

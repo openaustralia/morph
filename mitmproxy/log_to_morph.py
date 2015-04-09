@@ -3,18 +3,16 @@
 import urllib
 import os
 
-# Temporarily commenting out concurrent decorator until a bug in mitmproxy
-# is resolved. See https://github.com/mitmproxy/mitmproxy/issues/267
-#from libmproxy.script import concurrent
+from libmproxy.script import concurrent
 
-#@concurrent
+@concurrent
 def response(context, flow):
   url = os.environ['MORPH_URL'] + "/connection_logs"
   params = urllib.urlencode({
-  	'ip_address': flow.request.client_conn.address[0],
+  	'ip_address': flow.client_conn.address.host,
   	'method': flow.request.method,
   	'scheme': flow.request.scheme,
-    'host': flow.request.headers["Host"][0],
+    'host': flow.request.pretty_host(hostheader=True),
     'path': flow.request.path,
     'request_size': len(flow.request.content),
     'response_size': len(flow.response.content),

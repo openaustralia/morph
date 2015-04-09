@@ -22,6 +22,6 @@ class AlertMailer < ActionMailer::Base
     @subject = "Morph: #{pluralize(count, 'scraper')} you are watching #{count == 1 ? "is" : "are"} erroring"
 
     attachments.inline['logo_75x75.png'] = File.read(File.join(Rails.root, "app", "assets", path_to_image("logo_75x75.png")))
-    mail(to: "#{user.name} <#{user.email}>", subject: @subject)
+    mail(to: "#{user.name} <#{user.email}>", subject: @subject) if user.email
   end
 end

@@ -1,1 +1,1 @@
-scraper: php scraper.php
+scraper: php -d include_path=.:/app/vendor/openaustralia/scraperwiki scraper.php

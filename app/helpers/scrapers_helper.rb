@@ -16,4 +16,14 @@ module ScrapersHelper
   def full_name_with_links(scraper)
     link_to(scraper.owner.to_param, scraper.owner) + " / " + link_to(scraper.name, scraper)
   end
+
+  # Try to (sort of) handle the situation where text is not properly encoded
+  # and so auto_link would normally fail
+  def auto_link_fallback(text)
+    begin
+      auto_link(text)
+    rescue Encoding::CompatibilityError
+      text
+    end
+  end
 end

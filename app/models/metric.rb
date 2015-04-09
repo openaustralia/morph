@@ -51,7 +51,11 @@ class Metric < ActiveRecord::Base
   end
 
   def self.read_from_file(file)
-    read_from_string(File.read(file))
+    begin
+      read_from_string(File.read(file))
+    rescue Errno::ENOENT
+      nil
+    end
   end
 
   def self.parse_line(l)

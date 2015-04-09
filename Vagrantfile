@@ -83,8 +83,6 @@ VBOX_SCRIPT
 
 Vagrant.configure("2") do |config|
   # Note that this is a configuration for different VMs
-  # production2: The current live server
-  # production: A defunct production server
   # local: A local machine that mimics a production deployment
   # dev: A VM that has docker on it - used for development on OS X
 
@@ -92,48 +90,8 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
-  config.vm.define "production" do |production|
-    production.vm.synced_folder ".", "/vagrant", disabled: true
-
-    production.vm.provision :ansible do |ansible|
-      ansible.playbook = "provisioning/playbook.yml"
-      #ansible.verbose = 'vvv'
-    end
-
-    production.vm.provider :digital_ocean do |provider, override|
-      override.ssh.private_key_path = '~/.ssh/id_rsa'
-      override.vm.box = 'digital_ocean'
-      override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-
-      provider.image = "Ubuntu 12.04.3 x64"
-      provider.size = "1GB"
-      provider.client_id = ENV['DIGITAL_OCEAN_CLIENT_ID']
-      provider.api_key = ENV['DIGITAL_OCEAN_API_KEY']
-    end
-  end
-
-  config.vm.define "production2" do |production|
-    production.vm.synced_folder ".", "/vagrant", disabled: true
-
-    production.vm.provision :ansible do |ansible|
-      ansible.playbook = "provisioning/playbook.yml"
-      #ansible.verbose = 'vvv'
-    end
-
-    production.vm.provider :digital_ocean do |provider, override|
-      override.ssh.private_key_path = '~/.ssh/id_rsa'
-      override.vm.box = 'digital_ocean'
-      override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-
-      provider.image = "Ubuntu 12.04.3 x64"
-      provider.size = "2GB"
-      provider.client_id = ENV['DIGITAL_OCEAN_CLIENT_ID']
-      provider.api_key = ENV['DIGITAL_OCEAN_API_KEY']
-      provider.backups_enabled = true
-    end
-  end
-
   config.vm.define "local" do |local|
+    local.vm.network :private_network, ip: "192.168.11.2"
     local.vm.network :forwarded_port, guest: 80, host: 8000
     local.vm.network :forwarded_port, guest: 443, host: 8001
     local.vm.network :forwarded_port, guest: 22, host: 2200
@@ -162,6 +120,7 @@ Vagrant.configure("2") do |config|
     dev.vm.synced_folder ".", "/source"
 
     dev.vm.provider :virtualbox do |vb, override|
+      vb.memory = 1024
       override.vm.provision :shell, :inline => $vbox_script
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]

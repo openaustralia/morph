@@ -2,6 +2,9 @@ require 'new_relic/agent/method_tracer'
 
 class Scraper < ActiveRecord::Base
   include Sync::Actions
+  # Using smaller batch_size than the default for the time being because reindexing
+  # causes elasticsearch on the local VM to run out of memory
+  searchkick batch_size: 100 # defaults to 1000
 
   belongs_to :owner, inverse_of: :scrapers
   belongs_to :forked_by, class_name: "User"
@@ -155,13 +158,19 @@ class Scraper < ActiveRecord::Base
     "#{owner.data_root}/#{name}"
   end
 
+  def self.pull_docker_image(image)
+    Docker::Image.create('fromImage' => image) do |chunk|
+      data = JSON.parse(chunk)
+      puts "#{data['status']} #{data['id']} #{data['progress']}"
+    end
+  end
+
   def self.update_docker_image!
-    docker_command = "docker #{ENV['DOCKER_TCP'] ? "-H #{ENV['DOCKER_TCP']}" : ""}"
-    system("#{docker_command} pull openaustralia/morph-ruby")
-    system("#{docker_command} pull openaustralia/morph-php")
-    system("#{docker_command} pull openaustralia/morph-python")
-    system("#{docker_command} pull openaustralia/morph-perl")
-    system("#{docker_command} pull openaustralia/buildstep")
+    pull_docker_image("openaustralia/morph-ruby")
+    pull_docker_image("openaustralia/morph-php")
+    pull_docker_image("openaustralia/morph-python")
+    pull_docker_image("openaustralia/morph-perl")
+    pull_docker_image("openaustralia/buildstep")
   end
 
   def readme
@@ -192,7 +201,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def stop!
-    last_run.stop! if last_run.running?
+    last_run.stop!
   end
 
   def github_url_for_file(file)
@@ -204,7 +213,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def main_scraper_filename
-    language.scraper_filename
+    language.scraper_filename if language
   end
 
   def github_url_main_scraper_file
