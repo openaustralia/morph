@@ -87,22 +87,6 @@ module Morph
         end
       end
 
-      # If image is present locally use that. If it isn't then pull it from the hub
-      # This makes initial setup easier
-      def self.get_or_pull_image(name)
-        wrapper = Multiblock.wrapper
-        yield(wrapper)
-
-        begin
-          Docker::Image.get(name)
-        rescue Docker::Error::NotFoundError
-          Docker::Image.create('fromImage' => name) do |chunk|
-            data = JSON.parse(chunk)
-            wrapper.call(:log, :internalout, "#{data['status']} #{data['id']} #{data['progress']}\n")
-          end
-        end
-      end
-
       def self.compile(repo_path)
         wrapper = Multiblock.wrapper
         yield(wrapper)
