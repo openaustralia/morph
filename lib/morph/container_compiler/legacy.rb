@@ -5,12 +5,16 @@ module Morph
         wrapper = Multiblock.wrapper
         yield(wrapper)
 
+        image = get_or_pull_image(docker_image(run.language)) do |on|
+          on.log {|s,c| wrapper.call(:log, :internalout, c)}
+        end
+
         command = Metric.command(run.language.scraper_command, Run.time_output_filename)
         env_variables = run.scraper ? run.scraper.variables.map{|v| [v.name, v.value]} : []
         status_code = Morph::DockerRunner.run(
           command: command,
           user: "scraper",
-          image_name: docker_image(run.language),
+          image_name: image.id,
           container_name: docker_container_name(run),
           repo_path: run.repo_path,
           data_path: run.data_path,
