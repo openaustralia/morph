@@ -70,3 +70,11 @@ body {
   height: 500px;
   color: white;
 }
+
+.banner-quotes {
+  footer {
+    &:before {
+      content: none;
+    }
+  }
+}
