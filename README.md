@@ -147,9 +147,7 @@ When you've changed the Ansible playbooks to modify the infrastructure you'll wa
 
 ### Running tests
 
-If you're running guard (see above) the tests will also automatically run when you change a file. By default it's setup to use [Zeus](https://github.com/burke/zeus) which speeds things up considerably. You'll need to install this with
-
-    gem install zeus
+If you're running guard (see above) the tests will also automatically run when you change a file.
 
 ### How to contribute
 
