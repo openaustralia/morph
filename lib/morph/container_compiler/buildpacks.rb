@@ -121,18 +121,22 @@ module Morph
         hash
       end
 
+      def self.write_paths_to_directory(hash, dir)
+        hash.each do |path, content|
+          new_path = File.join(dir, path)
+          # Ensure the directory exists (for files in subdirectories)
+          FileUtils.mkdir_p(File.dirname(new_path))
+          File.open(new_path, "w") {|f| f.write(content)}
+          # Set an arbitrary & fixed modification time on the files so that if
+          # content is the same it will cache
+          FileUtils.touch(new_path, mtime: Time.new(2000,1,1))
+        end
+      end
+
       def self.create_tar_from_paths(hash)
         dir = Dir.mktmpdir("morph")
         begin
-          hash.each do |path, content|
-            new_path = File.join(dir, path)
-            # Ensure the directory exists (for files in subdirectories)
-            FileUtils.mkdir_p(File.dirname(new_path))
-            File.open(new_path, "w") {|f| f.write(content)}
-            # Set an arbitrary & fixed modification time on the files so that if
-            # content is the same it will cache
-            FileUtils.touch(new_path, mtime: Time.new(2000,1,1))
-          end
+          write_paths_to_directory(hash, dir)
           create_tar(dir)
         ensure
           FileUtils.remove_entry_secure dir
