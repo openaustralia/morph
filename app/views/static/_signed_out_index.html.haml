@@ -38,24 +38,18 @@
       .col-md-8
       %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-.container#quotes
+.container#quotes.banner-quotes
   .container
     .row
-      .col-md-4
+      .col-md-6
         %blockquote
-          %p Allow me to be the first to say amazeballs!
-          %small
-            = image_tag "https://www.gravatar.com/avatar/1d9536edb482e9e1f56b86459abb06c4?s=30", size: "50x50" , class: "img-circle"
-            = link_to "Henare Degan", "https://twitter.com/henaredegan"
-      .col-md-4
+          %p Scrapers are kept in public github repos and then we consume the data from an API, delicious! Is like scrapers with steroids!
+          %footer
+            = image_tag "https://www.gravatar.com/avatar/976cd09092e36aad6a7b959822b78c89?s=60", size: "60x60" , class: "img-circle"
+            = link_to "rezzo", "https://morph.io/rezzo"
+      .col-md-6
         %blockquote
-          %p I like it but then I would say that
-          %small
-            = image_tag "https://www.gravatar.com/avatar/30e5eec125c81e549294137a3ddd6c74?s=30", size: "50x50", class: "img-circle"
-            = link_to "Matthew Landauer", "https://twitter.com/matthewlandauer"
-      .col-md-4
-        %blockquote
-          %p Does it come with plasticine?
-          %small
-            = image_tag "https://www.gravatar.com/avatar/87bb46366f13106c2deebf655af73b38?s=30", size: "50x50", class: "img-circle"
-            = link_to "Kat Szuminska", "https://twitter.com/katska"
+          %p I love Morph because it gives you everything you need to run a scraper. I've written a system which notifies me when Australian FOI disclosure logs are updated.
+          %footer
+            = image_tag "https://avatars3.githubusercontent.com/u/851118?v=3&s=60", size: "60x60", class: "img-circle"
+            = link_to "hailspuds", "https://morph.io/hailspuds"

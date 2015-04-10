@@ -19,7 +19,7 @@ body {
   margin-bottom: 309px;
 }
 
-footer {
+.site-footer {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -73,4 +73,18 @@ footer {
   width: 100%;
   height: 500px;
   color: white;
+}
+
+.banner-quotes {
+  footer {
+    font-size: 1.125em;
+
+    &:before {
+      content: none;
+    }
+
+    img {
+      margin-right: .5em;
+    }
+  }
 }
