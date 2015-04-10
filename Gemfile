@@ -15,6 +15,7 @@ gem 'mysql2'
 gem "haml-rails"
 # Lock to version 3.2 of bootstrap to start with
 gem "bootstrap-sass", "~> 3.2.0"
+gem "font-awesome-rails"
 gem "bootstrap-select-rails"
 gem "devise"
 gem "omniauth-github"
