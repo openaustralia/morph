@@ -134,12 +134,9 @@ module Morph
       end
 
       def self.create_tar_from_paths(hash)
-        dir = Dir.mktmpdir("morph")
-        begin
+        Dir.mktmpdir("morph") do |dir|
           write_paths_to_directory(hash, dir)
           create_tar(dir)
-        ensure
-          FileUtils.remove_entry_secure dir
         end
       end
 
