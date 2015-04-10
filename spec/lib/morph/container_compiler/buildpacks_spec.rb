@@ -36,6 +36,25 @@ describe Morph::ContainerCompiler::Buildpacks do
       it {Morph::ContainerCompiler::Buildpacks.all_run_hash("test").should == {
         "foo/three.txt" => "", "one.txt" => "", "two.txt" => "", "scraper.rb" => ""}}
     end
+
+    describe ".write_all_config_with_defaults_to_directory" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
+          Dir.entries(dir).should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+        end
+      end
+    end
+
+    describe ".write_all_run_to_directory" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
+          Dir.entries(dir).should == [".", "..", "foo", "one.txt", "scraper.rb", "two.txt"]
+          Dir.entries(File.join(dir, "foo")).should == [".", "..", "three.txt"]
+        end
+      end
+    end
   end
 
   context "another set of files" do
@@ -73,6 +92,27 @@ describe Morph::ContainerCompiler::Buildpacks do
     describe ".all_run_hash" do
       it {Morph::ContainerCompiler::Buildpacks.all_run_hash("test").should == {
         "foo/three.txt" => "", "one.txt" => "", "scraper.rb" => ""}}
+    end
+
+    describe ".write_all_config_with_defaults_to_directory" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
+          Dir.entries(dir).should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+          File.read(File.join(dir, "Procfile")).should ==
+            "scraper: bundle exec ruby -r/usr/local/lib/prerun.rb scraper.rb\n"
+        end
+      end
+    end
+
+    describe ".write_all_run_to_directory" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
+          Dir.entries(dir).should == [".", "..", "foo", "one.txt", "scraper.rb"]
+          Dir.entries(File.join(dir, "foo")).should == [".", "..", "three.txt"]
+        end
+      end
     end
   end
 end
