@@ -105,12 +105,20 @@ module Morph
       # like Gemfile, requirements.txt, etc..
       # This comes from a whitelisted list
       def self.tar_config_files(repo_path)
-        create_tar_from_paths(all_config_hash_with_defaults(File.join(Rails.root, repo_path)))
+        hash = all_config_hash_with_defaults(File.join(Rails.root, repo_path))
+        Dir.mktmpdir("morph") do |dir|
+          write_paths_to_directory(hash, dir)
+          create_tar(dir)
+        end
       end
 
       # Contents of a tarfile that contains everything that isn't a configuration file
       def self.tar_run_files(repo_path)
-        create_tar_from_paths(all_run_hash(File.join(Rails.root, repo_path)))
+        hash = all_run_hash(File.join(Rails.root, repo_path))
+        Dir.mktmpdir("morph") do |dir|
+          write_paths_to_directory(hash, dir)
+          create_tar(dir)
+        end
       end
 
       def self.paths_to_hash(directory, paths)
@@ -130,13 +138,6 @@ module Morph
           # Set an arbitrary & fixed modification time on the files so that if
           # content is the same it will cache
           FileUtils.touch(new_path, mtime: Time.new(2000,1,1))
-        end
-      end
-
-      def self.create_tar_from_paths(hash)
-        Dir.mktmpdir("morph") do |dir|
-          write_paths_to_directory(hash, dir)
-          create_tar(dir)
         end
       end
 
