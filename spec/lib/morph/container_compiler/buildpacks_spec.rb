@@ -56,7 +56,7 @@ describe Morph::ContainerCompiler::Buildpacks do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
-          Dir.entries(dir).should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
         end
       end
     end
@@ -65,8 +65,8 @@ describe Morph::ContainerCompiler::Buildpacks do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
-          Dir.entries(dir).should == [".", "..", "foo", "one.txt", "scraper.rb", "two.txt"]
-          Dir.entries(File.join(dir, "foo")).should == [".", "..", "three.txt"]
+          Dir.entries(dir).sort.should == [".", "..", "foo", "one.txt", "scraper.rb", "two.txt"]
+          Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
         end
       end
     end
@@ -113,7 +113,7 @@ describe Morph::ContainerCompiler::Buildpacks do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
-          Dir.entries(dir).should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
           File.read(File.join(dir, "Procfile")).should ==
             "scraper: bundle exec ruby -r/usr/local/lib/prerun.rb scraper.rb\n"
         end
@@ -124,8 +124,8 @@ describe Morph::ContainerCompiler::Buildpacks do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
-          Dir.entries(dir).should == [".", "..", "foo", "one.txt", "scraper.rb"]
-          Dir.entries(File.join(dir, "foo")).should == [".", "..", "three.txt"]
+          Dir.entries(dir).sort.should == [".", "..", "foo", "one.txt", "scraper.rb"]
+          Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
         end
       end
     end
