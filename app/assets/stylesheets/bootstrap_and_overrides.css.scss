@@ -47,7 +47,11 @@ footer {
 }
 
 .navbar-brand {
-  font-family: 'Comfortaa', cursive;
+  letter-spacing: 1px;
+
+  .navbar-default & {
+    color: #555;
+  }
 }
 
 .container#banner {
