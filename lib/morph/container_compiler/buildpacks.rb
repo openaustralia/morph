@@ -121,10 +121,13 @@ module Morph
 
       def self.write_all_config_with_defaults_to_directory(source, dest)
         write_paths_to_directory(all_config_hash_with_defaults(source), dest)
+        fix_modification_times(dest)
       end
 
       def self.write_all_run_to_directory(source, dest)
         write_paths_to_directory(all_run_hash(source), dest)
+        # TODO I don't think I need to this step here
+        fix_modification_times(dest)
       end
 
       def self.paths_to_hash(directory, paths)
@@ -150,7 +153,6 @@ module Morph
           FileUtils.mkdir_p(File.dirname(new_path))
           File.open(new_path, "w") {|f| f.write(content)}
         end
-        fix_modification_times(dir)
       end
 
       def self.create_tar(directory)
