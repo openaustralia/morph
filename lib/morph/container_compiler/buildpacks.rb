@@ -135,16 +135,22 @@ module Morph
         hash
       end
 
+      # Set an arbitrary & fixed modification time on everything in a directory
+      # This ensures that if the content is the same docker will cache
+      def self.fix_modification_times(dir)
+        Find.find(dir) do |entry|
+          FileUtils.touch(entry, mtime: Time.new(2000,1,1))
+        end
+      end
+
       def self.write_paths_to_directory(hash, dir)
         hash.each do |path, content|
           new_path = File.join(dir, path)
           # Ensure the directory exists (for files in subdirectories)
           FileUtils.mkdir_p(File.dirname(new_path))
           File.open(new_path, "w") {|f| f.write(content)}
-          # Set an arbitrary & fixed modification time on the files so that if
-          # content is the same it will cache
-          FileUtils.touch(new_path, mtime: Time.new(2000,1,1))
         end
+        fix_modification_times(dir)
       end
 
       def self.create_tar(directory)
