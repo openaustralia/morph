@@ -101,7 +101,7 @@ describe Morph::ContainerCompiler::Buildpacks do
     describe ".all_config_hash_with_defaults" do
       it {Morph::ContainerCompiler::Buildpacks.all_config_hash_with_defaults("test").should == {
         "Gemfile"=>"", "Gemfile.lock"=>"",
-        "Procfile"=>"scraper: bundle exec ruby -r/usr/local/lib/prerun.rb scraper.rb\n"}}
+        "Procfile"=> File.read("default_files/ruby/Procfile")}}
     end
 
     describe ".all_run_hash" do
@@ -114,8 +114,7 @@ describe Morph::ContainerCompiler::Buildpacks do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
-          File.read(File.join(dir, "Procfile")).should ==
-            "scraper: bundle exec ruby -r/usr/local/lib/prerun.rb scraper.rb\n"
+          File.read(File.join(dir, "Procfile")).should == File.read("default_files/ruby/Procfile")
         end
       end
     end
