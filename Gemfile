@@ -13,7 +13,8 @@ gem 'openaustralia-sqlite3', require: "sqlite3"
 gem 'mysql2'
 
 gem "haml-rails"
-gem "twitter-bootstrap-rails"
+# Lock to version 3.2 of bootstrap to start with
+gem "bootstrap-sass", "~> 3.2.0"
 gem "bootstrap-select-rails"
 gem "devise"
 gem "omniauth-github"
