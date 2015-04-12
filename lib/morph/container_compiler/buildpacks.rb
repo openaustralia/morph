@@ -91,7 +91,9 @@ module Morph
         wrapper = Multiblock.wrapper
         yield(wrapper)
 
-        i = Docker::Image.get('openaustralia/buildstep')
+        i = get_or_pull_image('openaustralia/buildstep') do |on|
+          on.log {|s,c| wrapper.call(:log, :internalout, c)}
+        end
         # Insert the configuration part of the application code into the container and build
         commands = ["ADD code_config.tar /app", "ENV CURL_TIMEOUT 180", "RUN /build/builder"]
         docker_build_command(i, commands, "code_config.tar" => tar_config_files(repo_path)) do |on|
@@ -103,12 +105,29 @@ module Morph
       # like Gemfile, requirements.txt, etc..
       # This comes from a whitelisted list
       def self.tar_config_files(repo_path)
-        create_tar_from_paths(all_config_hash_with_defaults(File.join(Rails.root, repo_path)))
+        Dir.mktmpdir("morph") do |dir|
+          write_all_config_with_defaults_to_directory(File.join(Rails.root, repo_path), dir)
+          create_tar(dir)
+        end
       end
 
       # Contents of a tarfile that contains everything that isn't a configuration file
       def self.tar_run_files(repo_path)
-        create_tar_from_paths(all_run_hash(File.join(Rails.root, repo_path)))
+        Dir.mktmpdir("morph") do |dir|
+          write_all_run_to_directory(File.join(Rails.root, repo_path), dir)
+          create_tar(dir)
+        end
+      end
+
+      def self.write_all_config_with_defaults_to_directory(source, dest)
+        write_paths_to_directory(all_config_hash_with_defaults(source), dest)
+        fix_modification_times(dest)
+      end
+
+      def self.write_all_run_to_directory(source, dest)
+        write_paths_to_directory(all_run_hash(source), dest)
+        # TODO I don't think I need to this step here
+        fix_modification_times(dest)
       end
 
       def self.paths_to_hash(directory, paths)
@@ -119,21 +138,20 @@ module Morph
         hash
       end
 
-      def self.create_tar_from_paths(hash)
-        dir = Dir.mktmpdir("morph")
-        begin
-          hash.each do |path, content|
-            new_path = File.join(dir, path)
-            # Ensure the directory exists (for files in subdirectories)
-            FileUtils.mkdir_p(File.dirname(new_path))
-            File.open(new_path, "w") {|f| f.write(content)}
-            # Set an arbitrary & fixed modification time on the files so that if
-            # content is the same it will cache
-            FileUtils.touch(new_path, mtime: Time.new(2000,1,1))
-          end
-          create_tar(dir)
-        ensure
-          FileUtils.remove_entry_secure dir
+      # Set an arbitrary & fixed modification time on everything in a directory
+      # This ensures that if the content is the same docker will cache
+      def self.fix_modification_times(dir)
+        Find.find(dir) do |entry|
+          FileUtils.touch(entry, mtime: Time.new(2000,1,1))
+        end
+      end
+
+      def self.write_paths_to_directory(hash, dir)
+        hash.each do |path, content|
+          new_path = File.join(dir, path)
+          # Ensure the directory exists (for files in subdirectories)
+          FileUtils.mkdir_p(File.dirname(new_path))
+          File.open(new_path, "w") {|f| f.write(content)}
         end
       end
 

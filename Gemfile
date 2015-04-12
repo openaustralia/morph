@@ -13,7 +13,8 @@ gem 'openaustralia-sqlite3', require: "sqlite3"
 gem 'mysql2'
 
 gem "haml-rails"
-gem "twitter-bootstrap-rails"
+gem "bootstrap-sass"
+gem "font-awesome-rails"
 gem "bootstrap-select-rails"
 gem "devise"
 gem "omniauth-github"
@@ -82,6 +83,8 @@ group :development do
 
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem "spring"
+  gem 'spring-commands-rspec'
 end
 
 group :development, :test do

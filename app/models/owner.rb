@@ -88,12 +88,11 @@ class Owner < ActiveRecord::Base
   def gravatar_url(size = 440)
     url = read_attribute(:gravatar_url)
     if url
-      if url =~ /^https:\/\/(identicons.github.com|avatars.githubusercontent.com)/
-        # Can't seem to change the size for the github images
-        url
-      else
-        url + "&s=#{size}"
-      end
+      u = URI.parse(url)
+      queries = (u.query || "").split("&")
+      queries << "s=#{size}"
+      u.query = queries.join("&")
+      u.to_s
     end
   end
 

@@ -63,10 +63,6 @@ Now setup the databases:
 
     bundle exec dotenv rake db:setup
 
-Now you'll need to build the Docker container that scrapers run in.
-
-    bundle exec dotenv rake app:update_docker_image
-
 Now you can start the server
 
     bundle exec dotenv foreman start
@@ -151,9 +147,7 @@ When you've changed the Ansible playbooks to modify the infrastructure you'll wa
 
 ### Running tests
 
-If you're running guard (see above) the tests will also automatically run when you change a file. By default it's setup to use [Zeus](https://github.com/burke/zeus) which speeds things up considerably. You'll need to install this with
-
-    gem install zeus
+If you're running guard (see above) the tests will also automatically run when you change a file.
 
 ### How to contribute
 
