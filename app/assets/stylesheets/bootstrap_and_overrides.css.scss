@@ -76,8 +76,13 @@ body {
 }
 
 .banner-quotes {
-  footer {
+  p {
     font-size: 1.125em;
+  }
+
+  footer {
+    margin-top: 1em;
+    font-size: 1em;
 
     &:before {
       content: none;
@@ -85,6 +90,16 @@ body {
 
     img {
       margin-right: .5em;
+    }
+
+    .h-card {
+      span {
+        display: block;
+      }
+    }
+
+    .p-name {
+      font-size: 1.125em;
     }
   }
 }
