@@ -176,16 +176,10 @@ module Morph
         tempfile = Tempfile.new('morph_tar')
 
         in_directory(directory) do
-          begin
-            tar = Archive::Tar::Minitar::Output.new(tempfile.path)
-            Find.find(".") do |entry|
-              if entry != "."
-                Archive::Tar::Minitar.pack_file(entry, tar)
-              end
-            end
-          ensure
-            tar.close
-          end
+          # We used to use Archive::Tar::Minitar but that doesn't support
+          # symbolic links in the tar file. So, using tar from the command line
+          # instead.
+          `tar cf #{tempfile.path} .`
         end
         content = File.read(tempfile.path)
         FileUtils.rm_f(tempfile.path)

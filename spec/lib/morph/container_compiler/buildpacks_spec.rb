@@ -63,6 +63,21 @@ describe Morph::ContainerCompiler::Buildpacks do
         end
       end
     end
+
+    describe ".tar_run_files" do
+      it "should preserve the symbolic link" do
+        tar = Morph::ContainerCompiler::Buildpacks.tar_run_files("test")
+        Dir.mktmpdir do |dir|
+          Morph::ContainerCompiler::Buildpacks.in_directory(dir) do
+            File.open("test.tar", "w") {|f| f << tar}
+            # Quick and dirty
+            `tar xf test.tar`
+            File.symlink?("link.rb").should be_truthy
+            File.readlink("link.rb").should == "scraper.rb"
+          end
+        end
+      end
+    end
   end
 
   context "another set of files" do
