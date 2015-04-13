@@ -114,10 +114,10 @@ module Morph
       end
 
       # Contents of a tarfile that contains everything that isn't a configuration file
-      def self.tar_run_files(repo_path)
-        Dir.mktmpdir("morph") do |dir|
-          write_all_run_to_directory(File.join(Rails.root, repo_path), dir)
-          create_tar(dir)
+      def self.tar_run_files(source)
+        Dir.mktmpdir("morph") do |dest|
+          write_all_run_to_directory(source, dest)
+          create_tar(dest)
         end
       end
 
