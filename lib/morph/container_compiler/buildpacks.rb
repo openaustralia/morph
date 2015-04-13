@@ -130,14 +130,6 @@ module Morph
         fix_modification_times(dest)
       end
 
-      def self.paths_to_hash(directory, paths)
-        hash = {}
-        paths.each do |path|
-          hash[path] = File.read(File.join(directory, path))
-        end
-        hash
-      end
-
       # Set an arbitrary & fixed modification time on everything in a directory
       # This ensures that if the content is the same docker will cache
       def self.fix_modification_times(dir)
