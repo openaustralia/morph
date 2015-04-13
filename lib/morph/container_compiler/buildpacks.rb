@@ -149,13 +149,17 @@ module Morph
           FileUtils.rm_f(File.join(dest, path))
         end
 
-        # Remove directories starting with "."
-        Find.find(dest) do |path|
-          FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == ?.
-        end
+        remove_hidden_directories(dest)
 
         # TODO I don't think I need to this step here
         fix_modification_times(dest)
+      end
+
+      # Remove directories starting with "."
+      def self.remove_hidden_directories(directory)
+        Find.find(directory) do |path|
+          FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == ?.
+        end
       end
 
       # Set an arbitrary & fixed modification time on everything in a directory
