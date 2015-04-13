@@ -107,8 +107,8 @@ module Morph
       BINARY_NAMES[key]
     end
 
-    def default_file(file)
-      File.read("default_files/#{key}/#{file}")
+    def default_file_path(file)
+      "default_files/#{key}/#{file}"
     end
   end
 end

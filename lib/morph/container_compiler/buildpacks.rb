@@ -135,7 +135,7 @@ module Morph
           if files.all?{|file| !File.exists?(File.join(dest, file))}
             files.each do |file|
               File.open(File.join(dest, file), "w") do |f|
-                f << language.default_file(file)
+                f << File.read(language.default_file_path(file))
               end
             end
           end
