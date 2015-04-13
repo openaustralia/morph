@@ -120,8 +120,11 @@ module Morph
       end
 
       def self.write_all_config_with_defaults_to_directory(source, dest)
-        paths = all_hash(source).keys & all_config_filenames
-        hash = all_hash(source).select{|path,content| paths.include?(path)}
+        hash = {}
+        all_hash = all_hash(source)
+        all_config_filenames.each do |config_filename|
+          hash[config_filename] = all_hash[config_filename] if all_hash.has_key?(config_filename)
+        end
 
         language = Morph::Language.language(source)
         # TODO Need to be able to handle the situation when we haven't
