@@ -143,12 +143,17 @@ module Morph
       end
 
       def self.write_all_run_to_directory(source, dest)
-        hash = all_hash(source)
+        FileUtils.cp_r File.join(source, "."), dest
+
         all_config_filenames.each do |path|
-          hash.delete(path)
+          FileUtils.rm_f(File.join(dest, path))
         end
 
-        write_paths_to_directory(hash, dest)
+        # Remove directories starting with "."
+        Find.find(dest) do |path|
+          FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == ?.
+        end
+
         # TODO I don't think I need to this step here
         fix_modification_times(dest)
       end
