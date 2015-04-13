@@ -28,10 +28,24 @@ module Morph
     # So, the default Gemfile and Gemfile.lock only get inserted if both
     # those files are missing
     DEFAULT_FILES_TO_INSERT = {
-      ruby: [["Gemfile", "Gemfile.lock"], "Procfile"],
-      python: ["requirements.txt", "runtime.txt", "Procfile"],
-      php: [["composer.json", "composer.lock"], "Procfile"],
-      perl: ["app.psgi", "cpanfile", "Procfile"]
+      ruby: [
+        ["Gemfile", "Gemfile.lock"],
+        ["Procfile"]
+      ],
+      python: [
+        ["requirements.txt"],
+        ["runtime.txt"],
+        ["Procfile"]
+      ],
+      php: [
+        ["composer.json", "composer.lock"],
+        ["Procfile"]
+      ],
+      perl: [
+        ["app.psgi"],
+        ["cpanfile"],
+        ["Procfile"]
+      ]
     }
 
     attr_reader :key

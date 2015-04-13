@@ -124,7 +124,6 @@ module Morph
         language = Morph::Language.language(source)
 
         language.default_files_to_insert.each do |files|
-          files = [files] unless files.kind_of?(Array)
           if files.all?{|file| hash[file].nil?}
             files.each do |file|
               hash[file] = language.default_file(file)
