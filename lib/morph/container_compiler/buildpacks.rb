@@ -170,15 +170,6 @@ module Morph
         end
       end
 
-      def self.write_paths_to_directory(hash, dir)
-        hash.each do |path, content|
-          new_path = File.join(dir, path)
-          # Ensure the directory exists (for files in subdirectories)
-          FileUtils.mkdir_p(File.dirname(new_path))
-          File.open(new_path, "w") {|f| f.write(content)}
-        end
-      end
-
       def self.create_tar(directory)
         tempfile = Tempfile.new('morph_tar')
 
@@ -201,25 +192,6 @@ module Morph
 
       def self.all_config_filenames
         ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
-      end
-
-      # Relative paths to all the files in the given directory (recursive)
-      # Currently contents of directories starting "." get ignored
-      # TODO Useful with .git directories but doesn't seem like a good
-      # thing to do in general.
-      def self.all_hash(directory)
-        result = {}
-        Find.find(directory) do |path|
-          if FileTest.directory?(path)
-            if File.basename(path)[0] == ?.
-              Find.prune
-            end
-          else
-            result_path = Pathname.new(path).relative_path_from(Pathname.new(directory)).to_s
-            result[result_path] = File.read(path)
-          end
-        end
-        result
       end
 
       def self.in_directory(directory)
