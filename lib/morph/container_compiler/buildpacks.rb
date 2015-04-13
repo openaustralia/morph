@@ -139,7 +139,7 @@ module Morph
 
       def self.write_all_run_to_directory(source, dest)
         hash = all_hash(source)
-        all_config_hash(source).keys.each do |path|
+        all_config_filenames.each do |path|
           hash.delete(path)
         end
 
