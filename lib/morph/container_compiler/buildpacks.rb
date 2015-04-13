@@ -122,6 +122,8 @@ module Morph
       def self.write_all_config_with_defaults_to_directory(source, dest)
         hash = all_config_hash(source)
         language = Morph::Language.language(source)
+        # TODO Need to be able to handle the situation when we haven't
+        # recognised what language this scraper is
 
         language.default_files_to_insert.each do |files|
           if files.all?{|file| hash[file].nil?}
