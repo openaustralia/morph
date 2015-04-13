@@ -29,6 +29,7 @@ describe Morph::ContainerCompiler::Buildpacks do
       FileUtils.touch("test/Gemfile")
       FileUtils.touch("test/Gemfile.lock")
       FileUtils.touch("test/scraper.rb")
+      FileUtils.ln_s("scraper.rb", "test/link.rb")
     end
 
     after :each do
@@ -51,13 +52,14 @@ describe Morph::ContainerCompiler::Buildpacks do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", "foo", "one.txt", "scraper.rb", "two.txt"]
+          Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
           File.read(File.join(dir, ".a_dot_file.cfg")).should == ""
           File.read(File.join(dir, "foo/three.txt")).should == ""
           File.read(File.join(dir, "one.txt")).should == ""
           File.read(File.join(dir, "scraper.rb")).should == ""
           File.read(File.join(dir, "two.txt")).should == ""
+          File.readlink(File.join(dir, "link.rb")).should == "scraper.rb"
         end
       end
     end
