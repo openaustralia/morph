@@ -120,10 +120,9 @@ module Morph
       end
 
       def self.write_all_config_with_defaults_to_directory(source, dest)
-        hash = {}
-        all_hash = all_hash(source)
         all_config_filenames.each do |config_filename|
-          hash[config_filename] = all_hash[config_filename] if all_hash.has_key?(config_filename)
+          path = File.join(source, config_filename)
+          FileUtils.cp(path, dest) if File.exists?(path)
         end
 
         language = Morph::Language.language(source)
@@ -131,14 +130,15 @@ module Morph
         # recognised what language this scraper is
 
         language.default_files_to_insert.each do |files|
-          if files.all?{|file| hash[file].nil?}
+          if files.all?{|file| !File.exists?(File.join(dest, file))}
             files.each do |file|
-              hash[file] = language.default_file(file)
+              File.open(File.join(dest, file), "w") do |f|
+                f << language.default_file(file)
+              end
             end
           end
         end
 
-        write_paths_to_directory(hash, dest)
         fix_modification_times(dest)
       end
 
