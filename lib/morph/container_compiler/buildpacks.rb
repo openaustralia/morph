@@ -185,8 +185,12 @@ module Morph
         content
       end
 
+      def self.all_config_filenames
+        ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
+      end
+
       def self.all_config_hash(directory)
-        paths = all_hash(directory).keys & ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
+        paths = all_hash(directory).keys & all_config_filenames
         all_hash(directory).select{|path,content| paths.include?(path)}
       end
 
