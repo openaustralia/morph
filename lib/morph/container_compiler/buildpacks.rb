@@ -138,8 +138,10 @@ module Morph
       end
 
       def self.write_all_run_to_directory(source, dest)
-        paths = all_hash(source).keys - all_config_hash(source).keys
-        hash = all_hash(source).select{|path,content| paths.include?(path)}
+        hash = all_hash(source)
+        all_config_hash(source).keys.each do |path|
+          hash.delete(path)
+        end
 
         write_paths_to_directory(hash, dest)
         # TODO I don't think I need to this step here
