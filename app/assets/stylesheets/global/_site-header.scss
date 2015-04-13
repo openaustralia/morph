@@ -1,0 +1,7 @@
+.site-header {
+  .container {
+    @media (min-width: $grid-float-breakpoint) and (max-width: $screen-md-max) {
+      width: 100%;
+    }
+  }
+}
