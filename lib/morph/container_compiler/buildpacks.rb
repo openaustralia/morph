@@ -134,9 +134,7 @@ module Morph
         language.default_files_to_insert.each do |files|
           if files.all?{|file| !File.exists?(File.join(dest, file))}
             files.each do |file|
-              File.open(File.join(dest, file), "w") do |f|
-                f << File.read(language.default_file_path(file))
-              end
+              FileUtils.cp(language.default_file_path(file), File.join(dest, file))
             end
           end
         end
