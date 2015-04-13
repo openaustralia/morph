@@ -120,7 +120,9 @@ module Morph
       end
 
       def self.write_all_config_with_defaults_to_directory(source, dest)
-        hash = all_config_hash(source)
+        paths = all_hash(source).keys & all_config_filenames
+        hash = all_hash(source).select{|path,content| paths.include?(path)}
+
         language = Morph::Language.language(source)
         # TODO Need to be able to handle the situation when we haven't
         # recognised what language this scraper is
@@ -187,11 +189,6 @@ module Morph
 
       def self.all_config_filenames
         ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
-      end
-
-      def self.all_config_hash(directory)
-        paths = all_hash(directory).keys & all_config_filenames
-        all_hash(directory).select{|path,content| paths.include?(path)}
       end
 
       # Relative paths to all the files in the given directory (recursive)
