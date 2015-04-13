@@ -35,33 +35,14 @@ describe Morph::ContainerCompiler::Buildpacks do
       FileUtils.rm_rf("test")
     end
 
-    describe ".all_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_hash("test").should == {
-        "Gemfile" => "", "Gemfile.lock" => "", "Procfile" => "",
-        "foo/three.txt" => "", "one.txt" => "", "two.txt" => "", "scraper.rb" => "",
-        ".a_dot_file.cfg" => ""}}
-    end
-
-    describe ".all_config_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_config_hash("test").should == {
-        "Gemfile" => "", "Gemfile.lock" => "", "Procfile" => ""}}
-    end
-
-    describe ".all_config_hash_with_defaults" do
-      it {Morph::ContainerCompiler::Buildpacks.all_config_hash_with_defaults("test").should == {"Gemfile"=>"", "Gemfile.lock"=>"", "Procfile"=>""}}
-    end
-
-    describe ".all_run_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_run_hash("test").should == {
-        "foo/three.txt" => "", "one.txt" => "", "two.txt" => "", "scraper.rb" => "",
-        ".a_dot_file.cfg" => ""}}
-    end
-
     describe ".write_all_config_with_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+          File.read(File.join(dir, "Gemfile")).should == ""
+          File.read(File.join(dir, "Gemfile.lock")).should == ""
+          File.read(File.join(dir, "Procfile")).should == ""
         end
       end
     end
@@ -72,6 +53,11 @@ describe Morph::ContainerCompiler::Buildpacks do
           Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", "foo", "one.txt", "scraper.rb", "two.txt"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
+          File.read(File.join(dir, ".a_dot_file.cfg")).should == ""
+          File.read(File.join(dir, "foo/three.txt")).should == ""
+          File.read(File.join(dir, "one.txt")).should == ""
+          File.read(File.join(dir, "scraper.rb")).should == ""
+          File.read(File.join(dir, "two.txt")).should == ""
         end
       end
     end
@@ -91,34 +77,13 @@ describe Morph::ContainerCompiler::Buildpacks do
       FileUtils.rm_rf("test")
     end
 
-    describe ".all_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_hash("test").should == {
-        "Gemfile" => "", "Gemfile.lock" => "", "foo/three.txt" => "", "one.txt" => "",
-        "scraper.rb" => ""
-      }}
-    end
-
-    describe ".all_config_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_config_hash("test").should == {
-        "Gemfile" => "", "Gemfile.lock" => ""}}
-    end
-
-    describe ".all_config_hash_with_defaults" do
-      it {Morph::ContainerCompiler::Buildpacks.all_config_hash_with_defaults("test").should == {
-        "Gemfile"=>"", "Gemfile.lock"=>"",
-        "Procfile"=> File.read("default_files/ruby/Procfile")}}
-    end
-
-    describe ".all_run_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_run_hash("test").should == {
-        "foo/three.txt" => "", "one.txt" => "", "scraper.rb" => ""}}
-    end
-
     describe ".write_all_config_with_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+          File.read(File.join(dir, "Gemfile")).should == ""
+          File.read(File.join(dir, "Gemfile.lock")).should == ""
           File.read(File.join(dir, "Procfile")).should == File.read("default_files/ruby/Procfile")
         end
       end
@@ -130,6 +95,9 @@ describe Morph::ContainerCompiler::Buildpacks do
           Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "foo", "one.txt", "scraper.rb"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
+          File.read(File.join(dir, "foo/three.txt")).should == ""
+          File.read(File.join(dir, "one.txt")).should == ""
+          File.read(File.join(dir, "scraper.rb")).should == ""
         end
       end
     end
