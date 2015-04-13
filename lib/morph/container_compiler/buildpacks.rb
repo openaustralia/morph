@@ -1,6 +1,8 @@
 module Morph
   module ContainerCompiler
     class Buildpacks < Base
+      ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
+
       def self.compile_and_run(run)
         wrapper = Multiblock.wrapper
         yield(wrapper)
@@ -120,7 +122,7 @@ module Morph
       end
 
       def self.write_all_config_with_defaults_to_directory(source, dest)
-        all_config_filenames.each do |config_filename|
+        ALL_CONFIG_FILENAMES.each do |config_filename|
           path = File.join(source, config_filename)
           FileUtils.cp(path, dest) if File.exists?(path)
         end
@@ -145,7 +147,7 @@ module Morph
       def self.write_all_run_to_directory(source, dest)
         FileUtils.cp_r File.join(source, "."), dest
 
-        all_config_filenames.each do |path|
+        ALL_CONFIG_FILENAMES.each do |path|
           FileUtils.rm_f(File.join(dest, path))
         end
 
@@ -188,10 +190,6 @@ module Morph
         content = File.read(tempfile.path)
         FileUtils.rm_f(tempfile.path)
         content
-      end
-
-      def self.all_config_filenames
-        ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
       end
 
       def self.in_directory(directory)
