@@ -1,0 +1,14 @@
+.site-header {
+  .container {
+    @media (min-width: $grid-float-breakpoint) and (max-width: $screen-md-max) {
+      width: 100%;
+    }
+  }
+
+  form[role="search"] {
+    // restrict width of search form to avoid nav-bar wrapping
+    @media (min-width: $grid-float-breakpoint) and (max-width: 67em) {
+      width: 13em;
+    }
+  }
+}
