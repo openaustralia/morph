@@ -122,9 +122,8 @@ module Morph
       def self.write_all_config_with_defaults_to_directory(source, dest)
         hash = all_config_hash(source)
         language = Morph::Language.language(source)
-        files_array = language.default_files_to_insert
 
-        files_array.each do |files|
+        language.default_files_to_insert.each do |files|
           hash = insert_default_files_if_all_absent(hash, language, files)
         end
 
