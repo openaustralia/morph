@@ -124,7 +124,12 @@ module Morph
         language = Morph::Language.language(source)
 
         language.default_files_to_insert.each do |files|
-          hash = insert_default_files_if_all_absent(hash, language, files)
+          files = [files] unless files.kind_of?(Array)
+          if files.all?{|file| hash[file].nil?}
+            files.each do |file|
+              hash[file] = language.default_file(file)
+            end
+          end
         end
 
         write_paths_to_directory(hash, dest)
@@ -175,17 +180,6 @@ module Morph
         content = File.read(tempfile.path)
         FileUtils.rm_f(tempfile.path)
         content
-      end
-
-      # If all the files are absent insert them
-      def self.insert_default_files_if_all_absent(hash, language, files)
-        files = [files] unless files.kind_of?(Array)
-        if files.all?{|file| hash[file].nil?}
-          files.each do |file|
-            hash[file] = language.default_file(file)
-          end
-        end
-        hash
       end
 
       def self.all_config_hash(directory)
