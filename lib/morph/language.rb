@@ -97,7 +97,7 @@ module Morph
 
     def default_scraper
       if supported?
-        default_file(scraper_filename)
+        File.read(default_file_path(scraper_filename))
       else
         raise "Not yet supported"
       end
