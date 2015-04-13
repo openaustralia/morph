@@ -19,6 +19,9 @@ describe Morph::ContainerCompiler::Buildpacks do
   context "a set of files" do
     before :each do
       FileUtils.mkdir_p("test/foo")
+      FileUtils.mkdir_p("test/.bar")
+      FileUtils.touch("test/.a_dot_file.cfg")
+      FileUtils.touch("test/.bar/wibble.txt")
       FileUtils.touch("test/one.txt")
       FileUtils.touch("test/Procfile")
       FileUtils.touch("test/two.txt")
@@ -35,7 +38,8 @@ describe Morph::ContainerCompiler::Buildpacks do
     describe ".all_hash" do
       it {Morph::ContainerCompiler::Buildpacks.all_hash("test").should == {
         "Gemfile" => "", "Gemfile.lock" => "", "Procfile" => "",
-        "foo/three.txt" => "", "one.txt" => "", "two.txt" => "", "scraper.rb" => ""}}
+        "foo/three.txt" => "", "one.txt" => "", "two.txt" => "", "scraper.rb" => "",
+        ".a_dot_file.cfg" => ""}}
     end
 
     describe ".all_config_hash" do
@@ -49,7 +53,8 @@ describe Morph::ContainerCompiler::Buildpacks do
 
     describe ".all_run_hash" do
       it {Morph::ContainerCompiler::Buildpacks.all_run_hash("test").should == {
-        "foo/three.txt" => "", "one.txt" => "", "two.txt" => "", "scraper.rb" => ""}}
+        "foo/three.txt" => "", "one.txt" => "", "two.txt" => "", "scraper.rb" => "",
+        ".a_dot_file.cfg" => ""}}
     end
 
     describe ".write_all_config_with_defaults_to_directory" do
@@ -65,7 +70,7 @@ describe Morph::ContainerCompiler::Buildpacks do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", "foo", "one.txt", "scraper.rb", "two.txt"]
+          Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", "foo", "one.txt", "scraper.rb", "two.txt"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
         end
       end

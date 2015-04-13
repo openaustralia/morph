@@ -212,7 +212,9 @@ module Morph
       end
 
       # Relative paths to all the files in the given directory (recursive)
-      # (except for anything below a directory starting with ".")
+      # Currently contents of directories starting "." get ignored
+      # TODO Useful with .git directories but doesn't seem like a good
+      # thing to do in general.
       def self.all_hash(directory)
         result = {}
         Find.find(directory) do |path|
