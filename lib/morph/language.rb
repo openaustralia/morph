@@ -23,6 +23,10 @@ module Morph
       perl: "perl"
     }
 
+    # Files are grouped together when they need to be treated as a unit
+    # For instance in Ruby. Gemfile and Gemfile.lock always go together.
+    # So, the default Gemfile and Gemfile.lock only get inserted if both
+    # those files are missing
     DEFAULT_FILES_TO_INSERT = {
       ruby: [["Gemfile", "Gemfile.lock"], "Procfile"],
       python: ["requirements.txt", "runtime.txt", "Procfile"],
