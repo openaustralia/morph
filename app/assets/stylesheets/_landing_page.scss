@@ -12,8 +12,12 @@
 
 .container#banner {
   color: white;
-  padding-bottom: 3em;
+  padding-bottom: 1.5em;
   text-align: center;
+
+  @media (min-width: 27em) {
+    padding-bottom: 3em;
+  }
 
   @media (min-width: $screen-sm-min) {
     padding-top: 4em;
@@ -26,11 +30,19 @@
   }
 
   h2 {
-    font-size: 4em;
+    font-size: 2.5em;
+
+    @media (min-width: 27em) {
+      font-size: 4em;
+    }
   }
 
   .lower {
-      margin-top: 11em;
+      margin-top: 6.5em;
+
+      @media (min-width: 27em) {
+        margin-top: 11em;
+      }
 
       @media (min-width: $screen-md-min) {
         margin-top: 19em;
