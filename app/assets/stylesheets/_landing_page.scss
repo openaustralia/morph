@@ -63,8 +63,7 @@
 }
 
 .container#benefits {
-  padding-top: 40px;
-  padding-bottom: 60px;
+  padding-bottom: 2em;
   background-color: #FAFAFA;
   text-align: center;
 
@@ -74,6 +73,19 @@
 
   p {
     font-size: 1.15em;
+  }
+
+  @media (min-width: 27em) {
+    padding-top: 2em;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    padding-top: 4em;
+    padding-bottom: 3em;
+  }
+
+  @media (min-width: $screen-md-min) {
+    padding-bottom: 5.5em;
   }
 
   .col-md-4 {
