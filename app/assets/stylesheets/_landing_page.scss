@@ -57,8 +57,19 @@
   }
 
   .call-to-action {
+    border: 0;
+    background-color: darken($offset-color, 7%);
+    text-shadow: 1px 1px 0 darken($offset-color, 20%);
+    letter-spacing: 1px;
+
     @media (min-width: $screen-md-min) {
       margin: 1.5em 0 0;
+      text-shadow: 1px 2px 0 darken($offset-color, 20%);
+    }
+
+    &:hover,
+    &:focus {
+      background-color: darken($offset-color, 15%);
     }
   }
 }
