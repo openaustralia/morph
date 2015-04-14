@@ -107,6 +107,10 @@
   background-color: #b1d05f;
   text-align: center;
 
+  > .container {
+    padding: 0;
+  }
+
   p a {
     color: #1E241D;
     border-bottom: 2px darken(#b1d05f, 20%) solid;
