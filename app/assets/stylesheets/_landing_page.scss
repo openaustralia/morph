@@ -111,10 +111,13 @@
     color: #1E241D;
     border-bottom: 2px darken(#b1d05f, 20%) solid;
 
-    &:hover {
+    &:hover,
+    &:focus {
       text-decoration: none;
       color: #111;
       border-color: #1E241D;
+      background-color: lighten(#b1d05f, 10%);
+      text-shadow: 2px 2px 0 lighten(#b1d05f, 5%);
     }
   }
 }
