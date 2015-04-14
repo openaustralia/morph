@@ -120,6 +120,17 @@
       text-shadow: 2px 2px 0 lighten(#b1d05f, 5%);
     }
   }
+
+  .call-to-action {
+    color: #1E241D;
+    background-color: lighten(#b1d05f, 25%);
+    border: 0;
+
+    &:hover,
+    &:focus {
+      background-color: lighten(#b1d05f, 40%);
+    }
+  }
 }
 
 .container#quotes {
