@@ -1,0 +1,186 @@
+// Place all the styles related to the static controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.banner {
+  width: 100%;
+
+  .call-to-action {
+    margin: 1em 0 0;
+    font-size: 1.5em;
+  }
+}
+
+.container#banner {
+  color: white;
+  padding-bottom: 1.5em;
+  text-align: center;
+
+  @media (min-width: 27em) {
+    padding-bottom: 3em;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    padding-top: 4em;
+    padding-bottom: 4em;
+  }
+
+  h2,
+  h3 {
+    text-shadow: 0px .5px 3px rgba(20,30,0,0.4);
+  }
+
+  h2 {
+    font-size: 2.5em;
+
+    @media (min-width: 27em) {
+      font-size: 4em;
+    }
+  }
+
+  h3 {
+    @media (min-width: $screen-md-min) {
+      font-size: 2em;
+    }
+  }
+
+  .lower {
+      margin-top: 6.5em;
+
+      @media (min-width: 27em) {
+        margin-top: 11em;
+      }
+
+      @media (min-width: $screen-md-min) {
+        margin-top: 19em;
+      }
+  }
+
+  .call-to-action {
+    border: 0;
+    background-color: darken($offset-color, 7%);
+    text-shadow: 1px 1px 0 darken($offset-color, 20%);
+    letter-spacing: 1px;
+
+    @media (min-width: $screen-md-min) {
+      margin: 1.5em 0 0;
+      text-shadow: 1px 2px 0 darken($offset-color, 20%);
+    }
+
+    &:hover,
+    &:focus {
+      background-color: darken($offset-color, 15%);
+    }
+  }
+}
+
+#benefits {
+  padding-bottom: 2em;
+  background-color: #FAFAFA;
+  text-align: center;
+
+  h4 {
+    font-size: 1.5em;
+  }
+
+  p {
+    font-size: 1.15em;
+  }
+
+  @media (min-width: 27em) {
+    padding-top: 2em;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    padding-top: 4em;
+    padding-bottom: 3em;
+  }
+
+  @media (min-width: $screen-md-min) {
+    padding-bottom: 5.5em;
+  }
+
+  .col-md-4 {
+    padding-top: 30px;
+
+    h4 {
+      padding-top: 25px;
+    }
+  }
+
+  i {
+    color: #555;
+  }
+}
+
+#introducing {
+  color: #1E241D;
+  background-color: $offset-color;
+  text-align: center;
+
+  > .container {
+    padding: 0;
+  }
+
+  p a {
+    color: #1E241D;
+    border-bottom: 2px darken($offset-color, 20%) solid;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+      color: #111;
+      border-color: #1E241D;
+      background-color: lighten($offset-color, 10%);
+      text-shadow: 2px 2px 0 lighten($offset-color, 5%);
+    }
+  }
+
+  .call-to-action {
+    color: #1E241D;
+    background-color: lighten($offset-color, 25%);
+    border: 0;
+
+    &:hover,
+    &:focus {
+      background-color: lighten($offset-color, 40%);
+    }
+  }
+}
+
+#quotes {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.banner-quotes {
+  p {
+    font-size: 1.125em;
+  }
+
+  footer {
+    margin-top: 1em;
+
+    @media (min-width: $screen-sm-min) {
+      font-size: 1em;
+    }
+
+    &:before {
+      content: none;
+    }
+
+    img {
+      margin-right: .5em;
+    }
+
+    .h-card {
+      span {
+        display: block;
+      }
+    }
+
+    .p-name {
+      font-size: 1.125em;
+    }
+  }
+}
