@@ -37,6 +37,12 @@
     }
   }
 
+  h3 {
+    @media (min-width: $screen-md-min) {
+      font-size: 2em;
+    }
+  }
+
   .lower {
       margin-top: 6.5em;
 
