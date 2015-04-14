@@ -33,8 +33,14 @@
       margin-top: 11em;
 
       @media (min-width: $screen-md-min) {
-        margin-top: 18em;
+        margin-top: 19em;
       }
+  }
+
+  .call-to-action {
+    @media (min-width: $screen-md-min) {
+      margin: 1.5em 0 0;
+    }
   }
 }
 
