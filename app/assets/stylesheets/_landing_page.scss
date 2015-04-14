@@ -35,16 +35,19 @@
 }
 
 .container#benefits {
+  padding-top: 40px;
+  padding-bottom: 60px;
   background-color: #FAFAFA;
   text-align: center;
-  padding-top: 40px;
+
   .col-md-4 {
+    padding-top: 30px;
+
     h4 {
       padding-top: 25px;
     }
-    padding-top: 30px;
   }
-  padding-bottom: 60px;
+
   i {
     color: #555;
   }
