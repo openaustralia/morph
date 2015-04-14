@@ -23,11 +23,29 @@ module Morph
       perl: "perl"
     }
 
+    # Files are grouped together when they need to be treated as a unit
+    # For instance in Ruby. Gemfile and Gemfile.lock always go together.
+    # So, the default Gemfile and Gemfile.lock only get inserted if both
+    # those files are missing
     DEFAULT_FILES_TO_INSERT = {
-      ruby: [["Gemfile", "Gemfile.lock"], "Procfile"],
-      python: ["requirements.txt", "runtime.txt", "Procfile"],
-      php: [["composer.json", "composer.lock"], "Procfile"],
-      perl: ["app.psgi", "cpanfile", "Procfile"]
+      ruby: [
+        ["Gemfile", "Gemfile.lock"],
+        ["Procfile"]
+      ],
+      python: [
+        ["requirements.txt"],
+        ["runtime.txt"],
+        ["Procfile"]
+      ],
+      php: [
+        ["composer.json", "composer.lock"],
+        ["Procfile"]
+      ],
+      perl: [
+        ["app.psgi"],
+        ["cpanfile"],
+        ["Procfile"]
+      ]
     }
 
     attr_reader :key
@@ -79,7 +97,7 @@ module Morph
 
     def default_scraper
       if supported?
-        default_file(scraper_filename)
+        File.read(default_file_path(scraper_filename))
       else
         raise "Not yet supported"
       end
@@ -89,8 +107,8 @@ module Morph
       BINARY_NAMES[key]
     end
 
-    def default_file(file)
-      File.read("default_files/#{key}/#{file}")
+    def default_file_path(file)
+      "default_files/#{key}/#{file}"
     end
   end
 end

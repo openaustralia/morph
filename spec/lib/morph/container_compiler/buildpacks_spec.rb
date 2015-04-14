@@ -19,6 +19,9 @@ describe Morph::ContainerCompiler::Buildpacks do
   context "a set of files" do
     before :each do
       FileUtils.mkdir_p("test/foo")
+      FileUtils.mkdir_p("test/.bar")
+      FileUtils.touch("test/.a_dot_file.cfg")
+      FileUtils.touch("test/.bar/wibble.txt")
       FileUtils.touch("test/one.txt")
       FileUtils.touch("test/Procfile")
       FileUtils.touch("test/two.txt")
@@ -26,30 +29,11 @@ describe Morph::ContainerCompiler::Buildpacks do
       FileUtils.touch("test/Gemfile")
       FileUtils.touch("test/Gemfile.lock")
       FileUtils.touch("test/scraper.rb")
+      FileUtils.ln_s("scraper.rb", "test/link.rb")
     end
 
     after :each do
       FileUtils.rm_rf("test")
-    end
-
-    describe ".all_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_hash("test").should == {
-        "Gemfile" => "", "Gemfile.lock" => "", "Procfile" => "",
-        "foo/three.txt" => "", "one.txt" => "", "two.txt" => "", "scraper.rb" => ""}}
-    end
-
-    describe ".all_config_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_config_hash("test").should == {
-        "Gemfile" => "", "Gemfile.lock" => "", "Procfile" => ""}}
-    end
-
-    describe ".all_config_hash_with_defaults" do
-      it {Morph::ContainerCompiler::Buildpacks.all_config_hash_with_defaults("test").should == {"Gemfile"=>"", "Gemfile.lock"=>"", "Procfile"=>""}}
-    end
-
-    describe ".all_run_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_run_hash("test").should == {
-        "foo/three.txt" => "", "one.txt" => "", "two.txt" => "", "scraper.rb" => ""}}
     end
 
     describe ".write_all_config_with_defaults_to_directory" do
@@ -57,6 +41,9 @@ describe Morph::ContainerCompiler::Buildpacks do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+          File.read(File.join(dir, "Gemfile")).should == ""
+          File.read(File.join(dir, "Gemfile.lock")).should == ""
+          File.read(File.join(dir, "Procfile")).should == ""
         end
       end
     end
@@ -65,8 +52,29 @@ describe Morph::ContainerCompiler::Buildpacks do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", "foo", "one.txt", "scraper.rb", "two.txt"]
+          Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
+          File.read(File.join(dir, ".a_dot_file.cfg")).should == ""
+          File.read(File.join(dir, "foo/three.txt")).should == ""
+          File.read(File.join(dir, "one.txt")).should == ""
+          File.read(File.join(dir, "scraper.rb")).should == ""
+          File.read(File.join(dir, "two.txt")).should == ""
+          File.readlink(File.join(dir, "link.rb")).should == "scraper.rb"
+        end
+      end
+    end
+
+    describe ".tar_run_files" do
+      it "should preserve the symbolic link" do
+        tar = Morph::ContainerCompiler::Buildpacks.tar_run_files("test")
+        Dir.mktmpdir do |dir|
+          Morph::ContainerCompiler::Buildpacks.in_directory(dir) do
+            File.open("test.tar", "w") {|f| f << tar}
+            # Quick and dirty
+            `tar xf test.tar`
+            File.symlink?("link.rb").should be_truthy
+            File.readlink("link.rb").should == "scraper.rb"
+          end
         end
       end
     end
@@ -86,34 +94,13 @@ describe Morph::ContainerCompiler::Buildpacks do
       FileUtils.rm_rf("test")
     end
 
-    describe ".all_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_hash("test").should == {
-        "Gemfile" => "", "Gemfile.lock" => "", "foo/three.txt" => "", "one.txt" => "",
-        "scraper.rb" => ""
-      }}
-    end
-
-    describe ".all_config_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_config_hash("test").should == {
-        "Gemfile" => "", "Gemfile.lock" => ""}}
-    end
-
-    describe ".all_config_hash_with_defaults" do
-      it {Morph::ContainerCompiler::Buildpacks.all_config_hash_with_defaults("test").should == {
-        "Gemfile"=>"", "Gemfile.lock"=>"",
-        "Procfile"=> File.read("default_files/ruby/Procfile")}}
-    end
-
-    describe ".all_run_hash" do
-      it {Morph::ContainerCompiler::Buildpacks.all_run_hash("test").should == {
-        "foo/three.txt" => "", "one.txt" => "", "scraper.rb" => ""}}
-    end
-
     describe ".write_all_config_with_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+          File.read(File.join(dir, "Gemfile")).should == ""
+          File.read(File.join(dir, "Gemfile.lock")).should == ""
           File.read(File.join(dir, "Procfile")).should == File.read("default_files/ruby/Procfile")
         end
       end
@@ -125,6 +112,9 @@ describe Morph::ContainerCompiler::Buildpacks do
           Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "foo", "one.txt", "scraper.rb"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
+          File.read(File.join(dir, "foo/three.txt")).should == ""
+          File.read(File.join(dir, "one.txt")).should == ""
+          File.read(File.join(dir, "scraper.rb")).should == ""
         end
       end
     end

@@ -1,6 +1,8 @@
 module Morph
   module ContainerCompiler
     class Buildpacks < Base
+      ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
+
       def self.compile_and_run(run)
         wrapper = Multiblock.wrapper
         yield(wrapper)
@@ -112,30 +114,54 @@ module Morph
       end
 
       # Contents of a tarfile that contains everything that isn't a configuration file
-      def self.tar_run_files(repo_path)
-        Dir.mktmpdir("morph") do |dir|
-          write_all_run_to_directory(File.join(Rails.root, repo_path), dir)
-          create_tar(dir)
+      def self.tar_run_files(source)
+        Dir.mktmpdir("morph") do |dest|
+          write_all_run_to_directory(source, dest)
+          create_tar(dest)
         end
       end
 
       def self.write_all_config_with_defaults_to_directory(source, dest)
-        write_paths_to_directory(all_config_hash_with_defaults(source), dest)
+        ALL_CONFIG_FILENAMES.each do |config_filename|
+          path = File.join(source, config_filename)
+          FileUtils.cp(path, dest) if File.exists?(path)
+        end
+
+        language = Morph::Language.language(source)
+        # TODO Need to be able to handle the situation when we haven't
+        # recognised what language this scraper is
+
+        language.default_files_to_insert.each do |files|
+          if files.all?{|file| !File.exists?(File.join(dest, file))}
+            files.each do |file|
+              FileUtils.cp(language.default_file_path(file), File.join(dest, file))
+            end
+          end
+        end
+
         fix_modification_times(dest)
       end
 
       def self.write_all_run_to_directory(source, dest)
-        write_paths_to_directory(all_run_hash(source), dest)
+        FileUtils.cp_r File.join(source, "."), dest
+
+        ALL_CONFIG_FILENAMES.each do |path|
+          FileUtils.rm_f(File.join(dest, path))
+        end
+
+        remove_hidden_directories(dest)
+
         # TODO I don't think I need to this step here
         fix_modification_times(dest)
       end
 
-      def self.paths_to_hash(directory, paths)
-        hash = {}
-        paths.each do |path|
-          hash[path] = File.read(File.join(directory, path))
+      # Remove directories starting with "."
+      # TODO Make it just remove the .git directory in the root and not other hidden directories
+      # which people might find useful
+      def self.remove_hidden_directories(directory)
+        Find.find(directory) do |path|
+          FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == ?.
         end
-        hash
       end
 
       # Set an arbitrary & fixed modification time on everything in a directory
@@ -146,86 +172,18 @@ module Morph
         end
       end
 
-      def self.write_paths_to_directory(hash, dir)
-        hash.each do |path, content|
-          new_path = File.join(dir, path)
-          # Ensure the directory exists (for files in subdirectories)
-          FileUtils.mkdir_p(File.dirname(new_path))
-          File.open(new_path, "w") {|f| f.write(content)}
-        end
-      end
-
       def self.create_tar(directory)
         tempfile = Tempfile.new('morph_tar')
 
         in_directory(directory) do
-          begin
-            tar = Archive::Tar::Minitar::Output.new(tempfile.path)
-            Find.find(".") do |entry|
-              if entry != "."
-                Archive::Tar::Minitar.pack_file(entry, tar)
-              end
-            end
-          ensure
-            tar.close
-          end
+          # We used to use Archive::Tar::Minitar but that doesn't support
+          # symbolic links in the tar file. So, using tar from the command line
+          # instead.
+          `tar cf #{tempfile.path} .`
         end
         content = File.read(tempfile.path)
         FileUtils.rm_f(tempfile.path)
         content
-      end
-
-      def self.all_run_hash(directory)
-        paths = all_hash(directory).keys - all_config_hash(directory).keys
-        all_hash(directory).select{|path,content| paths.include?(path)}
-      end
-
-      # Take all_config_hash and fill in with default files and contents
-      # if some things are not available
-      def self.all_config_hash_with_defaults(directory)
-        hash = all_config_hash(directory)
-        language = Morph::Language.language(directory)
-        insert_default_files_if_all_absent2(hash, language, language.default_files_to_insert)
-      end
-
-      def self.insert_default_files_if_all_absent2(hash, language, files_array)
-        files_array.each do |files|
-          hash = insert_default_files_if_all_absent(hash, language, files)
-        end
-        hash
-      end
-
-      # If all the files are absent insert them
-      def self.insert_default_files_if_all_absent(hash, language, files)
-        files = [files] unless files.kind_of?(Array)
-        if files.all?{|file| hash[file].nil?}
-          files.each do |file|
-            hash[file] = language.default_file(file)
-          end
-        end
-        hash
-      end
-
-      def self.all_config_hash(directory)
-        paths = all_hash(directory).keys & ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
-        all_hash(directory).select{|path,content| paths.include?(path)}
-      end
-
-      # Relative paths to all the files in the given directory (recursive)
-      # (except for anything below a directory starting with ".")
-      def self.all_hash(directory)
-        result = {}
-        Find.find(directory) do |path|
-          if FileTest.directory?(path)
-            if File.basename(path)[0] == ?.
-              Find.prune
-            end
-          else
-            result_path = Pathname.new(path).relative_path_from(Pathname.new(directory)).to_s
-            result[result_path] = File.read(path)
-          end
-        end
-        result
       end
 
       def self.in_directory(directory)
