@@ -12,12 +12,12 @@
 
 .container#banner {
   color: white;
-  padding-bottom: 1.5em;
+  padding-bottom: 3em;
   text-align: center;
 
-  @media (min-width: $screen-md-min) {
+  @media (min-width: $screen-sm-min) {
     padding-top: 4em;
-    padding-bottom: 2em;
+    padding-bottom: 4em;
   }
 
   h2,
