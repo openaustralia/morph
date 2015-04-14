@@ -104,7 +104,7 @@
 
 #introducing {
   color: #1E241D;
-  background-color: #b1d05f;
+  background-color: $offset-color;
   text-align: center;
 
   > .container {
@@ -113,26 +113,26 @@
 
   p a {
     color: #1E241D;
-    border-bottom: 2px darken(#b1d05f, 20%) solid;
+    border-bottom: 2px darken($offset-color, 20%) solid;
 
     &:hover,
     &:focus {
       text-decoration: none;
       color: #111;
       border-color: #1E241D;
-      background-color: lighten(#b1d05f, 10%);
-      text-shadow: 2px 2px 0 lighten(#b1d05f, 5%);
+      background-color: lighten($offset-color, 10%);
+      text-shadow: 2px 2px 0 lighten($offset-color, 5%);
     }
   }
 
   .call-to-action {
     color: #1E241D;
-    background-color: lighten(#b1d05f, 25%);
+    background-color: lighten($offset-color, 25%);
     border: 0;
 
     &:hover,
     &:focus {
-      background-color: lighten(#b1d05f, 40%);
+      background-color: lighten($offset-color, 40%);
     }
   }
 }
