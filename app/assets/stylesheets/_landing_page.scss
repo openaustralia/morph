@@ -13,6 +13,7 @@
 .container#banner {
   color: white;
   padding-bottom: 1.5em;
+  text-align: center;
 
   @media (min-width: $screen-md-min) {
     padding-top: 4em;
