@@ -2,8 +2,11 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.container#banner {
+.banner {
   width: 100%;
+}
+
+.container#banner {
   height: 516px;
   color: white;
 
@@ -33,7 +36,6 @@
 }
 
 .container#benefits {
-  width: 100%;
   background-color: #FAFAFA;
   text-align: center;
   padding-top: 40px;
@@ -55,7 +57,6 @@
 }
 
 .container#quotes {
-  width: 100%;
   padding-top: 48px;
   padding-bottom: 48px;
 }

@@ -1,4 +1,4 @@
-.container#banner
+.banner.container#banner
   .row.text-center
     %h2 Take the hassle out of web scraping
     .lower
@@ -8,7 +8,7 @@
 :javascript
   $(".container#banner").backstretch("#{image_path("unsplash/tumblr_n10n1wmxiS1st5lhmo1_1280.jpg")}");
 
-.container#benefits
+.banner.container#benefits
   .container
     .row
       .col-md-4
@@ -30,7 +30,7 @@
 
 
 
-.jumbotron#introducing
+.banner.jumbotron#introducing
   .container
     :markdown
       Unlock real data from websites like [fire incidents in the Czech Republic](https://morph.io/soit-sk/firebrno), [upcoming legislation in the Chilean parliament](https://morph.io/ciudadanointeligente/pmocl-agendas), [postcodes in Slovakia](https://morph.io/soit-sk/slovakia_post_codes) and [buildings which are planned to be built or knocked down in Australia](https://morph.io/planningalerts-scrapers).
@@ -43,7 +43,7 @@
 
     = link_to "Add your scraper", user_omniauth_authorize_path(:github), class: "btn btn-default btn-lg"
 
-.container#quotes.banner-quotes
+.banner.container#quotes.banner-quotes
   .container
     .row
       .col-md-6
