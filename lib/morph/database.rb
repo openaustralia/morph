@@ -41,6 +41,16 @@ module Morph
       end
     end
 
+    def valid?
+      begin
+        # Do any old query
+        table_names
+        true
+      rescue SQLite3::NotADatabaseException
+        false
+      end
+    end
+
     # The table that should be listed first because it is the most important
     def first_table_name
       if table_names.include?(Database.sqlite_table_name)
@@ -84,7 +94,7 @@ module Morph
     def sql_query_safe(query, readonly = true)
       begin
         sql_query(query, readonly)
-      rescue SQLite3::CantOpenException, SQLite3::SQLException, SQLite3::NotADatabaseException
+      rescue SQLite3::CantOpenException, SQLite3::SQLException
         nil
       end
     end

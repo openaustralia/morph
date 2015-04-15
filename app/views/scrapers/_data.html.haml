@@ -1,35 +1,51 @@
 #data-table
-  - active_table = scraper.database.first_table_name
+  - if scraper.database.valid?
+    - active_table = scraper.database.first_table_name
 
-  - if active_table
+    - if active_table
+      %h3 Data
+      %ul.nav.nav-tabs
+        - scraper.database.table_names.each do |table|
+          %li{class: ("active" if table == active_table)}
+            = link_to table, "#table_#{table}", data: {toggle: "tab"}
+
+      .tab-content
+        - scraper.database.table_names.each do |table|
+          .tab-pane{class: ("active" if table == active_table), id: "table_#{table}"}
+            - rows = scraper.database.first_ten_rows(table)
+            %p
+              - unless signed_in?
+                To download data
+                = button_link_to "sign in with GitHub", user_omniauth_authorize_path(:github)
+              .btn-group
+                = button_link_to "Download table (as CSV)", data_scraper_path(scraper, format: :csv, query: scraper.database.select_all(table), key: (current_user.api_key if current_user)), disabled: !signed_in?
+                = button_link_to "Download SQLite database", data_scraper_path(scraper, :format => :sqlite, key: (current_user.api_key if current_user)), disabled: !signed_in?
+                = button_link_to "Use the API", api_documentation_index_path(scraper: scraper.full_name)
+            %p rows #{[10, scraper.database.no_rows(table)].min} / #{scraper.database.no_rows(table)} (#{number_to_human_size scraper.database.sqlite_db_size})
+            .table-responsive.scraper-data
+              %table.table.table-striped.table-bordered.table-condensed
+                - unless rows.empty?
+                  %tr
+                    - rows.first.each_key do |field|
+                      %th= field
+                - rows.each do |row|
+                  %tr
+                    - row.each_value do |v|
+                      %td
+                        %div.has-popover{data: {toggle: "popover", placement: "bottom", trigger: "hover", content: v, container: "body"}}
+                          = auto_link_fallback(v.to_s)
+  - else
     %h3 Data
-    %ul.nav.nav-tabs
-      - scraper.database.table_names.each do |table|
-        %li{class: ("active" if table == active_table)}
-          = link_to table, "#table_#{table}", data: {toggle: "tab"}
+    .alert.alert-danger(role="alert")
+      The sqlite database is not valid. This is very unusual.
+      It may have happened if the scraper died
+      unexpectedly in the middle of writing to the database.
 
-    .tab-content
-      - scraper.database.table_names.each do |table|
-        .tab-pane{class: ("active" if table == active_table), id: "table_#{table}"}
-          - rows = scraper.database.first_ten_rows(table)
-          %p
-            - unless signed_in?
-              To download data
-              = button_link_to "sign in with GitHub", user_omniauth_authorize_path(:github)
-            .btn-group
-              = button_link_to "Download table (as CSV)", data_scraper_path(scraper, format: :csv, query: scraper.database.select_all(table), key: (current_user.api_key if current_user)), disabled: !signed_in?
-              = button_link_to "Download SQLite database", data_scraper_path(scraper, :format => :sqlite, key: (current_user.api_key if current_user)), disabled: !signed_in?
-              = button_link_to "Use the API", api_documentation_index_path(scraper: scraper.full_name)
-          %p rows #{[10, scraper.database.no_rows(table)].min} / #{scraper.database.no_rows(table)} (#{number_to_human_size scraper.database.sqlite_db_size})
-          .table-responsive.scraper-data
-            %table.table.table-striped.table-bordered.table-condensed
-              - unless rows.empty?
-                %tr
-                  - rows.first.each_key do |field|
-                    %th= field
-              - rows.each do |row|
-                %tr
-                  - row.each_value do |v|
-                    %td
-                      %div.has-popover{data: {toggle: "popover", placement: "bottom", trigger: "hover", content: v, container: "body"}}
-                        = auto_link_fallback(v.to_s)
+      - if can? :destroy, scraper
+        To fix this:
+        %ol
+          %li= button_link_to "Download a copy of the current sqlite database", data_scraper_path(scraper, :format => :sqlite, key: current_user.api_key)
+          %li= button_to "Clear the database", clear_scraper_path(scraper), {class: "btn btn-danger"}
+          %li Rerun your scraper
+      - else
+        The owner of this scraper can take some simple steps to fix this.
