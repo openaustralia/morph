@@ -128,8 +128,8 @@ module Morph
         end
 
         language = Morph::Language.language(source)
-        # TODO Need to be able to handle the situation when we haven't
-        # recognised what language this scraper is
+        # We don't need to check that the language is recognised because
+        # the compiler is never called if the language isn't valid
 
         language.default_files_to_insert.each do |files|
           if files.all?{|file| !File.exists?(File.join(dest, file))}
