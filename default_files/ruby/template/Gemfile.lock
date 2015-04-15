@@ -1,0 +1,22 @@
+GIT
+  remote: https://github.com/openaustralia/scraperwiki-ruby.git
+  revision: fc50176812505e463077d5c673d504a6a234aa78
+  branch: morph_defaults
+  specs:
+    scraperwiki (3.0.1)
+      httpclient
+      sqlite_magic
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    httpclient (2.6.0.1)
+    sqlite3 (1.3.10)
+    sqlite_magic (0.0.3)
+      sqlite3
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  scraperwiki!
