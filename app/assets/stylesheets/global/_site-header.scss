@@ -12,3 +12,9 @@
     }
   }
 }
+
+// override bootstrap default height, which
+// is too short for our content.
+.navbar-fixed-top .navbar-collapse {
+  max-height: 370px;
+}
