@@ -6,8 +6,7 @@ class Run < ActiveRecord::Base
   has_one :metric
   has_many :connection_logs
 
-  delegate :git_url, :full_name, to: :scraper
-  delegate :current_revision_from_repo, to: :scraper, allow_nil: true
+  delegate :git_url, :full_name, :current_revision_from_repo, to: :scraper, allow_nil: true
   delegate :utime, :stime, to: :metric
 
   def database
