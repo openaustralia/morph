@@ -106,8 +106,12 @@ module Morph
       "default_files/#{key}/config/#{file}"
     end
 
+    def default_template_directory
+      "default_files/#{key}/template"
+    end
+
     def default_template_file_path(file)
-      "default_files/#{key}/template/#{file}"
+      "#{default_template_directory}/#{file}"
     end
   end
 end
