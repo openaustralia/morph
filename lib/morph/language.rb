@@ -91,17 +91,10 @@ module Morph
       LANGUAGES_SUPPORTED.include?(key)
     end
 
-    def default_scraper
-      if supported?
-        File.read(default_file_path(scraper_filename))
-      else
-        raise "Not yet supported"
-      end
-    end
-
     def scraper_templates
+      raise "Not yet supported" unless supported?
       {
-        scraper_filename => default_scraper
+        scraper_filename => File.read(default_file_path(scraper_filename))
       }
     end
 

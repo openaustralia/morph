@@ -13,9 +13,10 @@ describe Morph::Language do
     it { perl.human.should == "Perl" }
   end
 
-  describe "#default_scraper" do
+  describe "#scraper_templates" do
     it do
-      ruby.default_scraper.should == <<-EOF
+      ruby.scraper_templates.keys.should == ["scraper.rb"]
+      ruby.scraper_templates["scraper.rb"].should == <<-EOF
 # This is a template for a Ruby scraper on Morph (https://morph.io)
 # including some code snippets below that you should find helpful
 
@@ -44,7 +45,8 @@ describe Morph::Language do
     end
 
     it do
-      php.default_scraper.should == <<-EOF
+      php.scraper_templates.keys.should == ["scraper.php"]
+      php.scraper_templates["scraper.php"].should == <<-EOF
 <?
 // This is a template for a PHP scraper on Morph (https://morph.io)
 // including some code snippets below that you should find helpful
@@ -75,7 +77,8 @@ describe Morph::Language do
     end
 
     it do
-      python.default_scraper.should == <<-EOF
+      python.scraper_templates.keys.should == ["scraper.py"]
+      python.scraper_templates["scraper.py"].should == <<-EOF
 # This is a template for a Python scraper on Morph (https://morph.io)
 # including some code snippets below that you should find helpful
 
@@ -103,7 +106,8 @@ describe Morph::Language do
     end
 
     it do
-      perl.default_scraper.should == <<-EOF
+      perl.scraper_templates.keys.should == ["scraper.pl"]
+      perl.scraper_templates["scraper.pl"].should == <<-EOF
 # This is a template for a Perl scraper on Morph (https://morph.io)
 # including some code snippets below that you should find helpful
 
