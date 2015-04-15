@@ -43,7 +43,7 @@ describe Morph::ContainerCompiler::Buildpacks do
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
           File.read(File.join(dir, "Gemfile")).should == ""
           File.read(File.join(dir, "Gemfile.lock")).should == ""
-          File.read(File.join(dir, "Procfile")).should == File.read("default_files/ruby/Procfile")
+          File.read(File.join(dir, "Procfile")).should == File.read(Morph::Language.new(:ruby).default_file_path("Procfile"))
         end
       end
     end
@@ -101,7 +101,7 @@ describe Morph::ContainerCompiler::Buildpacks do
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
           File.read(File.join(dir, "Gemfile")).should == ""
           File.read(File.join(dir, "Gemfile.lock")).should == ""
-          File.read(File.join(dir, "Procfile")).should == File.read("default_files/ruby/Procfile")
+          File.read(File.join(dir, "Procfile")).should == File.read(Morph::Language.new(:ruby).default_file_path("Procfile"))
         end
       end
     end
@@ -136,9 +136,10 @@ describe Morph::ContainerCompiler::Buildpacks do
         Dir.mktmpdir do |dir|
           Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
-          File.read(File.join(dir, "Gemfile")).should == File.read("default_files/ruby/Gemfile")
-          File.read(File.join(dir, "Gemfile.lock")).should == File.read("default_files/ruby/Gemfile.lock")
-          File.read(File.join(dir, "Procfile")).should == File.read("default_files/ruby/Procfile")
+          ruby = Morph::Language.new(:ruby)
+          File.read(File.join(dir, "Gemfile")).should == File.read(ruby.default_file_path("Gemfile"))
+          File.read(File.join(dir, "Gemfile.lock")).should == File.read(ruby.default_file_path("Gemfile.lock"))
+          File.read(File.join(dir, "Procfile")).should == File.read(ruby.default_file_path("Procfile"))
         end
       end
     end
