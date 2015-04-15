@@ -15,7 +15,7 @@ class CreateScraperWorker
 
     # This block should happily run several times (after failures)
     scraper.create_scraper_progress.update("Add scraper template", 40)
-    files = scraper.original_language.scraper_templates.merge(
+    files = scraper.original_language.scraper_templates(scraper.owner.buildpacks).merge(
       ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
       # TODO Don't use hardcoded urls
       "README.md" => "This is a scraper that runs on [Morph](https://morph.io). To get started [see the documentation](https://morph.io/documentation)"

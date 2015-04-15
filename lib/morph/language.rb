@@ -91,7 +91,7 @@ module Morph
       LANGUAGES_SUPPORTED.include?(key)
     end
 
-    def scraper_templates
+    def scraper_templates(buildpacks)
       raise "Not yet supported" unless supported?
       {
         scraper_filename => File.read(default_template_file_path(scraper_filename))
