@@ -44,6 +44,9 @@ describe Morph::Language do
       EOF
     end
 
+    it { ruby.scraper_templates(true).keys.should == ["Gemfile", "Gemfile.lock", "scraper.rb"] }
+    it { ruby.scraper_templates(false)["scraper.rb"].should == ruby.scraper_templates(true)["scraper.rb"] }
+
     it do
       php.scraper_templates(false).keys.should == ["scraper.php"]
       php.scraper_templates(false)["scraper.php"].should == <<-EOF

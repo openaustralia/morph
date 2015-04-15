@@ -93,9 +93,20 @@ module Morph
 
     def scraper_templates(buildpacks)
       raise "Not yet supported" unless supported?
-      {
-        scraper_filename => File.read(default_template_file_path(scraper_filename))
-      }
+      if buildpacks
+        # We grab all the files in the template directory
+        result = {}
+        Dir.entries(default_template_directory).each do |file|
+          if file != "." && file != ".."
+            result[file] = File.read(File.join(default_template_directory, file))
+          end
+        end
+        result
+      else
+        {
+          scraper_filename => File.read(default_template_file_path(scraper_filename))
+        }
+      end
     end
 
     def binary_name
