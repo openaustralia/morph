@@ -23,6 +23,13 @@ module Morph
         end
 
         command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
+        # Handle this run not having a scraper attached (run from morph-cli)
+        if run.scraper
+          env_variables = run.scraper.variables.map{|v| [v.name, v.value]}
+        else
+          env_variables = []
+        end
+
         status_code = Morph::DockerRunner.run(
           command: command,
           # TODO Need to run this as the user scraper again
@@ -30,7 +37,7 @@ module Morph
           image_name: i2.id,
           container_name: run.docker_container_name,
           data_path: run.data_path,
-          env_variables: run.scraper.variables.map{|v| [v.name, v.value]}
+          env_variables: env_variables
         ) do |on|
             on.log { |s,c| wrapper.call(:log, s, c)}
             on.ip_address {|ip| wrapper.call(:ip_address, ip)}
