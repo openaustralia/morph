@@ -221,6 +221,14 @@ module Morph
       end
     end
 
+    def self.diffstat_safe(file1, file2)
+      begin
+        diffstat(file1, file2)
+      rescue SQLite3::NotADatabaseException
+        nil
+      end
+    end
+
     def self.diffstat(file1, file2)
       db1 = SQLite3::Database.new(file1)
       db2 = SQLite3::Database.new(file2)

@@ -125,19 +125,21 @@ class Run < ActiveRecord::Base
 
     update_attributes(status_code: status_code, finished_at: Time.now)
     # Update information about what changed in the database
-    diffstat = Morph::Database.diffstat(database.sqlite_db_backup_path, database.sqlite_db_path)
-    tables = diffstat[:tables][:counts]
-    records = diffstat[:records][:counts]
-    update_attributes(
-      tables_added: tables[:added],
-      tables_removed: tables[:removed],
-      tables_changed: tables[:changed],
-      tables_unchanged: tables[:unchanged],
-      records_added: records[:added],
-      records_removed: records[:removed],
-      records_changed: records[:changed],
-      records_unchanged: records[:unchanged]
-    )
+    diffstat = Morph::Database.diffstat_safe(database.sqlite_db_backup_path, database.sqlite_db_path)
+    if diffstat
+      tables = diffstat[:tables][:counts]
+      records = diffstat[:records][:counts]
+      update_attributes(
+        tables_added: tables[:added],
+        tables_removed: tables[:removed],
+        tables_changed: tables[:changed],
+        tables_unchanged: tables[:unchanged],
+        records_added: records[:added],
+        records_removed: records[:removed],
+        records_changed: records[:changed],
+        records_unchanged: records[:unchanged]
+      )
+    end
     Morph::Database.tidy_data_path(data_path)
     if scraper
       scraper.update_sqlite_db_size
