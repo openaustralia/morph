@@ -128,16 +128,7 @@ module Morph
         end
       end
 
-      def self.write_all_config_with_defaults_to_directory(source, dest)
-        ALL_CONFIG_FILENAMES.each do |config_filename|
-          path = File.join(source, config_filename)
-          FileUtils.cp(path, dest) if File.exists?(path)
-        end
-
-        language = Morph::Language.language(source)
-        # We don't need to check that the language is recognised because
-        # the compiler is never called if the language isn't valid
-
+      def self.add_config_defaults_to_directory(dest, language)
         language.default_files_to_insert.each do |files|
           if files.all?{|file| !File.exists?(File.join(dest, file))}
             files.each do |file|
@@ -145,6 +136,17 @@ module Morph
             end
           end
         end
+      end
+
+      def self.write_all_config_with_defaults_to_directory(source, dest)
+        ALL_CONFIG_FILENAMES.each do |config_filename|
+          path = File.join(source, config_filename)
+          FileUtils.cp(path, dest) if File.exists?(path)
+        end
+
+        # We don't need to check that the language is recognised because
+        # the compiler is never called if the language isn't valid
+        add_config_defaults_to_directory(dest, Morph::Language.language(source))
 
         fix_modification_times(dest)
       end
