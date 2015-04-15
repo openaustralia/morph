@@ -1,11 +1,13 @@
 %nav.site-header.navbar.navbar-default.navbar-fixed-top(role="navigation")
   .container
     .navbar-header
-      %button.navbar-toggle(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1")
+      %button.navbar-toggle(type="button" data-toggle="collapse" data-target=".site-header .navbar-collapse")
         %span.sr-only Toggle navigation
-        %span.fa.fa-bars
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
       = link_to "morph.io", root_path, class: "navbar-brand"
-    .collapse.navbar-collapse#bs-example-navbar-collapse-1
+    .collapse.navbar-collapse
       %ul.nav.navbar-nav
         -# TODO set class to "active" when this is the current page
         %li.dropdown{class: ("disabled" unless can? :new, Scraper)}
