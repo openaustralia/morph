@@ -103,7 +103,7 @@ module Morph
     end
 
     def default_file_path(file)
-      "default_files/#{key}/#{file}"
+      "default_files/#{key}/config/#{file}"
     end
   end
 end
