@@ -6,3 +6,17 @@
   = paginate @scrapers
   = render partial: "sync/scrapers/scraper", collection: @scrapers
   = paginate @scrapers
+
+  - if @scrapers.empty?
+    %h2 No results found
+    %p
+      Sorry, we couldn't find any scrapers relevant to your search term
+      %strong “#{@q}”.
+    %p
+      Suggestions:
+
+    %ul
+      %li check the spelling
+      %li try some more general or alternate terms
+
+    %p You could also try browsing all #{link_to "scrapers", scrapers_path} or #{link_to "users", users_path}.
