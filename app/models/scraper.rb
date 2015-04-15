@@ -19,6 +19,7 @@ class Scraper < ActiveRecord::Base
   has_many :variables
   accepts_nested_attributes_for :variables, allow_destroy: true
   validates_associated :variables
+  delegate :sqlite_total_rows, to: :database
 
   has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 

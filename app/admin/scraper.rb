@@ -9,6 +9,7 @@ ActiveAdmin.register Scraper do
     column :updated_at
     column :repo_size
     column :sqlite_db_size
+    column :sqlite_total_rows
     column :auto_run
   end
 

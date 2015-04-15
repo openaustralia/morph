@@ -113,6 +113,11 @@ module Morph
       end
     end
 
+    # Total number of records across all tables
+    def sqlite_total_rows
+      table_names.map {|t| no_rows(t)}.sum
+    end
+
     def clear
       FileUtils.rm sqlite_db_path if File.exists?(sqlite_db_path)
     end
