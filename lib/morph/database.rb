@@ -117,9 +117,17 @@ module Morph
       end
     end
 
+    def table_names_safe
+      begin
+        table_names
+      rescue SQLite3::NotADatabaseException
+        []
+      end
+    end
+
     # Total number of records across all tables
     def sqlite_total_rows
-      table_names.map {|t| no_rows(t)}.sum
+      table_names_safe.map {|t| no_rows(t)}.sum
     end
 
     def clear
