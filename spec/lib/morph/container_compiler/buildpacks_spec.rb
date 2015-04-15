@@ -43,7 +43,7 @@ describe Morph::ContainerCompiler::Buildpacks do
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
           File.read(File.join(dir, "Gemfile")).should == ""
           File.read(File.join(dir, "Gemfile.lock")).should == ""
-          File.read(File.join(dir, "Procfile")).should == ""
+          File.read(File.join(dir, "Procfile")).should == File.read("default_files/ruby/Procfile")
         end
       end
     end
@@ -114,6 +114,40 @@ describe Morph::ContainerCompiler::Buildpacks do
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
           File.read(File.join(dir, "foo/three.txt")).should == ""
           File.read(File.join(dir, "one.txt")).should == ""
+          File.read(File.join(dir, "scraper.rb")).should == ""
+        end
+      end
+    end
+  end
+
+  context "user tries to override Procfile" do
+    before :each do
+      FileUtils.mkdir_p("test")
+      File.open("test/Procfile", "w") {|f| f << "scraper: some override"}
+      FileUtils.touch("test/scraper.rb")
+    end
+
+    after :each do
+      FileUtils.rm_rf("test")
+    end
+
+    describe ".write_all_config_with_defaults_to_directory" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::ContainerCompiler::Buildpacks.write_all_config_with_defaults_to_directory("test", dir)
+          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+          File.read(File.join(dir, "Gemfile")).should == File.read("default_files/ruby/Gemfile")
+          File.read(File.join(dir, "Gemfile.lock")).should == File.read("default_files/ruby/Gemfile.lock")
+          File.read(File.join(dir, "Procfile")).should == File.read("default_files/ruby/Procfile")
+        end
+      end
+    end
+
+    describe ".write_all_run_to_directory" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::ContainerCompiler::Buildpacks.write_all_run_to_directory("test", dir)
+          Dir.entries(dir).sort.should == [".", "..", "scraper.rb"]
           File.read(File.join(dir, "scraper.rb")).should == ""
         end
       end

@@ -136,6 +136,9 @@ module Morph
             end
           end
         end
+
+        # Special behaviour for Procfile. We don't allow the user to override this
+        FileUtils.cp(language.default_file_path("Procfile"), File.join(dest, "Procfile"))
       end
 
       def self.write_all_config_with_defaults_to_directory(source, dest)

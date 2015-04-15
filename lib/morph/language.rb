@@ -29,22 +29,18 @@ module Morph
     # those files are missing
     DEFAULT_FILES_TO_INSERT = {
       ruby: [
-        ["Gemfile", "Gemfile.lock"],
-        ["Procfile"]
+        ["Gemfile", "Gemfile.lock"]
       ],
       python: [
         ["requirements.txt"],
-        ["runtime.txt"],
-        ["Procfile"]
+        ["runtime.txt"]
       ],
       php: [
-        ["composer.json", "composer.lock"],
-        ["Procfile"]
+        ["composer.json", "composer.lock"]
       ],
       perl: [
         ["app.psgi"],
-        ["cpanfile"],
-        ["Procfile"]
+        ["cpanfile"]
       ]
     }
 
