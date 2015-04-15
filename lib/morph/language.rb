@@ -99,6 +99,12 @@ module Morph
       end
     end
 
+    def scraper_templates
+      {
+        scraper_filename => default_scraper
+      }
+    end
+
     def binary_name
       BINARY_NAMES[key]
     end
