@@ -101,8 +101,12 @@ module Morph
 
     # Returns 0 if table doesn't exists (or there is some other problem)
     def no_rows(table = table_names.first)
-      q = sql_query_safe("select count(*) from '#{table}'")
-      q ? q.first.values.first : 0
+      begin
+        q = sql_query_safe("select count(*) from '#{table}'")
+        q ? q.first.values.first : 0
+      rescue SQLite3::NotADatabaseException
+        0
+      end
     end
 
     def sqlite_db_size
