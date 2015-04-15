@@ -94,7 +94,7 @@ module Morph
     def scraper_templates
       raise "Not yet supported" unless supported?
       {
-        scraper_filename => File.read(default_file_path(scraper_filename))
+        scraper_filename => File.read(default_config_file_path(scraper_filename))
       }
     end
 
@@ -102,7 +102,7 @@ module Morph
       BINARY_NAMES[key]
     end
 
-    def default_file_path(file)
+    def default_config_file_path(file)
       "default_files/#{key}/config/#{file}"
     end
   end

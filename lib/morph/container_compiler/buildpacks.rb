@@ -132,13 +132,13 @@ module Morph
         language.default_files_to_insert.each do |files|
           if files.all?{|file| !File.exists?(File.join(dest, file))}
             files.each do |file|
-              FileUtils.cp(language.default_file_path(file), File.join(dest, file))
+              FileUtils.cp(language.default_config_file_path(file), File.join(dest, file))
             end
           end
         end
 
         # Special behaviour for Procfile. We don't allow the user to override this
-        FileUtils.cp(language.default_file_path("Procfile"), File.join(dest, "Procfile"))
+        FileUtils.cp(language.default_config_file_path("Procfile"), File.join(dest, "Procfile"))
       end
 
       def self.write_all_config_with_defaults_to_directory(source, dest)
