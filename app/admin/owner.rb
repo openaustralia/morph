@@ -1,5 +1,7 @@
 ActiveAdmin.register Owner do
-  actions :index, :show
+  actions :index, :show, :edit, :update
+
+  permit_params :admin, :suspended
 
   index do
     column :gravatar do |owner|
@@ -23,12 +25,25 @@ ActiveAdmin.register Owner do
       number_to_human_size(owner.total_disk_usage)
     end
 
-    actions
+    actions defaults: false do |owner|
+      a link_to "View", admin_owner_path(owner)
+      if owner.user?
+        a link_to "Edit", edit_admin_owner_path(owner)
+      end
+    end
   end
 
   filter :type
   filter :nickname
   filter :name
+
+  form do |f|
+    inputs "Permissions" do
+      input :admin
+      input :suspended
+    end
+    actions
+  end
 
   controller do
     def find_resource
