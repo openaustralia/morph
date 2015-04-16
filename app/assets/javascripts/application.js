@@ -19,6 +19,7 @@
 //= require sync
 //= require cocoon
 //= require 'jquery.backstretch'
+//= require tablesaw.stackonly
 //= require api
 //= require bootstrap
 //= require documentation
