@@ -6,7 +6,6 @@
   @include tablesaw-stack( $grid-float-breakpoint );
 
   table {
-    white-space: nowrap;
     td, th {
       @media (min-width: $grid-float-breakpoint) {
         max-width: 200px;
@@ -20,6 +19,26 @@
       rgba(255,255,255,1) 95%,
       rgba(255,255,255,0)
     );
+
+  // override bootstrap styles for better compatability
+  // with TableSaw
+  .tablesaw > tbody > tr > td {
+    white-space: normal;
+
+    @media (min-width: $grid-float-breakpoint) {
+      white-space: nowrap;
+    }
+  }
+}
+
+.tablesaw-cell-content {
+  a {
+    word-wrap: break-word;
+
+    @media (min-width: $grid-float-breakpoint) {
+      word-wrap: inherit;
+    }
+  }
 }
 
 .popover-content {
