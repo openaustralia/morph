@@ -3,13 +3,15 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .table-responsive.scraper-data {
-  @include tablesaw-stack( 50em );
+  @include tablesaw-stack( $grid-float-breakpoint );
 
   table {
     white-space: nowrap;
     td, th {
-      max-width: 200px;
-      overflow: hidden;
+      @media (min-width: $grid-float-breakpoint) {
+        max-width: 200px;
+        overflow: hidden;
+      }
     }
   }
   overflow-x: scroll;
