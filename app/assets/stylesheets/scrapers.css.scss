@@ -15,6 +15,12 @@
         );
       ;
     }
+
+    tr {
+      @media (max-width: $grid-float-breakpoint) {
+        border-bottom: 2px solid $gray;
+      }
+    }
   }
 
   html:not(.tablesaw-enhanced) & {
