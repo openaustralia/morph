@@ -35,6 +35,14 @@
         overflow: hidden;
       }
 
+      .tablesaw-enhanced & {
+        @media (max-width: $grid-float-breakpoint) {
+          border-right: 0;
+          border-left: 0;
+          border-top: 0;
+        }
+      }
+
       html:not(.tablesaw-enhanced) & {
         max-width: 200px;
         overflow: hidden;
