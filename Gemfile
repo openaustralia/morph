@@ -29,6 +29,7 @@ gem "grit"
 # to not get cached
 gem 'docker-api', "< 1.20.0", :require => 'docker'
 gem "sidekiq"
+gem 'sidekiq-limit_fetch'
 gem "foreman"
 gem "faraday"
 #gem 'jquery-turbolinks'
