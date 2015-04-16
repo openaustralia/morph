@@ -3,16 +3,30 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .table-responsive.scraper-data {
-  @include tablesaw-stack( $grid-float-breakpoint );
+  .tablesaw-enhanced & {
+    @include tablesaw-stack( $grid-float-breakpoint );
 
-  overflow-x: scroll;
-  -webkit-mask:
-    -webkit-linear-gradient(
-      left,
-      rgba(255,255,255,1) 95%,
-      rgba(255,255,255,0)
-    );
-  ;
+    @media (min-width: $grid-float-breakpoint) {
+      -webkit-mask:
+        -webkit-linear-gradient(
+          left,
+          rgba(255,255,255,1) 95%,
+          rgba(255,255,255,0)
+        );
+      ;
+    }
+  }
+
+  html:not(.tablesaw-enhanced) & {
+    -webkit-mask:
+      -webkit-linear-gradient(
+        left,
+        rgba(255,255,255,1) 95%,
+        rgba(255,255,255,0)
+      );
+    ;
+  }
+
 
   table {
     td, th {
@@ -20,12 +34,18 @@
         max-width: 200px;
         overflow: hidden;
       }
+
+      html:not(.tablesaw-enhanced) & {
+        max-width: 200px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
     }
   }
 
   // override bootstrap styles for better compatability
   // with TableSaw
-  .tablesaw > tbody > tr > td {
+  .tablesaw-enhanced & .tablesaw > tbody > tr > td {
     white-space: normal;
 
     @media (min-width: $grid-float-breakpoint) {
