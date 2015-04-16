@@ -13,5 +13,15 @@ describe NewDomainWorker do
         domain.meta.should == "Get structured data out of the web. Code collaboration through GitHub. Run your scrapers in the cloud."
       end
     end
+
+    context "domain has been seen before" do
+      before(:each) { Domain.create!(name: "morph.io", meta: "Foo")}
+
+      it do
+        RestClient.should_not_receive(:get)
+        worker.perform("morph.io")
+        Domain.count.should == 1
+      end
+    end
   end
 end
