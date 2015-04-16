@@ -1,5 +1,7 @@
 ---
-:concurrency: 5
 :queues:
   - default
   - low
+  - small
+:limits:
+    default: 5
