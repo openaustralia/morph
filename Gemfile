@@ -41,6 +41,7 @@ gem "archive-tar-minitar"
 gem 'github-markup', :require => 'github/markup'
 gem 'redcarpet'
 gem 'RedCloth'
+gem 'rest-client'
 
 # For sidekiq ui
 gem 'sinatra', '>= 1.3.0', :require => nil
