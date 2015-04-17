@@ -32,8 +32,8 @@ namespace :app do
       domains = ConnectionLog.group(:host).pluck(:host)
       total = domains.count
       domains.each_with_index do |domain, index|
-        puts "#{index + 1}/#{total} #{domain}"
-        Domain.lookup_meta(domain)
+        puts "Queueing #{index + 1}/#{total} #{domain}"
+        NewDomainWorker.perform_async(domain)
       end
     end
   end
