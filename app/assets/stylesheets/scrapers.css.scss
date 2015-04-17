@@ -49,19 +49,10 @@
   // with TableSaw
   .tablesaw-enhanced & .tablesaw > tbody > tr > td {
     white-space: normal;
+    word-break: break-word;
 
     @media (min-width: $grid-float-breakpoint) {
       white-space: nowrap;
-    }
-  }
-}
-
-.tablesaw-cell-content {
-  a {
-    word-wrap: break-word;
-
-    @media (min-width: $grid-float-breakpoint) {
-      word-wrap: inherit;
     }
   }
 }
