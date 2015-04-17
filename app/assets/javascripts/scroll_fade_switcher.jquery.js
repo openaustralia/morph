@@ -58,9 +58,8 @@ function detectScroll() {
     tab_links = $('#data-table .nav-tabs a');
 
     tab_links.each(function() {
-      $(this).click(function () {
+      $(this).on('shown.bs.tab', function (e) {
         active_tab = $($(this).attr('href'));
-
         scroller_frame = active_tab.find('.scroller-frame');
 
         setScrollWatcher(scroller_frame);
