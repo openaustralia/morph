@@ -26,5 +26,15 @@ namespace :app do
         user.reset_authorization!
       end
     end
+
+    desc "Get meta info for all domains in the connection logs"
+    task :get_all_meta_info_for_connection_logs => :environment do
+      domains = ConnectionLog.group(:host).pluck(:host)
+      total = domains.count
+      domains.each_with_index do |domain, index|
+        puts "#{index + 1}/#{total} #{domain}"
+        Domain.lookup_meta(domain)
+      end
+    end
   end
 end
