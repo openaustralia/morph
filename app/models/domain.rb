@@ -20,7 +20,7 @@ class Domain < ActiveRecord::Base
       title_tag = header.at("title")
       title = title_tag.inner_text.strip if title_tag
       {meta: meta, title: title}
-    rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, RestClient::Forbidden, Errno::ECONNREFUSED, Errno::EINVAL
+    rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, RestClient::Forbidden, RestClient::BadGateway, Errno::ECONNREFUSED, Errno::EINVAL
       {meta: nil, title: nil}
     end
   end
