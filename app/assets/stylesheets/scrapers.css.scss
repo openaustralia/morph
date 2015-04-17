@@ -7,13 +7,7 @@
     @include tablesaw-stack( $grid-float-breakpoint );
 
     @media (min-width: $grid-float-breakpoint) {
-      -webkit-mask:
-        -webkit-linear-gradient(
-          left,
-          rgba(255,255,255,1) 95%,
-          rgba(255,255,255,0)
-        );
-      ;
+      overflow: scroll;
     }
 
     tr {
@@ -24,15 +18,8 @@
   }
 
   html:not(.tablesaw-enhanced) & {
-    -webkit-mask:
-      -webkit-linear-gradient(
-        left,
-        rgba(255,255,255,1) 95%,
-        rgba(255,255,255,0)
-      );
-    ;
+    overflow: scroll;
   }
-
 
   table {
     td, th {
@@ -76,6 +63,36 @@
       word-wrap: inherit;
     }
   }
+}
+
+// TODO: Rewrite these masks and gradients in
+//        prefixed syntax and let Autoprefixer do it's thing
+.panel-scrolled-right {
+  -webkit-mask:
+    -webkit-linear-gradient(
+      right,
+      rgba(255,255,255,1) 95%,
+      rgba(255,255,255,.5) 97.5%,
+      rgba(255,255,255,0)
+    );
+  ;
+}
+
+.panel-scrolled-left {
+  -webkit-mask:
+    -webkit-linear-gradient(
+      left,
+      rgba(255,255,255,1) 95%,
+      rgba(255,255,255,.5) 97.5%,
+      rgba(255,255,255,0)
+    );
+  ;
+}
+
+.panel-scrolled-middle {
+  -webkit-mask:
+    -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(2.5%,rgba(255,255,255,.5)), color-stop(5%,rgba(255,255,255,1)), color-stop(95%,rgba(255,255,255,1)), color-stop(97.5%,rgba(255,255,255,.5)), color-stop(100%,rgba(255,255,255,0)));
+  ;
 }
 
 .popover-content {

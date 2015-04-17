@@ -44,3 +44,5 @@ $ ->
     .on 'cocoon:before-remove', (e, removedItem) ->
       $(this).data('remove-timeout', 500)
       removedItem.fadeOut('fast')
+
+$ -> detectScroll()
