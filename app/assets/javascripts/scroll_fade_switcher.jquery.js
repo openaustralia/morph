@@ -1,4 +1,6 @@
 function detectScroll() {
+  // TODO: This should run again if TableSaw changes the
+  // layout.
   function findStartingPosition(scroller_frame) {
     scroller_panel = scroller_frame.find('.scroller-panel');
 
