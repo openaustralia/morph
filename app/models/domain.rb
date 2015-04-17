@@ -17,7 +17,7 @@ class Domain < ActiveRecord::Base
       header = Nokogiri::HTML(doc).at("html head")
       tag = header.at("meta[name='description']") || header.at("meta[name='Description']")
       tag["content"] if tag
-    rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, Errno::ECONNREFUSED
+    rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, RestClient::Forbidden, Errno::ECONNREFUSED
       nil
     end
   end
