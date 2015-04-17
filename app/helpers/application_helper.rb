@@ -18,4 +18,8 @@ module ApplicationHelper
   def bs_nav_link(text, url)
     content_tag(:li, link_to(text, url), class: ("active" if current_page?(url)))
   end
+
+  def body_class
+    controller.controller_path + " " + controller.action_name
+  end
 end

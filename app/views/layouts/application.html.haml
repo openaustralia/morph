@@ -21,17 +21,18 @@
     = javascript_include_tag Sync.adapter_javascript_url
     = render "heap_analytics"
 
-  %body
+  %body{class: "#{body_class}"}
     = render "google_analytics"
     = render "shared/nav"
 
-    .container
-      - if signed_in? && SiteSetting.read_only_mode
-        .alert.alert-warning.read-only-mode
-          %i.fa.fa-bell-o.fa-lg.pull-left
-          The site is currently <strong>read-only</strong> because we're doing some essential maintenance.
-          Scrapers can not be created or run. The good news is you can continue to browse the site.
-      = bootstrap_flash
+    .alert-wrapper
+      .container
+        - if signed_in? && SiteSetting.read_only_mode
+          .alert.alert-warning.read-only-mode
+            %i.fa.fa-bell-o.fa-lg.pull-left
+            The site is currently <strong>read-only</strong> because we're doing some essential maintenance.
+            Scrapers can not be created or run. The good news is you can continue to browse the site.
+        = bootstrap_flash
     = content_for?(:content) ? yield(:content) : yield
     = render "heap_analytics_identify"
     = render "shared/footer"
