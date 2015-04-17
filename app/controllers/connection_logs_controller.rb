@@ -12,6 +12,8 @@ class ConnectionLogsController < ApplicationController
         request_size: params[:request_size],
         response_size: params[:response_size]
       )
+      NewDomainWorker.perform_async(params[:host])
+
       render text: "Created"
     else
       render text: "Wrong API key", status: 401

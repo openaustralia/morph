@@ -29,6 +29,7 @@ gem "grit"
 # to not get cached
 gem 'docker-api', "< 1.20.0", :require => 'docker'
 gem "sidekiq"
+gem 'sidekiq-limit_fetch'
 gem "foreman"
 gem "faraday"
 #gem 'jquery-turbolinks'
@@ -40,6 +41,7 @@ gem "archive-tar-minitar"
 gem 'github-markup', :require => 'github/markup'
 gem 'redcarpet'
 gem 'RedCloth'
+gem 'rest-client'
 
 # For sidekiq ui
 gem 'sinatra', '>= 1.3.0', :require => nil
