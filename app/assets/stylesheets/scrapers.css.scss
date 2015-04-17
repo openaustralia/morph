@@ -22,12 +22,13 @@
   }
 
   table {
-    td, th {
-      @media (min-width: $grid-float-breakpoint) {
-        max-width: 200px;
-        overflow: hidden;
-      }
+    max-width: 100%;
 
+    @media (min-width: $grid-float-breakpoint) {
+      width: auto;
+    }
+
+    td, th {
       .tablesaw-enhanced & {
         @media (max-width: $grid-float-breakpoint) {
           border-right: 0;
@@ -61,6 +62,25 @@
 
     @media (min-width: $grid-float-breakpoint) {
       word-wrap: inherit;
+    }
+  }
+}
+
+.panel-scrollable {
+  table {
+    width: 100%;
+  }
+
+  td, th {
+    @media (min-width: $grid-float-breakpoint) {
+      max-width: 200px;
+      overflow: hidden;
+    }
+
+    html:not(.tablesaw-enhanced) & {
+      max-width: 200px;
+      overflow: hidden;
+      white-space: nowrap;
     }
   }
 }

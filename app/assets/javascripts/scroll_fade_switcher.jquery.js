@@ -6,6 +6,7 @@ function detectScroll() {
     panel_width = scroller_panel.width();
 
     if ( frame_width + 1 < panel_width ) {
+      scroller_frame.addClass("panel-scrollable");
       scroller_frame.addClass("panel-scrolled-left");
       console.log('scroller class added');
     } else {
