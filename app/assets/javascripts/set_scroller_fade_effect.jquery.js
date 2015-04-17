@@ -1,4 +1,4 @@
-function setScollerFadeEffect() {
+function setScrollerFadeEffect() {
   // TODO: This should run again if TableSaw changes the
   // layout.
   function findStartingPosition(scroller_frame) {
