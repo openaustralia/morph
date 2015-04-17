@@ -17,7 +17,9 @@ class Domain < ActiveRecord::Base
       header = Nokogiri::HTML(doc).at("html head")
       tag = header.at("meta[name='description']") || header.at("meta[name='Description']")
       meta = tag["content"] if tag
-      {meta: meta, title: header.at("title").inner_text}
+      title_tag = header.at("title")
+      title = title_tag.inner_text.strip if title_tag
+      {meta: meta, title: title}
     rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, RestClient::Forbidden, Errno::ECONNREFUSED
       {meta: nil, title: nil}
     end
