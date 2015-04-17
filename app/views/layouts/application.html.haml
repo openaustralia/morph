@@ -21,7 +21,7 @@
     = javascript_include_tag Sync.adapter_javascript_url
     = render "heap_analytics"
 
-  %body
+  %body{class: "#{body_class}"}
     = render "google_analytics"
     = render "shared/nav"
 
