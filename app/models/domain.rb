@@ -6,13 +6,9 @@ class Domain < ActiveRecord::Base
   def self.lookup_meta(domain_name)
     # TODO If the last time the meta info was grabbed was a long time ago, refresh it
     domain = ActiveRecord::Base.transaction do
-      find_by(name: domain_name) || create!(name: domain_name, meta: lookup_meta_remote(domain_name))
+      find_by(name: domain_name) || create!(name: domain_name, meta: lookup_metadata_remote(domain_name)[:meta])
     end
     domain.meta
-  end
-
-  def self.lookup_meta_remote(domain_name)
-    lookup_metadata_remote(domain_name)[:meta]
   end
 
   def self.lookup_metadata_remote(domain_name)
