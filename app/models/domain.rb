@@ -13,7 +13,7 @@ class Domain < ActiveRecord::Base
 
   def self.lookup_meta_remote(domain_name)
     begin
-      doc = RestClient.get("http://#{domain_name}")
+      doc = RestClient::Resource.new("http://#{domain_name}", verify_ssl: OpenSSL::SSL::VERIFY_NONE).get
       header = Nokogiri::HTML(doc).at("html head")
       tag = header.at("meta[name='description']") || header.at("meta[name='Description']")
       tag["content"] if tag
