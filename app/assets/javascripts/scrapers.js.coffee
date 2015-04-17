@@ -45,4 +45,4 @@ $ ->
       $(this).data('remove-timeout', 500)
       removedItem.fadeOut('fast')
 
-$ -> setScollerFadeEffect()
+$ -> setScollerFadeEffect() if setScollerFadeEffect?
