@@ -20,7 +20,7 @@
 //= require cocoon
 //= require 'jquery.backstretch'
 //= require tablesaw.stackonly
-//= require scroll_fade_switcher.jquery
+//= require set_scroller_fade_effect.jquery
 //= require api
 //= require bootstrap
 //= require documentation
