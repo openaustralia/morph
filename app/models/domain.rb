@@ -13,7 +13,8 @@ class Domain < ActiveRecord::Base
         doc = ""
       end
 
-      tag = Nokogiri::HTML(doc).at("html head meta[name='Description']")
+      header = Nokogiri::HTML(doc).at("html head")
+      tag = header.at("meta[name='description']") || header.at("meta[name='Description']")
       meta = tag["content"] if tag
       domain = create!(name: domain_name, meta: meta)
     end
