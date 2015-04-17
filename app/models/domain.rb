@@ -6,7 +6,7 @@ class Domain < ActiveRecord::Base
   def self.lookup_meta(domain_name)
     # TODO If the last time the meta info was grabbed was a long time ago, refresh it
     domain = ActiveRecord::Base.transaction do
-      find_by(name: domain_name) || create!(name: domain_name, meta: lookup_metadata_remote(domain_name)[:meta])
+      find_by(name: domain_name) || create!(lookup_metadata_remote(domain_name).merge(name: domain_name))
     end
     domain.meta
   end
@@ -17,9 +17,9 @@ class Domain < ActiveRecord::Base
       header = Nokogiri::HTML(doc).at("html head")
       tag = header.at("meta[name='description']") || header.at("meta[name='Description']")
       meta = tag["content"] if tag
-      {meta: meta}
+      {meta: meta, title: header.at("title").inner_text}
     rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, RestClient::Forbidden, Errno::ECONNREFUSED
-      {meta: nil}
+      {meta: nil, title: nil}
     end
   end
 end
