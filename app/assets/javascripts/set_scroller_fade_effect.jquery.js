@@ -67,7 +67,6 @@ function setScrollerFadeEffect() {
 
         setScrollWatcher(scroller_frame);
 
-        // This needs to wait until the tab is active
         findStartingPosition(scroller_frame);
       });
     });
