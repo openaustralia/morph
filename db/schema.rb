@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150326072730) do
+ActiveRecord::Schema.define(version: 20150416090020) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -45,9 +45,9 @@ ActiveRecord::Schema.define(version: 20150326072730) do
     t.text     "query"
     t.integer  "scraper_id"
     t.integer  "owner_id"
-    t.float    "utime"
-    t.float    "stime"
-    t.float    "wall_time"
+    t.float    "utime",      limit: 24
+    t.float    "stime",      limit: 24
+    t.float    "wall_time",  limit: 24
     t.integer  "size"
     t.string   "format"
     t.datetime "created_at"
@@ -90,6 +90,15 @@ ActiveRecord::Schema.define(version: 20150326072730) do
     t.string   "heading"
   end
 
+  create_table "domains", force: true do |t|
+    t.string   "name",       null: false
+    t.text     "meta"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "domains", ["name"], name: "index_domains_on_name", unique: true, using: :btree
+
   create_table "log_lines", force: true do |t|
     t.integer  "run_id"
     t.string   "stream"
@@ -103,9 +112,9 @@ ActiveRecord::Schema.define(version: 20150326072730) do
   add_index "log_lines", ["run_id"], name: "index_log_lines_on_run_id", using: :btree
 
   create_table "metrics", force: true do |t|
-    t.float    "wall_time"
-    t.float    "utime"
-    t.float    "stime"
+    t.float    "wall_time",  limit: 24
+    t.float    "utime",      limit: 24
+    t.float    "stime",      limit: 24
     t.integer  "maxrss"
     t.integer  "minflt"
     t.integer  "majflt"
@@ -165,10 +174,10 @@ ActiveRecord::Schema.define(version: 20150326072730) do
     t.datetime "updated_at"
     t.integer  "status_code"
     t.datetime "queued_at"
-    t.boolean  "auto",              default: false, null: false
+    t.boolean  "auto",                         default: false, null: false
     t.string   "git_revision"
     t.integer  "owner_id"
-    t.float    "wall_time",         default: 0.0,   null: false
+    t.float    "wall_time",         limit: 24, default: 0.0,   null: false
     t.integer  "tables_added"
     t.integer  "tables_removed"
     t.integer  "tables_changed"

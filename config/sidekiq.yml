@@ -1,0 +1,7 @@
+---
+:queues:
+  - default
+  - low
+  - small
+:limits:
+    default: 5
