@@ -5,8 +5,9 @@ class Domain < ActiveRecord::Base
   # Lookup and cache meta information for a domain
   def self.lookup_meta(domain_name)
     # TODO If the last time the meta info was grabbed was a long time ago, refresh it
-    # TODO Fix race condition
-    domain = find_by(name: domain_name) || create!(name: domain_name, meta: lookup_meta_remote(domain_name))
+    domain = ActiveRecord::Base.transaction do
+      find_by(name: domain_name) || create!(name: domain_name, meta: lookup_meta_remote(domain_name))
+    end
     domain.meta
   end
 
