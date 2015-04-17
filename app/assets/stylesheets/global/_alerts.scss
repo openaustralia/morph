@@ -2,4 +2,12 @@
   body.owners.show & {
     background-color: $offset-color;
   }
+
+  body.static.index & {
+    position: absolute;
+    top: 3.4em;
+    background: transparent;
+    z-index: 99;
+    width: 100%;
+  }
 }
