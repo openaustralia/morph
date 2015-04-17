@@ -15,9 +15,9 @@ class Domain < ActiveRecord::Base
     begin
       doc = RestClient::Resource.new("http://#{domain_name}", verify_ssl: OpenSSL::SSL::VERIFY_NONE).get
       header = Nokogiri::HTML(doc).at("html head")
-      tag = header.at("meta[name='description']") || header.at("meta[name='Description']")
+      tag = (header.at("meta[name='description']") || header.at("meta[name='Description']")) if header
       meta = tag["content"] if tag
-      title_tag = header.at("title")
+      title_tag = header.at("title") if header
       title = title_tag.inner_text.strip if title_tag
       {meta: meta, title: title}
     rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, RestClient::Forbidden, RestClient::BadGateway, Errno::ECONNREFUSED, Errno::EINVAL
