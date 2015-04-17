@@ -12,13 +12,18 @@ class Domain < ActiveRecord::Base
   end
 
   def self.lookup_meta_remote(domain_name)
+    lookup_metadata_remote(domain_name)[:meta]
+  end
+
+  def self.lookup_metadata_remote(domain_name)
     begin
       doc = RestClient::Resource.new("http://#{domain_name}", verify_ssl: OpenSSL::SSL::VERIFY_NONE).get
       header = Nokogiri::HTML(doc).at("html head")
       tag = header.at("meta[name='description']") || header.at("meta[name='Description']")
-      tag["content"] if tag
+      meta = tag["content"] if tag
+      {meta: meta}
     rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, RestClient::Forbidden, Errno::ECONNREFUSED
-      nil
+      {meta: nil}
     end
   end
 end
