@@ -1,50 +1,50 @@
-function setScrollerFadeEffect() {
-  // TODO: This should run again if TableSaw changes the
-  // layout.
-  function findStartingPosition(scroller_frame) {
+// TODO: This should run again if TableSaw changes the
+// layout.
+function findStartingPosition(scroller_frame) {
+  scroller_panel = scroller_frame.find('.scroller-panel');
+
+  frame_width = scroller_frame.width();
+  panel_width = scroller_panel.width();
+
+  if ( frame_width + 1 < panel_width ) {
+    scroller_frame.addClass("panel-scrollable");
+    scroller_frame.addClass("panel-scrolled-left");
+  } else {
+    scroller_frame.removeClass("panel-scrolled-right");
+    scroller_frame.removeClass("panel-scrolled-left");
+    scroller_frame.removeClass("panel-scrolled-middle");
+  }
+}
+
+function setScrollWatcher(scroller_frame) {
+  scroller_panel = scroller_frame.find('.scroller-panel');
+  frame_width = scroller_frame.width();
+  panel_width = scroller_panel.width();
+
+  scroller_frame.scroll(function() {
+    scroller_frame = $(this);
     scroller_panel = scroller_frame.find('.scroller-panel');
 
     frame_width = scroller_frame.width();
     panel_width = scroller_panel.width();
 
-    if ( frame_width + 1 < panel_width ) {
-      scroller_frame.addClass("panel-scrollable");
+    if (scroller_frame.scrollLeft() === 0 ){
       scroller_frame.addClass("panel-scrolled-left");
-    } else {
       scroller_frame.removeClass("panel-scrolled-right");
+      scroller_frame.removeClass("panel-scrolled-middle");
+    } else if (scroller_frame.scrollLeft() + frame_width + 2 > panel_width ) {
+      scroller_frame.addClass("panel-scrolled-right");
       scroller_frame.removeClass("panel-scrolled-left");
       scroller_frame.removeClass("panel-scrolled-middle");
+    } else {
+      scroller_frame.addClass("panel-scrolled-middle");
+      scroller_frame.removeClass("panel-scrolled-right");
+      scroller_frame.removeClass("panel-scrolled-left");
     }
-  }
+  });
+}
 
-  function setScrollWatcher(scroller_frame) {
-    scroller_panel = scroller_frame.find('.scroller-panel');
-    frame_width = scroller_frame.width();
-    panel_width = scroller_panel.width();
-
-    scroller_frame.scroll(function() {
-      scroller_frame = $(this);
-      scroller_panel = scroller_frame.find('.scroller-panel');
-
-      frame_width = scroller_frame.width();
-      panel_width = scroller_panel.width();
-
-      if (scroller_frame.scrollLeft() === 0 ){
-        scroller_frame.addClass("panel-scrolled-left");
-        scroller_frame.removeClass("panel-scrolled-right");
-        scroller_frame.removeClass("panel-scrolled-middle");
-      } else if (scroller_frame.scrollLeft() + frame_width + 2 > panel_width ) {
-        scroller_frame.addClass("panel-scrolled-right");
-        scroller_frame.removeClass("panel-scrolled-left");
-        scroller_frame.removeClass("panel-scrolled-middle");
-      } else {
-        scroller_frame.addClass("panel-scrolled-middle");
-        scroller_frame.removeClass("panel-scrolled-right");
-        scroller_frame.removeClass("panel-scrolled-left");
-      }
-    });
-  }
-
+function setScrollerFadeEffect() {
   if ($('.scroller-frame') && $('.scroller-panel')) {
     scroller_frame = $('#data-table .scroller-frame');
 
