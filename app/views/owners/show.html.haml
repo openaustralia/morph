@@ -52,7 +52,7 @@
     .list-group= sync partial: "scraper", collection: @erroring_scrapers
     .list-group= sync partial: "scraper", collection: @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
 
-  - if @owner == current_user
+  - if @owner == current_user || @owner.organization? && @owner.users.include?(current_user)
     .btn-group
       = button_link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
         Add Scraper
