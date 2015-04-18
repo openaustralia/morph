@@ -3,19 +3,107 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .table-responsive.scraper-data {
+  .tablesaw-enhanced & {
+    @include tablesaw-stack( $grid-float-breakpoint );
+
+    @media (min-width: $grid-float-breakpoint) {
+      overflow: scroll;
+    }
+
+    tr {
+      @media (max-width: $grid-float-breakpoint) {
+        border-bottom: 2px solid $gray;
+      }
+    }
+  }
+
+  html:not(.tablesaw-enhanced) & {
+    overflow: scroll;
+  }
+
   table {
-    white-space: nowrap;
+    max-width: 100%;
+
+    @media (min-width: $grid-float-breakpoint) {
+      width: auto;
+    }
+
     td, th {
+      .tablesaw-enhanced & {
+        @media (max-width: $grid-float-breakpoint) {
+          border-right: 0;
+          border-left: 0;
+          border-top: 0;
+        }
+      }
+
+      html:not(.tablesaw-enhanced) & {
+        max-width: 200px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  // override bootstrap styles for better compatability
+  // with TableSaw
+  .tablesaw-enhanced & .tablesaw > tbody > tr > td {
+    white-space: normal;
+    word-break: break-word;
+
+    @media (min-width: $grid-float-breakpoint) {
+      white-space: nowrap;
+    }
+  }
+}
+
+.panel-scrollable {
+  table {
+    width: 100%;
+  }
+
+  td, th {
+    @media (min-width: $grid-float-breakpoint) {
       max-width: 200px;
       overflow: hidden;
     }
+
+    html:not(.tablesaw-enhanced) & {
+      max-width: 200px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
-  overflow-x: scroll;
-  -webkit-mask: -webkit-linear-gradient(
-      left,
+}
+
+// TODO: Rewrite these masks and gradients in
+//        prefixed syntax and let Autoprefixer do it's thing
+.panel-scrolled-right {
+  -webkit-mask:
+    -webkit-linear-gradient(
+      right,
       rgba(255,255,255,1) 95%,
+      rgba(255,255,255,.5) 97.5%,
       rgba(255,255,255,0)
     );
+  ;
+}
+
+.panel-scrolled-left {
+  -webkit-mask:
+    -webkit-linear-gradient(
+      left,
+      rgba(255,255,255,1) 95%,
+      rgba(255,255,255,.5) 97.5%,
+      rgba(255,255,255,0)
+    );
+  ;
+}
+
+.panel-scrolled-middle {
+  -webkit-mask:
+    -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(2.5%,rgba(255,255,255,.5)), color-stop(5%,rgba(255,255,255,1)), color-stop(95%,rgba(255,255,255,1)), color-stop(97.5%,rgba(255,255,255,.5)), color-stop(100%,rgba(255,255,255,0)));
+  ;
 }
 
 .popover-content {
