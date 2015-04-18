@@ -17,6 +17,11 @@
       %p
         Scrapes
         = scraped_domains_list(scraper.last_run)
+      -# Only shows the meta info from the first domain
+      -# TODO Figure out what to do with more than one domain
+      - if Domain.find_by(name: scraper.last_run.scraped_domains.first)
+        %blockquote
+          %p= Domain.find_by(name: scraper.last_run.scraped_domains.first).meta_or_title
 
     - if scraper.owner.buildpacks
       %p.text-warning

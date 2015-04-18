@@ -2,6 +2,15 @@
 require "nokogiri"
 
 class Domain < ActiveRecord::Base
+  # If meta is available use that, otherwise title
+  def meta_or_title
+    if meta.present?
+      meta
+    elsif title.present?
+      title
+    end
+  end
+
   # Lookup and cache meta information for a domain
   def self.lookup_meta(domain_name)
     # TODO If the last time the meta info was grabbed was a long time ago, refresh it
