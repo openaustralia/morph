@@ -10,7 +10,6 @@ function setScrollerFadeEffect() {
     if ( frame_width + 1 < panel_width ) {
       scroller_frame.addClass("panel-scrollable");
       scroller_frame.addClass("panel-scrolled-left");
-      console.log('scroller class added');
     } else {
       scroller_frame.removeClass("panel-scrolled-right");
       scroller_frame.removeClass("panel-scrolled-left");
@@ -31,12 +30,10 @@ function setScrollerFadeEffect() {
       panel_width = scroller_panel.width();
 
       if (scroller_frame.scrollLeft() === 0 ){
-        console.log("left");
         scroller_frame.addClass("panel-scrolled-left");
         scroller_frame.removeClass("panel-scrolled-right");
         scroller_frame.removeClass("panel-scrolled-middle");
       } else if (scroller_frame.scrollLeft() + frame_width + 2 > panel_width ) {
-        console.log("right");
         scroller_frame.addClass("panel-scrolled-right");
         scroller_frame.removeClass("panel-scrolled-left");
         scroller_frame.removeClass("panel-scrolled-middle");
@@ -44,14 +41,11 @@ function setScrollerFadeEffect() {
         scroller_frame.addClass("panel-scrolled-middle");
         scroller_frame.removeClass("panel-scrolled-right");
         scroller_frame.removeClass("panel-scrolled-left");
-        console.log("middle");
       }
     });
   }
 
   if ($('.scroller-frame') && $('.scroller-panel')) {
-    console.log("Scroller elements present");
-
     scroller_frame = $('#data-table .scroller-frame');
 
     findStartingPosition(scroller_frame);
