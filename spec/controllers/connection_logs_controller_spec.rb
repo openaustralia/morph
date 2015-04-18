@@ -5,6 +5,7 @@ describe ConnectionLogsController do
     before(:each) { ConnectionLogsController.stub(key: "sjdf")}
 
     it "should be successful if correct key is used" do
+      NewDomainWorker.should_receive(:perform_async)
       post :create, key: "sjdf"
       response.should be_successful
     end
