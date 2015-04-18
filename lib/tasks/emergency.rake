@@ -32,8 +32,13 @@ namespace :app do
       domains = ConnectionLog.group(:host).pluck(:host)
       total = domains.count
       domains.each_with_index do |domain, index|
-        puts "Queueing #{index + 1}/#{total} #{domain}"
-        NewDomainWorker.perform_async(domain)
+        if Domain.where(name: domain).exists?
+          puts "Skipping #{index + 1}/#{total} #{domain}"
+        else
+          puts "Queueing #{index + 1}/#{total} #{domain}"
+          Domain.create!(name: domain)
+          NewDomainWorker.perform_async(domain)
+        end
       end
     end
   end
