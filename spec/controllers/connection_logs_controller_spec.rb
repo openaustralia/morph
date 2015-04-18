@@ -6,7 +6,7 @@ describe ConnectionLogsController do
 
     it "should be successful if correct key is used" do
       NewDomainWorker.should_receive(:perform_async)
-      post :create, key: "sjdf"
+      post :create, key: "sjdf", host: "foo.com"
       response.should be_successful
     end
 

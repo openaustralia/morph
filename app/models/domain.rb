@@ -11,6 +11,10 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  def update_meta!
+    update_attributes(Domain.lookup_metadata_remote(name))
+  end
+
   # Lookup and cache meta information for a domain
   def self.lookup_meta(domain_name)
     # TODO If the last time the meta info was grabbed was a long time ago, refresh it

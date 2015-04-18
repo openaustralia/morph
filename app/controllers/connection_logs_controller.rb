@@ -3,6 +3,13 @@ class ConnectionLogsController < ApplicationController
 
   def create
     if ConnectionLogsController.key == params[:key]
+      ActiveRecord::Base.transaction do
+        domain = Domain.find_by(name: params[:host])
+        if domain.nil?
+          domain = Domain.create!(name: params[:host])
+          NewDomainWorker.perform_async(params[:host])
+        end
+      end
       ConnectionLog.create!(
         ip_address: params[:ip_address],
         method: params[:method],
@@ -12,7 +19,6 @@ class ConnectionLogsController < ApplicationController
         request_size: params[:request_size],
         response_size: params[:response_size]
       )
-      NewDomainWorker.perform_async(params[:host])
 
       render text: "Created"
     else
