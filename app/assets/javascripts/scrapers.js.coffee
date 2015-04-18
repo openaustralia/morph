@@ -19,6 +19,12 @@ class Sync.ScraperShowPartial extends Sync.View
 class Sync.ScraperShowPartial extends Sync.View
   afterUpdate: -> $('time[data-time-ago]').timeago()
 
+class Sync.ScraperShowPartial extends Sync.View
+  afterUpdate: -> $(document).trigger("enhance.tablesaw")
+
+class Sync.ScraperShowPartial extends Sync.View
+  afterUpdate: -> setScrollerFadeEffect()
+
 bindCapitalise = (j) ->
   j.on "input", ->
     input = $(this)
