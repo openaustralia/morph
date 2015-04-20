@@ -12,5 +12,5 @@ To run a scraper go to the directory you have your scraper code in and
 
     morph
 
-It will run your local scraper on the Morph server and stream the console output back to you. You can use this with any support scraper
+It will run your local scraper on the morph.io server and stream the console output back to you. You can use this with any support scraper
 language without the hassle of having to install lots of things.

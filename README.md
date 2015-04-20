@@ -1,6 +1,6 @@
 [![Stories in Ready](https://badge.waffle.io/openaustralia/morph.png?label=ready)](https://waffle.io/openaustralia/morph) [![Build Status](https://travis-ci.org/openaustralia/morph.png?branch=master)](https://travis-ci.org/openaustralia/morph) [![Code Climate](https://codeclimate.com/github/openaustralia/morph.png)](https://codeclimate.com/github/openaustralia/morph)
 
-## Morph: A scraping platform
+## morph.io: A scraping platform
 
 * A [Heroku](https://www.heroku.com/) for [Scrapers](https://en.wikipedia.org/wiki/Web_scraping)
 * All code and collaboration through [GitHub](https://github.com/)
@@ -23,7 +23,7 @@ On Linux your user account should be able to manipulate Docker (just add your us
 User-facing:
 
 * [openaustralia/morph](https://github.com/openaustralia/morph) - Main application
-* [openaustralia/morph-cli](https://github.com/openaustralia/morph-cli) - Command-line morph tool
+* [openaustralia/morph-cli](https://github.com/openaustralia/morph-cli) - Command-line morph.io tool
 * [openaustralia/scraperwiki-python](https://github.com/openaustralia/scraperwiki-python) - Fork of [scraperwiki/scraperwiki-python](https://github.com/scraperwiki/scraperwiki-python) updated to use morph.io naming conventions
 * [openaustralia/scraperwiki-ruby](https://github.com/openaustralia/scraperwiki-ruby) - Fork of [scraperwiki/scraperwiki-ruby](https://github.com/scraperwiki/scraperwiki-ruby) updated to use morph.io naming conventions
 
@@ -48,7 +48,7 @@ Running this on OSX? Read the [OSX instructions](#installing-docker-on-osx) belo
 
 Edit `config/database.yml` with your database settings
 
-Create an [application on GitHub](https://github.com/settings/applications/new) so that Morph can talk to GitHub. Fill in the following values
+Create an [application on GitHub](https://github.com/settings/applications/new) so that morph.io can talk to GitHub. Fill in the following values
 
 * Application name: __Morph (dev)__
 * Homepage URL: __http://127.0.0.1:3000__
@@ -79,7 +79,7 @@ access this, run the following to give your account admin rights:
 
 If you're doing your development on Linux you're in luck because installing Docker is pretty straightforward. Just follow the instructions on the [Docker site](http://www.docker.io/gettingstarted/#h_installation).
 
-If you're on OSX you could follow the [instructions on the Docker site](https://docs.docker.com/installation/mac/). Docker encourage OSX users to install their [Kitematic](https://kitematic.com/) application, a [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface) for running Docker, that works with Morph. However there will be some extra configuration you will need to do to make it work with Morph.
+If you're on OSX you could follow the [instructions on the Docker site](https://docs.docker.com/installation/mac/). Docker encourage OSX users to install their [Kitematic](https://kitematic.com/) application, a [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface) for running Docker, that works with morph.io. However there will be some extra configuration you will need to do to make it work with morph.io.
 
 We've made it easier by providing a Vagrantfile that sets up a VM, installs docker on it and makes sure that your development box can talk to docker on the VM.
 
@@ -137,7 +137,7 @@ Now visit https://dev.morph.io/
 
 #### Production provisioning and deployment
 
-To deploy Morph to production, normally you'll just want to deploy using Capistrano:
+To deploy morph.io to production, normally you'll just want to deploy using Capistrano:
 
     cap production deploy
 

@@ -85,7 +85,7 @@ describe ScrapersController do
       sign_in user
     end
 
-    it 'should error if the scraper already exists on Morph' do
+    it 'should error if the scraper already exists on morph.io' do
       scraperwiki_double = double("Morph::Scraperwiki", exists?: true, private_scraper?: false, view?: false)
       Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
 
@@ -94,7 +94,7 @@ describe ScrapersController do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'my_scraper' }
       end
 
-      assigns(:scraper).errors[:name].should == ['is already taken on Morph']
+      assigns(:scraper).errors[:name].should == ['is already taken on morph.io']
     end
 
     it 'should error if the scraper already exists on GitHub' do
@@ -285,7 +285,7 @@ describe ScrapersController do
         response.should be_success
         body = Nokogiri::XML(response.body)
 
-        body.css("title").first.text.should == "Morph: mlandauer/a_scraper"
+        body.css("title").first.text.should == "morph.io: mlandauer/a_scraper"
         body.css("author name").first.text.should == "mlandauer"
         body.css("link").first[:href].should == "http://test.host/mlandauer/a_scraper"
 

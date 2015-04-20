@@ -80,7 +80,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Send Morph mails to Cuttlefish (see http://cuttlefish.io)
+  # Send morph.io mails to Cuttlefish (see http://cuttlefish.io)
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     :address => (ENV["CUTTLEFISH_SERVER"] || "cuttlefish.io"),

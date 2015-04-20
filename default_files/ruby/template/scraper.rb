@@ -1,4 +1,4 @@
-# This is a template for a Ruby scraper on Morph (https://morph.io)
+# This is a template for a Ruby scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
 # require 'scraperwiki'
@@ -19,6 +19,6 @@
 # ScraperWiki.select("* from data where 'name'='peter'")
 
 # You don't have to do things with the Mechanize or ScraperWiki libraries. You can use whatever gems are installed
-# on Morph for Ruby (https://github.com/openaustralia/morph-docker-ruby/blob/master/Gemfile) and all that matters
+# on morph.io for Ruby (https://github.com/openaustralia/morph-docker-ruby/blob/master/Gemfile) and all that matters
 # is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
 # has at least a table called data.

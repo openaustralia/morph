@@ -17,7 +17,7 @@ describe Morph::Language do
     it do
       ruby.scraper_templates(false).keys.should == ["scraper.rb"]
       ruby.scraper_templates(false)["scraper.rb"].should == <<-EOF
-# This is a template for a Ruby scraper on Morph (https://morph.io)
+# This is a template for a Ruby scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
 # require 'scraperwiki'
@@ -38,7 +38,7 @@ describe Morph::Language do
 # ScraperWiki.select("* from data where 'name'='peter'")
 
 # You don't have to do things with the Mechanize or ScraperWiki libraries. You can use whatever gems are installed
-# on Morph for Ruby (https://github.com/openaustralia/morph-docker-ruby/blob/master/Gemfile) and all that matters
+# on morph.io for Ruby (https://github.com/openaustralia/morph-docker-ruby/blob/master/Gemfile) and all that matters
 # is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
 # has at least a table called data.
       EOF
@@ -51,7 +51,7 @@ describe Morph::Language do
       php.scraper_templates(false).keys.should == ["scraper.php"]
       php.scraper_templates(false)["scraper.php"].should == <<-EOF
 <?
-// This is a template for a PHP scraper on Morph (https://morph.io)
+// This is a template for a PHP scraper on morph.io (https://morph.io)
 // including some code snippets below that you should find helpful
 
 // require 'scraperwiki.php';
@@ -72,7 +72,7 @@ describe Morph::Language do
 // scraperwiki::select("* from data where 'name'='peter'")
 
 // You don't have to do things with the ScraperWiki library. You can use whatever is installed
-// on Morph for PHP (See https://github.com/openaustralia/morph-docker-php) and all that matters
+// on morph.io for PHP (See https://github.com/openaustralia/morph-docker-php) and all that matters
 // is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
 // has at least a table called data.
 ?>
@@ -82,7 +82,7 @@ describe Morph::Language do
     it do
       python.scraper_templates(false).keys.should == ["scraper.py"]
       python.scraper_templates(false)["scraper.py"].should == <<-EOF
-# This is a template for a Python scraper on Morph (https://morph.io)
+# This is a template for a Python scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
 # import scraperwiki
@@ -102,7 +102,7 @@ describe Morph::Language do
 # scraperwiki.sql.select("* from data where 'name'='peter'")
 
 # You don't have to do things with the ScraperWiki and lxml libraries. You can use whatever libraries are installed
-# on Morph for Python (https://github.com/openaustralia/morph-docker-python/blob/master/pip_requirements.txt) and all that matters
+# on morph.io for Python (https://github.com/openaustralia/morph-docker-python/blob/master/pip_requirements.txt) and all that matters
 # is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
 # has at least a table called data.
       EOF
@@ -111,7 +111,7 @@ describe Morph::Language do
     it do
       perl.scraper_templates(false).keys.should == ["scraper.pl"]
       perl.scraper_templates(false)["scraper.pl"].should == <<-EOF
-# This is a template for a Perl scraper on Morph (https://morph.io)
+# This is a template for a Perl scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
 # use LWP::Simple;
@@ -143,7 +143,7 @@ describe Morph::Language do
 # }} @rows]);
 
 # You don't have to do things with the HTML::TreeBuilder and Database::DumpTruck
-# libraries. You can use whatever libraries are installed on Morph for Perl
+# libraries. You can use whatever libraries are installed on morph.io for Perl
 # (https://github.com/openaustralia/morph-docker-perl/blob/master/Dockerfile)
 # and all that matters is that your final data is written to an Sqlite
 # database called data.sqlite in the current working directory which has at

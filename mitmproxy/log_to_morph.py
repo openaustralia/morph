@@ -21,7 +21,7 @@ def response(context, flow):
   try:
     s = urllib.urlopen(url, params)
     s.close()
-  # If we can't contact the morph server still handle this request.
+  # If we can't contact the morph.io server still handle this request.
   # If we let this exception pass up the chain the request would get dropped
   except IOError, e:
-    print "Error contacting Morph server:", e
+    print "Error contacting morph.io server:", e

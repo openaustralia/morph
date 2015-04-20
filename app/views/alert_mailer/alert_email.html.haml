@@ -204,7 +204,7 @@
                   %h2
                     -# Hacky way to get full url in there
                     = image_tag attachments['logo_75x75.png'].url, size: "75x75"
-                    = link_to "Morph", root_url(@analytics_params)
+                    = link_to "morph.io", root_url(@analytics_params)
                     is letting you know that
                   - @broken_runs.each do |run|
                     %h3
@@ -235,5 +235,5 @@
                   %p
                     Annoyed by these emails? Then
                     = link_to "change what you're watching", watching_user_url(@user, @analytics_params)
-                  %p= link_to "Morph.io", root_url(@analytics_params)
+                  %p= link_to "morph.io", root_url(@analytics_params)
         %td

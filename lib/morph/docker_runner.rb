@@ -30,12 +30,12 @@ module Morph
         c = Docker::Container.create(container_options, conn_interactive)
       rescue Excon::Errors::SocketError => e
         text = "Could not connect to Docker server: #{e}"
-        wrapper.call(:log, :internalerr, "Morph internal error: #{text}\n")
+        wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
         wrapper.call(:log, :internalerr, "Requeueing...\n")
         raise text
       rescue Docker::Error::NotFoundError => e
         text = "Could not find docker image #{options[:image_name]}"
-        wrapper.call(:log, :internalerr, "Morph internal error: #{text}\n")
+        wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
         wrapper.call(:log, :internalerr, "Requeueing...\n")
         raise text
       end
@@ -62,7 +62,7 @@ module Morph
         status_code = c.json["State"]["ExitCode"]
         puts "Docker container finished..."
       rescue Exception => e
-        wrapper.call(:log,  :internalerr, "Morph internal error: #{e}\n")
+        wrapper.call(:log,  :internalerr, "morph.io internal error: #{e}\n")
         wrapper.call(:log, :internalerr, "Stopping current container and requeueing\n")
         c.kill
         raise e
