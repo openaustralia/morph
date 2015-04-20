@@ -15,15 +15,6 @@ class Domain < ActiveRecord::Base
     update_attributes(Domain.lookup_metadata_remote(name))
   end
 
-  # Lookup and cache meta information for a domain
-  def self.lookup_meta(domain_name)
-    # TODO If the last time the meta info was grabbed was a long time ago, refresh it
-    domain = ActiveRecord::Base.transaction do
-      find_by(name: domain_name) || create!(lookup_metadata_remote(domain_name).merge(name: domain_name))
-    end
-    domain.meta
-  end
-
   def self.lookup_metadata_remote(domain_name)
     begin
       doc = RestClient::Resource.new("http://#{domain_name}", verify_ssl: OpenSSL::SSL::VERIFY_NONE).get
