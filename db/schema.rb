@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150420013101) do
+ActiveRecord::Schema.define(version: 20150420040251) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -61,7 +61,6 @@ ActiveRecord::Schema.define(version: 20150420013101) do
     t.integer  "run_id"
     t.string   "method"
     t.string   "scheme"
-    t.string   "host"
     t.text     "path"
     t.integer  "request_size"
     t.integer  "response_size"
@@ -70,7 +69,7 @@ ActiveRecord::Schema.define(version: 20150420013101) do
     t.integer  "domain_id"
   end
 
-  add_index "connection_logs", ["host"], name: "index_connection_logs_on_host", using: :btree
+  add_index "connection_logs", ["domain_id"], name: "index_connection_logs_on_domain_id", using: :btree
   add_index "connection_logs", ["run_id"], name: "index_connection_logs_on_run_id", using: :btree
 
   create_table "contributions", force: true do |t|
