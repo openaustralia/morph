@@ -174,7 +174,7 @@ class Run < ActiveRecord::Base
     end
   end
 
-  def scraped_domain_objects
+  def scraped_domains
     Domain.find(connection_logs.group(:domain_id).order(:domain_id).pluck(:domain_id))
   end
 end
