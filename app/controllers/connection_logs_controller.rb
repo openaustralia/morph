@@ -15,7 +15,6 @@ class ConnectionLogsController < ApplicationController
         ip_address: params[:ip_address],
         method: params[:method],
         scheme: params[:scheme],
-        host: params[:host],
         domain_id: domain.id,
         path: params[:path],
         request_size: params[:request_size],
