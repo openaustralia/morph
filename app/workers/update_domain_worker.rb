@@ -1,4 +1,4 @@
-class NewDomainWorker
+class UpdateDomainWorker
   include Sidekiq::Worker
   sidekiq_options queue: :small
 

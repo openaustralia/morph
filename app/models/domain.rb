@@ -1,4 +1,4 @@
-# For the benefit of NewDomainWorker
+# For the benefit of UpdateDomainWorker
 require "nokogiri"
 
 class Domain < ActiveRecord::Base

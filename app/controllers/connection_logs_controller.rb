@@ -7,7 +7,7 @@ class ConnectionLogsController < ApplicationController
         domain = Domain.find_by(name: params[:host])
         if domain.nil?
           domain = Domain.create!(name: params[:host])
-          NewDomainWorker.perform_async(params[:host])
+          UpdateDomainWorker.perform_async(params[:host])
         end
       end
       ConnectionLog.create!(

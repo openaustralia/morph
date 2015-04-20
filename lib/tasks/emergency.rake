@@ -37,7 +37,7 @@ namespace :app do
         else
           puts "Queueing #{index + 1}/#{total} #{domain}"
           Domain.create!(name: domain)
-          NewDomainWorker.perform_async(domain)
+          UpdateDomainWorker.perform_async(domain)
         end
       end
     end
