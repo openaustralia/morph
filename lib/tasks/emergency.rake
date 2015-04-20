@@ -36,8 +36,8 @@ namespace :app do
           puts "Skipping #{index + 1}/#{total} #{domain}"
         else
           puts "Queueing #{index + 1}/#{total} #{domain}"
-          Domain.create!(name: domain)
-          UpdateDomainWorker.perform_async(domain)
+          d = Domain.create!(name: domain)
+          UpdateDomainWorker.perform_async(d.id)
         end
       end
     end
