@@ -177,6 +177,10 @@ class Run < ActiveRecord::Base
   # List of domains that this scraper run has scraped
   # Note that these are not urls, just domain names
   def scraped_domains
-    connection_logs.group(:host).order(:host).pluck(:host)
+    scraped_domain_objects.map{|d| d.name}
+  end
+
+  def scraped_domain_objects
+    Domain.find(connection_logs.group(:domain_id).order(:domain_id).pluck(:domain_id))
   end
 end
