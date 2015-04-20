@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150417052803) do
+ActiveRecord::Schema.define(version: 20150420013101) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 20150417052803) do
     t.integer  "response_size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "domain_id"
   end
 
   add_index "connection_logs", ["host"], name: "index_connection_logs_on_host", using: :btree
