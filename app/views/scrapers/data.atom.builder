@@ -1,6 +1,6 @@
 xml.instruct! :xml, :version => "1.0"
 xml.feed :xmlns => "http://www.w3.org/2005/Atom", "xmlns:dc" => "http://purl.org/dc/elements/1.1/" do
-  xml.title "Morph: #{@scraper.full_name}"
+  xml.title "morph.io: #{@scraper.full_name}"
   xml.subtitle @scraper.description
   xml.updated DateTime.parse(@scraper.updated_at.to_s).rfc3339
   xml.author do

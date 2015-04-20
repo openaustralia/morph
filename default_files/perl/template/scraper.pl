@@ -1,4 +1,4 @@
-# This is a template for a Perl scraper on Morph (https://morph.io)
+# This is a template for a Perl scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
 # use LWP::Simple;
@@ -30,7 +30,7 @@
 # }} @rows]);
 
 # You don't have to do things with the HTML::TreeBuilder and Database::DumpTruck
-# libraries. You can use whatever libraries are installed on Morph for Perl
+# libraries. You can use whatever libraries are installed on morph.io for Perl
 # (https://github.com/openaustralia/morph-docker-perl/blob/master/Dockerfile)
 # and all that matters is that your final data is written to an Sqlite
 # database called data.sqlite in the current working directory which has at

@@ -18,17 +18,17 @@ describe AlertMailer do
 
       it { email.from.should == ["contact@morph.io"]}
       it { email.to.should == ["matthew@oaf.org.au"]}
-      it { email.subject.should == "Morph: 1 scraper you are watching is erroring" }
+      it { email.subject.should == "morph.io: 1 scraper you are watching is erroring" }
     end
 
     context "two broken scrapers" do
       let(:broken_runs) { [run1, run2] }
       let(:email) { AlertMailer.alert_email(user, broken_runs, 32) }
 
-      it { email.subject.should == "Morph: 2 scrapers you are watching are erroring" }
+      it { email.subject.should == "morph.io: 2 scrapers you are watching are erroring" }
       it do
         email.text_part.body.to_s.should == <<-EOF
-Morph is letting you know that
+morph.io is letting you know that
 
 
 planningalerts-scrapers/spear errored
@@ -49,13 +49,13 @@ PHP Fatal error: Call to a member function find() on a non-object in /repo/scrap
 
 -----
 Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
-Morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
+morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
         EOF
       end
 
       it do
         expected = <<-EOF
-<a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">Morph</a>
+<a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">morph.io</a>
 is letting you know that
         EOF
         email.html_part.body.to_s.should include(expected)
@@ -90,7 +90,7 @@ It has been erroring for 3 days
 Annoyed by these emails? Then
 <a href="http://dev.morph.io/users/mlandauer/watching?utm_medium=email&amp;utm_source=alerts">change what you&#39;re watching</a>
 </p>
-<p><a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">Morph.io</a></p>
+<p><a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">morph.io</a></p>
         EOF
         email.html_part.body.to_s.should include(expected)
       end
@@ -100,7 +100,7 @@ Annoyed by these emails? Then
       it "should trunctate the log output" do
         run1.stub(error_text: "This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
         AlertMailer.alert_email(user, [run1], 32).text_part.body.to_s.should == <<-EOF
-Morph is letting you know that
+morph.io is letting you know that
 
 
 planningalerts-scrapers/campbelltown errored
@@ -119,7 +119,7 @@ Line five
 
 -----
 Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
-Morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
+morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
         EOF
       end
     end

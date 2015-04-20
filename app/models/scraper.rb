@@ -25,7 +25,7 @@ class Scraper < ActiveRecord::Base
 
   validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
   validates :owner, presence: true
-  validates :name, uniqueness: { scope: :owner, message: 'is already taken on Morph' }
+  validates :name, uniqueness: { scope: :owner, message: 'is already taken on morph.io' }
   validate :not_used_on_github, on: :create, unless: :github_id
   with_options if: :scraperwiki_shortname, if: :scraperwiki_url, on: :create do |s|
     s.validate :exists_on_scraperwiki
@@ -42,7 +42,7 @@ class Scraper < ActiveRecord::Base
     (watchers + owner.watchers).uniq
   end
 
-  # Given a scraper name on github populates the fields for a morph scraper but doesn't save it
+  # Given a scraper name on github populates the fields for a morph.io scraper but doesn't save it
   def self.new_from_github(full_name, octokit_client)
     repo = octokit_client.repository(full_name)
     repo_owner = Owner.find_by_nickname(repo.owner.login)
@@ -366,7 +366,7 @@ class Scraper < ActiveRecord::Base
     # Add another commit (but only if necessary) to translate the code so it runs here
     unless scraperwiki.translated_code == scraperwiki.code
       add_commit_to_master_on_github(forked_by, {scraperwiki.language.scraper_filename => scraperwiki.translated_code},
-        "Automatic update to make ScraperWiki scraper work on Morph")
+        "Automatic update to make ScraperWiki scraper work on morph.io")
     end
 
     create_scraper_progress.update("Synching repository", 80)

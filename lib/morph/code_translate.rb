@@ -1,6 +1,6 @@
 module Morph
   module CodeTranslate
-    # Translate Ruby code on ScraperWiki to something that will run on Morph
+    # Translate Ruby code on ScraperWiki to something that will run on morph.io
     def self.translate(language_key, code)
       case language_key
       when :ruby
