@@ -4,88 +4,54 @@ There's also lots of stuff that changes under the
 hood. If you're interested in seeing those too, look at the
 [full list of commits](https://github.com/openaustralia/morph/commits/master).
 
-### May 17
-For the case where people need to use secret keys in their scrapers (for instance
-accessing an API that requires them), you can now set one or more environment variables in the
-web interface that can be used in your scraper. Each scraper can have its own set
-of environment variables. The variables are viewable only by
-you or people who have write access to that scraper.
+## Summary for May & April 2015
+It's been a busy few weeks as we're working hard to further improve the user experience by tweaking lots of small things and adding a few much-needed features.
 
-Go to the scraper settings to access.
-
-On creating a scraper you can now optionally add a description.
-
-### May 5
-Added progress bar during the creation of a new scraper and adding a scraper from GitHub.
-
-### May 1
-Unfortunately we had our first case of abuse today. So, we suspended a user which of course
-involved us adding support for suspending a user!
-
-### April 26
-There's now an [example page that you can try out your scraping skills on](<%= examples_australian_members_of_parliament_documentation_index_path %>). It's based on the official
-list of Australian members of parliament.
-
-### April 19
-You can now write scrapers in Perl thanks to the effort of [@lkundrak](/lkundrak).
+We're also stabilising and improving the buildpacks support so that everyone can be seamlessly
+migrated to using buildpacks sometime in the coming weeks.
 
 ### April 18
-* In the API add support for atom feeds. Thank you to [@pezholio](https://github.com/pezholio) for this!
-  It works in a really flexible way where you can make any field of your data map to different
-  bits of the atom feed like the content and the link in each item. [Have a look](<%= api_documentation_index_path %>).
-* Added this "What's new" page
+* Show the meta (or title) information for domains scraped on the scraper page
+* Data table on scraper page is now responsive (works well across screen sizes) and has improved display when table is wider than current screen width
 
 ### April 17
-* morph.io now only needs to ask you for public repository read/write permissions for GitHub.
-  This is what we previously said:
-
-  > Why do you ask for read/write access to all my GitHub repositories, even the private ones?
-
-  > We don't in fact access your private repositories at all. Unfortunately because of a limitation
-  > in the GitHub API we have to ask for write permissions to private repositories to be able to
-  > create public repositories. I know it seems crazy but that's how they're doing things. We're
-  > hoping that soon GitHub will provide more fine-grained access control which will solve this.
-  > To see in detail what's happened so far see the
-  > [issue on GitHub](https://github.com/openaustralia/morph/issues/230).
-
-  This is **no longer the case**. Thank you Github for
-  [changing your API](https://developer.github.com/changes/2014-04-04-create-public-repo-without-repo-scope/).
-
-* You might have heard about the [heartbleed bug](http://heartbleed.com/). On the day heartbleed was
-  announced we patched the morph.io server. This stops anyone from exploiting the bug to gain
-  access to the SSL private key. No passwords are stored on our server because we authenticate
-  against GitHub using oauth. To be safe we've refreshed everyone's github oauth access token.
+* Put "add new scraper button" on organisation page
 
 ### April 16
-* Made the scraper run button more prominent
-* Speedup up the home page and the scraper pages
-* Changed the scraper error behaviour. We used to consider any output to standard error from
-  a scraper as an "error". This was put in place to catch certain types of errors in PHP
-  which did not cause a non-zero exit status. We've realised the error in our way as it does
-  mean in other languages legitimate warnings are causing scraper "errors" which isn't good.
-  So, now only the exit status is used to determine whether the scraper has errored or not.
+* When using buildpacks create template scraper that includes configuration files
 
-### April 12
-* Small content tweaks
-* Fixed some ScraperWiki URLs that had changed in ScraperWiki becoming read-only.
+### April 15
+* Fixed morph.io command-line tool (morph-cli gem) which had been broken since the addition of secret environment variable support to morph.io.
+* Fixed morph.io command-line tool with buildpacks
+* Improve display of database size on scraper page
+* If local sqlite database gets corrupted let the user know and let them know how to fix it.
+* Improvements to layout for navigation bar, including search and menu toggler icon
 
-### April 11
-* Fix problem caused by table names with spaces in SQLite
+### April 14
+* A brand new landing page! (visible when you're not logged in)
 
-### Mar 28
-* On each run it now shows you the number of database records that were added, removed or changed.
+### April 13
+* Fix issue with symlinks in repos with buildpacks
 
-### Mar 27
-* Improve error checking on ScraperWiki form page
+### April 10
+* Improve loading of small avatar images
 
-### Mar 26
-* Small visual design tweaks
-* Show number of watchers on scraper pages with a link to the full list of watchers
+### April 8
+* With buildpacks scraper output now streams in real time to the console
 
-### Mar 25
-* Design fixes
-* Redesigned user pages
-* Updated API documentation
+### April 7
+* Improve console output when outputting utf-8
+* Show domains (and number of pages scraped) for each scraper
+
+### May 30
+* Improve reliability of how stopped scrapers are cleaned up which reduces occurences of "stuck" scrapers
+* Add basic search over scrapers
+
+### May 26
+* Keep people signed in on Firefox browser
+
+### Feb 17
+* If an update to the scraper code has been force pushed to github, make morph.io pick up the changes correctly
 
 ### And further back
 
