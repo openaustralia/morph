@@ -1,5 +1,6 @@
 class ConnectionLog < ActiveRecord::Base
   attr_accessor :ip_address
+  belongs_to :domain
 
   before_save :update_run_id_from_ip_address
 
