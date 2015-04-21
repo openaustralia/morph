@@ -19,7 +19,7 @@
     %li{class: ('active' if @type == "Users"), role: "presentation"}
       = link_to search_path(q: @q, type: "Users") do
         Users
-        %span.badge 7
+        %span.badge #{@users.size}
 
   - if @type == "Users"
     = render partial: "users/fake_users_list"
