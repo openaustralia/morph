@@ -26,6 +26,10 @@ module Morph
         status_code
       end
 
+      def self.stop(run)
+        Morph::DockerRunner.stop(docker_container_name(run))
+      end
+
       def self.docker_image(language)
         "openaustralia/morph-#{language.key}"
       end

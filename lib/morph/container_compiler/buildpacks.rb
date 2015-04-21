@@ -47,6 +47,13 @@ module Morph
         status_code
       end
 
+      # Currently this will only stop the main run of the scraper. It won't
+      # actually stop the compile stage
+      # TODO Make this stop the compile stage
+      def self.stop(run)
+        Morph::DockerRunner.stop(docker_container_name(run))
+      end
+
       # file_environment needs to also include a Dockerfile with content
       def self.docker_build_from_files(file_environment)
         wrapper = Multiblock.wrapper

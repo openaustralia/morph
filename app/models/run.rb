@@ -152,7 +152,7 @@ class Run < ActiveRecord::Base
   end
 
   def stop!
-    Morph::DockerRunner.stop(docker_container_name)
+    container_compiler.stop(self)
     update_attributes(status_code: 130, finished_at: Time.now)
   end
 
