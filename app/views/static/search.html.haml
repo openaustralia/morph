@@ -17,6 +17,8 @@
       %li{role: "presentation"}
         = link_to "Users", "#"
 
+  = render partial: "users/fake_users_list"
+
   = paginate @scrapers
   = render partial: "sync/scrapers/scraper", collection: @scrapers
   = paginate @scrapers
