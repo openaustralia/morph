@@ -12,11 +12,11 @@
           %button.btn.btn-primary.btn-lg{type: "submit"} Search
 
   %ul.nav.nav-tabs
-    %li{role: "presentation"}
+    %li{class: ('active' unless @type == "Users"), role: "presentation"}
       = link_to "#" do
         Scrapers
         %span.badge #{@scrapers.size}
-    %li.active{role: "presentation"}
+    %li{class: ('active' if @type == "Users"), role: "presentation"}
       = link_to "#" do
         Users
         %span.badge 7
