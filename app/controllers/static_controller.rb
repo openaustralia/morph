@@ -5,5 +5,6 @@ class StaticController < ApplicationController
   def search
     @q = params[:q]
     @scrapers = Scraper.search(@q)
+    @type = params[:type]
   end
 end
