@@ -11,6 +11,12 @@
       .input-group-btn
         %button.btn.btn-primary{type: "submit"} Search
 
+  %ul.nav.nav-tabs
+      %li.active{role: "presentation"}
+        = link_to "Scrapers", "#"
+      %li{role: "presentation"}
+        = link_to "Users", "#"
+
   = paginate @scrapers
   = render partial: "sync/scrapers/scraper", collection: @scrapers
   = paginate @scrapers
