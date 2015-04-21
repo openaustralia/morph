@@ -11,41 +11,42 @@
         .input-group-btn
           %button.btn.btn-primary.btn-lg{type: "submit"} Search
 
-  %ul.nav.nav-tabs
-    %li{class: ('active' unless @type == "Users"), role: "presentation"}
-      = link_to search_path(q: @q, type: "Scrapers") do
-        Scrapers
-        %span.badge #{@scrapers.size}
-    %li{class: ('active' if @type == "Users"), role: "presentation"}
-      = link_to search_path(q: @q, type: "Users") do
-        Users
-        %span.badge #{@users.size}
+  - if @q
+    %ul.nav.nav-tabs
+      %li{class: ('active' unless @type == "Users"), role: "presentation"}
+        = link_to search_path(q: @q, type: "Scrapers") do
+          Scrapers
+          %span.badge #{@scrapers.size}
+      %li{class: ('active' if @type == "Users"), role: "presentation"}
+        = link_to search_path(q: @q, type: "Users") do
+          Users
+          %span.badge #{@users.size}
 
-  - if @type == "Users"
-    = paginate @users
-    = render partial: "users/user", collection: @users
-    = paginate @users
-  - else
-    = paginate @scrapers
-    = render partial: "sync/scrapers/scraper", collection: @scrapers
-    = paginate @scrapers
+    - if @type == "Users"
+      = paginate @users
+      = render partial: "users/user", collection: @users
+      = paginate @users
+    - else
+      = paginate @scrapers
+      = render partial: "sync/scrapers/scraper", collection: @scrapers
+      = paginate @scrapers
 
-  - if @type == "Users" && @users.empty? && @scrapers.any?
-    Sorry, we couldn’t find any users relevant to your search term
-    %strong “#{@q}”.
-  - elsif @type != "Users" && @scrapers.empty? && @users.any?
-    Sorry, we couldn’t find any scrapers relevant to your search term
-    %strong “#{@q}”.
-  - elsif @scrapers.empty? && @users.empty?
-    %h2 No results found
-    %p
-      Sorry, we couldn't find any scrapers or users relevant to your search term
+    - if @type == "Users" && @users.empty? && @scrapers.any?
+      Sorry, we couldn’t find any users relevant to your search term
       %strong “#{@q}”.
-    %p
-      Suggestions:
+    - elsif @type != "Users" && @scrapers.empty? && @users.any?
+      Sorry, we couldn’t find any scrapers relevant to your search term
+      %strong “#{@q}”.
+    - elsif @scrapers.empty? && @users.empty?
+      %h2 No results found
+      %p
+        Sorry, we couldn't find any scrapers or users relevant to your search term
+        %strong “#{@q}”.
+      %p
+        Suggestions:
 
-    %ul
-      %li check the spelling
-      %li try some more general or alternate terms
+      %ul
+        %li check the spelling
+        %li try some more general or alternate terms
 
-    %p You could also try browsing all #{link_to "scrapers", scrapers_path} or #{link_to "users", users_path}.
+      %p You could also try browsing all #{link_to "scrapers", scrapers_path} or #{link_to "users", users_path}.
