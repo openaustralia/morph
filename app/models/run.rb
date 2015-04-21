@@ -93,6 +93,10 @@ class Run < ActiveRecord::Base
     "https://github.com/#{full_name}/commit/#{git_revision}"
   end
 
+  def container_compiler
+    Morph::ContainerCompiler::Base.create(owner.buildpacks ? :buildpacks : :legacy)
+  end
+
   def go_with_logging
     puts "Starting...\n"
     database.backup
@@ -110,7 +114,7 @@ class Run < ActiveRecord::Base
       return
     end
 
-    status_code = Morph::ContainerCompiler::Base.create(owner.buildpacks ? :buildpacks : :legacy).compile_and_run(self) do |on|
+    status_code = container_compiler.compile_and_run(self) do |on|
       on.log {|s,c| yield s,c}
       on.ip_address do |ip|
         # Store the ip address of the container for this run
