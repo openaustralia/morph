@@ -30,10 +30,10 @@
     = render partial: "sync/scrapers/scraper", collection: @scrapers
     = paginate @scrapers
 
-  - if @scrapers.empty?
+  - if @scrapers.empty? && @users.empty?
     %h2 No results found
     %p
-      Sorry, we couldn't find any scrapers relevant to your search term
+      Sorry, we couldn't find any scrapers or users relevant to your search term
       %strong “#{@q}”.
     %p
       Suggestions:
