@@ -21,11 +21,12 @@
         Users
         %span.badge 7
 
-  = render partial: "users/fake_users_list"
-
-  -# = paginate @scrapers
-  -# = render partial: "sync/scrapers/scraper", collection: @scrapers
-  -# = paginate @scrapers
+  - if @type == "Users"
+    = render partial: "users/fake_users_list"
+  - else
+    = paginate @scrapers
+    = render partial: "sync/scrapers/scraper", collection: @scrapers
+    = paginate @scrapers
 
   - if @scrapers.empty?
     %h2 No results found
