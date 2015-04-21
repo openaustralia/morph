@@ -12,10 +12,10 @@
         %button.btn.btn-primary{type: "submit"} Search
 
   %ul.nav.nav-tabs
-      %li.active{role: "presentation"}
-        = link_to "Scrapers", "#"
-      %li{role: "presentation"}
-        = link_to "Users", "#"
+    %li{role: "presentation"}
+      = link_to "Scrapers", "#"
+    %li.active{role: "presentation"}
+      = link_to "Users", "#"
 
   = render partial: "users/fake_users_list"
 
