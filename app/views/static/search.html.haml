@@ -5,7 +5,7 @@
   .search-header
     %form.form-inline{action: search_path}
       %h1.label-heading
-        %label Search Scrapers and Users
+        %label Search
       .input-group.col-sm-12.col-md-8.col-lg-7
         %input.form-control.input-lg#query{required: "required", type: "search", autofocus: (@q.blank? ? true : false), maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
         .input-group-btn
