@@ -114,9 +114,13 @@ module Morph
           on.log {|s,c| wrapper.call(:log, :internalout, c)}
         end
         # Insert the configuration part of the application code into the container and build
-        docker_build_command(i,
-          ["ADD code_config.tar /app", "ENV CURL_TIMEOUT 180", "RUN /build/builder"],
+        i2 = docker_build_command(i,
+          ["ADD code_config.tar /app"],
           "code_config.tar" => tar_config_files(repo_path)) do |on|
+          on.log {|s,c| wrapper.call(:log, :internalout, c)}
+        end
+        docker_build_command(i2,
+          ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], {}) do |on|
           on.log {|s,c| wrapper.call(:log, :internalout, c)}
         end
       end
