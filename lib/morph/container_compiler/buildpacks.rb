@@ -113,12 +113,13 @@ module Morph
         i = get_or_pull_image('openaustralia/buildstep') do |on|
           on.log {|s,c| wrapper.call(:log, :internalout, c)}
         end
-        # Insert the configuration part of the application code into the container and build
+        # Insert the configuration part of the application code into the container
+        wrapper.call(:log, :internalout, "Injecting configuration...\n")
         i2 = docker_build_command(i,
           ["ADD code_config.tar /app"],
           "code_config.tar" => tar_config_files(repo_path)) do |on|
-          on.log {|s,c| wrapper.call(:log, :internalout, c)}
         end
+        # And build
         docker_build_command(i2,
           ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], {}) do |on|
           on.log {|s,c| wrapper.call(:log, :internalout, c)}
