@@ -18,8 +18,11 @@ module Morph
         end
 
         # Insert the actual code into the container
-        i2 = docker_build_command(i1, "add code.tar /app", "code.tar" => tar_run_files(run.repo_path)) do |on|
-          on.log {|s,c| wrapper.call(:log, :internalout, c)}
+        wrapper.call(:log, :internalout, "Injecting scraper code...\n")
+        i2 = docker_build_command(i1, "add code.tar /app",
+          "code.tar" => tar_run_files(run.repo_path)) do |on|
+          # Note that we're not sending the output of this to the console
+          # because it is relatively short running and is otherwise confusing
         end
 
         command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
