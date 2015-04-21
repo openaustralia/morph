@@ -13,11 +13,11 @@
 
   %ul.nav.nav-tabs
     %li{class: ('active' unless @type == "Users"), role: "presentation"}
-      = link_to "#" do
+      = link_to search_path(q: @q, type: "Scrapers") do
         Scrapers
         %span.badge #{@scrapers.size}
     %li{class: ('active' if @type == "Users"), role: "presentation"}
-      = link_to "#" do
+      = link_to search_path(q: @q, type: "Users") do
         Users
         %span.badge 7
 
