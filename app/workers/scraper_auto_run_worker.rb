@@ -1,6 +1,6 @@
 class ScraperAutoRunWorker
   include Sidekiq::Worker
-  sidekiq_options queue: :low
+  sidekiq_options queue: :low, backtrace: true
 
   def perform(scraper_id)
     scraper = Scraper.find(scraper_id)
