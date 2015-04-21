@@ -1,7 +1,15 @@
 .container
-  %h1
-    Search for
-    = @q
+  -# %h1
+  -#   Search for
+  -#   = @q
+
+  %form.form-inline.search{action: search_path}
+    %h1.label-heading
+      %label Search Scrapers and Users:
+    .input-group.col-sm-12.col-md-8.col-lg-7
+      %input.form-control#query{required: "required", type: "search", autofocus: (@q.blank? ? true : false), maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
+      .input-group-btn
+        %button.btn.btn-primary{type: "submit"} Search
 
   = paginate @scrapers
   = render partial: "sync/scrapers/scraper", collection: @scrapers
