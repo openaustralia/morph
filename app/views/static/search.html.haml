@@ -22,7 +22,9 @@
         %span.badge #{@users.size}
 
   - if @type == "Users"
-    = render partial: "users/fake_users_list"
+    = paginate @users
+    = render partial: "users/user", collection: @users
+    = paginate @users
   - else
     = paginate @scrapers
     = render partial: "sync/scrapers/scraper", collection: @scrapers
