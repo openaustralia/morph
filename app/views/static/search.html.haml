@@ -13,9 +13,13 @@
 
   %ul.nav.nav-tabs
     %li{role: "presentation"}
-      = link_to "Scrapers", "#"
+      = link_to "#" do
+        Scrapers
+        %span.badge #{@scrapers.size}
     %li.active{role: "presentation"}
-      = link_to "Users", "#"
+      = link_to "#" do
+        Users
+        %span.badge 7
 
   = render partial: "users/fake_users_list"
 
