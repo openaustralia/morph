@@ -3,7 +3,7 @@
   -#   Search for
   -#   = @q
   .search-header
-    %form.form-inline{action: search_path}
+    =form_tag search_path, method: "get", class: "form-inline" do
       %h1.label-heading
         %label Search
       .input-group.col-sm-12.col-md-8.col-lg-7
