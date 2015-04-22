@@ -12,7 +12,7 @@
         - else
           = highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
       -# Hmmm... not sure I should just blindly mark it as safe
-      %strong= highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
+      %strong.owner-nickname= highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
       - if !organization.company.blank?
         -# Hmmm... not sure I should just blindly mark it as safe
         %div= highlight[:company] ? highlight[:company].html_safe : organization.company
