@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   end
 
   root 'static#index'
-  get 'search', to: "static#search"
+  get 'search', to: "search#search"
 
   resources :documentation, only: :index do
     collection do

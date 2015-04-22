@@ -1,0 +1,50 @@
+.container
+  .search-header
+    =form_tag search_path, method: "get", class: "form-inline" do
+      %h1.label-heading
+        %label Search
+      .input-group.col-sm-12.col-md-8.col-lg-7
+        = hidden_field_tag :type, @type
+        %input.form-control.input-lg#query{required: "required", type: "search", autofocus: (@q.blank? ? true : false), maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
+        .input-group-btn
+          %button.btn.btn-primary.btn-lg{type: "submit"} Search
+
+  - if @q
+    %ul.nav.nav-tabs
+      %li{class: ('active' unless @type == "users"), role: "presentation"}
+        = link_to search_path(q: @q, type: nil) do
+          Scrapers
+          %span.badge #{@scrapers.size}
+      %li{class: ('active' if @type == "users"), role: "presentation"}
+        = link_to search_path(q: @q, type: "users") do
+          Users
+          %span.badge #{@owners.size}
+
+    - if @type == "users"
+      = paginate @owners
+      = render @owners
+      = paginate @owners
+    - else
+      = paginate @scrapers
+      = render partial: "sync/scrapers/scraper", collection: @scrapers
+      = paginate @scrapers
+
+    - if @type == "users" && @owners.empty? && @scrapers.any?
+      Sorry, we couldn’t find any users relevant to your search term
+      %strong “#{@q}”.
+    - elsif @type != "users" && @scrapers.empty? && @owners.any?
+      Sorry, we couldn’t find any scrapers relevant to your search term
+      %strong “#{@q}”.
+    - elsif @scrapers.empty? && @owners.empty?
+      %h2 No results found
+      %p
+        Sorry, we couldn't find any scrapers or users relevant to your search term
+        %strong “#{@q}”.
+      %p
+        Suggestions:
+
+      %ul
+        %li check the spelling
+        %li try some more general or alternate terms
+
+      %p You could also try browsing all #{link_to "scrapers", scrapers_path} or #{link_to "users", users_path}.
