@@ -21,7 +21,7 @@
 
     - if @type == "Users"
       = paginate @owners
-      = render partial: "users/user", collection: @owners
+      = render @owners
       = paginate @owners
     - else
       = paginate @scrapers
