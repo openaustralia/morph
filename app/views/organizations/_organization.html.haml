@@ -3,13 +3,30 @@
     .col-md-2
       = owner_image(organization, 80, false)
     .col-md-7
-      %div= organization.nickname
+      %div
+        - if defined?(details) && details[:highlight] && details[:highlight][:nickname]
+          = details[:highlight][:nickname].html_safe
+        - else
+          = organization.nickname
       - if organization.name
-        %div= organization.name
+        %div
+          - if defined?(details) && details[:highlight] && details[:highlight][:name]
+            -# Hmmm... not sure I should just blindly mark it as safe
+            = details[:highlight][:name].html_safe
+          - else
+            = organization.name
       - if !organization.company.blank?
-        %div= organization.company
+        %div
+          - if defined?(details) && details[:highlight] && details[:highlight][:company]
+            = details[:highlight][:company].html_safe
+          - else
+            = organization.company
       - elsif !organization.blog.blank?
-        %div= organization.blog
+        %div
+          - if defined?(details) && details[:highlight] && details[:highlight][:blog]
+            = details[:highlight][:blog].html_safe
+          - else
+            = organization.blog
     .col-md-3
       - if organization.scrapers.count > 0
         %div
