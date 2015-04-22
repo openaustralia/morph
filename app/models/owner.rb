@@ -6,7 +6,7 @@ class Owner < ActiveRecord::Base
 
   # Using smaller batch_size than the default for the time being because reindexing
   # causes elasticsearch on the local VM to run out of memory
-  searchkick highlight: [:nickname, :name], batch_size: 100 # defaults to 1000
+  searchkick batch_size: 100 # defaults to 1000
 
   has_many :scrapers, inverse_of: :owner
   has_many :runs

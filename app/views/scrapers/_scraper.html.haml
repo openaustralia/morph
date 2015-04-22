@@ -1,0 +1,8 @@
+- highlight = {} unless defined?(highlight) && highlight
+
+= link_to scraper, class: "list-group-item" do
+  %div.scraper-block
+    %strong.full_name= highlight[:full_name] ? highlight[:full_name].html_safe : scraper.full_name
+    %div
+      - unless scraper.description.blank?
+        = highlight[:description] ? highlight[:description].html_safe : scraper.description

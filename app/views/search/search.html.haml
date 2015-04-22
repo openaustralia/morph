@@ -27,7 +27,8 @@
       = paginate @owners
     - else
       .search-results
-        = render partial: "sync/scrapers/scraper", collection: @scrapers
+        - @scrapers.with_details.each do |scraper, details|
+          = render scraper, highlight: details[:highlight]
       = paginate @scrapers
 
     - if @type == "users" && @owners.empty? && @scrapers.any?
