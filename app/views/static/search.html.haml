@@ -17,24 +17,24 @@
       %li{class: ('active' if @type == "Users"), role: "presentation"}
         = link_to search_path(q: @q, type: "Users") do
           Users
-          %span.badge #{@users.size}
+          %span.badge #{@owners.size}
 
     - if @type == "Users"
-      = paginate @users
-      = render partial: "users/user", collection: @users
-      = paginate @users
+      = paginate @owners
+      = render partial: "users/user", collection: @owners
+      = paginate @owners
     - else
       = paginate @scrapers
       = render partial: "sync/scrapers/scraper", collection: @scrapers
       = paginate @scrapers
 
-    - if @type == "Users" && @users.empty? && @scrapers.any?
+    - if @type == "Users" && @owners.empty? && @scrapers.any?
       Sorry, we couldn’t find any users relevant to your search term
       %strong “#{@q}”.
-    - elsif @type != "Users" && @scrapers.empty? && @users.any?
+    - elsif @type != "Users" && @scrapers.empty? && @owners.any?
       Sorry, we couldn’t find any scrapers relevant to your search term
       %strong “#{@q}”.
-    - elsif @scrapers.empty? && @users.empty?
+    - elsif @scrapers.empty? && @owners.empty?
       %h2 No results found
       %p
         Sorry, we couldn't find any scrapers or users relevant to your search term
