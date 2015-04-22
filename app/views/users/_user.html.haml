@@ -6,7 +6,7 @@
       %div= user.nickname
       - if user.name
         %div
-          - if details && details[:highlight] && details[:highlight][:name]
+          - if defined?(details) && details[:highlight][:name]
             -# Hmmm... not sure I should just blindly mark it as safe
             = details[:highlight][:name].html_safe
           - else
