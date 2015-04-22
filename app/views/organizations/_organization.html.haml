@@ -8,9 +8,9 @@
       %h2.media-heading.h3
         - if organization.name
           -# Hmmm... not sure I should just blindly mark it as safe
-          %div= highlight[:name] ? highlight[:name].html_safe : organization.name
+          = highlight[:name] ? highlight[:name].html_safe : organization.name
         - else
-          %div= highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
+          = highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
       -# Hmmm... not sure I should just blindly mark it as safe
       %div= highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
       - if !organization.company.blank?
