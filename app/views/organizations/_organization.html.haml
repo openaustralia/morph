@@ -1,6 +1,6 @@
 - highlight = {} unless defined?(highlight) && highlight
 
-= link_to organization, class: "media" do
+= link_to organization, class: "owner-item media" do
   - if @q
     .media-left
       = owner_image(organization, 100, false)
