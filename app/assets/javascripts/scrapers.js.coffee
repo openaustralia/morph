@@ -49,7 +49,6 @@ setScrollWatcher = (scroller_frame) ->
       scroller_frame.removeClass("panel-scrolled-left")
 
 setScrollerFadeEffect = ->
-  console.log("In setScrollerFadeEffect")
   if $('.scroller-frame') && $('.scroller-panel')
     scroller_frame = $('#data-table .scroller-frame')
 
