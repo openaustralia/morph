@@ -13,7 +13,7 @@
           = highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
 
       -# Hmmm... not sure I should just blindly mark it as safe
-      %div= highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
+      %strong= highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
       - if !user.company.blank?
         -# Hmmm... not sure I should just blindly mark it as safe
         %div= highlight[:company] ? highlight[:company].html_safe : user.company
