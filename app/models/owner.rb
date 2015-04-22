@@ -18,7 +18,7 @@ class Owner < ActiveRecord::Base
 
   # Specify the data searchkick should index
   def search_data
-    as_json only: [:name, :nickname, :company, :blog]
+    as_json only: [:name, :nickname, :company]
   end
 
   # TODO Fix up type conversion
