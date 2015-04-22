@@ -21,13 +21,11 @@
           %span.badge #{@owners.size}
 
     - if @type == "users"
-      = paginate @owners
       .search-results
         - @owners.with_details.each do |owner, details|
           = render owner, highlight: details[:highlight]
       = paginate @owners
     - else
-      = paginate @scrapers
       .search-results
         = render partial: "sync/scrapers/scraper", collection: @scrapers
       = paginate @scrapers
