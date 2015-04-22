@@ -22,6 +22,7 @@
 
 .owner-item {
   display: block;
+  color: $text-color;
 
   + .owner-item {
     margin-top: 1.5em;
@@ -35,5 +36,6 @@
 
   .media-heading {
     margin-top: 5px;
+    color: $link-color;
   }
 }
