@@ -4,6 +4,10 @@ class Owner < ActiveRecord::Base
   extend FriendlyId
   friendly_id :nickname
 
+  # Using smaller batch_size than the default for the time being because reindexing
+  # causes elasticsearch on the local VM to run out of memory
+  searchkick batch_size: 100 # defaults to 1000
+
   has_many :scrapers, inverse_of: :owner
   has_many :runs
   before_create :set_api_key

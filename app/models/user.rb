@@ -1,8 +1,4 @@
 class User < Owner
-  # Using smaller batch_size than the default for the time being because reindexing
-  # causes elasticsearch on the local VM to run out of memory
-  searchkick batch_size: 100 # defaults to 1000
-
   # TODO Add :omniauthable
   devise :trackable, :rememberable, :omniauthable, :omniauth_providers => [:github]
   has_and_belongs_to_many :organizations, join_table: :organizations_users
