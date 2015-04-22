@@ -26,4 +26,10 @@
   + .owner-item {
     margin-top: 1.5em;
   }
+
+  .media-left {
+    @media (min-width: $screen-sm-min) {
+      padding-right: 15px;
+    }
+  }
 }
