@@ -1,32 +1,21 @@
+- highlight = {} unless defined?(highlight)
+
 = link_to user, class: "list-group-item" do
   .row
     .col-md-2
       = owner_image(user, 80, false)
     .col-md-7
-      %div
-        - if defined?(details) && details[:highlight] && details[:highlight][:nickname]
-          = details[:highlight][:nickname].html_safe
-        - else
-          = user.nickname
+      -# Hmmm... not sure I should just blindly mark it as safe
+      %div= highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
       - if user.name
-        %div
-          - if defined?(details) && details[:highlight] && details[:highlight][:name]
-            -# Hmmm... not sure I should just blindly mark it as safe
-            = details[:highlight][:name].html_safe
-          - else
-            = user.name
+        -# Hmmm... not sure I should just blindly mark it as safe
+        %div= highlight[:name] ? highlight[:name].html_safe : user.name
       - if !user.company.blank?
-        %div
-          - if defined?(details) && details[:highlight] && details[:highlight][:company]
-            = details[:highlight][:company].html_safe
-          - else
-            = user.company
+        -# Hmmm... not sure I should just blindly mark it as safe
+        %div= highlight[:company] ? highlight[:company].html_safe : user.company
       - elsif !user.blog.blank?
-        %div
-          - if defined?(details) && details[:highlight] && details[:highlight][:blog]
-            = details[:highlight][:blog].html_safe
-          - else
-            = user.blog
+        -# Hmmm... not sure I should just blindly mark it as safe
+        %div= highlight[:blog] ? highlight[:blog].html_safe : user.blog
     .col-md-3
       - if user.scrapers.count > 0
         %div
