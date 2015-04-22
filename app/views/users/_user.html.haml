@@ -5,11 +5,15 @@
     .media-left
       = owner_image(user, 80, false)
     .media-body
+      %h2.media-heading.h3
+        - if user.name
+          -# Hmmm... not sure I should just blindly mark it as safe
+          = highlight[:name] ? highlight[:name].html_safe : user.name
+        - else
+          = highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
+
       -# Hmmm... not sure I should just blindly mark it as safe
       %div= highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
-      - if user.name
-        -# Hmmm... not sure I should just blindly mark it as safe
-        %div= highlight[:name] ? highlight[:name].html_safe : user.name
       - if !user.company.blank?
         -# Hmmm... not sure I should just blindly mark it as safe
         %div= highlight[:company] ? highlight[:company].html_safe : user.company
