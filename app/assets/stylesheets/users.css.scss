@@ -19,3 +19,11 @@
   padding-top: 15px;
   padding-bottom: 15px;
 }
+
+.owner-item {
+  display: block;
+
+  + .owner-item {
+    margin-top: 1.5em;
+  }
+}
