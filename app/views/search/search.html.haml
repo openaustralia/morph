@@ -22,7 +22,8 @@
 
     - if @type == "users"
       = paginate @owners
-      = render @owners
+      - @owners.with_details.each do |owner, details|
+        = render owner, details: details
       = paginate @owners
     - else
       = paginate @scrapers
