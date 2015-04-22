@@ -29,7 +29,7 @@
     - else
       = paginate @scrapers
       .search-results
-        = render partial: "sync/scrapers/scraper", collection: @scrapers
+        = render @scrapers
       = paginate @scrapers
 
     - if @type == "users" && @owners.empty? && @scrapers.any?

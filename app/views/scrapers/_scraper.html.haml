@@ -1,0 +1,6 @@
+= link_to scraper, class: "list-group-item" do
+  %div.scraper-block
+    %strong.full_name= scraper.full_name
+    %div
+      - unless scraper.description.blank?
+        = scraper.description
