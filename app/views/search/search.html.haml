@@ -10,16 +10,16 @@
 
   - if @q
     %ul.nav.nav-tabs
-      %li{class: ('active' unless @type == "Users"), role: "presentation"}
-        = link_to search_path(q: @q, type: "Scrapers") do
+      %li{class: ('active' unless @type == "users"), role: "presentation"}
+        = link_to search_path(q: @q, type: "scrapers") do
           Scrapers
           %span.badge #{@scrapers.size}
-      %li{class: ('active' if @type == "Users"), role: "presentation"}
-        = link_to search_path(q: @q, type: "Users") do
+      %li{class: ('active' if @type == "users"), role: "presentation"}
+        = link_to search_path(q: @q, type: "users") do
           Users
           %span.badge #{@owners.size}
 
-    - if @type == "Users"
+    - if @type == "users"
       = paginate @owners
       = render @owners
       = paginate @owners
@@ -28,10 +28,10 @@
       = render partial: "sync/scrapers/scraper", collection: @scrapers
       = paginate @scrapers
 
-    - if @type == "Users" && @owners.empty? && @scrapers.any?
+    - if @type == "users" && @owners.empty? && @scrapers.any?
       Sorry, we couldn’t find any users relevant to your search term
       %strong “#{@q}”.
-    - elsif @type != "Users" && @scrapers.empty? && @owners.any?
+    - elsif @type != "users" && @scrapers.empty? && @owners.any?
       Sorry, we couldn’t find any scrapers relevant to your search term
       %strong “#{@q}”.
     - elsif @scrapers.empty? && @owners.empty?
