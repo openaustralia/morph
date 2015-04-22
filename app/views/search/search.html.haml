@@ -29,7 +29,8 @@
     - else
       = paginate @scrapers
       .search-results
-        = render @scrapers
+        - @scrapers.with_details.each do |scraper, details|
+          = render scraper, highlight: details[:highlight]
       = paginate @scrapers
 
     - if @type == "users" && @owners.empty? && @scrapers.any?
