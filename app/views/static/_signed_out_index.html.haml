@@ -1,8 +1,9 @@
-.banner.container#banner
-  %h2 Take the hassle out of web&nbsp;scraping
-  .lower
-    %h3 With all the power so you&nbsp;can scrape anything,&nbsp;anywhere
-    = link_to "Get started", user_omniauth_authorize_path(:github), class: "call-to-action btn btn-success btn-lg", id: "get_started_btn"
+.banner-wrapper
+  .banner.container#banner
+    %h2 Take the hassle out of web&nbsp;scraping
+    .lower
+      %h3 With all the power so you&nbsp;can scrape anything,&nbsp;anywhere
+      = link_to "Get started", user_omniauth_authorize_path(:github), class: "call-to-action btn btn-success btn-lg", id: "get_started_btn"
 
 :javascript
   $(".container#banner").backstretch("#{image_path("unsplash/tumblr_n10n1wmxiS1st5lhmo1_1280.jpg")}");
