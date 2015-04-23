@@ -8,7 +8,7 @@ mkdir -p $BACKUP_DIR
 # Created files should just readable (and writeable) by root
 umask 077 
 
-/usr/bin/innobackupex $BACKUP_DIR
+/usr/bin/innobackupex --compress $BACKUP_DIR
 
 no_backups=`ls -1 $BACKUP_DIR | wc -l`
 while [ $no_backups -gt 7 ]
