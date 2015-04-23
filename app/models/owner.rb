@@ -16,6 +16,11 @@ class Owner < ActiveRecord::Base
 
   serialize :feature_switches
 
+  # Specify the data searchkick should index
+  def search_data
+    as_json only: [:name, :nickname, :company]
+  end
+
   # TODO Fix up type conversion
   def buildpacks
     feature_switches[:buildpacks] == "1" if feature_switches.respond_to?(:has_key?)
