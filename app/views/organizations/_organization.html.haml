@@ -6,7 +6,7 @@
       = owner_image(organization, 100, false)
     .media-body
       %h2.media-heading.h3
-        - if organization.name
+        - if !organization.name.blank?
           -# Hmmm... not sure I should just blindly mark it as safe
           = highlight[:name] ? highlight[:name].html_safe : organization.name
         - else

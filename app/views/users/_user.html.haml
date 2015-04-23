@@ -6,7 +6,7 @@
       = owner_image(user, 100, false)
     .media-body
       %h2.media-heading.h3
-        - if user.name
+        - if !user.name.blank?
           -# Hmmm... not sure I should just blindly mark it as safe
           = highlight[:name] ? highlight[:name].html_safe : user.name
         - else
