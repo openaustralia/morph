@@ -35,4 +35,8 @@ module ScrapersHelper
       false
     end
   end
+
+  def link_url_or_escape(text)
+    is_url?(text) ? auto_link_fallback(text) : escape_once(text)
+  end
 end

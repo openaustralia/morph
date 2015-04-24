@@ -35,7 +35,7 @@
                         - row.each_value do |v|
                           %td
                             %div.has-popover{data: {toggle: "popover", placement: "bottom", trigger: "hover", content: v, container: "body"}}
-                              = is_url?(v.to_s) ? auto_link_fallback(v.to_s) : escape_once(v.to_s)
+                              = link_url_or_escape(v.to_s)
   - else
     %h3 Data
     .alert.alert-danger(role="alert")
