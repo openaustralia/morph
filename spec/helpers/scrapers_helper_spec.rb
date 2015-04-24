@@ -1,14 +1,12 @@
 require 'spec_helper'
 
-# Specs in this file have access to a helper object that includes
-# the ScrapersHelper. For example:
-#
-# describe ScrapersHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 describe ScrapersHelper do
+  describe "#is_url?" do
+    it { expect(helper.is_url?("foobar")).to eq false }
+    it { expect(helper.is_url?("http://example.com blah")).to eq false }
+    it { expect(helper.is_url?("ftp://example.com/no_ftp")).to eq false }
+    it { expect(helper.is_url?('<a href="http://example.com">blah</a>')).to eq false }
+    it { expect(helper.is_url?("http://example.com")).to eq true }
+    it { expect(helper.is_url?("http://example.com/#anchor")).to eq true }
+  end
 end

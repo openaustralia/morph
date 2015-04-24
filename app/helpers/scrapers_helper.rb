@@ -26,4 +26,13 @@ module ScrapersHelper
       text
     end
   end
+
+  def is_url?(text)
+    begin
+      u = URI.parse(text)
+      u.scheme == "http" || u.scheme == "https"
+    rescue URI::InvalidURIError
+      false
+    end
+  end
 end
