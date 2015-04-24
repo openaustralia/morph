@@ -26,3 +26,4 @@ vagrant_ansible_inventory_production2
 config/database.yml
 coverage
 db/backups
+mitmproxy/mitmproxy-dhparam.pem
