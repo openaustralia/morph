@@ -22,17 +22,6 @@
 
 .owner-item {
   display: block;
-  color: $text-color;
-
-  &:hover,
-  &:focus {
-    text-decoration: none;
-
-    .media-heading {
-      color: $link-hover-color;
-      text-decoration: $link-hover-decoration;
-    }
-  }
 
   + .owner-item {
     margin-top: 1.5em;
