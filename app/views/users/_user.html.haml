@@ -19,9 +19,6 @@
       - if !user.company.blank?
         -# Hmmm... not sure I should just blindly mark it as safe
         %div= highlight[:company] ? highlight[:company].html_safe : user.company
-      - elsif !user.blog.blank?
-        -# Hmmm... not sure I should just blindly mark it as safe
-        %div= highlight[:blog] ? highlight[:blog].html_safe : user.blog
 
 - else
   = link_to user do
