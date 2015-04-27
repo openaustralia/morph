@@ -117,6 +117,8 @@ GEM
       archive-tar-minitar
       excon (>= 0.38.0)
       json
+    domain_name (0.5.24)
+      unf (>= 0.0.5, < 1.0.0)
     dotenv (2.0.0)
     dotenv-rails (2.0.0)
       dotenv (= 2.0.0)
@@ -217,6 +219,8 @@ GEM
       haml (~> 4.0.0)
       nokogiri (~> 1.6.0)
       ruby_parser (~> 3.5)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     http_parser.rb (0.6.0)
     i18n (0.7.0)
     inherited_resources (1.6.0)
@@ -344,7 +348,8 @@ GEM
       redis (~> 3.0, >= 3.0.4)
     responders (1.1.2)
       railties (>= 3.2, < 4.2)
-    rest-client (1.7.3)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
     rspec (2.99.0)
@@ -443,6 +448,9 @@ GEM
     uglifier (2.7.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.1)
     vcr (2.9.3)
     warden (1.2.3)
       rack (>= 1.0)
