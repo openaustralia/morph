@@ -19,3 +19,25 @@
   padding-top: 15px;
   padding-bottom: 15px;
 }
+
+.owner-item {
+  margin-top: 0;
+
+  .media-left {
+    @media (min-width: $screen-sm-min) {
+      padding-right: 15px;
+    }
+  }
+
+  .media-heading {
+    margin-top: 6px;
+    color: $link-color;
+    font-weight: bold;
+  }
+
+  .owner-nickname {
+    margin-bottom: 5px;
+    display: block;
+    font-size: $font-size-large;
+  }
+}
