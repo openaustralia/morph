@@ -5,8 +5,8 @@
     = link_to user do
       = owner_image(user, 60, false)
   .media-body
-    = link_to user do
-      %h2.media-heading.h4
+    %h2.media-heading.h4
+      = link_to user do
         - if !user.name.blank?
           -# Hmmm... not sure I should just blindly mark it as safe
           = highlight[:name] ? highlight[:name].html_safe : user.name

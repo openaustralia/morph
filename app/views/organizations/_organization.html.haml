@@ -5,8 +5,8 @@
     = link_to organization do
       = owner_image(organization, 60, false)
   .media-body
-    = link_to organization do
-      %h2.media-heading.h4
+    %h2.media-heading.h4
+      = link_to organization do
         - if !organization.name.blank?
           -# Hmmm... not sure I should just blindly mark it as safe
           = highlight[:name] ? highlight[:name].html_safe : organization.name
