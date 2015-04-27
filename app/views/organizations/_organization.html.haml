@@ -1,23 +1,20 @@
 - highlight = {} unless defined?(highlight) && highlight
 
-= link_to organization, class: "list-group-item" do
-  .row
-    .col-md-2
-      = owner_image(organization, 80, false)
-    .col-md-7
+%article.owner-item.media
+  .media-left
+    = link_to organization do
+      = owner_image(organization, 60, false)
+  .media-body
+    %h2.media-heading.h4
+      = link_to organization do
+        - if !organization.name.blank?
+          -# Hmmm... not sure I should just blindly mark it as safe
+          = highlight[:name] ? highlight[:name].html_safe : organization.name
+        - else
+          = highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
+
+    -# Hmmm... not sure I should just blindly mark it as safe
+    %strong.owner-nickname= highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
+    - if !organization.company.blank?
       -# Hmmm... not sure I should just blindly mark it as safe
-      %div= highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
-      - if organization.name
-        -# Hmmm... not sure I should just blindly mark it as safe
-        %div= highlight[:name] ? highlight[:name].html_safe : organization.name
-      - if !organization.company.blank?
-        -# Hmmm... not sure I should just blindly mark it as safe
-        %div= highlight[:company] ? highlight[:company].html_safe : organization.company
-      - elsif !organization.blog.blank?
-        -# Hmmm... not sure I should just blindly mark it as safe
-        %div= highlight[:blog] ? highlight[:blog].html_safe : organization.blog
-    .col-md-3
-      - if organization.scrapers.count > 0
-        %div
-          Has
-          = pluralize(organization.scrapers.count, "scraper")
+      %div= highlight[:company] ? highlight[:company].html_safe : organization.company
