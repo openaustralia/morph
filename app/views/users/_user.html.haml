@@ -1,21 +1,27 @@
 - highlight = {} unless defined?(highlight) && highlight
 
-%article.owner-item.media
-  .media-left
-    = link_to user do
-      = owner_image(user, 60, false)
-  .media-body
-    %h2.media-heading.h4
-      = link_to user do
-        - if !user.name.blank?
-          -# Hmmm... not sure I should just blindly mark it as safe
-          = highlight[:name] ? highlight[:name].html_safe : user.name
-        - else
-          = highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
-
-    -# Hmmm... not sure I should just blindly mark it as safe
-    %strong.owner-nickname= highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
-    - if !user.company.blank?
+= link_to user, class: "list-group-item" do
+  .row
+    .col-md-2
+      = owner_image(user, 80, false)
+    .col-md-7
       -# Hmmm... not sure I should just blindly mark it as safe
-      %div= highlight[:company] ? highlight[:company].html_safe : user.company
-      
+      %div= highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
+      - if user.name
+        -# Hmmm... not sure I should just blindly mark it as safe
+        %div= highlight[:name] ? highlight[:name].html_safe : user.name
+      - if !user.company.blank?
+        -# Hmmm... not sure I should just blindly mark it as safe
+        %div= highlight[:company] ? highlight[:company].html_safe : user.company
+      - elsif !user.blog.blank?
+        -# Hmmm... not sure I should just blindly mark it as safe
+        %div= highlight[:blog] ? highlight[:blog].html_safe : user.blog
+    .col-md-3
+      - if user.scrapers.count > 0
+        %div
+          Has
+          = pluralize(user.scrapers.count, "scraper")
+      - if user.other_scrapers_contributed_to.count > 0
+        %div
+          Contributed to
+          = pluralize(user.other_scrapers_contributed_to.count, "scraper")
