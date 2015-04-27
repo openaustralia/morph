@@ -1,21 +1,19 @@
 - highlight = {} unless defined?(highlight) && highlight
 
-%article.owner-item.media
-  .media-left
-    = link_to user do
+= link_to user, class: 'list-group-item' do
+  %article.owner-item.media
+    .media-left
       = owner_image(user, 60, false)
-  .media-body
-    %h2.media-heading.h4
-      = link_to user do
+    .media-body
+      %h2.media-heading.h4
         - if !user.name.blank?
           -# Hmmm... not sure I should just blindly mark it as safe
           = highlight[:name] ? highlight[:name].html_safe : user.name
         - else
           = highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
 
-    -# Hmmm... not sure I should just blindly mark it as safe
-    %strong.owner-nickname= highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
-    - if !user.company.blank?
       -# Hmmm... not sure I should just blindly mark it as safe
-      %div= highlight[:company] ? highlight[:company].html_safe : user.company
-      
+      %strong.owner-nickname= highlight[:nickname] ? highlight[:nickname].html_safe : user.nickname
+      - if !user.company.blank?
+        -# Hmmm... not sure I should just blindly mark it as safe
+        %div= highlight[:company] ? highlight[:company].html_safe : user.company

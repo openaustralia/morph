@@ -21,9 +21,7 @@
 }
 
 .owner-item {
-  + .owner-item {
-    margin-top: 1.5em;
-  }
+  margin-top: 0;
 
   .media-left {
     @media (min-width: $screen-sm-min) {
