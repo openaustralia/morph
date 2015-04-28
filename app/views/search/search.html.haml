@@ -33,11 +33,13 @@
         = paginate @scrapers
 
       - if @type == "users" && @owners.empty? && @scrapers.any?
-        Sorry, we couldn’t find any users relevant to your search term
-        %strong “#{@q}”.
+        .alert.alert-info
+          Sorry, we couldn’t find any users relevant to your search term
+          %strong “#{@q}”.
       - elsif @type != "users" && @scrapers.empty? && @owners.any?
-        Sorry, we couldn’t find any scrapers relevant to your search term
-        %strong “#{@q}”.
+        .alert.alert-info
+          Sorry, we couldn’t find any scrapers relevant to your search term
+          %strong “#{@q}”.
     - else
       %h2 No results found
       %p
