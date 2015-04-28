@@ -20,6 +20,10 @@
   .alert.alert-success
     Last run completed successfully
     #{timeago_tag(run.finished_at, force: true)}.
+- elsif run.manually_stopped?
+  .alert.alert-success
+    Last run manually stopped
+    #{timeago_tag(run.finished_at, force: true)}.
 - elsif run.finished_with_errors?
   .alert.alert-danger
     Last run failed

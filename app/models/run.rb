@@ -69,6 +69,10 @@ class Run < ActiveRecord::Base
     finished? && !finished_successfully?
   end
 
+  def manually_stopped?
+    finished? && status_code == 130
+  end
+
   def error_text
     log_lines.where(stream: "stderr").order(:number).map{|l| l.text}.join
   end

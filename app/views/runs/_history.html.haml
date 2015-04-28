@@ -1,5 +1,5 @@
 - cache ["v5", run] do
-  %li.list-group-item{class: run.finished_successfully? ? "alert-success" : "alert-danger"}
+  %li.list-group-item{class: run.finished_successfully? || run.manually_stopped? ? "alert-success" : "alert-danger"}
     - if run.auto?
       Auto
     - else
@@ -11,6 +11,8 @@
     and
     - if run.finished_successfully?
       completed successfully
+    - elsif run.manually_stopped?
+      manually stopped
     - else
       failed
     #{timeago_tag(run.finished_at, force: true)}.
