@@ -49,7 +49,7 @@
   // with TableSaw
   .tablesaw-enhanced & .tablesaw > tbody > tr > td {
     white-space: normal;
-    word-break: break-word;
+    word-break: break-all;
 
     @media (min-width: $grid-float-breakpoint) {
       white-space: nowrap;
