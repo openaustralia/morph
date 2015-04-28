@@ -4,5 +4,5 @@
 
     -# TODO Only show a limited number of the most recent runs
     %ul.list-group
-    - scraper.finished_runs.each do |run|
-      = render partial: "runs/history", locals: {run: run}
+      - scraper.finished_runs.each do |run|
+        = render partial: "runs/history", locals: {run: run}
