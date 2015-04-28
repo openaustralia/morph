@@ -18,7 +18,7 @@ module Morph
         end
 
         # Insert the actual code into the container
-        wrapper.call(:log, :internalout, "Injecting scraper code...\n")
+        wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
         i2 = docker_build_command(i1, "add code.tar /app",
           "code.tar" => tar_run_files(run.repo_path)) do |on|
           # Note that we're not sending the output of this to the console
@@ -114,7 +114,7 @@ module Morph
           on.log {|s,c| wrapper.call(:log, :internalout, c)}
         end
         # Insert the configuration part of the application code into the container
-        wrapper.call(:log, :internalout, "Injecting configuration...\n")
+        wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
         i2 = docker_build_command(i,
           ["ADD code_config.tar /app"],
           "code_config.tar" => tar_config_files(repo_path)) do |on|
@@ -122,7 +122,12 @@ module Morph
         # And build
         docker_build_command(i2,
           ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], {}) do |on|
-          on.log {|s,c| wrapper.call(:log, :internalout, c)}
+          on.log do |s,c|
+            # We don't want to show the standard docker build output
+            unless c =~ /^Step \d+ :/ || c =~ /^ ---> / || c =~ /^Removing intermediate container / || c =~ /^Successfully built /
+              wrapper.call(:log, :internalout, c)
+            end
+          end
         end
       end
 
