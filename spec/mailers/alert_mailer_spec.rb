@@ -31,18 +31,18 @@ describe AlertMailer do
 morph.io is letting you know that
 
 
-planningalerts-scrapers/spear errored
-It has been erroring for 7 days
-Fix it: http://dev.morph.io/planningalerts-scrapers/spear?utm_medium=email&utm_source=alerts
-
-/repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )
-
-
 planningalerts-scrapers/campbelltown errored
 It has been erroring for 3 days
 Fix it: http://dev.morph.io/planningalerts-scrapers/campbelltown?utm_medium=email&utm_source=alerts
 
 PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16
+
+
+planningalerts-scrapers/spear errored
+It has been erroring for 7 days
+Fix it: http://dev.morph.io/planningalerts-scrapers/spear?utm_medium=email&utm_source=alerts
+
+/repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )
 
 
 32 other scrapers you are watching finished successfully
@@ -64,14 +64,6 @@ is letting you know that
       it do
         expected = <<-EOF
 <h3>
-<a href="http://dev.morph.io/planningalerts-scrapers/spear?utm_medium=email&amp;utm_source=alerts">planningalerts-scrapers/spear</a>
-errored
-</h3>
-<p>
-It has been erroring for 7 days
-</p>
-<pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
-<h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown?utm_medium=email&amp;utm_source=alerts">planningalerts-scrapers/campbelltown</a>
 errored
 </h3>
@@ -79,6 +71,14 @@ errored
 It has been erroring for 3 days
 </p>
 <pre>PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16</pre>
+<h3>
+<a href="http://dev.morph.io/planningalerts-scrapers/spear?utm_medium=email&amp;utm_source=alerts">planningalerts-scrapers/spear</a>
+errored
+</h3>
+<p>
+It has been erroring for 7 days
+</p>
+<pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
 <h3>32 other scrapers you are watching finished successfully</h3>
         EOF
         email.html_part.body.to_s.should include(expected)
