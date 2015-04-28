@@ -16,6 +16,7 @@ def response(context, flow):
     'path': flow.request.path,
     'request_size': len(flow.request.content),
     'response_size': len(flow.response.content),
+    'response_code': flow.response.code,
     'key': os.environ['MITMPROXY_SECRET']
   })
   try:
