@@ -38,9 +38,11 @@ class User < Owner
     auto_runs.select {|r| r.finished_with_errors?}
   end
 
-  def process_alerts
-    successful_runs = auto_runs.select {|r| r.finished_successfully?}
+  def successful_runs
+    auto_runs.select {|r| r.finished_successfully?}
+  end
 
+  def process_alerts
     unless broken_runs.empty?
       begin
         AlertMailer.alert_email(self, broken_runs, successful_runs.count).deliver
