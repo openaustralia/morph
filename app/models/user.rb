@@ -34,8 +34,11 @@ class User < Owner
     end.map{|s| s.last_run}
   end
 
+  def broken_runs
+    auto_runs.select {|r| r.finished_with_errors?}
+  end
+
   def process_alerts
-    broken_runs = auto_runs.select {|r| r.finished_with_errors?}
     successful_runs = auto_runs.select {|r| r.finished_successfully?}
 
     unless broken_runs.empty?
