@@ -45,7 +45,7 @@ describe User do
       # Scraper2 never ran successfully
       scraper2_errored_run = FactoryGirl.create(:run, scraper: scraper2, finished_at: 1.week.ago, status_code: 1)
 
-      expect(user.broken_runs).to eq [scraper2_errored_run, errored_run]
+      expect(user.broken_runs).to eq [errored_run, scraper2_errored_run]
     end
   end
 
