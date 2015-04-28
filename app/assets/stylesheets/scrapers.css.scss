@@ -211,6 +211,13 @@ a i.fa-clock-o {
   .full_name {
     word-break: break-all;
   }
+
+  .scraper-lang {
+    margin-top: .2em;
+    padding-left: .5em;
+    color: lighten($gray-light, 10%);
+    font-weight: bold;
+  }
 }
 
 h1.full_name {
