@@ -81,7 +81,7 @@ describe Morph::Database do
         Morph::Database.diffstat_table("foo", @db1, @db2).should == {added: 0, removed: 0, changed: 1, unchanged: 0}
       end
 
-      it "should be able to handle a large number of records" do
+      it "should be able to handle a large number of records", slow: true do
         FileUtils::rm_f(["tmp_db1.sqlite", "tmp_db2.sqlite"])
         # Create an sqlite database
         @db1 = SQLite3::Database.new("tmp_db1.sqlite")
