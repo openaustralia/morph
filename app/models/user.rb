@@ -35,7 +35,18 @@ class User < Owner
   end
 
   def broken_runs
-    auto_runs.select {|r| r.finished_with_errors?}
+    # The ones that are broken for the longest time come first
+    auto_runs.select {|r| r.finished_with_errors?}.sort do |a,b|
+      if a.scraper.latest_successful_run_time.nil? && b.scraper.latest_successful_run_time.nil?
+        0
+      elsif a.scraper.latest_successful_run_time.nil?
+        -1
+      elsif b.scraper.latest_successful_run_time.nil?
+        1
+      else
+        a.scraper.latest_successful_run_time <=> b.scraper.latest_successful_run_time
+      end
+    end
   end
 
   def successful_runs

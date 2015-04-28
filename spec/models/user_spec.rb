@@ -34,6 +34,19 @@ describe User do
       run = FactoryGirl.create(:run, scraper: scraper, finished_at: 1.week.ago, status_code: 0)
       expect(user.broken_runs).to eq []
     end
+
+    it "should sort them so the ones broken for the longest time come first" do
+      scraper2 = FactoryGirl.create(:scraper)
+      user.toggle_watch(scraper2)
+
+      # Scraper1 ran successfully once but not most recently
+      old_successful_run = FactoryGirl.create(:run, scraper: scraper, queued_at: 2.days.ago, finished_at: 2.days.ago, status_code: 0)
+      errored_run = FactoryGirl.create(:run, scraper: scraper, queued_at: 1.day.ago, finished_at: 1.day.ago, status_code: 1)
+      # Scraper2 never ran successfully
+      scraper2_errored_run = FactoryGirl.create(:run, scraper: scraper2, finished_at: 1.week.ago, status_code: 1)
+
+      expect(user.broken_runs).to eq [scraper2_errored_run, errored_run]
+    end
   end
 
   describe "#successful_runs" do

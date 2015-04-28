@@ -21,7 +21,7 @@ describe AlertMailer do
     end
 
     context "two broken scrapers" do
-      let(:user) { mock_model(User, name: "Matthew Landauer", email: "matthew@oaf.org.au", to_param: "mlandauer", broken_runs: [run1, run2], successful_runs: 32.times.collect { mock_model(Run) }) }
+      let(:user) { mock_model(User, name: "Matthew Landauer", email: "matthew@oaf.org.au", to_param: "mlandauer", broken_runs: [run2, run1], successful_runs: 32.times.collect { mock_model(Run) }) }
       let(:email) { AlertMailer.alert_email(user) }
 
       it { email.subject.should == "morph.io: 2 scrapers you are watching are erroring" }
