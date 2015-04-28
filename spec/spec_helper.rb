@@ -61,4 +61,6 @@ RSpec.configure do |config|
       DatabaseCleaner.clean
     end
   end
+
+  config.filter_run_excluding slow: true unless ENV["RUN_SLOW_TESTS"]
 end
