@@ -28,11 +28,13 @@ class User < Owner
     end
   end
 
-  def process_alerts
-    auto_runs = all_scrapers_watched.select do |s|
+  def auto_runs
+    all_scrapers_watched.select do |s|
       s.last_run
     end.map{|s| s.last_run}
+  end
 
+  def process_alerts
     broken_runs = auto_runs.select {|r| r.finished_with_errors?}
     successful_runs = auto_runs.select {|r| r.finished_successfully?}
 
