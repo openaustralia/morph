@@ -45,7 +45,7 @@ class User < Owner
   def process_alerts
     unless broken_runs.empty?
       begin
-        AlertMailer.alert_email(self, broken_runs, successful_runs.count).deliver
+        AlertMailer.alert_email(self).deliver
       rescue Net::SMTPSyntaxError
         puts "Warning: user #{nickname} has invalid email address #{email} (tried to send alert)"
       end

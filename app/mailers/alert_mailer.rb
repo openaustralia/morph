@@ -3,12 +3,12 @@ class AlertMailer < ActionMailer::Base
   include ActionView::Helpers::AssetUrlHelper
   default from: "morph.io <contact@morph.io>"
 
-  def alert_email(user, broken_runs, successful_count)
-    count = broken_runs.count
-    @user, @successful_count = user, successful_count
+  def alert_email(user)
+    count = user.broken_runs.count
+    @user, @successful_count = user, user.successful_runs.count
     @analytics_params = {utm_medium: "email", utm_source: "alerts"}
     # The ones that are broken for the longest time come first
-    @broken_runs = broken_runs.sort do |a,b|
+    @broken_runs = user.broken_runs.sort do |a,b|
       if a.scraper.latest_successful_run_time.nil? && b.scraper.latest_successful_run_time.nil?
         0
       elsif a.scraper.latest_successful_run_time.nil?
