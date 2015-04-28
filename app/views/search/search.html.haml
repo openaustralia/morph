@@ -10,34 +10,35 @@
           %button.btn.btn-primary{type: "submit"} Search
 
   - if @q
-    %ul.nav.nav-tabs
-      %li{class: ('active' unless @type == "users"), role: "presentation"}
-        = link_to search_path(q: @q, type: nil) do
-          Scrapers
-          %span.badge #{@scrapers.total_count}
-      %li{class: ('active' if @type == "users"), role: "presentation"}
-        = link_to search_path(q: @q, type: "users") do
-          Users
-          %span.badge #{@owners.total_count}
+    - if @scrapers.any? || @owners.any?
+      %ul.nav.nav-tabs
+        %li{class: ('active' unless @type == "users"), role: "presentation"}
+          = link_to search_path(q: @q, type: nil) do
+            Scrapers
+            %span.badge #{@scrapers.total_count}
+        %li{class: ('active' if @type == "users"), role: "presentation"}
+          = link_to search_path(q: @q, type: "users") do
+            Users
+            %span.badge #{@owners.total_count}
 
-    - if @type == "users"
-      .search-results
-        - @owners.with_details.each do |owner, details|
-          = render owner, highlight: details[:highlight]
-      = paginate @owners
+      - if @type == "users"
+        .search-results
+          - @owners.with_details.each do |owner, details|
+            = render owner, highlight: details[:highlight]
+        = paginate @owners
+      - else
+        .search-results
+          - @scrapers.with_details.each do |scraper, details|
+            = render scraper, highlight: details[:highlight]
+        = paginate @scrapers
+
+      - if @type == "users" && @owners.empty? && @scrapers.any?
+        Sorry, we couldn’t find any users relevant to your search term
+        %strong “#{@q}”.
+      - elsif @type != "users" && @scrapers.empty? && @owners.any?
+        Sorry, we couldn’t find any scrapers relevant to your search term
+        %strong “#{@q}”.
     - else
-      .search-results
-        - @scrapers.with_details.each do |scraper, details|
-          = render scraper, highlight: details[:highlight]
-      = paginate @scrapers
-
-    - if @type == "users" && @owners.empty? && @scrapers.any?
-      Sorry, we couldn’t find any users relevant to your search term
-      %strong “#{@q}”.
-    - elsif @type != "users" && @scrapers.empty? && @owners.any?
-      Sorry, we couldn’t find any scrapers relevant to your search term
-      %strong “#{@q}”.
-    - elsif @scrapers.empty? && @owners.empty?
       %h2 No results found
       %p
         Sorry, we couldn't find any scrapers or users relevant to your search term
