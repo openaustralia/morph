@@ -236,6 +236,14 @@ a i.fa-clock-o {
     + .icon-box {
       margin: 0 .25em 0 .5em;
     }
+
+    // make sure layout is the same if
+    // there's no .scraper-lang element.
+    &:first-child {
+      @media (min-width: 30em) {
+        margin-right: 54px;
+      }
+    }
   }
 }
 
