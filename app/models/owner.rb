@@ -23,7 +23,11 @@ class Owner < ActiveRecord::Base
 
   # TODO Fix up type conversion
   def buildpacks
-    feature_switches[:buildpacks] == "1" if feature_switches.respond_to?(:has_key?)
+    if feature_switches.respond_to?(:has_key?) && feature_switches.has_key?(:buildpacks)
+      feature_switches[:buildpacks] == "1"
+    else
+      true
+    end
   end
 
   def buildpacks=(value)
