@@ -24,7 +24,3 @@ python-2.7.6
 If you don't specify a `requirements.txt` or `runtime.txt` file, morph will insert defaults
 for you which are designed to be as close as possible to the environment provided by ScraperWiki
 Classic as it was in January 2014.
-
-### References
-* [Heroku Python Support](https://devcenter.heroku.com/articles/python-support)
-* [pip](https://pip.pypa.io/en/latest/)
