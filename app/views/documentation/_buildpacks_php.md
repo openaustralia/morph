@@ -50,7 +50,3 @@ For instance, to use PHP 5.5.12 your `composer.json` could look like this
 </pre>
 
 There are currently a limited number of PHP versions that are supported. See the [list at Heroku PHP support](https://devcenter.heroku.com/articles/php-support#supported-versions).
-
-### References
-* [Heroku PHP Support](https://devcenter.heroku.com/articles/php-support)
-* [Composer](https://getcomposer.org)
