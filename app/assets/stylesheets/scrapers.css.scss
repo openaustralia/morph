@@ -211,6 +211,40 @@ a i.fa-clock-o {
   .full_name {
     word-break: break-all;
   }
+
+  .scraper-lang {
+    margin: .2em 0 0 .25em;
+    color: lighten($gray-light, 10%);
+    font-weight: bold;
+    width: 4em;
+    text-align: right;
+  }
+
+  .icon-box {
+    margin: 0 .25em;
+    text-align: center;
+
+    @media (min-width: 37em) {
+      width: 3em;
+    }
+
+    .spinner,
+    i {
+      vertical-align: text-top;
+    }
+
+    + .icon-box {
+      margin: 0 .25em 0 .5em;
+    }
+
+    // make sure layout is the same if
+    // there's no .scraper-lang element.
+    &:first-child {
+      @media (min-width: 30em) {
+        margin-right: 54px;
+      }
+    }
+  }
 }
 
 h1.full_name {
