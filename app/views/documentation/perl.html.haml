@@ -6,3 +6,19 @@
       #{render "buildpacks_perl.md"}
   .col-sm-3
     = improve_button "Improve this section", "_buildpacks_perl.md"
+
+.row
+  .col-sm-9
+    :markdown
+      ### When there is no cpanfile
+
+      When there is no `cpanfile` in the scraper repository, a default version is installed
+    %pre
+      %code= File.read(Morph::Language.new(:perl).default_config_file_path("cpanfile"))
+
+.row
+  .col-sm-9
+    :markdown
+      #{render "perl_references.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "_perl_references.md"
