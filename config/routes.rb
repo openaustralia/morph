@@ -47,7 +47,10 @@ Rails.application.routes.draw do
     collection do
       get "api"
       get "what_is_new"
-      get 'buildpacks'
+      get "ruby"
+      get "php"
+      get "perl"
+      get "python"
       get "examples/australian_members_of_parliament"
     end
   end
