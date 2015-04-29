@@ -2,7 +2,9 @@
   .row
     .col-md-6
       %h2 Recent New Users
-      %p= link_to "See More&hellip;".html_safe, users_path
+      %p
+        = link_to users_path do
+          See more of the #{pluralize(User.count, "user")}&hellip;
       %ul.list-unstyled
         - User.all.order(created_at: :desc).limit(10).each do |user|
           %li
@@ -22,5 +24,7 @@
               = org.name
     .col-md-6
       %h2 Recently Active Scrapers
-      %p= link_to "See More&hellip;".html_safe, scrapers_path
+      %p
+        = link_to scrapers_path do
+          See more of the #{pluralize(Scraper.count, "scraper")}&hellip;
       .list-group= sync partial: "scraper", collection: Scraper.order(:updated_at => :desc).limit(10)
