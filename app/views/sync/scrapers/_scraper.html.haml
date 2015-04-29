@@ -3,8 +3,8 @@
     %div.scraper-block
       - unless scraper.language.blank?
         %small.scraper-lang.pull-right= scraper.language.human
-      .icon-box.pull-right= render partial: "scrapers/running_indicator", locals: {scraper: scraper}
       .icon-box.pull-right= render partial: "scrapers/auto_clock", locals: {scraper: scraper}
+      .icon-box.pull-right= render partial: "scrapers/running_indicator", locals: {scraper: scraper}
       - if scraper.last_run && scraper.last_run.finished_with_errors?
         %span.label.label-danger errored
       %strong.full_name= scraper.full_name
