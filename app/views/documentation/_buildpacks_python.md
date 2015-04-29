@@ -1,6 +1,6 @@
 ### Install libraries
 
-The Python buildpack installs libraries using `pip` from a `requirements.txt` file in the root of
+For Python morph.io installs libraries using `pip` from a `requirements.txt` file in the root of
 your scraper repository. The format for `requirements.txt` is straightforward.
 
 For example to install specific version of the `Pygments` and `SQLAlchemy` library, `requirements.txt`

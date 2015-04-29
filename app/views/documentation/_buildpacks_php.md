@@ -1,5 +1,5 @@
 ### Composer
-PHP Buildpacks uses [Composer](https://getcomposer.org/) for managing dependencies and runtime. You create
+PHP in morph.io uses [Composer](https://getcomposer.org/) for managing dependencies and runtime. You create
 a file `composer.json` in the root of your scraper repository which defines what libraries and
 extensions you want installed as well as the particular version of PHP that you want.
 
