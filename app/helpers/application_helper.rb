@@ -18,4 +18,9 @@ module ApplicationHelper
   def bs_nav_link(text, url)
     content_tag(:li, link_to(text, url), class: ("active" if current_page?(url)))
   end
+
+  def language_name_with_icon(key, options = {})
+    l = Morph::Language.new(key)
+    image_tag(l.image_path, options) + " " + l.human
+  end
 end
