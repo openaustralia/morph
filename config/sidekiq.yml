@@ -5,4 +5,5 @@
   - small
 :limits:
     default: 5
+    low: 5
     small: 10
