@@ -2,68 +2,64 @@
 
 .row
   .col-sm-9
-    %h1 A joyful birth of some documentation!
-    %ul
-      %li= link_to "What languages can scrapers be written in?", "#languages"
-      %li= link_to "In what format do I write out the data I've scraped?", "#format"
-      %li= link_to "What version of the language and what libraries do I have access to?", "#libraries"
-      %li= link_to "What if I want to install a library that isn't currently installed?", "#install"
-      %li= link_to "How do I run a scraper on my own machine?", "#run_locally"
-      %li= link_to "What limits are there on numbers of scrapers, usage, etc.?", "#limits"
-      %li= link_to "Your responsibility", "#responsibility"
-  .col-sm-3
-    = improve_button "Improve this page", "index.html.haml"
+    %p morph.io takes the hassle out of web scraping.
+
+    %p
+      Write your scraper in the language you know and love, push your code to GitHub, and
+      we take care of the boring bits. Things like running your scraper regularly, alerting you
+      if there's a problem, storing your data, and making your data available for download or
+      through a super-simple API.
 
 .row
   .col-sm-9
-    %h3.section#languages What languages can scrapers be written in?
-    = render "documentation/faq/languages"
+    %h3.section#languages Programming languages
+    = render "languages"
   .col-sm-3
-    = improve_button "Improve this section", "faq/_languages.html.haml"
+    = improve_button "Improve this section", "_languages.html.haml"
 
 .row
   .col-sm-9
-    %h3.section#format In what format do I write out the data I've scraped?
-    = render "documentation/faq/format"
+    %h3.section#format Storing your data
+    = render "format"
   .col-sm-3
-    = improve_button "Improve this section", "faq/_format.html.haml"
+    = improve_button "Improve this section", "_format.html.haml"
 
 .row
   .col-sm-9
-    %h3.section#libraries What version of the language and what libraries do I have access to?
+    %h3.section#libraries Language versions and libraries
     :markdown
-      #{render "documentation/faq/libraries.md"}
+      #{render "libraries.md"}
   .col-sm-3
-    = improve_button "Improve this section", "faq/_libraries.md"
+    = improve_button "Improve this section", "_libraries.md"
 
 .row
   .col-sm-9
-    %h3.section#install What if I want to install a library that isn't currently installed?
+    %h3.section#install Other libraries
     :markdown
-      #{render "documentation/faq/install.md"}
+      #{render "install.md"}
   .col-sm-3
-    = improve_button "Improve this section", "faq/_install.md"
+    = improve_button "Improve this section", "_install.md"
 
 .row
   .col-sm-9
-    %h3.section#run_locally How do I run a scraper on my own machine?
+    %h3.section#run_locally Testing your scraper locally
     :markdown
-      #{render "documentation/faq/run_locally.md"}
+      #{render "run_locally.md"}
   .col-sm-3
-    = improve_button "Improve this section", "faq/_run_locally.md"
+    = improve_button "Improve this section", "_run_locally.md"
 
 .row
   .col-sm-9
-    %h3.section#limits What limits are there on numbers of scrapers, usage, etc.?
+    %h3.section#limits Usage limits
     :markdown
-      #{render "documentation/faq/limits.md"}
+      #{render "limits.md"}
   .col-sm-3
-    = improve_button "Improve this section", "faq/_limits.md"
+    = improve_button "Improve this section", "_limits.md"
 
 .row
   .col-sm-9
     %h3.section#responsibility Your responsibility
     :markdown
-      #{render "documentation/faq/responsibility.md"}
+      #{render "responsibility.md"}
   .col-sm-3
-    = improve_button "Improve this section", "faq/_responsibility.md"
+    = improve_button "Improve this section", "_responsibility.md"
