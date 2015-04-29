@@ -21,12 +21,3 @@ ruby '1.9.3'
 </pre>
 
 For the full list of support ruby versions see [the Heroku documentation for its Ruby support](https://devcenter.heroku.com/articles/ruby-support#ruby-versions).
-
-### No Gemfile
-
-When there is no `Gemfile` and `Gemfile.lock` in the scraper repository, a default version of those files is installed which is as close as possible to the ScraperWiki environment as it was in January 2014. This is done to make migration from ScraperWiki as easy as possible.
-
-### References
-* [Heroku Ruby Support](https://devcenter.heroku.com/articles/ruby-support)
-* [Bundler](http://bundler.io/)
-* [morph.io Default Gemfile](https://github.com/openaustralia/morph/blob/master/default_files/ruby/Gemfile)
