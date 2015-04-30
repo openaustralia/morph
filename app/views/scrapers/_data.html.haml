@@ -8,7 +8,10 @@
         %p.scraper-data-usage
           %strong 1934 downloads
           by
-          %strong 3 users.
+          - # TODO: change this to show people/orgs who downloaded, not contributors
+          - scraper.contributors.each do |contributor|
+            = link_to contributor do
+              = owner_image(contributor, 30)
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
