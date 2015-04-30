@@ -3,11 +3,12 @@
     - active_table = scraper.database.first_table_name
 
     - if active_table
-      %h3 Data
-      %p.scraper-data-usage
-        %strong 1934 downloads
-        by
-        %strong 3 users.
+      %header.data-header
+        %h3 Data
+        %p.scraper-data-usage
+          %strong 1934 downloads
+          by
+          %strong 3 users.
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
