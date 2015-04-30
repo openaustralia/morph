@@ -106,6 +106,30 @@
   ;
 }
 
+.data-header {
+  @include clearfix;
+  margin: 20px 0 0;
+
+  h3 {
+    margin-top: 0;
+
+    @media (min-width: 30em) {
+      display: inline-block;
+      float: left;
+      clear: left;
+    }
+  }
+
+  .scraper-data-usage {
+    @media (min-width: 30em) {
+      margin-top: 8px;
+      display: inline-block;
+      float: right;
+      clear: right;
+    }
+  }
+}
+
 .popover-content {
   word-wrap: break-word;
 }
