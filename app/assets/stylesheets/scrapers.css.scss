@@ -115,17 +115,13 @@
 
     @media (min-width: 30em) {
       display: inline-block;
-      float: left;
-      clear: left;
     }
   }
 
   .scraper-data-usage {
     @media (min-width: 30em) {
-      margin-top: 8px;
+      margin: 8px 0 0 1em;
       display: inline-block;
-      float: right;
-      clear: right;
     }
   }
 }
