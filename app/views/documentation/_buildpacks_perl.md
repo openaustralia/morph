@@ -15,6 +15,3 @@ runs of the scraper could potentially use different versions of libraries.
 
 Check `cpanfile` into git alongside your scraper and the next time it's run on morph it will install
 the libraries.
-
-### References
-* [Third-party Heroku Perl Buildpack](https://github.com/miyagawa/heroku-buildpack-perl)

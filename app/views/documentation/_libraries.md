@@ -1,18 +1,15 @@
-The language versions and libraries available are intended as close as possible to those available on
-[ScraperWiki Classic](https://classic.scraperwiki.com/) as of January 2014. The main difference is that the scraperwiki library
-has been patched to write out by default to the convention used in morph.io for the table and sqlite database names.
+With morph.io it's easy to install the libraries you want to use and pick the version of the language too.
 
-#### Ruby 1.9.2-p320
-Here is the [list of installed Gems](https://github.com/openaustralia/morph-docker-ruby/blob/master/Gemfile) directly from the
-source that's used to build the docker image.
+You specify what you want in your scraper repository.
 
-#### PHP 5.3.10
-The version of PHP is very slightly more recent than the one on ScraperWiki classic. It is a bug fix release.
-To see in detail what's installed see the [docker source on Github](https://github.com/openaustralia/morph-docker-php).
+Each language does this differently (using the
+native tools to that language). So refer to the more detailed language documentation below for
+your preferred language or use the documentation menu over to the left of the screen.
 
-#### Python 2.7.3
-This version of Python is very slightly more recent than the one on ScraperWiki Classic (2.7.1). It is a bug fix release.
-To see in detail what libraries are installed see the [docker source on Github](https://github.com/openaustralia/morph-docker-python).
+* [Installing libraries with Ruby](/documentation/ruby)
+* [Installing libraries with PHP](/documentation/php)
+* [Installing libraries with Python](/documentation/python)
+* [Installing libraries with Perl](/documentation/perl)
 
-#### Perl 5.14.2
-For list of packages that are installed see the [docker source on Github](https://github.com/openaustralia/morph-docker-perl).
+If you don't specify any libraries or a language version it will default to using a setup
+as close as possible to that of [ScraperWiki Classic](https://classic.scraperwiki.com/) as of January 2014. This is for the benefit of those that have forked their scrapers from ScraperWiki Classic.

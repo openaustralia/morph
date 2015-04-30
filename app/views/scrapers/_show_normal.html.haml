@@ -22,9 +22,9 @@
       %blockquote
         %p= scraper.last_run.scraped_domains.first.meta_or_title
 
-    - if scraper.owner.buildpacks
+    - unless scraper.owner.buildpacks
       %p.text-warning
-        This scraper runs with the experimental buildpacks support.
+        This scraper runs with the legacy container compiler.
         - if can? :update, scraper.owner
           = link_to "Change settings", settings_owner_path(scraper.owner)
 

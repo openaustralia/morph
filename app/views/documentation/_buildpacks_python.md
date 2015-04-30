@@ -1,6 +1,6 @@
 ### Install libraries
 
-The Python buildpack installs libraries using `pip` from a `requirements.txt` file in the root of
+For Python morph.io installs libraries using `pip` from a `requirements.txt` file in the root of
 your scraper repository. The format for `requirements.txt` is straightforward.
 
 For example to install specific version of the `Pygments` and `SQLAlchemy` library, `requirements.txt`
@@ -24,7 +24,3 @@ python-2.7.6
 If you don't specify a `requirements.txt` or `runtime.txt` file, morph will insert defaults
 for you which are designed to be as close as possible to the environment provided by ScraperWiki
 Classic as it was in January 2014.
-
-### References
-* [Heroku Python Support](https://devcenter.heroku.com/articles/python-support)
-* [pip](https://pip.pypa.io/en/latest/)

@@ -1,5 +1,5 @@
 ### Composer
-PHP Buildpacks uses [Composer](https://getcomposer.org/) for managing dependencies and runtime. You create
+PHP in morph.io uses [Composer](https://getcomposer.org/) for managing dependencies and runtime. You create
 a file `composer.json` in the root of your scraper repository which defines what libraries and
 extensions you want installed as well as the particular version of PHP that you want.
 
@@ -50,7 +50,3 @@ For instance, to use PHP 5.5.12 your `composer.json` could look like this
 </pre>
 
 There are currently a limited number of PHP versions that are supported. See the [list at Heroku PHP support](https://devcenter.heroku.com/articles/php-support#supported-versions).
-
-### References
-* [Heroku PHP Support](https://devcenter.heroku.com/articles/php-support)
-* [Composer](https://getcomposer.org)
