@@ -4,6 +4,11 @@
 
     - if active_table
       %h3 Data
+      %p.scraper-data-usage
+        %strong 1934 downloads
+        by
+        %strong 3 users.
+
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
           %li{class: ("active" if table == active_table)}
