@@ -15,8 +15,7 @@
               by
               - scraper.downloaders.each do |downloader|
                 = link_to downloader do
-                  - tooltip_text = "Downloaded #{downloader.scraper_download_count(scraper)} times by #{downloader.name}"
-                  = image_tag downloader.gravatar_url(30), title: tooltip_text, alt: downloader.name, class: 'img-circle has-tooltip'
+                  = image_tag downloader.gravatar_url(30), title: "Downloaded #{downloader.scraper_download_count(scraper)} times by #{downloader.name}", alt: downloader.name, class: 'img-circle has-tooltip'
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
