@@ -5,17 +5,18 @@
     - if active_table
       %header.data-header
         %h3 Data
-        %p.scraper-data-usage
-          %strong
-            Downloaded
-            = scraper.downloads.count
-            times
-          - if scraper.downloads.any?
-            by
-            - scraper.downloaders.each do |downloader|
-              = link_to downloader do
-                - tooltip_text = "Downloaded #{downloader.scraper_download_count(scraper)} times by #{downloader.name}"
-                = image_tag downloader.gravatar_url(30), title: tooltip_text, alt: downloader.name, class: 'img-circle has-tooltip'
+        - if current_user && current_user.see_downloads
+          %p.scraper-data-usage
+            %strong
+              Downloaded
+              = scraper.downloads.count
+              times
+            - if scraper.downloads.any?
+              by
+              - scraper.downloaders.each do |downloader|
+                = link_to downloader do
+                  - tooltip_text = "Downloaded #{downloader.scraper_download_count(scraper)} times by #{downloader.name}"
+                  = image_tag downloader.gravatar_url(30), title: tooltip_text, alt: downloader.name, class: 'img-circle has-tooltip'
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
