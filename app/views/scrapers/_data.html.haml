@@ -14,7 +14,7 @@
               by
               - scraper.downloaders.each do |downloader|
                 = link_to downloader do
-                  = image_tag downloader.gravatar_url(30), size: "30x30", title: "Downloaded #{pluralize(downloader.scraper_download_count(scraper), 'time')} by #{downloader.nickname}", alt: downloader.nickname, class: 'img-circle has-tooltip'
+                  = owner_image(downloader, 30, true, "Downloaded #{pluralize(downloader.scraper_download_count(scraper), 'time')} by #{downloader.nickname}")
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
