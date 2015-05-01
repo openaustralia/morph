@@ -120,4 +120,8 @@ class Owner < ActiveRecord::Base
   def ability
     @ability ||= Ability.new(self)
   end
+
+  def scraper_download_count(scraper)
+   scraper.downloads.where(owner_id: id).count
+  end
 end
