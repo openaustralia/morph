@@ -9,9 +9,9 @@
           %p.scraper-data-usage
             %strong
               Downloaded
-              = scraper.downloads.count
+              = scraper.api_queries.count
               times
-            - if scraper.downloads.any?
+            - if scraper.api_queries.any?
               by
               - scraper.downloaders.each do |downloader|
                 = link_to downloader do

@@ -129,6 +129,7 @@ class Owner < ActiveRecord::Base
   end
 
   def scraper_download_count(scraper)
-   scraper.downloads.where(owner_id: id).count
+   scraper.api_queries.where(owner_id: id).count
+
   end
 end

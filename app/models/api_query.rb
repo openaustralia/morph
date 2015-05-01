@@ -1,4 +1,7 @@
 class ApiQuery < ActiveRecord::Base
+
+  belongs_to :scraper
+
   # disable STI
   self.inheritance_column = :_type_disabled
 

@@ -23,6 +23,8 @@ class Scraper < ActiveRecord::Base
 
   has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 
+  has_many :api_queries
+
   validates :name, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "can only have letters, numbers, '_' and '-'" }
   validates :owner, presence: true
   validates :name, uniqueness: { scope: :owner, message: 'is already taken on morph.io' }
@@ -42,12 +44,8 @@ class Scraper < ActiveRecord::Base
     (watchers + owner.watchers).uniq
   end
 
-  def downloads
-    ApiQuery.where(scraper_id: id)
-  end
-
   def downloaders
-    downloads.map do |d|
+    api_queries.map do |d|
       Owner.find(d.owner_id)
     end.uniq
   end
