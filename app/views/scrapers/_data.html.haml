@@ -10,16 +10,11 @@
             Downloaded
             = scraper.downloads.count
             times
-          by
-          - # TODO: Replace this hardcoded stuff to show people/orgs who downloaded the scraper
-          %a{:href => "/ciudadanointeligente"}
-            %img.has-tooltip{:alt => "ciudadanointeligente", "data-container" => "body", "data-original-title" => "", "data-placement" => "bottom", "data-title" => "Downloaded 5782 times by ciudadanointeligente", :height => "30", :src => "https://gravatar.com/avatar/15c938035f91373cb36062d6ad4ef2e5?d=https%3A%2F%2Fidenticons.github.com%2F6738e91db5a8843ba60d9147dd297d5a.png&r=x&s=30", :title => "", :width => "30"}/
-          %a{:href => "/jacksongs"}
-            %img.img-circle.has-tooltip{:alt => "jacksongs", "data-container" => "body", "data-original-title" => "", "data-placement" => "bottom", "data-title" => "jacksongs", :height => "30", :src => "https://avatars.githubusercontent.com/u/1189369?v=3&s=30", :title => "", :width => "30"}/
-          %a{:href => "/rezzo"}
-            %img.img-circle.has-tooltip{:alt => "rezzo", "data-container" => "body", "data-placement" => "bottom", "data-title" => "rezzo", :height => "30", :src => "https://avatars.githubusercontent.com/u/153339?v=3&s=30", :width => "30"}/
-          %a{:href => "/martinszy"}
-            %img.img-circle.has-tooltip{:alt => "martinszy", "data-container" => "body", "data-placement" => "bottom", "data-title" => "martinszy", :height => "30", :src => "https://avatars.githubusercontent.com/u/997732?v=3&s=30", :width => "30"}/
+          - if scraper.downloads.any?
+            by
+            - scraper.downloaders.each do |downloader|
+              = link_to downloader do
+                = image_tag downloader.gravatar_url(30), title: downloader.name, alt: downloader.name, class: 'img-circle'
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
