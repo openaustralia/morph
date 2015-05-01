@@ -9,13 +9,12 @@
           %p.scraper-data-usage
             %strong
               Downloaded
-              = scraper.api_queries.count
-              times
+              = pluralize(scraper.api_queries.count, "time")
             - if scraper.api_queries.any?
               by
               - scraper.downloaders.each do |downloader|
                 = link_to downloader do
-                  = image_tag downloader.gravatar_url(30), size: "30x30", title: "Downloaded #{downloader.scraper_download_count(scraper)} times by #{downloader.name}", alt: downloader.name, class: 'img-circle has-tooltip'
+                  = image_tag downloader.gravatar_url(30), size: "30x30", title: "Downloaded #{pluralize(downloader.scraper_download_count(scraper), 'time')} by #{downloader.name}", alt: downloader.name, class: 'img-circle has-tooltip'
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
