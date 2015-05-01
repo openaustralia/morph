@@ -45,9 +45,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def downloaders
-    api_queries.map do |d|
-      Owner.find(d.owner_id)
-    end.uniq
+    api_queries.group(:owner_id).map {|d| d.owner}
   end
 
   # Given a scraper name on github populates the fields for a morph.io scraper but doesn't save it
