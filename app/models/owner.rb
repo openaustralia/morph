@@ -21,19 +21,26 @@ class Owner < ActiveRecord::Base
     as_json only: [:name, :nickname, :company]
   end
 
-  # TODO Fix up type conversion
-  def buildpacks
-    if feature_switches.respond_to?(:has_key?) && feature_switches.has_key?(:buildpacks)
-      feature_switches[:buildpacks] == "1"
+  def get_feature_switch_value(key, default)
+    if feature_switches.respond_to?(:has_key?) && feature_switches.has_key?(key)
+      feature_switches[key] == "1"
     else
-      true
+      default
     end
   end
 
-  def buildpacks=(value)
+  def set_feature_switch_value(key, value)
     s = feature_switches || {}
-    s[:buildpacks] = value
+    s[key] = value
     self.feature_switches = s
+  end
+
+  def buildpacks
+    get_feature_switch_value(:buildpacks, true)
+  end
+
+  def buildpacks=(value)
+    set_feature_switch_value(:buildpacks, value)
   end
 
   def name
@@ -119,5 +126,10 @@ class Owner < ActiveRecord::Base
 
   def ability
     @ability ||= Ability.new(self)
+  end
+
+  def scraper_download_count(scraper)
+   scraper.api_queries.where(owner_id: id).count
+
   end
 end

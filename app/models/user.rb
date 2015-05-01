@@ -6,6 +6,14 @@ class User < Owner
   has_many :contributions
   has_many :scrapers_contributed_to, through: :contributions, source: :scraper
 
+  def see_downloads
+    get_feature_switch_value(:see_downloads, false)
+  end
+
+  def see_downloads=(value)
+    set_feature_switch_value(:see_downloads, value)
+  end
+
   # In most cases people have contributed to the scrapers that they own so we really don't
   # want to see these twice. This method just removes their own scrapers from the list
   def other_scrapers_contributed_to
