@@ -34,4 +34,6 @@
 
     = simple_form_for @owner do |f|
       = f.input :buildpacks, as: :boolean, hint: "Add experimental support for Heroku buildpacks. Allows the installation of custom libraries, etc.."
+      - if @owner.user?
+        = f.input :see_downloads, as: :boolean, hint: "This user can see information on who downloaded what data, etc..."
       = f.button :submit, "Update feature settings"

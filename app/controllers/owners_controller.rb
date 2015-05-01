@@ -29,7 +29,7 @@ class OwnersController < ApplicationController
 
   def update
     if @owner.user?
-      @owner.update_attributes(buildpacks: params[:user][:buildpacks])
+      @owner.update_attributes(buildpacks: params[:user][:buildpacks], see_downloads: params[:user][:see_downloads])
     elsif @owner.organization?
       @owner.update_attributes(buildpacks: params[:organization][:buildpacks])
     else
