@@ -6,7 +6,10 @@
       %header.data-header
         %h3 Data
         %p.scraper-data-usage
-          %strong Downloaded 1934 times
+          %strong
+            Downloaded
+            = scraper.downloads.count
+            times
           by
           - # TODO: Replace this hardcoded stuff to show people/orgs who downloaded the scraper
           %a{:href => "/ciudadanointeligente"}
