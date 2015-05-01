@@ -46,6 +46,12 @@ class Scraper < ActiveRecord::Base
     ApiQuery.where(scraper_id: id)
   end
 
+  def downloaders
+    downloads.map do |d|
+      Owner.find(d.owner_id)
+    end.uniq
+  end
+
   # Given a scraper name on github populates the fields for a morph.io scraper but doesn't save it
   def self.new_from_github(full_name, octokit_client)
     repo = octokit_client.repository(full_name)
