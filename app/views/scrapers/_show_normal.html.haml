@@ -71,6 +71,8 @@
       %h4
         %i.fa.fa-github-square.fa-lg
         Scraper code
+      - unless scraper.language.blank?
+        %strong.scraper-lang= scraper.language.human
       - if scraper.github_url
         %p
           %h5 Repository
@@ -80,8 +82,6 @@
           - if scraper.main_scraper_filename
             %h5 Main scraper
             #{link_to scraper.main_scraper_filename, scraper.github_url_main_scraper_file, target: "_blank"}
-            &mdash;
-            written in #{scraper.language.human}
     %p
       .form-group
         %label(for="git_url") git clone URL
