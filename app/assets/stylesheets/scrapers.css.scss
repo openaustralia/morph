@@ -236,6 +236,12 @@ a i.fa-clock-o {
 
   .full_name {
     word-break: break-all;
+    color: $link-color;
+  }
+
+  a:hover & .full_name,
+  a:focus & .full_name {
+    color: $link-hover-color;
   }
 
   .scraper-lang {
