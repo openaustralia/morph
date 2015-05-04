@@ -40,6 +40,10 @@ class Scraper < ActiveRecord::Base
 
   delegate :queued?, :running?, to: :last_run, allow_nil: true
 
+  def search_data
+    as_json only: [:name, :description, :full_name]
+  end
+
   def scraped_domains
     last_run ? last_run.scraped_domains : []
   end
