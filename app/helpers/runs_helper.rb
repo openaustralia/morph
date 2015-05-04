@@ -32,10 +32,10 @@ module RunsHelper
     d = run.scraped_domains.map{|d| h(d.name)}
     # If there are more than 3 in the list then summarise
     if d.count > 3
-      d = d[0..2] + [pluralize(d[3..-1].count, "other".html_safe)]
-      d.to_sentence.html_safe
+      d = d[0..2] + [pluralize(d[3..-1].count, "other")]
+      d.to_sentence
     else
-      d.join(", ").html_safe
+      d.join(", ")
     end
   end
 end

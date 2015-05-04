@@ -51,31 +51,26 @@ describe RunsHelper do
     it do
       allow(run).to receive(:scraped_domains).and_return([foo_domain])
       expect(helper.simplified_scraped_domains_list(run)).to eq 'foo.com'
-      expect(helper.simplified_scraped_domains_list(run)).to be_html_safe
     end
 
     it do
       allow(run).to receive(:scraped_domains).and_return([foo_domain, bar_domain])
       expect(helper.simplified_scraped_domains_list(run)).to eq 'foo.com, bar.com'
-      expect(helper.simplified_scraped_domains_list(run)).to be_html_safe
     end
 
     it do
       allow(run).to receive(:scraped_domains).and_return([foo_domain, bar_domain, www_foo_domain])
       expect(helper.simplified_scraped_domains_list(run)).to eq 'foo.com, bar.com, www.foo.com'
-      expect(helper.simplified_scraped_domains_list(run)).to be_html_safe
     end
 
     it do
       allow(run).to receive(:scraped_domains).and_return([foo_domain, bar_domain, www_foo_domain, www_bar_domain])
       expect(helper.simplified_scraped_domains_list(run)).to eq 'foo.com, bar.com, www.foo.com, and 1 other'
-      expect(helper.simplified_scraped_domains_list(run)).to be_html_safe
     end
 
     it do
       allow(run).to receive(:scraped_domains).and_return([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain])
       expect(helper.simplified_scraped_domains_list(run)).to eq 'foo.com, bar.com, www.foo.com, and 2 others'
-      expect(helper.simplified_scraped_domains_list(run)).to be_html_safe
     end
   end
 end
