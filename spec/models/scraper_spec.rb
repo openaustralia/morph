@@ -116,4 +116,25 @@ describe Scraper do
       end
     end
   end
+
+  describe "#scraped_domains" do
+    let(:scraper) { Scraper.new }
+    let(:last_run) { mock_model(Run) }
+
+    it "should return an empty array if there is no last run" do
+      expect(scraper.scraped_domains).to eq []
+    end
+
+    context "there is a last run" do
+      before :each do
+        allow(scraper).to receive(:last_run).and_return(last_run)
+      end
+
+      it "should defer to the last run" do
+        result = mock
+        expect(last_run).to receive(:scraped_domains).and_return(result)
+        expect(scraper.scraped_domains).to eq result
+      end
+    end
+  end
 end

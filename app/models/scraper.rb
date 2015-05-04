@@ -40,6 +40,10 @@ class Scraper < ActiveRecord::Base
 
   delegate :queued?, :running?, to: :last_run, allow_nil: true
 
+  def scraped_domains
+    last_run ? last_run.scraped_domains : []
+  end
+
   def all_watchers
     (watchers + owner.watchers).uniq
   end
