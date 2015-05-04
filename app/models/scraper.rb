@@ -360,7 +360,13 @@ class Scraper < ActiveRecord::Base
     if sqlite_data
       database.write_sqlite_database(sqlite_data)
       # Rename the main table in the sqlite database
-      database.standardise_table_name("swdata")
+      if database.valid?
+        database.standardise_table_name("swdata")
+      else
+        # If the data was corrupt when loading from Scraperwiki then just
+        # delete our local copy here. Much simpler for the user.
+        database.clear
+      end
     end
 
     create_scraper_progress.update("Forking code", 60)
