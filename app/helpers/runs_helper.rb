@@ -27,4 +27,15 @@ module RunsHelper
     end
     d.to_sentence.html_safe
   end
+
+  def simplified_scraped_domains_list(run)
+    d = run.scraped_domains.map{|d| h(d.name)}
+    # If there are more than 3 in the list then summarise
+    if d.count > 3
+      d = d[0..2] + [pluralize(d[3..-1].count, "other".html_safe)]
+      d.to_sentence.html_safe
+    else
+      d.join(", ").html_safe
+    end
+  end
 end
