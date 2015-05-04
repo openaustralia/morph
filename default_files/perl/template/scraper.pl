@@ -29,9 +29,8 @@
 #     Age => $_->look_down(_tag => 'td', id => 'age')->content,
 # }} @rows]);
 
-# You don't have to do things with the HTML::TreeBuilder and Database::DumpTruck
-# libraries. You can use whatever libraries are installed on morph.io for Perl
-# (https://github.com/openaustralia/morph-docker-perl/blob/master/Dockerfile)
-# and all that matters is that your final data is written to an Sqlite
-# database called data.sqlite in the current working directory which has at
-# least a table called data.
+# You don't have to do things with the HTML::TreeBuilder and Database::DumpTruck libraries.
+# You can use whatever libraries you want: https://morph.io/documentation/perl
+# All that matters is that your final data is written to an SQLite database
+# called "data.sqlite" in the current working directory which has at least a table
+# called "data".

@@ -17,7 +17,8 @@
 # # An arbitrary query against the database
 # scraperwiki.sql.select("* from data where 'name'='peter'")
 
-# You don't have to do things with the ScraperWiki and lxml libraries. You can use whatever libraries are installed
-# on morph.io for Python (https://github.com/openaustralia/morph-docker-python/blob/master/pip_requirements.txt) and all that matters
-# is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
-# has at least a table called data.
+# You don't have to do things with the ScraperWiki and lxml libraries.
+# You can use whatever libraries you want: https://morph.io/documentation/python
+# All that matters is that your final data is written to an SQLite database
+# called "data.sqlite" in the current working directory which has at least a table
+# called "data".
