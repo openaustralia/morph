@@ -13,7 +13,7 @@
 
     %h4= scraper.description
 
-    - if scraper.last_run && !scraper.last_run.scraped_domains.empty?
+    - unless scraper.scraped_domains.empty?
       %p
         Scrapes
         = scraped_domains_list(scraper.last_run)
