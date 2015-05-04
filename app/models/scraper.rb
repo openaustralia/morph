@@ -4,7 +4,7 @@ class Scraper < ActiveRecord::Base
   include Sync::Actions
   # Using smaller batch_size than the default for the time being because reindexing
   # causes elasticsearch on the local VM to run out of memory
-  searchkick batch_size: 100 # defaults to 1000
+  searchkick word_end: [:scraped_domain_names], batch_size: 100 # defaults to 1000
 
   belongs_to :owner, inverse_of: :scrapers
   belongs_to :forked_by, class_name: "User"
