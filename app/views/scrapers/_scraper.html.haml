@@ -8,3 +8,5 @@
     %div
       - unless scraper.description.blank?
         = highlight[:description] ? highlight[:description].html_safe : scraper.description
+      - unless scraper.scraped_domains.empty?
+        %p.scraper-domains-list.text-muted= simplified_scraped_domains_list(scraper.scraped_domains)
