@@ -20,7 +20,7 @@
       -# Only shows the meta info from the first domain
       -# TODO Figure out what to do with more than one domain
       %blockquote
-        %p= scraper.last_run.scraped_domains.first.meta_or_title
+        %p= scraper.scraped_domains.first.meta_or_title
 
     - unless scraper.owner.buildpacks
       %p.text-warning
