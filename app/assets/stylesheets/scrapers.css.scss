@@ -233,8 +233,19 @@ a i.fa-clock-o {
 .scraper-block {
   overflow: hidden;
   text-overflow: ellipsis;
+
   .full_name {
     word-break: break-all;
+    color: $link-color;
+
+    @media (min-width: 40em) {
+      font-size: $font-size-h4;
+    }
+  }
+
+  a:hover & .full_name,
+  a:focus & .full_name {
+    color: $link-hover-color;
   }
 
   .scraper-lang {
