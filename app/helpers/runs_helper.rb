@@ -34,8 +34,8 @@ module RunsHelper
     summary_of_array(d, "other domain".html_safe).to_sentence.html_safe
   end
 
-  def simplified_scraped_domains_list(run)
-    d = run.scraped_domains.map{|d| h(d.name)}
+  def simplified_scraped_domains_list(scraped_domains)
+    d = scraped_domains.map{|d| h(d.name)}
     # If there are more than 3 in the list then summarise
     if d.count > 3
       summary_of_array(d, "other").to_sentence
