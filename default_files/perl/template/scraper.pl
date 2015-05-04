@@ -23,11 +23,11 @@
 # # Open a database handle
 # my $dt = Database::DumpTruck->new({dbname => 'data.sqlite', table => 'data'});
 #
-# # Insert content of <td id="name"> and <td id="age"> into the database
-# $dt->insert([map {{
-#     Name => $_->look_down(_tag => 'td', id => 'name')->content,
-#     Age => $_->look_down(_tag => 'td', id => 'age')->content,
-# }} @rows]);
+# # Insert some records into the database
+# $dt->insert([{
+#     Name => 'Susan',
+#     Occupation => 'Software Developer'
+# }]);
 
 # You don't have to do things with the HTML::TreeBuilder and Database::DumpTruck libraries.
 # You can use whatever libraries you want: https://morph.io/documentation/perl
