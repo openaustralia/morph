@@ -4,6 +4,8 @@
       - unless scraper.language.blank?
         %small.scraper-lang.pull-right= scraper.language.human
       .icon-box.pull-right= render partial: "scrapers/auto_clock", locals: {scraper: scraper}
+      -# TODO Refactor this so that we're not duplicating logic of checking queued and running
+      -# here as well as in "scrapers/running_indicator" partial
       - if scraper.queued? || scraper.running?
         .icon-box.pull-right= render partial: "scrapers/running_indicator", locals: {scraper: scraper}
       - elsif scraper.last_run && scraper.last_run.finished_with_errors?
