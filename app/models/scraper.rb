@@ -41,7 +41,16 @@ class Scraper < ActiveRecord::Base
   delegate :queued?, :running?, to: :last_run, allow_nil: true
 
   def search_data
-    as_json only: [:name, :description, :full_name]
+    {
+      name: name,
+      description: description,
+      full_name: full_name,
+      scraped_domain_names: scraped_domain_names
+    }
+  end
+
+  def scraped_domain_names
+    scraped_domains.map{|d| d.name}
   end
 
   def scraped_domains
