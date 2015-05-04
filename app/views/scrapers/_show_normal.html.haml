@@ -16,7 +16,7 @@
     - unless scraper.scraped_domains.empty?
       %p
         Scrapes
-        = scraped_domains_list2(scraper.last_run.scraped_domains)
+        = scraped_domains_list(scraper.last_run.scraped_domains)
       -# Only shows the meta info from the first domain
       -# TODO Figure out what to do with more than one domain
       %blockquote
