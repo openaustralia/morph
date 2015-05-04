@@ -151,6 +151,7 @@ class Run < ActiveRecord::Base
     end
   end
 
+  # TODO Shouldn't this update the metrics here as well?
   def stop!
     container_compiler.stop(self)
     update_attributes(status_code: 130, finished_at: Time.now)
