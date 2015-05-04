@@ -29,7 +29,7 @@ module RunsHelper
   end
 
   def scraped_domains_list(scraped_domains)
-    d = scraped_domains.map{|d| link_to h(d.name), h("http://#{d.name}")}
+    d = scraped_domains.map{|d| link_to h(d.name), h("http://#{d.name}"), target: "_blank"}
     # If there are more than 3 in the list then summarise
     summary_of_array(d, "other domain".html_safe).to_sentence.html_safe
   end
