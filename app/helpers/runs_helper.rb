@@ -28,11 +28,6 @@ module RunsHelper
     end
   end
 
-  def scraped_domains_list(run)
-    scraped_domains = run.scraped_domains
-    scraped_domains_list2(scraped_domains)
-  end
-
   def scraped_domains_list2(scraped_domains)
     d = scraped_domains.map{|d| link_to h(d.name), h("http://#{d.name}")}
     # If there are more than 3 in the list then summarise
