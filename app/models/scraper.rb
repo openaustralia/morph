@@ -42,9 +42,8 @@ class Scraper < ActiveRecord::Base
 
   def search_data
     {
-      name: name,
-      description: description,
       full_name: full_name,
+      description: description,
       scraped_domain_names: scraped_domain_names
     }
   end
