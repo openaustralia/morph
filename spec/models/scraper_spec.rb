@@ -37,7 +37,7 @@ describe Scraper do
     describe "#scraperwiki_url" do
       it do
         @scraper.scraperwiki_shortname = "australian_rainfall"
-        @scraper.scraperwiki_url.should == "https://classic.scraperwiki.com/scrapers/australian_rainfall/" 
+        @scraper.scraperwiki_url.should == "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
       end
 
       it do
