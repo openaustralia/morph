@@ -237,6 +237,10 @@ a i.fa-clock-o {
   .full_name {
     word-break: break-all;
     color: $link-color;
+
+    @media (min-width: 40em) {
+      font-size: $font-size-h4;
+    }
   }
 
   a:hover & .full_name,
