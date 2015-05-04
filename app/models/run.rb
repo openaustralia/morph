@@ -146,6 +146,7 @@ class Run < ActiveRecord::Base
     Morph::Database.tidy_data_path(data_path)
     if scraper
       scraper.update_sqlite_db_size
+      scraper.reindex
       scraper.reload
       sync_update scraper
     end
