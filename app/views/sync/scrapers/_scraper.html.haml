@@ -1,18 +1,1 @@
-- cache ["v5", scraper] do
-  = link_to scraper, class: "list-group-item" do
-    %div.scraper-block
-      - unless scraper.language.blank?
-        %small.scraper-lang.pull-right= scraper.language.human
-      .icon-box.pull-right= render partial: "scrapers/auto_clock", locals: {scraper: scraper}
-      -# TODO Refactor this so that we're not duplicating logic of checking queued and running
-      -# here as well as in "scrapers/running_indicator" partial
-      - if scraper.queued? || scraper.running?
-        .icon-box.pull-right= render partial: "scrapers/running_indicator", locals: {scraper: scraper}
-      - elsif scraper.last_run && scraper.last_run.finished_with_errors?
-        %span.label.label-danger.pull-right errored
-      %strong.full_name= scraper.full_name
-      %div
-        - unless scraper.description.blank?
-          = scraper.description
-        - unless scraper.scraped_domains.empty?
-          %p.scraper-domains-list.text-muted= simplified_scraped_domains_list(scraper.scraped_domains)
+= render partial: "scrapers/scraper_base", locals: {scraper: scraper}
