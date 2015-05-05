@@ -1,17 +1,18 @@
-.container
-  .search-header
-    =form_tag search_path, method: "get", class: "form-inline" do
-      %h1.label-heading
-        %label Search over 2000 scrapers
-      .input-group.col-sm-12.col-md-8.col-lg-7
-        = hidden_field_tag :type, @type
-        %input.form-control#query{required: "required", type: "search", autofocus: (@q.blank? ? true : false), maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
-        .input-group-btn
-          %button.btn.btn-primary{type: "submit"} Search
-      %p
-        try #{link_to "parliament", search_path(q: "parliament")},
-        #{ link_to "planning", search_path(q: "planning")} or
-        #{ link_to "Ghana", search_path(q: "Ghana")}
+.banner-search.banner
+  .container
+    .search-header
+      =form_tag search_path, method: "get", class: "form-inline" do
+        %h1.label-heading
+          %label Search over 2000 scrapers
+        .input-group.col-sm-12.col-md-8.col-lg-7
+          = hidden_field_tag :type, @type
+          %input.form-control#query{required: "required", type: "search", autofocus: (@q.blank? ? true : false), maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
+          .input-group-btn
+            %button.btn.btn-primary{type: "submit"} Search
+        %p
+          try #{link_to "parliament", search_path(q: "parliament")},
+          #{ link_to "planning", search_path(q: "planning")} or
+          #{ link_to "Ghana", search_path(q: "Ghana")}
 
 .container
   .row
