@@ -4,7 +4,7 @@
       =form_tag search_path, method: "get", class: "form-inline" do
         %h1.label-heading
           %label Search over 2000 scrapers
-        .input-group.col-sm-12.col-md-8.col-lg-7
+        .input-group.col-sm-12.col-md-9.col-lg-8
           = hidden_field_tag :type, @type
           %input.form-control#query{required: "required", type: "search", maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
           .input-group-btn
