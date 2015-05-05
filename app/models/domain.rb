@@ -25,7 +25,7 @@ class Domain < ActiveRecord::Base
       title = title_tag.inner_text.strip if title_tag
       {meta: meta, title: title}
     # TODO If there's an error record that in the database
-    rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, RestClient::Forbidden, RestClient::RequestTimeout, RestClient::BadGateway, RestClient::MaxRedirectsReached, RestClient::RequestFailed, RestClient::ServiceUnavailable, Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EINVAL, Errno::EHOSTUNREACH, URI::InvalidURIError
+  rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::ResourceNotFound, RestClient::Forbidden, RestClient::RequestTimeout, RestClient::BadGateway, RestClient::MaxRedirectsReached, RestClient::RequestFailed, RestClient::ServiceUnavailable, RestClient::ServerBrokeConnection, Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EINVAL, Errno::EHOSTUNREACH, URI::InvalidURIError, Net::HTTPBadResponse
       {meta: nil, title: nil}
     end
   end
