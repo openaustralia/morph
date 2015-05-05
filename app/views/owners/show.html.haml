@@ -48,9 +48,9 @@
 
   - else
     %h3= pluralize(@scrapers.count, "scraper")
-    .list-group= sync partial: "scraper", collection: @running_scrapers
-    .list-group= sync partial: "scraper", collection: @erroring_scrapers
-    .list-group= sync partial: "scraper", collection: @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
+    .list-group= sync partial: "scraper_without_owner", collection: @running_scrapers
+    .list-group= sync partial: "scraper_without_owner", collection: @erroring_scrapers
+    .list-group= sync partial: "scraper_without_owner", collection: @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
 
   - if @owner == current_user || @owner.organization? && @owner.users.include?(current_user)
     .btn-group
