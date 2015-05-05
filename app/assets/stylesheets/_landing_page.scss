@@ -11,6 +11,24 @@
   }
 }
 
+.banner-search {
+  .label-heading {
+    font-size: $font-size-h4;
+
+    @media (min-width: $screen-xs-min) {
+      font-size: $font-size-h3;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      font-size: $font-size-h2;
+    }
+
+    @media (min-width: $screen-md-min) {
+      font-size: $font-size-h1;
+    }
+  }
+}
+
 .search-suggestions {
   margin-top: .75em;
 }
