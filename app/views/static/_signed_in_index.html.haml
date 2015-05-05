@@ -1,4 +1,15 @@
 .container
+  .search-header
+    =form_tag search_path, method: "get", class: "form-inline" do
+      %h1.label-heading
+        %label Search
+      .input-group.col-sm-12.col-md-8.col-lg-7
+        = hidden_field_tag :type, @type
+        %input.form-control#query{required: "required", type: "search", autofocus: (@q.blank? ? true : false), maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
+        .input-group-btn
+          %button.btn.btn-primary{type: "submit"} Search
+
+.container
   .row
     .col-md-6
       %h2 Recent New Users
