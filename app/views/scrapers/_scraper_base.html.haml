@@ -1,4 +1,4 @@
-- cache ["v5", scraper] do
+- cache ["v5", scraper, hide_owner] do
   = link_to scraper, class: "list-group-item" do
     %div.scraper-block
       - unless scraper.language.blank?
@@ -10,7 +10,7 @@
         .icon-box.pull-right= render partial: "scrapers/running_indicator", locals: {scraper: scraper}
       - elsif scraper.last_run && scraper.last_run.finished_with_errors?
         %span.label.label-danger.pull-right errored
-      %strong.full_name= scraper.full_name
+      %strong.full_name= hide_owner ? scraper.name : scraper.full_name
       %div
         - unless scraper.description.blank?
           = scraper.description
