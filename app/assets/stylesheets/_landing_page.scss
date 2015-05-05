@@ -36,6 +36,10 @@
 
 .search-suggestions {
   margin-top: .75em;
+
+  @media (min-width: $screen-md-min) {
+    font-size: 1.125em;
+  }
 }
 
 .banner-wrapper {
