@@ -18,9 +18,3 @@ For example, for Python 2.7.6 put this in `runtime.txt`
 <pre>
 python-2.7.6
 </pre>
-
-### Default libraries and Python version
-
-If you don't specify a `requirements.txt` or `runtime.txt` file, morph will insert defaults
-for you which are designed to be as close as possible to the environment provided by ScraperWiki
-Classic as it was in January 2014.
