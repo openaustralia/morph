@@ -12,6 +12,11 @@
 }
 
 .banner-search {
+  @media (min-width: $screen-md-min) {
+    padding-bottom: 24px;
+    padding-top: 24px;
+  }
+
   .label-heading {
     font-size: $font-size-h4;
 
