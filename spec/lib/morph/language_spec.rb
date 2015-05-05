@@ -37,10 +37,11 @@ describe Morph::Language do
 # # An arbitrary query against the database
 # ScraperWiki.select("* from data where 'name'='peter'")
 
-# You don't have to do things with the Mechanize or ScraperWiki libraries. You can use whatever gems are installed
-# on morph.io for Ruby (https://github.com/openaustralia/morph-docker-ruby/blob/master/Gemfile) and all that matters
-# is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
-# has at least a table called data.
+# You don't have to do things with the Mechanize or ScraperWiki libraries.
+# You can use whatever gems you want: https://morph.io/documentation/ruby
+# All that matters is that your final data is written to an SQLite database
+# called "data.sqlite" in the current working directory which has at least a table
+# called "data".
       EOF
     end
 
@@ -71,10 +72,11 @@ describe Morph::Language do
 // // An arbitrary query against the database
 // scraperwiki::select("* from data where 'name'='peter'")
 
-// You don't have to do things with the ScraperWiki library. You can use whatever is installed
-// on morph.io for PHP (See https://github.com/openaustralia/morph-docker-php) and all that matters
-// is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
-// has at least a table called data.
+// You don't have to do things with the ScraperWiki library.
+// You can use whatever libraries you want: https://morph.io/documentation/php
+// All that matters is that your final data is written to an SQLite database
+// called "data.sqlite" in the current working directory which has at least a table
+// called "data".
 ?>
       EOF
     end
@@ -101,10 +103,11 @@ describe Morph::Language do
 # # An arbitrary query against the database
 # scraperwiki.sql.select("* from data where 'name'='peter'")
 
-# You don't have to do things with the ScraperWiki and lxml libraries. You can use whatever libraries are installed
-# on morph.io for Python (https://github.com/openaustralia/morph-docker-python/blob/master/pip_requirements.txt) and all that matters
-# is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
-# has at least a table called data.
+# You don't have to do things with the ScraperWiki and lxml libraries.
+# You can use whatever libraries you want: https://morph.io/documentation/python
+# All that matters is that your final data is written to an SQLite database
+# called "data.sqlite" in the current working directory which has at least a table
+# called "data".
       EOF
     end
 
@@ -136,18 +139,17 @@ describe Morph::Language do
 # # Open a database handle
 # my $dt = Database::DumpTruck->new({dbname => 'data.sqlite', table => 'data'});
 #
-# # Insert content of <td id="name"> and <td id="age"> into the database
-# $dt->insert([map {{
-#     Name => $_->look_down(_tag => 'td', id => 'name')->content,
-#     Age => $_->look_down(_tag => 'td', id => 'age')->content,
-# }} @rows]);
+# # Insert some records into the database
+# $dt->insert([{
+#     Name => 'Susan',
+#     Occupation => 'Software Developer'
+# }]);
 
-# You don't have to do things with the HTML::TreeBuilder and Database::DumpTruck
-# libraries. You can use whatever libraries are installed on morph.io for Perl
-# (https://github.com/openaustralia/morph-docker-perl/blob/master/Dockerfile)
-# and all that matters is that your final data is written to an Sqlite
-# database called data.sqlite in the current working directory which has at
-# least a table called data.
+# You don't have to do things with the HTML::TreeBuilder and Database::DumpTruck libraries.
+# You can use whatever libraries you want: https://morph.io/documentation/perl
+# All that matters is that your final data is written to an SQLite database
+# called "data.sqlite" in the current working directory which has at least a table
+# called "data".
       EOF
     end
   end

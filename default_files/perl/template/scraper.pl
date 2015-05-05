@@ -23,15 +23,14 @@
 # # Open a database handle
 # my $dt = Database::DumpTruck->new({dbname => 'data.sqlite', table => 'data'});
 #
-# # Insert content of <td id="name"> and <td id="age"> into the database
-# $dt->insert([map {{
-#     Name => $_->look_down(_tag => 'td', id => 'name')->content,
-#     Age => $_->look_down(_tag => 'td', id => 'age')->content,
-# }} @rows]);
+# # Insert some records into the database
+# $dt->insert([{
+#     Name => 'Susan',
+#     Occupation => 'Software Developer'
+# }]);
 
-# You don't have to do things with the HTML::TreeBuilder and Database::DumpTruck
-# libraries. You can use whatever libraries are installed on morph.io for Perl
-# (https://github.com/openaustralia/morph-docker-perl/blob/master/Dockerfile)
-# and all that matters is that your final data is written to an Sqlite
-# database called data.sqlite in the current working directory which has at
-# least a table called data.
+# You don't have to do things with the HTML::TreeBuilder and Database::DumpTruck libraries.
+# You can use whatever libraries you want: https://morph.io/documentation/perl
+# All that matters is that your final data is written to an SQLite database
+# called "data.sqlite" in the current working directory which has at least a table
+# called "data".
