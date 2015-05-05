@@ -9,7 +9,7 @@
           %input.form-control#query{required: "required", type: "search", autofocus: (@q.blank? ? true : false), maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
           .input-group-btn
             %button.btn.btn-primary{type: "submit"} Search
-        %p
+        %p.search-suggestions
           try #{link_to "parliament", search_path(q: "parliament")},
           #{ link_to "planning", search_path(q: "planning")} or
           #{ link_to "Ghana", search_path(q: "Ghana")}
