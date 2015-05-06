@@ -1,7 +1,7 @@
 .container
   %h1.label-heading
     Search
-  = render partial: "search_banner"
+  = render partial: "search_form"
 
   - if @q
     - if @scrapers.any? || @owners.any?
