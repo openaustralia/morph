@@ -54,7 +54,12 @@
   }
 
   h2 {
-    font-weight: normal;
+    font-size: $font-size-h4;
+
+    @media (min-width: $screen-sm-min) {
+      font-size: $font-size-h3;
+      font-weight: normal;
+    }
   }
 }
 
