@@ -52,6 +52,10 @@
   @media (min-width: $screen-md-min) {
     padding-bottom: 48px;
   }
+
+  h2 {
+    font-weight: normal;
+  }
 }
 
 .banner-wrapper {
