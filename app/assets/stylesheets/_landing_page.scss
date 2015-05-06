@@ -11,6 +11,41 @@
   }
 }
 
+.banner-search {
+  @media (min-width: $screen-md-min) {
+    padding-bottom: 24px;
+    padding-top: 24px;
+  }
+
+  .label-heading {
+    font-size: $font-size-h4;
+
+    @media (min-width: $screen-xs-min) {
+      font-size: $font-size-h3;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      font-size: $font-size-h2;
+    }
+
+    @media (min-width: $screen-md-min) {
+      font-size: $font-size-h1;
+    }
+
+    .pre-heading {
+      margin-bottom: .2em;
+    }
+  }
+}
+
+.search-suggestions {
+  margin-top: .75em;
+
+  @media (min-width: $screen-md-min) {
+    font-size: 1.125em;
+  }
+}
+
 .banner-wrapper {
   background-color: #716b58;
 }

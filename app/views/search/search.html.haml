@@ -1,17 +1,11 @@
 .container
-  .search-header
-    =form_tag search_path, method: "get", class: "form-inline" do
-      %h1.label-heading
-        %label Search
-      .input-group.col-sm-12.col-md-8.col-lg-7
-        = hidden_field_tag :type, @type
-        %input.form-control#query{required: "required", type: "search", autofocus: (@q.blank? ? true : false), maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
-        .input-group-btn
-          %button.btn.btn-primary{type: "submit"} Search
+  %h1.label-heading
+    Search
+  = render partial: "search_banner"
 
   - if @q
     - if @scrapers.any? || @owners.any?
-      %ul.nav.nav-tabs
+      %ul.search-type-nav.nav.nav-tabs
         %li{class: ('active' unless @type == "users"), role: "presentation"}
           = link_to search_path(q: @q, type: nil) do
             Scrapers
