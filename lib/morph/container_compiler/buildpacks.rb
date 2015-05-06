@@ -46,7 +46,15 @@ module Morph
             on.ip_address {|ip| wrapper.call(:ip_address, ip)}
         end
 
-        i2.delete("noprune" => 1)
+        # There's a potential race condition here where we are trying to delete something
+        # that might be used elsewhere. Do the most crude thing and just ignore any errors
+        # that deleting might throw up.
+        begin
+          i2.delete("noprune" => 1)
+        # TODO When docker-api gem gets updated Docker::Error::ConfictError will be
+        # changed to Docker::Error::ConflictError
+        rescue Docker::Error::ConfictError
+        end
         status_code
       end
 
