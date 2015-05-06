@@ -3,7 +3,7 @@
 .container
   - if @q
     - if @scrapers.any? || @owners.any?
-      %ul.nav.nav-tabs
+      %ul.search-type-nav.nav.nav-tabs
         %li{class: ('active' unless @type == "users"), role: "presentation"}
           = link_to search_path(q: @q, type: nil) do
             Scrapers
