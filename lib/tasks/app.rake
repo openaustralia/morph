@@ -82,7 +82,7 @@ namespace :app do
     end
     containers.each do |c|
       id = c.id[0..11]
-      name = c.info["Names"].first
+      name = c.info["Names"].first if c.info["Names"]
       finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
       puts "Removing container id: #{id}, name: #{name}, finished: #{finished_ago} seconds ago"
       c.delete
