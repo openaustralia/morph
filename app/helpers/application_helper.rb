@@ -23,4 +23,8 @@ module ApplicationHelper
     l = Morph::Language.new(key)
     image_tag(l.image_path, options) + " " + l.human
   end
+
+  def floor_to_hundreds(number)
+    (number / 100.0).floor * 100
+  end
 end
