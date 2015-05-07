@@ -27,8 +27,9 @@
             - rows = scraper.database.first_ten_rows(table)
             .scraper-download-block
               - unless signed_in?
-                To download data
-                = button_link_to "sign in with GitHub", user_omniauth_authorize_path(:github)
+                %p
+                  To download data
+                  = button_link_to "sign in with GitHub", user_omniauth_authorize_path(:github)
               .btn-group
                 = button_link_to "Download table (as CSV)", data_scraper_path(scraper, format: :csv, query: scraper.database.select_all(table), key: (current_user.api_key if current_user)), disabled: !signed_in?
                 = button_link_to "Download SQLite database (#{number_to_human_size scraper.database.sqlite_db_size})", data_scraper_path(scraper, :format => :sqlite, key: (current_user.api_key if current_user)), disabled: !signed_in?
