@@ -25,7 +25,7 @@
         - scraper.database.table_names.each do |table|
           .tab-pane{class: ("active" if table == active_table), id: "table_#{table}"}
             - rows = scraper.database.first_ten_rows(table)
-            %p.scraper-download-block
+            .scraper-download-block
               - unless signed_in?
                 To download data
                 = button_link_to "sign in with GitHub", user_omniauth_authorize_path(:github)
