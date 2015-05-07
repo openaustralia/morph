@@ -1,21 +1,9 @@
-You can see the list of people who have downloaded the data
-collected by a scraper on morph.io.
-Your downloads will be listed.
-Use this information to find new people to collaborate with
-and more open data to use in your own projects.
+On each scraper you can see who has downloaded or used the API to get the data.
+Your downloads are also listed there.
 
-Downloads of .csv and database files, as well as calls to
-scraper APIs are counted as ‘Downloads’.
+By being able to see openly who is using what we aim to promote collaboration and serendipity.
+Creating or scraping data is important, but it's people using it that really makes it exciting. Showing who downloads what, connects people making scrapers with those who use the data.
 
-If it is important for you to protect your identity
-in downloading data from morph.io, you have a couple of options.
-You could make an alternate Github account and email
-for your work on morph.io, that cannot be linked back to the
-identity you would like to protect.
+There may be situations where you don't want to be identified as downloading some data. In that case please create an alternate GitHub (and morph.io) account which does not identify you and use that to download the data.
 
-If this is not possible, please contact us.
-We'll do our best to help if you explain you're circumstances.
-Morph is the scraping platform for civic hackers,
-activists and researchers. We strongly believe in being open
-by default, but understand there are times when data collection
-must be protected.
+If that's not possible, or you have any questions, please [contact us](mailto:contact@oaf.org.au).
