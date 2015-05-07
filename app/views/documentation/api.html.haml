@@ -8,7 +8,7 @@
   %code
     GET #{api_url_in_html(content_tag(:em, "[scraper]"), content_tag(:em, "[format]"), content_tag(:em, "[api_key]"), content_tag(:em, "[sql]"), "")}
 
-%p
+%p.alert.alert-info
   Your API calls will be shown as downloads on the scraper page.
   = link_to "Why?", documentation_index_path(anchor: "open_downloads"), title: 'Read about why downloader information is public and open.'
 
