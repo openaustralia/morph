@@ -127,16 +127,23 @@
 }
 
 .scraper-download-block {
-  .btn-group a:last-child {
-    @media (min-width: $screen-md-min) {
-      margin-right: .5em;
+  margin-top: 1em;
+
+  .btn-group {
+    margin-bottom: 1em;
+
+    a:last-child {
+      @media (min-width: $screen-md-min) {
+        margin-right: .5em;
+      }
     }
   }
 }
 
 .download-privacy-notice {
-  margin-top: 1em;
+  margin: 0 0 1em;
   display: inline-block;
+  vertical-align: top;
 
   &.alert {
     padding: 0.25em .5em;
