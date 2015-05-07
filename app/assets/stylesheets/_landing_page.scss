@@ -46,6 +46,23 @@
   }
 }
 
+.banner-add-scraper {
+  padding-bottom: 24px;
+
+  @media (min-width: $screen-md-min) {
+    padding-bottom: 48px;
+  }
+
+  h2 {
+    font-size: $font-size-h4;
+
+    @media (min-width: $screen-sm-min) {
+      font-size: $font-size-h3;
+      font-weight: normal;
+    }
+  }
+}
+
 .banner-wrapper {
   background-color: #716b58;
 }

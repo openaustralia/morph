@@ -5,6 +5,12 @@
       Search over #{pluralize(floor_to_hundreds(Scraper.count), "scraper")}
     = render partial: "search_form"
 
+- if current_user.scrapers.empty?
+  .banner-add-scraper.banner
+    .container
+      %h2 Unlock the data you need
+      = link_to "Create your first scraper", new_scraper_path, class: "btn btn-primary btn-lg"
+
 .container
   .row
     .col-md-6
