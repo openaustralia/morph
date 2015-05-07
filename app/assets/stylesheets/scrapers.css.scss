@@ -137,6 +137,10 @@
 .download-privacy-notice {
   margin-top: 1em;
   display: inline-block;
+
+  &.alert {
+    padding: 0.25em .5em;
+  }
 }
 
 .popover-content {
