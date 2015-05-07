@@ -8,6 +8,10 @@
   %code
     GET #{api_url_in_html(content_tag(:em, "[scraper]"), content_tag(:em, "[format]"), content_tag(:em, "[api_key]"), content_tag(:em, "[sql]"), "")}
 
+%p
+  Your API calls will be shown as downloads on the scraper page.
+  = link_to "Why?", documentation_index_path(anchor: "open_downloads"), title: 'Read about why downloader information is public and open.'
+
 %h2 Parameters
 
 -# TODO Write this whole form in a more concise way using the magic of simple_form
