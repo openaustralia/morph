@@ -34,7 +34,9 @@
                 = button_link_to "Download SQLite database (#{number_to_human_size scraper.database.sqlite_db_size})", data_scraper_path(scraper, :format => :sqlite, key: (current_user.api_key if current_user)), disabled: !signed_in?
                 = button_link_to "Use the API", api_documentation_index_path(scraper: scraper.full_name)
               - if user_signed_in?
-                %span.download-privacy-notice Your downloads will be shown above #{link_to "Why?", documentation_index_path(anchor: "open_downloads"), title: 'Read about why downloader information is public and open.'}
+                %span.download-privacy-notice
+                  Your downloads will be shown above
+                  = link_to "Why?", documentation_index_path(anchor: "open_downloads"), title: 'Read about why downloader information is public and open.'
             %p rows #{[10, scraper.database.no_rows(table)].min} / #{scraper.database.no_rows(table)}
             .table-responsive.scraper-data.scroller-frame
               %table.table.table-striped.table-bordered.table-condensed.tablesaw.tablesaw-stack.scroller-panel{data: {tablesaw: {mode: "stack" }}}
