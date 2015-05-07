@@ -126,6 +126,14 @@
   }
 }
 
+.scraper-download-block {
+  .btn-group a:last-child {
+    @media (min-width: $screen-md-min) {
+      margin-right: .5em;
+    }
+  }
+}
+
 .download-privacy-notice {
   margin-top: 1em;
   display: inline-block;
