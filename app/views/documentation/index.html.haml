@@ -50,6 +50,14 @@
 
 .row
   .col-sm-9
+    %h3.section#open_downloads See who is using the data
+    :markdown
+      #{render "open_downloads.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "_open_downloads.md"
+
+.row
+  .col-sm-9
     %h3.section#responsibility Your responsibility
     :markdown
       #{render "responsibility.md"}
