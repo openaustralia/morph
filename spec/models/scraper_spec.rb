@@ -137,4 +137,24 @@ describe Scraper do
       end
     end
   end
+
+  describe "#download_count_by_owner" do
+    let(:scraper) do
+      # Doing this to avoid validations getting called
+      s = Scraper.new(owner_id: 1)
+      s.save(validate: false)
+      s
+    end
+    let(:owner1) { Owner.create }
+    let(:owner2) { Owner.create }
+    before :each do
+      scraper.api_queries.create(owner: owner1)
+      scraper.api_queries.create(owner: owner1)
+      scraper.api_queries.create(owner: owner2)
+    end
+
+    it do
+      expect(scraper.download_count_by_owner).to eq [[owner1, 2], [owner2, 1]]
+    end
+  end
 end
