@@ -138,7 +138,7 @@ describe Scraper do
     end
   end
 
-  describe "#download_count_by_owner" do
+  context "a scraper with some downloads" do
     let(:scraper) do
       # Doing this to avoid validations getting called
       s = Scraper.new(owner_id: 1)
@@ -153,8 +153,16 @@ describe Scraper do
       scraper.api_queries.create(owner: owner2)
     end
 
-    it do
-      expect(scraper.download_count_by_owner).to eq [[owner2, 2], [owner1, 1]]
+    describe "#download_count_by_owner" do
+      it do
+        expect(scraper.download_count_by_owner).to eq [[owner2, 2], [owner1, 1]]
+      end
+    end
+
+    describe "#download_count" do
+      it do
+        expect(scraper.download_count).to eq 3
+      end
     end
   end
 end
