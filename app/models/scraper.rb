@@ -71,6 +71,16 @@ class Scraper < ActiveRecord::Base
     api_queries.count
   end
 
+  def public_download_count_by_owner
+    api_queries.visible.group(:owner_id).order("count_all desc").count.map do |id,count|
+      [Owner.find(id), count]
+    end
+  end
+
+  def public_download_count
+    api_queries.visible.count
+  end
+
   # Given a scraper name on github populates the fields for a morph.io scraper but doesn't save it
   def self.new_from_github(full_name, octokit_client)
     repo = octokit_client.repository(full_name)
