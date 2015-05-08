@@ -4,12 +4,12 @@ describe User do
   let(:user) {User.new}
 
   context "user has no scrapers" do
-    describe "#successful_scrapers" do
-      it{ expect(user.successful_scrapers).to eq []}
+    describe "#watched_successful_scrapers" do
+      it{ expect(user.watched_successful_scrapers).to eq []}
     end
 
-    describe "#broken_scrapers" do
-      it{ expect(user.broken_scrapers).to eq []}
+    describe "#watched_broken_scrapers" do
+      it{ expect(user.watched_broken_scrapers).to eq []}
     end
   end
 
@@ -19,12 +19,12 @@ describe User do
       expect(user).to receive(:all_scrapers_watched).and_return([scraper])
     end
 
-    describe "#successful_scrapers" do
-      it{ expect(user.successful_scrapers).to eq [scraper]}
+    describe "#watched_successful_scrapers" do
+      it{ expect(user.watched_successful_scrapers).to eq [scraper]}
     end
 
-    describe "#broken_scrapers" do
-      it{ expect(user.broken_scrapers).to eq []}
+    describe "#watched_broken_scrapers" do
+      it{ expect(user.watched_broken_scrapers).to eq []}
     end
   end
 
@@ -34,12 +34,12 @@ describe User do
       expect(user).to receive(:all_scrapers_watched).and_return([scraper])
     end
 
-    describe "#successful_scrapers" do
-      it{ expect(user.successful_scrapers).to eq []}
+    describe "#watched_successful_scrapers" do
+      it{ expect(user.watched_successful_scrapers).to eq []}
     end
 
-    describe "#broken_scrapers" do
-      it{ expect(user.broken_scrapers).to eq [scraper]}
+    describe "#watched_broken_scrapers" do
+      it{ expect(user.watched_broken_scrapers).to eq [scraper]}
     end
   end
 
@@ -50,12 +50,12 @@ describe User do
       expect(user).to receive(:all_scrapers_watched).and_return([scraper1, scraper2])
     end
 
-    describe "#successful_scrapers" do
-      it{ expect(user.successful_scrapers).to eq [scraper2]}
+    describe "#watched_successful_scrapers" do
+      it{ expect(user.watched_successful_scrapers).to eq [scraper2]}
     end
 
-    describe "#broken_scrapers" do
-      it{ expect(user.broken_scrapers).to eq [scraper1]}
+    describe "#watched_broken_scrapers" do
+      it{ expect(user.watched_broken_scrapers).to eq [scraper1]}
     end
   end
 end
