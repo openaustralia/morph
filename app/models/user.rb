@@ -46,7 +46,7 @@ class User < Owner
 
     unless broken_runs.empty?
       begin
-        AlertMailer.alert_email(self, broken_runs, successful_runs.count).deliver
+        AlertMailer.alert_email2(self, broken_runs.map { |r| r.scraper }, successful_runs.count).deliver
       rescue Net::SMTPSyntaxError
         puts "Warning: user #{nickname} has invalid email address #{email} (tried to send alert)"
       end

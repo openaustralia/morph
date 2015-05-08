@@ -22,6 +22,10 @@ class AlertMailer < ActionMailer::Base
     @subject = "morph.io: #{pluralize(count, 'scraper')} you are watching #{count == 1 ? "is" : "are"} erroring"
 
     attachments.inline['logo_75x75.png'] = File.read(File.join(Rails.root, "app", "assets", path_to_image("logo_75x75.png")))
-    mail(to: "#{user.name} <#{user.email}>", subject: @subject) if user.email
+    mail(to: "#{user.name} <#{user.email}>", subject: @subject, template_name: 'alert_email') if user.email
+  end
+
+  def alert_email2(user, broken_scrapers, successful_count)
+    alert_email(user, broken_scrapers.map {|s| s.last_run}, successful_count)
   end
 end
