@@ -157,25 +157,25 @@ describe Scraper do
 
     describe "#download_count_by_owner" do
       it do
-        expect(scraper.download_count_by_owner).to eq [[owner2, 3], [owner1, 1]]
+        expect(scraper.download_count_by_owner(true)).to eq [[owner2, 3], [owner1, 1]]
       end
     end
 
     describe "#download_count" do
       it do
-        expect(scraper.download_count).to eq 4
+        expect(scraper.download_count(true)).to eq 4
       end
     end
 
-    describe "#public_download_count_by_owner" do
+    describe "#download_count_by_owner" do
       it do
-        expect(scraper.public_download_count_by_owner).to eq [[owner2, 2], [owner1, 1]]
+        expect(scraper.download_count_by_owner(false)).to eq [[owner2, 2], [owner1, 1]]
       end
     end
 
-    describe "#public_download_count" do
+    describe "#download_count" do
       it do
-        expect(scraper.public_download_count).to eq 3
+        expect(scraper.download_count(false)).to eq 3
       end
     end
   end
