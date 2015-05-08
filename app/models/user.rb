@@ -44,8 +44,9 @@ class User < Owner
     all_scrapers_watched.select {|s| s.last_run_finished_with_errors?}
   end
 
-  def process_alerts
-    broken_scrapers = broken_scrapers.sort do |a,b|
+  # Puts scrapers that have most recently failed first
+  def broken_scrapers_ordered_by_urgency
+    broken_scrapers.sort do |a,b|
       if b.latest_successful_run_time.nil? && a.latest_successful_run_time.nil?
         0
       elsif b.latest_successful_run_time.nil?
@@ -56,10 +57,12 @@ class User < Owner
         b.latest_successful_run_time <=> a.latest_successful_run_time
       end
     end
+  end
 
-    unless broken_scrapers.empty?
+  def process_alerts
+    unless broken_scrapers_ordered_by_urgency.empty?
       begin
-        AlertMailer.alert_email(self, broken_scrapers, successful_scrapers.count).deliver
+        AlertMailer.alert_email(self, broken_scrapers_ordered_by_urgency, successful_scrapers.count).deliver
       rescue Net::SMTPSyntaxError
         puts "Warning: user #{nickname} has invalid email address #{email} (tried to send alert)"
       end
