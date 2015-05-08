@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150428045908) do
+ActiveRecord::Schema.define(version: 20150508011134) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20150428045908) do
     t.datetime "updated_at"
   end
 
+  add_index "api_queries", ["created_at"], name: "index_api_queries_on_created_at", using: :btree
   add_index "api_queries", ["owner_id"], name: "index_api_queries_on_owner_id", using: :btree
   add_index "api_queries", ["scraper_id"], name: "index_api_queries_on_scraper_id", using: :btree
 
