@@ -10,7 +10,7 @@
             %strong
               Downloaded
               = pluralize(scraper.download_count, "time")
-            - if scraper.api_queries.any?
+            - if scraper.download_count > 0
               by
               - scraper.download_count_by_owner.each do |downloader,count|
                 = link_to downloader do
