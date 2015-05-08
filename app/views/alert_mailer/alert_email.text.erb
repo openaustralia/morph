@@ -1,17 +1,17 @@
 morph.io is letting you know that
 
 
-<% @broken_runs.each do |run| %>
-<%= run.full_name %> errored
-<% if run.scraper.latest_successful_run_time %>
-It has been erroring for <%= time_ago_in_words(run.scraper.latest_successful_run_time) %>
+<% @broken_scrapers.each do |scraper| %>
+<%= scraper.full_name %> errored
+<% if scraper.latest_successful_run_time %>
+It has been erroring for <%= time_ago_in_words(scraper.latest_successful_run_time) %>
 <% else %>
 It has never run successfully
 <% end %>
-Fix it: <%= scraper_url(run.scraper, @analytics_params) %>
+Fix it: <%= scraper_url(scraper, @analytics_params) %>
 
-<%= run.error_text.split("\n")[0..4].join("\n") %>
-<% if run.error_text.split("\n").count > 5 %>
+<%= scraper.last_run.error_text.split("\n")[0..4].join("\n") %>
+<% if scraper.last_run.error_text.split("\n").count > 5 %>
 (truncated)
 <% end %>
 

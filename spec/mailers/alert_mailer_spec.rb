@@ -5,11 +5,11 @@ describe AlertMailer do
     let(:user) { mock_model(User, name: "Matthew Landauer", email: "matthew@oaf.org.au", to_param: "mlandauer") }
     let(:full_name1) { "planningalerts-scrapers/campbelltown" }
     let(:full_name2) { "planningalerts-scrapers/spear" }
-    let(:scraper1) { mock_model(Scraper, to_param: full_name1, latest_successful_run_time: 3.days.ago) }
-    let(:scraper2) { mock_model(Scraper, to_param: full_name2, latest_successful_run_time: 7.days.ago) }
-    let(:run1) { mock_model(Run, full_name: full_name1, finished_at: 2.hours.ago, scraper: scraper1,
+    let(:scraper1) { mock_model(Scraper, to_param: full_name1, latest_successful_run_time: 3.days.ago, full_name: full_name1) }
+    let(:scraper2) { mock_model(Scraper, to_param: full_name2, latest_successful_run_time: 7.days.ago, full_name: full_name2) }
+    let(:run1) { mock_model(Run, finished_at: 2.hours.ago, scraper: scraper1,
       error_text: "PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16\n") }
-    let(:run2) { mock_model(Run, full_name: full_name2, finished_at: 22.hours.ago, scraper: scraper2,
+    let(:run2) { mock_model(Run, finished_at: 22.hours.ago, scraper: scraper2,
       error_text: "/repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )\n") }
     before :each do
       allow(scraper1).to receive(:last_run).and_return(run1)
