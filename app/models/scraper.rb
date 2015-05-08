@@ -114,6 +114,14 @@ class Scraper < ActiveRecord::Base
     latest_successful_run.finished_at if latest_successful_run
   end
 
+  def last_run_finished_successfully?
+    if last_run
+      last_run.finished_successfully?
+    else
+      false
+    end
+  end
+
   def finished_runs
     runs.where("finished_at IS NOT NULL").order(finished_at: :desc)
   end

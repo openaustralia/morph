@@ -36,6 +36,10 @@ class User < Owner
     end
   end
 
+  def successful_scrapers
+    all_scrapers_watched.select {|s| s.last_run_finished_successfully?}
+  end
+
   def process_alerts
     auto_scrapers = all_scrapers_watched.select do |s|
       s.last_run

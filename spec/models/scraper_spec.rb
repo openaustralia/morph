@@ -137,4 +137,30 @@ describe Scraper do
       end
     end
   end
+
+  describe "#last_run_finished_successfully?" do
+    let(:scraper) { Scraper.new }
+
+    context "scraper has never run" do
+      it{expect(scraper.last_run_finished_successfully?).to eq false}
+    end
+
+    context "scraper has run but it failed" do
+      let(:run) {mock_model(Run, finished_successfully?: false)}
+      before :each do
+        allow(scraper).to receive(:last_run).and_return(run)
+      end
+
+      it{expect(scraper.last_run_finished_successfully?).to eq false}
+    end
+
+    context "scraper has fun and it was successful" do
+      let(:run) {mock_model(Run, finished_successfully?: true)}
+      before :each do
+        allow(scraper).to receive(:last_run).and_return(run)
+      end
+
+      it{expect(scraper.last_run_finished_successfully?).to eq true}
+    end
+  end
 end
