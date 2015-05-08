@@ -149,12 +149,12 @@ describe Scraper do
     let(:owner2) { Owner.create }
     before :each do
       scraper.api_queries.create(owner: owner1)
-      scraper.api_queries.create(owner: owner1)
+      scraper.api_queries.create(owner: owner2)
       scraper.api_queries.create(owner: owner2)
     end
 
     it do
-      expect(scraper.download_count_by_owner).to eq [[owner1, 2], [owner2, 1]]
+      expect(scraper.download_count_by_owner).to eq [[owner2, 2], [owner1, 1]]
     end
   end
 end
