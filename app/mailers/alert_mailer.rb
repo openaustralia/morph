@@ -3,7 +3,7 @@ class AlertMailer < ActionMailer::Base
   include ActionView::Helpers::AssetUrlHelper
   default from: "morph.io <contact@morph.io>"
 
-  def alert_email2(user, broken_scrapers, successful_count)
+  def alert_email(user, broken_scrapers, successful_count)
     broken_runs = broken_scrapers.map {|s| s.last_run}
     count = broken_runs.count
     @user, @successful_count = user, successful_count
@@ -23,6 +23,6 @@ class AlertMailer < ActionMailer::Base
     @subject = "morph.io: #{pluralize(count, 'scraper')} you are watching #{count == 1 ? "is" : "are"} erroring"
 
     attachments.inline['logo_75x75.png'] = File.read(File.join(Rails.root, "app", "assets", path_to_image("logo_75x75.png")))
-    mail(to: "#{user.name} <#{user.email}>", subject: @subject, template_name: 'alert_email') if user.email
+    mail(to: "#{user.name} <#{user.email}>", subject: @subject) if user.email
   end
 end
