@@ -12,9 +12,9 @@
               = pluralize(scraper.api_queries.count, "time")
             - if scraper.api_queries.any?
               by
-              - scraper.downloaders.each do |downloader|
+              - scraper.download_count_by_owner.each do |downloader,count|
                 = link_to downloader do
-                  = owner_image(downloader, 30, true, "Downloaded #{pluralize(downloader.scraper_download_count(scraper), 'time')} by #{downloader.nickname}")
+                  = owner_image(downloader, 30, true, "Downloaded #{pluralize(count, 'time')} by #{downloader.nickname}")
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
