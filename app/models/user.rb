@@ -44,9 +44,23 @@ class User < Owner
     broken_runs = auto_runs.select {|r| r.finished_with_errors?}
     successful_runs = auto_runs.select {|r| r.finished_successfully?}
 
+    broken_scrapers = broken_runs.map { |r| r.scraper }
+
+    broken_scrapers = broken_scrapers.sort do |a,b|
+      if b.latest_successful_run_time.nil? && a.latest_successful_run_time.nil?
+        0
+      elsif b.latest_successful_run_time.nil?
+        -1
+      elsif a.latest_successful_run_time.nil?
+        1
+      else
+        b.latest_successful_run_time <=> a.latest_successful_run_time
+      end
+    end
+
     unless broken_runs.empty?
       begin
-        AlertMailer.alert_email(self, broken_runs.map { |r| r.scraper }, successful_runs.count).deliver
+        AlertMailer.alert_email(self, broken_scrapers, successful_runs.count).deliver
       rescue Net::SMTPSyntaxError
         puts "Warning: user #{nickname} has invalid email address #{email} (tried to send alert)"
       end
