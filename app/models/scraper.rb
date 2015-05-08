@@ -60,17 +60,19 @@ class Scraper < ActiveRecord::Base
     (watchers + owner.watchers).uniq
   end
 
+  def visible_api_queries(show_everything = false)
+    show_everything ? api_queries : api_queries.visible
+  end
+
   # Also orders the owners by number of downloads
   def download_count_by_owner(show_everything = false)
-    q = show_everything ? api_queries : api_queries.visible
-    q.group(:owner_id).order("count_all desc").count.map do |id,count|
+    visible_api_queries(show_everything).group(:owner_id).order("count_all desc").count.map do |id,count|
       [Owner.find(id), count]
     end
   end
 
   def download_count(show_everything = false)
-    q = show_everything ? api_queries : api_queries.visible
-    q.count
+    visible_api_queries(show_everything).count
   end
 
   # Given a scraper name on github populates the fields for a morph.io scraper but doesn't save it
