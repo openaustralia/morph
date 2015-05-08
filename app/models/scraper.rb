@@ -62,7 +62,9 @@ class Scraper < ActiveRecord::Base
 
   # Also orders the owners by number of downloads
   def download_count_by_owner
-    api_queries.group(:owner_id).map {|d| d.owner}.map{|d| [d, d.scraper_download_count(self)]}.sort{|a,b| b[1] <=> a[1]}
+    api_queries.group(:owner_id).map {|d| d.owner}.map do |d|
+      [d, api_queries.where(owner_id: d.id).count]
+    end.sort{|a,b| b[1] <=> a[1]}
   end
 
   def download_count

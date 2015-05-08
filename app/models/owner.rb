@@ -127,9 +127,4 @@ class Owner < ActiveRecord::Base
   def ability
     @ability ||= Ability.new(self)
   end
-
-  def scraper_download_count(scraper)
-   scraper.api_queries.where(owner_id: id).count
-
-  end
 end
