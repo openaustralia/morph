@@ -45,13 +45,6 @@ class User < Owner
   end
 
   def process_alerts
-    auto_scrapers = all_scrapers_watched.select do |s|
-      s.last_run
-    end
-
-    successful_scrapers = auto_scrapers.select {|s| s.last_run.finished_successfully?}
-    broken_scrapers = auto_scrapers.select {|s| s.last_run.finished_with_errors?}
-
     broken_scrapers = broken_scrapers.sort do |a,b|
       if b.latest_successful_run_time.nil? && a.latest_successful_run_time.nil?
         0
