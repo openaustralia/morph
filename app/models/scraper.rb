@@ -38,7 +38,7 @@ class Scraper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :full_name
 
-  delegate :queued?, :running?, to: :last_run, allow_nil: true
+  delegate :finished_successfully?, :finished_with_errors?, :queued?, :running?, to: :last_run, allow_nil: true
 
   def search_data
     {
@@ -112,14 +112,6 @@ class Scraper < ActiveRecord::Base
   def latest_successful_run_time
     latest_successful_run = successful_runs.first
     latest_successful_run.finished_at if latest_successful_run
-  end
-
-  def finished_successfully?
-    last_run && last_run.finished_successfully?
-  end
-
-  def finished_with_errors?
-    last_run && last_run.finished_with_errors?
   end
 
   def finished_runs
