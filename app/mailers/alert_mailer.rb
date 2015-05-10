@@ -1,6 +1,7 @@
 class AlertMailer < ActionMailer::Base
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::AssetUrlHelper
+  add_template_helper UsersHelper
   default from: "morph.io <contact@morph.io>"
 
   def alert_email(user, broken_scrapers, successful_scrapers)

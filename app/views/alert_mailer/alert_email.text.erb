@@ -1,7 +1,6 @@
 morph.io is letting you know that
 
-<%= pluralize(@successful_scrapers.count, "scraper") %> finished successfully
-<%= pluralize(@broken_scrapers.count, "scraper") %> errored
+<%= alert_scrapers_summary_sentence(@successful_scrapers.count, @broken_scrapers.count) %>
 
 <% @broken_scrapers.each do |scraper| %>
 <%= scraper.full_name %> errored

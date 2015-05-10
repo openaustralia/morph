@@ -34,8 +34,7 @@ describe AlertMailer do
         email.text_part.body.to_s.should == <<-EOF
 morph.io is letting you know that
 
-32 scrapers finished successfully
-2 scrapers errored
+32 scrapers you are watching are working. These 2 have a problem:
 
 planningalerts-scrapers/campbelltown errored
 It has been erroring for 3 days
@@ -67,8 +66,7 @@ is letting you know that
 
       it do
         expected = <<-EOF
-<h3>32 scrapers finished successfully</h3>
-<h3>2 scrapers errored</h3>
+<h3>32 scrapers you are watching are working. These 2 have a problem:</h3>
 <h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown?utm_medium=email&amp;utm_source=alerts">planningalerts-scrapers/campbelltown</a>
 errored
@@ -107,8 +105,7 @@ Annoyed by these emails? Then
         AlertMailer.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s.should == <<-EOF
 morph.io is letting you know that
 
-32 scrapers finished successfully
-1 scraper errored
+32 scrapers you are watching are working. This 1 has a problem:
 
 planningalerts-scrapers/campbelltown errored
 It has been erroring for 3 days
@@ -132,14 +129,14 @@ morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
     describe "count of number of scrapers that finished successfully" do
       context "32 scrapers" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1] * 32) }
-        it { mail.text_part.body.to_s.should include("32 scrapers finished successfully") }
-        it { mail.html_part.body.to_s.should include("32 scrapers finished successfully") }
+        it { mail.text_part.body.to_s.should include("32 scrapers you are watching are working. This 1 has a problem:") }
+        it { mail.html_part.body.to_s.should include("32 scrapers you are watching are working. This 1 has a problem:") }
       end
 
       context "1 scraper" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1]) }
-        it { mail.text_part.body.to_s.should include("1 scraper finished successfully") }
-        it { mail.html_part.body.to_s.should include("1 scraper finished successfully") }
+        it { mail.text_part.body.to_s.should include("1 scraper you are watching is working. This 1 has a problem:") }
+        it { mail.html_part.body.to_s.should include("1 scraper you are watching is working. This 1 has a problem:") }
       end
     end
   end
