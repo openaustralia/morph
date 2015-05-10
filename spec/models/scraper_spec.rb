@@ -131,7 +131,7 @@ describe Scraper do
       end
 
       it "should defer to the last run" do
-        result = mock
+        result = double
         expect(last_run).to receive(:scraped_domains).and_return(result)
         expect(scraper.scraped_domains).to eq result
       end
