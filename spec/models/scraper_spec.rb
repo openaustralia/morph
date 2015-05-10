@@ -143,11 +143,11 @@ describe Scraper do
 
     context "scraper has never run" do
       describe "#last_run_finished_successfully?" do
-        it{expect(scraper.last_run_finished_successfully?).to eq false}
+        it{expect(scraper.last_run_finished_successfully?).to be_falsey}
       end
 
       describe "#last_run_finished_with_errors?" do
-        it{expect(scraper.last_run_finished_with_errors?).to eq false}
+        it{expect(scraper.last_run_finished_with_errors?).to be_falsey}
       end
     end
 
@@ -158,11 +158,11 @@ describe Scraper do
       end
 
       describe "#last_run_finished_successfully?" do
-        it{expect(scraper.last_run_finished_successfully?).to eq false}
+        it{expect(scraper.last_run_finished_successfully?).to be_falsey}
       end
 
       describe "#last_run_finished_with_errors?" do
-        it{expect(scraper.last_run_finished_with_errors?).to eq true}
+        it{expect(scraper.last_run_finished_with_errors?).to be_truthy}
       end
     end
 
@@ -173,11 +173,11 @@ describe Scraper do
       end
 
       describe "#last_run_finished_successfully?" do
-        it{expect(scraper.last_run_finished_successfully?).to eq true}
+        it{expect(scraper.last_run_finished_successfully?).to be_truthy}
       end
 
       describe "#last_run_finished_with_errors?" do
-        it{expect(scraper.last_run_finished_with_errors?).to eq false}
+        it{expect(scraper.last_run_finished_with_errors?).to be_falsey}
       end
     end
   end
