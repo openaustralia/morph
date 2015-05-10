@@ -115,19 +115,11 @@ class Scraper < ActiveRecord::Base
   end
 
   def last_run_finished_successfully?
-    if last_run
-      last_run.finished_successfully?
-    else
-      false
-    end
+    last_run && last_run.finished_successfully?
   end
 
   def last_run_finished_with_errors?
-    if last_run
-      last_run.finished_with_errors?
-    else
-      false
-    end
+    last_run && last_run.finished_with_errors?
   end
 
   def finished_runs
