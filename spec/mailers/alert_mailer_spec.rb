@@ -22,14 +22,14 @@ describe AlertMailer do
 
       it { email.from.should == ["contact@morph.io"]}
       it { email.to.should == ["matthew@oaf.org.au"]}
-      it { email.subject.should == "morph.io: 1 scraper you are watching is erroring" }
+      it { email.subject.should == "1 scraper you are watching is erroring" }
     end
 
     context "two broken scrapers" do
       let(:broken_scrapers) { [scraper1, scraper2] }
       let(:email) { AlertMailer.alert_email(user, broken_scrapers, [scraper1] * 32) }
 
-      it { email.subject.should == "morph.io: 2 scrapers you are watching are erroring" }
+      it { email.subject.should == "2 scrapers you are watching are erroring" }
       it do
         email.text_part.body.to_s.should == <<-EOF
 morph.io is letting you know that
