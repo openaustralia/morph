@@ -1,5 +1,7 @@
 morph.io is letting you know that
 
+<%= pluralize(@successful_scrapers.count, "scraper") %> finished successfully
+<%= pluralize(@broken_scrapers.count, "scraper") %> errored
 
 <% @broken_scrapers.each do |scraper| %>
 <%= scraper.full_name %> errored
@@ -17,8 +19,6 @@ Fix it: <%= scraper_url(scraper, @analytics_params) %>
 
 
 <% end %>
-<%= pluralize(@successful_scrapers.count, "other scraper") %> you are watching finished successfully
-
 -----
 Annoyed by these emails? Then change what you're watching - <%= watching_user_url(@user, @analytics_params) %>
 morph.io - <%= root_url(@analytics_params) %>

@@ -34,6 +34,8 @@ describe AlertMailer do
         email.text_part.body.to_s.should == <<-EOF
 morph.io is letting you know that
 
+32 scrapers finished successfully
+2 scrapers errored
 
 planningalerts-scrapers/campbelltown errored
 It has been erroring for 3 days
@@ -48,8 +50,6 @@ Fix it: http://dev.morph.io/planningalerts-scrapers/spear?utm_medium=email&utm_s
 
 /repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )
 
-
-32 other scrapers you are watching finished successfully
 
 -----
 Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
@@ -67,6 +67,8 @@ is letting you know that
 
       it do
         expected = <<-EOF
+<h3>32 scrapers finished successfully</h3>
+<h3>2 scrapers errored</h3>
 <h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown?utm_medium=email&amp;utm_source=alerts">planningalerts-scrapers/campbelltown</a>
 errored
@@ -83,7 +85,6 @@ errored
 It has been erroring for 7 days
 </p>
 <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
-<h3>32 other scrapers you are watching finished successfully</h3>
         EOF
         email.html_part.body.to_s.should include(expected)
       end
@@ -106,6 +107,8 @@ Annoyed by these emails? Then
         AlertMailer.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s.should == <<-EOF
 morph.io is letting you know that
 
+32 scrapers finished successfully
+1 scraper errored
 
 planningalerts-scrapers/campbelltown errored
 It has been erroring for 3 days
@@ -119,8 +122,6 @@ Line five
 (truncated)
 
 
-32 other scrapers you are watching finished successfully
-
 -----
 Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
 morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
@@ -131,14 +132,14 @@ morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
     describe "count of number of scrapers that finished successfully" do
       context "32 scrapers" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1] * 32) }
-        it { mail.text_part.body.to_s.should include("32 other scrapers you are watching finished successfully") }
-        it { mail.html_part.body.to_s.should include("32 other scrapers you are watching finished successfully") }
+        it { mail.text_part.body.to_s.should include("32 scrapers finished successfully") }
+        it { mail.html_part.body.to_s.should include("32 scrapers finished successfully") }
       end
 
       context "1 scraper" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1]) }
-        it { mail.text_part.body.to_s.should include("1 other scraper you are watching finished successfully") }
-        it { mail.html_part.body.to_s.should include("1 other scraper you are watching finished successfully") }
+        it { mail.text_part.body.to_s.should include("1 scraper finished successfully") }
+        it { mail.html_part.body.to_s.should include("1 scraper finished successfully") }
       end
     end
   end

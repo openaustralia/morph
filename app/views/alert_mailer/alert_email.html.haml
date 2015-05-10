@@ -206,6 +206,10 @@
                     = image_tag attachments['logo_75x75.png'].url, size: "75x75"
                     = link_to "morph.io", root_url(@analytics_params)
                     is letting you know that
+
+                  %h3 #{pluralize(@successful_scrapers.count, "scraper")} finished successfully
+                  %h3 #{pluralize(@broken_scrapers.count, "scraper")} errored
+
                   - @broken_scrapers.each do |scraper|
                     %h3
                       = link_to scraper.full_name, scraper_url(scraper, @analytics_params)
@@ -219,8 +223,6 @@
                       = scraper.last_run.error_text.split("\n")[0..4].join("\n")
                       - if scraper.last_run.error_text.split("\n").count > 5
                         (truncated)
-
-                  %h3 #{pluralize(@successful_scrapers.count, "other scraper")} you are watching finished successfully
         %td
 
     -# footer
