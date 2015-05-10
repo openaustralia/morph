@@ -220,7 +220,7 @@
                       - if scraper.last_run.error_text.split("\n").count > 5
                         (truncated)
 
-                  %h3 #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
+                  %h3 #{pluralize(@successful_scrapers.count, "other scraper")} you are watching finished successfully
         %td
 
     -# footer

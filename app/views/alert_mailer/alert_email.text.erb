@@ -17,7 +17,7 @@ Fix it: <%= scraper_url(scraper, @analytics_params) %>
 
 
 <% end %>
-<%= pluralize(@successful_count, "other scraper") %> you are watching finished successfully
+<%= pluralize(@successful_scrapers.count, "other scraper") %> you are watching finished successfully
 
 -----
 Annoyed by these emails? Then change what you're watching - <%= watching_user_url(@user, @analytics_params) %>
