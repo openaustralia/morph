@@ -222,5 +222,22 @@ describe Scraper do
         it{expect(scraper.finished_with_errors?).to be_falsey}
       end
     end
+
+    describe "#finished_recently?" do
+      context "has never run" do
+        before(:each) {allow(scraper).to receive(:finished_at).and_return(nil)}
+        it {expect(scraper.finished_recently?).to be_falsey}
+      end
+
+      context "last finished 2 days ago" do
+        before(:each) {allow(scraper).to receive(:finished_at).and_return(2.days.ago)}
+        it {expect(scraper.finished_recently?).to be_falsey}
+      end
+
+      context "last finished 2 hours ago" do
+        before(:each) {allow(scraper).to receive(:finished_at).and_return(2.hours.ago)}
+        it {expect(scraper.finished_recently?).to be_truthy}
+      end
+    end
   end
 end

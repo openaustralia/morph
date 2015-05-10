@@ -36,12 +36,13 @@ class User < Owner
     end
   end
 
+  # Only include scrapers that finished in the last 24 hours
   def watched_successful_scrapers
-    all_scrapers_watched.select {|s| s.finished_successfully?}
+    all_scrapers_watched.select {|s| s.finished_successfully? && s.finished_recently?}
   end
 
   def watched_broken_scrapers
-    all_scrapers_watched.select {|s| s.finished_with_errors?}
+    all_scrapers_watched.select {|s| s.finished_with_errors? && s.finished_recently?}
   end
 
   # Puts scrapers that have most recently failed first
