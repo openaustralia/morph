@@ -131,7 +131,7 @@ describe Scraper do
       end
 
       it "should defer to the last run" do
-        result = mock
+        result = double
         expect(last_run).to receive(:scraped_domains).and_return(result)
         expect(scraper.scraped_domains).to eq result
       end
@@ -176,6 +176,50 @@ describe Scraper do
     describe "#download_count" do
       it do
         expect(scraper.download_count(false)).to eq 3
+      end
+    end
+  end
+
+  context "there is a scraper" do
+    let(:scraper) { Scraper.new }
+
+    context "scraper has never run" do
+      describe "#finished_successfully?" do
+        it{expect(scraper.finished_successfully?).to be_falsey}
+      end
+
+      describe "#finished_with_errors?" do
+        it{expect(scraper.finished_with_errors?).to be_falsey}
+      end
+    end
+
+    context "scraper has run but it failed" do
+      let(:run) {mock_model(Run, finished_successfully?: false, finished_with_errors?: true)}
+      before :each do
+        allow(scraper).to receive(:last_run).and_return(run)
+      end
+
+      describe "#finished_successfully?" do
+        it{expect(scraper.finished_successfully?).to be_falsey}
+      end
+
+      describe "#finished_with_errors?" do
+        it{expect(scraper.finished_with_errors?).to be_truthy}
+      end
+    end
+
+    context "scraper has run and it was successful" do
+      let(:run) {mock_model(Run, finished_successfully?: true, finished_with_errors?: false)}
+      before :each do
+        allow(scraper).to receive(:last_run).and_return(run)
+      end
+
+      describe "#finished_successfully?" do
+        it{expect(scraper.finished_successfully?).to be_truthy}
+      end
+
+      describe "#finished_with_errors?" do
+        it{expect(scraper.finished_with_errors?).to be_falsey}
       end
     end
   end

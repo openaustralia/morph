@@ -38,7 +38,7 @@ class Scraper < ActiveRecord::Base
   extend FriendlyId
   friendly_id :full_name
 
-  delegate :queued?, :running?, to: :last_run, allow_nil: true
+  delegate :finished_successfully?, :finished_with_errors?, :queued?, :running?, to: :last_run, allow_nil: true
 
   def search_data
     {

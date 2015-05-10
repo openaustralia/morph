@@ -206,21 +206,21 @@
                     = image_tag attachments['logo_75x75.png'].url, size: "75x75"
                     = link_to "morph.io", root_url(@analytics_params)
                     is letting you know that
-                  - @broken_runs.each do |run|
+                  - @broken_scrapers.each do |scraper|
                     %h3
-                      = link_to run.full_name, scraper_url(run.scraper, @analytics_params)
+                      = link_to scraper.full_name, scraper_url(scraper, @analytics_params)
                       errored
                     %p
-                      - if run.scraper.latest_successful_run_time
-                        It has been erroring for #{time_ago_in_words(run.scraper.latest_successful_run_time)}
+                      - if scraper.latest_successful_run_time
+                        It has been erroring for #{time_ago_in_words(scraper.latest_successful_run_time)}
                       - else
                         It has never run successfully
                     %pre
-                      = run.error_text.split("\n")[0..4].join("\n")
-                      - if run.error_text.split("\n").count > 5
+                      = scraper.last_run.error_text.split("\n")[0..4].join("\n")
+                      - if scraper.last_run.error_text.split("\n").count > 5
                         (truncated)
 
-                  %h3 #{pluralize(@successful_count, "other scraper")} you are watching finished successfully
+                  %h3 #{pluralize(@successful_scrapers.count, "other scraper")} you are watching finished successfully
         %td
 
     -# footer
