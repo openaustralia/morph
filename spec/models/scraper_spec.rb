@@ -142,12 +142,12 @@ describe Scraper do
     let(:scraper) { Scraper.new }
 
     context "scraper has never run" do
-      describe "#last_run_finished_successfully?" do
-        it{expect(scraper.last_run_finished_successfully?).to be_falsey}
+      describe "#finished_successfully?" do
+        it{expect(scraper.finished_successfully?).to be_falsey}
       end
 
-      describe "#last_run_finished_with_errors?" do
-        it{expect(scraper.last_run_finished_with_errors?).to be_falsey}
+      describe "#finished_with_errors?" do
+        it{expect(scraper.finished_with_errors?).to be_falsey}
       end
     end
 
@@ -157,12 +157,12 @@ describe Scraper do
         allow(scraper).to receive(:last_run).and_return(run)
       end
 
-      describe "#last_run_finished_successfully?" do
-        it{expect(scraper.last_run_finished_successfully?).to be_falsey}
+      describe "#finished_successfully?" do
+        it{expect(scraper.finished_successfully?).to be_falsey}
       end
 
-      describe "#last_run_finished_with_errors?" do
-        it{expect(scraper.last_run_finished_with_errors?).to be_truthy}
+      describe "#finished_with_errors?" do
+        it{expect(scraper.finished_with_errors?).to be_truthy}
       end
     end
 
@@ -172,12 +172,12 @@ describe Scraper do
         allow(scraper).to receive(:last_run).and_return(run)
       end
 
-      describe "#last_run_finished_successfully?" do
-        it{expect(scraper.last_run_finished_successfully?).to be_truthy}
+      describe "#finished_successfully?" do
+        it{expect(scraper.finished_successfully?).to be_truthy}
       end
 
-      describe "#last_run_finished_with_errors?" do
-        it{expect(scraper.last_run_finished_with_errors?).to be_falsey}
+      describe "#finished_with_errors?" do
+        it{expect(scraper.finished_with_errors?).to be_falsey}
       end
     end
   end

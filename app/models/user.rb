@@ -37,11 +37,11 @@ class User < Owner
   end
 
   def watched_successful_scrapers
-    all_scrapers_watched.select {|s| s.last_run_finished_successfully?}
+    all_scrapers_watched.select {|s| s.finished_successfully?}
   end
 
   def watched_broken_scrapers
-    all_scrapers_watched.select {|s| s.last_run_finished_with_errors?}
+    all_scrapers_watched.select {|s| s.finished_with_errors?}
   end
 
   # Puts scrapers that have most recently failed first
