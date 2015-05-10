@@ -3,7 +3,8 @@ class AlertMailer < ActionMailer::Base
   include ActionView::Helpers::AssetUrlHelper
   default from: "morph.io <contact@morph.io>"
 
-  def alert_email(user, broken_scrapers, successful_count)
+  def alert_email(user, broken_scrapers, successful_scrapers)
+    successful_count = successful_scrapers.count
     @user, @broken_scrapers, @successful_count = user, broken_scrapers, successful_count
     @analytics_params = {utm_medium: "email", utm_source: "alerts"}
 
