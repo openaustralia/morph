@@ -57,7 +57,7 @@ module Morph
       options = {
         repo_path: run.repo_path,
         data_path: run.data_path,
-        env_variables: run.variables.map{|v| [v.name, v.value]},
+        env_variables: run.env_variables,
         container_name: run.docker_container_name
       }
 

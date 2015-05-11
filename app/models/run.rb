@@ -181,6 +181,11 @@ class Run < ActiveRecord::Base
     scraper ? scraper.variables : []
   end
 
+  # Returns array of environment variables as key-value pairs
+  def env_variables
+    variables.map{|v| [v.name, v.value]}
+  end
+
   def docker_container_name
     "#{owner.to_param}_#{name}_#{id}"
   end
