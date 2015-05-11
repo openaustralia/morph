@@ -50,16 +50,6 @@ module Morph
       status_code
     end
 
-    def self.compile_and_run(run)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      compile_and_run2(repo_path: run.repo_path, data_path: run.data_path, env_variables: run.env_variables, container_name: run.docker_container_name) do |on|
-        on.log {|s,c| wrapper.call(:log, s, c)}
-        on.ip_address {|ip| wrapper.call(:ip_address, ip)}
-      end
-    end
-
     # Currently this will only stop the main run of the scraper. It won't
     # actually stop the compile stage
     # TODO Make this stop the compile stage
