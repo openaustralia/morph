@@ -175,4 +175,9 @@ class Run < ActiveRecord::Base
   def scraped_domains
     Domain.find(connection_logs.group(:domain_id).order(:domain_id).pluck(:domain_id))
   end
+
+  def variables
+    # Handle this run not having a scraper attached (run from morph-cli)
+    scraper ? scraper.variables : []
+  end
 end
