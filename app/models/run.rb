@@ -145,8 +145,11 @@ class Run < ActiveRecord::Base
   end
 
   # TODO Shouldn't this update the metrics here as well?
+  # Currently this will only stop the main run of the scraper. It won't
+  # actually stop the compile stage
+  # TODO Make this stop the compile stage
   def stop!
-    Morph::DockerRunner.stop(self)
+    Morph::DockerRunner.stop(docker_container_name)
     update_attributes(status_code: 130, finished_at: Time.now)
   end
 

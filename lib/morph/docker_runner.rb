@@ -50,12 +50,9 @@ module Morph
       status_code
     end
 
-    # Currently this will only stop the main run of the scraper. It won't
-    # actually stop the compile stage
-    # TODO Make this stop the compile stage
-    def self.stop(run)
-      if container_exists?(run.docker_container_name)
-        c = Docker::Container.get(run.docker_container_name)
+    def self.stop(container_name)
+      if container_exists?(container_name)
+        c = Docker::Container.get(container_name)
         c.kill
       end
     end
