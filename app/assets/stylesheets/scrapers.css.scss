@@ -320,6 +320,20 @@ a i.fa-clock-o {
   }
 }
 
+.scraper-alerts-list {
+  .list-group-item {
+    padding-bottom: 0;
+  }
+
+  .scraper-error-info {
+    margin-top: 10px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 5px 15px;
+    font-size: $font-size-small;
+  }
+}
+
 h1.full_name {
   overflow: hidden;
   text-overflow: ellipsis;
