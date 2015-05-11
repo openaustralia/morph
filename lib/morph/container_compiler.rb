@@ -364,5 +364,23 @@ module Morph
     def self.update_docker_image!
       pull_docker_image("openaustralia/buildstep")
     end
+
+    def self.remove_stopped_containers!
+      containers = Docker::Container.all(:all => true)
+      containers = containers.select do |c|
+        running = c.json["State"]["Running"]
+        # Time ago in seconds that this finished
+        finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
+        # Only show containers that have been stopped for more than 5 minutes
+        !running && finished_ago > 5 * 60
+      end
+      containers.each do |c|
+        id = c.id[0..11]
+        name = c.info["Names"].first if c.info["Names"]
+        finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
+        puts "Removing container id: #{id}, name: #{name}, finished: #{finished_ago} seconds ago"
+        c.delete
+      end
+    end
   end
 end
