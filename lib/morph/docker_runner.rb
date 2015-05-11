@@ -168,9 +168,8 @@ module Morph
     # actually stop the compile stage
     # TODO Make this stop the compile stage
     def self.stop(run)
-      container_name = docker_container_name(run)
-      if container_exists?(container_name)
-        c = Docker::Container.get(container_name)
+      if container_exists?(docker_container_name(run))
+        c = Docker::Container.get(docker_container_name(run))
         c.kill
       end
     end
