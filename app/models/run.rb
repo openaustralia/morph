@@ -86,7 +86,7 @@ class Run < ActiveRecord::Base
   end
 
   def docker_container_name
-    Morph::DockerRunner::Base.docker_container_name(self)
+    Morph::DockerRunner.docker_container_name(self)
   end
 
   def git_revision_github_url
