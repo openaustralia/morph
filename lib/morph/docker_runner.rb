@@ -28,8 +28,6 @@ module Morph
 
       status_code = run(
         command: command,
-        # TODO Need to run this as the user scraper again
-        user: "root",
         image_name: i2.id,
         container_name: docker_container_name(run),
         data_path: run.data_path,
@@ -190,7 +188,8 @@ module Morph
 
       container_options = {
         "Cmd" => ['/bin/bash', '-l', '-c', options[:command]],
-        "User" => options[:user],
+        # TODO We can just get rid of the line below, right? (because it's the default)
+        "User" => "root",
         "Image" => options[:image_name],
         # See explanation in https://github.com/openaustralia/morph/issues/242
         "CpuShares" => 307,
