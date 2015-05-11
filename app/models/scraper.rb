@@ -204,10 +204,6 @@ class Scraper < ActiveRecord::Base
   end
 
   def self.update_docker_image!
-    pull_docker_image("openaustralia/morph-ruby")
-    pull_docker_image("openaustralia/morph-php")
-    pull_docker_image("openaustralia/morph-python")
-    pull_docker_image("openaustralia/morph-perl")
     pull_docker_image("openaustralia/buildstep")
   end
 
