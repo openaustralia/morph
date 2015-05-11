@@ -12,6 +12,32 @@
       = link_to "Create your first scraper", new_scraper_path, class: "btn btn-primary btn-lg"
 
 .container
+  - # Static Prototype of scrapers that need attention list
+  %h2 2 scrapers you are watching need help
+  .list-group
+    %a.list-group-item{:href => "/planningalerts-scrapers/leichhardt"}
+      .scraper-block
+        %small.scraper-lang.pull-right Ruby
+        .icon-box.pull-right
+          %i.fa.fa-clock-o.has-tooltip{"data-original-title" => "", "data-placement" => "bottom", "data-title" => "Scraper runs automatically once per day", :title => ""}
+        %span.label.label-danger.pull-right errored
+        %strong.full_name equivalentideas/leichhardt
+        %div
+          Leichhardt Municipal Council Development Applications
+          %p.scraper-domains-list.text-muted www.eservices.lmc.nsw.gov.au
+    %a.list-group-item{:href => "/planningalerts-scrapers/scenic_rim"}
+      .scraper-block
+        %small.scraper-lang.pull-right Ruby
+        .icon-box.pull-right
+          %i.fa.fa-clock-o.has-tooltip{"data-original-title" => "", "data-placement" => "bottom", "data-title" => "Scraper runs automatically once per day", :title => ""}
+        %span.label.label-danger.pull-right errored
+        %strong.full_name equivalentideas/scenic_rim
+        %div
+          Scenic Rim Regional Council Development Applications
+          %p.scraper-domains-list.text-muted pdonline.scenicrim.qld.gov.au
+
+  = link_to "Manage your watched scrapers", " "
+
   .row
     .col-md-6
       %h2 Recent New Users
