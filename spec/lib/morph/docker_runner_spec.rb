@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Morph::ContainerCompiler do
+describe Morph::DockerRunner do
   describe ".fix_modification_times" do
     it do
       Dir.mktmpdir do |dir|
         FileUtils.touch(File.join(dir, "foo"))
         FileUtils.mkdir_p(File.join(dir, "bar"))
         FileUtils.touch(File.join(dir, "bar", "twist"))
-        Morph::ContainerCompiler.fix_modification_times(dir)
+        Morph::DockerRunner.fix_modification_times(dir)
         File.mtime(dir).should == Time.new(2000,1,1)
         File.mtime(File.join(dir, "foo")).should == Time.new(2000,1,1)
         File.mtime(File.join(dir, "bar")).should == Time.new(2000,1,1)
@@ -39,7 +39,7 @@ describe Morph::ContainerCompiler do
     describe ".write_all_config_with_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::ContainerCompiler.write_all_config_with_defaults_to_directory("test", dir)
+          Morph::DockerRunner.write_all_config_with_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
           File.read(File.join(dir, "Gemfile")).should == ""
           File.read(File.join(dir, "Gemfile.lock")).should == ""
@@ -51,7 +51,7 @@ describe Morph::ContainerCompiler do
     describe ".write_all_run_to_directory" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::ContainerCompiler.write_all_run_to_directory("test", dir)
+          Morph::DockerRunner.write_all_run_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
           File.read(File.join(dir, ".a_dot_file.cfg")).should == ""
@@ -66,9 +66,9 @@ describe Morph::ContainerCompiler do
 
     describe ".tar_run_files" do
       it "should preserve the symbolic link" do
-        tar = Morph::ContainerCompiler.tar_run_files("test")
+        tar = Morph::DockerRunner.tar_run_files("test")
         Dir.mktmpdir do |dir|
-          Morph::ContainerCompiler.in_directory(dir) do
+          Morph::DockerRunner.in_directory(dir) do
             File.open("test.tar", "w") {|f| f << tar}
             # Quick and dirty
             `tar xf test.tar`
@@ -97,7 +97,7 @@ describe Morph::ContainerCompiler do
     describe ".write_all_config_with_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::ContainerCompiler.write_all_config_with_defaults_to_directory("test", dir)
+          Morph::DockerRunner.write_all_config_with_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
           File.read(File.join(dir, "Gemfile")).should == ""
           File.read(File.join(dir, "Gemfile.lock")).should == ""
@@ -109,7 +109,7 @@ describe Morph::ContainerCompiler do
     describe ".write_all_run_to_directory" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::ContainerCompiler.write_all_run_to_directory("test", dir)
+          Morph::DockerRunner.write_all_run_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "foo", "one.txt", "scraper.rb"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
           File.read(File.join(dir, "foo/three.txt")).should == ""
@@ -134,7 +134,7 @@ describe Morph::ContainerCompiler do
     describe ".write_all_config_with_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::ContainerCompiler.write_all_config_with_defaults_to_directory("test", dir)
+          Morph::DockerRunner.write_all_config_with_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
           ruby = Morph::Language.new(:ruby)
           File.read(File.join(dir, "Gemfile")).should == File.read(ruby.default_config_file_path("Gemfile"))
@@ -147,7 +147,7 @@ describe Morph::ContainerCompiler do
     describe ".write_all_run_to_directory" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::ContainerCompiler.write_all_run_to_directory("test", dir)
+          Morph::DockerRunner.write_all_run_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "scraper.rb"]
           File.read(File.join(dir, "scraper.rb")).should == ""
         end

@@ -24,7 +24,7 @@ namespace :app do
 
   desc "Build docker image (Needs to be done once before any scrapers are run)"
   task :update_docker_image => :environment do
-    Morph::ContainerCompiler.update_docker_image!
+    Morph::DockerRunner.update_docker_image!
   end
 
   desc "Synchronise all repositories"
@@ -72,7 +72,7 @@ namespace :app do
   # clean up containers that have been stopped for more than 5 minutes.
   desc "Remove stopped containers"
   task :remove_stopped_containers => :environment do
-    Morph::ContainerCompiler.remove_stopped_containers!
+    Morph::DockerRunner.remove_stopped_containers!
   end
 
   def confirm(message)

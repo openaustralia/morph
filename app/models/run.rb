@@ -86,7 +86,7 @@ class Run < ActiveRecord::Base
   end
 
   def docker_container_name
-    Morph::ContainerCompiler::Base.docker_container_name(self)
+    Morph::DockerRunner::Base.docker_container_name(self)
   end
 
   def git_revision_github_url
@@ -110,7 +110,7 @@ class Run < ActiveRecord::Base
       return
     end
 
-    status_code = Morph::ContainerCompiler.compile_and_run(self) do |on|
+    status_code = Morph::DockerRunner.compile_and_run(self) do |on|
       on.log {|s,c| yield s,c}
       on.ip_address do |ip|
         # Store the ip address of the container for this run
@@ -150,7 +150,7 @@ class Run < ActiveRecord::Base
 
   # TODO Shouldn't this update the metrics here as well?
   def stop!
-    Morph::ContainerCompiler.stop(self)
+    Morph::DockerRunner.stop(self)
     update_attributes(status_code: 130, finished_at: Time.now)
   end
 

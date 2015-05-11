@@ -1,5 +1,5 @@
 module Morph
-  class ContainerCompiler
+  class DockerRunner
     ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
 
     def self.docker_container_name(run)
