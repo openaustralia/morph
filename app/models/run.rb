@@ -94,7 +94,7 @@ class Run < ActiveRecord::Base
   end
 
   def container_compiler
-    Morph::ContainerCompiler::Base.create(:buildpacks)
+    Morph::ContainerCompiler::Buildpacks
   end
 
   def go_with_logging
