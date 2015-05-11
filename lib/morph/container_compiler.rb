@@ -81,7 +81,11 @@ module Morph
     # actually stop the compile stage
     # TODO Make this stop the compile stage
     def self.stop(run)
-      Morph::DockerRunner.stop(docker_container_name(run))
+      container_name = docker_container_name(run)
+      if container_exists?(container_name)
+        c = Docker::Container.get(container_name)
+        c.kill
+      end
     end
 
     # file_environment needs to also include a Dockerfile with content

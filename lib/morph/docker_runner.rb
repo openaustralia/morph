@@ -86,12 +86,5 @@ module Morph
 
       status_code
     end
-
-    def self.stop(container_name)
-      if Morph::ContainerCompiler.container_exists?(container_name)
-        c = Docker::Container.get(container_name)
-        c.kill
-      end
-    end
   end
 end
