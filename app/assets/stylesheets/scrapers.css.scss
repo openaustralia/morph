@@ -138,17 +138,20 @@
       }
     }
   }
+
+
+  .download-privacy-notice {
+    margin: 0 0 1em;
+    display: inline-block;
+    vertical-align: top;
+
+    &.alert {
+      padding: 0.25em .5em;
+    }
+  }
 }
 
 .download-privacy-notice {
-  margin: 0 0 1em;
-  display: inline-block;
-  vertical-align: top;
-
-  &.alert {
-    padding: 0.25em .5em;
-  }
-
   a {
     text-decoration: underline;
   }
