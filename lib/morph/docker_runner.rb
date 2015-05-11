@@ -2,26 +2,6 @@ module Morph
   class DockerRunner
     ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
 
-    def self.docker_container_name(run)
-      "#{run.owner.to_param}_#{run.name}_#{run.id}"
-    end
-
-    # If image is present locally use that. If it isn't then pull it from the hub
-    # This makes initial setup easier
-    def self.get_or_pull_image(name)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      begin
-        Docker::Image.get(name)
-      rescue Docker::Error::NotFoundError
-        Docker::Image.create('fromImage' => name) do |chunk|
-          data = JSON.parse(chunk)
-          wrapper.call(:log, :internalout, "#{data['status']} #{data['id']} #{data['progress']}\n")
-        end
-      end
-    end
-
     def self.compile_and_run(run)
       wrapper = Multiblock.wrapper
       yield(wrapper)
@@ -75,6 +55,114 @@ module Morph
       rescue Docker::Error::ConfictError
       end
       status_code
+    end
+
+    # Currently this will only stop the main run of the scraper. It won't
+    # actually stop the compile stage
+    # TODO Make this stop the compile stage
+    def self.stop(run)
+      if container_exists?(docker_container_name(run))
+        c = Docker::Container.get(docker_container_name(run))
+        c.kill
+      end
+    end
+
+    # Contents of a tarfile that contains everything that isn't a configuration file
+    def self.tar_run_files(source)
+      Dir.mktmpdir("morph") do |dest|
+        write_all_run_to_directory(source, dest)
+        create_tar(dest)
+      end
+    end
+
+    def self.write_all_config_with_defaults_to_directory(source, dest)
+      ALL_CONFIG_FILENAMES.each do |config_filename|
+        path = File.join(source, config_filename)
+        FileUtils.cp(path, dest) if File.exists?(path)
+      end
+
+      # We don't need to check that the language is recognised because
+      # the compiler is never called if the language isn't valid
+      add_config_defaults_to_directory(dest, Morph::Language.language(source))
+
+      fix_modification_times(dest)
+    end
+
+    def self.write_all_run_to_directory(source, dest)
+      FileUtils.cp_r File.join(source, "."), dest
+
+      ALL_CONFIG_FILENAMES.each do |path|
+        FileUtils.rm_f(File.join(dest, path))
+      end
+
+      remove_hidden_directories(dest)
+
+      # TODO I don't think I need to this step here
+      fix_modification_times(dest)
+    end
+
+    # Set an arbitrary & fixed modification time on everything in a directory
+    # This ensures that if the content is the same docker will cache
+    def self.fix_modification_times(dir)
+      Find.find(dir) do |entry|
+        FileUtils.touch(entry, mtime: Time.new(2000,1,1))
+      end
+    end
+
+    def self.in_directory(directory)
+      cwd = FileUtils.pwd
+      FileUtils.cd(directory)
+      yield
+    ensure
+      FileUtils.cd(cwd)
+    end
+
+    def self.update_docker_image!
+      pull_docker_image("openaustralia/buildstep")
+    end
+
+    def self.remove_stopped_containers!
+      containers = Docker::Container.all(:all => true)
+      containers = containers.select do |c|
+        running = c.json["State"]["Running"]
+        # Time ago in seconds that this finished
+        finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
+        # Only show containers that have been stopped for more than 5 minutes
+        !running && finished_ago > 5 * 60
+      end
+      containers.each do |c|
+        id = c.id[0..11]
+        name = c.info["Names"].first if c.info["Names"]
+        finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
+        puts "Removing container id: #{id}, name: #{name}, finished: #{finished_ago} seconds ago"
+        c.delete
+      end
+    end
+
+    def self.container_for_run_exists?(run)
+      container_exists?(docker_container_name(run))
+    end
+
+    private
+
+    def self.docker_container_name(run)
+      "#{run.owner.to_param}_#{run.name}_#{run.id}"
+    end
+
+    # If image is present locally use that. If it isn't then pull it from the hub
+    # This makes initial setup easier
+    def self.get_or_pull_image(name)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
+      begin
+        Docker::Image.get(name)
+      rescue Docker::Error::NotFoundError
+        Docker::Image.create('fromImage' => name) do |chunk|
+          data = JSON.parse(chunk)
+          wrapper.call(:log, :internalout, "#{data['status']} #{data['id']} #{data['progress']}\n")
+        end
+      end
     end
 
     def self.run(options)
@@ -164,16 +252,6 @@ module Morph
       c
     end
 
-    # Currently this will only stop the main run of the scraper. It won't
-    # actually stop the compile stage
-    # TODO Make this stop the compile stage
-    def self.stop(run)
-      if container_exists?(docker_container_name(run))
-        c = Docker::Container.get(docker_container_name(run))
-        c.kill
-      end
-    end
-
     # file_environment needs to also include a Dockerfile with content
     def self.docker_build_from_files(file_environment)
       wrapper = Multiblock.wrapper
@@ -258,14 +336,6 @@ module Morph
       end
     end
 
-    # Contents of a tarfile that contains everything that isn't a configuration file
-    def self.tar_run_files(source)
-      Dir.mktmpdir("morph") do |dest|
-        write_all_run_to_directory(source, dest)
-        create_tar(dest)
-      end
-    end
-
     def self.add_config_defaults_to_directory(dest, language)
       language.default_files_to_insert.each do |files|
         if files.all?{|file| !File.exists?(File.join(dest, file))}
@@ -279,46 +349,12 @@ module Morph
       FileUtils.cp(language.default_config_file_path("Procfile"), File.join(dest, "Procfile"))
     end
 
-    def self.write_all_config_with_defaults_to_directory(source, dest)
-      ALL_CONFIG_FILENAMES.each do |config_filename|
-        path = File.join(source, config_filename)
-        FileUtils.cp(path, dest) if File.exists?(path)
-      end
-
-      # We don't need to check that the language is recognised because
-      # the compiler is never called if the language isn't valid
-      add_config_defaults_to_directory(dest, Morph::Language.language(source))
-
-      fix_modification_times(dest)
-    end
-
-    def self.write_all_run_to_directory(source, dest)
-      FileUtils.cp_r File.join(source, "."), dest
-
-      ALL_CONFIG_FILENAMES.each do |path|
-        FileUtils.rm_f(File.join(dest, path))
-      end
-
-      remove_hidden_directories(dest)
-
-      # TODO I don't think I need to this step here
-      fix_modification_times(dest)
-    end
-
     # Remove directories starting with "."
     # TODO Make it just remove the .git directory in the root and not other hidden directories
     # which people might find useful
     def self.remove_hidden_directories(directory)
       Find.find(directory) do |path|
         FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == ?.
-      end
-    end
-
-    # Set an arbitrary & fixed modification time on everything in a directory
-    # This ensures that if the content is the same docker will cache
-    def self.fix_modification_times(dir)
-      Find.find(dir) do |entry|
-        FileUtils.touch(entry, mtime: Time.new(2000,1,1))
       end
     end
 
@@ -336,14 +372,6 @@ module Morph
       content
     end
 
-    def self.in_directory(directory)
-      cwd = FileUtils.pwd
-      FileUtils.cd(directory)
-      yield
-    ensure
-      FileUtils.cd(cwd)
-    end
-
     def self.container_exists?(name)
       begin
         Docker::Container.get(name)
@@ -358,32 +386,6 @@ module Morph
         data = JSON.parse(chunk)
         puts "#{data['status']} #{data['id']} #{data['progress']}"
       end
-    end
-
-    def self.update_docker_image!
-      pull_docker_image("openaustralia/buildstep")
-    end
-
-    def self.remove_stopped_containers!
-      containers = Docker::Container.all(:all => true)
-      containers = containers.select do |c|
-        running = c.json["State"]["Running"]
-        # Time ago in seconds that this finished
-        finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
-        # Only show containers that have been stopped for more than 5 minutes
-        !running && finished_ago > 5 * 60
-      end
-      containers.each do |c|
-        id = c.id[0..11]
-        name = c.info["Names"].first if c.info["Names"]
-        finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
-        puts "Removing container id: #{id}, name: #{name}, finished: #{finished_ago} seconds ago"
-        c.delete
-      end
-    end
-
-    def self.container_for_run_exists?(run)
-      container_exists?(docker_container_name(run))
     end
   end
 end
