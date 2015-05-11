@@ -2,11 +2,12 @@ module Morph
   class DockerRunner
     ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
 
-    def self.compile_and_run(run)
+    # options: repo_path, container_name, data_path, env_variables
+    def self.compile_and_run2(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i1 = compile(run.repo_path) do |on|
+      i1 = compile(options[:repo_path]) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
       end
 
@@ -19,7 +20,7 @@ module Morph
       # Insert the actual code into the container
       wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
       i2 = docker_build_command(i1, "add code.tar /app",
-        "code.tar" => tar_run_files(run.repo_path)) do |on|
+        "code.tar" => tar_run_files(options[:repo_path])) do |on|
         # Note that we're not sending the output of this to the console
         # because it is relatively short running and is otherwise confusing
       end
@@ -29,9 +30,9 @@ module Morph
       status_code = run(
         command: command,
         image_name: i2.id,
-        container_name: docker_container_name(run),
-        data_path: run.data_path,
-        env_variables: run.variables.map{|v| [v.name, v.value]}
+        container_name: options[:container_name],
+        data_path: options[:data_path],
+        env_variables: options[:env_variables]
       ) do |on|
           on.log { |s,c| wrapper.call(:log, s, c)}
           on.ip_address {|ip| wrapper.call(:ip_address, ip)}
@@ -47,6 +48,23 @@ module Morph
       rescue Docker::Error::ConfictError
       end
       status_code
+    end
+
+    def self.compile_and_run(run)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
+      options = {
+        repo_path: run.repo_path,
+        data_path: run.data_path,
+        env_variables: run.variables.map{|v| [v.name, v.value]},
+        container_name: docker_container_name(run)
+      }
+
+      compile_and_run2(options) do |on|
+        on.log {|s,c| wrapper.call(:log, s, c)}
+        on.ip_address {|ip| wrapper.call(:ip_address, ip)}
+      end
     end
 
     # Currently this will only stop the main run of the scraper. It won't
