@@ -6,13 +6,13 @@ namespace :app do
     desc "If there are scrapers that think they're running but there is no container remove the running run"
     task :delete_broken_runs => :environment do
       Run.where("finished_at IS NULL").each do |run|
-        if Morph::DockerRunner.container_exists?(run.docker_container_name)
+        if Morph::DockerRunner.container_exists?(Morph::DockerRunner.docker_container_name(run))
           # TODO could potentially check if container is running or stopped and
           # then if it's stopped delete the container (this is assuming that
           # there still is a running background job that will kick in again)
-          puts "Container #{run.docker_container_name} exists"
+          puts "Container #{Morph::DockerRunner.docker_container_name(run)} exists"
         else
-          puts "Container #{run.docker_container_name} doesn't exist. Therefore deleting run"
+          puts "Container #{Morph::DockerRunner.docker_container_name(run)} doesn't exist. Therefore deleting run"
           # Using destroy to ensure that callbacks are called (mainly for caching)
           run.destroy
         end

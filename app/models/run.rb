@@ -85,10 +85,6 @@ class Run < ActiveRecord::Base
     File.join(data_path, Run.time_output_filename)
   end
 
-  def docker_container_name
-    Morph::DockerRunner.docker_container_name(self)
-  end
-
   def git_revision_github_url
     "https://github.com/#{full_name}/commit/#{git_revision}"
   end

@@ -57,7 +57,7 @@ module Morph
         # TODO Need to run this as the user scraper again
         user: "root",
         image_name: i2.id,
-        container_name: run.docker_container_name,
+        container_name: docker_container_name(run),
         data_path: run.data_path,
         env_variables: env_variables
       ) do |on|
