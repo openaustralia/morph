@@ -196,10 +196,6 @@ class Scraper < ActiveRecord::Base
     "#{owner.data_root}/#{name}"
   end
 
-  def self.update_docker_image!
-    Morph::ContainerCompiler.pull_docker_image("openaustralia/buildstep")
-  end
-
   def readme
     f = Dir.glob(File.join(repo_path, "README*")).first
     if f

@@ -360,5 +360,9 @@ module Morph
         puts "#{data['status']} #{data['id']} #{data['progress']}"
       end
     end
+
+    def self.update_docker_image!
+      pull_docker_image("openaustralia/buildstep")
+    end
   end
 end
