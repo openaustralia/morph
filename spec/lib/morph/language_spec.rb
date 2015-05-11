@@ -14,10 +14,10 @@ describe Morph::Language do
   end
 
   describe "#scraper_templates" do
-    it { ruby.scraper_templates(true).keys.sort.should == ["Gemfile", "Gemfile.lock", "scraper.rb"] }
+    it { ruby.scraper_templates.keys.sort.should == ["Gemfile", "Gemfile.lock", "scraper.rb"] }
 
     it do
-      ruby.scraper_templates(true)["scraper.rb"].should == <<-EOF
+      ruby.scraper_templates["scraper.rb"].should == <<-EOF
 # This is a template for a Ruby scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
@@ -46,10 +46,10 @@ describe Morph::Language do
       EOF
     end
 
-    it {php.scraper_templates(true).keys.sort.should == ["composer.json", "composer.lock", "scraper.php"]}
+    it {php.scraper_templates.keys.sort.should == ["composer.json", "composer.lock", "scraper.php"]}
 
     it do
-      php.scraper_templates(true)["scraper.php"].should == <<-EOF
+      php.scraper_templates["scraper.php"].should == <<-EOF
 <?
 // This is a template for a PHP scraper on morph.io (https://morph.io)
 // including some code snippets below that you should find helpful
@@ -80,10 +80,10 @@ describe Morph::Language do
       EOF
     end
 
-    it {python.scraper_templates(true).keys.sort.should == ["requirements.txt", "runtime.txt", "scraper.py"]}
+    it {python.scraper_templates.keys.sort.should == ["requirements.txt", "runtime.txt", "scraper.py"]}
 
     it do
-      python.scraper_templates(true)["scraper.py"].should == <<-EOF
+      python.scraper_templates["scraper.py"].should == <<-EOF
 # This is a template for a Python scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
@@ -111,10 +111,10 @@ describe Morph::Language do
       EOF
     end
 
-    it {perl.scraper_templates(true).keys.sort.should == ["cpanfile", "scraper.pl"]}
+    it {perl.scraper_templates.keys.sort.should == ["cpanfile", "scraper.pl"]}
 
     it do
-      perl.scraper_templates(true)["scraper.pl"].should == <<-EOF
+      perl.scraper_templates["scraper.pl"].should == <<-EOF
 # This is a template for a Perl scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
