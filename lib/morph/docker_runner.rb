@@ -58,7 +58,7 @@ module Morph
         repo_path: run.repo_path,
         data_path: run.data_path,
         env_variables: run.variables.map{|v| [v.name, v.value]},
-        container_name: docker_container_name(run)
+        container_name: run.docker_container_name
       }
 
       compile_and_run2(options) do |on|
@@ -71,8 +71,8 @@ module Morph
     # actually stop the compile stage
     # TODO Make this stop the compile stage
     def self.stop(run)
-      if container_exists?(docker_container_name(run))
-        c = Docker::Container.get(docker_container_name(run))
+      if container_exists?(run.docker_container_name)
+        c = Docker::Container.get(run.docker_container_name)
         c.kill
       end
     end
@@ -150,14 +150,10 @@ module Morph
     end
 
     def self.container_for_run_exists?(run)
-      container_exists?(docker_container_name(run))
+      container_exists?(run.docker_container_name)
     end
 
     private
-
-    def self.docker_container_name(run)
-      "#{run.owner.to_param}_#{run.name}_#{run.id}"
-    end
 
     # If image is present locally use that. If it isn't then pull it from the hub
     # This makes initial setup easier

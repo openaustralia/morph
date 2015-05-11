@@ -180,4 +180,8 @@ class Run < ActiveRecord::Base
     # Handle this run not having a scraper attached (run from morph-cli)
     scraper ? scraper.variables : []
   end
+
+  def docker_container_name
+    "#{owner.to_param}_#{name}_#{id}"
+  end
 end
