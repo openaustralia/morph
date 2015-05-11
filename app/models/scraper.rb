@@ -196,15 +196,8 @@ class Scraper < ActiveRecord::Base
     "#{owner.data_root}/#{name}"
   end
 
-  def self.pull_docker_image(image)
-    Docker::Image.create('fromImage' => image) do |chunk|
-      data = JSON.parse(chunk)
-      puts "#{data['status']} #{data['id']} #{data['progress']}"
-    end
-  end
-
   def self.update_docker_image!
-    pull_docker_image("openaustralia/buildstep")
+    Morph::ContainerCompiler.pull_docker_image("openaustralia/buildstep")
   end
 
   def readme
