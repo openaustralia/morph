@@ -54,14 +54,7 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      options = {
-        repo_path: run.repo_path,
-        data_path: run.data_path,
-        env_variables: run.env_variables,
-        container_name: run.docker_container_name
-      }
-
-      compile_and_run2(options) do |on|
+      compile_and_run2(repo_path: run.repo_path, data_path: run.data_path, env_variables: run.env_variables, container_name: run.docker_container_name) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
         on.ip_address {|ip| wrapper.call(:ip_address, ip)}
       end
