@@ -331,6 +331,8 @@ a i.fa-clock-o {
     border-bottom-left-radius: 3px;
     padding: 5px 15px;
     font-size: $font-size-small;
+    color: $alert-danger-text;
+    background-color: lighten($alert-danger-bg, 5%);
   }
 }
 
