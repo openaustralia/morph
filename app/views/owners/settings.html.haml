@@ -33,7 +33,6 @@
       test out experimental features or otherwise only enable things for certain users.
 
     = simple_form_for @owner do |f|
-      = f.input :buildpacks, as: :boolean, hint: "Add experimental support for Heroku buildpacks. Allows the installation of custom libraries, etc.."
       - if @owner.user?
         = f.input :see_downloads, as: :boolean, hint: "See all downloads include those before #{ApiQuery::VISIBLE_CUT_OFF_DATE}", label: "See all downloads"
       = f.button :submit, "Update feature settings"

@@ -36,11 +36,7 @@ class Owner < ActiveRecord::Base
   end
 
   def buildpacks
-    get_feature_switch_value(:buildpacks, true)
-  end
-
-  def buildpacks=(value)
-    set_feature_switch_value(:buildpacks, value)
+    true
   end
 
   def name
