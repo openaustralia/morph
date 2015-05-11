@@ -10,9 +10,9 @@ namespace :app do
           # TODO could potentially check if container is running or stopped and
           # then if it's stopped delete the container (this is assuming that
           # there still is a running background job that will kick in again)
-          puts "Container #{Morph::DockerRunner.docker_container_name(run)} exists"
+          puts "Container for run #{run.id} (#{run.scraper.full_name}) exists"
         else
-          puts "Container #{Morph::DockerRunner.docker_container_name(run)} doesn't exist. Therefore deleting run"
+          puts "Container for run #{run.id} (#{run.scraper.full_name}) doesn't exist. Therefore deleting run"
           # Using destroy to ensure that callbacks are called (mainly for caching)
           run.destroy
         end
