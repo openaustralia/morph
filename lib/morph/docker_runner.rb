@@ -381,5 +381,9 @@ module Morph
         c.delete
       end
     end
+
+    def self.container_for_run_exists?(run)
+      container_exists?(docker_container_name(run))
+    end
   end
 end
