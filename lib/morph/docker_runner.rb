@@ -129,8 +129,13 @@ module Morph
       end
     end
 
-    def self.container_for_run_exists?(run)
-      container_exists?(run.docker_container_name)
+    def self.container_exists?(name)
+      begin
+        Docker::Container.get(name)
+        true
+      rescue Docker::Error::NotFoundError => e
+        false
+      end
     end
 
     private
@@ -357,15 +362,6 @@ module Morph
       content = File.read(tempfile.path)
       FileUtils.rm_f(tempfile.path)
       content
-    end
-
-    def self.container_exists?(name)
-      begin
-        Docker::Container.get(name)
-        true
-      rescue Docker::Error::NotFoundError => e
-        false
-      end
     end
 
     def self.pull_docker_image(image)

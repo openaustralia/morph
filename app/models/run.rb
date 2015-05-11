@@ -192,4 +192,8 @@ class Run < ActiveRecord::Base
   def docker_container_name
     "#{owner.to_param}_#{name}_#{id}"
   end
+
+  def container_for_run_exists?
+    Morph::DockerRunner.container_exists?(docker_container_name)
+  end
 end
