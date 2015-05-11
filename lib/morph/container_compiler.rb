@@ -253,5 +253,14 @@ module Morph
     ensure
       FileUtils.cd(cwd)
     end
+
+    def self.container_exists?(name)
+      begin
+        Docker::Container.get(name)
+        true
+      rescue Docker::Error::NotFoundError => e
+        false
+      end
+    end
   end
 end
