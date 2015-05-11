@@ -94,7 +94,7 @@ class Run < ActiveRecord::Base
   end
 
   def container_compiler
-    Morph::ContainerCompiler::Base.create(owner.buildpacks ? :buildpacks : :legacy)
+    Morph::ContainerCompiler::Base.create(:buildpacks)
   end
 
   def go_with_logging

@@ -35,10 +35,6 @@ class Owner < ActiveRecord::Base
     self.feature_switches = s
   end
 
-  def buildpacks
-    true
-  end
-
   def name
     # If nickname and name are identical return nil
     if read_attribute(:name) != nickname

@@ -23,12 +23,6 @@
         %blockquote
           %p= scraper.scraped_domains.first.meta_or_title
 
-    - unless scraper.owner.buildpacks
-      %p.text-warning
-        This scraper runs with the legacy container compiler.
-        - if can? :update, scraper.owner
-          = link_to "Change settings", settings_owner_path(scraper.owner)
-
     - if can? :run, scraper
       #scraper_run
         = render partial: "scrapers/run_button", locals: {scraper: scraper}
