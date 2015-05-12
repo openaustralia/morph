@@ -10,7 +10,7 @@ module Morph
       i = compile_step1 do |s,c|
         wrapper.call(:log, s, c)
       end
-      i2 = compile_step2(i, options[:repo_path]) do |s,c|
+      i2 = compile_step2(i, tar_config_files(options[:repo_path])) do |s,c|
         wrapper.call(:log, s, c)
       end
       i3 = compile_step3(i2) do |s,c|
@@ -23,7 +23,7 @@ module Morph
         return 255;
       end
 
-      i4 = compile_step4(i3, options[:repo_path]) do |s,c|
+      i4 = compile_step4(i3, tar_run_files(options[:repo_path])) do |s,c|
         wrapper.call(:log, s, c)
       end
 
@@ -278,11 +278,11 @@ module Morph
     end
 
     # Insert the configuration part of the application code into the container
-    def self.compile_step2(i, repo_path)
+    def self.compile_step2(i, code_config_tar)
       yield :internalout, "Injecting configuration and compiling...\n"
       docker_build_command(i,
         ["ADD code_config.tar /app"],
-        "code_config.tar" => tar_config_files(repo_path)) do |on|
+        "code_config.tar" => code_config_tar) do |on|
       end
     end
 
@@ -300,10 +300,9 @@ module Morph
     end
 
     # Insert the actual code into the container
-    def self.compile_step4(i, repo_path)
+    def self.compile_step4(i, code_tar)
       yield :internalout, "Injecting scraper code and running...\n"
-      docker_build_command(i, "add code.tar /app",
-        "code.tar" => tar_run_files(repo_path)) do |on|
+      docker_build_command(i, "add code.tar /app", "code.tar" => code_tar) do |on|
         # Note that we're not sending the output of this to the console
         # because it is relatively short running and is otherwise confusing
       end
