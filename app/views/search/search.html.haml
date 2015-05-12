@@ -21,9 +21,10 @@
             = render owner, highlight: details[:highlight]
           = paginate @owners
         - else
-          .list-filters.btn-group
-            = link_to "Only scrapers with data", search_path(q: @q), class: "btn btn-default #{('active' unless @show == 'all')}"
-            = link_to "All scrapers", search_path(q: @q, show: "all"), class: "btn btn-default #{('active' if @show == 'all')}"
+          - if @type != "users" && !@scrapers_total_count.zero?
+            .list-filters.btn-group
+              = link_to "Only scrapers with data", search_path(q: @q), class: "btn btn-default #{('active' unless @show == 'all')}"
+              = link_to "All scrapers", search_path(q: @q, show: "all"), class: "btn btn-default #{('active' if @show == 'all')}"
           - @scrapers.with_details.each do |scraper, details|
             = render scraper, highlight: details[:highlight]
           = paginate @scrapers
