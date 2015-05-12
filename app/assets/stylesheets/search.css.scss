@@ -42,5 +42,9 @@
     @media (min-width: 18em) {
       flex-grow: 1;
     }
+
+    @media (min-width: 40em) {
+      padding: 5px 15px;
+    }
   }
 }
