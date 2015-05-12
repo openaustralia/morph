@@ -48,6 +48,10 @@ class Scraper < ActiveRecord::Base
     }
   end
 
+  def has_data?
+    sqlite_db_size > 0
+  end
+
   def scraped_domain_names
     scraped_domains.map{|d| d.name}
   end
