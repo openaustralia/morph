@@ -13,7 +13,6 @@
 
 .container
   - if !current_user.watched_broken_scrapers.empty?
-    - # Static Prototype of scrapers that need attention list
     .scraper-alert-panel.panel.panel-danger
       %h2.panel-heading #{pluralize(current_user.watched_broken_scrapers.count, 'scraper')} you are watching need help
       .scraper-alerts-list.list-group= sync partial: "scraper_with_errors", collection: current_user.watched_broken_scrapers
