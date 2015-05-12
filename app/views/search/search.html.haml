@@ -4,7 +4,7 @@
   = render partial: "search_form"
 
   - if @q
-    - if @scrapers.any? || @owners.any?
+    - if !@scrapers_total_count.zero? || @owners.any?
       .search-results
         %ul.search-type-nav.nav.nav-tabs
           %li{class: ('active' unless @type == "users"), role: "presentation"}
