@@ -15,7 +15,7 @@
   - if !current_user.watched_broken_scrapers.empty?
     - # Static Prototype of scrapers that need attention list
     .scraper-alert-panel.panel.panel-danger
-      %h2.panel-heading 2 scrapers you are watching need help
+      %h2.panel-heading #{pluralize(current_user.watched_broken_scrapers.count, 'scraper')} you are watching need help
       .scraper-alerts-list.list-group
         %a.list-group-item{:href => "/planningalerts-scrapers/leichhardt"}
           .scraper-block
