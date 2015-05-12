@@ -11,9 +11,15 @@
   margin-bottom: 2em;
 }
 
-.search-results em {
-  font-style: normal;
-  background-color: rgba(255,255,140,0.5);
+.search-results {
+  @media (min-width: 40em) {
+    position: relative;
+  }
+
+  em {
+    font-style: normal;
+    background-color: rgba(255,255,140,0.5);
+  }
 }
 
 .list-filters {
@@ -25,6 +31,9 @@
 
   @media (min-width: 40em) {
     display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   a {
