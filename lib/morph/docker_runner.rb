@@ -75,7 +75,7 @@ module Morph
     # This comes from a whitelisted list
     def self.tar_config_files(source)
       Dir.mktmpdir("morph") do |dest|
-        write_all_config_with_defaults_to_directory(File.join(Rails.root, source), dest)
+        write_all_config_with_defaults_to_directory(source, dest)
         Morph::DockerUtils.create_tar(dest)
       end
     end
