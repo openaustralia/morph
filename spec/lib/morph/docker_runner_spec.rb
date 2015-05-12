@@ -68,7 +68,7 @@ describe Morph::DockerRunner do
       it "should preserve the symbolic link" do
         tar = Morph::DockerRunner.tar_run_files("test")
         Dir.mktmpdir do |dir|
-          Morph::DockerRunner.in_directory(dir) do
+          Morph::DockerUtils.in_directory(dir) do
             File.open("test.tar", "w") {|f| f << tar}
             # Quick and dirty
             `tar xf test.tar`

@@ -61,7 +61,7 @@ module Morph
     def self.tar_run_files(source)
       Dir.mktmpdir("morph") do |dest|
         write_all_run_to_directory(source, dest)
-        create_tar(dest)
+        Morph::DockerUtils.create_tar(dest)
       end
     end
 
@@ -97,14 +97,6 @@ module Morph
       Find.find(dir) do |entry|
         FileUtils.touch(entry, mtime: Time.new(2000,1,1))
       end
-    end
-
-    def self.in_directory(directory)
-      cwd = FileUtils.pwd
-      FileUtils.cd(directory)
-      yield
-    ensure
-      FileUtils.cd(cwd)
     end
 
     def self.update_docker_image!
@@ -324,7 +316,7 @@ module Morph
     def self.tar_config_files(repo_path)
       Dir.mktmpdir("morph") do |dir|
         write_all_config_with_defaults_to_directory(File.join(Rails.root, repo_path), dir)
-        create_tar(dir)
+        Morph::DockerUtils.create_tar(dir)
       end
     end
 
@@ -348,20 +340,6 @@ module Morph
       Find.find(directory) do |path|
         FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == ?.
       end
-    end
-
-    def self.create_tar(directory)
-      tempfile = Tempfile.new('morph_tar')
-
-      in_directory(directory) do
-        # We used to use Archive::Tar::Minitar but that doesn't support
-        # symbolic links in the tar file. So, using tar from the command line
-        # instead.
-        `tar cf #{tempfile.path} .`
-      end
-      content = File.read(tempfile.path)
-      FileUtils.rm_f(tempfile.path)
-      content
     end
   end
 end
