@@ -7,19 +7,19 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i1 = compile(options[:repo_path]) do |on|
+      i3 = compile(options[:repo_path]) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
       end
 
       # If something went wrong during the compile and it couldn't finish
-      if i1.nil?
+      if i3.nil?
         # TODO: Return the status for a compile error
         return 255;
       end
 
       # Insert the actual code into the container
       wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
-      i2 = docker_build_command(i1, "add code.tar /app",
+      i4 = docker_build_command(i3, "add code.tar /app",
         "code.tar" => tar_run_files(options[:repo_path])) do |on|
         # Note that we're not sending the output of this to the console
         # because it is relatively short running and is otherwise confusing
@@ -29,7 +29,7 @@ module Morph
 
       status_code = run(
         command: command,
-        image_name: i2.id,
+        image_name: i4.id,
         container_name: options[:container_name],
         data_path: options[:data_path],
         env_variables: options[:env_variables]
@@ -42,7 +42,7 @@ module Morph
       # that might be used elsewhere. Do the most crude thing and just ignore any errors
       # that deleting might throw up.
       begin
-        i2.delete("noprune" => 1)
+        i4.delete("noprune" => 1)
       # TODO When docker-api gem gets updated Docker::Error::ConfictError will be
       # changed to Docker::Error::ConflictError
       rescue Docker::Error::ConfictError
@@ -273,26 +273,26 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i = compile_step1 do |c|
-        wrapper.call(:log, :internalout, c)
+      i = compile_step1 do |s,c|
+        wrapper.call(:log, s, c)
       end
-      i2 = compile_step2(i, repo_path) do |c|
-        wrapper.call(:log, :internalout, c)
+      i2 = compile_step2(i, repo_path) do |s,c|
+        wrapper.call(:log, s, c)
       end
-      compile_step3(i2) do |c|
-        wrapper.call(:log, :internalout, c)
+      compile_step3(i2) do |s,c|
+        wrapper.call(:log, s, c)
       end
     end
 
     def self.compile_step1
       Morph::DockerUtils.get_or_pull_image('openaustralia/buildstep') do |on|
-        on.log {|s,c| yield c}
+        on.log {|s,c| yield :internalout, c}
       end
     end
 
     # Insert the configuration part of the application code into the container
     def self.compile_step2(i, repo_path)
-      yield "Injecting configuration and compiling...\n"
+      yield :internalout, "Injecting configuration and compiling...\n"
       docker_build_command(i,
         ["ADD code_config.tar /app"],
         "code_config.tar" => tar_config_files(repo_path)) do |on|
@@ -300,13 +300,13 @@ module Morph
     end
 
     # And build
-    def self.compile_step3(i2)
-      docker_build_command(i2,
+    def self.compile_step3(i)
+      docker_build_command(i,
         ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], {}) do |on|
         on.log do |s,c|
           # We don't want to show the standard docker build output
           unless c =~ /^Step \d+ :/ || c =~ /^ ---> / || c =~ /^Removing intermediate container / || c =~ /^Successfully built /
-            yield c
+            yield :internalout, c
           end
         end
       end
