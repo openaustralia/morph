@@ -44,7 +44,8 @@ class Scraper < ActiveRecord::Base
     {
       full_name: full_name,
       description: description,
-      scraped_domain_names: scraped_domain_names
+      scraped_domain_names: scraped_domain_names,
+      has_data?: has_data?
     }
   end
 
