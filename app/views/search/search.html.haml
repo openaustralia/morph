@@ -33,7 +33,7 @@
           .alert.alert-info
             Sorry, we couldn’t find any users relevant to your search term
             %strong “#{@q}”.
-        - elsif @type != "users" && @scrapers_total_count.zero? && @owners.any?
+        - elsif @type != "users" && @owners.any? && @scrapers_total_count.zero?
           .alert.alert-info
             Sorry, we couldn’t find any scrapers relevant to your search term
             %strong “#{@q}”.
