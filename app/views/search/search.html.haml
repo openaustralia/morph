@@ -21,6 +21,10 @@
             = render owner, highlight: details[:highlight]
         = paginate @owners
       - else
+        - # TODO Make these filters actually work, this is a prototype
+        .list-filters.btn-group
+          = link_to "Only scrapers with data", "", class: "active btn btn-default"
+          = link_to "All scrapers", "", class: "btn btn-default"
         .search-results
           - @scrapers.with_details.each do |scraper, details|
             = render scraper, highlight: details[:highlight]
