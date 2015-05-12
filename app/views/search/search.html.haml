@@ -28,14 +28,21 @@
             = render scraper, highlight: details[:highlight]
           = paginate @scrapers
 
-        - if @type == "users" && @owners.empty? && @scrapers.any?
+        - if @type == "users" && @owners.empty? && !@scrapers_total_count.zero?
           .alert.alert-info
             Sorry, we couldn’t find any users relevant to your search term
             %strong “#{@q}”.
-        - elsif @type != "users" && @scrapers.empty? && @owners.any?
+        - elsif @type != "users" && @scrapers_total_count.zero? && @owners.any?
           .alert.alert-info
             Sorry, we couldn’t find any scrapers relevant to your search term
             %strong “#{@q}”.
+        - elsif @type != "users" && @show != "all" && @scrapers.empty?
+          .alert.alert-info
+            Sorry, we couldn’t find any scrapers
+            %em with data
+            relevant to your search term
+            %strong “#{@q}”.
+
     - else
       %h2 No results found
       %p
