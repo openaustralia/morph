@@ -7,10 +7,13 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
+      tar_config_files = tar_config_files(options[:repo_path])
+      tar_run_files = tar_run_files(options[:repo_path])
+
       i = compile_step1 do |s,c|
         wrapper.call(:log, s, c)
       end
-      i2 = compile_step2(i, tar_config_files(options[:repo_path])) do |s,c|
+      i2 = compile_step2(i, tar_config_files) do |s,c|
         wrapper.call(:log, s, c)
       end
       i3 = compile_step3(i2) do |s,c|
@@ -23,7 +26,7 @@ module Morph
         return 255;
       end
 
-      i4 = compile_step4(i3, tar_run_files(options[:repo_path])) do |s,c|
+      i4 = compile_step4(i3, tar_run_files) do |s,c|
         wrapper.call(:log, s, c)
       end
 
@@ -63,6 +66,16 @@ module Morph
     def self.tar_run_files(source)
       Dir.mktmpdir("morph") do |dest|
         write_all_run_to_directory(source, dest)
+        Morph::DockerUtils.create_tar(dest)
+      end
+    end
+
+    # Contents of a tarfile that contains configuration type files
+    # like Gemfile, requirements.txt, etc..
+    # This comes from a whitelisted list
+    def self.tar_config_files(source)
+      Dir.mktmpdir("morph") do |dest|
+        write_all_config_with_defaults_to_directory(File.join(Rails.root, source), dest)
         Morph::DockerUtils.create_tar(dest)
       end
     end
@@ -305,16 +318,6 @@ module Morph
       docker_build_command(i, "add code.tar /app", "code.tar" => code_tar) do |on|
         # Note that we're not sending the output of this to the console
         # because it is relatively short running and is otherwise confusing
-      end
-    end
-
-    # Contents of a tarfile that contains configuration type files
-    # like Gemfile, requirements.txt, etc..
-    # This comes from a whitelisted list
-    def self.tar_config_files(repo_path)
-      Dir.mktmpdir("morph") do |dir|
-        write_all_config_with_defaults_to_directory(File.join(Rails.root, repo_path), dir)
-        Morph::DockerUtils.create_tar(dir)
       end
     end
 
