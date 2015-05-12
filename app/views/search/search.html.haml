@@ -10,7 +10,7 @@
           %li{class: ('active' unless @type == "users"), role: "presentation"}
             = link_to search_path(q: @q, type: nil) do
               Scrapers
-              %span.badge #{@scrapers_total_count ? @scrapers_total_count : @scrapers.total_count}
+              %span.badge #{@scrapers_total_count}
           %li{class: ('active' if @type == "users"), role: "presentation"}
             = link_to search_path(q: @q, type: "users") do
               Users
