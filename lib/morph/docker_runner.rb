@@ -132,22 +132,6 @@ module Morph
 
     private
 
-    # If image is present locally use that. If it isn't then pull it from the hub
-    # This makes initial setup easier
-    def self.get_or_pull_image(name)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      begin
-        Docker::Image.get(name)
-      rescue Docker::Error::NotFoundError
-        Docker::Image.create('fromImage' => name) do |chunk|
-          data = JSON.parse(chunk)
-          wrapper.call(:log, :internalout, "#{data['status']} #{data['id']} #{data['progress']}\n")
-        end
-      end
-    end
-
     def self.run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
@@ -289,7 +273,7 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i = get_or_pull_image('openaustralia/buildstep') do |on|
+      i = Morph::DockerUtils.get_or_pull_image('openaustralia/buildstep') do |on|
         on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
       # Insert the configuration part of the application code into the container
