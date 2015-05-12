@@ -108,7 +108,7 @@ module Morph
     end
 
     def self.update_docker_image!
-      pull_docker_image("openaustralia/buildstep")
+      Morph::DockerUtils.pull_docker_image("openaustralia/buildstep")
     end
 
     def self.remove_stopped_containers!
@@ -362,13 +362,6 @@ module Morph
       content = File.read(tempfile.path)
       FileUtils.rm_f(tempfile.path)
       content
-    end
-
-    def self.pull_docker_image(image)
-      Docker::Image.create('fromImage' => image) do |chunk|
-        data = JSON.parse(chunk)
-        puts "#{data['status']} #{data['id']} #{data['progress']}"
-      end
     end
   end
 end
