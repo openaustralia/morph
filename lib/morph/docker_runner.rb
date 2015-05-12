@@ -23,12 +23,8 @@ module Morph
         return 255;
       end
 
-      # Insert the actual code into the container
-      wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
-      i4 = docker_build_command(i3, "add code.tar /app",
-        "code.tar" => tar_run_files(options[:repo_path])) do |on|
-        # Note that we're not sending the output of this to the console
-        # because it is relatively short running and is otherwise confusing
+      i4 = compile_step4(i3, options[:repo_path]) do |s,c|
+        wrapper.call(:log, s, c)
       end
 
       command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
@@ -300,6 +296,16 @@ module Morph
             yield :internalout, c
           end
         end
+      end
+    end
+
+    # Insert the actual code into the container
+    def self.compile_step4(i, repo_path)
+      yield :internalout, "Injecting scraper code and running...\n"
+      docker_build_command(i, "add code.tar /app",
+        "code.tar" => tar_run_files(repo_path)) do |on|
+        # Note that we're not sending the output of this to the console
+        # because it is relatively short running and is otherwise confusing
       end
     end
 
