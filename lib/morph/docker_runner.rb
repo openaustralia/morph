@@ -7,8 +7,14 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i3 = compile(options[:repo_path]) do |on|
-        on.log {|s,c| wrapper.call(:log, s, c)}
+      i = compile_step1 do |s,c|
+        wrapper.call(:log, s, c)
+      end
+      i2 = compile_step2(i, options[:repo_path]) do |s,c|
+        wrapper.call(:log, s, c)
+      end
+      i3 = compile_step3(i2) do |s,c|
+        wrapper.call(:log, s, c)
       end
 
       # If something went wrong during the compile and it couldn't finish
@@ -266,21 +272,6 @@ module Morph
       file_environment["Dockerfile"] = "from #{image.id}\n" + commands.map{|c| c + "\n"}.join
       docker_build_from_files(file_environment) do |on|
         on.log {|s,c| wrapper.call(:log, s, c)}
-      end
-    end
-
-    def self.compile(repo_path)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      i = compile_step1 do |s,c|
-        wrapper.call(:log, s, c)
-      end
-      i2 = compile_step2(i, repo_path) do |s,c|
-        wrapper.call(:log, s, c)
-      end
-      compile_step3(i2) do |s,c|
-        wrapper.call(:log, s, c)
       end
     end
 
