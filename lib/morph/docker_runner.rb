@@ -273,22 +273,40 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i = Morph::DockerUtils.get_or_pull_image('openaustralia/buildstep') do |on|
-        on.log {|s,c| wrapper.call(:log, :internalout, c)}
+      i = compile_step1 do |c|
+        wrapper.call(:log, :internalout, c)
       end
-      # Insert the configuration part of the application code into the container
-      wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
-      i2 = docker_build_command(i,
+      i2 = compile_step2(i, repo_path) do |c|
+        wrapper.call(:log, :internalout, c)
+      end
+      compile_step3(i2) do |c|
+        wrapper.call(:log, :internalout, c)
+      end
+    end
+
+    def self.compile_step1
+      Morph::DockerUtils.get_or_pull_image('openaustralia/buildstep') do |on|
+        on.log {|s,c| yield c}
+      end
+    end
+
+    # Insert the configuration part of the application code into the container
+    def self.compile_step2(i, repo_path)
+      yield "Injecting configuration and compiling...\n"
+      docker_build_command(i,
         ["ADD code_config.tar /app"],
         "code_config.tar" => tar_config_files(repo_path)) do |on|
       end
-      # And build
+    end
+
+    # And build
+    def self.compile_step3(i2)
       docker_build_command(i2,
         ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], {}) do |on|
         on.log do |s,c|
           # We don't want to show the standard docker build output
           unless c =~ /^Step \d+ :/ || c =~ /^ ---> / || c =~ /^Removing intermediate container / || c =~ /^Successfully built /
-            wrapper.call(:log, :internalout, c)
+            yield c
           end
         end
       end
