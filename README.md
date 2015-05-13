@@ -117,21 +117,14 @@ Install [Vagrant](http://www.vagrantup.com/) and [Ansible](http://www.ansible.co
 
 Add these lines to your `/etc/hosts` file:
 
-    127.0.0.1  dev.morph.io
-    127.0.0.1  faye.dev.morph.io
+    192.168.11.2  dev.morph.io
+    192.168.11.2  faye.dev.morph.io
+    192.168.11.2  api.dev.morph.io
+    192.168.11.2  discuss.dev.morph.io
 
 Once the box is created and provisioned, deploy the application to your Vagrant box:
 
     cap local deploy
-
-To access the application you need to forward HTTP and HTTPS privileged ports.
-
-**OS X**: There's a script to do this via the firewall `./local_port_forward_os_x.sh`.
-
-**Linux**: On Linux the quickest way is to install the `redir` utility (`sudo aptitude install redir`) and then run these commands in separate terminals:
-
-    sudo redir --lport 80 --cport 8000
-    sudo redir --lport 443 --cport 8001
 
 Now visit https://dev.morph.io/
 
