@@ -321,6 +321,7 @@ a i.fa-clock-o {
 }
 
 h1.full_name {
+  padding-bottom: 1.2; // compensate for overflow:hidden, keep descenders visible
   overflow: hidden;
   text-overflow: ellipsis;
 }
