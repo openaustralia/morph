@@ -5,44 +5,54 @@
 
   - if @q
     - if !@scrapers_total_count.zero? || !@owners.empty?
-      .search-results
-        %ul.search-type-nav.nav.nav-tabs
-          %li{class: ('active' unless @type == "users"), role: "presentation"}
-            = link_to search_path(q: @q, type: nil) do
-              Scrapers
-              %span.badge #{@scrapers_total_count}
-          %li{class: ('active' if @type == "users"), role: "presentation"}
-            = link_to search_path(q: @q, type: "users") do
-              Users
-              %span.badge #{@owners.total_count}
+      .search-results.row
+        .col-xs-12
+          %ul.search-type-nav.nav.nav-tabs
+            %li{class: ('active' unless @type == "users"), role: "presentation"}
+              = link_to search_path(q: @q, type: nil) do
+                Scrapers
+                %span.badge #{@scrapers_total_count}
+            %li{class: ('active' if @type == "users"), role: "presentation"}
+              = link_to search_path(q: @q, type: "users") do
+                Users
+                %span.badge #{@owners.total_count}
 
-        - if @type == "users"
-          - @owners.with_details.each do |owner, details|
-            = render owner, highlight: details[:highlight]
-          = paginate @owners
+        - if @type == "users" && !@owners.total_count.zero?
+          .col-xs-12
+            - @owners.with_details.each do |owner, details|
+              = render owner, highlight: details[:highlight]
+          .col-xs-12
+            = paginate @owners
         - else
           - if @type != "users" && !@scrapers_total_count.zero?
-            .list-filters.btn-group
-              = link_to "Only scrapers with data", search_path(q: @q), class: "btn btn-default #{('active' unless @show == 'all')}"
-              = link_to "All scrapers", search_path(q: @q, show: "all"), class: "btn btn-default #{('active' if @show == 'all')}"
-          - @scrapers.with_details.each do |scraper, details|
-            = render scraper, highlight: details[:highlight]
-          = paginate @scrapers
+            .col-xs-12.col-md-3.list-filters
+              .btn-group
+                = link_to "Only scrapers with data", search_path(q: @q), class: "btn btn-default #{('active' unless @show == 'all')}"
+                = link_to "All scrapers", search_path(q: @q, show: "all"), class: "btn btn-default #{('active' if @show == 'all')}"
+            - if !@scrapers.total_count.zero?
+              .col-xs-12.col-md-9
+                - @scrapers.with_details.each do |scraper, details|
+                  = render scraper, highlight: details[:highlight]
+              .col-xs-12
+                = paginate @scrapers
 
         - if @type == "users" && @owners.empty? && !@scrapers_total_count.zero?
-          .alert.alert-info
-            Sorry, we couldn’t find any users relevant to your search term
-            %strong “#{@q}”.
+          .col-xs-12
+            .alert.alert-info
+              Sorry, we couldn’t find any users relevant to your search term
+              %strong “#{@q}”.
         - elsif @type != "users" && !@owners.empty? && @scrapers_total_count.zero?
-          .alert.alert-info
-            Sorry, we couldn’t find any scrapers relevant to your search term
-            %strong “#{@q}”.
+          .col-xs-12
+            .alert.alert-info
+              Sorry, we couldn’t find any scrapers relevant to your search term
+              %strong “#{@q}”.
         - elsif @type != "users" && @show != "all" && @scrapers.empty?
-          .alert.alert-info
-            Sorry, we couldn’t find any scrapers
-            %em with data,
-            that are relevant to your search term
-            %strong “#{@q}”.
+          .col-xs-12.col-md-9
+            .alert.alert-info
+              Sorry, we couldn’t find any scrapers
+              %em with data,
+              that are relevant to your search term
+              %strong “#{@q}”.
 
     - else
       %h2 No results found
