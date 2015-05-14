@@ -84,7 +84,7 @@ module Morph
           end
           conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
           begin
-            result = Docker::Image.build_from_dir(dir, {'rm' => 1}, conn_interactive) do |chunk|
+            result = Docker::Image.build_from_tar(StringIO.new(create_tar(dir)), {'rm' => 1}, conn_interactive) do |chunk|
               # TODO Do this properly
               begin
                 wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
