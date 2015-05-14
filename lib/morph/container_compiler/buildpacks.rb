@@ -66,6 +66,8 @@ module Morph
       end
 
       # file_environment needs to also include a Dockerfile with content
+      # We're effectively tarring everything up twice
+      # TODO: Fix this
       def self.docker_build_from_files(file_environment)
         wrapper = Multiblock.wrapper
         yield(wrapper)
