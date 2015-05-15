@@ -26,12 +26,11 @@ module Morph
         return 255;
       end
 
-      tar_run_files = Dir.mktmpdir("morph") do |dest|
+      i4 = Dir.mktmpdir("morph") do |dest|
         write_all_run_to_directory(options[:repo_path], dest)
-        Morph::DockerUtils.create_tar(dest)
-      end
-      i4 = compile_step4(i3, tar_run_files) do |s,c|
-        wrapper.call(:log, s, c)
+        compile_step4(i3, dest) do |s,c|
+          wrapper.call(:log, s, c)
+        end
       end
 
       command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
@@ -276,9 +275,6 @@ module Morph
 
     # Insert the configuration part of the application code into the container
     def self.compile_step2(image, dest)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
       yield :internalout, "Injecting configuration and compiling...\n"
 
       Dir.mktmpdir("morph") do |dir|
@@ -303,11 +299,11 @@ module Morph
     end
 
     # Insert the actual code into the container
-    def self.compile_step4(image, code_tar)
+    def self.compile_step4(image, dest)
       yield :internalout, "Injecting scraper code and running...\n"
 
       Dir.mktmpdir("morph") do |dir|
-        File.open(File.join(dir, "code.tar"), "w") {|f| f.write code_tar}
+        File.open(File.join(dir, "code.tar"), "w") {|f| f.write Morph::DockerUtils.create_tar(dest)}
 
         docker_build_command(image, "add code.tar /app", dir) do |on|
           # Note that we're not sending the output of this to the console
