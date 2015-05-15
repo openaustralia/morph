@@ -36,6 +36,18 @@ describe Morph::DockerRunner do
       FileUtils.rm_rf("test")
     end
 
+    describe ".write_all_config_to_directory" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::DockerRunner.write_all_config_to_directory("test", dir)
+          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
+          File.read(File.join(dir, "Gemfile")).should == ""
+          File.read(File.join(dir, "Gemfile.lock")).should == ""
+          File.read(File.join(dir, "Procfile")).should == ""
+        end
+      end
+    end
+
     describe ".write_all_config_with_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
@@ -79,6 +91,17 @@ describe Morph::DockerRunner do
       FileUtils.rm_rf("test")
     end
 
+    describe ".write_all_config_to_directory" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::DockerRunner.write_all_config_to_directory("test", dir)
+          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock"]
+          File.read(File.join(dir, "Gemfile")).should == ""
+          File.read(File.join(dir, "Gemfile.lock")).should == ""
+        end
+      end
+    end
+
     describe ".write_all_config_with_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
@@ -114,6 +137,17 @@ describe Morph::DockerRunner do
 
     after :each do
       FileUtils.rm_rf("test")
+    end
+
+    describe ".write_all_config_to_directory" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::DockerRunner.write_all_config_to_directory("test", dir)
+          Dir.entries(dir).sort.should == [".", "..", "Procfile"]
+          ruby = Morph::Language.new(:ruby)
+          File.read(File.join(dir, "Procfile")).should == "scraper: some override"
+        end
+      end
     end
 
     describe ".write_all_config_with_defaults_to_directory" do
