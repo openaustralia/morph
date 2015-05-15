@@ -21,11 +21,12 @@
             = render partial: "no_results_of_type_notice"
         - else
           - if !@unfiltered_scrapers_count.zero?
-            .col-xs-12.col-md-3.list-filters
-              %h2.h5.text-muted Filter scrapers
-              .btn-group
-                = link_to "With data", search_path(q: @q), class: "btn btn-default #{('active' unless @show == 'all')}"
-                = link_to "All", search_path(q: @q, show: "all"), class: "btn btn-default #{('active' if @show == 'all')}"
+            %aside.col-xs-12.col-md-3
+              .list-filters
+                %h2.h5.text-muted Filter scrapers
+                .btn-group
+                  = link_to "With data", search_path(q: @q), class: "btn btn-default #{('active' unless @show == 'all')}"
+                  = link_to "All", search_path(q: @q, show: "all"), class: "btn btn-default #{('active' if @show == 'all')}"
 
             - # If there are scrapers matching filters
             - if !@scrapers.total_count.zero?

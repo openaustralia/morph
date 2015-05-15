@@ -20,13 +20,15 @@
   .alert {
     margin-top: 0;
   }
+
+  aside {
+    @media (min-width: $screen-md-min) {
+      float: right;
+    }
+  }
 }
 
 .list-filters {
-  @media (min-width: $screen-md-min) {
-    float: right;
-  }
-
   h2 {
     margin: 0;
     font-weight: normal;
