@@ -10,7 +10,7 @@ class SearchController < ApplicationController
     @owners = Owner.search @q, default_owner_search_params
 
     all_scrapers = Scraper.search @q, default_scraper_search_params
-    @scrapers_total_count = all_scrapers.total_count
+    @unfiltered_scrapers_count = all_scrapers.total_count
 
     if @show == "all" && @type != "users"
       @scrapers = all_scrapers

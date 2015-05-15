@@ -4,14 +4,14 @@
   = render partial: "search_form"
 
   - if @q
-    - if !@scrapers_total_count.zero? || !@owners.empty?
+    - if !@unfiltered_scrapers_count.zero? || !@owners.empty?
       .search-results.row
         .col-xs-12
           %ul.search-type-nav.nav.nav-tabs
             %li{class: ('active' unless @type == "users"), role: "presentation"}
               = link_to search_path(q: @q, type: nil) do
                 Scrapers
-                %span.badge #{@scrapers_total_count}
+                %span.badge #{@unfiltered_scrapers_count}
             %li{class: ('active' if @type == "users"), role: "presentation"}
               = link_to search_path(q: @q, type: "users") do
                 Users
@@ -28,7 +28,7 @@
           - else
             = render partial: "no_results_of_type_notice"
         - else
-          - if !@scrapers_total_count.zero?
+          - if !@unfiltered_scrapers_count.zero?
             .col-xs-12.col-md-3.list-filters
               %h2.h5.text-muted Filter scrapers
               .btn-group
