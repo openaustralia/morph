@@ -266,7 +266,7 @@ module Morph
 
       commands = [commands] unless commands.kind_of?(Array)
 
-      file_environment["Dockerfile"] = "from #{image.id}\n" + commands.map{|c| c + "\n"}.join
+      file_environment["Dockerfile"] = dockerfile_contents_from_commands(image, commands)
       Dir.mktmpdir("morph") do |dir|
         file_environment.each do |file, content|
           File.open(File.join(dir, file), "w") {|f| f.write content}
@@ -276,6 +276,10 @@ module Morph
           on.log {|s,c| wrapper.call(:log, s, c)}
         end
       end
+    end
+
+    def self.dockerfile_contents_from_commands(image, commands)
+      "from #{image.id}\n" + commands.map{|c| c + "\n"}.join
     end
 
     def self.compile_step1
