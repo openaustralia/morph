@@ -254,11 +254,11 @@ module Morph
       Dir.mktmpdir("morph") do |dir2|
         copy_directory_contents(dir, dir2)
         File.open(File.join(dir2, "Dockerfile"), "w") {|f| f.write dockerfile_contents_from_commands(image, commands)}
-      end
 
-      fix_modification_times(dir2)
-      docker_build_from_dir(dir2) do |on|
-        on.log {|s,c| wrapper.call(:log, s, c)}
+        fix_modification_times(dir2)
+        docker_build_from_dir(dir2) do |on|
+          on.log {|s,c| wrapper.call(:log, s, c)}
+        end
       end
     end
 
