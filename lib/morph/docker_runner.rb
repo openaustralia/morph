@@ -242,9 +242,7 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      result = nil
-      dir = Dir.mktmpdir("morph")
-      begin
+      Dir.mktmpdir("morph") do |dir|
         file_environment.each do |file, content|
           path = File.join(dir, file)
           File.open(path, "w") {|f| f.write content}
@@ -254,7 +252,7 @@ module Morph
         end
         conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
         begin
-          result = Docker::Image.build_from_tar(StringIO.new(Morph::DockerUtils.create_tar(dir)), {'rm' => 1}, conn_interactive) do |chunk|
+          Docker::Image.build_from_tar(StringIO.new(Morph::DockerUtils.create_tar(dir)), {'rm' => 1}, conn_interactive) do |chunk|
             # TODO Do this properly
             begin
               wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
@@ -263,12 +261,9 @@ module Morph
             end
           end
         rescue Docker::Error::UnexpectedResponseError
-          result = nil
+          nil
         end
-      ensure
-        FileUtils.remove_entry_secure dir
       end
-      result
     end
 
     # file_environment is a hash of files (and their contents) to put in the same directory
