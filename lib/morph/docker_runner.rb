@@ -2,16 +2,25 @@ module Morph
   class DockerRunner
     ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
 
+    # Contents of a tarfile that contains everything that isn't a configuration file
+    def self.tar_run_files(source)
+      Dir.mktmpdir("morph") do |dest|
+        write_all_run_to_directory(source, dest)
+        Morph::DockerUtils.create_tar(dest)
+      end
+    end
+
     # options: repo_path, container_name, data_path, env_variables
     def self.compile_and_run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      tar_config_files = tar_config_files(options[:repo_path])
-      tar_run_files = tar_run_files(options[:repo_path])
-
       i = compile_step1 do |s,c|
         wrapper.call(:log, s, c)
+      end
+      tar_config_files = Dir.mktmpdir("morph") do |dest|
+        write_all_config_with_defaults_to_directory(options[:repo_path], dest)
+        Morph::DockerUtils.create_tar(dest)
       end
       i2 = compile_step2(i, tar_config_files) do |s,c|
         wrapper.call(:log, s, c)
@@ -26,7 +35,7 @@ module Morph
         return 255;
       end
 
-      i4 = compile_step4(i3, tar_run_files) do |s,c|
+      i4 = compile_step4(i3, tar_run_files(options[:repo_path])) do |s,c|
         wrapper.call(:log, s, c)
       end
 
@@ -59,24 +68,6 @@ module Morph
       if container_exists?(container_name)
         c = Docker::Container.get(container_name)
         c.kill
-      end
-    end
-
-    # Contents of a tarfile that contains everything that isn't a configuration file
-    def self.tar_run_files(source)
-      Dir.mktmpdir("morph") do |dest|
-        write_all_run_to_directory(source, dest)
-        Morph::DockerUtils.create_tar(dest)
-      end
-    end
-
-    # Contents of a tarfile that contains configuration type files
-    # like Gemfile, requirements.txt, etc..
-    # This comes from a whitelisted list
-    def self.tar_config_files(source)
-      Dir.mktmpdir("morph") do |dest|
-        write_all_config_with_defaults_to_directory(source, dest)
-        Morph::DockerUtils.create_tar(dest)
       end
     end
 
