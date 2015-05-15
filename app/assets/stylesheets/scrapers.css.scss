@@ -138,15 +138,22 @@
       }
     }
   }
+
+
+  .download-privacy-notice {
+    margin: 0 0 1em;
+    display: inline-block;
+    vertical-align: middle;
+
+    &.alert {
+      padding: 0.25em .5em;
+    }
+  }
 }
 
 .download-privacy-notice {
-  margin: 0 0 1em;
-  display: inline-block;
-  vertical-align: top;
-
-  &.alert {
-    padding: 0.25em .5em;
+  a {
+    text-decoration: underline;
   }
 }
 
@@ -313,7 +320,24 @@ a i.fa-clock-o {
   }
 }
 
+.scraper-alerts-list {
+  .list-group-item {
+    padding-bottom: 0;
+  }
+
+  .scraper-error-info {
+    margin-top: 10px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 5px 15px;
+    font-size: $font-size-small;
+    color: $alert-danger-text;
+    background-color: lighten($alert-danger-bg, 5%);
+  }
+}
+
 h1.full_name {
+  padding-bottom: 1.2; // compensate for overflow:hidden, keep descenders visible
   overflow: hidden;
   text-overflow: ellipsis;
 }

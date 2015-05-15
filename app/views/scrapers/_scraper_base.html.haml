@@ -1,4 +1,4 @@
-- cache ["v5", scraper, hide_owner] do
+- cache ["v5", scraper, hide_owner, show_errored_detail] do
   = link_to scraper, class: "list-group-item" do
     %div.scraper-block
       - unless scraper.language.blank?
@@ -16,3 +16,9 @@
           = scraper.description
         - unless scraper.scraped_domains.empty?
           %p.scraper-domains-list.text-muted= simplified_scraped_domains_list(scraper.scraped_domains)
+    - if show_errored_detail
+      .scraper-error-info.row
+        - if scraper.latest_successful_run_time
+          Errored for #{time_ago_in_words(scraper.latest_successful_run_time)}
+        - else
+          Never run successfully

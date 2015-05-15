@@ -92,8 +92,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "local" do |local|
     local.vm.network :private_network, ip: "192.168.11.2"
-    local.vm.network :forwarded_port, guest: 80, host: 8000
-    local.vm.network :forwarded_port, guest: 443, host: 8001
+    local.vm.hostname = "dev.morph.io"
     local.vm.network :forwarded_port, guest: 22, host: 2200
     local.vm.network :forwarded_port, guest: 4443, host: 4443
     local.vm.synced_folder ".", "/vagrant", disabled: true
@@ -126,5 +125,4 @@ Vagrant.configure("2") do |config|
       vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
     end
   end
-
 end

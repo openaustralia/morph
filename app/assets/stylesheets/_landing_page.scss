@@ -63,6 +63,24 @@
   }
 }
 
+.scraper-alert-panel {
+  margin-bottom: 15px;
+
+  // override .panel.panel-danger margin-top
+  &.panel {
+    margin-top: 0;
+  }
+
+  .panel-heading {
+    margin: 0;
+    font-size: $font-size-base;
+
+    @media (min-width: 40em) {
+      font-size: $font-size-h4;
+    }
+  }
+}
+
 .banner-wrapper {
   background-color: #716b58;
 }
