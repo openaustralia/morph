@@ -10,12 +10,11 @@ module Morph
       i = compile_step1 do |s,c|
         wrapper.call(:log, s, c)
       end
-      tar_config_files = Dir.mktmpdir("morph") do |dest|
+      i2 = Dir.mktmpdir("morph") do |dest|
         write_all_config_with_defaults_to_directory(options[:repo_path], dest)
-        Morph::DockerUtils.create_tar(dest)
-      end
-      i2 = compile_step2(i, tar_config_files) do |s,c|
-        wrapper.call(:log, s, c)
+        compile_step2(i, dest) do |s,c|
+          wrapper.call(:log, s, c)
+        end
       end
       i3 = compile_step3(i2) do |s,c|
         wrapper.call(:log, s, c)
@@ -276,11 +275,14 @@ module Morph
     end
 
     # Insert the configuration part of the application code into the container
-    def self.compile_step2(image, code_config_tar)
+    def self.compile_step2(image, dest)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
       yield :internalout, "Injecting configuration and compiling...\n"
 
       Dir.mktmpdir("morph") do |dir|
-        File.open(File.join(dir, "code_config.tar"), "w") {|f| f.write code_config_tar}
+        File.open(File.join(dir, "code_config.tar"), "w") {|f| f.write Morph::DockerUtils.create_tar(dest)}
         docker_build_command(image, ["ADD code_config.tar /app"], dir) do |on|
         end
       end
