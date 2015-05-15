@@ -2,14 +2,6 @@ module Morph
   class DockerRunner
     ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
 
-    # Contents of a tarfile that contains everything that isn't a configuration file
-    def self.tar_run_files(source)
-      Dir.mktmpdir("morph") do |dest|
-        write_all_run_to_directory(source, dest)
-        Morph::DockerUtils.create_tar(dest)
-      end
-    end
-
     # options: repo_path, container_name, data_path, env_variables
     def self.compile_and_run(options)
       wrapper = Multiblock.wrapper
@@ -35,7 +27,11 @@ module Morph
         return 255;
       end
 
-      i4 = compile_step4(i3, tar_run_files(options[:repo_path])) do |s,c|
+      tar_run_files = Dir.mktmpdir("morph") do |dest|
+        write_all_run_to_directory(options[:repo_path], dest)
+        Morph::DockerUtils.create_tar(dest)
+      end
+      i4 = compile_step4(i3, tar_run_files) do |s,c|
         wrapper.call(:log, s, c)
       end
 
