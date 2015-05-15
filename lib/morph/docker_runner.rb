@@ -259,7 +259,9 @@ module Morph
       end
     end
 
-    def self.docker_build_command2(image, commands, dir)
+    # We're effectively tarring everything up twice
+    # TODO: Fix this
+    def self.docker_build_command(image, commands, dir)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
@@ -275,26 +277,6 @@ module Morph
       end
     end
 
-    # file_environment is a hash of files (and their contents) to put in the same directory
-    # as the Dockerfile created to contain the command
-    # Returns the new image
-    # We're effectively tarring everything up twice
-    # TODO: Fix this
-    def self.docker_build_command(image, commands, file_environment)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      Dir.mktmpdir("morph") do |dir|
-        file_environment.each do |file, content|
-          File.open(File.join(dir, file), "w") {|f| f.write content}
-        end
-
-        docker_build_command2(image, commands, dir) do |on|
-          on.log {|s,c| wrapper.call(:log, s, c)}
-        end
-      end
-    end
-
     def self.dockerfile_contents_from_commands(image, commands)
       commands = [commands] unless commands.kind_of?(Array)
       "from #{image.id}\n" + commands.map{|c| c + "\n"}.join
@@ -307,33 +289,41 @@ module Morph
     end
 
     # Insert the configuration part of the application code into the container
-    def self.compile_step2(i, code_config_tar)
+    def self.compile_step2(image, code_config_tar)
       yield :internalout, "Injecting configuration and compiling...\n"
-      docker_build_command(i,
-        ["ADD code_config.tar /app"],
-        "code_config.tar" => code_config_tar) do |on|
+
+      Dir.mktmpdir("morph") do |dir|
+        File.open(File.join(dir, "code_config.tar"), "w") {|f| f.write code_config_tar}
+        docker_build_command(image, ["ADD code_config.tar /app"], dir) do |on|
+        end
       end
     end
 
     # And build
-    def self.compile_step3(i)
-      docker_build_command(i,
-        ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], {}) do |on|
-        on.log do |s,c|
-          # We don't want to show the standard docker build output
-          unless c =~ /^Step \d+ :/ || c =~ /^ ---> / || c =~ /^Removing intermediate container / || c =~ /^Successfully built /
-            yield :internalout, c
+    def self.compile_step3(image)
+      Dir.mktmpdir("morph") do |dir|
+        docker_build_command(image, ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], dir) do |on|
+          on.log do |s,c|
+            # We don't want to show the standard docker build output
+            unless c =~ /^Step \d+ :/ || c =~ /^ ---> / || c =~ /^Removing intermediate container / || c =~ /^Successfully built /
+              yield :internalout, c
+            end
           end
         end
       end
     end
 
     # Insert the actual code into the container
-    def self.compile_step4(i, code_tar)
+    def self.compile_step4(image, code_tar)
       yield :internalout, "Injecting scraper code and running...\n"
-      docker_build_command(i, "add code.tar /app", "code.tar" => code_tar) do |on|
-        # Note that we're not sending the output of this to the console
-        # because it is relatively short running and is otherwise confusing
+
+      Dir.mktmpdir("morph") do |dir|
+        File.open(File.join(dir, "code.tar"), "w") {|f| f.write code_tar}
+
+        docker_build_command(image, "add code.tar /app", dir) do |on|
+          # Note that we're not sending the output of this to the console
+          # because it is relatively short running and is otherwise confusing
+        end
       end
     end
 
