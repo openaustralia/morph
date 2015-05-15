@@ -93,8 +93,12 @@ module Morph
       fix_modification_times(dest)
     end
 
-    def self.write_all_run_to_directory(source, dest)
+    def self.copy_directory_contents(source, dest)
       FileUtils.cp_r File.join(source, "."), dest
+    end
+
+    def self.write_all_run_to_directory(source, dest)
+      copy_directory_contents(source, dest)
 
       ALL_CONFIG_FILENAMES.each do |path|
         FileUtils.rm_f(File.join(dest, path))
