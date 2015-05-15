@@ -264,11 +264,7 @@ module Morph
 
       Dir.mktmpdir("morph") do |dir|
         file_environment.each do |file, content|
-          path = File.join(dir, file)
-          File.open(path, "w") {|f| f.write content}
-          # Set an arbitrary & fixed modification time on the files so that if
-          # content is the same it will cache
-          FileUtils.touch(path, mtime: Time.new(2000,1,1))
+          File.open(File.join(dir, file), "w") {|f| f.write content}
         end
         fix_modification_times(dir)
         docker_build_from_dir(dir) do |on|
