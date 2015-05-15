@@ -10,11 +10,11 @@ module Morph
       i = compile_step1 do |s,c|
         wrapper.call(:log, s, c)
       end
+      # Insert the configuration part of the application code into the container
       i2 = Dir.mktmpdir("morph") do |dest|
         write_all_config_with_defaults_to_directory(options[:repo_path], dest)
-        compile_step2(i, dest) do |s,c|
-          wrapper.call(:log, s, c)
-        end
+        wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
+        inject_files(i, dest)
       end
       i3 = compile_step3(i2) do |s,c|
         wrapper.call(:log, s, c)
@@ -26,11 +26,11 @@ module Morph
         return 255;
       end
 
+      # Insert the actual code into the container
       i4 = Dir.mktmpdir("morph") do |dest|
         write_all_run_to_directory(options[:repo_path], dest)
-        compile_step4(i3, dest) do |s,c|
-          wrapper.call(:log, s, c)
-        end
+        wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
+        inject_files(i3, dest)
       end
 
       command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
@@ -260,21 +260,22 @@ module Morph
       "from #{image.id}\n" + commands.map{|c| c + "\n"}.join
     end
 
-    def self.compile_step1
-      Morph::DockerUtils.get_or_pull_image('openaustralia/buildstep') do |on|
-        on.log {|s,c| yield :internalout, c}
-      end
-    end
-
-    # Insert the configuration part of the application code into the container
-    def self.compile_step2(image, dest)
-      yield :internalout, "Injecting configuration and compiling...\n"
-
+    # Inject all files in the given directory into the /app directory in the image
+    # and return a new image
+    def self.inject_files(image, dest)
       Dir.mktmpdir("morph") do |dir|
         FileUtils.mkdir(File.join(dir, "app"))
         copy_directory_contents(dest, File.join(dir, "app"))
         docker_build_command(image, ["ADD app /app"], dir) do |on|
+          # Note that we're not sending the output of this to the console
+          # because it is relatively short running and is otherwise confusing
         end
+      end
+    end
+
+    def self.compile_step1
+      Morph::DockerUtils.get_or_pull_image('openaustralia/buildstep') do |on|
+        on.log {|s,c| yield :internalout, c}
       end
     end
 
@@ -288,21 +289,6 @@ module Morph
               yield :internalout, c
             end
           end
-        end
-      end
-    end
-
-    # Insert the actual code into the container
-    def self.compile_step4(image, dest)
-      yield :internalout, "Injecting scraper code and running...\n"
-
-      Dir.mktmpdir("morph") do |dir|
-
-        FileUtils.mkdir(File.join(dir, "app"))
-        copy_directory_contents(dest, File.join(dir, "app"))
-        docker_build_command(image, "add app /app", dir) do |on|
-          # Note that we're not sending the output of this to the console
-          # because it is relatively short running and is otherwise confusing
         end
       end
     end
