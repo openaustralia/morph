@@ -1,0 +1,6 @@
+.col-xs-12
+  .alert.alert-info
+    Sorry, we couldn’t find any
+    = @type == "users" ? @type : "scrapers"
+    relevant to your search term
+    %strong “#{@q}”.
