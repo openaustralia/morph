@@ -235,6 +235,26 @@ module Morph
       c
     end
 
+    def self.docker_build_from_dir(dir)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
+      # How does this connection get closed?
+      conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
+      begin
+        Docker::Image.build_from_tar(StringIO.new(Morph::DockerUtils.create_tar(dir)), {'rm' => 1}, conn_interactive) do |chunk|
+          # TODO Do this properly
+          begin
+            wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
+          rescue JSON::ParserError
+            # Workaround until we handle this properly
+          end
+        end
+      rescue Docker::Error::UnexpectedResponseError
+        nil
+      end
+    end
+
     # file_environment needs to also include a Dockerfile with content
     # We're effectively tarring everything up twice
     # TODO: Fix this
@@ -250,18 +270,9 @@ module Morph
           # content is the same it will cache
           FileUtils.touch(path, mtime: Time.new(2000,1,1))
         end
-        conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
-        begin
-          Docker::Image.build_from_tar(StringIO.new(Morph::DockerUtils.create_tar(dir)), {'rm' => 1}, conn_interactive) do |chunk|
-            # TODO Do this properly
-            begin
-              wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
-            rescue JSON::ParserError
-              # Workaround until we handle this properly
-            end
-          end
-        rescue Docker::Error::UnexpectedResponseError
-          nil
+        fix_modification_times(dir)
+        docker_build_from_dir(dir) do |on|
+          on.log {|s,c| wrapper.call(:log, s, c)}
         end
       end
     end
