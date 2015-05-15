@@ -236,6 +236,8 @@ module Morph
     end
 
     # file_environment needs to also include a Dockerfile with content
+    # We're effectively tarring everything up twice
+    # TODO: Fix this
     def self.docker_build_from_files(file_environment)
       wrapper = Multiblock.wrapper
       yield(wrapper)
@@ -252,7 +254,7 @@ module Morph
         end
         conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
         begin
-          result = Docker::Image.build_from_dir(dir, {'rm' => 1}, conn_interactive) do |chunk|
+          result = Docker::Image.build_from_tar(StringIO.new(Morph::DockerUtils.create_tar(dir)), {'rm' => 1}, conn_interactive) do |chunk|
             # TODO Do this properly
             begin
               wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
