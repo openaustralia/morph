@@ -1,6 +1,12 @@
 .col-xs-12.col-md-9
   .alert.alert-info
     Sorry, we couldn’t find any
-    = @type == "users" ? @type : "scrapers"
+    - if @type == "users"
+      users
+    - else
+      scrapers
+      - if !@scrapers_total_count.zero? && @scrapers.total_count.zero?
+        %em with data,
+        that are
     relevant to your search term
     %strong “#{@q}”.
