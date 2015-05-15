@@ -244,8 +244,6 @@ module Morph
       end
     end
 
-    # We're effectively tarring everything up twice
-    # TODO: Fix this
     def self.docker_build_command(image, commands, dir)
       wrapper = Multiblock.wrapper
       yield(wrapper)
@@ -278,8 +276,9 @@ module Morph
       yield :internalout, "Injecting configuration and compiling...\n"
 
       Dir.mktmpdir("morph") do |dir|
-        File.open(File.join(dir, "code_config.tar"), "w") {|f| f.write Morph::DockerUtils.create_tar(dest)}
-        docker_build_command(image, ["ADD code_config.tar /app"], dir) do |on|
+        FileUtils.mkdir(File.join(dir, "app"))
+        copy_directory_contents(dest, File.join(dir, "app"))
+        docker_build_command(image, ["ADD app /app"], dir) do |on|
         end
       end
     end
@@ -303,9 +302,10 @@ module Morph
       yield :internalout, "Injecting scraper code and running...\n"
 
       Dir.mktmpdir("morph") do |dir|
-        File.open(File.join(dir, "code.tar"), "w") {|f| f.write Morph::DockerUtils.create_tar(dest)}
 
-        docker_build_command(image, "add code.tar /app", dir) do |on|
+        FileUtils.mkdir(File.join(dir, "app"))
+        copy_directory_contents(dest, File.join(dir, "app"))
+        docker_build_command(image, "add app /app", dir) do |on|
           # Note that we're not sending the output of this to the console
           # because it is relatively short running and is otherwise confusing
         end
