@@ -74,8 +74,6 @@ module Morph
       # We don't need to check that the language is recognised because
       # the compiler is never called if the language isn't valid
       add_config_defaults_to_directory(dest, Morph::Language.language(source))
-
-      fix_modification_times(dest)
     end
 
     def self.copy_directory_contents(source, dest)
@@ -90,9 +88,6 @@ module Morph
       end
 
       remove_hidden_directories(dest)
-
-      # TODO I don't think I need to this step here
-      fix_modification_times(dest)
     end
 
     # Set an arbitrary & fixed modification time on everything in a directory
