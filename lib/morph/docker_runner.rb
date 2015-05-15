@@ -65,11 +65,15 @@ module Morph
       end
     end
 
-    def self.write_all_config_with_defaults_to_directory(source, dest)
+    def self.write_all_config_to_directory(source, dest)
       ALL_CONFIG_FILENAMES.each do |config_filename|
         path = File.join(source, config_filename)
         FileUtils.cp(path, dest) if File.exists?(path)
       end
+    end
+
+    def self.write_all_config_with_defaults_to_directory(source, dest)
+      write_all_config_to_directory(source, dest)
 
       # We don't need to check that the language is recognised because
       # the compiler is never called if the language isn't valid
