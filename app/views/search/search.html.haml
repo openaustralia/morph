@@ -26,10 +26,7 @@
               = paginate @owners
 
           - else
-            .col-xs-12
-              .alert.alert-info
-                Sorry, we couldn’t find any users relevant to your search term
-                %strong “#{@q}”.
+            = render partial: "no_results_of_type_notice"
         - else
           - if !@scrapers_total_count.zero?
             .col-xs-12.col-md-3.list-filters
@@ -53,10 +50,7 @@
                   that are relevant to your search term
                   %strong “#{@q}”.
           - else
-            .col-xs-12
-              .alert.alert-info
-                Sorry, we couldn’t find any scrapers relevant to your search term
-                %strong “#{@q}”.
+            = render partial: "no_results_of_type_notice"
     - else
       %h2 No results found
       %p
