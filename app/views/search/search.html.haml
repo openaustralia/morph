@@ -17,44 +17,46 @@
                 Users
                 %span.badge #{@owners.total_count}
 
-        - if @type == "users" && !@owners.total_count.zero?
-          .col-xs-12
-            - @owners.with_details.each do |owner, details|
-              = render owner, highlight: details[:highlight]
-          .col-xs-12
-            = paginate @owners
+        - if @type == "users"
+          - if !@owners.total_count.zero?
+            .col-xs-12
+              - @owners.with_details.each do |owner, details|
+                = render owner, highlight: details[:highlight]
+            .col-xs-12
+              = paginate @owners
+
+          - else
+            .col-xs-12
+              .alert.alert-info
+                Sorry, we couldn’t find any users relevant to your search term
+                %strong “#{@q}”.
         - else
-          - if @type != "users" && !@scrapers_total_count.zero?
+          - if !@scrapers_total_count.zero?
             .col-xs-12.col-md-3.list-filters
               %h2.h5.text-muted Filter scrapers
               .btn-group
                 = link_to "With data", search_path(q: @q), class: "btn btn-default #{('active' unless @show == 'all')}"
                 = link_to "All", search_path(q: @q, show: "all"), class: "btn btn-default #{('active' if @show == 'all')}"
+
+            - # If there are scrapers matching filters
             - if !@scrapers.total_count.zero?
               .col-xs-12.col-md-9
                 - @scrapers.with_details.each do |scraper, details|
                   = render scraper, highlight: details[:highlight]
               .col-xs-12
                 = paginate @scrapers
-
-        - if @type == "users" && @owners.empty? && !@scrapers_total_count.zero?
-          .col-xs-12
-            .alert.alert-info
-              Sorry, we couldn’t find any users relevant to your search term
-              %strong “#{@q}”.
-        - elsif @type != "users" && !@owners.empty? && @scrapers_total_count.zero?
-          .col-xs-12
-            .alert.alert-info
-              Sorry, we couldn’t find any scrapers relevant to your search term
-              %strong “#{@q}”.
-        - elsif @type != "users" && @show != "all" && @scrapers.empty?
-          .col-xs-12.col-md-9
-            .alert.alert-info
-              Sorry, we couldn’t find any scrapers
-              %em with data,
-              that are relevant to your search term
-              %strong “#{@q}”.
-
+            - else
+              .col-xs-12.col-md-9
+                .alert.alert-info
+                  Sorry, we couldn’t find any scrapers
+                  %em with data,
+                  that are relevant to your search term
+                  %strong “#{@q}”.
+          - else
+            .col-xs-12
+              .alert.alert-info
+                Sorry, we couldn’t find any scrapers relevant to your search term
+                %strong “#{@q}”.
     - else
       %h2 No results found
       %p
