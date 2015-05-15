@@ -1,0 +1,5 @@
+.list-filters
+  %h2.h5.text-muted Filter scrapers
+  .btn-group
+    = link_to "With data", search_path(q: @q), class: "btn btn-default #{('active' unless @show == 'all')}"
+    = link_to "All", search_path(q: @q, show: "all"), class: "btn btn-default #{('active' if @show == 'all')}"
