@@ -7,15 +7,7 @@
     - if !@unfiltered_scrapers_count.zero? || !@owners.empty?
       .search-results.row
         .col-xs-12
-          %ul.search-type-nav.nav.nav-tabs
-            %li{class: ('active' unless @type == "users"), role: "presentation"}
-              = link_to search_path(q: @q, type: nil) do
-                Scrapers
-                %span.badge #{@unfiltered_scrapers_count}
-            %li{class: ('active' if @type == "users"), role: "presentation"}
-              = link_to search_path(q: @q, type: "users") do
-                Users
-                %span.badge #{@owners.total_count}
+          = render partial: "search_type_nav"
 
         - if @type == "users"
           - if !@owners.total_count.zero?
