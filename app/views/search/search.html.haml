@@ -2,25 +2,21 @@
   %h1.label-heading
     Search
   = render partial: "search_form"
-
   - if @q
     - if !@unfiltered_scrapers_count.zero? || !@owners.empty?
       .search-results.row
         .col-xs-12
           = render partial: "search_type_nav"
-
         - if @type == "users"
           - if !@owners.total_count.zero?
             .col-xs-12
               = render partial: "search_results_list", locals: {results: @owners}
-
           - else
             = render partial: "no_results_of_type_notice"
         - else
           - if !@unfiltered_scrapers_count.zero?
             %aside.col-xs-12.col-md-3
               = render partial: "scraper_search_filter_controls"
-
             - # If there are scrapers matching filters
             - if !@scrapers.total_count.zero?
               .col-xs-12.col-md-9
@@ -36,9 +32,7 @@
         %strong “#{@q}”.
       %p
         Suggestions:
-
       %ul
         %li check the spelling
         %li try some more general or alternate terms
-
       %p You could also try browsing all #{link_to "scrapers", scrapers_path} or #{link_to "users", users_path}.
