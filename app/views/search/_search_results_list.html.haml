@@ -1,0 +1,3 @@
+- results.with_details.each do |result, details|
+  = render result, highlight: details[:highlight]
+= paginate results
