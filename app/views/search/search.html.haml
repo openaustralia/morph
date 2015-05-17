@@ -12,10 +12,7 @@
         - if @type == "users"
           - if !@owners.total_count.zero?
             .col-xs-12
-              - @owners.with_details.each do |owner, details|
-                = render owner, highlight: details[:highlight]
-            .col-xs-12
-              = paginate @owners
+              = render partial: "search_results_list", locals: {results: @owners}
 
           - else
             = render partial: "no_results_of_type_notice"
@@ -27,10 +24,7 @@
             - # If there are scrapers matching filters
             - if !@scrapers.total_count.zero?
               .col-xs-12.col-md-9
-                - @scrapers.with_details.each do |scraper, details|
-                  = render scraper, highlight: details[:highlight]
-              .col-xs-12
-                = paginate @scrapers
+                = render partial: "search_results_list", locals: {results: @scrapers}
             - else
               = render partial: "no_results_of_type_notice"
           - else
