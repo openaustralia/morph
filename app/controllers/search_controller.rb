@@ -12,7 +12,7 @@ class SearchController < ApplicationController
     all_scrapers = Scraper.search @q, default_scraper_search_params
     @unfiltered_scrapers_count = all_scrapers.total_count
 
-    if @show == "all" && @type != "users"
+    if @show == "all"
       @scrapers = all_scrapers
     else
       @scrapers = Scraper.search @q, default_scraper_search_params.merge(where: {has_data?: true})
