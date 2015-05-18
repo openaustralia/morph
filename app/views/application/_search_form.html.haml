@@ -2,6 +2,7 @@
   %label.sr-only{for: "query"} Search
   .input-group.col-sm-12.col-md-9.col-lg-8
     = hidden_field_tag :type, @type
+    = hidden_field_tag :show, @show
     %input.form-control#query{required: "required", type: "search", maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
     .input-group-btn
       %button.btn.btn-primary{type: "submit"} Search

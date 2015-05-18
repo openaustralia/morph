@@ -134,6 +134,7 @@ class ScrapersController < ApplicationController
   def clear
     authorize! :clear, @scraper
     @scraper.database.clear
+    @scraper.reindex
     redirect_to @scraper
   end
 

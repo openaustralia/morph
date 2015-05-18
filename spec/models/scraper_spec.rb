@@ -183,6 +183,26 @@ describe Scraper do
   context "there is a scraper" do
     let(:scraper) { Scraper.new }
 
+    context "scraper has no data" do
+      before :each do
+        expect(scraper).to receive(:sqlite_total_rows).and_return(0)
+      end
+
+      describe "#has_data?" do
+        it{expect(scraper.has_data?).to eq false}
+      end
+    end
+
+    context "scraper has a data" do
+      before :each do
+        expect(scraper).to receive(:sqlite_total_rows).and_return(1)
+      end
+
+      describe "#has_data?" do
+        it{expect(scraper.has_data?).to eq true}
+      end
+    end
+
     context "scraper has never run" do
       describe "#finished_successfully?" do
         it{expect(scraper.finished_successfully?).to be_falsey}

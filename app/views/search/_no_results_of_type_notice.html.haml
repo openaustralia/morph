@@ -1,0 +1,12 @@
+.col-xs-12.col-md-9
+  .alert.alert-info
+    Sorry, we couldn’t find any
+    - if @type == "users"
+      users
+    - else
+      scrapers
+      - if !@unfiltered_scrapers_count.zero? && @scrapers.total_count.zero?
+        %em with data,
+        that are
+    relevant to your search term
+    %strong “#{@q}”.
