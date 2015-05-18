@@ -1,6 +1,39 @@
 require 'spec_helper'
 
 describe RunsHelper do
+  describe "#scraped_domains_list_without_links" do
+    let(:foo_domain) { mock_model(Domain, name: "foo.com")}
+    let(:bar_domain) { mock_model(Domain, name: "bar.com")}
+    let(:www_foo_domain) { mock_model(Domain, name: "www.foo.com")}
+    let(:www_bar_domain) { mock_model(Domain, name: "www.bar.com")}
+    let(:fiddle_domain) { mock_model(Domain, name: "fiddle.com")}
+
+    it do
+      expect(helper.scraped_domains_list_without_links([foo_domain])).to eq 'foo.com'
+      expect(helper.scraped_domains_list_without_links([foo_domain])).to be_html_safe
+    end
+
+    it do
+      expect(helper.scraped_domains_list_without_links([foo_domain, bar_domain])).to eq 'foo.com and bar.com'
+      expect(helper.scraped_domains_list_without_links([foo_domain, bar_domain])).to be_html_safe
+    end
+
+    it do
+      expect(helper.scraped_domains_list_without_links([foo_domain, bar_domain, www_foo_domain])).to eq 'foo.com, bar.com, and www.foo.com'
+      expect(helper.scraped_domains_list_without_links([foo_domain, bar_domain, www_foo_domain])).to be_html_safe
+    end
+
+    it do
+      expect(helper.scraped_domains_list_without_links([foo_domain, bar_domain, www_foo_domain, www_bar_domain])).to eq 'foo.com, bar.com, www.foo.com, and 1 other domain'
+      expect(helper.scraped_domains_list_without_links([foo_domain, bar_domain, www_foo_domain, www_bar_domain])).to be_html_safe
+    end
+
+    it do
+      expect(helper.scraped_domains_list_without_links([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain])).to eq 'foo.com, bar.com, www.foo.com, and 2 other domains'
+      expect(helper.scraped_domains_list_without_links([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain])).to be_html_safe
+    end
+  end
+
   describe "#scraped_domains_list" do
     let(:foo_domain) { mock_model(Domain, name: "foo.com")}
     let(:bar_domain) { mock_model(Domain, name: "bar.com")}
