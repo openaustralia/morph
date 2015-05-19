@@ -8,5 +8,10 @@
   apt: pkg=libxslt1-dev
 - name: Install pip (required to install mitmproxy)
   apt: pkg=python-pip
-- name: Install mitmproxy
-  pip: name=mitmproxy
+# Install netlib & mitmproxy from master until mitmproxy 0.12 is released
+- name: Install pre-release of netlib
+  pip:
+    name: "git+https://github.com/mitmproxy/netlib.git@46fadfc82386265c26b77ea0d8c3801585c84fbc#egg=netlib"
+- name: Install pre-release of mitmproxy
+  pip:
+    name: "git+https://github.com/mitmproxy/mitmproxy.git@26923dd0e41fe9d5db6fa0677ee0bc627f5a7db2#egg=mitmproxy"
