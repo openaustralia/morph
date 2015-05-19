@@ -1,5 +1,5 @@
 - content_for :title, @scraper.full_name
-- set_meta_tags description: (!@scraper.description.blank? ? @scraper.description : 'A scraper to collect structured data from the web')
+- set_meta_tags description: scraper_description(@scraper)
 
 .container
   = sync partial: "show_partial", resource: @scraper, refetch: true
