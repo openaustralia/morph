@@ -9,7 +9,7 @@ describe RunsHelper do
     let(:fiddle_domain) { mock_model(Domain, name: "fiddle.com")}
 
     describe "#scraped_domains_list" do
-      describe "#scraped_domains_list with links" do
+      describe "#with links" do
         it do
           expect(helper.scraped_domains_list([foo_domain], true)).to eq '<a href="http://foo.com" target="_blank">foo.com</a>'
           expect(helper.scraped_domains_list([foo_domain], true)).to be_html_safe
@@ -36,7 +36,7 @@ describe RunsHelper do
         end
       end
 
-      describe "#scraped_domains_list without links" do
+      describe "#without links" do
         it do
           expect(helper.scraped_domains_list([foo_domain], false)).to eq 'foo.com'
           expect(helper.scraped_domains_list([foo_domain], false)).to be_html_safe
