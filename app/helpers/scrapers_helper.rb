@@ -44,7 +44,11 @@ module ScrapersHelper
     if !scraper.description.blank?
       scraper.description
     else
-      'A scraper to collect structured data from the web.'
+      if !scraper.scraped_domains.empty?
+        "A scraper to collect structured data from #{scraped_domains_list_without_links(scraper.scraped_domains)}."
+      else
+        'A scraper to collect structured data from the web.'
+      end
     end
   end
 end
