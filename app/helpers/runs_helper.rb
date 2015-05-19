@@ -28,6 +28,10 @@ module RunsHelper
     end
   end
 
+  def scraped_domain_link(d)
+    link_to h(d.name), h("http://#{d.name}"), target: "_blank"
+  end
+
   def scraped_domains_list_without_links(scraped_domains)
     d = scraped_domains.map{|d| h(d.name)}
     # If there are more than 3 in the list then summarise
