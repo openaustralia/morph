@@ -20,7 +20,7 @@ describe ScrapersHelper do
     let(:fiddle_domain) { mock_model(Domain, name: "fiddle.com") }
 
     context "scraper description is blank" do
-      it { expect(helper.scraper_description(scraper)).to eq 'A scraper to collect structured data from the web.'}
+      it { expect(helper.scraper_description(scraper)).to eq 'A scraper to collect structured data from the web.' }
     end
 
     context "scraper description is blank and has one scraped domain" do
@@ -46,7 +46,7 @@ describe ScrapersHelper do
         allow(scraper).to receive(:description).and_return('Foo bar')
       end
 
-      it { expect(helper.scraper_description(scraper)).to eq 'Foo bar'}
+      it { expect(helper.scraper_description(scraper)).to eq 'Foo bar' }
     end
   end
 end
