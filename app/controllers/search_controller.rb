@@ -8,12 +8,10 @@ class SearchController < ApplicationController
     @show = params[:show]
 
     @owners = Owner.search @q, default_owner_search_params
-
-    all_scrapers = Scraper.search @q, default_scraper_search_params
-    @unfiltered_scrapers_count = all_scrapers.total_count
+    @all_scrapers = Scraper.search @q, default_scraper_search_params
 
     if @show == "all"
-      @scrapers = all_scrapers
+      @scrapers = @all_scrapers
     else
       @scrapers = Scraper.search @q, default_scraper_search_params.merge(where: {has_data?: true})
     end

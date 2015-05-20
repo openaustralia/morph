@@ -3,7 +3,7 @@
     Search
   = render partial: "search_form"
   - if @q
-    - if !@unfiltered_scrapers_count.zero? || !@owners.empty?
+    - if !@all_scrapers.total_count.zero? || !@owners.empty?
       .search-results.row
         .col-xs-12
           = render partial: "search_type_nav"
@@ -14,7 +14,7 @@
           - else
             = render partial: "no_results_of_type_notice"
         - else
-          - if !@unfiltered_scrapers_count.zero?
+          - if !@all_scrapers.total_count.zero?
             %aside.col-xs-12.col-md-3
               = render partial: "scraper_search_filter_controls"
             - # If there are scrapers matching filters
