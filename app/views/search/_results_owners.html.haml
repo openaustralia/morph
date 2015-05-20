@@ -1,0 +1,5 @@
+.col-xs-12
+  - if @owners.total_count.zero?
+    .alert.alert-info= no_search_results_message("users", @q)
+  - else
+    = render partial: "search_results_list", locals: {results: @owners}
