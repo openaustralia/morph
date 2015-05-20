@@ -1,4 +1,6 @@
 class User < Owner
+  include Skylight::Helpers
+  
   # TODO Add :omniauthable
   devise :trackable, :rememberable, :omniauthable, :omniauth_providers => [:github]
   has_and_belongs_to_many :organizations, join_table: :organizations_users
@@ -45,6 +47,7 @@ class User < Owner
     all_scrapers_watched.select {|s| s.finished_with_errors? && s.finished_recently?}
   end
 
+  instrument_method
   # Puts scrapers that have most recently failed first
   def watched_broken_scrapers_ordered_by_urgency
     watched_broken_scrapers.sort do |a,b|
