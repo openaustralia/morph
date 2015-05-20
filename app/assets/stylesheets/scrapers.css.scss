@@ -287,14 +287,22 @@ a i.fa-clock-o {
     margin: .2em 0 0 .25em;
     width: 4em;
     text-align: right;
+
+    @media (min-width: 40em) {
+      margin-top: .5em;
+    }
   }
 
   .icon-box {
-    margin: 0 .25em;
+    margin: .1em .25em 0 .25em;
     text-align: center;
 
     @media (min-width: 37em) {
       width: 3em;
+    }
+
+    @media (min-width: 40em) {
+      margin-top: .25em;
     }
 
     .spinner,
@@ -316,7 +324,11 @@ a i.fa-clock-o {
   }
 
   .label-danger.pull-right {
-    margin-left: 0.25em;
+    margin: .2em 0 0 .25em;
+
+    @media (min-width: 40em) {
+      margin-top: .5em;
+    }
   }
 }
 
