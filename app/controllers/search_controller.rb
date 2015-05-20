@@ -9,11 +9,8 @@ class SearchController < ApplicationController
 
     @owners = Owner.search @q, default_owner_search_params
     @all_scrapers = Scraper.search @q, default_scraper_search_params
+    @filtered_scrapers = Scraper.search @q, default_scraper_search_params.merge(where: {has_data?: true})
 
-    if @show == "all"
-      @scrapers = @all_scrapers
-    else
-      @scrapers = Scraper.search @q, default_scraper_search_params.merge(where: {has_data?: true})
-    end
+    @scrapers = @show == "all" ? @all_scrapers : @filtered_scrapers
   end
 end
