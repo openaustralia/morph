@@ -5,7 +5,7 @@
   - if @q
     - if @all_scrapers.total_count.zero? && @owners.empty?
       %h2 No results found
-      %p= no_search_results_message("scrapers", @q)
+      %p= no_search_results_message("scrapers or users", @q)
       %p
         Suggestions:
       %ul
