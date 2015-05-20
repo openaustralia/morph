@@ -23,7 +23,7 @@
           %aside.col-xs-12.col-md-3
             = render partial: "scraper_search_filter_controls"
 
-        - if (@type == "users" && @owners.total_count.zero?) || (@type != "users" && (@all_scrapers.total_count.zero? || @scrapers.total_count.zero?))
+        - if (@type == "users" && @owners.total_count.zero?) || (@type != "users" && @scrapers.total_count.zero?)
           = render partial: "no_results_of_type_notice"
         - else
           - if @type == "users"
