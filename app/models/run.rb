@@ -65,16 +65,16 @@ class Run < ActiveRecord::Base
     !!finished_at
   end
 
+  def finished_successfully?
+    status_code == 0
+  end
+
   def finished_with_errors?
-    finished? && !finished_successfully?
+    status_code && status_code != 0
   end
 
   def error_text
     log_lines.where(stream: "stderr").order(:number).map{|l| l.text}.join
-  end
-
-  def finished_successfully?
-    finished? && status_code == 0
   end
 
   def self.time_output_filename
