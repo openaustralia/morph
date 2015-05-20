@@ -125,7 +125,7 @@ class Scraper < ActiveRecord::Base
 
   instrument_method
   def successful_runs
-    runs.order(finished_at: :desc).select{|r| r.finished_successfully?}
+    runs.order(finished_at: :desc).finished_successfully
   end
 
   instrument_method
@@ -147,7 +147,7 @@ class Scraper < ActiveRecord::Base
   # Returns nil if not able to calculate this
   # TODO Refactor this using scopes
   def average_successful_wall_time
-    successful_runs.sum(&:wall_time) / successful_runs.count if successful_runs.count > 0
+    successful_runs.sum(:wall_time) / successful_runs.count if successful_runs.count > 0
   end
 
   def total_wall_time

@@ -6,6 +6,8 @@ class Run < ActiveRecord::Base
   has_one :metric
   has_many :connection_logs
 
+  scope :finished_successfully, -> { where(status_code: 0) }
+
   delegate :git_url, :full_name, :current_revision_from_repo, to: :scraper, allow_nil: true
   delegate :utime, :stime, to: :metric
 
