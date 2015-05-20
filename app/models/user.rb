@@ -43,6 +43,7 @@ class User < Owner
     all_scrapers_watched.select {|s| s.finished_successfully? && s.finished_recently?}
   end
 
+  instrument_method
   def watched_broken_scrapers
     all_scrapers_watched.select {|s| s.finished_with_errors? && s.finished_recently?}
   end
