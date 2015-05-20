@@ -76,7 +76,14 @@ class User < Owner
 
   instrument_method
   def watched_broken_scrapers
-    all_scrapers_watched.select {|s| s.finished_with_errors? && s.finished_recently?}
+    scrapers = all_scrapers_watched
+
+    # Doing this hideous round-about dance to avoid many calls to the database
+    # and I can't use the naive includes(:last_run) because it loads all the runs
+    # for a scraper not just the last one (discards the limit part of the query)
+    ids = Run.where(scraper_id: scrapers.map(&:id)).order("queued_at DESC").group(:scraper_id).select {|r| r.finished_with_errors? && r.finished_recently?}.map(&:scraper_id)
+
+    scrapers.select{|s| ids.include? s.id}
   end
 
   instrument_method
