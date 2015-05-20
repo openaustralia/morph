@@ -75,6 +75,10 @@ class Run < ActiveRecord::Base
     status_code && status_code != 0
   end
 
+  def finished_recently?
+    finished_at && finished_at > 24.hours.ago
+  end
+
   def error_text
     log_lines.where(stream: "stderr").order(:number).map{|l| l.text}.join
   end
