@@ -9,11 +9,11 @@
   .container
     %h3 This week
     .metric-box.col-sm-4
-      %strong 22,000
+      %strong= number_with_delimiter(Morph::VanityStats.total_pages_scraped_in_last_week)
       web pages scraped
     .metric-box.col-sm-4
-      %strong 750,000
+      %strong= number_with_delimiter(Morph::VanityStats.total_database_rows_updated_in_last_week)
       rows of data collected
     .metric-box.col-sm-4
-      %strong 5,000
+      %strong= number_with_delimiter(Morph::VanityStats.total_api_queries_in_last_week)
       downloads &amp; API queries
