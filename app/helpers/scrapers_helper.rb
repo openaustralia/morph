@@ -39,4 +39,17 @@ module ScrapersHelper
   def link_url_or_escape(text)
     is_url?(text) ? auto_link_fallback(text) : escape_once(text)
   end
+
+  def scraper_description(scraper)
+    if !scraper.description.blank?
+      scraper.description
+    else
+      text = 'A scraper to collect structured data from '
+      if !scraper.scraped_domains.empty?
+        text += "#{scraped_domains_list(scraper.scraped_domains, false)}."
+      else
+        text += 'the web.'
+      end
+    end
+  end
 end

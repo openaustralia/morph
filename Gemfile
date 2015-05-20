@@ -52,6 +52,7 @@ gem 'sitemap_generator'
 gem 'kaminari'
 gem 'kaminari-bootstrap', '~> 3.0.1'
 gem "rails-timeago", "~> 2.0"
+gem 'meta-tags'
 # Rails 4 compatibility isn't released yet. So tracking HEAD.
 gem 'activeadmin', github: 'activeadmin'
 gem 'faye'

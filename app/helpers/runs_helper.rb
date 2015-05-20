@@ -28,8 +28,12 @@ module RunsHelper
     end
   end
 
-  def scraped_domains_list(scraped_domains)
-    d = scraped_domains.map{|d| link_to h(d.name), h("http://#{d.name}"), target: "_blank"}
+  def scraped_domain_link(domain)
+    link_to h(domain.name), h("http://#{domain.name}"), target: "_blank"
+  end
+
+  def scraped_domains_list(scraped_domains, with_links = true)
+    d = scraped_domains.map{|d| (with_links ? scraped_domain_link(d) : h(d.name))}
     # If there are more than 3 in the list then summarise
     summary_of_array(d, "other domain".html_safe).to_sentence.html_safe
   end
