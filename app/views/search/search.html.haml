@@ -5,9 +5,7 @@
   - if @q
     - if @all_scrapers.total_count.zero? && @owners.empty?
       %h2 No results found
-      %p
-        Sorry, we couldn't find any scrapers or users relevant to your search term
-        %strong “#{@q}”.
+      %p= no_search_results_message("scrapers", @q)
       %p
         Suggestions:
       %ul
