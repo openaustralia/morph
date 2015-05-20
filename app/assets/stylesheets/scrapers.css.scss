@@ -7,7 +7,7 @@
     @include tablesaw-stack( $grid-float-breakpoint );
 
     @media (min-width: $grid-float-breakpoint) {
-      overflow: scroll;
+      overflow: auto;
     }
 
     tr {
