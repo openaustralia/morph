@@ -38,32 +38,6 @@ class User < Owner
     end
   end
 
-  # Only include scrapers that finished in the last 24 hours
-  def watched_successful_scrapers
-    all_scrapers_watched.select {|s| s.finished_successfully? && s.finished_recently?}
-  end
-
-  instrument_method
-  def watched_broken_scrapers
-    all_scrapers_watched.select {|s| s.finished_with_errors? && s.finished_recently?}
-  end
-
-  instrument_method
-  # Puts scrapers that have most recently failed first
-  def watched_broken_scrapers_ordered_by_urgency
-    watched_broken_scrapers.sort do |a,b|
-      if b.latest_successful_run_time.nil? && a.latest_successful_run_time.nil?
-        0
-      elsif b.latest_successful_run_time.nil?
-        -1
-      elsif a.latest_successful_run_time.nil?
-        1
-      else
-        b.latest_successful_run_time <=> a.latest_successful_run_time
-      end
-    end
-  end
-
   def process_alerts
     unless watched_broken_scrapers_ordered_by_urgency.empty?
       begin
@@ -91,6 +65,32 @@ class User < Owner
       alerts.create(watch: object)
       if object.respond_to?(:scrapers)
         alerts.where(watch_id: object.scrapers, watch_type: "Scraper").destroy_all
+      end
+    end
+  end
+
+  # Only include scrapers that finished in the last 24 hours
+  def watched_successful_scrapers
+    all_scrapers_watched.select {|s| s.finished_successfully? && s.finished_recently?}
+  end
+
+  instrument_method
+  def watched_broken_scrapers
+    all_scrapers_watched.select {|s| s.finished_with_errors? && s.finished_recently?}
+  end
+
+  instrument_method
+  # Puts scrapers that have most recently failed first
+  def watched_broken_scrapers_ordered_by_urgency
+    watched_broken_scrapers.sort do |a,b|
+      if b.latest_successful_run_time.nil? && a.latest_successful_run_time.nil?
+        0
+      elsif b.latest_successful_run_time.nil?
+        -1
+      elsif a.latest_successful_run_time.nil?
+        1
+      else
+        b.latest_successful_run_time <=> a.latest_successful_run_time
       end
     end
   end
