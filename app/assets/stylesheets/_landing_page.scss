@@ -258,3 +258,23 @@
     }
   }
 }
+
+.banner-metrics {
+  padding-bottom: 24px;
+  text-align: center;
+
+  h3 {
+    margin-bottom: 24px;
+    font-weight: normal;
+  }
+}
+
+.metric-box {
+  margin-bottom: 24px;
+  font-size: $font-size-h4;
+
+  strong {
+    display: block;
+    font-size: $font-size-h1;
+  }
+}
