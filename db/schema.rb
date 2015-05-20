@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150520075504) do
+ActiveRecord::Schema.define(version: 20150520075930) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -193,6 +193,7 @@ ActiveRecord::Schema.define(version: 20150520075504) do
     t.string   "ip_address"
   end
 
+  add_index "runs", ["finished_at"], name: "index_runs_on_finished_at", using: :btree
   add_index "runs", ["owner_id"], name: "index_runs_on_owner_id", using: :btree
   add_index "runs", ["scraper_id"], name: "index_runs_on_scraper_id", using: :btree
 
