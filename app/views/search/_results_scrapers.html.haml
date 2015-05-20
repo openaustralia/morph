@@ -10,4 +10,6 @@
       - else
         = no_search_results_message("scrapers", @q)
   - else
-    = render partial: "search_results_list", locals: {results: @scrapers}
+    - @scrapers.with_details.each do |scraper, details|
+      = render scraper, highlight: details[:highlight]
+    = paginate @scrapers
