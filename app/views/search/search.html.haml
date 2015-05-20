@@ -3,29 +3,7 @@
     Search
   = render partial: "search_form"
   - if @q
-    - if !@all_scrapers.total_count.zero? || !@owners.empty?
-      .search-results.row
-        .col-xs-12
-          = render partial: "search_type_nav"
-        - if @type == "users"
-          - if !@owners.total_count.zero?
-            .col-xs-12
-              = render partial: "search_results_list", locals: {results: @owners}
-          - else
-            = render partial: "no_results_of_type_notice"
-        - else
-          - if !@all_scrapers.total_count.zero?
-            %aside.col-xs-12.col-md-3
-              = render partial: "scraper_search_filter_controls"
-            - # If there are scrapers matching filters
-            - if !@scrapers.total_count.zero?
-              .col-xs-12.col-md-9
-                = render partial: "search_results_list", locals: {results: @scrapers}
-            - else
-              = render partial: "no_results_of_type_notice"
-          - else
-            = render partial: "no_results_of_type_notice"
-    - else
+    - if @all_scrapers.total_count.zero? && @owners.empty?
       %h2 No results found
       %p
         Sorry, we couldn't find any scrapers or users relevant to your search term
@@ -36,3 +14,25 @@
         %li check the spelling
         %li try some more general or alternate terms
       %p You could also try browsing all #{link_to "scrapers", scrapers_path} or #{link_to "users", users_path}.
+    - else
+      .search-results.row
+        .col-xs-12
+          = render partial: "search_type_nav"
+        - if @type == "users"
+          - if @owners.total_count.zero?
+            = render partial: "no_results_of_type_notice"
+          - else
+            .col-xs-12
+              = render partial: "search_results_list", locals: {results: @owners}
+        - else
+          - if @all_scrapers.total_count.zero?
+            = render partial: "no_results_of_type_notice"
+          - else
+            %aside.col-xs-12.col-md-3
+              = render partial: "scraper_search_filter_controls"
+            - # If there are scrapers matching filters
+            - if @scrapers.total_count.zero?
+              = render partial: "no_results_of_type_notice"
+            - else
+              .col-xs-12.col-md-9
+                = render partial: "search_results_list", locals: {results: @scrapers}
