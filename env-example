@@ -45,3 +45,6 @@ HONEYBADGER_API_KEY=xxxxxxxx
 # We're using Cuttlefish to send mail
 CUTTLEFISH_USERNAME=xxxxxxx
 CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx
+
+# skylight.io performance monitoring
+SKYLIGHT_AUTHENTICATION=xxxxxxxxxxxxxxxxx
