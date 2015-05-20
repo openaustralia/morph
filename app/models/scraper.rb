@@ -1,6 +1,8 @@
 require 'new_relic/agent/method_tracer'
 
 class Scraper < ActiveRecord::Base
+  include Skylight::Helpers
+
   include Sync::Actions
   # Using smaller batch_size than the default for the time being because reindexing
   # causes elasticsearch on the local VM to run out of memory
@@ -121,10 +123,12 @@ class Scraper < ActiveRecord::Base
     update_attributes(contributors: c)
   end
 
+  instrument_method
   def successful_runs
     runs.order(finished_at: :desc).select{|r| r.finished_successfully?}
   end
 
+  instrument_method
   def latest_successful_run_time
     latest_successful_run = successful_runs.first
     latest_successful_run.finished_at if latest_successful_run
