@@ -1,6 +1,6 @@
 class User < Owner
   include Skylight::Helpers
-  
+
   # TODO Add :omniauthable
   devise :trackable, :rememberable, :omniauthable, :omniauth_providers => [:github]
   has_and_belongs_to_many :organizations, join_table: :organizations_users
