@@ -19,16 +19,19 @@
         .col-xs-12
           = render partial: "search_type_nav"
 
-        - if @type != "users" && !@all_scrapers.total_count.zero?
-          %aside.col-xs-12.col-md-3
-            = render partial: "scraper_search_filter_controls"
-
-        - if (@type == "users" && @owners.total_count.zero?) || (@type != "users" && @scrapers.total_count.zero?)
-          = render partial: "no_results_of_type_notice"
-        - else
-          - if @type == "users"
+        - if @type == "users"
+          - if @owners.total_count.zero?
+            = render partial: "no_results_of_type_notice"
+          - else
             .col-xs-12
               = render partial: "search_results_list", locals: {results: @owners}
+        - else
+          - if !@all_scrapers.total_count.zero?
+            %aside.col-xs-12.col-md-3
+              = render partial: "scraper_search_filter_controls"
+
+          - if @scrapers.total_count.zero?
+            = render partial: "no_results_of_type_notice"
           - else
             .col-xs-12.col-md-9
               = render partial: "search_results_list", locals: {results: @scrapers}
