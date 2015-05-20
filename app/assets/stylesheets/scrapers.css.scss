@@ -287,6 +287,10 @@ a i.fa-clock-o {
     margin: .2em 0 0 .25em;
     width: 4em;
     text-align: right;
+
+    @media (min-width: 40em) {
+      margin-top: .5em;
+    }
   }
 
   .icon-box {
