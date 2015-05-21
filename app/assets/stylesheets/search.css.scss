@@ -52,6 +52,10 @@
     @media (min-width: $screen-md-min) {
       display: inline-block;
     }
+
+    .badge {
+      background-color: $gray-light;
+    }
   }
 
   a {
