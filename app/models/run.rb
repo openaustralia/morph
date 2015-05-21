@@ -5,6 +5,7 @@ class Run < ActiveRecord::Base
   has_many :log_lines
   has_one :metric
   has_many :connection_logs
+  has_many :domains, -> { distinct }, through: :connection_logs
 
   scope :finished_successfully, -> { where(status_code: 0) }
 
@@ -182,7 +183,7 @@ class Run < ActiveRecord::Base
   end
 
   def scraped_domains
-    Domain.find(connection_logs.group(:domain_id).order(:domain_id).pluck(:domain_id))
+    domains
   end
 
   def variables
