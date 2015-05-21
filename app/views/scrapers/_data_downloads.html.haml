@@ -1,0 +1,9 @@
+%p.scraper-data-usage
+  %strong
+    Downloaded
+    = pluralize(scraper.download_count(current_user && current_user.see_downloads), "time")
+  - if scraper.download_count(current_user && current_user.see_downloads) > 0
+    by
+    - scraper.download_count_by_owner(current_user && current_user.see_downloads).each do |downloader,count|
+      = link_to downloader do
+        = owner_image(downloader, 30, true, "Downloaded #{pluralize(count, 'time')} by #{downloader.nickname}")
