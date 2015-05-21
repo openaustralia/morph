@@ -14,7 +14,7 @@
       %div
         - unless scraper.description.blank?
           = scraper.description
-        - unless scraper.scraped_domains.empty?
+        - unless scraper.scraped_domains.length == 0
           %p.scraper-domains-list.text-muted= simplified_scraped_domains_list(scraper.scraped_domains)
     - if show_errored_detail
       .scraper-error-info.row
