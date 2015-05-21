@@ -5,7 +5,7 @@
     - if active_table
       %header.data-header
         %h3 Data
-        = render "data_downloads", scraper: scraper
+        = render "scrapers/data_downloads", scraper: scraper
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
@@ -16,7 +16,7 @@
         - scraper.database.table_names.each do |table|
           .tab-pane{class: ("active" if table == active_table), id: "table_#{table}"}
             - rows = scraper.database.first_ten_rows(table)
-            = render "data_download_links", scraper: scraper, table: table
+            = render "scrapers/data_download_links", scraper: scraper, table: table
 
             %p rows #{[10, scraper.database.no_rows(table)].min} / #{scraper.database.no_rows(table)}
             .table-responsive.scraper-data.scroller-frame
