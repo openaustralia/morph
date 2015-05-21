@@ -182,10 +182,6 @@ class Run < ActiveRecord::Base
     end
   end
 
-  def scraped_domains
-    domains
-  end
-
   def variables
     # Handle this run not having a scraper attached (run from morph-cli)
     scraper ? scraper.variables : []

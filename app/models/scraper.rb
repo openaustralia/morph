@@ -60,7 +60,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def scraped_domains
-    last_run ? last_run.scraped_domains : []
+    last_run ? last_run.domains : []
   end
 
   def all_watchers
