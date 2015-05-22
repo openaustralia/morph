@@ -58,12 +58,12 @@ module Morph
       status_code
     end
 
-    def self.add_config_defaults_to_directory2(source, dest)
+    def self.add_config_defaults_to_directory(source, dest)
       copy_directory_contents(source, dest)
       # We don't need to check that the language is recognised because
       # the compiler is never called if the language isn't valid
       language = Morph::Language.language(dest)
-      
+
       language.default_files_to_insert.each do |files|
         if files.all?{|file| !File.exists?(File.join(dest, file))}
           files.each do |file|
@@ -82,7 +82,7 @@ module Morph
       yield(wrapper)
 
       Dir.mktmpdir("morph") do |defaults|
-        add_config_defaults_to_directory2(options[:repo_path], defaults)
+        add_config_defaults_to_directory(options[:repo_path], defaults)
 
         compile_and_run2(options.merge(repo_path: defaults)) do |on|
           on.log { |s,c| wrapper.call(:log, s, c)}

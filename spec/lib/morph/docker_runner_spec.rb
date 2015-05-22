@@ -48,10 +48,10 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".add_config_defaults_to_directory2" do
+    describe ".add_config_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::DockerRunner.add_config_defaults_to_directory2("test", dir)
+          Morph::DockerRunner.add_config_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", ".bar", "Gemfile", "Gemfile.lock", "Procfile", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"]
           Dir.entries(File.join(dir, ".bar")).sort.should == [".", "..", "wibble.txt"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
@@ -111,10 +111,10 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".add_config_defaults_to_directory2" do
+    describe ".add_config_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::DockerRunner.add_config_defaults_to_directory2("test", dir)
+          Morph::DockerRunner.add_config_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile", "foo", "one.txt", "scraper.rb"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
           File.read(File.join(dir, "Gemfile")).should == ""
@@ -163,10 +163,10 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".add_config_defaults_to_directory2" do
+    describe ".add_config_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::DockerRunner.add_config_defaults_to_directory2("test", dir)
+          Morph::DockerRunner.add_config_defaults_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"]
           ruby = Morph::Language.new(:ruby)
           File.read(File.join(dir, "Gemfile")).should == File.read(ruby.default_config_file_path("Gemfile"))
