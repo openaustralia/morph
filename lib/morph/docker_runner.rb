@@ -63,7 +63,17 @@ module Morph
       # We don't need to check that the language is recognised because
       # the compiler is never called if the language isn't valid
       language = Morph::Language.language(dest)
-      add_config_defaults_to_directory(dest, language)
+      
+      language.default_files_to_insert.each do |files|
+        if files.all?{|file| !File.exists?(File.join(dest, file))}
+          files.each do |file|
+            FileUtils.cp(language.default_config_file_path(file), File.join(dest, file))
+          end
+        end
+      end
+
+      # Special behaviour for Procfile. We don't allow the user to override this
+      FileUtils.cp(language.default_config_file_path("Procfile"), File.join(dest, "Procfile"))
     end
 
     # options: repo_path, container_name, data_path, env_variables
@@ -310,19 +320,6 @@ module Morph
           end
         end
       end
-    end
-
-    def self.add_config_defaults_to_directory(dest, language)
-      language.default_files_to_insert.each do |files|
-        if files.all?{|file| !File.exists?(File.join(dest, file))}
-          files.each do |file|
-            FileUtils.cp(language.default_config_file_path(file), File.join(dest, file))
-          end
-        end
-      end
-
-      # Special behaviour for Procfile. We don't allow the user to override this
-      FileUtils.cp(language.default_config_file_path("Procfile"), File.join(dest, "Procfile"))
     end
 
     # Remove directories starting with "."
