@@ -58,17 +58,21 @@ module Morph
       status_code
     end
 
+    def self.add_config_defaults_to_directory2(source, dest)
+      copy_directory_contents(source, dest)
+      # We don't need to check that the language is recognised because
+      # the compiler is never called if the language isn't valid
+      language = Morph::Language.language(dest)
+      add_config_defaults_to_directory(dest, language)
+    end
+
     # options: repo_path, container_name, data_path, env_variables
     def self.compile_and_run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
       Dir.mktmpdir("morph") do |defaults|
-        copy_directory_contents(options[:repo_path], defaults)
-        # We don't need to check that the language is recognised because
-        # the compiler is never called if the language isn't valid
-        language = Morph::Language.language(defaults)
-        add_config_defaults_to_directory(defaults, language)
+        add_config_defaults_to_directory2(options[:repo_path], defaults)
 
         compile_and_run2(options.merge(repo_path: defaults)) do |on|
           on.log { |s,c| wrapper.call(:log, s, c)}
