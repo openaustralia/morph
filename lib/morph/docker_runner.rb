@@ -3,6 +3,62 @@ module Morph
     ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
 
     # options: repo_path, container_name, data_path, env_variables
+    def self.compile_and_run2(options)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
+      i = compile_step1 do |s,c|
+        wrapper.call(:log, s, c)
+      end
+      # Insert the configuration part of the application code into the container
+      i2 = Dir.mktmpdir("morph") do |dest|
+        write_all_config_to_directory(options[:repo_path], dest)
+        wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
+        inject_files(i, dest)
+      end
+      i3 = compile_step3(i2) do |s,c|
+        wrapper.call(:log, s, c)
+      end
+
+      # If something went wrong during the compile and it couldn't finish
+      if i3.nil?
+        # TODO: Return the status for a compile error
+        return 255;
+      end
+
+      # Insert the actual code into the container
+      i4 = Dir.mktmpdir("morph") do |dest|
+        write_all_run_to_directory(options[:repo_path], dest)
+        wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
+        inject_files(i3, dest)
+      end
+
+      command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
+
+      status_code = run(
+        command: command,
+        image_name: i4.id,
+        container_name: options[:container_name],
+        data_path: options[:data_path],
+        env_variables: options[:env_variables]
+      ) do |on|
+          on.log { |s,c| wrapper.call(:log, s, c)}
+          on.ip_address {|ip| wrapper.call(:ip_address, ip)}
+      end
+
+      # There's a potential race condition here where we are trying to delete something
+      # that might be used elsewhere. Do the most crude thing and just ignore any errors
+      # that deleting might throw up.
+      begin
+        i4.delete("noprune" => 1)
+      # TODO When docker-api gem gets updated Docker::Error::ConfictError will be
+      # changed to Docker::Error::ConflictError
+      rescue Docker::Error::ConfictError
+      end
+      status_code
+    end
+
+    # options: repo_path, container_name, data_path, env_variables
     def self.compile_and_run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
@@ -14,55 +70,10 @@ module Morph
         language = Morph::Language.language(defaults)
         add_config_defaults_to_directory(defaults, language)
 
-        i = compile_step1 do |s,c|
-          wrapper.call(:log, s, c)
+        compile_and_run2(options.merge(repo_path: defaults)) do |on|
+          on.log { |s,c| wrapper.call(:log, s, c)}
+          on.ip_address {|ip| wrapper.call(:ip_address, ip)}
         end
-        # Insert the configuration part of the application code into the container
-        i2 = Dir.mktmpdir("morph") do |dest|
-          write_all_config_to_directory(defaults, dest)
-          wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
-          inject_files(i, dest)
-        end
-        i3 = compile_step3(i2) do |s,c|
-          wrapper.call(:log, s, c)
-        end
-
-        # If something went wrong during the compile and it couldn't finish
-        if i3.nil?
-          # TODO: Return the status for a compile error
-          return 255;
-        end
-
-        # Insert the actual code into the container
-        i4 = Dir.mktmpdir("morph") do |dest|
-          write_all_run_to_directory(defaults, dest)
-          wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
-          inject_files(i3, dest)
-        end
-
-        command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
-
-        status_code = run(
-          command: command,
-          image_name: i4.id,
-          container_name: options[:container_name],
-          data_path: options[:data_path],
-          env_variables: options[:env_variables]
-        ) do |on|
-            on.log { |s,c| wrapper.call(:log, s, c)}
-            on.ip_address {|ip| wrapper.call(:ip_address, ip)}
-        end
-
-        # There's a potential race condition here where we are trying to delete something
-        # that might be used elsewhere. Do the most crude thing and just ignore any errors
-        # that deleting might throw up.
-        begin
-          i4.delete("noprune" => 1)
-        # TODO When docker-api gem gets updated Docker::Error::ConfictError will be
-        # changed to Docker::Error::ConflictError
-        rescue Docker::Error::ConfictError
-        end
-        status_code
       end
     end
 
