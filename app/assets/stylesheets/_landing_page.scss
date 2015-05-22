@@ -196,6 +196,10 @@
     padding: 0;
   }
 
+  .col-lg-8 {
+    @include make-lg-column(8.25);
+  }
+
   p a {
     color: #1E241D;
     border-bottom: 2px darken($offset-color, 20%) solid;
