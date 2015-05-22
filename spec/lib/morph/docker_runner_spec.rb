@@ -48,18 +48,6 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".write_all_config_with_defaults_to_directory" do
-      it do
-        Dir.mktmpdir do |dir|
-          Morph::DockerRunner.write_all_config_with_defaults_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
-          File.read(File.join(dir, "Gemfile")).should == ""
-          File.read(File.join(dir, "Gemfile.lock")).should == ""
-          File.read(File.join(dir, "Procfile")).should == File.read(Morph::Language.new(:ruby).default_config_file_path("Procfile"))
-        end
-      end
-    end
-
     describe ".add_config_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
@@ -124,18 +112,6 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".write_all_config_with_defaults_to_directory" do
-      it do
-        Dir.mktmpdir do |dir|
-          Morph::DockerRunner.write_all_config_with_defaults_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
-          File.read(File.join(dir, "Gemfile")).should == ""
-          File.read(File.join(dir, "Gemfile.lock")).should == ""
-          File.read(File.join(dir, "Procfile")).should == File.read(Morph::Language.new(:ruby).default_config_file_path("Procfile"))
-        end
-      end
-    end
-
     describe ".add_config_defaults_to_directory" do
       it do
         Dir.mktmpdir do |dir|
@@ -185,19 +161,6 @@ describe Morph::DockerRunner do
           Dir.entries(dir).sort.should == [".", "..", "Procfile"]
           ruby = Morph::Language.new(:ruby)
           File.read(File.join(dir, "Procfile")).should == "scraper: some override"
-        end
-      end
-    end
-
-    describe ".write_all_config_with_defaults_to_directory" do
-      it do
-        Dir.mktmpdir do |dir|
-          Morph::DockerRunner.write_all_config_with_defaults_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile"]
-          ruby = Morph::Language.new(:ruby)
-          File.read(File.join(dir, "Gemfile")).should == File.read(ruby.default_config_file_path("Gemfile"))
-          File.read(File.join(dir, "Gemfile.lock")).should == File.read(ruby.default_config_file_path("Gemfile.lock"))
-          File.read(File.join(dir, "Procfile")).should == File.read(ruby.default_config_file_path("Procfile"))
         end
       end
     end

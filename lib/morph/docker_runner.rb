@@ -12,7 +12,11 @@ module Morph
       end
       # Insert the configuration part of the application code into the container
       i2 = Dir.mktmpdir("morph") do |dest|
-        write_all_config_with_defaults_to_directory(options[:repo_path], dest)
+        write_all_config_to_directory(options[:repo_path], dest)
+        # We don't need to check that the language is recognised because
+        # the compiler is never called if the language isn't valid
+        language = Morph::Language.language(options[:repo_path])
+        add_config_defaults_to_directory(dest, language)
         wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
         inject_files(i, dest)
       end
@@ -70,14 +74,6 @@ module Morph
         path = File.join(source, config_filename)
         FileUtils.cp(path, dest) if File.exists?(path)
       end
-    end
-
-    def self.write_all_config_with_defaults_to_directory(source, dest)
-      write_all_config_to_directory(source, dest)
-
-      # We don't need to check that the language is recognised because
-      # the compiler is never called if the language isn't valid
-      add_config_defaults_to_directory(dest, Morph::Language.language(source))
     end
 
     def self.copy_directory_contents(source, dest)
