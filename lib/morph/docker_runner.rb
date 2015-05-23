@@ -29,7 +29,6 @@ module Morph
       # Insert the actual code into the container
       i4 = Dir.mktmpdir("morph") do |dest|
         write_all_run_to_directory(options[:repo_path], dest)
-        remove_hidden_directories(dest)
         wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
         inject_files(i3, dest)
       end
