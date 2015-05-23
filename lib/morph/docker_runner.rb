@@ -65,13 +65,16 @@ module Morph
       end
     end
 
-    def self.write_all_run_to_directory(source, dest)
+    def self.write_all_run_to_directory2(source, dest)
       Morph::DockerUtils.copy_directory_contents(source, dest)
 
       ALL_CONFIG_FILENAMES.each do |path|
         FileUtils.rm_f(File.join(dest, path))
       end
+    end
 
+    def self.write_all_run_to_directory(source, dest)
+      write_all_run_to_directory2(source, dest)
       remove_hidden_directories(dest)
     end
 
