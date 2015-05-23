@@ -65,12 +65,8 @@ module Morph
       end
     end
 
-    def self.copy_directory_contents(source, dest)
-      FileUtils.cp_r File.join(source, "."), dest
-    end
-
     def self.write_all_run_to_directory(source, dest)
-      copy_directory_contents(source, dest)
+      Morph::DockerUtils.copy_directory_contents(source, dest)
 
       ALL_CONFIG_FILENAMES.each do |path|
         FileUtils.rm_f(File.join(dest, path))
@@ -225,7 +221,7 @@ module Morph
 
       # Leave the files in dir untouched
       Dir.mktmpdir("morph") do |dir2|
-        copy_directory_contents(dir, dir2)
+        Morph::DockerUtils.copy_directory_contents(dir, dir2)
         File.open(File.join(dir2, "Dockerfile"), "w") {|f| f.write dockerfile_contents_from_commands(image, commands)}
 
         fix_modification_times(dir2)
@@ -245,7 +241,7 @@ module Morph
     def self.inject_files(image, dest)
       Dir.mktmpdir("morph") do |dir|
         FileUtils.mkdir(File.join(dir, "app"))
-        copy_directory_contents(dest, File.join(dir, "app"))
+        Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, "app"))
         docker_build_command(image, ["ADD app /app"], dir) do |on|
           # Note that we're not sending the output of this to the console
           # because it is relatively short running and is otherwise confusing

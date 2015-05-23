@@ -60,5 +60,9 @@ module Morph
         c.kill
       end
     end
+
+    def self.copy_directory_contents(source, dest)
+      FileUtils.cp_r File.join(source, "."), dest
+    end
   end
 end

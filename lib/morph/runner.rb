@@ -16,7 +16,7 @@ module Morph
     end
 
     def self.add_config_defaults_to_directory(source, dest)
-      Morph::DockerRunner.copy_directory_contents(source, dest)
+      Morph::DockerUtils.copy_directory_contents(source, dest)
       # We don't need to check that the language is recognised because
       # the compiler is never called if the language isn't valid
       language = Morph::Language.language(dest)
