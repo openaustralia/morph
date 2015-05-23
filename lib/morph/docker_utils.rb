@@ -64,5 +64,13 @@ module Morph
     def self.copy_directory_contents(source, dest)
       FileUtils.cp_r File.join(source, "."), dest
     end
+
+    # Set an arbitrary & fixed modification time on everything in a directory
+    # This ensures that if the content is the same docker will cache
+    def self.fix_modification_times(dir)
+      Find.find(dir) do |entry|
+        FileUtils.touch(entry, mtime: Time.new(2000,1,1))
+      end
+    end
   end
 end

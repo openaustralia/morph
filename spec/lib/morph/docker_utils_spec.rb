@@ -19,4 +19,19 @@ describe Morph::DockerUtils do
       end
     end
   end
+
+  describe ".fix_modification_times" do
+    it do
+      Dir.mktmpdir do |dir|
+        FileUtils.touch(File.join(dir, "foo"))
+        FileUtils.mkdir_p(File.join(dir, "bar"))
+        FileUtils.touch(File.join(dir, "bar", "twist"))
+        Morph::DockerUtils.fix_modification_times(dir)
+        File.mtime(dir).should == Time.new(2000,1,1)
+        File.mtime(File.join(dir, "foo")).should == Time.new(2000,1,1)
+        File.mtime(File.join(dir, "bar")).should == Time.new(2000,1,1)
+        File.mtime(File.join(dir, "bar", "twist")).should == Time.new(2000,1,1)
+      end
+    end
+  end
 end

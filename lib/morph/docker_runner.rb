@@ -73,14 +73,6 @@ module Morph
       end
     end
 
-    # Set an arbitrary & fixed modification time on everything in a directory
-    # This ensures that if the content is the same docker will cache
-    def self.fix_modification_times(dir)
-      Find.find(dir) do |entry|
-        FileUtils.touch(entry, mtime: Time.new(2000,1,1))
-      end
-    end
-
     def self.update_docker_image!
       Morph::DockerUtils.pull_docker_image("openaustralia/buildstep")
     end
@@ -222,7 +214,7 @@ module Morph
         Morph::DockerUtils.copy_directory_contents(dir, dir2)
         File.open(File.join(dir2, "Dockerfile"), "w") {|f| f.write dockerfile_contents_from_commands(image, commands)}
 
-        fix_modification_times(dir2)
+        Morph::DockerUtils.fix_modification_times(dir2)
         docker_build_from_dir(dir2) do |on|
           on.log {|s,c| wrapper.call(:log, s, c)}
         end
