@@ -28,7 +28,8 @@ module Morph
 
       # Insert the actual code into the container
       i4 = Dir.mktmpdir("morph") do |dest|
-        write_all_run_to_directory(options[:repo_path], dest)
+        write_all_run_to_directory2(options[:repo_path], dest)
+        remove_hidden_directories(dest)
         wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
         inject_files(i3, dest)
       end
@@ -71,11 +72,6 @@ module Morph
       ALL_CONFIG_FILENAMES.each do |path|
         FileUtils.rm_f(File.join(dest, path))
       end
-    end
-
-    def self.write_all_run_to_directory(source, dest)
-      write_all_run_to_directory2(source, dest)
-      remove_hidden_directories(dest)
     end
 
     # Set an arbitrary & fixed modification time on everything in a directory
