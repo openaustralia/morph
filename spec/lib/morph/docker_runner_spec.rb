@@ -63,6 +63,16 @@ describe Morph::DockerRunner do
         end
       end
     end
+
+    describe ".remove_hidden_directories" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::DockerUtils.copy_directory_contents("test", dir)
+          Morph::DockerRunner.remove_hidden_directories(dir)
+          Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", "Gemfile", "Gemfile.lock", "Procfile", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"]
+        end
+      end
+    end
   end
 
   context "another set of files" do
@@ -102,6 +112,16 @@ describe Morph::DockerRunner do
         end
       end
     end
+
+    describe ".remove_hidden_directories" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::DockerUtils.copy_directory_contents("test", dir)
+          Morph::DockerRunner.remove_hidden_directories(dir)
+          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "foo", "one.txt", "scraper.rb"]
+        end
+      end
+    end
   end
 
   context "user tries to override Procfile" do
@@ -132,6 +152,16 @@ describe Morph::DockerRunner do
           Morph::DockerRunner.write_all_run_to_directory("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "scraper.rb"]
           File.read(File.join(dir, "scraper.rb")).should == ""
+        end
+      end
+    end
+
+    describe ".remove_hidden_directories" do
+      it do
+        Dir.mktmpdir do |dir|
+          Morph::DockerUtils.copy_directory_contents("test", dir)
+          Morph::DockerRunner.remove_hidden_directories(dir)
+          Dir.entries(dir).sort.should == [".", "..", "Procfile", "scraper.rb"]
         end
       end
     end
