@@ -48,27 +48,6 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".add_config_defaults_to_directory" do
-      it do
-        Dir.mktmpdir do |dir|
-          Morph::DockerRunner.add_config_defaults_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", ".bar", "Gemfile", "Gemfile.lock", "Procfile", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"]
-          Dir.entries(File.join(dir, ".bar")).sort.should == [".", "..", "wibble.txt"]
-          Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
-          File.read(File.join(dir, ".a_dot_file.cfg")).should == ""
-          File.read(File.join(dir, ".bar", "wibble.txt")).should == ""
-          File.read(File.join(dir, "Gemfile")).should == ""
-          File.read(File.join(dir, "Gemfile.lock")).should == ""
-          File.read(File.join(dir, "Procfile")).should == File.read(Morph::Language.new(:ruby).default_config_file_path("Procfile"))
-          File.read(File.join(dir, "foo", "three.txt")).should == ""
-          File.read(File.join(dir, "link.rb")).should == ""
-          File.read(File.join(dir, "one.txt")).should == ""
-          File.read(File.join(dir, "scraper.rb")).should == ""
-          File.read(File.join(dir, "two.txt")).should == ""
-        end
-      end
-    end
-
     describe ".write_all_run_to_directory" do
       it do
         Dir.mktmpdir do |dir|
@@ -111,22 +90,6 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".add_config_defaults_to_directory" do
-      it do
-        Dir.mktmpdir do |dir|
-          Morph::DockerRunner.add_config_defaults_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile", "foo", "one.txt", "scraper.rb"]
-          Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
-          File.read(File.join(dir, "Gemfile")).should == ""
-          File.read(File.join(dir, "Gemfile.lock")).should == ""
-          File.read(File.join(dir, "Procfile")).should == File.read(Morph::Language.new(:ruby).default_config_file_path("Procfile"))
-          File.read(File.join(dir, "foo", "three.txt")).should == ""
-          File.read(File.join(dir, "one.txt")).should == ""
-          File.read(File.join(dir, "scraper.rb")).should == ""
-        end
-      end
-    end
-
     describe ".write_all_run_to_directory" do
       it do
         Dir.mktmpdir do |dir|
@@ -159,20 +122,6 @@ describe Morph::DockerRunner do
           Dir.entries(dir).sort.should == [".", "..", "Procfile"]
           ruby = Morph::Language.new(:ruby)
           File.read(File.join(dir, "Procfile")).should == "scraper: some override"
-        end
-      end
-    end
-
-    describe ".add_config_defaults_to_directory" do
-      it do
-        Dir.mktmpdir do |dir|
-          Morph::DockerRunner.add_config_defaults_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"]
-          ruby = Morph::Language.new(:ruby)
-          File.read(File.join(dir, "Gemfile")).should == File.read(ruby.default_config_file_path("Gemfile"))
-          File.read(File.join(dir, "Gemfile.lock")).should == File.read(ruby.default_config_file_path("Gemfile.lock"))
-          File.read(File.join(dir, "Procfile")).should == File.read(ruby.default_config_file_path("Procfile"))
-          File.read(File.join(dir, "scraper.rb")).should == ""
         end
       end
     end

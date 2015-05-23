@@ -113,7 +113,7 @@ class Run < ActiveRecord::Base
       return
     end
 
-    status_code = Morph::DockerRunner.compile_and_run(repo_path: repo_path, data_path: data_path, env_variables: env_variables, container_name: docker_container_name) do |on|
+    status_code = Morph::Runner.compile_and_run(repo_path: repo_path, data_path: data_path, env_variables: env_variables, container_name: docker_container_name) do |on|
       on.log {|s,c| yield s,c}
       on.ip_address do |ip|
         # Store the ip address of the container for this run
