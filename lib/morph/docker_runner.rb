@@ -3,7 +3,7 @@ module Morph
     ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
 
     # options: repo_path, container_name, data_path, env_variables
-    def self.compile_and_run2(options)
+    def self.compile_and_run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 

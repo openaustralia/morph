@@ -8,7 +8,7 @@ module Morph
       Dir.mktmpdir("morph") do |defaults|
         add_config_defaults_to_directory(options[:repo_path], defaults)
 
-        Morph::DockerRunner.compile_and_run2(options.merge(repo_path: defaults)) do |on|
+        Morph::DockerRunner.compile_and_run(options.merge(repo_path: defaults)) do |on|
           on.log { |s,c| wrapper.call(:log, s, c)}
           on.ip_address {|ip| wrapper.call(:ip_address, ip)}
         end
