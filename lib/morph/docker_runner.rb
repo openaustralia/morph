@@ -12,7 +12,7 @@ module Morph
       end
       # Insert the configuration part of the application code into the container
       i2 = Dir.mktmpdir("morph") do |dest|
-        write_all_config_to_directory(options[:repo_path], dest)
+        copy_config_to_directory(options[:repo_path], dest, true)
         wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
         inject_files(i, dest)
       end
@@ -28,7 +28,7 @@ module Morph
 
       # Insert the actual code into the container
       i4 = Dir.mktmpdir("morph") do |dest|
-        write_all_run_to_directory(options[:repo_path], dest)
+        copy_config_to_directory(options[:repo_path], dest, false)
         wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
         inject_files(i3, dest)
       end
@@ -68,14 +68,6 @@ module Morph
           end
         end
       end
-    end
-
-    def self.write_all_config_to_directory(source, dest)
-      copy_config_to_directory(source, dest, true)
-    end
-
-    def self.write_all_run_to_directory(source, dest)
-      copy_config_to_directory(source, dest, false)
     end
 
     def self.update_docker_image!
