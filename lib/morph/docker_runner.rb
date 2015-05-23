@@ -59,17 +59,22 @@ module Morph
     end
 
     def self.write_all_config_to_directory(source, dest)
-      ALL_CONFIG_FILENAMES.each do |config_filename|
-        path = File.join(source, config_filename)
-        FileUtils.cp(path, dest) if File.exists?(path)
+      Dir.entries(source).each do |entry|
+        if entry != "." && entry != ".."
+          if ALL_CONFIG_FILENAMES.include? entry
+            FileUtils.copy_entry(File.join(source, entry), File.join(dest, entry))
+          end
+        end
       end
     end
 
     def self.write_all_run_to_directory(source, dest)
-      Morph::DockerUtils.copy_directory_contents(source, dest)
-
-      ALL_CONFIG_FILENAMES.each do |path|
-        FileUtils.rm_f(File.join(dest, path))
+      Dir.entries(source).each do |entry|
+        if entry != "." && entry != ".."
+          unless ALL_CONFIG_FILENAMES.include? entry
+            FileUtils.copy_entry(File.join(source, entry), File.join(dest, entry))
+          end
+        end
       end
     end
 
