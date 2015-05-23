@@ -58,24 +58,24 @@ module Morph
       status_code
     end
 
-    def self.write_all_config_to_directory(source, dest)
+    # If copy_config is true copies the config file across
+    # Otherwise copies the other files across
+    def self.copy_config_to_directory(source, dest, copy_config)
       Dir.entries(source).each do |entry|
         if entry != "." && entry != ".."
-          if ALL_CONFIG_FILENAMES.include? entry
+          unless copy_config ^ ALL_CONFIG_FILENAMES.include?(entry)
             FileUtils.copy_entry(File.join(source, entry), File.join(dest, entry))
           end
         end
       end
     end
 
+    def self.write_all_config_to_directory(source, dest)
+      copy_config_to_directory(source, dest, true)
+    end
+
     def self.write_all_run_to_directory(source, dest)
-      Dir.entries(source).each do |entry|
-        if entry != "." && entry != ".."
-          unless ALL_CONFIG_FILENAMES.include? entry
-            FileUtils.copy_entry(File.join(source, entry), File.join(dest, entry))
-          end
-        end
-      end
+      copy_config_to_directory(source, dest, false)
     end
 
     def self.update_docker_image!
