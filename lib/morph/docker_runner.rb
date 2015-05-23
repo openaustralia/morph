@@ -266,14 +266,5 @@ module Morph
         end
       end
     end
-
-    # Remove directories starting with "."
-    # TODO Make it just remove the .git directory in the root and not other hidden directories
-    # which people might find useful
-    def self.remove_hidden_directories(directory)
-      Find.find(directory) do |path|
-        FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == ?.
-      end
-    end
   end
 end
