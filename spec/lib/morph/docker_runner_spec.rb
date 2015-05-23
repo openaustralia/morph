@@ -48,13 +48,15 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".write_all_run_to_directory" do
+    describe ".write_all_run_to_directory2" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::DockerRunner.write_all_run_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"]
+          Morph::DockerRunner.write_all_run_to_directory2("test", dir)
+          Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", ".bar", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"]
+          Dir.entries(File.join(dir, ".bar")).sort.should == [".", "..", "wibble.txt"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
           File.read(File.join(dir, ".a_dot_file.cfg")).should == ""
+          File.read(File.join(dir, ".bar", "wibble.txt")).should == ""
           File.read(File.join(dir, "foo/three.txt")).should == ""
           File.read(File.join(dir, "one.txt")).should == ""
           File.read(File.join(dir, "scraper.rb")).should == ""
@@ -100,10 +102,10 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".write_all_run_to_directory" do
+    describe ".write_all_run_to_directory2" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::DockerRunner.write_all_run_to_directory("test", dir)
+          Morph::DockerRunner.write_all_run_to_directory2("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "foo", "one.txt", "scraper.rb"]
           Dir.entries(File.join(dir, "foo")).sort.should == [".", "..", "three.txt"]
           File.read(File.join(dir, "foo/three.txt")).should == ""
@@ -146,10 +148,10 @@ describe Morph::DockerRunner do
       end
     end
 
-    describe ".write_all_run_to_directory" do
+    describe ".write_all_run_to_directory2" do
       it do
         Dir.mktmpdir do |dir|
-          Morph::DockerRunner.write_all_run_to_directory("test", dir)
+          Morph::DockerRunner.write_all_run_to_directory2("test", dir)
           Dir.entries(dir).sort.should == [".", "..", "scraper.rb"]
           File.read(File.join(dir, "scraper.rb")).should == ""
         end
