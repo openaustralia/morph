@@ -91,13 +91,6 @@ module Morph
       end
     end
 
-    def self.stop(container_name)
-      if container_exists?(container_name)
-        c = Docker::Container.get(container_name)
-        c.kill
-      end
-    end
-
     def self.write_all_config_to_directory(source, dest)
       ALL_CONFIG_FILENAMES.each do |config_filename|
         path = File.join(source, config_filename)
@@ -146,15 +139,6 @@ module Morph
         finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
         puts "Removing container id: #{id}, name: #{name}, finished: #{finished_ago} seconds ago"
         c.delete
-      end
-    end
-
-    def self.container_exists?(name)
-      begin
-        Docker::Container.get(name)
-        true
-      rescue Docker::Error::NotFoundError => e
-        false
       end
     end
 

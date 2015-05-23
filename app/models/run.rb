@@ -156,7 +156,7 @@ class Run < ActiveRecord::Base
   # actually stop the compile stage
   # TODO Make this stop the compile stage
   def stop!
-    Morph::DockerRunner.stop(docker_container_name)
+    Morph::DockerUtils.stop(docker_container_name)
     update_attributes(status_code: 130, finished_at: Time.now)
   end
 
@@ -197,6 +197,6 @@ class Run < ActiveRecord::Base
   end
 
   def container_for_run_exists?
-    Morph::DockerRunner.container_exists?(docker_container_name)
+    Morph::DockerUtils.container_exists?(docker_container_name)
   end
 end
