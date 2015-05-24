@@ -1,13 +1,14 @@
 module Morph
   class DockerRunner
     ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
+    BUILDSTEP_IMAGE = "openaustralia/buildstep"
 
     # options: repo_path, container_name, data_path, env_variables
     def self.compile_and_run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i = Morph::DockerUtils.get_or_pull_image('openaustralia/buildstep') do |on|
+      i = Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE) do |on|
         on.log {|s,c| wrapper.call(:log, :internalout, c)}
       end
       # Insert the configuration part of the application code into the container
@@ -71,7 +72,7 @@ module Morph
     end
 
     def self.update_docker_image!
-      Morph::DockerUtils.pull_docker_image("openaustralia/buildstep")
+      Morph::DockerUtils.pull_docker_image(BUILDSTEP_IMAGE)
     end
 
     def self.remove_stopped_containers!
