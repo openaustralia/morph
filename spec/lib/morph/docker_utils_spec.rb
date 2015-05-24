@@ -34,4 +34,37 @@ describe Morph::DockerUtils do
       end
     end
   end
+
+  describe ".copy_directory_contents" do
+    it "should copy a file in the root of a directory" do
+      Dir.mktmpdir do |source|
+        Dir.mktmpdir do |dest|
+          File.open(File.join(source, "foo.txt"), "w") {|f| f << "Hello"}
+          Morph::DockerUtils.copy_directory_contents(source, dest)
+          expect(File.read(File.join(dest, "foo.txt"))).to eq "Hello"
+        end
+      end
+    end
+
+    it "should copy a directory and its contents" do
+      Dir.mktmpdir do |source|
+        Dir.mktmpdir do |dest|
+          FileUtils.mkdir(File.join(source, "foo"))
+          File.open(File.join(source, "foo", "foo.txt"), "w") {|f| f << "Hello"}
+          Morph::DockerUtils.copy_directory_contents(source, dest)
+          expect(File.read(File.join(dest, "foo", "foo.txt"))).to eq "Hello"
+        end
+      end
+    end
+
+    it "should copy a file starting with ." do
+      Dir.mktmpdir do |source|
+        Dir.mktmpdir do |dest|
+          File.open(File.join(source, ".foo.txt"), "w") {|f| f << "Hello"}
+          Morph::DockerUtils.copy_directory_contents(source, dest)
+          expect(File.read(File.join(dest, ".foo.txt"))).to eq "Hello"
+        end
+      end
+    end
+  end
 end
