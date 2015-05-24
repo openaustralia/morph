@@ -16,7 +16,7 @@ module Morph
         wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
         inject_files(i, dest)
       end
-      i3 = compile_step3(i2) do |s,c|
+      i3 = compile(i2) do |s,c|
         wrapper.call(:log, s, c)
       end
 
@@ -237,7 +237,7 @@ module Morph
     end
 
     # And build
-    def self.compile_step3(image)
+    def self.compile(image)
       Dir.mktmpdir("morph") do |dir|
         docker_build_command(image, ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], dir) do |on|
           on.log do |s,c|
