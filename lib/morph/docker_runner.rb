@@ -17,8 +17,8 @@ module Morph
         wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
         inject_files(i, dest)
       end
-      i3 = compile(i2) do |s,c|
-        wrapper.call(:log, s, c)
+      i3 = compile(i2) do |c|
+        wrapper.call(:log, :internalout, c)
       end
 
       # If something went wrong during the compile and it couldn't finish
@@ -237,7 +237,7 @@ module Morph
         docker_build_command(image, ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], dir) do |c|
           # We don't want to show the standard docker build output
           unless c =~ /^Step \d+ :/ || c =~ /^ ---> / || c =~ /^Removing intermediate container / || c =~ /^Successfully built /
-            yield :internalout, c
+            yield c
           end
         end
       end
