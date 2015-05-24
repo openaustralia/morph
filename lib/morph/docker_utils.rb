@@ -32,15 +32,12 @@ module Morph
     # This makes initial setup easier
     # TODO No need to use Multiblock here really
     def self.get_or_pull_image(name)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
       begin
         Docker::Image.get(name)
       rescue Docker::Error::NotFoundError
         Docker::Image.create('fromImage' => name) do |chunk|
           data = JSON.parse(chunk)
-          wrapper.call(:log, :internalout, "#{data['status']} #{data['id']} #{data['progress']}\n")
+          yield "#{data['status']} #{data['id']} #{data['progress']}\n"
         end
       end
     end

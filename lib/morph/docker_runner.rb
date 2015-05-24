@@ -8,8 +8,8 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i = Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE) do |on|
-        on.log {|s,c| wrapper.call(:log, :internalout, c)}
+      i = Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE) do |c|
+        wrapper.call(:log, :internalout, c)
       end
       # Insert the configuration part of the application code into the container
       i2 = Dir.mktmpdir("morph") do |dest|
