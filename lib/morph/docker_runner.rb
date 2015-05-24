@@ -232,6 +232,7 @@ module Morph
     end
 
     # And build
+    # TODO Set memory and cpu limits during compile
     def self.compile(image)
       Dir.mktmpdir("morph") do |dir|
         docker_build_command(image, ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], dir) do |c|
