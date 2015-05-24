@@ -201,9 +201,6 @@ module Morph
     end
 
     def self.docker_build_command(image, commands, dir)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
       # Leave the files in dir untouched
       Dir.mktmpdir("morph") do |dir2|
         Morph::DockerUtils.copy_directory_contents(dir, dir2)
@@ -211,7 +208,7 @@ module Morph
 
         Morph::DockerUtils.fix_modification_times(dir2)
         docker_build_from_dir(dir2) do |c|
-          wrapper.call(:log, :stdout, c)
+          yield c
         end
       end
     end
@@ -227,7 +224,7 @@ module Morph
       Dir.mktmpdir("morph") do |dir|
         FileUtils.mkdir(File.join(dir, "app"))
         Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, "app"))
-        docker_build_command(image, ["ADD app /app"], dir) do |on|
+        docker_build_command(image, ["ADD app /app"], dir) do |c|
           # Note that we're not sending the output of this to the console
           # because it is relatively short running and is otherwise confusing
         end
@@ -237,12 +234,10 @@ module Morph
     # And build
     def self.compile(image)
       Dir.mktmpdir("morph") do |dir|
-        docker_build_command(image, ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], dir) do |on|
-          on.log do |s,c|
-            # We don't want to show the standard docker build output
-            unless c =~ /^Step \d+ :/ || c =~ /^ ---> / || c =~ /^Removing intermediate container / || c =~ /^Successfully built /
-              yield :internalout, c
-            end
+        docker_build_command(image, ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], dir) do |c|
+          # We don't want to show the standard docker build output
+          unless c =~ /^Step \d+ :/ || c =~ /^ ---> / || c =~ /^Removing intermediate container / || c =~ /^Successfully built /
+            yield :internalout, c
           end
         end
       end
