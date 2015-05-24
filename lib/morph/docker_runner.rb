@@ -184,16 +184,13 @@ module Morph
     end
 
     def self.docker_build_from_dir(dir)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
       # How does this connection get closed?
       conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
       begin
         Docker::Image.build_from_tar(StringIO.new(Morph::DockerUtils.create_tar(dir)), {'rm' => 1}, conn_interactive) do |chunk|
           # TODO Do this properly
           begin
-            wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
+            yield JSON.parse(chunk)["stream"]
           rescue JSON::ParserError
             # Workaround until we handle this properly
           end
@@ -213,8 +210,8 @@ module Morph
         File.open(File.join(dir2, "Dockerfile"), "w") {|f| f.write dockerfile_contents_from_commands(image, commands)}
 
         Morph::DockerUtils.fix_modification_times(dir2)
-        docker_build_from_dir(dir2) do |on|
-          on.log {|s,c| wrapper.call(:log, s, c)}
+        docker_build_from_dir(dir2) do |c|
+          wrapper.call(:log, :stdout, c)
         end
       end
     end
