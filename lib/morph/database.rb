@@ -62,10 +62,11 @@ module Morph
 
     def sql_query(query, readonly = true)
       raise SQLite3::Exception, "No query specified" if query.blank?
-      db = SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: readonly)
-      # If database is busy wait 5s
-      db.busy_timeout(5000)
-      Database.clean_utf8_query_result(db.execute(query))
+      SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: readonly) do |db|
+        # If database is busy wait 5s
+        db.busy_timeout(5000)
+        return Database.clean_utf8_query_result(db.execute(query))
+      end
     end
 
     def self.clean_utf8_query_result(array)
@@ -247,64 +248,67 @@ module Morph
     end
 
     def self.diffstat(file1, file2)
-      db1 = SQLite3::Database.new(file1)
-      db2 = SQLite3::Database.new(file2)
+      SQLite3::Database.new(file1) do |db1|
+        SQLite3::Database.new(file2) do |db2|
+          r = table_changes(db1, db2)
 
-      r = table_changes(db1, db2)
-      result = {
-        tables: {
-          added: [],
-          removed: [],
-          changed: [],
-          unchanged: [],
-          counts: {added: 0, removed: 0, changed: 0, unchanged: 0}
-        },
-        records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
-      }
-      records_added, records_removed, records_changed = 0, 0, 0
-      r[:unchanged].each do |table|
-        records = diffstat_table(table, db1, db2)
-        result[:tables][:unchanged] << {
-          name: table,
-          records: {counts: records}
-        }
-        result[:records][:counts][:added] += records[:added]
-        result[:records][:counts][:removed] += records[:removed]
-        result[:records][:counts][:changed] += records[:changed]
-        result[:records][:counts][:unchanged] += records[:unchanged]
+          result = {
+            tables: {
+              added: [],
+              removed: [],
+              changed: [],
+              unchanged: [],
+              counts: {added: 0, removed: 0, changed: 0, unchanged: 0}
+            },
+            records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+          }
+          records_added, records_removed, records_changed = 0, 0, 0
+          r[:unchanged].each do |table|
+            records = diffstat_table(table, db1, db2)
+            result[:tables][:unchanged] << {
+              name: table,
+              records: {counts: records}
+            }
+            result[:records][:counts][:added] += records[:added]
+            result[:records][:counts][:removed] += records[:removed]
+            result[:records][:counts][:changed] += records[:changed]
+            result[:records][:counts][:unchanged] += records[:unchanged]
+          end
+          r[:changed].each do |table|
+            records = diffstat_table(table, db1, db2)
+            result[:tables][:changed] << {
+              name: table,
+              records: {counts: records}
+            }
+            result[:records][:counts][:added] += records[:added]
+            result[:records][:counts][:removed] += records[:removed]
+            result[:records][:counts][:changed] += records[:changed]
+            result[:records][:counts][:unchanged] += records[:unchanged]
+          end
+          r[:added].each do |table|
+            added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
+            result[:tables][:added] << {
+              name: table,
+              records: {counts: {added: added, removed: 0, changed: 0, unchanged: 0}}
+            }
+            result[:records][:counts][:added] += added
+          end
+          r[:removed].each do |table|
+            removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
+            result[:tables][:removed] << {
+              name: table,
+              records: {counts: {added: 0, removed: removed, changed: 0, unchanged: 0}}
+            }
+            result[:records][:counts][:removed] += removed
+          end
+          result[:tables][:counts][:added] = result[:tables][:added].count
+          result[:tables][:counts][:removed] = result[:tables][:removed].count
+          result[:tables][:counts][:changed] = result[:tables][:changed].count
+          result[:tables][:counts][:unchanged] = result[:tables][:unchanged].count
+
+          return result
+        end
       end
-      r[:changed].each do |table|
-        records = diffstat_table(table, db1, db2)
-        result[:tables][:changed] << {
-          name: table,
-          records: {counts: records}
-        }
-        result[:records][:counts][:added] += records[:added]
-        result[:records][:counts][:removed] += records[:removed]
-        result[:records][:counts][:changed] += records[:changed]
-        result[:records][:counts][:unchanged] += records[:unchanged]
-      end
-      r[:added].each do |table|
-        added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
-        result[:tables][:added] << {
-          name: table,
-          records: {counts: {added: added, removed: 0, changed: 0, unchanged: 0}}
-        }
-        result[:records][:counts][:added] += added
-      end
-      r[:removed].each do |table|
-        removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
-        result[:tables][:removed] << {
-          name: table,
-          records: {counts: {added: 0, removed: removed, changed: 0, unchanged: 0}}
-        }
-        result[:records][:counts][:removed] += removed
-      end
-      result[:tables][:counts][:added] = result[:tables][:added].count
-      result[:tables][:counts][:removed] = result[:tables][:removed].count
-      result[:tables][:counts][:changed] = result[:tables][:changed].count
-      result[:tables][:counts][:unchanged] = result[:tables][:unchanged].count
-      result
     end
 
     private
