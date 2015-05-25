@@ -227,6 +227,9 @@ class ScrapersController < ApplicationController
     authorize! :watchers, @scraper
   end
 
+  def running
+  end
+
   private
 
   def render_error(message)
