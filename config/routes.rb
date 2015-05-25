@@ -88,6 +88,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'scrapers/running', to: "scrapers#running"
+
   # These routes with path: "/" need to be at the end
   resources :owners, path: "/", only: [:show, :update]
   resources :users, path: "/", only: :show
