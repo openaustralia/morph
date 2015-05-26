@@ -20,7 +20,7 @@
         %small.pre-heading Recent new users
         Welcome to morph.io
       %ul.list-unstyled.list-inline
-        - User.all.order(created_at: :desc).limit(10).each do |user|
+        - User.all.order(created_at: :desc).limit(8).each do |user|
           %li
             = link_to user do
               = owner_image(user, 60)
