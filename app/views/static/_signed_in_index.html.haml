@@ -17,7 +17,7 @@
   .row
     .col-xs-12
       %h2 Recent New Users
-      %ul.list-unstyled
+      %ul.list-unstyled.list-inline
         - User.all.order(created_at: :desc).limit(10).each do |user|
           %li
             = link_to user do
