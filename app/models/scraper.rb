@@ -43,9 +43,7 @@ class Scraper < ActiveRecord::Base
   delegate :finished_recently?, :finished_at, :finished_successfully?, :finished_with_errors?, :queued?, :running?, to: :last_run, allow_nil: true
 
   def self.currently_running
-    running_scrapers = []
-    self.all.map {|scraper| running_scrapers << scraper if scraper.running?}
-    return running_scrapers
+    Run.running.map(&:scraper).compact
   end
 
   def search_data
