@@ -7,7 +7,7 @@ module Morph
 
       Dir.mktmpdir("morph") do |defaults|
         add_config_defaults_to_directory(options[:repo_path], defaults)
-        remove_hidden_directories(dest)
+        remove_hidden_directories(defaults)
 
         Morph::DockerRunner.compile_and_run(options.merge(repo_path: defaults)) do |on|
           on.log { |s,c| wrapper.call(:log, s, c)}
