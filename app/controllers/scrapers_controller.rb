@@ -12,7 +12,7 @@ class ScrapersController < ApplicationController
   end
 
   def index
-    @scrapers = Scraper.accessible_by(current_ability).order(:updated_at => :desc).page(params[:page])
+    @scrapers = Scraper.accessible_by(current_ability).order(:created_at => :desc).page(params[:page])
   end
 
   def new
