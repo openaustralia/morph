@@ -28,15 +28,6 @@
             - if user.name
               &mdash;
               = user.name
-      %h2 Organizations with Scrapers
-      %ul.list-unstyled
-        - Organization.all_with_scrapers.each do |org|
-          %li
-            = owner_image(org, 20)
-            = link_to org.nickname, org
-            - if org.name
-              &mdash;
-              = org.name
     .col-md-6
       %h2 Recently Active Scrapers
       %p
