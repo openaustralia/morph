@@ -19,10 +19,10 @@
       %h2
         %small.pre-heading Recent new users
         Welcome to morph.io
-      %ul.list-unstyled.list-inline
+      %ul.owner-list-simple.list-unstyled.list-inline
         - # TODO Don't show users who have a 'default' Github identicon avartar
         - User.all.order(created_at: :desc).limit(8).each do |user|
-          %li= link_to owner_image(user, 60), user
+          %li.owner-item= link_to owner_image(user, 60), user
       %p= link_to "See more of the #{pluralize(User.count, "user")}…", users_path
     .col-md-6
       %h2 Recently Active Scrapers
