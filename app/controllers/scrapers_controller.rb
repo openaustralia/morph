@@ -228,6 +228,7 @@ class ScrapersController < ApplicationController
   end
 
   def running
+    @scrapers = Scraper.currently_running
   end
 
   private
