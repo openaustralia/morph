@@ -21,7 +21,7 @@
         - User.all.order(created_at: :desc).limit(10).each do |user|
           %li
             = link_to user do
-              = owner_image(user, 20)
+              = owner_image(user, 60)
       %p
         = link_to users_path do
           See more of the #{pluralize(User.count, "user")}&hellip;
