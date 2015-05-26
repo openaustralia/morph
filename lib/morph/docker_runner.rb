@@ -1,6 +1,6 @@
 module Morph
   class DockerRunner
-    ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
+    ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "app.psgi", "cpanfile"]
     BUILDSTEP_IMAGE = "openaustralia/buildstep"
 
     # options: repo_path, container_name, data_path, env_variables
