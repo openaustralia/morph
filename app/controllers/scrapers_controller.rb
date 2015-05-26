@@ -228,7 +228,7 @@ class ScrapersController < ApplicationController
   end
 
   def running
-    @scrapers = Scraper.currently_running
+    @scrapers = Scraper.running
   end
 
   private
