@@ -52,7 +52,10 @@
 
     = render partial: "scrapers/status", locals: {scraper: scraper}
     = render partial: "scrapers/console", locals: {scraper: scraper}
-    = render partial: "scrapers/data", locals: {scraper: scraper}
+    -# TEMPORARY HACK to test something that can only be reproduced in production
+    -# Limit the effect to one specific scraper
+    - if scraper.full_name != "mlandauer/rwanda-chamber-of-deputies"
+      = render partial: "scrapers/data", locals: {scraper: scraper}
     = render partial: "scrapers/statistics", locals: {scraper: scraper}
     = render partial: "scrapers/history", locals: {scraper: scraper}
   .col-md-2
