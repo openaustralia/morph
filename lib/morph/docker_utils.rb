@@ -32,16 +32,41 @@ module Morph
     # This makes initial setup easier
     # TODO No need to use Multiblock here really
     def self.get_or_pull_image(name)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
       begin
         Docker::Image.get(name)
       rescue Docker::Error::NotFoundError
         Docker::Image.create('fromImage' => name) do |chunk|
           data = JSON.parse(chunk)
-          wrapper.call(:log, :internalout, "#{data['status']} #{data['id']} #{data['progress']}\n")
+          yield "#{data['status']} #{data['id']} #{data['progress']}\n"
         end
+      end
+    end
+
+    def self.container_exists?(name)
+      begin
+        Docker::Container.get(name)
+        true
+      rescue Docker::Error::NotFoundError => e
+        false
+      end
+    end
+
+    def self.stop(container_name)
+      if container_exists?(container_name)
+        c = Docker::Container.get(container_name)
+        c.kill
+      end
+    end
+
+    def self.copy_directory_contents(source, dest)
+      FileUtils.cp_r File.join(source, "."), dest
+    end
+
+    # Set an arbitrary & fixed modification time on everything in a directory
+    # This ensures that if the content is the same docker will cache
+    def self.fix_modification_times(dir)
+      Find.find(dir) do |entry|
+        FileUtils.touch(entry, mtime: Time.new(2000,1,1))
       end
     end
   end

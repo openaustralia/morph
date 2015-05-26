@@ -1,23 +1,24 @@
 module Morph
   class DockerRunner
-    ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "cpanfile"]
+    ALL_CONFIG_FILENAMES = ["Gemfile", "Gemfile.lock", "Procfile", "requirements.txt", "runtime.txt", "composer.json", "composer.lock", "app.psgi", "cpanfile"]
+    BUILDSTEP_IMAGE = "openaustralia/buildstep"
 
     # options: repo_path, container_name, data_path, env_variables
     def self.compile_and_run(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      tar_config_files = tar_config_files(options[:repo_path])
-      tar_run_files = tar_run_files(options[:repo_path])
-
-      i = compile_step1 do |s,c|
-        wrapper.call(:log, s, c)
+      i = Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE) do |c|
+        wrapper.call(:log, :internalout, c)
       end
-      i2 = compile_step2(i, tar_config_files) do |s,c|
-        wrapper.call(:log, s, c)
+      # Insert the configuration part of the application code into the container
+      i2 = Dir.mktmpdir("morph") do |dest|
+        copy_config_to_directory(options[:repo_path], dest, true)
+        wrapper.call(:log, :internalout, "Injecting configuration and compiling...\n")
+        inject_files(i, dest)
       end
-      i3 = compile_step3(i2) do |s,c|
-        wrapper.call(:log, s, c)
+      i3 = compile(i2) do |c|
+        wrapper.call(:log, :internalout, c)
       end
 
       # If something went wrong during the compile and it couldn't finish
@@ -26,8 +27,11 @@ module Morph
         return 255;
       end
 
-      i4 = compile_step4(i3, tar_run_files) do |s,c|
-        wrapper.call(:log, s, c)
+      # Insert the actual code into the container
+      i4 = Dir.mktmpdir("morph") do |dest|
+        copy_config_to_directory(options[:repo_path], dest, false)
+        wrapper.call(:log, :internalout, "Injecting scraper code and running...\n")
+        inject_files(i3, dest)
       end
 
       command = Metric.command("/start scraper", "/data/" + Run.time_output_filename)
@@ -55,67 +59,20 @@ module Morph
       status_code
     end
 
-    def self.stop(container_name)
-      if container_exists?(container_name)
-        c = Docker::Container.get(container_name)
-        c.kill
-      end
-    end
-
-    # Contents of a tarfile that contains everything that isn't a configuration file
-    def self.tar_run_files(source)
-      Dir.mktmpdir("morph") do |dest|
-        write_all_run_to_directory(source, dest)
-        Morph::DockerUtils.create_tar(dest)
-      end
-    end
-
-    # Contents of a tarfile that contains configuration type files
-    # like Gemfile, requirements.txt, etc..
-    # This comes from a whitelisted list
-    def self.tar_config_files(source)
-      Dir.mktmpdir("morph") do |dest|
-        write_all_config_with_defaults_to_directory(source, dest)
-        Morph::DockerUtils.create_tar(dest)
-      end
-    end
-
-    def self.write_all_config_with_defaults_to_directory(source, dest)
-      ALL_CONFIG_FILENAMES.each do |config_filename|
-        path = File.join(source, config_filename)
-        FileUtils.cp(path, dest) if File.exists?(path)
-      end
-
-      # We don't need to check that the language is recognised because
-      # the compiler is never called if the language isn't valid
-      add_config_defaults_to_directory(dest, Morph::Language.language(source))
-
-      fix_modification_times(dest)
-    end
-
-    def self.write_all_run_to_directory(source, dest)
-      FileUtils.cp_r File.join(source, "."), dest
-
-      ALL_CONFIG_FILENAMES.each do |path|
-        FileUtils.rm_f(File.join(dest, path))
-      end
-
-      remove_hidden_directories(dest)
-
-      # TODO I don't think I need to this step here
-      fix_modification_times(dest)
-    end
-
-    # Set an arbitrary & fixed modification time on everything in a directory
-    # This ensures that if the content is the same docker will cache
-    def self.fix_modification_times(dir)
-      Find.find(dir) do |entry|
-        FileUtils.touch(entry, mtime: Time.new(2000,1,1))
+    # If copy_config is true copies the config file across
+    # Otherwise copies the other files across
+    def self.copy_config_to_directory(source, dest, copy_config)
+      Dir.entries(source).each do |entry|
+        if entry != "." && entry != ".."
+          unless copy_config ^ ALL_CONFIG_FILENAMES.include?(entry)
+            FileUtils.copy_entry(File.join(source, entry), File.join(dest, entry))
+          end
+        end
       end
     end
 
     def self.update_docker_image!
-      Morph::DockerUtils.pull_docker_image("openaustralia/buildstep")
+      Morph::DockerUtils.pull_docker_image(BUILDSTEP_IMAGE)
     end
 
     def self.remove_stopped_containers!
@@ -133,15 +90,6 @@ module Morph
         finished_ago = Time.now - Time::iso8601(c.json["State"]["FinishedAt"])
         puts "Removing container id: #{id}, name: #{name}, finished: #{finished_ago} seconds ago"
         c.delete
-      end
-    end
-
-    def self.container_exists?(name)
-      begin
-        Docker::Container.get(name)
-        true
-      rescue Docker::Error::NotFoundError => e
-        false
       end
     end
 
@@ -235,113 +183,64 @@ module Morph
       c
     end
 
-    # file_environment needs to also include a Dockerfile with content
-    # We're effectively tarring everything up twice
-    # TODO: Fix this
-    def self.docker_build_from_files(file_environment)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      result = nil
-      dir = Dir.mktmpdir("morph")
+    def self.docker_build_from_dir(dir)
+      # How does this connection get closed?
+      conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
       begin
-        file_environment.each do |file, content|
-          path = File.join(dir, file)
-          File.open(path, "w") {|f| f.write content}
-          # Set an arbitrary & fixed modification time on the files so that if
-          # content is the same it will cache
-          FileUtils.touch(path, mtime: Time.new(2000,1,1))
-        end
-        conn_interactive = Docker::Connection.new(ENV["DOCKER_URL"] || Docker.default_socket_url, {read_timeout: 4.hours})
-        begin
-          result = Docker::Image.build_from_tar(StringIO.new(Morph::DockerUtils.create_tar(dir)), {'rm' => 1}, conn_interactive) do |chunk|
-            # TODO Do this properly
-            begin
-              wrapper.call(:log, :stdout, JSON.parse(chunk)["stream"])
-            rescue JSON::ParserError
-              # Workaround until we handle this properly
-            end
+        Docker::Image.build_from_tar(StringIO.new(Morph::DockerUtils.create_tar(dir)), {'rm' => 1}, conn_interactive) do |chunk|
+          # TODO Do this properly
+          begin
+            yield JSON.parse(chunk)["stream"]
+          rescue JSON::ParserError
+            # Workaround until we handle this properly
           end
-        rescue Docker::Error::UnexpectedResponseError
-          result = nil
         end
-      ensure
-        FileUtils.remove_entry_secure dir
+      rescue Docker::Error::UnexpectedResponseError
+        nil
       end
-      result
     end
 
-    # file_environment is a hash of files (and their contents) to put in the same directory
-    # as the Dockerfile created to contain the command
-    # Returns the new image
-    def self.docker_build_command(image, commands, file_environment)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
+    def self.docker_build_command(image, commands, dir)
+      # Leave the files in dir untouched
+      Dir.mktmpdir("morph") do |dir2|
+        Morph::DockerUtils.copy_directory_contents(dir, dir2)
+        File.open(File.join(dir2, "Dockerfile"), "w") {|f| f.write dockerfile_contents_from_commands(image, commands)}
 
+        Morph::DockerUtils.fix_modification_times(dir2)
+        docker_build_from_dir(dir2) do |c|
+          yield c
+        end
+      end
+    end
+
+    def self.dockerfile_contents_from_commands(image, commands)
       commands = [commands] unless commands.kind_of?(Array)
-
-      file_environment["Dockerfile"] = "from #{image.id}\n" + commands.map{|c| c + "\n"}.join
-      docker_build_from_files(file_environment) do |on|
-        on.log {|s,c| wrapper.call(:log, s, c)}
-      end
+      "from #{image.id}\n" + commands.map{|c| c + "\n"}.join
     end
 
-    def self.compile_step1
-      Morph::DockerUtils.get_or_pull_image('openaustralia/buildstep') do |on|
-        on.log {|s,c| yield :internalout, c}
-      end
-    end
-
-    # Insert the configuration part of the application code into the container
-    def self.compile_step2(i, code_config_tar)
-      yield :internalout, "Injecting configuration and compiling...\n"
-      docker_build_command(i,
-        ["ADD code_config.tar /app"],
-        "code_config.tar" => code_config_tar) do |on|
+    # Inject all files in the given directory into the /app directory in the image
+    # and return a new image
+    def self.inject_files(image, dest)
+      Dir.mktmpdir("morph") do |dir|
+        FileUtils.mkdir(File.join(dir, "app"))
+        Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, "app"))
+        docker_build_command(image, ["ADD app /app"], dir) do |c|
+          # Note that we're not sending the output of this to the console
+          # because it is relatively short running and is otherwise confusing
+        end
       end
     end
 
     # And build
-    def self.compile_step3(i)
-      docker_build_command(i,
-        ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], {}) do |on|
-        on.log do |s,c|
+    # TODO Set memory and cpu limits during compile
+    def self.compile(image)
+      Dir.mktmpdir("morph") do |dir|
+        docker_build_command(image, ["ENV CURL_TIMEOUT 180", "RUN /build/builder"], dir) do |c|
           # We don't want to show the standard docker build output
           unless c =~ /^Step \d+ :/ || c =~ /^ ---> / || c =~ /^Removing intermediate container / || c =~ /^Successfully built /
-            yield :internalout, c
+            yield c
           end
         end
-      end
-    end
-
-    # Insert the actual code into the container
-    def self.compile_step4(i, code_tar)
-      yield :internalout, "Injecting scraper code and running...\n"
-      docker_build_command(i, "add code.tar /app", "code.tar" => code_tar) do |on|
-        # Note that we're not sending the output of this to the console
-        # because it is relatively short running and is otherwise confusing
-      end
-    end
-
-    def self.add_config_defaults_to_directory(dest, language)
-      language.default_files_to_insert.each do |files|
-        if files.all?{|file| !File.exists?(File.join(dest, file))}
-          files.each do |file|
-            FileUtils.cp(language.default_config_file_path(file), File.join(dest, file))
-          end
-        end
-      end
-
-      # Special behaviour for Procfile. We don't allow the user to override this
-      FileUtils.cp(language.default_config_file_path("Procfile"), File.join(dest, "Procfile"))
-    end
-
-    # Remove directories starting with "."
-    # TODO Make it just remove the .git directory in the root and not other hidden directories
-    # which people might find useful
-    def self.remove_hidden_directories(directory)
-      Find.find(directory) do |path|
-        FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == ?.
       end
     end
   end

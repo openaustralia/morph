@@ -8,6 +8,7 @@ class Run < ActiveRecord::Base
   has_many :domains, -> { distinct }, through: :connection_logs
 
   scope :finished_successfully, -> { where(status_code: 0) }
+  scope :running, -> { where(finished_at: nil).where("started_at IS NOT NULL") }
 
   delegate :git_url, :full_name, :current_revision_from_repo, to: :scraper, allow_nil: true
   delegate :utime, :stime, to: :metric
@@ -113,7 +114,7 @@ class Run < ActiveRecord::Base
       return
     end
 
-    status_code = Morph::DockerRunner.compile_and_run(repo_path: repo_path, data_path: data_path, env_variables: env_variables, container_name: docker_container_name) do |on|
+    status_code = Morph::Runner.compile_and_run(repo_path: repo_path, data_path: data_path, env_variables: env_variables, container_name: docker_container_name) do |on|
       on.log {|s,c| yield s,c}
       on.ip_address do |ip|
         # Store the ip address of the container for this run
@@ -156,7 +157,7 @@ class Run < ActiveRecord::Base
   # actually stop the compile stage
   # TODO Make this stop the compile stage
   def stop!
-    Morph::DockerRunner.stop(docker_container_name)
+    Morph::DockerUtils.stop(docker_container_name)
     update_attributes(status_code: 130, finished_at: Time.now)
   end
 
@@ -197,6 +198,6 @@ class Run < ActiveRecord::Base
   end
 
   def container_for_run_exists?
-    Morph::DockerRunner.container_exists?(docker_container_name)
+    Morph::DockerUtils.container_exists?(docker_container_name)
   end
 end

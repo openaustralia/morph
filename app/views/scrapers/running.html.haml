@@ -1,0 +1,5 @@
+.container
+  .row
+    .col-xs-12
+      %h1 Scrapers currently running
+      .list-group= sync partial: "scraper", collection: @scrapers

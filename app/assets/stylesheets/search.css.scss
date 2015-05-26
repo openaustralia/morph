@@ -32,12 +32,10 @@
   h2 {
     margin: 0;
     font-weight: normal;
-    overflow: hidden;
     height: 0;
 
     @media (min-width: $screen-md-min) {
       margin: 0 0 $padding-large-vertical;
-      overflow: auto;
       height: auto;
     }
   }
