@@ -16,7 +16,9 @@
 
   .row
     .col-xs-12
-      %h2 Recent New Users
+      %h2
+        %small.pre-heading Recent new users
+        Welcome to morph.io
       %ul.list-unstyled.list-inline
         - User.all.order(created_at: :desc).limit(10).each do |user|
           %li
