@@ -42,6 +42,10 @@ class Scraper < ActiveRecord::Base
 
   delegate :finished_recently?, :finished_at, :finished_successfully?, :finished_with_errors?, :queued?, :running?, to: :last_run, allow_nil: true
 
+  def self.running
+    Run.running.map(&:scraper).compact
+  end
+
   def search_data
     {
       full_name: full_name,

@@ -85,6 +85,7 @@ Rails.application.routes.draw do
       post 'github', to: "scrapers#create_github"
       get 'github_form'
       post 'scraperwiki', to: "scrapers#create_scraperwiki"
+      get 'running'
     end
   end
 

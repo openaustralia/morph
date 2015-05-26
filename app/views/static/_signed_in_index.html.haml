@@ -37,9 +37,3 @@
             - if org.name
               &mdash;
               = org.name
-    .col-md-6
-      %h2 Recently Active Scrapers
-      %p
-        = link_to scrapers_path do
-          See more of the #{pluralize(Scraper.count, "scraper")}&hellip;
-      .list-group= sync partial: "scraper", collection: Scraper.order(:updated_at => :desc).limit(10)
