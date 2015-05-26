@@ -17,9 +17,6 @@
   .row
     .col-xs-12
       %h2 Recent New Users
-      %p
-        = link_to users_path do
-          See more of the #{pluralize(User.count, "user")}&hellip;
       %ul.list-unstyled
         - User.all.order(created_at: :desc).limit(10).each do |user|
           %li
@@ -28,6 +25,9 @@
             - if user.name
               &mdash;
               = user.name
+      %p
+        = link_to users_path do
+          See more of the #{pluralize(User.count, "user")}&hellip;
     .col-md-6
       %h2 Recently Active Scrapers
       %p
