@@ -1,26 +1,27 @@
 module Morph
+  # Special stuff for each scripting language supported by morph.io
   class Language
     LANGUAGES_SUPPORTED = [:ruby, :php, :python, :perl]
 
     WEBSITES = {
-      ruby: "https://www.ruby-lang.org/en/",
-      php: "http://www.php.net/",
-      python: "https://www.python.org/",
-      perl: "http://www.perl.org/"
+      ruby: 'https://www.ruby-lang.org/en/',
+      php: 'http://www.php.net/',
+      python: 'https://www.python.org/',
+      perl: 'http://www.perl.org/'
     }
 
-    HUMAN = {ruby: "Ruby", php: "PHP", python: "Python", perl: "Perl" }
+    HUMAN = { ruby: 'Ruby', php: 'PHP', python: 'Python', perl: 'Perl' }
 
-    FILE_EXTENSIONS = {ruby: "rb", php: "php", python: "py", perl: "pl"}
+    FILE_EXTENSIONS = { ruby: 'rb', php: 'php', python: 'py', perl: 'pl' }
 
     BINARY_NAMES = {
       # Run a special script of ours before anything else which switches off
       # buffering on stdout and stderr
-      ruby: "ruby -r/usr/local/lib/prerun.rb",
-      php: "php",
+      ruby: 'ruby -r/usr/local/lib/prerun.rb',
+      php: 'php',
       # -u turns off buffering for stdout and stderr
-      python: "python -u",
-      perl: "perl"
+      python: 'python -u',
+      perl: 'perl'
     }
 
     # Files are grouped together when they need to be treated as a unit
@@ -29,18 +30,18 @@ module Morph
     # those files are missing
     DEFAULT_FILES_TO_INSERT = {
       ruby: [
-        ["Gemfile", "Gemfile.lock"]
+        ['Gemfile', 'Gemfile.lock']
       ],
       python: [
-        ["requirements.txt"],
-        ["runtime.txt"]
+        ['requirements.txt'],
+        ['runtime.txt']
       ],
       php: [
-        ["composer.json", "composer.lock"]
+        ['composer.json', 'composer.lock']
       ],
       perl: [
-        ["app.psgi"],
-        ["cpanfile"]
+        ['app.psgi'],
+        ['cpanfile']
       ]
     }
 
@@ -53,12 +54,12 @@ module Morph
     # Find the language of the code in the given directory
     def self.language(repo_path)
       languages_supported.find do |language|
-        File.exists?(File.join(repo_path, language.scraper_filename))
+        File.exist?(File.join(repo_path, language.scraper_filename))
       end
     end
 
     def self.languages_supported
-      LANGUAGES_SUPPORTED.map{|l| Language.new(l)}
+      LANGUAGES_SUPPORTED.map { |l| Language.new(l) }
     end
 
     def default_files_to_insert
@@ -67,7 +68,7 @@ module Morph
 
     def human
       t = HUMAN[key]
-      raise "Unsupported language" if t.nil?
+      fail 'Unsupported language' if t.nil?
       t
     end
 
@@ -92,11 +93,11 @@ module Morph
     end
 
     def scraper_templates
-      raise "Not yet supported" unless supported?
+      fail 'Not yet supported' unless supported?
       # We grab all the files in the template directory
       result = {}
       Dir.entries(default_template_directory).each do |file|
-        if file != "." && file != ".."
+        if file != '.' && file != '..'
           result[file] = File.read(File.join(default_template_directory, file))
         end
       end

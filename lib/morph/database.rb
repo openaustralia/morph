@@ -1,17 +1,17 @@
 module Morph
   class Database
     def initialize(data_path)
-      if data_path == "db/scrapers/data/mlandauer/rwanda-chamber-of-deputies"
+      if data_path == 'db/scrapers/data/mlandauer/rwanda-chamber-of-deputies'
         # TEMPORARY HACK to ensure that we're never reading from this particular
         # scraper. Instead we redirect the sqlite queries to another database
-        @data_path = "db/scrapers/data/mlandauer/scraperwiki_scrapers"
+        @data_path = 'db/scrapers/data/mlandauer/scraperwiki_scrapers'
       else
         @data_path = data_path
       end
     end
 
     def self.sqlite_db_filename
-      "data.sqlite"
+      'data.sqlite'
     end
 
     def self.sqlite_db_backup_filename
@@ -19,7 +19,7 @@ module Morph
     end
 
     def self.sqlite_table_name
-      "data"
+      'data'
     end
 
     def sqlite_db_path
@@ -31,16 +31,18 @@ module Morph
     end
 
     def backup
-      FileUtils.cp(sqlite_db_path, sqlite_db_backup_path) if File.exists?(sqlite_db_path)
+      return unless File.exist?(sqlite_db_path)
+
+      FileUtils.cp(sqlite_db_path, sqlite_db_backup_path)
     end
 
     # The actual table names in the current db
     def table_names
       q = sql_query_safe("select name from sqlite_master where type='table'")
       if q
-        q = q.map{|h| h["name"]}
+        q = q.map { |h| h['name'] }
         # sqlite_sequence is a special system table (used with autoincrement)
-        q.delete("sqlite_sequence")
+        q.delete('sqlite_sequence')
         q
       else
         []
@@ -48,13 +50,11 @@ module Morph
     end
 
     def valid?
-      begin
-        # Do any old query
-        table_names
-        true
-      rescue SQLite3::NotADatabaseException
-        false
-      end
+      # Do any old query
+      table_names
+      true
+    rescue SQLite3::NotADatabaseException
+      false
     end
 
     # The table that should be listed first because it is the most important
@@ -67,8 +67,12 @@ module Morph
     end
 
     def sql_query(query, readonly = true)
-      raise SQLite3::Exception, "No query specified" if query.blank?
-      SQLite3::Database.new(sqlite_db_path, results_as_hash: true, type_translation: true, readonly: readonly) do |db|
+      fail SQLite3::Exception, 'No query specified' if query.blank?
+      SQLite3::Database.new(
+        sqlite_db_path,
+        results_as_hash: true,
+        type_translation: true,
+        readonly: readonly) do |db|
         # If database is busy wait 5s
         db.busy_timeout(5000)
         return Database.clean_utf8_query_result(db.execute(query))
@@ -76,12 +80,12 @@ module Morph
     end
 
     def self.clean_utf8_query_result(array)
-      array.map{|row| clean_utf8_query_row(row)}
+      array.map { |row| clean_utf8_query_row(row) }
     end
 
     def self.clean_utf8_query_row(row)
       result = {}
-      row.each {|k,v| result[clean_utf8_string(k)] = clean_utf8_string(v)}
+      row.each { |k, v| result[clean_utf8_string(k)] = clean_utf8_string(v) }
       result
     end
 
@@ -91,7 +95,8 @@ module Morph
         if string.valid_encoding?
           string
         else
-          string.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+          string.encode('UTF-8', 'binary',
+                        invalid: :replace, undef: :replace, replace: '')
         end
       else
         string
@@ -99,25 +104,21 @@ module Morph
     end
 
     def sql_query_safe(query, readonly = true)
-      begin
-        sql_query(query, readonly)
-      rescue SQLite3::CantOpenException, SQLite3::SQLException
-        nil
-      end
+      sql_query(query, readonly)
+    rescue SQLite3::CantOpenException, SQLite3::SQLException
+      nil
     end
 
     # Returns 0 if table doesn't exists (or there is some other problem)
     def no_rows(table = table_names.first)
-      begin
-        q = sql_query_safe("select count(*) from '#{table}'")
-        q ? q.first.values.first : 0
-      rescue SQLite3::NotADatabaseException
-        0
-      end
+      q = sql_query_safe("select count(*) from '#{table}'")
+      q ? q.first.values.first : 0
+    rescue SQLite3::NotADatabaseException
+      0
     end
 
     def sqlite_db_size
-      if File.exists?(sqlite_db_path)
+      if File.exist?(sqlite_db_path)
         File::Stat.new(sqlite_db_path).size
       else
         0
@@ -125,29 +126,28 @@ module Morph
     end
 
     def table_names_safe
-      begin
-        table_names
-      rescue SQLite3::NotADatabaseException
-        []
-      end
+      table_names
+    rescue SQLite3::NotADatabaseException
+      []
     end
 
     # Total number of records across all tables
     def sqlite_total_rows
-      table_names_safe.map {|t| no_rows(t)}.sum
+      table_names_safe.map { |t| no_rows(t) }.sum
     end
 
     def clear
-      FileUtils.rm sqlite_db_path if File.exists?(sqlite_db_path)
+      FileUtils.rm sqlite_db_path if File.exist?(sqlite_db_path)
     end
 
     def write_sqlite_database(content)
       FileUtils.mkdir_p @data_path
-      File.open(sqlite_db_path, 'wb') {|file| file.write(content) }
+      File.open(sqlite_db_path, 'wb') { |file| file.write(content) }
     end
 
     def standardise_table_name(table_name)
-      sql_query_safe("ALTER TABLE '#{table_name}' RENAME TO '#{Database.sqlite_table_name}'", false)
+      sql_query_safe("ALTER TABLE '#{table_name}' " \
+        "RENAME TO '#{Database.sqlite_table_name}'", false)
     end
 
     def select_first_ten(table = table_names.first)
@@ -166,13 +166,14 @@ module Morph
     def self.tidy_data_path(data_path)
       # First get all the files in the data directory
       filenames = Dir.entries(data_path)
-      filenames.delete(".")
-      filenames.delete("..")
+      filenames.delete('.')
+      filenames.delete('..')
       filenames.delete(sqlite_db_filename)
-      FileUtils.rm_rf filenames.map{|f| File.join(data_path, f)}
+      FileUtils.rm_rf filenames.map { |f| File.join(data_path, f) }
     end
 
-    # Remove any files or directories in the data_path that are not the actual database
+    # Remove any files or directories in the data_path that are not the
+    # actual database
     def tidy_data_path
       Database.tidy_data_path(@data_path)
     end
@@ -185,18 +186,24 @@ module Morph
       min1, max1 = v1.first
       min2, max2 = v2.first
       if min1.nil? && max1.nil? && min2.nil? && max2.nil?
-        min, max = 1, 1
+        min = 1
+        max = 1
       elsif min1.nil? && max1.nil?
-        min, max = min2, max2
+        min = min2
+        max = max2
       elsif min2.nil? && max2.nil?
-        min, max = min1, max1
+        min = min1
+        max = max1
       else
         min = [min1, min2].min
         max = [max1, max2].max
       end
       page_min = min
       page_max = min + page - 1
-      added, removed, changed, unchanged = 0, 0, 0, 0
+      added = 0
+      removed = 0
+      changed = 0
+      unchanged = 0
       while page_min <= max
         result = diffstat_table_rowid_range(table, page_min, page_max, db1, db2)
         added += result[:added]
@@ -207,7 +214,7 @@ module Morph
         page_max += page
       end
 
-      {added: added, removed: removed, changed: changed, unchanged: unchanged}
+      { added: added, removed: removed, changed: changed, unchanged: unchanged }
     end
 
     # Needs to be called with a block that given an array of ids
@@ -216,16 +223,18 @@ module Morph
       added = ids2 - ids1
       removed = ids1 - ids2
       possibly_changed = ids1 - removed
-      unchanged, changed = yield(possibly_changed).partition{|t| t[1] == t[2]}
-      unchanged = unchanged.map{|t| t[0]}
-      changed = changed.map{|t| t[0]}
-      {added: added, removed: removed, changed: changed, unchanged: unchanged}
+      unchanged, changed = yield(possibly_changed).partition do |t|
+        t[1] == t[2]
+      end
+      unchanged = unchanged.map { |t| t[0] }
+      changed = changed.map { |t| t[0] }
+      { added: added, removed: removed, changed: changed, unchanged: unchanged }
     end
 
     def self.changes(db1, db2, ids_query)
       v1, v2 = execute2(db1, db2, ids_query)
-      ids1 = v1.map{|r| r.first}
-      ids2 = v2.map{|r| r.first}
+      ids1 = v1.map(&:first)
+      ids2 = v2.map(&:first)
 
       data_changes(ids1, ids2) do |possibly_changed|
         values1, values2 = execute2(db1, db2, yield(possibly_changed))
@@ -246,11 +255,9 @@ module Morph
     end
 
     def self.diffstat_safe(file1, file2)
-      begin
-        diffstat(file1, file2)
-      rescue SQLite3::NotADatabaseException
-        nil
-      end
+      diffstat(file1, file2)
+    rescue SQLite3::NotADatabaseException
+      nil
     end
 
     def self.diffstat(file1, file2)
@@ -264,16 +271,17 @@ module Morph
               removed: [],
               changed: [],
               unchanged: [],
-              counts: {added: 0, removed: 0, changed: 0, unchanged: 0}
+              counts: { added: 0, removed: 0, changed: 0, unchanged: 0 }
             },
-            records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+            records: {
+              counts: { added: 0, removed: 0, changed: 0, unchanged: 0 }
+            }
           }
-          records_added, records_removed, records_changed = 0, 0, 0
           r[:unchanged].each do |table|
             records = diffstat_table(table, db1, db2)
             result[:tables][:unchanged] << {
               name: table,
-              records: {counts: records}
+              records: { counts: records }
             }
             result[:records][:counts][:added] += records[:added]
             result[:records][:counts][:removed] += records[:removed]
@@ -284,7 +292,7 @@ module Morph
             records = diffstat_table(table, db1, db2)
             result[:tables][:changed] << {
               name: table,
-              records: {counts: records}
+              records: { counts: records }
             }
             result[:records][:counts][:added] += records[:added]
             result[:records][:counts][:removed] += records[:removed]
@@ -295,7 +303,9 @@ module Morph
             added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
             result[:tables][:added] << {
               name: table,
-              records: {counts: {added: added, removed: 0, changed: 0, unchanged: 0}}
+              records: {
+                counts: { added: added, removed: 0, changed: 0, unchanged: 0 }
+              }
             }
             result[:records][:counts][:added] += added
           end
@@ -303,14 +313,20 @@ module Morph
             removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
             result[:tables][:removed] << {
               name: table,
-              records: {counts: {added: 0, removed: removed, changed: 0, unchanged: 0}}
+              records: {
+                counts: { added: 0, removed: removed, changed: 0, unchanged: 0 }
+              }
             }
             result[:records][:counts][:removed] += removed
           end
-          result[:tables][:counts][:added] = result[:tables][:added].count
-          result[:tables][:counts][:removed] = result[:tables][:removed].count
-          result[:tables][:counts][:changed] = result[:tables][:changed].count
-          result[:tables][:counts][:unchanged] = result[:tables][:unchanged].count
+          result[:tables][:counts][:added] =
+            result[:tables][:added].count
+          result[:tables][:counts][:removed] =
+            result[:tables][:removed].count
+          result[:tables][:counts][:changed] =
+            result[:tables][:changed].count
+          result[:tables][:counts][:unchanged] =
+            result[:tables][:unchanged].count
 
           return result
         end
@@ -333,7 +349,12 @@ module Morph
     # Find the difference within a range of rowids
     def self.diffstat_table_rowid_range(table, min, max, db1, db2)
       r = rows_changed_in_range(table, min, max, db1, db2)
-      {added: r[:added].count, removed: r[:removed].count, changed: r[:changed].count, unchanged: r[:unchanged].count}
+      {
+        added: r[:added].count,
+        removed: r[:removed].count,
+        changed: r[:changed].count,
+        unchanged: r[:unchanged].count
+      }
     end
   end
 end

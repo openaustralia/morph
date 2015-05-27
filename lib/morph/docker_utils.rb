@@ -1,4 +1,6 @@
 module Morph
+  # Utility methods for manipulating docker containers and preparing data
+  # to inject into docker containers
   class DockerUtils
     def self.pull_docker_image(image)
       Docker::Image.create('fromImage' => image) do |chunk|
@@ -28,27 +30,23 @@ module Morph
       FileUtils.cd(cwd)
     end
 
-    # If image is present locally use that. If it isn't then pull it from the hub
-    # This makes initial setup easier
-    # TODO No need to use Multiblock here really
+    # If image is present locally use that. If it isn't then pull it from
+    # the hub. This makes initial setup easier
+    # TODO: No need to use Multiblock here really
     def self.get_or_pull_image(name)
-      begin
-        Docker::Image.get(name)
-      rescue Docker::Error::NotFoundError
-        Docker::Image.create('fromImage' => name) do |chunk|
-          data = JSON.parse(chunk)
-          yield "#{data['status']} #{data['id']} #{data['progress']}\n"
-        end
+      Docker::Image.get(name)
+    rescue Docker::Error::NotFoundError
+      Docker::Image.create('fromImage' => name) do |chunk|
+        data = JSON.parse(chunk)
+        yield "#{data['status']} #{data['id']} #{data['progress']}\n"
       end
     end
 
     def self.container_exists?(name)
-      begin
-        Docker::Container.get(name)
-        true
-      rescue Docker::Error::NotFoundError => e
-        false
-      end
+      Docker::Container.get(name)
+      true
+    rescue Docker::Error::NotFoundError
+      false
     end
 
     def self.stop(container_name)
@@ -59,14 +57,14 @@ module Morph
     end
 
     def self.copy_directory_contents(source, dest)
-      FileUtils.cp_r File.join(source, "."), dest
+      FileUtils.cp_r File.join(source, '.'), dest
     end
 
     # Set an arbitrary & fixed modification time on everything in a directory
     # This ensures that if the content is the same docker will cache
     def self.fix_modification_times(dir)
       Find.find(dir) do |entry|
-        FileUtils.touch(entry, mtime: Time.new(2000,1,1))
+        FileUtils.touch(entry, mtime: Time.new(2000, 1, 1))
       end
     end
   end
