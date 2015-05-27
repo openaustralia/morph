@@ -1,12 +1,13 @@
+# Settings that apply to the whole app and everybody on it
 class SiteSetting < ActiveRecord::Base
   serialize :settings
 
   def self.read_only_mode
-    read_setting("read_only_mode")
+    read_setting('read_only_mode')
   end
 
   def self.read_only_mode=(mode)
-    write_setting("read_only_mode", mode)
+    write_setting('read_only_mode', mode)
   end
 
   def self.toggle_read_only_mode!
@@ -24,10 +25,10 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.write_setting(key, value)
-    record.update_attributes(settings: record.settings.merge({key => value}))
+    record.update_attributes(settings: record.settings.merge(key => value))
   end
 
   def self.defaults
-    {"read_only_mode" => false}
+    { 'read_only_mode' => false }
   end
 end

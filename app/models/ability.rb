@@ -1,3 +1,4 @@
+# Who has permission to do what
 class Ability
   include CanCan::Ability
 
@@ -6,59 +7,51 @@ class Ability
     # user can view settings of scrapers it owns
     can :settings, Scraper, owner_id: user.id
     unless SiteSetting.read_only_mode
-      can [:destroy, :update, :run, :stop, :clear, :create, :create_github], Scraper, owner_id: user.id
+      can [:destroy, :update, :run, :stop, :clear, :create, :create_github],
+          Scraper,
+          owner_id: user.id
     end
 
-    # user can view settings of scrapers belonging to an org they are a member of
+    # user can view settings of scrapers belonging to an org they are a
+    # member of
     user.organizations.each do |org|
       can :settings, Scraper, owner_id: org.id
       unless SiteSetting.read_only_mode
-        can [:destroy, :update, :run, :stop, :clear, :create, :create_github], Scraper, owner_id: org.id
+        can [:destroy, :update, :run, :stop, :clear, :create, :create_github],
+            Scraper,
+            owner_id: org.id
       end
     end
 
     # Everyone can list all the scrapers
     can [:index, :show, :watchers], Scraper
-    unless SiteSetting.read_only_mode
-      can [:new, :github, :scraperwiki], Scraper
-    end
+    can [:new, :github, :scraperwiki], Scraper unless SiteSetting.read_only_mode
 
     # You can look at your own settings
     can :settings, Owner, id: user.id
-    unless SiteSetting.read_only_mode
-      can :reset_key, Owner, id: user.id
-    end
+    can :reset_key, Owner, id: user.id unless SiteSetting.read_only_mode
+
     # user should be able to see settings for an org they're part of
     user.organizations.each do |org|
       can :settings, Owner, id: org.id
-      unless SiteSetting.read_only_mode
-        can :reset_key, Owner, id: org.id
-      end
+      can :reset_key, Owner, id: org.id unless SiteSetting.read_only_mode
     end
+
     # Admins can look at all owner settings and update
     if user.admin?
       can :settings, Owner
-      unless SiteSetting.read_only_mode
-        can :update, Owner
-      end
+      can :update, Owner unless SiteSetting.read_only_mode
     end
 
     # Everyone can show and watch anyone
     can :show, Owner
-    unless SiteSetting.read_only_mode
-      can :watch, Owner
-    end
+    can :watch, Owner unless SiteSetting.read_only_mode
 
     # Everybody can look at all the users and see who they are watching
     can [:index, :watching], User
+    can :toggle_read_only_mode, SiteSetting if user.admin?
 
-    if user.admin?
-      can :toggle_read_only_mode, SiteSetting
-    end
-
-    unless SiteSetting.read_only_mode
-      can :create, Run
-    end
+    can :create, Run unless SiteSetting.read_only_mode
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

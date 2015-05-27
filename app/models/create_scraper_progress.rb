@@ -1,3 +1,4 @@
+# Progress in morp creating a scraper
 class CreateScraperProgress < ActiveRecord::Base
   include Sync::Actions
   has_one :scraper, dependent: :nullify
