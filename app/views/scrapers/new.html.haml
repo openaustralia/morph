@@ -13,13 +13,14 @@
           = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false
       .col-sm-6
         = f.input :name do
+          - name_input_field = f.input_field :name, class: "form-control", placeholder:"city_of_sydney_development_applications"
           - if current_user.all_owners.count == 1
-            = f.input_field :name, class: "form-control", placeholder:"city_of_sydney_development_applications"
+            = name_input_field
           - else
             -# Using long-winded form here because simple_form doesn't directly support prepends
             .input-group
               %span.input-group-addon /
-              = f.input_field :name, class: "form-control", placeholder:"city_of_sydney_development_applications"
+              = name_input_field
           %span.help-block Name to give the scraper here and on GitHub
 
     .row
