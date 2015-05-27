@@ -41,3 +41,9 @@
     font-size: $font-size-large;
   }
 }
+
+.owner-list-simple {
+  .owner-item {
+    margin-bottom: $padding-large-vertical;
+  }
+}

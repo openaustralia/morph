@@ -15,25 +15,11 @@
   = render "broken_scrapers"
 
   .row
-    .col-md-6
-      %h2 Recent New Users
-      %p
-        = link_to users_path do
-          See more of the #{pluralize(User.count, "user")}&hellip;
-      %ul.list-unstyled
-        - User.all.order(created_at: :desc).limit(10).each do |user|
-          %li
-            = owner_image(user, 20)
-            = link_to user.nickname, user
-            - if user.name
-              &mdash;
-              = user.name
-      %h2 Organizations with Scrapers
-      %ul.list-unstyled
-        - Organization.all_with_scrapers.each do |org|
-          %li
-            = owner_image(org, 20)
-            = link_to org.nickname, org
-            - if org.name
-              &mdash;
-              = org.name
+    .new-users-block.col-xs-12
+      %h2
+        %small.pre-heading Recent new users
+        Welcome to morph.io
+      %ul.owner-list-simple.list-unstyled.list-inline
+        - User.where.not(name: nil).order(created_at: :desc).limit(8).each do |user|
+          %li.owner-item= link_to owner_image(user, 60), user
+      %p= link_to "See more of the #{pluralize(User.count, "user")}…", users_path
