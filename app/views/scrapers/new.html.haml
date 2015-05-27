@@ -17,7 +17,6 @@
           - if current_user.all_owners.count == 1
             = name_input_field
           - else
-            -# Using long-winded form here because simple_form doesn't directly support prepends
             .input-group
               %span.input-group-addon /
               = name_input_field
