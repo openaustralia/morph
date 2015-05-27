@@ -124,7 +124,7 @@ module Morph
     end
 
     # Mandatory: command, image_name, user
-    # Optional: env_variables, repo_path, data_path, container_name
+    # Optional: env_variables, data_path, container_name
     def self.run_no_cleanup(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
@@ -181,9 +181,6 @@ module Morph
 
       begin
         binds = []
-        if options[:repo_path]
-          binds << "#{local_root_path}/#{options[:repo_path]}:/repo:ro"
-        end
         if options[:data_path]
           binds << "#{local_root_path}/#{options[:data_path]}:/data"
         end
