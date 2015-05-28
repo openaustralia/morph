@@ -38,7 +38,13 @@ module Morph
       i4 = Dir.mktmpdir('morph') do |dest|
         copy_config_to_directory(options[:repo_path], dest, false)
         # Copy across the current sqlite database as well
-        FileUtils.cp(File.join(options[:data_path], 'data.sqlite'), dest)
+        if File.exist?(File.join(options[:data_path], 'data.sqlite'))
+          FileUtils.cp(File.join(options[:data_path], 'data.sqlite'), dest)
+        else
+          # Copy across a zero-sized file which will overwrite the symbolic
+          # link on the container
+          FileUtils.touch(File.join(dest, 'data.sqlite'))
+        end
         wrapper.call(:log, :internalout,
                      "Injecting scraper code and database and running...\n")
         inject_files2(i3, dest)
@@ -49,7 +55,7 @@ module Morph
 
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
-      status_code, sqlite_tar = run(
+      status_code, sqlite_data = run(
         command: command,
         image_name: i4.id,
         container_name: options[:container_name],
@@ -60,10 +66,9 @@ module Morph
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
 
-      # Now extract the tar file
-      Dir.mktmpdir('morph') do |dest|
-        Morph::DockerUtils.extract_tar(sqlite_tar, dest)
-        FileUtils.cp(File.join(dest, 'data.sqlite'), options[:data_path])
+      # TODO: Should do this as more of an atomic replace on the filesystem
+      File.open(File.join(options[:data_path], 'data.sqlite'), 'wb') do |f|
+        f << sqlite_data
       end
 
       # There's a potential race condition here where we are trying to delete
@@ -130,13 +135,21 @@ module Morph
       # Grab the resulting sqlite database
       # TODO: Don't concatenate this tarfile in memory. It could get big
       sqlite_tar = ''
+      # TODO: Handle the situation if that file wasn't created or it was
+      # deleted on the container
       c.copy('/app/data.sqlite') do |chunk|
         sqlite_tar += chunk
       end
+      # Now extract the tar file
+      sqlite_data = Dir.mktmpdir('morph') do |dest|
+        Morph::DockerUtils.extract_tar(sqlite_tar, dest)
+        File.open(File.join(dest, 'data.sqlite'), 'rb') { |f| f.read }
+      end
+
       # Clean up after ourselves
       c.delete
 
-      [status_code, sqlite_tar]
+      [status_code, sqlite_data]
     end
 
     # Mandatory: command, image_name, user
