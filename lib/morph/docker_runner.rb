@@ -161,8 +161,8 @@ module Morph
       # Open up a special interactive connection to Docker
       # TODO: Cache connection
       conn_interactive = Docker::Connection.new(
-        ENV['DOCKER_URL'] || Docker.default_socket_url,
-        chunk_size: 1, read_timeout: 4.hours)
+        Docker.url,
+        {chunk_size: 1, read_timeout: 4.hours}.merge(Docker.env_options))
 
       container_options = {
         'Cmd' => ['/bin/bash', '-l', '-c', options[:command]],
@@ -223,8 +223,8 @@ module Morph
     def self.docker_build_from_dir(dir)
       # How does this connection get closed?
       conn_interactive = Docker::Connection.new(
-        ENV['DOCKER_URL'] || Docker.default_socket_url,
-        read_timeout: 4.hours)
+        Docker.url,
+        { read_timeout: 4.hours }.merge(Docker.env_options))
       begin
         Docker::Image.build_from_tar(
           StringIO.new(Morph::DockerUtils.create_tar(dir)),
