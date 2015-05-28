@@ -66,10 +66,14 @@ module Morph
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
 
-      # TODO: Should do this as more of an atomic replace on the filesystem
-      File.open(File.join(options[:data_path], 'data.sqlite'), 'wb') do |f|
+      # First write to a temporary file with the new sqlite data
+      File.open(File.join(options[:data_path], 'data.sqlite.new'), 'wb') do |f|
         f << sqlite_data
       end
+      # Then, rename the file to the "live" file overwriting the old data
+      # This should happen atomically
+      File.rename(File.join(options[:data_path], 'data.sqlite.new'),
+                  File.join(options[:data_path], 'data.sqlite'))
 
       # There's a potential race condition here where we are trying to delete
       # something that might be used elsewhere. Do the most crude thing and
