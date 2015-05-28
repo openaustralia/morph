@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui-easing
 //= require bootstrap-sprockets
 //= require bootstrap-select
 //= require zeroclipboard
