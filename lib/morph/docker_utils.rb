@@ -30,15 +30,6 @@ module Morph
       tmp.unlink
     end
 
-    # BEWARE: Not thread safe!
-    def self.in_directory(directory)
-      cwd = FileUtils.pwd
-      FileUtils.cd(directory)
-      yield
-    ensure
-      FileUtils.cd(cwd)
-    end
-
     # If image is present locally use that. If it isn't then pull it from
     # the hub. This makes initial setup easier
     # TODO: No need to use Multiblock here really

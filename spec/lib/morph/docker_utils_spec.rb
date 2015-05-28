@@ -9,13 +9,12 @@ describe Morph::DockerUtils do
       end
 
       Dir.mktmpdir do |dir|
-        Morph::DockerUtils.in_directory(dir) do
-          File.open('test.tar', 'w') { |f| f << tar }
-          # Quick and dirty
-          `tar xf test.tar`
-          expect(File.symlink?('link.rb')).to be_truthy
-          expect(File.readlink('link.rb')).to eq 'scraper.rb'
-        end
+        path = File.join(dir, 'test.tar')
+        File.open(path, 'w') { |f| f << tar }
+        # Quick and dirty
+        `tar xf #{path} -C #{dir}`
+        expect(File.symlink?(File.join(dir, 'link.rb'))).to be_truthy
+        expect(File.readlink(File.join(dir, 'link.rb'))).to eq 'scraper.rb'
       end
     end
   end
