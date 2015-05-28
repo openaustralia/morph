@@ -7,7 +7,7 @@ roundUpBy = (value, round_to) ->
 
 $ ->
   metricsInview = new (Waypoint.Inview)(
-    element: $('.banner-metrics')[0]
+    element: $('.metric-box')[0]
     enter: (direction) ->
       $(".metric-box strong").each (index) ->
         $this = $(this)
