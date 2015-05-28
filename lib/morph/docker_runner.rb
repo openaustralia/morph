@@ -55,7 +55,7 @@ module Morph
 
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
-      status_code, sqlite_data = run(
+      status_code, sqlite_data, time_data = run(
         command: command,
         image_name: i4.id,
         container_name: options[:container_name],
@@ -80,7 +80,7 @@ module Morph
         # TODO: When docker-api gem gets updated Docker::Error::ConfictError
         # will be changed to Docker::Error::ConflictError
       end
-      status_code
+      [status_code, time_data]
     end
 
     # If copy_config is true copies the config file across
@@ -134,11 +134,13 @@ module Morph
       c.wait
       # Grab the resulting sqlite database
       sqlite_data = Morph::DockerUtils.copy_file(c, '/app/data.sqlite')
+      time_data = Morph::DockerUtils.copy_file(
+        c, '/app/' + Run.time_output_filename)
 
       # Clean up after ourselves
       c.delete
 
-      [status_code, sqlite_data]
+      [status_code, sqlite_data, time_data]
     end
 
     # Mandatory: command, image_name, user
