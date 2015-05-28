@@ -18,6 +18,13 @@ $ ->
           easing: "easeInOutQuint"
           step: ->
             $this.text Math.ceil(@counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          complete: ->
+            jQuery(counter: $target_count).animate { counter: (3 + $target_count) },
+              duration: 1500 + index * 600
+              easing: "easeOutQuint"
+              step: ->
+                $this.text Math.ceil(@counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                return
             return
         return
       # only run this once
