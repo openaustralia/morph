@@ -27,4 +27,6 @@ $ ->
             $this.counter = roundUpBy($this.counter, 10)
           $this.text(Math.round($this.counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
           return
+      # only run this once
+      this.destroy()
   )
