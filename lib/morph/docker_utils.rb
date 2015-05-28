@@ -21,6 +21,15 @@ module Morph
       content
     end
 
+    def self.extract_tar(content, directory)
+      tmp = Tempfile.new('morph.tar')
+      tmp << content
+      tmp.close
+      # Quick and dirty
+      `tar xf #{tmp.path} -C #{directory}`
+      tmp.unlink
+    end
+
     # BEWARE: Not thread safe!
     def self.in_directory(directory)
       cwd = FileUtils.pwd

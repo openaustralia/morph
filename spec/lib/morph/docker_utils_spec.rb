@@ -20,6 +20,20 @@ describe Morph::DockerUtils do
     end
   end
 
+  describe '.extract_tar' do
+    it 'should do the opposite of create_tar' do
+      content = Dir.mktmpdir do |dir|
+        File.open(File.join(dir, 'foo'), 'w') { |f| f << 'hello' }
+        Morph::DockerUtils.create_tar(dir)
+      end
+
+      Dir.mktmpdir do |dir|
+        Morph::DockerUtils.extract_tar(content, dir)
+        expect(File.read(File.join(dir, 'foo'))).to eq 'hello'
+      end
+    end
+  end
+
   describe '.fix_modification_times' do
     it do
       Dir.mktmpdir do |dir|
