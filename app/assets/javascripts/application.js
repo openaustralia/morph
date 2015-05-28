@@ -21,6 +21,8 @@
 //= require 'jquery.backstretch'
 //= require tablesaw.stackonly
 //= require tweenjs-0.6.1
+//= require jquery.waypoints
+//= require waypoints.inview
 //= require api
 //= require bootstrap
 //= require documentation
