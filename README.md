@@ -14,7 +14,7 @@
 ### Dependencies
 Ruby 2.0.0, Docker, MySQL, SQLite 3, Redis, mitmproxy and Elasticsearch.
 
-On OS X for development also Vagrant & VirtualBox to host a VM with Docker - see below for more.
+On OS X for development also Kitematic - see below for more.
 
 On Linux your user account should be able to manipulate Docker (just add your user to the `docker` group).
 
@@ -72,17 +72,17 @@ access this, run the following to give your account admin rights:
 
 If you're doing your development on Linux you're in luck because installing Docker is pretty straightforward. Just follow the instructions on the [Docker site](http://www.docker.io/gettingstarted/#h_installation).
 
-If you're on OSX you could follow the [instructions on the Docker site](https://docs.docker.com/installation/mac/). Docker encourage OSX users to install their [Kitematic](https://kitematic.com/) application, a [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface) for running Docker, that works with morph.io. However there will be some extra configuration you will need to do to make it work with morph.io.
+Install [Kitematic](https://kitematic.com/). This will also, I think, prompt
+you to install VirtualBox if you don't already have it.
 
-We've made it easier by providing a Vagrantfile that sets up a VM, installs docker on it and makes sure that your development box can talk to docker on the VM.
+Then, from the command-line
+```
+docker-machine env
+```
 
-First install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads). Then,
-
-    vagrant up dev
-
-After the Vagrant vm is built, **run `vagrant halt dev` and then `vagrant up dev` again** to make sure the shared folders are correctly set up. Then you can continue with the [installation steps above](#to-install).
-
-Just recently the Docker folks have released a version of the docker client that works on OS X. The first build is [available to download](http://test.docker.io/builds/Darwin/x86_64/docker-0.7.3.tgz). You might find this helpful later but isn't essential.
+Paste the output of that command into the docker section of the `.env` file.
+Now the application will know how to contact the docker server running on
+a VM on your machine.
 
 ### Guard Livereload
 

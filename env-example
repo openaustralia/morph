@@ -8,10 +8,12 @@ GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # If this is Linux then your docker daemon is likely running locally on a socket. In that case the DOCKER_URL
 # and DOCKER_TCP does not need to be set (comment the lines below out).
-# If this is OS X, then your docker daemon will be running inside a VM with a tunneled port (see instructions
-# in the README for how to set this up)
-DOCKER_URL=http://localhost:4243
-DOCKER_TCP=localhost:4243
+# If this is OS X, then follow the instructions in the README to install
+# Kitematic (https://kitematic.com/) and then run `docker-machine env` and paste
+# the output below
+DOCKER_TLS_VERIFY=1
+DOCKER_CERT_PATH="/Users/matthew/.docker/machine/machines/dev"
+DOCKER_HOST=tcp://192.168.99.100:2376
 
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
