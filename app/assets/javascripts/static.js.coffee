@@ -18,13 +18,6 @@ $ ->
         tween = createjs.Tween.get($this).to( {counter: $target_count}, (500 + index * 200) , createjs.Ease.quintInOut)
 
         tween.addEventListener 'change', (event) ->
-          # if the number is under 90 of the target, increment number by thousands
-          if $this.counter < $target_count * 0.8
-            $this.counter = roundUpBy($this.counter, 1000)
-          else if $this.counter < $target_count * 0.9
-            $this.counter = roundUpBy($this.counter, 100)
-          else if $this.counter < $target_count * 0.999
-            $this.counter = roundUpBy($this.counter, 10)
           $this.text(Math.round($this.counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
           return
       # only run this once
