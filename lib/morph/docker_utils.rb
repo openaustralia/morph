@@ -73,8 +73,6 @@ module Morph
     # Copy a single file from a container. Returns a string with the contents
     # of the file. Obviously need to provide a filesystem path within the
     # container
-    # TODO: Handle the situation if that file wasn't created or it was
-    # deleted on the container
     def self.copy_file(container, path)
       tar = ''
       # TODO: Don't concatenate this tarfile in memory. It could get big
