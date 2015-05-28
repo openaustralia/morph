@@ -11,15 +11,15 @@ $ ->
     enter: (direction) ->
       $(".metric-box strong").each (index) ->
         $this = $(this)
-        starting_point = 0
         $target_count = parseInt($this.text().replace(/\,/g, ''))
-        $this.counter = starting_point
 
-        tween = createjs.Tween.get($this).to( {counter: $target_count}, (500 + index * 200) , createjs.Ease.quintInOut)
-
-        tween.addEventListener 'change', (event) ->
-          $this.text(Math.round($this.counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-          return
+        jQuery(counter: 0).animate { counter: $target_count },
+          duration: 500 + index * 200
+          easing: "easeInOutQuint"
+          step: ->
+            $this.text Math.ceil(@counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            return
+        return
       # only run this once
       this.destroy()
   )
