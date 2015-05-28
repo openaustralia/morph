@@ -14,7 +14,7 @@ $ ->
     # set the test to 0
     $this.counter = starting_point
 
-    tween = createjs.Tween.get($this).to( {counter: $target_count}, (1000 + index * 1000) , createjs.Ease.quintOut)
+    tween = createjs.Tween.get($this).to( {counter: $target_count}, (1200 + index * 1000) , createjs.Ease.quintOut)
 
     tween.addEventListener 'change', (event) ->
       # if the number is under 90 of the target, increment number by thousands
