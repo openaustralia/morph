@@ -12,7 +12,7 @@ $ ->
     $this.text(starting_point)
     $this.counter = starting_point
 
-    tween = createjs.Tween.get($this).to( {counter: $target_count}, 10000)
+    tween = createjs.Tween.get($this).to( {counter: $target_count}, 10000 , createjs.Ease.quintOut)
 
     tween.addEventListener 'change', (event) ->
       $this.text(Math.round($this.counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
