@@ -14,13 +14,13 @@ $ ->
         $target_count = parseInt($this.text().replace(/\,/g, ''))
 
         jQuery(counter: 0).animate { counter: $target_count },
-          duration: 500 + index * 200
+          duration: 400 + index * 200
           easing: "easeInOutQuint"
           step: ->
             $this.text Math.ceil(@counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
           complete: ->
             jQuery(counter: $target_count).animate { counter: (3 + $target_count) },
-              duration: 1500 + index * 600
+              duration: 1300 + index * 600
               easing: "easeOutQuint"
               step: ->
                 $this.text Math.ceil(@counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
