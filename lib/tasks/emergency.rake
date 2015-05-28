@@ -6,13 +6,15 @@ namespace :app do
     desc "If there are scrapers that think they're running but there is no container remove the running run"
     task :delete_broken_runs => :environment do
       Run.where("finished_at IS NULL").each do |run|
+        run_name = "#{run.id}"
+        run_name += " (#{run.scraper.full_name})" if run.scraper
         if run.container_for_run_exists?
           # TODO could potentially check if container is running or stopped and
           # then if it's stopped delete the container (this is assuming that
           # there still is a running background job that will kick in again)
-          puts "Container for run #{run.id} (#{run.scraper.full_name}) exists"
+          puts "Container for run #{run_name} exists"
         else
-          puts "Container for run #{run.id} (#{run.scraper.full_name}) doesn't exist. Therefore deleting run"
+          puts "Container for run #{run_name} doesn't exist. Therefore deleting run"
           # Using destroy to ensure that callbacks are called (mainly for caching)
           run.destroy
         end
