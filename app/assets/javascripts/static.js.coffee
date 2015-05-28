@@ -15,7 +15,7 @@ $ ->
         $target_count = parseInt($this.text().replace(/\,/g, ''))
         $this.counter = starting_point
 
-        tween = createjs.Tween.get($this).to( {counter: $target_count}, (1200 + index * 600) , createjs.Ease.quintInOut)
+        tween = createjs.Tween.get($this).to( {counter: $target_count}, (500 + index * 200) , createjs.Ease.quintInOut)
 
         tween.addEventListener 'change', (event) ->
           # if the number is under 90 of the target, increment number by thousands
