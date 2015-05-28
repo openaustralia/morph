@@ -37,15 +37,19 @@ module Morph
       # Insert the actual code into the container
       i4 = Dir.mktmpdir('morph') do |dest|
         copy_config_to_directory(options[:repo_path], dest, false)
+        # Copy across the current sqlite database as well
+        FileUtils.cp(File.join(options[:data_path], 'data.sqlite'), dest)
         wrapper.call(:log, :internalout,
-                     "Injecting scraper code and running...\n")
-        inject_files(i3, dest)
+                     "Injecting scraper code and database and running...\n")
+        inject_files2(i3, dest)
       end
 
       command = Metric.command('/start scraper',
-                               '/data/' + Run.time_output_filename)
+                               '/app/' + Run.time_output_filename)
 
-      status_code = run(
+      # TODO: Also copy back time output file and the sqlite journal file
+      # The sqlite journal file won't be present most of the time
+      status_code, sqlite_tar = run(
         command: command,
         image_name: i4.id,
         container_name: options[:container_name],
@@ -54,6 +58,12 @@ module Morph
       ) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
+      end
+
+      # Now extract the tar file
+      Dir.mktmpdir('morph') do |dest|
+        Morph::DockerUtils.extract_tar(sqlite_tar, dest)
+        FileUtils.cp(File.join(dest, 'data.sqlite'), options[:data_path])
       end
 
       # There's a potential race condition here where we are trying to delete
@@ -117,10 +127,15 @@ module Morph
       status_code = c.json['State']['ExitCode']
       # Wait until container has definitely stopped
       c.wait
+      # Grab the resulting sqlite database
+      sqlite_tar = ''
+      c.copy('/app/data.sqlite') do |chunk|
+        sqlite_tar += chunk
+      end
       # Clean up after ourselves
       c.delete
 
-      status_code
+      [status_code, sqlite_tar]
     end
 
     # Mandatory: command, image_name, user
@@ -170,21 +185,8 @@ module Morph
         raise text
       end
 
-      # TODO: the local path will be different if docker isn't running through
-      # Vagrant (i.e. locally)
-      # HACK: on OS X we're expecting to use Vagrant
-      if RUBY_PLATFORM.downcase.include?('darwin')
-        local_root_path = "/vagrant"
-      else
-        local_root_path = Rails.root
-      end
-
       begin
-        binds = []
-        if options[:data_path]
-          binds << "#{local_root_path}/#{options[:data_path]}:/data"
-        end
-        c.start('Binds' => binds)
+        c.start
         puts 'Running docker container...'
         # Let parent know about ip address of running container
         wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
@@ -254,6 +256,19 @@ module Morph
         FileUtils.mkdir(File.join(dir, 'app'))
         Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
         docker_build_command(image, ['ADD app /app'], dir) do |c|
+          # Note that we're not sending the output of this to the console
+          # because it is relatively short running and is otherwise confusing
+        end
+      end
+    end
+
+    def self.inject_files2(image, dest)
+      Dir.mktmpdir('morph') do |dir|
+        Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
+        docker_build_command(
+          image,
+          ['ADD app /app', 'RUN chown -R scraper:scraper /app'],
+          dir) do |c|
           # Note that we're not sending the output of this to the console
           # because it is relatively short running and is otherwise confusing
         end
