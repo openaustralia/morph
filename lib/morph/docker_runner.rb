@@ -71,9 +71,9 @@ module Morph
       # just ignore any errors that deleting might throw up.
       begin
         i4.delete('noprune' => 1)
-      # TODO: When docker-api gem gets updated Docker::Error::ConfictError will be
-      # changed to Docker::Error::ConflictError
       rescue Docker::Error::ConfictError
+        # TODO: When docker-api gem gets updated Docker::Error::ConfictError
+        # will be changed to Docker::Error::ConflictError
       end
       status_code
     end
@@ -128,6 +128,7 @@ module Morph
       # Wait until container has definitely stopped
       c.wait
       # Grab the resulting sqlite database
+      # TODO: Don't concatenate this tarfile in memory. It could get big
       sqlite_tar = ''
       c.copy('/app/data.sqlite') do |chunk|
         sqlite_tar += chunk
@@ -191,8 +192,8 @@ module Morph
         # Let parent know about ip address of running container
         wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
         c.attach(logs: true) do |s, c|
-          # We're going to assume (somewhat rashly, I might add) that the console
-          # output from the scraper is always encoded as UTF-8.
+          # We're going to assume (somewhat rashly, I might add) that the
+          # console output from the scraper is always encoded as UTF-8.
           c.force_encoding('UTF-8')
           c.scrub!
           wrapper.call(:log, s, c)
