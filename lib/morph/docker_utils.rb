@@ -78,7 +78,12 @@ module Morph
     def self.copy_file(container, path)
       tar = ''
       # TODO: Don't concatenate this tarfile in memory. It could get big
-      container.copy(path) { |chunk| tar += chunk }
+      begin
+        container.copy(path) { |chunk| tar += chunk }
+      rescue Docker::Error::ServerError
+        # If the path isn't found
+        return nil
+      end
       # Now extract the tar file and return the contents of the file
       Dir.mktmpdir('morph') do |dest|
         Morph::DockerUtils.extract_tar(tar, dest)
