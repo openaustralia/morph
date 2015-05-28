@@ -9,7 +9,6 @@ $ ->
     $target_count = parseInt($this.text().replace(/\,/g, ''))
 
     # set the test to 0
-    $this.text(starting_point)
     $this.counter = starting_point
 
     tween = createjs.Tween.get($this).to( {counter: $target_count}, 10000 , createjs.Ease.quintOut)
