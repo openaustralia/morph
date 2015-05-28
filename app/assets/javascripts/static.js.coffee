@@ -14,7 +14,7 @@ $ ->
         $target_count = parseInt($this.text().replace(/\,/g, ''))
 
         jQuery(counter: 0).animate { counter: $target_count },
-          duration: 400 + index * 200
+          duration: 300 + index * 200
           easing: "easeInOutQuint"
           step: ->
             $this.text Math.ceil(@counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
