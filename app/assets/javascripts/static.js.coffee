@@ -5,10 +5,15 @@
 $ ->
   animateMetric = $(".metric-box strong").each ->
     $this = $(this)
-    jQuery(counter: 0).animate { counter: $this.text().replace(/\,/g, '') },
-      duration: 3000
-      easing: 'swing'
-      step: ->
-        $this.text Math.ceil(@counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-        return
-    return
+    starting_point = 0
+    $target_count = parseInt($this.text().replace(/\,/g, ''))
+
+    # set the test to 0
+    $this.text(starting_point)
+    $this.counter = starting_point
+
+    tween = createjs.Tween.get($this).to( {counter: $target_count}, 3000 )
+
+    tween.addEventListener 'change', (event) ->
+      $this.text(Math.round($this.counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+      return
