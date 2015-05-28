@@ -16,13 +16,15 @@ module Morph
       # symbolic links in the tar file. So, using tar from the command line
       # instead.
       `tar cf #{tempfile.path} -C #{directory} .`
-      content = File.read(tempfile.path)
+      content = File.open(tempfile.path, 'rb') { |f| f.read }
       FileUtils.rm_f(tempfile.path)
       content
     end
 
     def self.extract_tar(content, directory)
-      tmp = Tempfile.new('morph.tar')
+      # Use ascii-8bit as the encoding to ensure that the binary data isn't
+      # changed on saving
+      tmp = Tempfile.new('morph.tar', Dir.tmpdir, encoding: 'ASCII-8BIT')
       tmp << content
       tmp.close
       # Quick and dirty

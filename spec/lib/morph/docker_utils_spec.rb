@@ -17,18 +17,30 @@ describe Morph::DockerUtils do
         expect(File.readlink(File.join(dir, 'link.rb'))).to eq 'scraper.rb'
       end
     end
+
+    it 'should have an encoding of ASCII-8BIT' do
+      Dir.mktmpdir do |dest|
+        tar = Morph::DockerUtils.create_tar(dest)
+        expect(tar.encoding).to eq Encoding::ASCII_8BIT
+      end
+    end
   end
 
   describe '.extract_tar' do
     it 'should do the opposite of create_tar' do
+      # Binary data that can't be interpreted as valid text
+      target = "\xE6"
+      target.force_encoding('ASCII-8BIT')
+
       content = Dir.mktmpdir do |dir|
-        File.open(File.join(dir, 'foo'), 'w') { |f| f << 'hello' }
+        File.open(File.join(dir, 'foo'), 'wb') { |f| f << target }
         Morph::DockerUtils.create_tar(dir)
       end
 
       Dir.mktmpdir do |dir|
         Morph::DockerUtils.extract_tar(content, dir)
-        expect(File.read(File.join(dir, 'foo'))).to eq 'hello'
+        v = File.open(File.join(dir, 'foo'), 'rb') { |f| f.read }
+        expect(v).to eq target
       end
     end
   end
