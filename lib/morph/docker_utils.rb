@@ -69,5 +69,22 @@ module Morph
         FileUtils.touch(entry, mtime: Time.new(2000, 1, 1))
       end
     end
+
+    # Copy a single file from a container. Returns a string with the contents
+    # of the file. Obviously need to provide a filesystem path within the
+    # container
+    # TODO: Handle the situation if that file wasn't created or it was
+    # deleted on the container
+    def self.copy_file(container, path)
+      tar = ''
+      # TODO: Don't concatenate this tarfile in memory. It could get big
+      container.copy(path) { |chunk| tar += chunk }
+      # Now extract the tar file and return the contents of the file
+      Dir.mktmpdir('morph') do |dest|
+        Morph::DockerUtils.extract_tar(tar, dest)
+        path2 = File.join(dest, Pathname.new(path).basename.to_s)
+        File.open(path2, 'rb') { |f| f.read }
+      end
+    end
   end
 end

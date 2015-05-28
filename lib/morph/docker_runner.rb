@@ -133,18 +133,7 @@ module Morph
       # Wait until container has definitely stopped
       c.wait
       # Grab the resulting sqlite database
-      # TODO: Don't concatenate this tarfile in memory. It could get big
-      sqlite_tar = ''
-      # TODO: Handle the situation if that file wasn't created or it was
-      # deleted on the container
-      c.copy('/app/data.sqlite') do |chunk|
-        sqlite_tar += chunk
-      end
-      # Now extract the tar file
-      sqlite_data = Dir.mktmpdir('morph') do |dest|
-        Morph::DockerUtils.extract_tar(sqlite_tar, dest)
-        File.open(File.join(dest, 'data.sqlite'), 'rb') { |f| f.read }
-      end
+      sqlite_data = Morph::DockerUtils.copy_file(c, '/app/data.sqlite')
 
       # Clean up after ourselves
       c.delete
