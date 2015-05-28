@@ -20,6 +20,7 @@
 //= require cocoon
 //= require 'jquery.backstretch'
 //= require tablesaw.stackonly
+//= require tweenjs-0.6.1
 //= require api
 //= require bootstrap
 //= require documentation
