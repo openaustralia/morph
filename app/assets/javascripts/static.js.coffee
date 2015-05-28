@@ -2,8 +2,8 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-roundUpToThousand = (value) ->
-  return 1000 * Math.ceil(value / 1000)
+roundUpBy = (value, round_to) ->
+  return round_to * Math.ceil(value / round_to)
 
 $ ->
   animateMetric = $(".metric-box strong").each (index) ->
@@ -18,6 +18,11 @@ $ ->
 
     tween.addEventListener 'change', (event) ->
       # if the number is under 90 of the target, increment number by thousands
-      $this.counter = roundUpToThousand($this.counter) if $this.counter < $target_count * 0.9
+      if $this.counter < $target_count * 0.7
+        $this.counter = roundUpBy($this.counter, 1000)
+      else if $this.counter < $target_count * 0.8
+        $this.counter = roundUpBy($this.counter, 100)
+      else if $this.counter < $target_count * 0.99
+        $this.counter = roundUpBy($this.counter, 10)
       $this.text(Math.round($this.counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
       return
