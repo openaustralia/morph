@@ -6,6 +6,7 @@ formatNumberWithCommaDelimiter = (number) ->
   Math.ceil(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 animateNumber = (element, target_final_count, duration) ->
+  # break the animation into two steps to exaggerate the easing
   step_one_target_count = if target_final_count > 10040 then target_final_count - 40 else target_final_count
   jQuery(counter: 0).animate { counter: step_one_target_count },
     duration: duration
