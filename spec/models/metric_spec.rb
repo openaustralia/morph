@@ -39,30 +39,6 @@ Page size (bytes): 4096
       it { @m.majflt.should == 0 }
       # Should be saved
       it { @m.id.should_not be_nil}
-    end 
-  end
-
-  describe ".read_from_file" do
-    context "output in a file" do
-      before :each do
-        FileUtils::mkdir_p("#{Rails.root}/tmp")
-      end
-      
-      let(:filename) { "#{Rails.root}/tmp/time.output" }
-      let(:text) { "User time (seconds): 1.12\nVoluntary context switches: 42\n" }
-
-      before(:each) { File.open(filename, "w") {|f| f.write(text)} }
-      after(:each) { FileUtils.rm(filename) }
-
-      it "should read from a file" do
-        result = double
-        Metric.should_receive(:read_from_string).and_return(result)
-        Metric.read_from_file(filename).should == result
-      end
-
-      it "should return nil if there's no file" do
-        Metric.read_from_file("#{Rails.root}/tmp/a_missing_file").should be_nil
-      end
     end
   end
 

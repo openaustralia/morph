@@ -54,12 +54,6 @@ class Metric < ActiveRecord::Base
     Metric.create(params)
   end
 
-  def self.read_from_file(file)
-    read_from_string(File.read(file))
-  rescue Errno::ENOENT
-    nil
-  end
-
   def self.parse_line(l)
     field, value = l.split(': ')
     case field
