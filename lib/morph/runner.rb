@@ -13,13 +13,14 @@ module Morph
         remove_hidden_directories(defaults)
         add_sqlite_db_to_directory(options[:data_path], defaults)
 
-        status_code, sqlite_data, time_params = Morph::DockerRunner.compile_and_run(
-          defaults, options[:env_variables], options[:container_name]) do |on|
+        status_code, data, time_params = Morph::DockerRunner.compile_and_run(
+          defaults, options[:env_variables], options[:container_name],
+          ['data.sqlite']) do |on|
           on.log { |s, c| wrapper.call(:log, s, c) }
           on.ip_address { |ip| wrapper.call(:ip_address, ip) }
         end
 
-        copy_sqlite_db_back(options[:data_path], sqlite_data)
+        copy_sqlite_db_back(options[:data_path], data['data.sqlite'])
 
         [status_code, time_params]
       end

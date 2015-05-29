@@ -11,7 +11,7 @@ module Morph
     ]
     BUILDSTEP_IMAGE = 'openaustralia/buildstep'
 
-    def self.compile_and_run(repo_path, env_variables, container_name)
+    def self.compile_and_run(repo_path, env_variables, container_name, files)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
@@ -46,18 +46,27 @@ module Morph
       command = Metric.command('/start scraper',
                                '/app/' + Run.time_output_filename)
 
-      sqlite_file = '/app/data.sqlite'
+      # Make the paths absolute paths for the container
+      files = files.map { |f| File.join('/app', f)}
       time_file = '/app/' + Run.time_output_filename
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
       status_code, data = run(i4.id, command,
-           env_variables, container_name, [sqlite_file, time_file]) do |on|
+           env_variables, container_name, files + [time_file]) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
 
-      sqlite_data = data[sqlite_file]
-      time_data = data[time_file]
+      time_data = data.delete(time_file)
+      time_params = Metric.params_from_string(time_data) if time_data
+
+      # Remove /app from the beginning of all paths in data
+      data_with_stripped_paths = {}
+      data.each do |path, content|
+        stripped_path =
+          Pathname.new(path).relative_path_from(Pathname.new('/app')).to_s
+        data_with_stripped_paths[stripped_path] = content
+      end
 
       # There's a potential race condition here where we are trying to delete
       # something that might be used elsewhere. Do the most crude thing and
@@ -69,9 +78,7 @@ module Morph
         # will be changed to Docker::Error::ConflictError
       end
 
-      time_params = Metric.params_from_string(time_data) if time_data
-
-      [status_code, sqlite_data, time_params]
+      [status_code, data_with_stripped_paths, time_params]
     end
 
     # If copy_config is true copies the config file across
