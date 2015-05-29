@@ -6,13 +6,14 @@ formatNumberWithCommaDelimiter = (number) ->
   Math.ceil(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 animateNumber = (element, target_count, duration) ->
-  jQuery(counter: 0).animate { counter: target_count - 40 },
+  step_one_target_count = target_count - 40
+  jQuery(counter: 0).animate { counter: step_one_target_count },
     duration: duration
     easing: "easeInOutQuint"
     step: ->
       element.text formatNumberWithCommaDelimiter(@counter)
     complete: ->
-      jQuery(counter: target_count - 40).animate { counter: (target_count) },
+      jQuery(counter: step_one_target_count).animate { counter: (target_count) },
         duration: 400
         easing: "easeOutQuint"
         step: ->
