@@ -22,6 +22,6 @@
       %div
     %div= database_changes_in_words(run)
     %div
-      - if run.connection_logs.count > 0
-        = pluralize(run.connection_logs.count, "page")
+      - if run.connection_logs.size > 0
+        = pluralize(run.connection_logs.size, "page")
         scraped
