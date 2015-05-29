@@ -2,25 +2,24 @@ module Morph
   # High level API for running morph scraper. Handles the setting up of default
   # configuration if things like Gemfiles are not included (for Ruby)
   class Runner
-    # options: repo_path, container_name, data_path, env_variables
-    # TODO: Also do the insertion of the Procfile here
-    def self.compile_and_run(options)
+    def self.compile_and_run(repo_path, data_path, env_variables,
+                             container_name)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
       Dir.mktmpdir('morph') do |defaults|
-        add_config_defaults_to_directory(options[:repo_path], defaults)
+        add_config_defaults_to_directory(repo_path, defaults)
         remove_hidden_directories(defaults)
-        add_sqlite_db_to_directory(options[:data_path], defaults)
+        add_sqlite_db_to_directory(data_path, defaults)
 
         status_code, data, time_params = Morph::DockerRunner.compile_and_run(
-          defaults, options[:env_variables], options[:container_name],
+          defaults, env_variables, container_name,
           ['data.sqlite']) do |on|
           on.log { |s, c| wrapper.call(:log, s, c) }
           on.ip_address { |ip| wrapper.call(:ip_address, ip) }
         end
 
-        copy_sqlite_db_back(options[:data_path], data['data.sqlite'])
+        copy_sqlite_db_back(data_path, data['data.sqlite'])
 
         [status_code, time_params]
       end

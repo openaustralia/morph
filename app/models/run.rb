@@ -120,8 +120,7 @@ class Run < ActiveRecord::Base
     end
 
     status_code, time_params = Morph::Runner.compile_and_run(
-      repo_path: repo_path, data_path: data_path, env_variables: env_variables,
-      container_name: docker_container_name) do |on|
+      repo_path, data_path, env_variables, docker_container_name) do |on|
       on.log { |s, c| yield s, c }
       on.ip_address do |ip|
         # Store the ip address of the container for this run
