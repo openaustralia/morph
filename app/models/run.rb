@@ -91,10 +91,6 @@ class Run < ActiveRecord::Base
     'time.output'
   end
 
-  def time_output_path
-    File.join(data_path, Run.time_output_filename)
-  end
-
   def git_revision_github_url
     "https://github.com/#{full_name}/commit/#{git_revision}"
   end
