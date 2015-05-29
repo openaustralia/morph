@@ -49,13 +49,8 @@ module Morph
 
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
-      status_code, sqlite_data, time_data = run(
-        command: command,
-        image_name: i4.id,
-        container_name: container_name,
-        data_path: data_path,
-        env_variables: env_variables
-      ) do |on|
+      status_code, sqlite_data, time_data = run(i4.id, command,
+           env_variables, container_name) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
@@ -110,12 +105,12 @@ module Morph
 
     private
 
-    def self.run(options)
+    def self.run(image_name, command, env_variables, container_name)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      c = run_no_cleanup(options[:image_name], options[:command],
-                      options[:env_variables], options[:container_name]) do |on|
+      c = run_no_cleanup(image_name, command,
+                         env_variables, container_name) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
