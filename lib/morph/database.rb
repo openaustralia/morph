@@ -1,13 +1,7 @@
 module Morph
   class Database
     def initialize(data_path)
-      if data_path == 'db/scrapers/data/mlandauer/rwanda-chamber-of-deputies'
-        # TEMPORARY HACK to ensure that we're never reading from this particular
-        # scraper. Instead we redirect the sqlite queries to another database
-        @data_path = 'db/scrapers/data/mlandauer/scraperwiki_scrapers'
-      else
-        @data_path = data_path
-      end
+      @data_path = data_path
     end
 
     def self.sqlite_db_filename
