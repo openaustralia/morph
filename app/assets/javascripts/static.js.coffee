@@ -29,9 +29,8 @@ $ ->
     element: $('.metric-box')[0]
     enter: (direction) ->
       $(".metric-box strong").each (index) ->
-        $this = $(this)
-        $target_count = parseInt($this.text().replace(/\,/g, ''))
-        animateNumber($this, $target_count, 300 + index * 200)
+        $target_count = parseInt($(this).text().replace(/\,/g, ''))
+        animateNumber($(this), $target_count, 300 + index * 200)
       # only run this once
       this.destroy()
   )
