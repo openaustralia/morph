@@ -114,10 +114,12 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      c = run_no_cleanup(options) do |on|
+      c = run_no_cleanup(options[:image_name], options[:command],
+                      options[:env_variables], options[:container_name]) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
+
       status_code = c.json['State']['ExitCode']
       # Wait until container has definitely stopped
       c.wait
@@ -132,13 +134,9 @@ module Morph
       [status_code, sqlite_data, time_data]
     end
 
-    # Mandatory: command, image_name
-    # Optional: env_variables, container_name
-    def self.run_no_cleanup(options)
+    def self.run_no_cleanup(image_name, command, env_variables, container_name)
       wrapper = Multiblock.wrapper
       yield(wrapper)
-
-      env_variables = options[:env_variables] || {}
 
       # Open up a special interactive connection to Docker
       # TODO: Cache connection
@@ -147,22 +145,20 @@ module Morph
         {chunk_size: 1, read_timeout: 4.hours}.merge(Docker.env_options))
 
       container_options = {
-        'Cmd' => ['/bin/bash', '-l', '-c', options[:command]],
+        'Cmd' => ['/bin/bash', '-l', '-c', command],
         # TODO: We can just get rid of the line below, right?
         # (because it's the default)
         'User' => 'root',
-        'Image' => options[:image_name],
+        'Image' => image_name,
         # See explanation in https://github.com/openaustralia/morph/issues/242
         'CpuShares' => 307,
         # Memory limit (in bytes)
         # On a 1G machine we're allowing a max of 10 containers to run at
         # a time. So, 100M
         'Memory' => 100 * 1024 * 1024,
-        'Env' => env_variables.map { |k, v| "#{k}=#{v}" }
+        'Env' => env_variables.map { |k, v| "#{k}=#{v}" },
+        'name' => container_name
       }
-      if options[:container_name]
-        container_options['name'] = options[:container_name]
-      end
 
       # This will fail if there is another container with the same name
       begin
@@ -173,7 +169,7 @@ module Morph
         wrapper.call(:log, :internalerr, "Requeueing...\n")
         raise text
       rescue Docker::Error::NotFoundError => e
-        text = "Could not find docker image #{options[:image_name]}"
+        text = "Could not find docker image #{image_name}"
         wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
         wrapper.call(:log, :internalerr, "Requeueing...\n")
         raise text
