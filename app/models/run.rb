@@ -119,7 +119,7 @@ class Run < ActiveRecord::Base
       return
     end
 
-    status_code, time_data = Morph::Runner.compile_and_run(
+    status_code, time_params = Morph::Runner.compile_and_run(
       repo_path: repo_path, data_path: data_path, env_variables: env_variables,
       container_name: docker_container_name) do |on|
       on.log { |s, c| yield s, c }
@@ -130,7 +130,6 @@ class Run < ActiveRecord::Base
     end
 
     # Now collect and save the metrics
-    time_params = Metric.params_from_string(time_data) if time_data
     metric = Metric.create(time_params) if time_params
     metric.update_attributes(run_id: self.id) if metric
 

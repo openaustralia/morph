@@ -68,7 +68,10 @@ module Morph
         # TODO: When docker-api gem gets updated Docker::Error::ConfictError
         # will be changed to Docker::Error::ConflictError
       end
-      [status_code, sqlite_data, time_data]
+
+      time_params = Metric.params_from_string(time_data) if time_data
+
+      [status_code, sqlite_data, time_params]
     end
 
     # If copy_config is true copies the config file across
