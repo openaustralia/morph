@@ -33,7 +33,8 @@ class Metric < ActiveRecord::Base
     "/usr/bin/time -v -o #{metric_file} #{other}"
   end
 
-  def self.read_from_string(s)
+  # Parse the output of the time command and return a hash of the parameters
+  def self.params_from_string(s)
     params = s.split("\n").inject({}) do |params, line|
       r = parse_line(line)
       params.merge(r ? { r[0] => r[1] } : {})
@@ -51,7 +52,11 @@ class Metric < ActiveRecord::Base
 
     # page_size isn't an attribute on this model
     params.delete(:page_size)
-    Metric.create(params)
+    params
+  end
+
+  def self.read_from_string(s)
+    Metric.create(params_from_string(s))
   end
 
   def self.parse_line(l)
