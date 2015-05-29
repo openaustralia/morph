@@ -9,13 +9,13 @@ formatNumber = (number) ->
   Math.ceil(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 animateNumber = (element, target_count, duration) ->
-  jQuery(counter: 0).animate { counter: target_count },
+  jQuery(counter: 0).animate { counter: target_count - 40 },
     duration: duration
     easing: "easeInOutQuint"
     step: ->
       element.text formatNumber(@counter)
     complete: ->
-      jQuery(counter: target_count).animate { counter: (40 + target_count) },
+      jQuery(counter: target_count - 40).animate { counter: (target_count) },
         duration: 400
         easing: "easeOutQuint"
         step: ->
