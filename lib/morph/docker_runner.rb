@@ -11,8 +11,8 @@ module Morph
     ]
     BUILDSTEP_IMAGE = 'openaustralia/buildstep'
 
-    # options: repo_path, container_name, data_path, env_variables
-    def self.compile_and_run(options)
+    def self.compile_and_run(repo_path, data_path, env_variables,
+      container_name)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
@@ -21,7 +21,7 @@ module Morph
       end
       # Insert the configuration part of the application code into the container
       i2 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(options[:repo_path], dest, true)
+        copy_config_to_directory(repo_path, dest, true)
         wrapper.call(:log, :internalout,
                      "Injecting configuration and compiling...\n")
         inject_files(i, dest)
@@ -38,10 +38,10 @@ module Morph
 
       # Insert the actual code into the container
       i4 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(options[:repo_path], dest, false)
+        copy_config_to_directory(repo_path, dest, false)
         # Copy across the current sqlite database as well
-        if File.exist?(File.join(options[:data_path], 'data.sqlite'))
-          FileUtils.cp(File.join(options[:data_path], 'data.sqlite'), dest)
+        if File.exist?(File.join(data_path, 'data.sqlite'))
+          FileUtils.cp(File.join(data_path, 'data.sqlite'), dest)
         else
           # Copy across a zero-sized file which will overwrite the symbolic
           # link on the container
@@ -60,9 +60,9 @@ module Morph
       status_code, sqlite_data, time_data = run(
         command: command,
         image_name: i4.id,
-        container_name: options[:container_name],
-        data_path: options[:data_path],
-        env_variables: options[:env_variables]
+        container_name: container_name,
+        data_path: data_path,
+        env_variables: env_variables
       ) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
@@ -71,13 +71,13 @@ module Morph
       # Only overwrite the sqlite database if the container has one
       if sqlite_data
         # First write to a temporary file with the new sqlite data
-        File.open(File.join(options[:data_path], 'data.sqlite.new'), 'wb') do |f|
+        File.open(File.join(data_path, 'data.sqlite.new'), 'wb') do |f|
           f << sqlite_data
         end
         # Then, rename the file to the "live" file overwriting the old data
         # This should happen atomically
-        File.rename(File.join(options[:data_path], 'data.sqlite.new'),
-                    File.join(options[:data_path], 'data.sqlite'))
+        File.rename(File.join(data_path, 'data.sqlite.new'),
+                    File.join(data_path, 'data.sqlite'))
       end
 
       # There's a potential race condition here where we are trying to delete

@@ -13,7 +13,8 @@ module Morph
         remove_hidden_directories(defaults)
 
         Morph::DockerRunner.compile_and_run(
-          options.merge(repo_path: defaults)) do |on|
+          defaults, options[:data_path],
+          options[:env_variables], options[:container_name]) do |on|
           on.log { |s, c| wrapper.call(:log, s, c) }
           on.ip_address { |ip| wrapper.call(:ip_address, ip) }
         end
