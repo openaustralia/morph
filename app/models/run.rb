@@ -87,10 +87,6 @@ class Run < ActiveRecord::Base
     log_lines.where(stream: 'stderr').order(:number).map(&:text).join
   end
 
-  def self.time_output_filename
-    'time.output'
-  end
-
   def git_revision_github_url
     "https://github.com/#{full_name}/commit/#{git_revision}"
   end

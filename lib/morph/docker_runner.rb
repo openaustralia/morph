@@ -43,12 +43,11 @@ module Morph
         inject_files2(i3, dest)
       end
 
-      command = Metric.command('/start scraper',
-                               '/app/' + Run.time_output_filename)
+      time_file = '/app/time.output'
+      command = Metric.command('/start scraper', time_file)
 
       # Make the paths absolute paths for the container
       files = files.map { |f| File.join('/app', f)}
-      time_file = '/app/' + Run.time_output_filename
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
       status_code, data = run(i4.id, command,
