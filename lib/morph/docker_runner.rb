@@ -125,10 +125,7 @@ module Morph
       c.wait
 
       # Grab the resulting files
-      data = {}
-      files.each do |file|
-        data[file] = Morph::DockerUtils.copy_file(c, file)
-      end
+      data = Morph::DockerUtils.copy_files(c, files)
 
       # Clean up after ourselves
       c.delete

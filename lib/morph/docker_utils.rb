@@ -89,5 +89,14 @@ module Morph
         File.open(path2, 'rb') { |f| f.read }
       end
     end
+
+    # Get a set of files from a container and return them as a hash
+    def self.copy_files(container, paths)
+      data = {}
+      paths.each do |path|
+        data[path] = Morph::DockerUtils.copy_file(container, path)
+      end
+      data
+    end
   end
 end
