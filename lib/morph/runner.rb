@@ -14,8 +14,7 @@ module Morph
         add_sqlite_db_to_directory(options[:data_path], defaults)
 
         status_code, sqlite_data, time_data = Morph::DockerRunner.compile_and_run(
-          defaults, options[:data_path],
-          options[:env_variables], options[:container_name]) do |on|
+          defaults, options[:env_variables], options[:container_name]) do |on|
           on.log { |s, c| wrapper.call(:log, s, c) }
           on.ip_address { |ip| wrapper.call(:ip_address, ip) }
         end

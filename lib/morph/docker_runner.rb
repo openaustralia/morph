@@ -11,8 +11,7 @@ module Morph
     ]
     BUILDSTEP_IMAGE = 'openaustralia/buildstep'
 
-    def self.compile_and_run(repo_path, data_path, env_variables,
-      container_name)
+    def self.compile_and_run(repo_path, env_variables, container_name)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
