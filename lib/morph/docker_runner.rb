@@ -1,4 +1,6 @@
 module Morph
+  # More low-level API for running scrapers. Does not do much of the magic
+  # and is less opinionated than the higher-level API in Morph::Runner
   class DockerRunner
     ALL_CONFIG_FILENAMES = [
       'Procfile',
