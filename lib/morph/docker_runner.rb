@@ -46,13 +46,18 @@ module Morph
       command = Metric.command('/start scraper',
                                '/app/' + Run.time_output_filename)
 
+      sqlite_file = '/app/data.sqlite'
+      time_file = '/app/' + Run.time_output_filename
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
-      status_code, sqlite_data, time_data = run(i4.id, command,
-           env_variables, container_name) do |on|
+      status_code, data = run(i4.id, command,
+           env_variables, container_name, [sqlite_file, time_file]) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
+
+      sqlite_data = data[sqlite_file]
+      time_data = data[time_file]
 
       # There's a potential race condition here where we are trying to delete
       # something that might be used elsewhere. Do the most crude thing and
@@ -104,7 +109,8 @@ module Morph
 
     private
 
-    def self.run(image_name, command, env_variables, container_name)
+    # files - paths to files to return at the end of the run
+    def self.run(image_name, command, env_variables, container_name, files)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
@@ -117,15 +123,17 @@ module Morph
       status_code = c.json['State']['ExitCode']
       # Wait until container has definitely stopped
       c.wait
-      # Grab the resulting sqlite database
-      sqlite_data = Morph::DockerUtils.copy_file(c, '/app/data.sqlite')
-      time_data = Morph::DockerUtils.copy_file(
-        c, '/app/' + Run.time_output_filename)
+
+      # Grab the resulting files
+      data = {}
+      files.each do |file|
+        data[file] = Morph::DockerUtils.copy_file(c, file)
+      end
 
       # Clean up after ourselves
       c.delete
 
-      [status_code, sqlite_data, time_data]
+      [status_code, data]
     end
 
     def self.run_no_cleanup(image_name, command, env_variables, container_name)
