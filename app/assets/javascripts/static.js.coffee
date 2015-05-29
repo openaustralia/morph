@@ -2,9 +2,6 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-roundUpBy = (value, round_to) ->
-  return round_to * Math.ceil(value / round_to)
-
 formatNumber = (number) ->
   Math.ceil(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
