@@ -16,18 +16,20 @@ module Morph
       # symbolic links in the tar file. So, using tar from the command line
       # instead.
       `tar cf #{tempfile.path} -C #{directory} .`
-      content = File.read(tempfile.path)
+      content = File.open(tempfile.path, 'rb') { |f| f.read }
       FileUtils.rm_f(tempfile.path)
       content
     end
 
-    # BEWARE: Not thread safe!
-    def self.in_directory(directory)
-      cwd = FileUtils.pwd
-      FileUtils.cd(directory)
-      yield
-    ensure
-      FileUtils.cd(cwd)
+    def self.extract_tar(content, directory)
+      # Use ascii-8bit as the encoding to ensure that the binary data isn't
+      # changed on saving
+      tmp = Tempfile.new('morph.tar', Dir.tmpdir, encoding: 'ASCII-8BIT')
+      tmp << content
+      tmp.close
+      # Quick and dirty
+      `tar xf #{tmp.path} -C #{directory}`
+      tmp.unlink
     end
 
     # If image is present locally use that. If it isn't then pull it from
@@ -66,6 +68,35 @@ module Morph
       Find.find(dir) do |entry|
         FileUtils.touch(entry, mtime: Time.new(2000, 1, 1))
       end
+    end
+
+    # Copy a single file from a container. Returns a string with the contents
+    # of the file. Obviously need to provide a filesystem path within the
+    # container
+    def self.copy_file(container, path)
+      tar = ''
+      # TODO: Don't concatenate this tarfile in memory. It could get big
+      begin
+        container.copy(path) { |chunk| tar += chunk }
+      rescue Docker::Error::ServerError
+        # If the path isn't found
+        return nil
+      end
+      # Now extract the tar file and return the contents of the file
+      Dir.mktmpdir('morph') do |dest|
+        Morph::DockerUtils.extract_tar(tar, dest)
+        path2 = File.join(dest, Pathname.new(path).basename.to_s)
+        File.open(path2, 'rb') { |f| f.read }
+      end
+    end
+
+    # Get a set of files from a container and return them as a hash
+    def self.copy_files(container, paths)
+      data = {}
+      paths.each do |path|
+        data[path] = Morph::DockerUtils.copy_file(container, path)
+      end
+      data
     end
   end
 end

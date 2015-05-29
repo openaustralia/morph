@@ -11,7 +11,7 @@ describe Metric do
     end
   end
 
-  describe ".read_from_string" do
+  describe ".params_from_string" do
     context "correctly formatted output" do
       let(:string) {
         <<-EOF
@@ -23,45 +23,16 @@ Page size (bytes): 4096
         EOF
       }
 
-      before :each do
+      it do
         Metric.should_receive(:parse_line).with("Maximum resident set size (kbytes): 3808").and_return([:maxrss, 3808])
         Metric.should_receive(:parse_line).with("Minor (reclaiming a frame) page faults: 292").and_return([:minflt, 292])
         Metric.should_receive(:parse_line).with("Something to be ignored").and_return(nil)
         Metric.should_receive(:parse_line).with("Major (requiring I/O) page faults: 0").and_return([:majflt, 0])
         Metric.should_receive(:parse_line).with("Page size (bytes): 4096").and_return([:page_size, 4096])
-        @m = Metric.read_from_string(string)
-      end
-
-      # There's a bug in GNU time 1.7 which wrongly reports the maximum resident set size on the version of Ubuntu that we're using
-      # See https://groups.google.com/forum/#!topic/gnu.utils.help/u1MOsHL4bhg
-      it { @m.maxrss.should == 952 }
-      it { @m.minflt.should == 292 }
-      it { @m.majflt.should == 0 }
-      # Should be saved
-      it { @m.id.should_not be_nil}
-    end 
-  end
-
-  describe ".read_from_file" do
-    context "output in a file" do
-      before :each do
-        FileUtils::mkdir_p("#{Rails.root}/tmp")
-      end
-      
-      let(:filename) { "#{Rails.root}/tmp/time.output" }
-      let(:text) { "User time (seconds): 1.12\nVoluntary context switches: 42\n" }
-
-      before(:each) { File.open(filename, "w") {|f| f.write(text)} }
-      after(:each) { FileUtils.rm(filename) }
-
-      it "should read from a file" do
-        result = double
-        Metric.should_receive(:read_from_string).and_return(result)
-        Metric.read_from_file(filename).should == result
-      end
-
-      it "should return nil if there's no file" do
-        Metric.read_from_file("#{Rails.root}/tmp/a_missing_file").should be_nil
+        # There's a bug in GNU time 1.7 which wrongly reports the maximum resident set size on the version of Ubuntu that we're using
+        # See https://groups.google.com/forum/#!topic/gnu.utils.help/u1MOsHL4bhg
+        Metric.params_from_string(string).should == {
+          maxrss: 952, minflt: 292, majflt: 0}
       end
     end
   end

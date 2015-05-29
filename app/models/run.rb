@@ -119,9 +119,8 @@ class Run < ActiveRecord::Base
       return
     end
 
-    status_code = Morph::Runner.compile_and_run(
-      repo_path: repo_path, data_path: data_path, env_variables: env_variables,
-      container_name: docker_container_name) do |on|
+    status_code, time_params = Morph::Runner.compile_and_run(
+      repo_path, data_path, env_variables, docker_container_name) do |on|
       on.log { |s, c| yield s, c }
       on.ip_address do |ip|
         # Store the ip address of the container for this run
@@ -130,7 +129,7 @@ class Run < ActiveRecord::Base
     end
 
     # Now collect and save the metrics
-    metric = Metric.read_from_file(time_output_path)
+    metric = Metric.create(time_params) if time_params
     metric.update_attributes(run_id: self.id) if metric
 
     update_attributes(status_code: status_code, finished_at: Time.now)

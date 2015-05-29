@@ -1,4 +1,6 @@
 module Morph
+  # More low-level API for running scrapers. Does not do much of the magic
+  # and is less opinionated than the higher-level API in Morph::Runner
   class DockerRunner
     ALL_CONFIG_FILENAMES = [
       'Procfile',
@@ -9,8 +11,7 @@ module Morph
     ]
     BUILDSTEP_IMAGE = 'openaustralia/buildstep'
 
-    # options: repo_path, container_name, data_path, env_variables
-    def self.compile_and_run(options)
+    def self.compile_and_run(repo_path, env_variables, container_name, files)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
@@ -19,7 +20,7 @@ module Morph
       end
       # Insert the configuration part of the application code into the container
       i2 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(options[:repo_path], dest, true)
+        copy_config_to_directory(repo_path, dest, true)
         wrapper.call(:log, :internalout,
                      "Injecting configuration and compiling...\n")
         inject_files(i, dest)
@@ -34,26 +35,37 @@ module Morph
         return 255
       end
 
-      # Insert the actual code into the container
+      # Insert the actual code (and database) into the container
       i4 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(options[:repo_path], dest, false)
+        copy_config_to_directory(repo_path, dest, false)
         wrapper.call(:log, :internalout,
-                     "Injecting scraper code and running...\n")
-        inject_files(i3, dest)
+                     "Injecting scraper and running...\n")
+        inject_files2(i3, dest)
       end
 
       command = Metric.command('/start scraper',
-                               '/data/' + Run.time_output_filename)
+                               '/app/' + Run.time_output_filename)
 
-      status_code = run(
-        command: command,
-        image_name: i4.id,
-        container_name: options[:container_name],
-        data_path: options[:data_path],
-        env_variables: options[:env_variables]
-      ) do |on|
+      # Make the paths absolute paths for the container
+      files = files.map { |f| File.join('/app', f)}
+      time_file = '/app/' + Run.time_output_filename
+      # TODO: Also copy back time output file and the sqlite journal file
+      # The sqlite journal file won't be present most of the time
+      status_code, data = run(i4.id, command,
+           env_variables, container_name, files + [time_file]) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
+      end
+
+      time_data = data.delete(time_file)
+      time_params = Metric.params_from_string(time_data) if time_data
+
+      # Remove /app from the beginning of all paths in data
+      data_with_stripped_paths = {}
+      data.each do |path, content|
+        stripped_path =
+          Pathname.new(path).relative_path_from(Pathname.new('/app')).to_s
+        data_with_stripped_paths[stripped_path] = content
       end
 
       # There's a potential race condition here where we are trying to delete
@@ -61,11 +73,12 @@ module Morph
       # just ignore any errors that deleting might throw up.
       begin
         i4.delete('noprune' => 1)
-      # TODO: When docker-api gem gets updated Docker::Error::ConfictError will be
-      # changed to Docker::Error::ConflictError
       rescue Docker::Error::ConfictError
+        # TODO: When docker-api gem gets updated Docker::Error::ConfictError
+        # will be changed to Docker::Error::ConflictError
       end
-      status_code
+
+      [status_code, data_with_stripped_paths, time_params]
     end
 
     # If copy_config is true copies the config file across
@@ -106,54 +119,55 @@ module Morph
 
     private
 
-    def self.run(options)
+    # files - paths to files to return at the end of the run
+    def self.run(image_name, command, env_variables, container_name, files)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      c = run_no_cleanup(options) do |on|
+      c = run_no_cleanup(image_name, command,
+                         env_variables, container_name) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
+
       status_code = c.json['State']['ExitCode']
       # Wait until container has definitely stopped
       c.wait
+
+      # Grab the resulting files
+      data = Morph::DockerUtils.copy_files(c, files)
+
       # Clean up after ourselves
       c.delete
 
-      status_code
+      [status_code, data]
     end
 
-    # Mandatory: command, image_name, user
-    # Optional: env_variables, data_path, container_name
-    def self.run_no_cleanup(options)
+    def self.run_no_cleanup(image_name, command, env_variables, container_name)
       wrapper = Multiblock.wrapper
       yield(wrapper)
-
-      env_variables = options[:env_variables] || {}
 
       # Open up a special interactive connection to Docker
       # TODO: Cache connection
       conn_interactive = Docker::Connection.new(
-        ENV['DOCKER_URL'] || Docker.default_socket_url,
-        chunk_size: 1, read_timeout: 4.hours)
+        Docker.url,
+        {chunk_size: 1, read_timeout: 4.hours}.merge(Docker.env_options))
 
       container_options = {
-        'Cmd' => ['/bin/bash', '-l', '-c', options[:command]],
+        'Cmd' => ['/bin/bash', '-l', '-c', command],
         # TODO: We can just get rid of the line below, right?
         # (because it's the default)
         'User' => 'root',
-        'Image' => options[:image_name],
+        'Image' => image_name,
         # See explanation in https://github.com/openaustralia/morph/issues/242
         'CpuShares' => 307,
         # Memory limit (in bytes)
         # On a 1G machine we're allowing a max of 10 containers to run at
         # a time. So, 100M
         'Memory' => 100 * 1024 * 1024,
-        'Env' => env_variables.map { |k, v| "#{k}=#{v}" }
+        'Env' => env_variables.map { |k, v| "#{k}=#{v}" },
+        'name' => container_name
       }
-      if options[:container_name]
-        container_options['name'] = options[:container_name]
-      end
 
       # This will fail if there is another container with the same name
       begin
@@ -164,33 +178,20 @@ module Morph
         wrapper.call(:log, :internalerr, "Requeueing...\n")
         raise text
       rescue Docker::Error::NotFoundError => e
-        text = "Could not find docker image #{options[:image_name]}"
+        text = "Could not find docker image #{image_name}"
         wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
         wrapper.call(:log, :internalerr, "Requeueing...\n")
         raise text
       end
 
-      # TODO: the local path will be different if docker isn't running through
-      # Vagrant (i.e. locally)
-      # HACK: on OS X we're expecting to use Vagrant
-      if RUBY_PLATFORM.downcase.include?('darwin')
-        local_root_path = "/vagrant"
-      else
-        local_root_path = Rails.root
-      end
-
       begin
-        binds = []
-        if options[:data_path]
-          binds << "#{local_root_path}/#{options[:data_path]}:/data"
-        end
-        c.start('Binds' => binds)
+        c.start
         puts 'Running docker container...'
         # Let parent know about ip address of running container
         wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
         c.attach(logs: true) do |s, c|
-          # We're going to assume (somewhat rashly, I might add) that the console
-          # output from the scraper is always encoded as UTF-8.
+          # We're going to assume (somewhat rashly, I might add) that the
+          # console output from the scraper is always encoded as UTF-8.
           c.force_encoding('UTF-8')
           c.scrub!
           wrapper.call(:log, s, c)
@@ -209,8 +210,8 @@ module Morph
     def self.docker_build_from_dir(dir)
       # How does this connection get closed?
       conn_interactive = Docker::Connection.new(
-        ENV['DOCKER_URL'] || Docker.default_socket_url,
-        read_timeout: 4.hours)
+        Docker.url,
+        { read_timeout: 4.hours }.merge(Docker.env_options))
       begin
         Docker::Image.build_from_tar(
           StringIO.new(Morph::DockerUtils.create_tar(dir)),
@@ -254,6 +255,19 @@ module Morph
         FileUtils.mkdir(File.join(dir, 'app'))
         Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
         docker_build_command(image, ['ADD app /app'], dir) do |c|
+          # Note that we're not sending the output of this to the console
+          # because it is relatively short running and is otherwise confusing
+        end
+      end
+    end
+
+    def self.inject_files2(image, dest)
+      Dir.mktmpdir('morph') do |dir|
+        Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
+        docker_build_command(
+          image,
+          ['ADD app /app', 'RUN chown -R scraper:scraper /app'],
+          dir) do |c|
           # Note that we're not sending the output of this to the console
           # because it is relatively short running and is otherwise confusing
         end
