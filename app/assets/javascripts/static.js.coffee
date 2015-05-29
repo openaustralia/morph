@@ -5,18 +5,21 @@
 roundUpBy = (value, round_to) ->
   return round_to * Math.ceil(value / round_to)
 
+formatNumber = (number) ->
+  Math.ceil(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
 animateNumber = (element, target_count, duration) ->
   jQuery(counter: 0).animate { counter: target_count },
     duration: duration
     easing: "easeInOutQuint"
     step: ->
-      element.text Math.ceil(@counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      element.text formatNumber(@counter)
     complete: ->
       jQuery(counter: target_count).animate { counter: (40 + target_count) },
         duration: 400
         easing: "easeOutQuint"
         step: ->
-          element.text Math.ceil(@counter).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          element.text formatNumber(@counter)
           return
       return
   return
