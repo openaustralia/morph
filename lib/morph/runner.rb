@@ -11,15 +11,7 @@ module Morph
       Dir.mktmpdir('morph') do |defaults|
         add_config_defaults_to_directory(options[:repo_path], defaults)
         remove_hidden_directories(defaults)
-
-        # Copy across the current sqlite database as well
-        if File.exist?(File.join(options[:data_path], 'data.sqlite'))
-          FileUtils.cp(File.join(options[:data_path], 'data.sqlite'), defaults)
-        else
-          # Copy across a zero-sized file which will overwrite the symbolic
-          # link on the container
-          FileUtils.touch(File.join(defaults, 'data.sqlite'))
-        end
+        add_sqlite_db_to_directory(options[:data_path], defaults)
 
         status_code, sqlite_data, time_data = Morph::DockerRunner.compile_and_run(
           defaults, options[:data_path],
@@ -28,19 +20,36 @@ module Morph
           on.ip_address { |ip| wrapper.call(:ip_address, ip) }
         end
 
-        # Only overwrite the sqlite database if the container has one
-        if sqlite_data
-          # First write to a temporary file with the new sqlite data
-          File.open(File.join(options[:data_path], 'data.sqlite.new'), 'wb') do |f|
-            f << sqlite_data
-          end
-          # Then, rename the file to the "live" file overwriting the old data
-          # This should happen atomically
-          File.rename(File.join(options[:data_path], 'data.sqlite.new'),
-                      File.join(options[:data_path], 'data.sqlite'))
-        end
+        copy_sqlite_db_back(options[:data_path], sqlite_data)
 
         [status_code, time_data]
+      end
+    end
+
+    def self.add_sqlite_db_to_directory(data_path, dir)
+      # Copy across the current sqlite database as well
+      if File.exist?(File.join(data_path, 'data.sqlite'))
+        # TODO: Ensure that there isn't anything else writing to the db
+        # while we make a copy of it. There's the backup API. Use that?
+        FileUtils.cp(File.join(data_path, 'data.sqlite'), dir)
+      else
+        # Copy across a zero-sized file which will overwrite the symbolic
+        # link on the container
+        FileUtils.touch(File.join(dir, 'data.sqlite'))
+      end
+    end
+
+    def self.copy_sqlite_db_back(data_path, sqlite_data)
+      # Only overwrite the sqlite database if the container has one
+      if sqlite_data
+        # First write to a temporary file with the new sqlite data
+        File.open(File.join(data_path, 'data.sqlite.new'), 'wb') do |f|
+          f << sqlite_data
+        end
+        # Then, rename the file to the "live" file overwriting the old data
+        # This should happen atomically
+        File.rename(File.join(data_path, 'data.sqlite.new'),
+                    File.join(data_path, 'data.sqlite'))
       end
     end
 
