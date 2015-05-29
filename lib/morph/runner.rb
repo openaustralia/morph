@@ -21,12 +21,26 @@ module Morph
           FileUtils.touch(File.join(defaults, 'data.sqlite'))
         end
 
-        Morph::DockerRunner.compile_and_run(
+        status_code, sqlite_data, time_data = Morph::DockerRunner.compile_and_run(
           defaults, options[:data_path],
           options[:env_variables], options[:container_name]) do |on|
           on.log { |s, c| wrapper.call(:log, s, c) }
           on.ip_address { |ip| wrapper.call(:ip_address, ip) }
         end
+
+        # Only overwrite the sqlite database if the container has one
+        if sqlite_data
+          # First write to a temporary file with the new sqlite data
+          File.open(File.join(options[:data_path], 'data.sqlite.new'), 'wb') do |f|
+            f << sqlite_data
+          end
+          # Then, rename the file to the "live" file overwriting the old data
+          # This should happen atomically
+          File.rename(File.join(options[:data_path], 'data.sqlite.new'),
+                      File.join(options[:data_path], 'data.sqlite'))
+        end
+
+        [status_code, time_data]
       end
     end
 

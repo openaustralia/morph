@@ -60,18 +60,6 @@ module Morph
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
 
-      # Only overwrite the sqlite database if the container has one
-      if sqlite_data
-        # First write to a temporary file with the new sqlite data
-        File.open(File.join(data_path, 'data.sqlite.new'), 'wb') do |f|
-          f << sqlite_data
-        end
-        # Then, rename the file to the "live" file overwriting the old data
-        # This should happen atomically
-        File.rename(File.join(data_path, 'data.sqlite.new'),
-                    File.join(data_path, 'data.sqlite'))
-      end
-
       # There's a potential race condition here where we are trying to delete
       # something that might be used elsewhere. Do the most crude thing and
       # just ignore any errors that deleting might throw up.
@@ -81,7 +69,7 @@ module Morph
         # TODO: When docker-api gem gets updated Docker::Error::ConfictError
         # will be changed to Docker::Error::ConflictError
       end
-      [status_code, time_data]
+      [status_code, sqlite_data, time_data]
     end
 
     # If copy_config is true copies the config file across
