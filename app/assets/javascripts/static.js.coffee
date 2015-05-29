@@ -2,7 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-formatNumber = (number) ->
+formatNumberWithCommaDelimiter = (number) ->
   Math.ceil(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 animateNumber = (element, target_count, duration) ->
@@ -10,13 +10,13 @@ animateNumber = (element, target_count, duration) ->
     duration: duration
     easing: "easeInOutQuint"
     step: ->
-      element.text formatNumber(@counter)
+      element.text formatNumberWithCommaDelimiter(@counter)
     complete: ->
       jQuery(counter: target_count - 40).animate { counter: (target_count) },
         duration: 400
         easing: "easeOutQuint"
         step: ->
-          element.text formatNumber(@counter)
+          element.text formatNumberWithCommaDelimiter(@counter)
           return
       return
   return
