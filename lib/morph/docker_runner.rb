@@ -132,8 +132,8 @@ module Morph
       [status_code, sqlite_data, time_data]
     end
 
-    # Mandatory: command, image_name, user
-    # Optional: env_variables, data_path, container_name
+    # Mandatory: command, image_name
+    # Optional: env_variables, container_name
     def self.run_no_cleanup(options)
       wrapper = Multiblock.wrapper
       yield(wrapper)
