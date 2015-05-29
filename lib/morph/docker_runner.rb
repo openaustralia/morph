@@ -44,7 +44,7 @@ module Morph
       end
 
       time_file = '/app/time.output'
-      command = Metric.command('/start scraper', time_file)
+      command = Morph::TimeCommand.command('/start scraper', time_file)
 
       # Make the paths absolute paths for the container
       files = files.map { |f| File.join('/app', f)}
@@ -57,7 +57,7 @@ module Morph
       end
 
       time_data = data.delete(time_file)
-      time_params = Metric.params_from_string(time_data) if time_data
+      time_params = Morph::TimeCommand.params_from_string(time_data) if time_data
 
       # Remove /app from the beginning of all paths in data
       data_with_stripped_paths = {}

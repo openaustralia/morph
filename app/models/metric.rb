@@ -28,17 +28,4 @@ class Metric < ActiveRecord::Base
   def cpu_time
     utime + stime
   end
-
-  def self.command(other, metric_file)
-    Morph::TimeCommand.command(other, metric_file)
-  end
-
-  # Parse the output of the time command and return a hash of the parameters
-  def self.params_from_string(s)
-    Morph::TimeCommand.params_from_string(s)
-  end
-
-  def self.parse_line(l)
-    Morph::TimeCommand.parse_line(l)
-  end
 end
