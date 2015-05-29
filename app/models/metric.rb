@@ -55,10 +55,6 @@ class Metric < ActiveRecord::Base
     params
   end
 
-  def self.read_from_string(s)
-    Metric.create(params_from_string(s))
-  end
-
   def self.parse_line(l)
     field, value = l.split(': ')
     case field

@@ -130,10 +130,9 @@ class Run < ActiveRecord::Base
     end
 
     # Now collect and save the metrics
-    if time_data
-      metric = Metric.read_from_string(time_data)
-      metric.update_attributes(run_id: self.id) if metric
-    end
+    time_params = Metric.params_from_string(time_data) if time_data
+    metric = Metric.create(time_params) if time_params
+    metric.update_attributes(run_id: self.id) if metric
 
     update_attributes(status_code: status_code, finished_at: Time.now)
     # Update information about what changed in the database
