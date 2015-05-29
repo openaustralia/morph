@@ -12,6 +12,15 @@ module Morph
         add_config_defaults_to_directory(options[:repo_path], defaults)
         remove_hidden_directories(defaults)
 
+        # Copy across the current sqlite database as well
+        if File.exist?(File.join(options[:data_path], 'data.sqlite'))
+          FileUtils.cp(File.join(options[:data_path], 'data.sqlite'), defaults)
+        else
+          # Copy across a zero-sized file which will overwrite the symbolic
+          # link on the container
+          FileUtils.touch(File.join(defaults, 'data.sqlite'))
+        end
+
         Morph::DockerRunner.compile_and_run(
           defaults, options[:data_path],
           options[:env_variables], options[:container_name]) do |on|

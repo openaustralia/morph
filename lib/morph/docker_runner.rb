@@ -36,19 +36,11 @@ module Morph
         return 255
       end
 
-      # Insert the actual code into the container
+      # Insert the actual code (and database) into the container
       i4 = Dir.mktmpdir('morph') do |dest|
         copy_config_to_directory(repo_path, dest, false)
-        # Copy across the current sqlite database as well
-        if File.exist?(File.join(data_path, 'data.sqlite'))
-          FileUtils.cp(File.join(data_path, 'data.sqlite'), dest)
-        else
-          # Copy across a zero-sized file which will overwrite the symbolic
-          # link on the container
-          FileUtils.touch(File.join(dest, 'data.sqlite'))
-        end
         wrapper.call(:log, :internalout,
-                     "Injecting scraper code and database and running...\n")
+                     "Injecting scraper and running...\n")
         inject_files2(i3, dest)
       end
 
