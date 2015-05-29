@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui-easing
 //= require bootstrap-sprockets
 //= require bootstrap-select
 //= require zeroclipboard
@@ -20,6 +21,8 @@
 //= require cocoon
 //= require 'jquery.backstretch'
 //= require tablesaw.stackonly
+//= require jquery.waypoints
+//= require waypoints.inview
 //= require api
 //= require bootstrap
 //= require documentation
