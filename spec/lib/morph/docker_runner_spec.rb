@@ -11,6 +11,7 @@ describe Morph::DockerRunner do
     it "should let me know that it can't select a buildpack" do
       Dir.mktmpdir do |dir|
         logs = []
+        container_count = Morph::DockerUtils.stopped_containers.count
         status_code, _data_with_stripped_paths, _time_params =
           Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
           on.log do |s, c|
@@ -23,6 +24,8 @@ describe Morph::DockerRunner do
           [:internalout, "Injecting configuration and compiling...\n"],
           [:internalout, "\e[1G-----> Unable to select a buildpack\n"]
         ]
+        expect(Morph::DockerUtils.stopped_containers.count)
+          .to eq container_count
       end
     end
 
@@ -37,6 +40,7 @@ describe Morph::DockerRunner do
           f << "puts 'Hello world!'\n"
         end
         logs = []
+        container_count = Morph::DockerUtils.stopped_containers.count
         status_code, _data_with_stripped_paths, _time_params =
           Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
           on.log do |s, c|
@@ -51,6 +55,8 @@ describe Morph::DockerRunner do
           [:internalout, "Injecting scraper and running...\n"],
           [:stdout,      "Hello world!\n"]
         ]
+        expect(Morph::DockerUtils.stopped_containers.count)
+          .to eq container_count
       end
     end
   end

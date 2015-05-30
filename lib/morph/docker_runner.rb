@@ -214,7 +214,7 @@ module Morph
         buffer = ''
         Docker::Image.build_from_tar(
           StringIO.new(Morph::DockerUtils.create_tar(dir)),
-          { 'rm' => 1 }, conn_interactive) do |chunk|
+          { 'forcerm' => 1 }, conn_interactive) do |chunk|
           buffer += chunk
           while i = buffer.index("\r\n")
             first_part = buffer[0..i - 1]

@@ -98,5 +98,11 @@ module Morph
       end
       data
     end
+
+    def self.stopped_containers
+      Docker::Container.all(all: true).select do |c|
+        !c.json['State']['Running']
+      end
+    end
   end
 end
