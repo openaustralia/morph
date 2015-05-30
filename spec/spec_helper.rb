@@ -62,5 +62,18 @@ RSpec.configure do |config|
     end
   end
 
+  # For tests marked as :docker tests don't use VCR
+  config.around(:each) do |ex|
+    if ex.metadata.key?(:docker)
+      VCR.turned_off do
+        WebMock.allow_net_connect!
+        ex.run
+      end
+    else
+      ex.run
+    end
+  end
+
+  config.filter_run_excluding docker: true
   config.filter_run_excluding slow: true unless ENV["RUN_SLOW_TESTS"]
 end

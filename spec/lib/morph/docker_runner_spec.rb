@@ -1,6 +1,60 @@
 require 'spec_helper'
 
 describe Morph::DockerRunner do
+  # Tests that involve docker are marked as 'docker: true'. This removes
+  # them from the default tests. To explicitly run the docker tests:
+  # bundle exec rspec spec/lib/morph/docker_runner_spec.rb --tag docker
+
+  # These are integration tests with the whole docker server and the
+  # docker images that are used. Also, the tests are very slow!
+  describe '.compile_and_run', docker: true do
+    it "should let me know that it can't select a buildpack" do
+      Dir.mktmpdir do |dir|
+        logs = []
+        status_code, _data_with_stripped_paths, _time_params =
+          Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
+          on.log do |_s, c|
+            logs << c
+            puts c
+          end
+        end
+        expect(status_code).to eq 255
+        expect(logs).to eq [
+          "Injecting configuration and compiling...\n",
+          "\e[1G-----> Unable to select a buildpack\n"
+        ]
+      end
+    end
+
+    it 'should be able to run hello world of course' do
+      Dir.mktmpdir do |dir|
+        File.open(File.join(dir, 'Procfile'), 'w') do |f|
+          f << "scraper: bundle exec ruby scraper.rb"
+        end
+        FileUtils.touch(File.join(dir, 'Gemfile'))
+        FileUtils.touch(File.join(dir, 'Gemfile.lock'))
+        File.open(File.join(dir, 'scraper.rb'), 'w') do |f|
+          f << "puts 'Hello world!'\n"
+        end
+        logs = []
+        status_code, _data_with_stripped_paths, _time_params =
+          Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
+          on.log do |_s, c|
+            logs << c
+            puts c
+          end
+        end
+        expect(status_code).to eq 0
+        # These logs will actually be different if the compile isn't cached
+        expect(logs).to eq [
+          "Injecting configuration and compiling...\n",
+          "Injecting scraper and running...\n",
+          "Hello world!\n"
+        ]
+      end
+    end
+  end
+
   context 'a set of files' do
     before :each do
       FileUtils.mkdir_p 'test/foo'

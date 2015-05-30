@@ -28,11 +28,10 @@ module Morph
       i3 = compile(i2) do |c|
         wrapper.call(:log, :internalout, c)
       end
-
       # If something went wrong during the compile and it couldn't finish
       if i3.nil?
         # TODO: Return the status for a compile error
-        return 255
+        return [255, {}, {}]
       end
 
       # Insert the actual code (and database) into the container
@@ -212,14 +211,16 @@ module Morph
         Docker.url,
         { read_timeout: 4.hours }.merge(Docker.env_options))
       begin
+        buffer = ''
         Docker::Image.build_from_tar(
           StringIO.new(Morph::DockerUtils.create_tar(dir)),
           { 'rm' => 1 }, conn_interactive) do |chunk|
-          # TODO: Do this properly
-          begin
-            yield JSON.parse(chunk)['stream']
-          rescue JSON::ParserError
-            # Workaround until we handle this properly
+          buffer += chunk
+          while i = buffer.index("\r\n")
+            first_part = buffer[0..i - 1]
+            buffer = buffer[i + 2..-1]
+            parsed_line = JSON.parse(first_part)
+            yield parsed_line['stream'] if parsed_line.key?('stream')
           end
         end
       rescue Docker::Error::UnexpectedResponseError
