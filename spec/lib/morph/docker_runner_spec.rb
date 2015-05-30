@@ -13,15 +13,15 @@ describe Morph::DockerRunner do
         logs = []
         status_code, _data_with_stripped_paths, _time_params =
           Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
-          on.log do |_s, c|
-            logs << c
+          on.log do |s, c|
+            logs << [s, c]
             puts c
           end
         end
         expect(status_code).to eq 255
         expect(logs).to eq [
-          "Injecting configuration and compiling...\n",
-          "\e[1G-----> Unable to select a buildpack\n"
+          [:internalout, "Injecting configuration and compiling...\n"],
+          [:internalout, "\e[1G-----> Unable to select a buildpack\n"]
         ]
       end
     end
@@ -39,17 +39,17 @@ describe Morph::DockerRunner do
         logs = []
         status_code, _data_with_stripped_paths, _time_params =
           Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
-          on.log do |_s, c|
-            logs << c
+          on.log do |s, c|
+            logs << [s, c]
             puts c
           end
         end
         expect(status_code).to eq 0
         # These logs will actually be different if the compile isn't cached
         expect(logs).to eq [
-          "Injecting configuration and compiling...\n",
-          "Injecting scraper and running...\n",
-          "Hello world!\n"
+          [:internalout, "Injecting configuration and compiling...\n"],
+          [:internalout, "Injecting scraper and running...\n"],
+          [:stdout,      "Hello world!\n"]
         ]
       end
     end
