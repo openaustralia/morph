@@ -32,7 +32,7 @@ describe Morph::DockerRunner do
     it 'should be able to run hello world of course' do
       Dir.mktmpdir do |dir|
         File.open(File.join(dir, 'Procfile'), 'w') do |f|
-          f << "scraper: bundle exec ruby scraper.rb"
+          f << 'scraper: bundle exec ruby scraper.rb'
         end
         FileUtils.touch(File.join(dir, 'Gemfile'))
         FileUtils.touch(File.join(dir, 'Gemfile.lock'))
@@ -41,7 +41,7 @@ describe Morph::DockerRunner do
         end
         logs = []
         container_count = Morph::DockerUtils.stopped_containers.count
-        status_code, _data_with_stripped_paths, _time_params =
+        status_code, _files, _time_params =
           Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
           on.log do |s, c|
             logs << [s, c]
@@ -54,6 +54,38 @@ describe Morph::DockerRunner do
           [:internalout, "Injecting configuration and compiling...\n"],
           [:internalout, "Injecting scraper and running...\n"],
           [:stdout,      "Hello world!\n"]
+        ]
+        expect(Morph::DockerUtils.stopped_containers.count)
+          .to eq container_count
+      end
+    end
+
+    it 'should be able to grab a file resulting from running the scraper' do
+      Dir.mktmpdir do |dir|
+        File.open(File.join(dir, 'Procfile'), 'w') do |f|
+          f << 'scraper: bundle exec ruby scraper.rb'
+        end
+        FileUtils.touch(File.join(dir, 'Gemfile'))
+        FileUtils.touch(File.join(dir, 'Gemfile.lock'))
+        File.open(File.join(dir, 'scraper.rb'), 'w') do |f|
+          f << "File.open('foo.txt', 'w') { |f| f << 'Hello World!'}\n"
+        end
+        logs = []
+        container_count = Morph::DockerUtils.stopped_containers.count
+        status_code, files, _time_params =
+          Morph::DockerRunner.compile_and_run(
+            dir, {}, 'foo', ['foo.txt']) do |on|
+          on.log do |s, c|
+            logs << [s, c]
+            puts c
+          end
+        end
+        expect(status_code).to eq 0
+        expect(files).to eq('foo.txt' => 'Hello World!')
+        # These logs will actually be different if the compile isn't cached
+        expect(logs).to eq [
+          [:internalout, "Injecting configuration and compiling...\n"],
+          [:internalout, "Injecting scraper and running...\n"]
         ]
         expect(Morph::DockerUtils.stopped_containers.count)
           .to eq container_count
