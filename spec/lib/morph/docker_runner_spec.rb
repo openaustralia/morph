@@ -8,12 +8,15 @@ describe Morph::DockerRunner do
   # These are integration tests with the whole docker server and the
   # docker images that are used. Also, the tests are very slow!
   describe '.compile_and_run', docker: true do
-    before(:each) { @dir = Dir.mktmpdir }
+    before(:each) do
+      @dir = Dir.mktmpdir
+      @container_count = Morph::DockerUtils.stopped_containers.count
+    end
+
     after(:each) { FileUtils.remove_entry @dir}
 
     it "should let me know that it can't select a buildpack" do
       logs = []
-      container_count = Morph::DockerUtils.stopped_containers.count
       result =
         Morph::DockerRunner.compile_and_run(@dir, {}, 'foo', []) do |on|
         on.log do |s, c|
@@ -28,66 +31,64 @@ describe Morph::DockerRunner do
         [:internalout, "\e[1G-----> Unable to select a buildpack\n"]
       ]
       expect(Morph::DockerUtils.stopped_containers.count)
-        .to eq container_count
+        .to eq @container_count
     end
 
-    it 'should be able to run hello world of course' do
-      File.open(File.join(@dir, 'Procfile'), 'w') do |f|
-        f << 'scraper: bundle exec ruby scraper.rb'
-      end
-      FileUtils.touch(File.join(@dir, 'Gemfile'))
-      FileUtils.touch(File.join(@dir, 'Gemfile.lock'))
-      File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
-        f << "puts 'Hello world!'\n"
-      end
-      logs = []
-      container_count = Morph::DockerUtils.stopped_containers.count
-      result =
-        Morph::DockerRunner.compile_and_run(@dir, {}, 'foo', []) do |on|
-        on.log do |s, c|
-          logs << [s, c]
-          # puts c
+    context 'A ruby scraper with no dependencies' do
+      before(:each) do
+        File.open(File.join(@dir, 'Procfile'), 'w') do |f|
+          f << 'scraper: bundle exec ruby scraper.rb'
         end
+        FileUtils.touch(File.join(@dir, 'Gemfile'))
+        FileUtils.touch(File.join(@dir, 'Gemfile.lock'))
       end
-      expect(result.status_code).to eq 0
-      # These logs will actually be different if the compile isn't cached
-      expect(logs).to eq [
-        [:internalout, "Injecting configuration and compiling...\n"],
-        [:internalout, "Injecting scraper and running...\n"],
-        [:stdout,      "Hello world!\n"]
-      ]
-      expect(Morph::DockerUtils.stopped_containers.count)
-        .to eq container_count
-    end
 
-    it 'should be able to grab a file resulting from running the scraper' do
-      File.open(File.join(@dir, 'Procfile'), 'w') do |f|
-        f << 'scraper: bundle exec ruby scraper.rb'
-      end
-      FileUtils.touch(File.join(@dir, 'Gemfile'))
-      FileUtils.touch(File.join(@dir, 'Gemfile.lock'))
-      File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
-        f << "File.open('foo.txt', 'w') { |f| f << 'Hello World!'}\n"
-      end
-      logs = []
-      container_count = Morph::DockerUtils.stopped_containers.count
-      result =
-        Morph::DockerRunner.compile_and_run(
-          @dir, {}, 'foo', ['foo.txt', 'bar']) do |on|
-        on.log do |s, c|
-          logs << [s, c]
-          # puts c
+      it 'should be able to run hello world of course' do
+        File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
+          f << "puts 'Hello world!'\n"
         end
+        logs = []
+        result =
+          Morph::DockerRunner.compile_and_run(@dir, {}, 'foo', []) do |on|
+          on.log do |s, c|
+            logs << [s, c]
+            # puts c
+          end
+        end
+        expect(result.status_code).to eq 0
+        # These logs will actually be different if the compile isn't cached
+        expect(logs).to eq [
+          [:internalout, "Injecting configuration and compiling...\n"],
+          [:internalout, "Injecting scraper and running...\n"],
+          [:stdout,      "Hello world!\n"]
+        ]
+        expect(Morph::DockerUtils.stopped_containers.count)
+          .to eq @container_count
       end
-      expect(result.status_code).to eq 0
-      expect(result.files).to eq('foo.txt' => 'Hello World!', 'bar' => nil)
-      # These logs will actually be different if the compile isn't cached
-      expect(logs).to eq [
-        [:internalout, "Injecting configuration and compiling...\n"],
-        [:internalout, "Injecting scraper and running...\n"]
-      ]
-      expect(Morph::DockerUtils.stopped_containers.count)
-        .to eq container_count
+
+      it 'should be able to grab a file resulting from running the scraper' do
+        File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
+          f << "File.open('foo.txt', 'w') { |f| f << 'Hello World!'}\n"
+        end
+        logs = []
+        result =
+          Morph::DockerRunner.compile_and_run(
+            @dir, {}, 'foo', ['foo.txt', 'bar']) do |on|
+          on.log do |s, c|
+            logs << [s, c]
+            # puts c
+          end
+        end
+        expect(result.status_code).to eq 0
+        expect(result.files).to eq('foo.txt' => 'Hello World!', 'bar' => nil)
+        # These logs will actually be different if the compile isn't cached
+        expect(logs).to eq [
+          [:internalout, "Injecting configuration and compiling...\n"],
+          [:internalout, "Injecting scraper and running...\n"]
+        ]
+        expect(Morph::DockerUtils.stopped_containers.count)
+          .to eq @container_count
+      end
     end
 
     skip 'should be able to pass environment variables' do
