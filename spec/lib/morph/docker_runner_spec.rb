@@ -13,12 +13,12 @@ describe Morph::DockerRunner do
       @container_count = Morph::DockerUtils.stopped_containers.count
     end
 
-    after(:each) { FileUtils.remove_entry @dir}
+    after(:each) { FileUtils.remove_entry @dir }
 
     it "should let me know that it can't select a buildpack" do
       logs = []
-      result =
-        Morph::DockerRunner.compile_and_run(@dir, {}, 'foo', []) do |on|
+      result = Morph::DockerRunner.compile_and_run(
+        @dir, {}, 'foo', []) do |on|
         on.log do |s, c|
           logs << [s, c]
           # puts c
@@ -48,8 +48,8 @@ describe Morph::DockerRunner do
           f << "puts 'Hello world!'\n"
         end
         logs = []
-        result =
-          Morph::DockerRunner.compile_and_run(@dir, {}, 'foo', []) do |on|
+        result = Morph::DockerRunner.compile_and_run(
+          @dir, {}, 'foo', []) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
@@ -71,9 +71,8 @@ describe Morph::DockerRunner do
           f << "File.open('foo.txt', 'w') { |f| f << 'Hello World!'}\n"
         end
         logs = []
-        result =
-          Morph::DockerRunner.compile_and_run(
-            @dir, {}, 'foo', ['foo.txt', 'bar']) do |on|
+        result = Morph::DockerRunner.compile_and_run(
+          @dir, {}, 'foo', ['foo.txt', 'bar']) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
@@ -95,9 +94,8 @@ describe Morph::DockerRunner do
           f << "puts ENV['AN_ENV_VARIABLE']\n"
         end
         logs = []
-        result =
-          Morph::DockerRunner.compile_and_run(
-            @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, 'foo', []) do |on|
+        result = Morph::DockerRunner.compile_and_run(
+          @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, 'foo', []) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
@@ -116,8 +114,10 @@ describe Morph::DockerRunner do
         File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
           f << <<-EOF
 require 'socket'
-address = Socket.ip_address_list.find{|i| i.ipv4? && !i.ipv4_loopback?}.ip_address
-File.open("ip_address", "w") {|f| f << address}
+address = Socket.ip_address_list.find do |i|
+  i.ipv4? && !i.ipv4_loopback?
+end
+File.open("ip_address", "w") {|f| f << address.ip_address}
           EOF
         end
         ip_address = nil
@@ -130,15 +130,15 @@ File.open("ip_address", "w") {|f| f << address}
         expect(ip_address).to eq result.files['ip_address']
       end
 
-      it "should return a non-zero error code if the scraper fails" do
+      it 'should return a non-zero error code if the scraper fails' do
         File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
           f << <<-EOF
 This is not going to run as ruby code so should return an error
           EOF
         end
         logs = []
-        result =
-          Morph::DockerRunner.compile_and_run(@dir, {}, 'foo', []) do |on|
+        result = Morph::DockerRunner.compile_and_run(
+          @dir, {}, 'foo', []) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
@@ -150,17 +150,16 @@ This is not going to run as ruby code so should return an error
           [:internalout, "Injecting configuration and compiling...\n"],
           [:internalout, "Injecting scraper and running...\n"],
           [:stderr,
-            "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n" \
-            "This is not going to run as ruby code so should return an error\n" \
-            "                 ^\n" \
-            "scraper.rb:1: void value expression\n"]
+           "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n" \
+           "This is not going to run as ruby code so should return an error\n" \
+           "                 ^\n" \
+           "scraper.rb:1: void value expression\n"]
         ]
       end
     end
 
     skip 'should cache the compile' do
     end
-
   end
 
   context 'a set of files' do
