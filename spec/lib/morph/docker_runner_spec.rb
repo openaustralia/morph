@@ -129,6 +129,33 @@ File.open("ip_address", "w") {|f| f << address}
         # These logs will actually be different if the compile isn't cached
         expect(ip_address).to eq result.files['ip_address']
       end
+
+      it "should return a non-zero error code if the scraper fails" do
+        File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
+          f << <<-EOF
+This is not going to run as ruby code so should return an error
+          EOF
+        end
+        logs = []
+        result =
+          Morph::DockerRunner.compile_and_run(@dir, {}, 'foo', []) do |on|
+          on.log do |s, c|
+            logs << [s, c]
+            # puts c
+          end
+        end
+        expect(result.status_code).to eq 1
+        # These logs will actually be different if the compile isn't cached
+        expect(logs).to eq [
+          [:internalout, "Injecting configuration and compiling...\n"],
+          [:internalout, "Injecting scraper and running...\n"],
+          [:stderr,
+            "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n" \
+            "This is not going to run as ruby code so should return an error\n" \
+            "                 ^\n" \
+            "scraper.rb:1: void value expression\n"]
+        ]
+      end
     end
 
     skip 'should cache the compile' do
