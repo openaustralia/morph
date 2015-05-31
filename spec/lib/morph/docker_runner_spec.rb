@@ -74,14 +74,14 @@ describe Morph::DockerRunner do
         container_count = Morph::DockerUtils.stopped_containers.count
         status_code, files, _time_params =
           Morph::DockerRunner.compile_and_run(
-            dir, {}, 'foo', ['foo.txt']) do |on|
+            dir, {}, 'foo', ['foo.txt', 'bar']) do |on|
           on.log do |s, c|
             logs << [s, c]
             puts c
           end
         end
         expect(status_code).to eq 0
-        expect(files).to eq('foo.txt' => 'Hello World!')
+        expect(files).to eq('foo.txt' => 'Hello World!', 'bar' => nil)
         # These logs will actually be different if the compile isn't cached
         expect(logs).to eq [
           [:internalout, "Injecting configuration and compiling...\n"],
@@ -93,9 +93,6 @@ describe Morph::DockerRunner do
     end
 
     skip 'should be able to pass environment variables' do
-    end
-
-    skip 'should be able to handle file not existing' do
     end
 
     skip 'should cache the compile' do
