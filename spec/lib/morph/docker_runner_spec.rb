@@ -89,9 +89,28 @@ describe Morph::DockerRunner do
         expect(Morph::DockerUtils.stopped_containers.count)
           .to eq @container_count
       end
-    end
 
-    skip 'should be able to pass environment variables' do
+      it 'should be able to pass environment variables' do
+        File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
+          f << "puts ENV['AN_ENV_VARIABLE']\n"
+        end
+        logs = []
+        result =
+          Morph::DockerRunner.compile_and_run(
+            @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, 'foo', []) do |on|
+          on.log do |s, c|
+            logs << [s, c]
+            # puts c
+          end
+        end
+        expect(result.status_code).to eq 0
+        # These logs will actually be different if the compile isn't cached
+        expect(logs).to eq [
+          [:internalout, "Injecting configuration and compiling...\n"],
+          [:internalout, "Injecting scraper and running...\n"],
+          [:stdout,      "Hello world!\n"]
+        ]
+      end
     end
 
     skip 'should cache the compile' do
