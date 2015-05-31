@@ -111,13 +111,29 @@ describe Morph::DockerRunner do
           [:stdout,      "Hello world!\n"]
         ]
       end
+
+      it 'should return the ip address of the container' do
+        File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
+          f << <<-EOF
+require 'socket'
+address = Socket.ip_address_list.find{|i| i.ipv4? && !i.ipv4_loopback?}.ip_address
+File.open("ip_address", "w") {|f| f << address}
+          EOF
+        end
+        ip_address = nil
+        result = Morph::DockerRunner.compile_and_run(
+          @dir, {}, 'foo', ['ip_address']) do |on|
+          on.ip_address { |ip| ip_address = ip }
+        end
+        expect(result.status_code).to eq 0
+        # These logs will actually be different if the compile isn't cached
+        expect(ip_address).to eq result.files['ip_address']
+      end
     end
 
     skip 'should cache the compile' do
     end
 
-    skip 'should return the ip address of the container' do
-    end
   end
 
   context 'a set of files' do
