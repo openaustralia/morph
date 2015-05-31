@@ -91,6 +91,18 @@ describe Morph::DockerRunner do
           .to eq container_count
       end
     end
+
+    skip 'should be able to pass environment variables' do
+    end
+
+    skip 'should be able to handle file not existing' do
+    end
+
+    skip 'should cache the compile' do
+    end
+
+    skip 'should return the ip address of the container' do
+    end
   end
 
   context 'a set of files' do
