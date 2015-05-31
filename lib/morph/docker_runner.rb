@@ -184,7 +184,7 @@ module Morph
 
       begin
         c.start
-        puts 'Running docker container...'
+        # puts 'Running docker container...'
         # Let parent know about ip address of running container
         wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
         c.attach(logs: true) do |s, c|
@@ -194,7 +194,7 @@ module Morph
           c.scrub!
           wrapper.call(:log, s, c)
         end
-        puts 'Docker container finished...'
+        # puts 'Docker container finished...'
       rescue Exception => e
         wrapper.call(:log,  :internalerr, "morph.io internal error: #{e}\n")
         wrapper.call(:log, :internalerr,

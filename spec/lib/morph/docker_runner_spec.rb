@@ -16,7 +16,7 @@ describe Morph::DockerRunner do
           Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
           on.log do |s, c|
             logs << [s, c]
-            puts c
+            # puts c
           end
         end
         expect(status_code).to eq 255
@@ -45,7 +45,7 @@ describe Morph::DockerRunner do
           Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
           on.log do |s, c|
             logs << [s, c]
-            puts c
+            # puts c
           end
         end
         expect(status_code).to eq 0
@@ -77,7 +77,7 @@ describe Morph::DockerRunner do
             dir, {}, 'foo', ['foo.txt', 'bar']) do |on|
           on.log do |s, c|
             logs << [s, c]
-            puts c
+            # puts c
           end
         end
         expect(status_code).to eq 0
