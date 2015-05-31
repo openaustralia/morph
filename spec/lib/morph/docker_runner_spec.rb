@@ -12,14 +12,15 @@ describe Morph::DockerRunner do
       Dir.mktmpdir do |dir|
         logs = []
         container_count = Morph::DockerUtils.stopped_containers.count
-        status_code, _data_with_stripped_paths, _time_params =
+        result =
           Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
           end
         end
-        expect(status_code).to eq 255
+
+        expect(result.status_code).to eq 255
         expect(logs).to eq [
           [:internalout, "Injecting configuration and compiling...\n"],
           [:internalout, "\e[1G-----> Unable to select a buildpack\n"]
@@ -41,14 +42,14 @@ describe Morph::DockerRunner do
         end
         logs = []
         container_count = Morph::DockerUtils.stopped_containers.count
-        status_code, _files, _time_params =
+        result =
           Morph::DockerRunner.compile_and_run(dir, {}, 'foo', []) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
           end
         end
-        expect(status_code).to eq 0
+        expect(result.status_code).to eq 0
         # These logs will actually be different if the compile isn't cached
         expect(logs).to eq [
           [:internalout, "Injecting configuration and compiling...\n"],
@@ -72,7 +73,7 @@ describe Morph::DockerRunner do
         end
         logs = []
         container_count = Morph::DockerUtils.stopped_containers.count
-        status_code, files, _time_params =
+        result =
           Morph::DockerRunner.compile_and_run(
             dir, {}, 'foo', ['foo.txt', 'bar']) do |on|
           on.log do |s, c|
@@ -80,8 +81,8 @@ describe Morph::DockerRunner do
             # puts c
           end
         end
-        expect(status_code).to eq 0
-        expect(files).to eq('foo.txt' => 'Hello World!', 'bar' => nil)
+        expect(result.status_code).to eq 0
+        expect(result.files).to eq('foo.txt' => 'Hello World!', 'bar' => nil)
         # These logs will actually be different if the compile isn't cached
         expect(logs).to eq [
           [:internalout, "Injecting configuration and compiling...\n"],

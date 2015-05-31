@@ -31,7 +31,7 @@ module Morph
       # If something went wrong during the compile and it couldn't finish
       if i3.nil?
         # TODO: Return the status for a compile error
-        return [255, {}, {}]
+        return Morph::RunResult.new(255, {}, {})
       end
 
       # Insert the actual code (and database) into the container
@@ -76,7 +76,7 @@ module Morph
         # will be changed to Docker::Error::ConflictError
       end
 
-      [status_code, data_with_stripped_paths, time_params]
+      Morph::RunResult.new(status_code, data_with_stripped_paths, time_params)
     end
 
     # If copy_config is true copies the config file across
