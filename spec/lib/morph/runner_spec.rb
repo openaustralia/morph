@@ -1,6 +1,29 @@
 require 'spec_helper'
 
 describe Morph::Runner do
+  describe '.go', docker: true do
+    it 'should run without an associated scraper' do
+      owner = User.create(nickname: 'mlandauer')
+      run = Run.create(owner: owner)
+      run.database.clear
+      expect(run.database.no_rows).to eq 0
+      FileUtils.mkdir_p(run.repo_path)
+      File.open(File.join(run.repo_path, 'scraper.rb'), 'w') do |f|
+        f << <<-EOF
+require 'scraperwiki'
+require "open-uri"
+
+puts "Running scraper"
+ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software developer", "time" => Time.now})
+        EOF
+      end
+      Morph::Runner.new(run).go {}
+      run.reload
+      expect(run.status_code).to eq 0
+      expect(run.database.no_rows).to eq 1
+    end
+  end
+
   describe '.add_config_defaults_to_directory' do
     before(:each) { FileUtils.mkdir('test') }
     after(:each) { FileUtils.rm_rf('test') }
