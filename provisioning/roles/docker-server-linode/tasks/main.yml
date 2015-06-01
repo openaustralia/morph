@@ -44,8 +44,11 @@
 - name: Ensure that pycurl is installed (for ansible)
   apt: pkg=python-pycurl
 
-- name: Ensure that we have the docker repository
-  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
+# It looks like this stuff has changed. Docker is now suggesting
+# using a script to install stuff. Eek!
+
+#- name: Ensure that we have the docker repository
+#  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
 
 # docker needs apparmor but it's not a dependency in the package for some reason
 - name: Install apparmor
