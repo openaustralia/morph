@@ -21,6 +21,14 @@ module Morph
       end
     end
 
+    def log(stream, text)
+      puts "#{stream}: #{text}"
+      number = run.log_lines.maximum(:number) || 0
+      line = run.log_lines.create(stream: stream.to_s, text: text,
+                                  number: (number + 1))
+      sync_new line, scope: run
+    end
+
     def go_with_logging
       puts "Starting...\n"
       run.database.backup
@@ -80,14 +88,6 @@ module Morph
         run.scraper.reload
         sync_update run.scraper
       end
-    end
-
-    def log(stream, text)
-      puts "#{stream}: #{text}"
-      number = run.log_lines.maximum(:number) || 0
-      line = run.log_lines.create(stream: stream.to_s, text: text,
-                                  number: (number + 1))
-      sync_new line, scope: run
     end
 
     # TODO: Shouldn't this update the metrics here as well?
