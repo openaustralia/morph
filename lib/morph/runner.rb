@@ -188,7 +188,8 @@ module Morph
     end
 
     def container_for_run_exists?
-      Morph::DockerUtils.container_exists?(docker_container_name)
+      !Morph::DockerUtils.find_container_with_label(
+        run_label_key, run_label_value).nil?
     end
   end
 end
