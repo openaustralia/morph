@@ -1,162 +1,184 @@
 require 'spec_helper'
 
 describe Morph::Runner do
-  describe ".add_config_defaults_to_directory" do
-    before(:each) { FileUtils.mkdir("test") }
-    after(:each) { FileUtils.rm_rf("test") }
+  describe '.add_config_defaults_to_directory' do
+    before(:each) { FileUtils.mkdir('test') }
+    after(:each) { FileUtils.rm_rf('test') }
 
-    context "a perl scraper" do
-      before(:each) { FileUtils.touch("test/scraper.pl") }
+    context 'a perl scraper' do
+      before(:each) { FileUtils.touch('test/scraper.pl') }
 
       it do
         Dir.mktmpdir do |dir|
-          Morph::Runner.add_config_defaults_to_directory("test", dir)
-          Dir.entries(dir).sort.should == [".", "..", "Procfile", "app.psgi", "cpanfile", "scraper.pl"]
+          Morph::Runner.add_config_defaults_to_directory('test', dir)
+          expect(Dir.entries(dir).sort).to eq [
+            '.', '..', 'Procfile', 'app.psgi', 'cpanfile', 'scraper.pl']
           perl = Morph::Language.new(:perl)
-          File.read(File.join(dir, "Procfile")).should == File.read(perl.default_config_file_path("Procfile"))
-          File.read(File.join(dir, "app.psgi")).should == File.read(perl.default_config_file_path("app.psgi"))
-          File.read(File.join(dir, "cpanfile")).should == File.read(perl.default_config_file_path("cpanfile"))
+          expect(File.read(File.join(dir, 'Procfile')))
+            .to eq File.read(perl.default_config_file_path('Procfile'))
+          expect(File.read(File.join(dir, 'app.psgi')))
+            .to eq File.read(perl.default_config_file_path('app.psgi'))
+          expect(File.read(File.join(dir, 'cpanfile')))
+            .to eq File.read(perl.default_config_file_path('cpanfile'))
         end
       end
     end
 
-    context "a ruby scraper" do
-      before(:each) { FileUtils.touch("test/scraper.rb") }
+    context 'a ruby scraper' do
+      before(:each) { FileUtils.touch('test/scraper.rb') }
 
-      context "user tries to override Procfile" do
+      context 'user tries to override Procfile' do
         before :each do
-          File.open("test/Procfile", "w") {|f| f << "scraper: some override"}
-          FileUtils.touch("test/Gemfile")
-          FileUtils.touch("test/Gemfile.lock")
+          File.open('test/Procfile', 'w') { |f| f << 'scraper: some override' }
+          FileUtils.touch('test/Gemfile')
+          FileUtils.touch('test/Gemfile.lock')
         end
 
-        it "should always use the template Procfile" do
+        it 'should always use the template Procfile' do
           Dir.mktmpdir do |dir|
-            Morph::Runner.add_config_defaults_to_directory("test", dir)
-            Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"]
-            File.read(File.join(dir, "Gemfile")).should == ""
-            File.read(File.join(dir, "Gemfile.lock")).should == ""
-            File.read(File.join(dir, "Procfile")).should == File.read(Morph::Language.new(:ruby).default_config_file_path("Procfile"))
-          end
-        end
-      end
-
-      context "user supplies Gemfile and Gemfile.lock" do
-        before :each do
-          FileUtils.touch("test/Gemfile")
-          FileUtils.touch("test/Gemfile.lock")
-        end
-
-        it "should only provide a template Procfile" do
-          Dir.mktmpdir do |dir|
-            Morph::Runner.add_config_defaults_to_directory("test", dir)
-            Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"]
-            File.read(File.join(dir, "Gemfile")).should == ""
-            File.read(File.join(dir, "Gemfile.lock")).should == ""
-            File.read(File.join(dir, "Procfile")).should == File.read(Morph::Language.new(:ruby).default_config_file_path("Procfile"))
-          end
-        end
-      end
-
-      context "user doesn't supply Gemfile or Gemfile.lock" do
-        it "should provide a template Gemfile, Gemfile.lock and Procfile" do
-          Dir.mktmpdir do |dir|
-            Morph::Runner.add_config_defaults_to_directory("test", dir)
-            Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"]
+            Morph::Runner.add_config_defaults_to_directory('test', dir)
+            expect(Dir.entries(dir).sort).to eq [
+              '.', '..', 'Gemfile', 'Gemfile.lock', 'Procfile', 'scraper.rb']
+            expect(File.read(File.join(dir, 'Gemfile'))).to eq ''
+            expect(File.read(File.join(dir, 'Gemfile.lock'))).to eq ''
             ruby = Morph::Language.new(:ruby)
-            File.read(File.join(dir, "Gemfile")).should == File.read(ruby.default_config_file_path("Gemfile"))
-            File.read(File.join(dir, "Gemfile.lock")).should == File.read(ruby.default_config_file_path("Gemfile.lock"))
-            File.read(File.join(dir, "Procfile")).should == File.read(ruby.default_config_file_path("Procfile"))
+            expect(File.read(File.join(dir, 'Procfile')))
+              .to eq File.read(ruby.default_config_file_path('Procfile'))
           end
         end
       end
 
-      context "user supplies Gemfile but no Gemfile.lock" do
+      context 'user supplies Gemfile and Gemfile.lock' do
         before :each do
-          FileUtils.touch("test/Gemfile")
+          FileUtils.touch('test/Gemfile')
+          FileUtils.touch('test/Gemfile.lock')
         end
 
-        it "should not try to use the template Gemfile.lock" do
+        it 'should only provide a template Procfile' do
           Dir.mktmpdir do |dir|
-            Morph::Runner.add_config_defaults_to_directory("test", dir)
-            Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Procfile", "scraper.rb"]
-            File.read(File.join(dir, "Gemfile")).should == ""
-            File.read(File.join(dir, "Procfile")).should == File.read(Morph::Language.new(:ruby).default_config_file_path("Procfile"))
+            Morph::Runner.add_config_defaults_to_directory('test', dir)
+            expect(Dir.entries(dir).sort).to eq [
+              '.', '..', 'Gemfile', 'Gemfile.lock', 'Procfile', 'scraper.rb']
+            expect(File.read(File.join(dir, 'Gemfile'))).to eq ''
+            expect(File.read(File.join(dir, 'Gemfile.lock'))).to eq ''
+            ruby = Morph::Language.new(:ruby)
+            expect(File.read(File.join(dir, 'Procfile')))
+              .to eq File.read(ruby.default_config_file_path('Procfile'))
+          end
+        end
+      end
+
+      context 'user does not supply Gemfile or Gemfile.lock' do
+        it 'should provide a template Gemfile, Gemfile.lock and Procfile' do
+          Dir.mktmpdir do |dir|
+            Morph::Runner.add_config_defaults_to_directory('test', dir)
+            expect(Dir.entries(dir).sort).to eq [
+              '.', '..', 'Gemfile', 'Gemfile.lock', 'Procfile', 'scraper.rb']
+            ruby = Morph::Language.new(:ruby)
+            expect(File.read(File.join(dir, 'Gemfile')))
+              .to eq File.read(ruby.default_config_file_path('Gemfile'))
+            expect(File.read(File.join(dir, 'Gemfile.lock')))
+              .to eq File.read(ruby.default_config_file_path('Gemfile.lock'))
+            expect(File.read(File.join(dir, 'Procfile')))
+              .to eq File.read(ruby.default_config_file_path('Procfile'))
+          end
+        end
+      end
+
+      context 'user supplies Gemfile but no Gemfile.lock' do
+        before :each do
+          FileUtils.touch('test/Gemfile')
+        end
+
+        it 'should not try to use the template Gemfile.lock' do
+          Dir.mktmpdir do |dir|
+            Morph::Runner.add_config_defaults_to_directory('test', dir)
+            expect(Dir.entries(dir).sort).to eq [
+              '.', '..', 'Gemfile', 'Procfile', 'scraper.rb']
+            expect(File.read(File.join(dir, 'Gemfile'))).to eq ''
+            ruby = Morph::Language.new(:ruby)
+            expect(File.read(File.join(dir, 'Procfile')))
+              .to eq File.read(ruby.default_config_file_path('Procfile'))
           end
         end
       end
     end
   end
 
-  describe ".remove_hidden_directories" do
-    context "a set of files" do
+  describe '.remove_hidden_directories' do
+    context 'a set of files' do
       before :each do
-        FileUtils.mkdir_p("test/foo")
-        FileUtils.mkdir_p("test/.bar")
-        FileUtils.touch("test/.a_dot_file.cfg")
-        FileUtils.touch("test/.bar/wibble.txt")
-        FileUtils.touch("test/one.txt")
-        FileUtils.touch("test/Procfile")
-        FileUtils.touch("test/two.txt")
-        FileUtils.touch("test/foo/three.txt")
-        FileUtils.touch("test/Gemfile")
-        FileUtils.touch("test/Gemfile.lock")
-        FileUtils.touch("test/scraper.rb")
-        FileUtils.ln_s("scraper.rb", "test/link.rb")
+        FileUtils.mkdir_p('test/foo')
+        FileUtils.mkdir_p('test/.bar')
+        FileUtils.touch('test/.a_dot_file.cfg')
+        FileUtils.touch('test/.bar/wibble.txt')
+        FileUtils.touch('test/one.txt')
+        FileUtils.touch('test/Procfile')
+        FileUtils.touch('test/two.txt')
+        FileUtils.touch('test/foo/three.txt')
+        FileUtils.touch('test/Gemfile')
+        FileUtils.touch('test/Gemfile.lock')
+        FileUtils.touch('test/scraper.rb')
+        FileUtils.ln_s('scraper.rb', 'test/link.rb')
       end
 
       after :each do
-        FileUtils.rm_rf("test")
+        FileUtils.rm_rf('test')
       end
 
       it do
         Dir.mktmpdir do |dir|
-          Morph::DockerUtils.copy_directory_contents("test", dir)
+          Morph::DockerUtils.copy_directory_contents('test', dir)
           Morph::Runner.remove_hidden_directories(dir)
-          Dir.entries(dir).sort.should == [".", "..", ".a_dot_file.cfg", "Gemfile", "Gemfile.lock", "Procfile", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"]
+          expect(Dir.entries(dir).sort).to eq [
+            '.', '..', '.a_dot_file.cfg', 'Gemfile', 'Gemfile.lock',
+            'Procfile', 'foo', 'link.rb', 'one.txt', 'scraper.rb', 'two.txt']
         end
       end
     end
 
-    context "another set of files" do
+    context 'another set of files' do
       before :each do
-        FileUtils.mkdir_p("test/foo")
-        FileUtils.touch("test/one.txt")
-        FileUtils.touch("test/foo/three.txt")
-        FileUtils.touch("test/Gemfile")
-        FileUtils.touch("test/Gemfile.lock")
-        FileUtils.touch("test/scraper.rb")
+        FileUtils.mkdir_p('test/foo')
+        FileUtils.touch('test/one.txt')
+        FileUtils.touch('test/foo/three.txt')
+        FileUtils.touch('test/Gemfile')
+        FileUtils.touch('test/Gemfile.lock')
+        FileUtils.touch('test/scraper.rb')
       end
 
       after :each do
-        FileUtils.rm_rf("test")
+        FileUtils.rm_rf('test')
       end
 
       it do
         Dir.mktmpdir do |dir|
-          Morph::DockerUtils.copy_directory_contents("test", dir)
+          Morph::DockerUtils.copy_directory_contents('test', dir)
           Morph::Runner.remove_hidden_directories(dir)
-          Dir.entries(dir).sort.should == [".", "..", "Gemfile", "Gemfile.lock", "foo", "one.txt", "scraper.rb"]
+          expect(Dir.entries(dir).sort).to eq [
+            '.', '..', 'Gemfile', 'Gemfile.lock', 'foo', 'one.txt',
+            'scraper.rb']
         end
       end
     end
 
-    context "user tries to override Procfile" do
+    context 'user tries to override Procfile' do
       before :each do
-        FileUtils.mkdir_p("test")
-        File.open("test/Procfile", "w") {|f| f << "scraper: some override"}
-        FileUtils.touch("test/scraper.rb")
+        FileUtils.mkdir_p('test')
+        File.open('test/Procfile', 'w') { |f| f << 'scraper: some override' }
+        FileUtils.touch('test/scraper.rb')
       end
 
       after :each do
-        FileUtils.rm_rf("test")
+        FileUtils.rm_rf('test')
       end
 
       it do
         Dir.mktmpdir do |dir|
-          Morph::DockerUtils.copy_directory_contents("test", dir)
+          Morph::DockerUtils.copy_directory_contents('test', dir)
           Morph::Runner.remove_hidden_directories(dir)
-          Dir.entries(dir).sort.should == [".", "..", "Procfile", "scraper.rb"]
+          expect(Dir.entries(dir).sort).to eq [
+            '.', '..', 'Procfile', 'scraper.rb']
         end
       end
     end
