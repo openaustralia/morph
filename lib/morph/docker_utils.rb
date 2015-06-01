@@ -48,7 +48,7 @@ module Morph
     # Returns nil otherwise
     def self.find_container_with_label(key, value)
       Docker::Container.all(all: true).find do |c|
-        c.info['Labels'][key] == value
+        c.info['Labels'] && c.info['Labels'][key] == value
       end
     end
 
