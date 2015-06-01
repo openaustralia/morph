@@ -16,10 +16,6 @@ module Morph
       return if run.scraper.nil?
 
       Morph::Github.synchronise_repo(run.repo_path, run.git_url)
-      go!
-    end
-
-    def go!
       go_with_logging do |s, c|
         log(s, c)
       end
