@@ -192,7 +192,15 @@ module Morph
           # console output from the scraper is always encoded as UTF-8.
           c.force_encoding('UTF-8')
           c.scrub!
-          wrapper.call(:log, s, c)
+          # There are times when multiple lines are returned and this does
+          # not always happen consistently. So, for simplicity and consistency
+          # we will split multiple lines up
+          while i = c.index("\n")
+            wrapper.call(:log, s, c[0..i])
+            c = c[i+1..-1]
+          end
+          # Anything left over
+          wrapper.call(:log, s, c) if c.length > 0
         end
         # puts 'Docker container finished...'
       rescue Exception => e

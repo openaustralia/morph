@@ -149,11 +149,10 @@ This is not going to run as ruby code so should return an error
         expect(logs).to eq [
           [:internalout, "Injecting configuration and compiling...\n"],
           [:internalout, "Injecting scraper and running...\n"],
-          [:stderr,
-           "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n" \
-           "This is not going to run as ruby code so should return an error\n" \
-           "                 ^\n" \
-           "scraper.rb:1: void value expression\n"]
+          [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
+          [:stderr, "This is not going to run as ruby code so should return an error\n"],
+          [:stderr, "                 ^\n"],
+          [:stderr, "scraper.rb:1: void value expression\n"]
         ]
       end
     end
