@@ -89,7 +89,7 @@
   when: cron_jobs
 
 - name: Cron job to clean out stopped containers every 5 minutes
-  cron: name="stopped container" minute="*/5" user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:remove_stopped_containers RAILS_ENV=production"
+  cron: name="stopped container" state=absent
   when: cron_jobs
 
 - name: Install nodejs for asset precompiling
