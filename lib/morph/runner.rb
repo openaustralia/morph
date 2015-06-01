@@ -16,12 +16,12 @@ module Morph
       return if run.scraper.nil?
 
       Morph::Github.synchronise_repo(run.repo_path, run.git_url)
-      run.go!
+      go!
     end
 
     def go!
-      run.go_with_logging do |s, c|
-        run.log(s, c)
+      go_with_logging do |s, c|
+        log(s, c)
       end
     end
 
@@ -47,7 +47,7 @@ module Morph
 
       status_code, time_params = Morph::Runner.compile_and_run(
         run.repo_path, run.data_path,
-        run.env_variables, run.docker_container_name) do |on|
+        run.env_variables, docker_container_name) do |on|
         on.log { |s, c| yield s, c }
         on.ip_address do |ip|
           # Store the ip address of the container for this run
@@ -99,7 +99,7 @@ module Morph
     # actually stop the compile stage
     # TODO: Make this stop the compile stage
     def stop!
-      Morph::DockerUtils.stop(run.docker_container_name)
+      Morph::DockerUtils.stop(docker_container_name)
       run.update_attributes(status_code: 130, finished_at: Time.now)
     end
 
@@ -189,7 +189,7 @@ module Morph
     end
 
     def container_for_run_exists?
-      Morph::DockerUtils.container_exists?(run.docker_container_name)
+      Morph::DockerUtils.container_exists?(docker_container_name)
     end
   end
 end

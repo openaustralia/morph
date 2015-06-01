@@ -51,8 +51,12 @@ class Scraper < ActiveRecord::Base
   friendly_id :full_name
 
   delegate :finished_recently?, :finished_at, :finished_successfully?,
-           :finished_with_errors?, :queued?, :running?, :stop!,
+           :finished_with_errors?, :queued?, :running?,
            to: :last_run, allow_nil: true
+
+  def stop!
+    Morph::Runner.new(last_run).stop!
+  end
 
   def self.running
     Run.running.map(&:scraper).compact

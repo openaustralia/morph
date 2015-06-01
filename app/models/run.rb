@@ -90,36 +90,6 @@ class Run < ActiveRecord::Base
     "https://github.com/#{full_name}/commit/#{git_revision}"
   end
 
-  def synch_and_go!
-    Morph::Runner.new(self).synch_and_go!
-  end
-
-  def go!
-    Morph::Runner.new(self).go!
-  end
-
-  def go_with_logging
-    Morph::Runner.new(self).go_with_logging do |s, c|
-      yield s, c
-    end
-  end
-
-  def log(stream, text)
-    Morph::Runner.new(self).log(stream, text)
-  end
-
-  def stop!
-    Morph::Runner.new(self).stop!
-  end
-
-  def docker_container_name
-    Morph::Runner.new(self).docker_container_name
-  end
-
-  def container_for_run_exists?
-    Morph::Runner.new(self).container_for_run_exists?
-  end
-
   def variables
     # Handle this run not having a scraper attached (run from morph-cli)
     scraper ? scraper.variables : []

@@ -8,7 +8,7 @@ namespace :app do
       Run.where("finished_at IS NULL").each do |run|
         run_name = "#{run.id}"
         run_name += " (#{run.scraper.full_name})" if run.scraper
-        if run.container_for_run_exists?
+        if Morph::Runner.new(run).container_for_run_exists?
           # TODO could potentially check if container is running or stopped and
           # then if it's stopped delete the container (this is assuming that
           # there still is a running background job that will kick in again)
