@@ -49,21 +49,29 @@ module Morph
         return
       end
 
-      status_code, time_params = Morph::Runner.compile_and_run(
-        run.repo_path, run.data_path,
-        run.env_variables, docker_container_name) do |on|
-        on.log { |s, c| yield s, c }
-        on.ip_address do |ip|
-          # Store the ip address of the container for this run
-          run.update_attributes(ip_address: ip)
+      result = Dir.mktmpdir('morph') do |defaults|
+        Morph::Runner.add_config_defaults_to_directory(run.repo_path, defaults)
+        Morph::Runner.remove_hidden_directories(defaults)
+        Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
+
+        Morph::DockerRunner.compile_and_run(
+          defaults, run.env_variables, docker_container_name,
+          ['data.sqlite']) do |on|
+          on.log { |s, c| yield s, c }
+          on.ip_address do |ip|
+            # Store the ip address of the container for this run
+            run.update_attributes(ip_address: ip)
+          end
         end
       end
 
+      Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
+
       # Now collect and save the metrics
-      metric = Metric.create(time_params) if time_params
+      metric = Metric.create(result.time_params) if result.time_params
       metric.update_attributes(run_id: run.id) if metric
 
-      run.update_attributes(status_code: status_code, finished_at: Time.now)
+      run.update_attributes(status_code: result.status_code, finished_at: Time.now)
       # Update information about what changed in the database
       diffstat = Morph::Database.diffstat_safe(
         run.database.sqlite_db_backup_path, run.database.sqlite_db_path)
@@ -97,29 +105,6 @@ module Morph
     def stop!
       Morph::DockerUtils.stop(docker_container_name)
       run.update_attributes(status_code: 130, finished_at: Time.now)
-    end
-
-    def self.compile_and_run(repo_path, data_path, env_variables,
-                             container_name)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      Dir.mktmpdir('morph') do |defaults|
-        add_config_defaults_to_directory(repo_path, defaults)
-        remove_hidden_directories(defaults)
-        add_sqlite_db_to_directory(data_path, defaults)
-
-        result = Morph::DockerRunner.compile_and_run(
-          defaults, env_variables, container_name,
-          ['data.sqlite']) do |on|
-          on.log { |s, c| wrapper.call(:log, s, c) }
-          on.ip_address { |ip| wrapper.call(:ip_address, ip) }
-        end
-
-        copy_sqlite_db_back(data_path, result.files['data.sqlite'])
-
-        [result.status_code, result.time_params]
-      end
     end
 
     def self.add_sqlite_db_to_directory(data_path, dir)
