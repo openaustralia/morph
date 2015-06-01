@@ -103,10 +103,8 @@ module Morph
     # actually stop the compile stage
     # TODO: Make this stop the compile stage
     def stop!
-      # Find the container with the right label
-      container = Docker::Container.all(all: true).find do |c|
-        c.info['Labels'][run_label_key] == run_label_value
-      end
+      container = Morph::DockerUtils.find_container_with_label(
+        run_label_key, run_label_value)
       container.kill if container
       run.update_attributes(status_code: 130, finished_at: Time.now)
     end

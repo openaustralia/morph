@@ -58,6 +58,14 @@ module Morph
       end
     end
 
+    # Finds the first matching container
+    # Returns nil otherwise
+    def self.find_container_with_label(key, value)
+      Docker::Container.all(all: true).find do |c|
+        c.info['Labels'][key] == value
+      end
+    end
+
     def self.copy_directory_contents(source, dest)
       FileUtils.cp_r File.join(source, '.'), dest
     end
