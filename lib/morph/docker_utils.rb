@@ -44,20 +44,6 @@ module Morph
       end
     end
 
-    def self.container_exists?(name)
-      Docker::Container.get(name)
-      true
-    rescue Docker::Error::NotFoundError
-      false
-    end
-
-    def self.stop(container_name)
-      if container_exists?(container_name)
-        c = Docker::Container.get(container_name)
-        c.kill
-      end
-    end
-
     # Finds the first matching container
     # Returns nil otherwise
     def self.find_container_with_label(key, value)
