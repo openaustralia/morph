@@ -172,10 +172,11 @@ module Morph
     # How to label the container for the actually running scraper
     def docker_container_labels
       # Everything needs to be a string
-      {
-        'io.morph.scraper' => run.scraper.full_name,
+      labels = {
         'io.morph.run' => run.id.to_s
       }
+      labels['io.morph.scraper'] = run.scraper.full_name if run.scraper
+      labels
     end
 
     def container_for_run_exists?
