@@ -11,7 +11,8 @@ module Morph
     ]
     BUILDSTEP_IMAGE = 'openaustralia/buildstep'
 
-    def self.compile_and_run(repo_path, env_variables, container_name, files)
+    def self.compile_and_run(repo_path, env_variables, container_name,
+                             container_labels, files)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
@@ -49,8 +50,9 @@ module Morph
       files = files.map { |f| File.join('/app', f)}
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
-      status_code, data = run(i4.id, command,
-           env_variables, container_name, files + [time_file]) do |on|
+      status_code, data = run(
+        i4.id, command, env_variables, container_name,
+        container_labels, files + [time_file]) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
@@ -118,12 +120,13 @@ module Morph
     private
 
     # files - paths to files to return at the end of the run
-    def self.run(image_name, command, env_variables, container_name, files)
+    def self.run(image_name, command, env_variables, container_name,
+                 container_labels, files)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
       c = run_no_cleanup(image_name, command,
-                         env_variables, container_name) do |on|
+                         env_variables, container_name, container_labels) do |on|
         on.log { |s, c| wrapper.call(:log, s, c) }
         on.ip_address { |ip| wrapper.call(:ip_address, ip) }
       end
@@ -141,7 +144,8 @@ module Morph
       [status_code, data]
     end
 
-    def self.run_no_cleanup(image_name, command, env_variables, container_name)
+    def self.run_no_cleanup(image_name, command, env_variables, container_name,
+                            container_labels)
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
@@ -164,7 +168,8 @@ module Morph
         # a time. So, 100M
         'Memory' => 100 * 1024 * 1024,
         'Env' => env_variables.map { |k, v| "#{k}=#{v}" },
-        'name' => container_name
+        'name' => container_name,
+        'Labels' => container_labels
       }
 
       # This will fail if there is another container with the same name

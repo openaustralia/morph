@@ -56,7 +56,7 @@ module Morph
 
         Morph::DockerRunner.compile_and_run(
           defaults, run.env_variables, docker_container_name,
-          ['data.sqlite']) do |on|
+          docker_container_labels, ['data.sqlite']) do |on|
           on.log { |s, c| yield s, c }
           on.ip_address do |ip|
             # Store the ip address of the container for this run
@@ -167,6 +167,15 @@ module Morph
 
     def docker_container_name
       "#{run.owner.to_param}_#{run.name}_#{run.id}"
+    end
+
+    # How to label the container for the actually running scraper
+    def docker_container_labels
+      # Everything needs to be a string
+      {
+        'io.morph.scraper' => run.scraper.full_name,
+        'io.morph.run' => run.id.to_s
+      }
     end
 
     def container_for_run_exists?
