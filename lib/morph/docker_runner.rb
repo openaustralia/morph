@@ -168,7 +168,6 @@ module Morph
         # a time. So, 100M
         'Memory' => 100 * 1024 * 1024,
         'Env' => env_variables.map { |k, v| "#{k}=#{v}" },
-        'name' => container_name,
         'Labels' => container_labels
       }
 
