@@ -37,7 +37,7 @@ class ApiController < ApplicationController
 
       result = []
       response.headers['Content-Type'] = 'text/event-stream'
-      Morph::Runner.new(run).go_with_logging do |s,text|
+      Morph::Runner.new(run).go do |s,text|
         response.stream.write({stream: s, text: text}.to_json + "\n")
       end
       response.stream.close
