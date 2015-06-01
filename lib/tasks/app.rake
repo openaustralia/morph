@@ -63,18 +63,6 @@ namespace :app do
     Morph::Backup.restore if confirm("Are you sure? This will overwrite the databases and Redis needs to be shutdown.")
   end
 
-  # This task should be run from a cron job every 5-10 minutes or so. This is workaround
-  # for the fact that to-date we can't completely cleanly clean-up after ourselves properly
-  # In an ideal world our container runner would always consistently handle the container
-  # cleanup. This doesn't always work. So, that's why we have this workaround.
-  #
-  # To avoid cleaning up before the container runner has a chance to clean up we only
-  # clean up containers that have been stopped for more than 5 minutes.
-  desc "Remove stopped containers"
-  task :remove_stopped_containers => :environment do
-    Morph::DockerRunner.remove_stopped_containers!
-  end
-
   def confirm(message)
     STDOUT.puts "#{message} (y/n)"
     STDIN.gets.strip == "y"
