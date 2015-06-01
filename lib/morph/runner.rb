@@ -2,6 +2,107 @@ module Morph
   # High level API for running morph scraper. Handles the setting up of default
   # configuration if things like Gemfiles are not included (for Ruby)
   class Runner
+    include Sync::Actions
+    attr_accessor :run
+
+    def initialize(run)
+      @run = run
+    end
+
+    # The main section of the scraper running that is run in the background
+    def synch_and_go!
+      # If this run belongs to a scraper that has just been deleted then
+      # don't do anything
+      return if run.scraper.nil?
+
+      Morph::Github.synchronise_repo(run.repo_path, run.git_url)
+      run.go!
+    end
+
+    def go!
+      run.go_with_logging do |s, c|
+        run.log(s, c)
+      end
+    end
+
+    def go_with_logging
+      puts "Starting...\n"
+      run.database.backup
+      run.update_attributes(started_at: Time.now,
+                            git_revision: run.current_revision_from_repo)
+      sync_update run.scraper if run.scraper
+      FileUtils.mkdir_p run.data_path
+      FileUtils.chmod 0777, run.data_path
+
+      unless run.language && run.language.supported?
+        supported_scraper_files =
+          Morph::Language.languages_supported.map(&:scraper_filename)
+        m = "Can't find scraper code. Expected to find a file called " +
+            supported_scraper_files.to_sentence(last_word_connector: ', or ') +
+            ' in the root directory'
+        yield 'stderr', m
+        run.update_attributes(status_code: 999, finished_at: Time.now)
+        return
+      end
+
+      status_code, time_params = Morph::Runner.compile_and_run(
+        run.repo_path, run.data_path,
+        run.env_variables, run.docker_container_name) do |on|
+        on.log { |s, c| yield s, c }
+        on.ip_address do |ip|
+          # Store the ip address of the container for this run
+          run.update_attributes(ip_address: ip)
+        end
+      end
+
+      # Now collect and save the metrics
+      metric = Metric.create(time_params) if time_params
+      metric.update_attributes(run_id: run.id) if metric
+
+      run.update_attributes(status_code: status_code, finished_at: Time.now)
+      # Update information about what changed in the database
+      diffstat = Morph::Database.diffstat_safe(
+        run.database.sqlite_db_backup_path, run.database.sqlite_db_path)
+      if diffstat
+        tables = diffstat[:tables][:counts]
+        records = diffstat[:records][:counts]
+        run.update_attributes(
+          tables_added: tables[:added],
+          tables_removed: tables[:removed],
+          tables_changed: tables[:changed],
+          tables_unchanged: tables[:unchanged],
+          records_added: records[:added],
+          records_removed: records[:removed],
+          records_changed: records[:changed],
+          records_unchanged: records[:unchanged]
+        )
+      end
+      Morph::Database.tidy_data_path(run.data_path)
+      if run.scraper
+        run.scraper.update_sqlite_db_size
+        run.scraper.reindex
+        run.scraper.reload
+        sync_update run.scraper
+      end
+    end
+
+    def log(stream, text)
+      puts "#{stream}: #{text}"
+      number = run.log_lines.maximum(:number) || 0
+      line = run.log_lines.create(stream: stream.to_s, text: text,
+                                  number: (number + 1))
+      sync_new line, scope: run
+    end
+
+    # TODO: Shouldn't this update the metrics here as well?
+    # Currently this will only stop the main run of the scraper. It won't
+    # actually stop the compile stage
+    # TODO: Make this stop the compile stage
+    def stop!
+      Morph::DockerUtils.stop(run.docker_container_name)
+      run.update_attributes(status_code: 130, finished_at: Time.now)
+    end
+
     def self.compile_and_run(repo_path, data_path, env_variables,
                              container_name)
       wrapper = Multiblock.wrapper
@@ -81,6 +182,14 @@ module Morph
           FileUtils.rm_rf(path)
         end
       end
+    end
+
+    def docker_container_name
+      "#{run.owner.to_param}_#{run.name}_#{run.id}"
+    end
+
+    def container_for_run_exists?
+      Morph::DockerUtils.container_exists?(run.docker_container_name)
     end
   end
 end

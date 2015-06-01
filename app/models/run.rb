@@ -1,6 +1,5 @@
 # A run of a scraper
 class Run < ActiveRecord::Base
-  include Sync::Actions
   belongs_to :owner
   belongs_to :scraper, inverse_of: :runs, touch: true
   has_many :log_lines
@@ -91,97 +90,34 @@ class Run < ActiveRecord::Base
     "https://github.com/#{full_name}/commit/#{git_revision}"
   end
 
-  def go_with_logging
-    puts "Starting...\n"
-    database.backup
-    update_attributes(started_at: Time.now,
-                      git_revision: current_revision_from_repo)
-    sync_update scraper if scraper
-    FileUtils.mkdir_p data_path
-    FileUtils.chmod 0777, data_path
-
-    unless language && language.supported?
-      supported_scraper_files =
-        Morph::Language.languages_supported.map(&:scraper_filename)
-      m = "Can't find scraper code. Expected to find a file called " +
-          supported_scraper_files.to_sentence(last_word_connector: ', or ') +
-          ' in the root directory'
-      yield 'stderr', m
-      update_attributes(status_code: 999, finished_at: Time.now)
-      return
-    end
-
-    status_code, time_params = Morph::Runner.compile_and_run(
-      repo_path, data_path, env_variables, docker_container_name) do |on|
-      on.log { |s, c| yield s, c }
-      on.ip_address do |ip|
-        # Store the ip address of the container for this run
-        update_attributes(ip_address: ip)
-      end
-    end
-
-    # Now collect and save the metrics
-    metric = Metric.create(time_params) if time_params
-    metric.update_attributes(run_id: self.id) if metric
-
-    update_attributes(status_code: status_code, finished_at: Time.now)
-    # Update information about what changed in the database
-    diffstat = Morph::Database.diffstat_safe(
-      database.sqlite_db_backup_path, database.sqlite_db_path)
-    if diffstat
-      tables = diffstat[:tables][:counts]
-      records = diffstat[:records][:counts]
-      update_attributes(
-        tables_added: tables[:added],
-        tables_removed: tables[:removed],
-        tables_changed: tables[:changed],
-        tables_unchanged: tables[:unchanged],
-        records_added: records[:added],
-        records_removed: records[:removed],
-        records_changed: records[:changed],
-        records_unchanged: records[:unchanged]
-      )
-    end
-    Morph::Database.tidy_data_path(data_path)
-    if scraper
-      scraper.update_sqlite_db_size
-      scraper.reindex
-      scraper.reload
-      sync_update scraper
-    end
-  end
-
-  # TODO: Shouldn't this update the metrics here as well?
-  # Currently this will only stop the main run of the scraper. It won't
-  # actually stop the compile stage
-  # TODO: Make this stop the compile stage
-  def stop!
-    Morph::DockerUtils.stop(docker_container_name)
-    update_attributes(status_code: 130, finished_at: Time.now)
-  end
-
-  def log(stream, text)
-    puts "#{stream}: #{text}"
-    number = log_lines.maximum(:number) || 0
-    line = log_lines.create(stream: stream.to_s, text: text,
-                            number: (number + 1))
-    sync_new line, scope: self
+  def synch_and_go!
+    Morph::Runner.new(self).synch_and_go!
   end
 
   def go!
-    go_with_logging do |s, c|
-      log(s, c)
+    Morph::Runner.new(self).go!
+  end
+
+  def go_with_logging
+    Morph::Runner.new(self).go_with_logging do |s, c|
+      yield s, c
     end
   end
 
-  # The main section of the scraper running that is run in the background
-  def synch_and_go!
-    # If this run belongs to a scraper that has just been deleted then
-    # don't do anything
-    return if scraper.nil?
+  def log(stream, text)
+    Morph::Runner.new(self).log(stream, text)
+  end
 
-    Morph::Github.synchronise_repo(repo_path, git_url)
-    go!
+  def stop!
+    Morph::Runner.new(self).stop!
+  end
+
+  def docker_container_name
+    Morph::Runner.new(self).docker_container_name
+  end
+
+  def container_for_run_exists?
+    Morph::Runner.new(self).container_for_run_exists?
   end
 
   def variables
@@ -192,13 +128,5 @@ class Run < ActiveRecord::Base
   # Returns array of environment variables as key-value pairs
   def env_variables
     variables.map { |v| [v.name, v.value] }
-  end
-
-  def docker_container_name
-    "#{owner.to_param}_#{name}_#{id}"
-  end
-
-  def container_for_run_exists?
-    Morph::DockerUtils.container_exists?(docker_container_name)
   end
 end
