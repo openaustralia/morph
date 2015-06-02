@@ -199,25 +199,9 @@ module Morph
     end
 
     def self.docker_build_from_dir(dir)
-      # How does this connection get closed?
-      conn_interactive = Docker::Connection.new(
-        Docker.url,
-        { read_timeout: 4.hours }.merge(Docker.env_options))
-      begin
-        buffer = ''
-        Docker::Image.build_from_tar(
-          StringIO.new(Morph::DockerUtils.create_tar(dir)),
-          { 'forcerm' => 1 }, conn_interactive) do |chunk|
-          buffer += chunk
-          while i = buffer.index("\r\n")
-            first_part = buffer[0..i - 1]
-            buffer = buffer[i + 2..-1]
-            parsed_line = JSON.parse(first_part)
-            yield parsed_line['stream'] if parsed_line.key?('stream')
-          end
-        end
-      rescue Docker::Error::UnexpectedResponseError
-        nil
+      Morph::DockerUtils.docker_build_from_dir(
+        dir, read_timeout: 4.hours) do |c|
+        yield c
       end
     end
 
