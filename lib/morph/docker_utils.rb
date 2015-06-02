@@ -44,11 +44,19 @@ module Morph
       end
     end
 
+    def self.label_value(container, label_key)
+      container.info['Labels'][label_key] if container.info.key?('Labels')
+    end
+
+    def self.container_has_label_value?(container, key, value)
+      label_value(container, key) == value
+    end
+
     # Finds the first matching container
     # Returns nil otherwise
     def self.find_container_with_label(key, value)
-      Docker::Container.all(all: true).find do |c|
-        c.info['Labels'] && c.info['Labels'][key] == value
+      Docker::Container.all(all: true).find do |container|
+        container_has_label_value?(container, key, value)
       end
     end
 
