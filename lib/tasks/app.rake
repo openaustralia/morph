@@ -63,6 +63,25 @@ namespace :app do
     Morph::Backup.restore if confirm("Are you sure? This will overwrite the databases and Redis needs to be shutdown.")
   end
 
+  desc 'Show info about stopped containers'
+  task show_stopped_containers: :environment do
+    # List all stopped containers
+    Morph::DockerUtils.stopped_containers.each do |container|
+      run = Morph::Runner.run_for_container(container)
+      # Only show containers that belong to morph.io runs
+      # TODO: Also show other stopped containers that could be failed compiles
+      if run
+        container_id = container.json['Id']
+        run_id = run.id
+        scraper_name = run.scraper.full_name if run.scraper
+        exit_code = container.json['State']['ExitCode']
+        finished_at = container.json['State']['FinishedAt']
+        oom_killed = container.json['State']['OOMKilled']
+        puts "container_id: #{container_id}, run_id: #{run_id}, scraper_name: #{scraper_name}, exit_code: #{exit_code}, oom_killed: #{oom_killed}, finished_at: #{finished_at}"
+      end
+    end
+  end
+
   def confirm(message)
     STDOUT.puts "#{message} (y/n)"
     STDIN.gets.strip == "y"

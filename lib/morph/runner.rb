@@ -191,5 +191,16 @@ module Morph
       !Morph::DockerUtils.find_container_with_label(
         Morph::Runner.run_label_key, run_label_value).nil?
     end
+
+    def self.run_id_for_container(container)
+      value = Morph::DockerUtils.label_value(container, run_label_key)
+      value.to_i if value
+    end
+
+    # Given a run return the associated run object
+    def self.run_for_container(container)
+      run_id = run_id_for_container(container)
+      Run.find(run_id) if run_id
+    end
   end
 end
