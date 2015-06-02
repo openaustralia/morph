@@ -198,13 +198,6 @@ module Morph
       c
     end
 
-    def self.docker_build_from_dir(dir)
-      Morph::DockerUtils.docker_build_from_dir(
-        dir, read_timeout: 4.hours) do |c|
-        yield c
-      end
-    end
-
     def self.docker_build_command(image, commands, dir)
       # Leave the files in dir untouched
       Dir.mktmpdir('morph') do |dir2|
@@ -214,7 +207,8 @@ module Morph
         end
 
         Morph::DockerUtils.fix_modification_times(dir2)
-        docker_build_from_dir(dir2) do |c|
+        Morph::DockerUtils.docker_build_from_dir(
+          dir2, read_timeout: 4.hours) do |c|
           yield c
         end
       end
