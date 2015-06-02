@@ -77,7 +77,8 @@ namespace :app do
         exit_code = container.json['State']['ExitCode']
         finished_at = container.json['State']['FinishedAt']
         oom_killed = container.json['State']['OOMKilled']
-        puts "container_id: #{container_id}, run_id: #{run_id}, scraper_name: #{scraper_name}, exit_code: #{exit_code}, oom_killed: #{oom_killed}, finished_at: #{finished_at}"
+        running = run.running?
+        puts "container_id: #{container_id}, run_id: #{run_id}, scraper_name: #{scraper_name}, exit_code: #{exit_code}, oom_killed: #{oom_killed}, finished_at: #{finished_at}, running: #{running}"
       end
     end
   end
