@@ -104,7 +104,7 @@ module Morph
     # TODO: Make this stop the compile stage
     def stop!
       container = Morph::DockerUtils.find_container_with_label(
-        run_label_key, run_label_value)
+        Morph::Runner.run_label_key, run_label_value)
       container.kill if container
       run.update_attributes(status_code: 130, finished_at: Time.now)
     end
@@ -171,7 +171,7 @@ module Morph
       "#{run.owner.to_param}_#{run.name}_#{run.id}"
     end
 
-    def run_label_key
+    def self.run_label_key
       'io.morph.run'
     end
 
@@ -182,14 +182,14 @@ module Morph
     # How to label the container for the actually running scraper
     def docker_container_labels
       # Everything needs to be a string
-      labels = { run_label_key => run_label_value }
+      labels = { Morph::Runner.run_label_key => run_label_value }
       labels['io.morph.scraper'] = run.scraper.full_name if run.scraper
       labels
     end
 
     def container_for_run_exists?
       !Morph::DockerUtils.find_container_with_label(
-        run_label_key, run_label_value).nil?
+        Morph::Runner.run_label_key, run_label_value).nil?
     end
   end
 end
