@@ -63,32 +63,6 @@ namespace :app do
     Morph::Backup.restore if confirm("Are you sure? This will overwrite the databases and Redis needs to be shutdown.")
   end
 
-  desc 'Show info about stopped containers'
-  task show_stopped_containers: :environment do
-    # List all stopped containers
-    class Record
-      attr_accessor :container_id, :exit_code, :finished_at, :oom_killed,
-                    :run_id, :scraper_name, :running, :auto
-    end
-    records = Morph::DockerUtils.stopped_containers.map do |container|
-      run = Morph::Runner.run_for_container(container)
-      record = Record.new
-      record.container_id = container.json['Id'][0..11]
-      record.exit_code = container.json['State']['ExitCode']
-      record.finished_at =
-        Time.parse(container.json['State']['FinishedAt']).getlocal.strftime('%c')
-      record.oom_killed = container.json['State']['OOMKilled'] ? 'yes' : 'no'
-      if run
-        record.run_id = run.id
-        record.scraper_name = run.scraper.full_name if run.scraper
-        record.running = run.running? ? 'yes' : 'no'
-        record.auto = run.auto? ? 'yes' : 'no'
-      end
-      record
-    end
-    tp records
-  end
-
   def confirm(message)
     STDOUT.puts "#{message} (y/n)"
     STDIN.gets.strip == "y"
