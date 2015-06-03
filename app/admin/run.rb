@@ -25,4 +25,42 @@ ActiveAdmin.register Run do
   filter :started_at
   filter :finished_at
   filter :wall_time
+
+  show do
+    attributes_table do
+      row :id
+      row :scraper
+      row :started_at
+      row :finished_at
+      row :status_code
+      row :queued_at
+      row :auto
+      row :git_revision
+      row :owner
+      row :wall_time
+      row :records_added
+      row :records_removed
+      row :records_changed
+      row :records_unchanged
+    end
+
+    h2 'Console output'
+
+    table do
+      thead do
+        tr do
+          th 'Stream'
+          th 'Text'
+        end
+      end
+      tbody do
+        run.log_lines.order(:number).each do |line|
+          tr do
+            td line.stream
+            td line.text
+          end
+        end
+      end
+    end
+  end
 end
