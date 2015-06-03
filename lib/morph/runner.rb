@@ -65,7 +65,10 @@ module Morph
         end
       end
 
-      Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
+      # Only copy back database if it's there and has something in it
+      if result.files && result.files.key?('data.sqlite')
+        Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
+      end
 
       # Now collect and save the metrics
       metric = Metric.create(result.time_params) if result.time_params
