@@ -26,6 +26,8 @@ class Metric < ActiveRecord::Base
   #            exceeded its time slice.
 
   def cpu_time
-    utime + stime
+    # At least in development there are some nil utime and stime values
+    # So, try to handle this gracefully
+    (utime || 0) + (stime || 0)
   end
 end
