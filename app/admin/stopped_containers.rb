@@ -14,6 +14,7 @@ ActiveAdmin.register_page 'Stopped Containers' do
         record[:run_id] = run.id
         record[:scraper_name] = run.scraper.full_name if run.scraper
         record[:running] = run.running? ? 'yes' : 'no'
+        record[:run_status_code] = run.status_code
         record[:auto] = run.auto? ? 'yes' : 'no'
       end
       record
@@ -33,6 +34,7 @@ ActiveAdmin.register_page 'Stopped Containers' do
           th 'Run ID'
           th 'Scraper name'
           th 'Running'
+          th 'Run status code'
           th 'Auto'
         end
       end
@@ -56,6 +58,7 @@ ActiveAdmin.register_page 'Stopped Containers' do
               end
             end
             td record[:running]
+            td record[:run_status_code]
             td record[:auto]
           end
         end
