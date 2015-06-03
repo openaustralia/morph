@@ -17,11 +17,12 @@ ActiveAdmin.register_page 'Stopped Containers' do
       tbody do
         records = Morph::DockerUtils.stopped_containers.each do |container|
           run = Morph::Runner.run_for_container(container)
+          info = container.json
           record = {
-            container_id: container.json['Id'][0..11],
-            exit_code: container.json['State']['ExitCode'],
-            finished_at: Time.parse(container.json['State']['FinishedAt']).getlocal.strftime('%c'),
-            oom_killed: container.json['State']['OOMKilled'] ? 'yes' : 'no'
+            container_id: info['Id'][0..11],
+            exit_code: info['State']['ExitCode'],
+            finished_at: Time.parse(info['State']['FinishedAt']).getlocal.strftime('%c'),
+            oom_killed: info['State']['OOMKilled'] ? 'yes' : 'no'
           }
           if run
             record[:run_id] = run.id
