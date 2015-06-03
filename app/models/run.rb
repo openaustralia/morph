@@ -12,14 +12,10 @@ class Run < ActiveRecord::Base
 
   delegate :git_url, :full_name, :current_revision_from_repo,
            to: :scraper, allow_nil: true
-  delegate :utime, :stime, to: :metric
+  delegate :utime, :stime, :cpu_time, to: :metric
 
   def database
     Morph::Database.new(data_path)
-  end
-
-  def cpu_time
-    utime + stime
   end
 
   def language
