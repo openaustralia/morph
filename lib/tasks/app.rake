@@ -66,23 +66,26 @@ namespace :app do
   desc 'Show info about stopped containers'
   task show_stopped_containers: :environment do
     # List all stopped containers
-    Morph::DockerUtils.stopped_containers.each do |container|
-      run = Morph::Runner.run_for_container(container)
-      record = {
-        container_id: container.json['Id'],
-        exit_code:    container.json['State']['ExitCode'],
-        finished_at:  container.json['State']['FinishedAt'],
-        oom_killed:   container.json['State']['OOMKilled']
-      }
-      if run
-        record = record.merge(
-          run_id:       run.id,
-          scraper_name: (run.scraper.full_name if run.scraper),
-          running:      run.running?
-        )
-      end
-      p record
+    class Record
+      attr_accessor :container_id, :exit_code, :finished_at, :oom_killed,
+                    :run_id, :scraper_name, :running
     end
+    records = Morph::DockerUtils.stopped_containers.map do |container|
+      run = Morph::Runner.run_for_container(container)
+      record = Record.new
+      record.container_id = container.json['Id'][0..11]
+      record.exit_code = container.json['State']['ExitCode']
+      record.finished_at =
+        Time.parse(container.json['State']['FinishedAt']).getlocal.strftime('%c')
+      record.oom_killed = container.json['State']['OOMKilled'] ? 'yes' : 'no'
+      if run
+        record.run_id = run.id
+        record.scraper_name = run.scraper.full_name if run.scraper
+        record.running = run.running? ? 'yes' : 'no'
+      end
+      record
+    end
+    tp records
   end
 
   def confirm(message)
