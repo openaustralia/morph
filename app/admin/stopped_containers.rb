@@ -18,6 +18,9 @@ ActiveAdmin.register_page 'Stopped Containers' do
       record
     end
 
+    # Show most recent record first
+    records = records.sort { |a, b| b[:finished_at] <=> a[:finished_at] }
+
     table do
       thead do
         tr do
