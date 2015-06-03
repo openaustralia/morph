@@ -57,7 +57,7 @@ ActiveAdmin.register Run do
         run.log_lines.order(:number).each do |line|
           tr do
             td line.stream
-            td line.text
+            td h(line.text).gsub("\n", "<br/>").html_safe
           end
         end
       end
