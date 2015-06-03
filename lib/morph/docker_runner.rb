@@ -172,6 +172,16 @@ module Morph
         # puts 'Running docker container...'
         # Let parent know about ip address of running container
         wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
+        # TODO: We need to be prepared to gracefully handle Docker::Error::TimeoutError
+        # This should involve throwing a specific exception (something like
+        # Morph::IntentionalRequeue) that says "requeue this" and then we
+        # need to make sure that the requeud job reattaches to the existing
+        # container. It should be able to handle the container still running
+        # as well as having stopped. We can also shorten the read timeout as
+        # it doesn't really have anything to do with how long scrapers are
+        # allowed to run. It's just the time between reads of the log before
+        # the attach read times out. So, a scraper that outputs stuff to
+        # standard out regularly can run a lot longer than one that doesn't.
         c.attach(logs: true) do |s, c|
           # We're going to assume (somewhat rashly, I might add) that the
           # console output from the scraper is always encoded as UTF-8.
