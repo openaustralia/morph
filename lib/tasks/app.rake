@@ -68,7 +68,7 @@ namespace :app do
     # List all stopped containers
     class Record
       attr_accessor :container_id, :exit_code, :finished_at, :oom_killed,
-                    :run_id, :scraper_name, :running
+                    :run_id, :scraper_name, :running, :auto
     end
     records = Morph::DockerUtils.stopped_containers.map do |container|
       run = Morph::Runner.run_for_container(container)
@@ -82,6 +82,7 @@ namespace :app do
         record.run_id = run.id
         record.scraper_name = run.scraper.full_name if run.scraper
         record.running = run.running? ? 'yes' : 'no'
+        record.auto = run.auto? ? 'yes' : 'no'
       end
       record
     end
