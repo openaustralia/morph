@@ -1,11 +1,29 @@
 ActiveAdmin.register_page 'Stopped Containers' do
   content do
+    records = Morph::DockerUtils.stopped_containers.map do |container|
+      run = Morph::Runner.run_for_container(container)
+      info = container.json
+      record = {
+        container_id: info['Id'][0..11],
+        exit_code: info['State']['ExitCode'],
+        finished_at: Time.parse(info['State']['FinishedAt']),
+        oom_killed: info['State']['OOMKilled'] ? 'yes' : 'no'
+      }
+      if run
+        record[:run_id] = run.id
+        record[:scraper_name] = run.scraper.full_name if run.scraper
+        record[:running] = run.running? ? 'yes' : 'no'
+        record[:auto] = run.auto? ? 'yes' : 'no'
+      end
+      record
+    end
+
     table do
       thead do
         tr do
           th 'Container ID'
           th 'Exit code'
-          th 'Finished at'
+          th 'Finished'
           th 'OOM Killed'
           th 'Run ID'
           th 'Scraper name'
@@ -15,25 +33,11 @@ ActiveAdmin.register_page 'Stopped Containers' do
       end
 
       tbody do
-        records = Morph::DockerUtils.stopped_containers.each do |container|
-          run = Morph::Runner.run_for_container(container)
-          info = container.json
-          record = {
-            container_id: info['Id'][0..11],
-            exit_code: info['State']['ExitCode'],
-            finished_at: Time.parse(info['State']['FinishedAt']).getlocal.strftime('%c'),
-            oom_killed: info['State']['OOMKilled'] ? 'yes' : 'no'
-          }
-          if run
-            record[:run_id] = run.id
-            record[:scraper_name] = run.scraper.full_name if run.scraper
-            record[:running] = run.running? ? 'yes' : 'no'
-            record[:auto] = run.auto? ? 'yes' : 'no'
-          end
+        records.each do |record|
           tr do
             td record[:container_id]
             td record[:exit_code]
-            td record[:finished_at]
+            td time_ago_in_words(record[:finished_at]) + ' ago'
             td record[:oom_killed]
             td do
               if record[:run_id]
@@ -50,8 +54,6 @@ ActiveAdmin.register_page 'Stopped Containers' do
           end
         end
       end
-    end
-    ul do
     end
   end
 end
