@@ -34,8 +34,16 @@ ActiveAdmin.register_page 'Stopped Containers' do
             td record[:exit_code]
             td record[:finished_at]
             td record[:oom_killed]
-            td record[:run_id]
-            td record[:scraper_name]
+            td do
+              if record[:run_id]
+                link_to record[:run_id], admin_run_path(id: record[:run_id])
+              end
+            end
+            td do
+              if record[:scraper_name]
+                link_to record[:scraper_name], scraper_path(id: record[:scraper_name])
+              end
+            end
             td record[:running]
             td record[:auto]
           end
