@@ -21,6 +21,11 @@ VCR.configure do |c|
   c.hook_into :webmock
 end
 
+# We don't want webmock to get involved with the excon library at all
+# Otherwise tests that involve streaming output from a docker container
+# just buffer. It took way too long to figure out where the problem was!
+WebMock::HttpLibAdapters::ExconAdapter.disable!
+
 RSpec.configure do |config|
   # ## Mock Framework
   #

@@ -155,6 +155,30 @@ This is not going to run as ruby code so should return an error
           [:stderr, "scraper.rb:1: void value expression\n"]
         ]
       end
+
+      it 'should stream output if the right things are set for the language' do
+        File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
+          f << %q(
+puts "Started!"
+(1..10).each do |i|
+  $stdout.puts "#{i}..."
+  $stdout.flush
+  sleep 0.1
+end
+puts "Finished!"
+          )
+        end
+        logs = []
+        result = Morph::DockerRunner.compile_and_run(
+          @dir, {}, 'foo', {}, []) do |on|
+          on.log do |s, c|
+            logs << [Time.now, c]
+          end
+        end
+        start_time = logs.find{|l| l[1] == "Started!\n"}[0]
+        end_time = logs.find{|l| l[1] == "Finished!\n"}[0]
+        expect(end_time - start_time).to be_within(0.1).of(1.0)
+      end
     end
 
     skip 'should cache the compile' do
