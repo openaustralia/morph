@@ -45,7 +45,7 @@ module Morph
     end
 
     def self.label_value(container, label_key)
-      container.info['Labels'][label_key] if container.info.key?('Labels')
+      container.info['Labels'][label_key] if container.info && container.info['Labels']
     end
 
     def self.container_has_label_value?(container, key, value)
