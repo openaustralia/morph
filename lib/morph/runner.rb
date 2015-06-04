@@ -30,7 +30,7 @@ module Morph
     end
 
     def go
-      puts "Starting...\n"
+      #puts "Starting...\n"
       run.database.backup
       run.update_attributes(started_at: Time.now,
                             git_revision: run.current_revision_from_repo)
