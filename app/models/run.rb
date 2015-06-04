@@ -14,6 +14,8 @@ class Run < ActiveRecord::Base
            to: :scraper, allow_nil: true
   delegate :utime, :stime, :cpu_time, to: :metric
 
+  # TODO: Run requires an owner - add a validation for that
+
   def database
     Morph::Database.new(data_path)
   end
@@ -46,6 +48,7 @@ class Run < ActiveRecord::Base
     end
   end
 
+  # TODO: Put env in path so development and test don't crash into each other
   def data_path
     "#{owner.data_root}/#{name}"
   end
