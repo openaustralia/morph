@@ -24,6 +24,7 @@ ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software 
     end
   end
 
+  # TODO: Test that we can stop the compile stage
   describe ".stop!", docker: true do
     it 'should be able to stop a scraper running in a continuous loop' do
       owner = User.create(nickname: 'mlandauer')
