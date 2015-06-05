@@ -200,10 +200,14 @@ module Morph
         # puts 'Docker container finished...'
       rescue Exception => e
         wrapper.call(:log,  :internalerr, "morph.io internal error: #{e}\n")
-        wrapper.call(:log, :internalerr,
-                     "Stopping current container and requeueing\n")
         # TODO: Don't kill container for all exceptions
-        c.kill unless e.is_a?(Sidekiq::Shutdown)
+        if e.is_a?(Sidekiq::Shutdown)
+          wrapper.call(:log, :internalerr, "Requeueing\n")
+        else
+          wrapper.call(:log, :internalerr,
+                       "Stopping current container and requeueing\n")
+          c.kill
+        end
         raise e
       end
       c
