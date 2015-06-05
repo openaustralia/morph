@@ -101,15 +101,15 @@ module Morph
       end
     end
 
-    # TODO: Shouldn't this update the metrics here as well?
-    # Currently this will only stop the main run of the scraper. It won't
-    # actually stop the compile stage
+    # Note that cleanup is automatically done by the process on the
+    # background queue attached to the container. When the scraper process is
+    # killed here, the attach block finishes and the container cleanup is done
+    # as if the scraper had stopped on its own
     # TODO: Make this stop the compile stage
     def stop!
       container = Morph::DockerUtils.find_container_with_label(
         Morph::Runner.run_label_key, run_label_value)
       container.kill if container
-      run.update_attributes(status_code: 130, finished_at: Time.now)
     end
 
     def self.add_sqlite_db_to_directory(data_path, dir)

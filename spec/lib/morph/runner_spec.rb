@@ -62,6 +62,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       expect(logs.last == "2...\n" || logs.last == "3...\n").to eq true
       expect(Morph::DockerUtils.stopped_containers.count).to eq container_count
       expect(run.database.first_ten_rows).to eq [{ 'state' => 'started' }]
+      expect(run.status_code).to eq 137
     end
   end
 
