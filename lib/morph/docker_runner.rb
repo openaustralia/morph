@@ -50,12 +50,24 @@ module Morph
       files = files.map { |f| File.join('/app', f) }
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
-      status_code, data = run(
-        i4.id, command, env_variables,
-        container_labels, files + [time_file]) do |on|
-        on.log { |s, c| wrapper.call(:log, s, c) }
-        on.ip_address { |ip| wrapper.call(:ip_address, ip) }
+      c = start_run(i4.id, command, env_variables, container_labels)
+
+      # Let parent know about ip address of running container
+      wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
+
+      attach_to_run(c) do |s, c|
+        wrapper.call(:log, s, c)
       end
+
+      status_code = c.json['State']['ExitCode']
+      # Wait until container has definitely stopped
+      c.wait
+
+      # Grab the resulting files
+      data = Morph::DockerUtils.copy_files(c, files + [time_file])
+
+      # Clean up after ourselves
+      c.delete
 
       time_data = data.delete(time_file)
       if time_data
@@ -101,34 +113,6 @@ module Morph
     end
 
     private
-
-    # files - paths to files to return at the end of the run
-    def self.run(image_name, command, env_variables,
-                 container_labels, files)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      c = start_run(image_name, command, env_variables, container_labels)
-
-      # Let parent know about ip address of running container
-      wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
-
-      attach_to_run(c) do |s, c|
-        wrapper.call(:log, s, c)
-      end
-
-      status_code = c.json['State']['ExitCode']
-      # Wait until container has definitely stopped
-      c.wait
-
-      # Grab the resulting files
-      data = Morph::DockerUtils.copy_files(c, files)
-
-      # Clean up after ourselves
-      c.delete
-
-      [status_code, data]
-    end
 
     def self.start_run(image_name, command, env_variables,
                        container_labels)
