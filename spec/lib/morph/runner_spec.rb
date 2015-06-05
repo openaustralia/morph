@@ -41,7 +41,9 @@ puts "Finished!"
         )
       end
       logs = []
+
       runner = Morph::Runner.new(run)
+      container_count = Morph::DockerUtils.stopped_containers.count
       runner.go do |s, c|
         logs << c
         if c == "2...\n"
@@ -53,6 +55,7 @@ puts "Finished!"
         end
       end
       expect(logs.last == "2...\n" || logs.last == "3...\n").to eq true
+      expect(Morph::DockerUtils.stopped_containers.count).to eq container_count
     end
   end
 
