@@ -107,6 +107,10 @@ module Morph
       end
     end
 
+    def self.running_containers
+      Docker::Container.all
+    end
+
     def self.docker_build_from_dir(dir, options)
       # How does this connection get closed?
       connection = Docker::Connection.new(

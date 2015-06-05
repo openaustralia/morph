@@ -1,4 +1,6 @@
 require 'spec_helper'
+# To define Sidekiq::Shutdown
+require 'sidekiq/cli'
 
 describe Morph::Runner do
   describe '.go', docker: true do
@@ -21,6 +23,54 @@ ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software 
       run.reload
       expect(run.status_code).to eq 0
       expect(run.database.no_rows).to eq 1
+    end
+
+    it 'should magically handle a sidekiq queue restart' do
+      owner = User.create(nickname: 'mlandauer')
+      run = Run.create(owner: owner)
+      FileUtils.rm_rf(run.data_path)
+      FileUtils.rm_rf(run.repo_path)
+      FileUtils.mkdir_p(run.repo_path)
+      File.open(File.join(run.repo_path, 'scraper.rb'), 'w') do |f|
+        f << %q(
+require 'scraperwiki'
+
+puts "Started!"
+ScraperWiki.save_sqlite(["state"], {"state" => "started"})
+(1..50).each do |i|
+  puts "#{i}..."
+  sleep 1
+end
+puts "Finished!"
+ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
+        )
+      end
+      logs = []
+
+      runner = Morph::Runner.new(run)
+      running_count = Morph::DockerUtils.running_containers.count
+      container_count = Morph::DockerUtils.stopped_containers.count
+      expect {runner.go do |s, c|
+        logs << c
+        puts c
+        if c == "2...\n"
+          raise Sidekiq::Shutdown
+        end
+      end}.to raise_error(Sidekiq::Shutdown)
+      expect(logs).to eq [
+        "Injecting configuration and compiling...\n",
+        "Injecting scraper and running...\n",
+        "Started!\n",
+        "1...\n",
+        "2...\n",
+        "morph.io internal error: Sidekiq::Shutdown\n",
+        "Stopping current container and requeueing\n"
+      ]
+      run.reload
+      expect(run).to be_running
+      # We expect the container to still be running
+      expect(Morph::DockerUtils.running_containers.count)
+        .to eq (running_count + 1)
     end
   end
 

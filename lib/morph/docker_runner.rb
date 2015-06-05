@@ -202,7 +202,8 @@ module Morph
         wrapper.call(:log,  :internalerr, "morph.io internal error: #{e}\n")
         wrapper.call(:log, :internalerr,
                      "Stopping current container and requeueing\n")
-        c.kill
+        # TODO: Don't kill container for all exceptions
+        c.kill unless e.is_a?(Sidekiq::Shutdown)
         raise e
       end
       c
