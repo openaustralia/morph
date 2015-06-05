@@ -16,7 +16,7 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      c, i4 = compile_and_start_run(
+      c = compile_and_start_run(
         repo_path, env_variables, container_labels) do |s, c|
         wrapper.call(:log, s, c)
       end
@@ -29,7 +29,7 @@ module Morph
       # Let parent know about ip address of running container
       wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
 
-      attach_to_run_and_finish(c, i4, files) do |s, c|
+      attach_to_run_and_finish(c, files) do |s, c|
         wrapper.call(:log, s, c)
       end
     end
@@ -54,7 +54,7 @@ module Morph
       end
       # If something went wrong during the compile and it couldn't finish
       if i3.nil?
-        return [nil, nil]
+        return nil
       end
 
       # Insert the actual code (and database) into the container
@@ -68,15 +68,15 @@ module Morph
 
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
-      c = start_run(i4.id, command, env_variables, container_labels)
-      [c, i4]
+      start_run(i4.id, command, env_variables, container_labels)
     end
 
-    def self.attach_to_run_and_finish(c, i4, files)
+    def self.attach_to_run_and_finish(c, files)
       attach_to_run(c) do |s, c|
         yield(s, c)
       end
 
+      # TODO: Don't call c.json multiple times
       status_code = c.json['State']['ExitCode']
       # Wait until container has definitely stopped
       c.wait
@@ -86,6 +86,9 @@ module Morph
 
       # Grab the resulting files
       data = Morph::DockerUtils.copy_files(c, files + [time_file])
+
+      # Before we delete the container get the image it was made from
+      i4 = Docker::Image.get(c.json['Image'])
 
       # Clean up after ourselves
       c.delete
@@ -106,6 +109,8 @@ module Morph
       # There's a potential race condition here where we are trying to delete
       # something that might be used elsewhere. Do the most crude thing and
       # just ignore any errors that deleting might throw up.
+      # TODO: We wouldn't need to clean up the image with the scraper code if
+      # we injected the scraper code via stdin when we attach to the container
       begin
         i4.delete('noprune' => 1)
       rescue Docker::Error::ConfictError
