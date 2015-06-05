@@ -22,6 +22,7 @@ ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
   c.hook_into :webmock
+  c.ignore_hosts 'codeclimate.com'
 end
 
 # We don't want webmock to get involved with the excon library at all
