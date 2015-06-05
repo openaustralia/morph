@@ -24,6 +24,38 @@ ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software 
     end
   end
 
+  describe ".stop!", docker: true do
+    it 'should be able to stop a scraper running in a continuous loop' do
+      owner = User.create(nickname: 'mlandauer')
+      run = Run.create(owner: owner)
+      FileUtils.rm_rf(run.repo_path)
+      FileUtils.mkdir_p(run.repo_path)
+      File.open(File.join(run.repo_path, 'scraper.rb'), 'w') do |f|
+        f << %q(
+puts "Starting!"
+(1..50).each do |i|
+  puts "#{i}..."
+  sleep 0.1
+end
+puts "Finished!"
+        )
+      end
+      logs = []
+      runner = Morph::Runner.new(run)
+      runner.go do |s, c|
+        logs << c
+        if c == "2...\n"
+          # Putting the stop code in another thread (which is essentially
+          # similar to how it works on morph.io for real)
+          # If we don't do this we get a "Closed stream (IOError)" which I
+          # haven't yet been able to figure out the origins of
+          Thread.new { runner.stop! }
+        end
+      end
+      expect(logs.last == "2...\n" || logs.last == "3...\n").to eq true
+    end
+  end
+
   describe '.add_config_defaults_to_directory' do
     before(:each) { FileUtils.mkdir('test') }
     after(:each) { FileUtils.rm_rf('test') }
