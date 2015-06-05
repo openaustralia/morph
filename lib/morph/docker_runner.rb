@@ -16,41 +16,21 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      i = Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE) do |c|
-        wrapper.call(:log, :internalout, c)
-      end
-      # Insert the configuration part of the application code into the container
-      i2 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(repo_path, dest, true)
-        wrapper.call(:log, :internalout,
-                     "Injecting configuration and compiling...\n")
-        inject_files(i, dest)
-      end
-      i3 = compile(i2) do |c|
-        wrapper.call(:log, :internalout, c)
-      end
-      # If something went wrong during the compile and it couldn't finish
-      if i3.nil?
-        # TODO: Return the status for a compile error
-        return Morph::RunResult.new(255, {}, {})
-      end
-
-      # Insert the actual code (and database) into the container
-      i4 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(repo_path, dest, false)
-        wrapper.call(:log, :internalout,
-                     "Injecting scraper and running...\n")
-        inject_files2(i3, dest)
-      end
-
+      # TODO: Move this to a method
       time_file = '/app/time.output'
-      command = Morph::TimeCommand.command('/start scraper', time_file)
 
       # Make the paths absolute paths for the container
       files = files.map { |f| File.join('/app', f) }
-      # TODO: Also copy back time output file and the sqlite journal file
-      # The sqlite journal file won't be present most of the time
-      c = start_run(i4.id, command, env_variables, container_labels)
+
+      c, i4 = compile_and_start_run(
+        repo_path, env_variables, container_labels, time_file) do |s, c|
+        wrapper.call(:log, s, c)
+      end
+
+      if c.nil?
+        # TODO: Return the status for a compile error
+        return Morph::RunResult.new(255, {}, {})
+      end
 
       # Let parent know about ip address of running container
       wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
@@ -58,6 +38,40 @@ module Morph
       attach_to_run_and_finish(c, i4, files, time_file) do |s, c|
         wrapper.call(:log, s, c)
       end
+    end
+
+    def self.compile_and_start_run(
+      repo_path, env_variables, container_labels, time_file)
+      i = Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE) do |c|
+        yield(:internalout, c)
+      end
+      # Insert the configuration part of the application code into the container
+      i2 = Dir.mktmpdir('morph') do |dest|
+        copy_config_to_directory(repo_path, dest, true)
+        yield(:internalout, "Injecting configuration and compiling...\n")
+        inject_files(i, dest)
+      end
+      i3 = compile(i2) do |c|
+        yield(:internalout, c)
+      end
+      # If something went wrong during the compile and it couldn't finish
+      if i3.nil?
+        return [nil, nil]
+      end
+
+      # Insert the actual code (and database) into the container
+      i4 = Dir.mktmpdir('morph') do |dest|
+        copy_config_to_directory(repo_path, dest, false)
+        yield(:internalout, "Injecting scraper and running...\n")
+        inject_files2(i3, dest)
+      end
+
+      command = Morph::TimeCommand.command('/start scraper', time_file)
+
+      # TODO: Also copy back time output file and the sqlite journal file
+      # The sqlite journal file won't be present most of the time
+      c = start_run(i4.id, command, env_variables, container_labels)
+      [c, i4]
     end
 
     def self.attach_to_run_and_finish(c, i4, files, time_file)
