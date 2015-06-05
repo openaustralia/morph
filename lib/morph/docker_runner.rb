@@ -16,9 +16,6 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      # Make the paths absolute paths for the container
-      files = files.map { |f| File.join('/app', f) }
-
       c, i4 = compile_and_start_run(
         repo_path, env_variables, container_labels) do |s, c|
         wrapper.call(:log, s, c)
@@ -83,6 +80,9 @@ module Morph
       status_code = c.json['State']['ExitCode']
       # Wait until container has definitely stopped
       c.wait
+
+      # Make the paths absolute paths for the container
+      files = files.map { |f| File.join('/app', f) }
 
       # Grab the resulting files
       data = Morph::DockerUtils.copy_files(c, files + [time_file])
