@@ -16,14 +16,11 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      # TODO: Move this to a method
-      time_file = '/app/time.output'
-
       # Make the paths absolute paths for the container
       files = files.map { |f| File.join('/app', f) }
 
       c, i4 = compile_and_start_run(
-        repo_path, env_variables, container_labels, time_file) do |s, c|
+        repo_path, env_variables, container_labels) do |s, c|
         wrapper.call(:log, s, c)
       end
 
@@ -35,13 +32,17 @@ module Morph
       # Let parent know about ip address of running container
       wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
 
-      attach_to_run_and_finish(c, i4, files, time_file) do |s, c|
+      attach_to_run_and_finish(c, i4, files) do |s, c|
         wrapper.call(:log, s, c)
       end
     end
 
+    def self.time_file
+      '/app/time.output'
+    end
+
     def self.compile_and_start_run(
-      repo_path, env_variables, container_labels, time_file)
+      repo_path, env_variables, container_labels)
       i = Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE) do |c|
         yield(:internalout, c)
       end
@@ -74,7 +75,7 @@ module Morph
       [c, i4]
     end
 
-    def self.attach_to_run_and_finish(c, i4, files, time_file)
+    def self.attach_to_run_and_finish(c, i4, files)
       attach_to_run(c) do |s, c|
         yield(s, c)
       end
