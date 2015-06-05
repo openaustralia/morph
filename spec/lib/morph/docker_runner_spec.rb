@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Morph::DockerRunner do
-  # Tests that involve docker are marked as 'docker: true'. This removes
-  # them from the default tests. To explicitly run the docker tests:
-  # bundle exec rspec spec/lib/morph/docker_runner_spec.rb --tag docker
+  # Tests that involve docker are marked as 'docker: true'. This stops
+  # them from running on travis ci which doesn't have access to a docker
+  # server
 
   # These are integration tests with the whole docker server and the
   # docker images that are used. Also, the tests are very slow!
