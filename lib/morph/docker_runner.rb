@@ -68,7 +68,46 @@ module Morph
 
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
-      start_run(i4.id, command, env_variables, container_labels)
+
+      # Open up a special interactive connection to Docker
+      # TODO: Cache connection
+      conn_interactive = Docker::Connection.new(
+        Docker.url,
+        { chunk_size: 1, read_timeout: 4.hours }.merge(Docker.env_options))
+
+      container_options = {
+        'Cmd' => ['/bin/bash', '-l', '-c', command],
+        # TODO: We can just get rid of the line below, right?
+        # (because it's the default)
+        'User' => 'root',
+        'Image' => i4.id,
+        # See explanation in https://github.com/openaustralia/morph/issues/242
+        'CpuShares' => 307,
+        # Memory limit (in bytes)
+        # On a 1G machine we're allowing a max of 10 containers to run at
+        # a time. So, 100M
+        'Memory' => 100 * 1024 * 1024,
+        'Env' => env_variables.map { |k, v| "#{k}=#{v}" },
+        'Labels' => container_labels
+      }
+
+      # This will fail if there is another container with the same name
+      begin
+        c = Docker::Container.create(container_options, conn_interactive)
+      rescue Excon::Errors::SocketError => e
+        text = "Could not connect to Docker server: #{e}"
+        wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
+        wrapper.call(:log, :internalerr, "Requeueing...\n")
+        raise text
+      rescue Docker::Error::NotFoundError
+        text = "Could not find docker image #{i4.id}"
+        wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
+        wrapper.call(:log, :internalerr, "Requeueing...\n")
+        raise text
+      end
+
+      c.start
+      c
     end
 
     def self.attach_to_run_and_finish(c, files)
@@ -139,49 +178,6 @@ module Morph
     end
 
     private
-
-    def self.start_run(image_name, command, env_variables,
-                       container_labels)
-      # Open up a special interactive connection to Docker
-      # TODO: Cache connection
-      conn_interactive = Docker::Connection.new(
-        Docker.url,
-        { chunk_size: 1, read_timeout: 4.hours }.merge(Docker.env_options))
-
-      container_options = {
-        'Cmd' => ['/bin/bash', '-l', '-c', command],
-        # TODO: We can just get rid of the line below, right?
-        # (because it's the default)
-        'User' => 'root',
-        'Image' => image_name,
-        # See explanation in https://github.com/openaustralia/morph/issues/242
-        'CpuShares' => 307,
-        # Memory limit (in bytes)
-        # On a 1G machine we're allowing a max of 10 containers to run at
-        # a time. So, 100M
-        'Memory' => 100 * 1024 * 1024,
-        'Env' => env_variables.map { |k, v| "#{k}=#{v}" },
-        'Labels' => container_labels
-      }
-
-      # This will fail if there is another container with the same name
-      begin
-        c = Docker::Container.create(container_options, conn_interactive)
-      rescue Excon::Errors::SocketError => e
-        text = "Could not connect to Docker server: #{e}"
-        wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
-        wrapper.call(:log, :internalerr, "Requeueing...\n")
-        raise text
-      rescue Docker::Error::NotFoundError
-        text = "Could not find docker image #{image_name}"
-        wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
-        wrapper.call(:log, :internalerr, "Requeueing...\n")
-        raise text
-      end
-
-      c.start
-      c
-    end
 
     def self.attach_to_run(c)
       # TODO: We need to gracefully handle Docker::Error::TimeoutError
