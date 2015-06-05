@@ -106,10 +106,13 @@ module Morph
       wrapper = Multiblock.wrapper
       yield(wrapper)
 
-      c = run_no_cleanup(image_name, command,
-                         env_variables, container_labels) do |on|
-        on.log { |s, c| wrapper.call(:log, s, c) }
-        on.ip_address { |ip| wrapper.call(:ip_address, ip) }
+      c = start_run(image_name, command, env_variables, container_labels)
+
+      # Let parent know about ip address of running container
+      wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
+
+      attach_to_run(c) do |s, c|
+        wrapper.call(:log, s, c)
       end
 
       status_code = c.json['State']['ExitCode']
@@ -205,23 +208,6 @@ module Morph
         c.kill
       end
       raise e
-    end
-
-    def self.run_no_cleanup(image_name, command, env_variables,
-                            container_labels)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      c = start_run(image_name, command, env_variables, container_labels)
-
-      # puts 'Running docker container...'
-      # Let parent know about ip address of running container
-      wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
-
-      attach_to_run(c) do |s, c|
-        wrapper.call(:log, s, c)
-      end
-      c
     end
 
     def self.docker_build_command(image, commands, dir)
