@@ -55,7 +55,7 @@ module Morph
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
 
         Morph::DockerRunner.compile_and_run(
-          defaults, run.env_variables, docker_container_name,
+          defaults, run.env_variables,
           docker_container_labels, ['data.sqlite']) do |on|
           on.log { |s, c| yield s, c }
           on.ip_address do |ip|
@@ -168,10 +168,6 @@ module Morph
           FileUtils.rm_rf(path)
         end
       end
-    end
-
-    def docker_container_name
-      "#{run.owner.to_param}_#{run.name}_#{run.id}"
     end
 
     def self.run_label_key

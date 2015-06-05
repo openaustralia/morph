@@ -18,7 +18,7 @@ describe Morph::DockerRunner do
     it "should let me know that it can't select a buildpack" do
       logs = []
       result = Morph::DockerRunner.compile_and_run(
-        @dir, {}, 'foo', {}, []) do |on|
+        @dir, {}, {}, []) do |on|
         on.log do |s, c|
           logs << [s, c]
           # puts c
@@ -49,7 +49,7 @@ describe Morph::DockerRunner do
         end
         logs = []
         result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, 'foo', {}, []) do |on|
+          @dir, {}, {}, []) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
@@ -72,7 +72,7 @@ describe Morph::DockerRunner do
         end
         logs = []
         result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, 'foo', {}, ['foo.txt', 'bar']) do |on|
+          @dir, {}, {}, ['foo.txt', 'bar']) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
@@ -95,7 +95,7 @@ describe Morph::DockerRunner do
         end
         logs = []
         result = Morph::DockerRunner.compile_and_run(
-          @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, 'foo', {}, []) do |on|
+          @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}, []) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
@@ -122,7 +122,7 @@ File.open("ip_address", "w") {|f| f << address.ip_address}
         end
         ip_address = nil
         result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, 'foo', {}, ['ip_address']) do |on|
+          @dir, {}, {}, ['ip_address']) do |on|
           on.ip_address { |ip| ip_address = ip }
         end
         expect(result.status_code).to eq 0
@@ -138,7 +138,7 @@ This is not going to run as ruby code so should return an error
         end
         logs = []
         result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, 'foo', {}, []) do |on|
+          @dir, {}, {}, []) do |on|
           on.log do |s, c|
             logs << [s, c]
             # puts c
@@ -170,7 +170,7 @@ puts "Finished!"
         end
         logs = []
         result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, 'foo', {}, []) do |on|
+          @dir, {}, {}, []) do |on|
           on.log do |s, c|
             logs << [Time.now, c]
           end
