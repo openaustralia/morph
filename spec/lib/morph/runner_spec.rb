@@ -28,16 +28,21 @@ ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software 
     it 'should be able to stop a scraper running in a continuous loop' do
       owner = User.create(nickname: 'mlandauer')
       run = Run.create(owner: owner)
+      FileUtils.rm_rf(run.data_path)
       FileUtils.rm_rf(run.repo_path)
       FileUtils.mkdir_p(run.repo_path)
       File.open(File.join(run.repo_path, 'scraper.rb'), 'w') do |f|
         f << %q(
-puts "Starting!"
+require 'scraperwiki'
+
+puts "Started!"
+ScraperWiki.save_sqlite(["state"], {"state" => "started"})
 (1..50).each do |i|
   puts "#{i}..."
   sleep 0.1
 end
 puts "Finished!"
+ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         )
       end
       logs = []
@@ -56,6 +61,7 @@ puts "Finished!"
       end
       expect(logs.last == "2...\n" || logs.last == "3...\n").to eq true
       expect(Morph::DockerUtils.stopped_containers.count).to eq container_count
+      expect(run.database.first_ten_rows).to eq [{ 'state' => 'started' }]
     end
   end
 
