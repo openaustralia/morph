@@ -168,6 +168,45 @@ module Morph
       c
     end
 
+    def self.attach_to_run(c)
+      # TODO: We need to be prepared to gracefully handle Docker::Error::TimeoutError
+      # This should involve throwing a specific exception (something like
+      # Morph::IntentionalRequeue) that says "requeue this" and then we
+      # need to make sure that the requeud job reattaches to the existing
+      # container. It should be able to handle the container still running
+      # as well as having stopped. We can also shorten the read timeout as
+      # it doesn't really have anything to do with how long scrapers are
+      # allowed to run. It's just the time between reads of the log before
+      # the attach read times out. So, a scraper that outputs stuff to
+      # standard out regularly can run a lot longer than one that doesn't.
+      c.attach(logs: true) do |s, c|
+        # We're going to assume (somewhat rashly, I might add) that the
+        # console output from the scraper is always encoded as UTF-8.
+        c.force_encoding('UTF-8')
+        c.scrub!
+        # There are times when multiple lines are returned and this does
+        # not always happen consistently. So, for simplicity and consistency
+        # we will split multiple lines up
+        while i = c.index("\n")
+          yield(s, c[0..i])
+          c = c[i+1..-1]
+        end
+        # Anything left over
+        yield(s, c) if c.length > 0
+      end
+      # puts 'Docker container finished...'
+    rescue Exception => e
+      yield(:internalerr, "morph.io internal error: #{e}\n")
+      # TODO: Don't kill container for all exceptions
+      if e.is_a?(Sidekiq::Shutdown)
+        yield(:internalerr, "Requeueing\n")
+      else
+        yield(:internalerr, "Stopping current container and requeueing\n")
+        c.kill
+      end
+      raise e
+    end
+
     def self.run_no_cleanup(image_name, command, env_variables,
                             container_labels)
       wrapper = Multiblock.wrapper
@@ -179,44 +218,8 @@ module Morph
       # Let parent know about ip address of running container
       wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
 
-      begin
-        # TODO: We need to be prepared to gracefully handle Docker::Error::TimeoutError
-        # This should involve throwing a specific exception (something like
-        # Morph::IntentionalRequeue) that says "requeue this" and then we
-        # need to make sure that the requeud job reattaches to the existing
-        # container. It should be able to handle the container still running
-        # as well as having stopped. We can also shorten the read timeout as
-        # it doesn't really have anything to do with how long scrapers are
-        # allowed to run. It's just the time between reads of the log before
-        # the attach read times out. So, a scraper that outputs stuff to
-        # standard out regularly can run a lot longer than one that doesn't.
-        c.attach(logs: true) do |s, c|
-          # We're going to assume (somewhat rashly, I might add) that the
-          # console output from the scraper is always encoded as UTF-8.
-          c.force_encoding('UTF-8')
-          c.scrub!
-          # There are times when multiple lines are returned and this does
-          # not always happen consistently. So, for simplicity and consistency
-          # we will split multiple lines up
-          while i = c.index("\n")
-            wrapper.call(:log, s, c[0..i])
-            c = c[i+1..-1]
-          end
-          # Anything left over
-          wrapper.call(:log, s, c) if c.length > 0
-        end
-        # puts 'Docker container finished...'
-      rescue Exception => e
-        wrapper.call(:log,  :internalerr, "morph.io internal error: #{e}\n")
-        # TODO: Don't kill container for all exceptions
-        if e.is_a?(Sidekiq::Shutdown)
-          wrapper.call(:log, :internalerr, "Requeueing\n")
-        else
-          wrapper.call(:log, :internalerr,
-                       "Stopping current container and requeueing\n")
-          c.kill
-        end
-        raise e
+      attach_to_run(c) do |s, c|
+        wrapper.call(:log, s, c)
       end
       c
     end
