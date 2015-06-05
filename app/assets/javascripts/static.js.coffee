@@ -25,12 +25,13 @@ animateNumber = (element, target_final_count, duration) ->
   return
 
 $ ->
-  metricsInview = new (Waypoint.Inview)(
-    element: $('.metric-box')[0]
-    enter: (direction) ->
-      $(".metric-box strong").each (index) ->
-        $target_count = parseInt($(this).text().replace(/\,/g, ''))
-        animateNumber($(this), $target_count, 300 + index * 200) if $target_count > 0
-      # only run this once
-      this.destroy()
-  )
+  if ($('.banner-metrics').length)
+    metricsInview = new (Waypoint.Inview)(
+      element: $('.metric-box')[0]
+      enter: (direction) ->
+        $(".metric-box strong").each (index) ->
+          $target_count = parseInt($(this).text().replace(/\,/g, ''))
+          animateNumber($(this), $target_count, 300 + index * 200) if $target_count > 0
+        # only run this once
+        this.destroy()
+    )
