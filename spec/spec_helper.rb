@@ -79,6 +79,6 @@ RSpec.configure do |config|
     end
   end
 
-  config.filter_run_excluding docker: true
+  config.filter_run_excluding docker: true if ENV["DONT_RUN_DOCKER_TESTS"]
   config.filter_run_excluding slow: true unless ENV["RUN_SLOW_TESTS"]
 end
