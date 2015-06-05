@@ -55,8 +55,14 @@ module Morph
       # Let parent know about ip address of running container
       wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
 
-      attach_to_run(c) do |s, c|
+      attach_to_run_and_finish(c, i4, files, time_file) do |s, c|
         wrapper.call(:log, s, c)
+      end
+    end
+
+    def self.attach_to_run_and_finish(c, i4, files, time_file)
+      attach_to_run(c) do |s, c|
+        yield(s, c)
       end
 
       status_code = c.json['State']['ExitCode']
