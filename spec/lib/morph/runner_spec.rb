@@ -71,6 +71,15 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       # We expect the container to still be running
       expect(Morph::DockerUtils.running_containers.count)
         .to eq (running_count + 1)
+
+      # Now, we simulate the queue restarting the job
+      # started_at = run.started_at
+      # runner.go do |s, c|
+      #   puts c
+      # end
+      # run.reload
+      # # The start time shouldn't have changed
+      # expect(run.started_at).to eq started_at
     end
   end
 
