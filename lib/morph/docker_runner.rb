@@ -47,7 +47,7 @@ module Morph
       command = Morph::TimeCommand.command('/start scraper', time_file)
 
       # Make the paths absolute paths for the container
-      files = files.map { |f| File.join('/app', f)}
+      files = files.map { |f| File.join('/app', f) }
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
       status_code, data = run(
@@ -58,7 +58,9 @@ module Morph
       end
 
       time_data = data.delete(time_file)
-      time_params = Morph::TimeCommand.params_from_string(time_data) if time_data
+      if time_data
+        time_params = Morph::TimeCommand.params_from_string(time_data)
+      end
 
       # Remove /app from the beginning of all paths in data
       data_with_stripped_paths = {}
@@ -134,7 +136,7 @@ module Morph
       # TODO: Cache connection
       conn_interactive = Docker::Connection.new(
         Docker.url,
-        {chunk_size: 1, read_timeout: 4.hours}.merge(Docker.env_options))
+        { chunk_size: 1, read_timeout: 4.hours }.merge(Docker.env_options))
 
       container_options = {
         'Cmd' => ['/bin/bash', '-l', '-c', command],
@@ -160,7 +162,7 @@ module Morph
         wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
         wrapper.call(:log, :internalerr, "Requeueing...\n")
         raise text
-      rescue Docker::Error::NotFoundError => e
+      rescue Docker::Error::NotFoundError
         text = "Could not find docker image #{image_name}"
         wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
         wrapper.call(:log, :internalerr, "Requeueing...\n")
@@ -172,7 +174,7 @@ module Morph
     end
 
     def self.attach_to_run(c)
-      # TODO: We need to be prepared to gracefully handle Docker::Error::TimeoutError
+      # TODO: We need to gracefully handle Docker::Error::TimeoutError
       # This should involve throwing a specific exception (something like
       # Morph::IntentionalRequeue) that says "requeue this" and then we
       # need to make sure that the requeud job reattaches to the existing
@@ -192,7 +194,7 @@ module Morph
         # we will split multiple lines up
         while i = c.index("\n")
           yield(s, c[0..i])
-          c = c[i+1..-1]
+          c = c[i + 1..-1]
         end
         # Anything left over
         yield(s, c) if c.length > 0
@@ -237,7 +239,7 @@ module Morph
       Dir.mktmpdir('morph') do |dir|
         FileUtils.mkdir(File.join(dir, 'app'))
         Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
-        docker_build_command(image, ['ADD app /app'], dir) do |c|
+        docker_build_command(image, ['ADD app /app'], dir) do
           # Note that we're not sending the output of this to the console
           # because it is relatively short running and is otherwise confusing
         end
@@ -250,7 +252,7 @@ module Morph
         docker_build_command(
           image,
           ['ADD app /app', 'RUN chown -R scraper:scraper /app'],
-          dir) do |c|
+          dir) do
           # Note that we're not sending the output of this to the console
           # because it is relatively short running and is otherwise confusing
         end
