@@ -125,11 +125,8 @@ module Morph
       [status_code, data]
     end
 
-    def self.run_no_cleanup(image_name, command, env_variables,
-                            container_labels)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
+    def self.start_run(image_name, command, env_variables,
+                       container_labels)
       # Open up a special interactive connection to Docker
       # TODO: Cache connection
       conn_interactive = Docker::Connection.new(
@@ -167,11 +164,22 @@ module Morph
         raise text
       end
 
+      c.start
+      c
+    end
+
+    def self.run_no_cleanup(image_name, command, env_variables,
+                            container_labels)
+      wrapper = Multiblock.wrapper
+      yield(wrapper)
+
+      c = start_run(image_name, command, env_variables, container_labels)
+
+      # puts 'Running docker container...'
+      # Let parent know about ip address of running container
+      wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
+
       begin
-        c.start
-        # puts 'Running docker container...'
-        # Let parent know about ip address of running container
-        wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
         # TODO: We need to be prepared to gracefully handle Docker::Error::TimeoutError
         # This should involve throwing a specific exception (something like
         # Morph::IntentionalRequeue) that says "requeue this" and then we
