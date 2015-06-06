@@ -17,15 +17,11 @@ describe Morph::DockerRunner do
 
     it "should let me know that it can't select a buildpack" do
       logs = []
-      result = Morph::DockerRunner.compile_and_run(
-        @dir, {}, {}, []) do |on|
-        on.log do |s, c|
-          logs << [s, c]
-          # puts c
-        end
+      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+        logs << [s, c]
       end
 
-      expect(result.status_code).to eq 255
+      expect(c).to be_nil
       expect(logs).to eq [
         [:internalout, "Injecting configuration and compiling...\n"],
         [:internalout, "\e[1G-----> Unable to select a buildpack\n"]
@@ -48,12 +44,11 @@ describe Morph::DockerRunner do
           f << "puts 'Hello world!'\n"
         end
         logs = []
-        result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, {}, []) do |on|
-          on.log do |s, c|
-            logs << [s, c]
-            # puts c
-          end
+        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+          logs << [s, c]
+        end
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+          logs << [s, c]
         end
         expect(result.status_code).to eq 0
         # These logs will actually be different if the compile isn't cached
@@ -71,12 +66,12 @@ describe Morph::DockerRunner do
           f << "File.open('foo.txt', 'w') { |f| f << 'Hello World!'}\n"
         end
         logs = []
-        result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, {}, ['foo.txt', 'bar']) do |on|
-          on.log do |s, c|
-            logs << [s, c]
-            # puts c
-          end
+        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+          logs << [s, c]
+        end
+        result = Morph::DockerRunner.attach_to_run_and_finish(
+          c, ['foo.txt', 'bar']) do |s, c|
+          logs << [s, c]
         end
         expect(result.status_code).to eq 0
         expect(result.files).to eq('foo.txt' => 'Hello World!', 'bar' => nil)
@@ -94,12 +89,12 @@ describe Morph::DockerRunner do
           f << "puts ENV['AN_ENV_VARIABLE']\n"
         end
         logs = []
-        result = Morph::DockerRunner.compile_and_run(
-          @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}, []) do |on|
-          on.log do |s, c|
-            logs << [s, c]
-            # puts c
-          end
+        c = Morph::DockerRunner.compile_and_start_run(
+          @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}) do |s, c|
+          logs << [s, c]
+        end
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+          logs << [s, c]
         end
         expect(result.status_code).to eq 0
         # These logs will actually be different if the compile isn't cached
@@ -121,10 +116,10 @@ File.open("ip_address", "w") {|f| f << address.ip_address}
           EOF
         end
         ip_address = nil
-        result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, {}, ['ip_address']) do |on|
-          on.ip_address { |ip| ip_address = ip }
-        end
+        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+        ip_address = c.json['NetworkSettings']['IPAddress']
+        result = Morph::DockerRunner.attach_to_run_and_finish(
+          c, ['ip_address']) {}
         expect(result.status_code).to eq 0
         # These logs will actually be different if the compile isn't cached
         expect(ip_address).to eq result.files['ip_address']
@@ -137,12 +132,11 @@ This is not going to run as ruby code so should return an error
           EOF
         end
         logs = []
-        result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, {}, []) do |on|
-          on.log do |s, c|
-            logs << [s, c]
-            # puts c
-          end
+        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+          logs << [s, c]
+        end
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+          logs << [s, c]
         end
         expect(result.status_code).to eq 1
         # These logs will actually be different if the compile isn't cached
@@ -169,11 +163,11 @@ puts "Finished!"
           )
         end
         logs = []
-        result = Morph::DockerRunner.compile_and_run(
-          @dir, {}, {}, []) do |on|
-          on.log do |s, c|
-            logs << [Time.now, c]
-          end
+        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+          logs << [Time.now, c]
+        end
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+          logs << [Time.now, c]
         end
         start_time = logs.find{|l| l[1] == "Started!\n"}[0]
         end_time = logs.find{|l| l[1] == "Finished!\n"}[0]

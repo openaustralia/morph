@@ -1,3 +1,6 @@
+# To define Sidekiq::Shutdown
+require 'sidekiq/cli'
+
 module Morph
   # More low-level API for running scrapers. Does not do much of the magic
   # and is less opinionated than the higher-level API in Morph::Runner
@@ -10,29 +13,6 @@ module Morph
       'app.psgi', 'cpanfile'
     ]
     BUILDSTEP_IMAGE = 'openaustralia/buildstep'
-
-    def self.compile_and_run(repo_path, env_variables,
-                             container_labels, files)
-      wrapper = Multiblock.wrapper
-      yield(wrapper)
-
-      c = compile_and_start_run(
-        repo_path, env_variables, container_labels) do |s, c|
-        wrapper.call(:log, s, c)
-      end
-
-      if c.nil?
-        # TODO: Return the status for a compile error
-        return Morph::RunResult.new(255, {}, {})
-      end
-
-      # Let parent know about ip address of running container
-      wrapper.call(:ip_address, c.json['NetworkSettings']['IPAddress'])
-
-      attach_to_run_and_finish(c, files) do |s, c|
-        wrapper.call(:log, s, c)
-      end
-    end
 
     def self.time_file
       '/app/time.output'

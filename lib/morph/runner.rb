@@ -54,13 +54,22 @@ module Morph
         Morph::Runner.remove_hidden_directories(defaults)
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
 
-        Morph::DockerRunner.compile_and_run(
-          defaults, run.env_variables,
-          docker_container_labels, ['data.sqlite']) do |on|
-          on.log { |s, c| yield s, c }
-          on.ip_address do |ip|
-            # Store the ip address of the container for this run
-            run.update_attributes(ip_address: ip)
+        c = Morph::DockerRunner.compile_and_start_run(
+          defaults, run.env_variables, docker_container_labels) do |s, c|
+          yield(s, c)
+        end
+
+        if c.nil?
+          # TODO: Return the status for a compile error
+          Morph::RunResult.new(255, {}, {})
+        else
+          # Record ip address of running container
+          run.update_attributes(
+            ip_address: c.json['NetworkSettings']['IPAddress'])
+
+          Morph::DockerRunner.attach_to_run_and_finish(
+            c, ['data.sqlite']) do |s, c|
+            yield(s, c)
           end
         end
       end
