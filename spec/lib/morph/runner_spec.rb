@@ -39,7 +39,7 @@ puts "Started!"
 ScraperWiki.save_sqlite(["state"], {"state" => "started"})
 (1..10).each do |i|
   puts "#{i}..."
-  sleep 1
+  sleep 0.1
 end
 puts "Finished!"
 ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
@@ -52,7 +52,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       container_count = Morph::DockerUtils.stopped_containers.count
       expect {runner.go do |s, c|
         logs << c
-        puts c
+        #puts c
         if c == "2...\n"
           raise Sidekiq::Shutdown
         end
@@ -77,7 +77,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       logs = []
       runner.go do |s, c|
         logs << c
-        puts c
+        #puts c
       end
       # TODO: Really we only want to get newer logs
       expect(logs).to eq [
