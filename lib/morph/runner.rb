@@ -16,17 +16,22 @@ module Morph
       return if run.scraper.nil?
 
       Morph::Github.synchronise_repo(run.repo_path, run.git_url)
+      go_with_logging
+    end
+
+    def go_with_logging
       go do |s, c|
         log(s, c)
+        yield s, c if block_given?
       end
     end
 
     def log(stream, text)
-      puts "#{stream}: #{text}"
+      puts "#{stream}: #{text}" unless Rails.env.test?
       number = run.log_lines.maximum(:number) || 0
       line = run.log_lines.create(stream: stream.to_s, text: text,
                                   number: (number + 1))
-      sync_new line, scope: run
+      sync_new line, scope: run unless Rails.env.test?
     end
 
     def go
@@ -41,9 +46,17 @@ module Morph
         c = compile_and_start_run do |s, c|
           yield s, c
         end
+        lines_to_skip = 0
+      else
+        # Figure out how many log lines we want to skip
+        lines_to_skip = run.log_lines.where("stream = 'stdout' OR stream = 'stderr'").count
       end
+      count = 0
       attach_to_run_and_finish(c) do |s, c|
-        yield s, c
+        count += 1
+        if count > lines_to_skip
+          yield s, c
+        end
       end
     end
 

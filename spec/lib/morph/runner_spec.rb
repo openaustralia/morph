@@ -50,7 +50,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       runner = Morph::Runner.new(run)
       running_count = Morph::DockerUtils.running_containers.count
       container_count = Morph::DockerUtils.stopped_containers.count
-      expect {runner.go do |s, c|
+      expect {runner.go_with_logging do |s, c|
         logs << c
         #puts c
         if c == "2...\n"
@@ -79,11 +79,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         logs << c
         #puts c
       end
-      # TODO: Really we only want to get newer logs
       expect(logs).to eq [
-        "Started!\n",
-        "1...\n",
-        "2...\n",
         "3...\n",
         "4...\n",
         "5...\n",
