@@ -100,6 +100,87 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       expect(run.database.first_ten_rows).to eq [
         { 'state' => 'started' }, { 'state' => 'finished' }]
     end
+
+    it 'should handle restarting from a stopped container' do
+      owner = User.create(nickname: 'mlandauer')
+      run = Run.create(owner: owner)
+      FileUtils.rm_rf(run.data_path)
+      FileUtils.rm_rf(run.repo_path)
+      FileUtils.mkdir_p(run.repo_path)
+      File.open(File.join(run.repo_path, 'scraper.rb'), 'w') do |f|
+        f << %q(
+require 'scraperwiki'
+
+puts "Started!"
+ScraperWiki.save_sqlite(["state"], {"state" => "started"})
+(1..10).each do |i|
+  puts "#{i}..."
+  sleep 0.1
+end
+puts "Finished!"
+ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
+        )
+      end
+      logs = []
+
+      runner = Morph::Runner.new(run)
+      running_count = Morph::DockerUtils.running_containers.count
+      container_count = Morph::DockerUtils.stopped_containers.count
+      expect {runner.go do |s, c|
+        logs << c
+        #puts c
+        if c == "2...\n"
+          raise Sidekiq::Shutdown
+        end
+      end}.to raise_error(Sidekiq::Shutdown)
+      expect(logs).to eq [
+        "Injecting configuration and compiling...\n",
+        "Injecting scraper and running...\n",
+        "Started!\n",
+        "1...\n",
+        "2...\n",
+        "Internal morph.io: Requeuing watch process because: Sidekiq::Shutdown\n"
+      ]
+      run.reload
+      expect(run).to be_running
+      # We expect the container to still be running
+      expect(Morph::DockerUtils.running_containers.count)
+        .to eq (running_count + 1)
+      expect(run.database.first_ten_rows).to eq []
+
+      puts "Waiting..."
+      # Wait until container is stopped
+      sleep 2
+
+      # Now, we simulate the queue restarting the job
+      started_at = run.started_at
+      logs = []
+      runner.go do |s, c|
+        logs << c
+        #puts c
+      end
+      # TODO: Really we only want to get newer logs
+      expect(logs).to eq [
+        "Started!\n",
+        "1...\n",
+        "2...\n",
+        "3...\n",
+        "4...\n",
+        "5...\n",
+        "6...\n",
+        "7...\n",
+        "8...\n",
+        "9...\n",
+        "10...\n",
+        "Finished!\n"
+      ]
+      run.reload
+      # The start time shouldn't have changed
+      expect(run.started_at).to eq started_at
+      expect(run.database.first_ten_rows).to eq [
+        { 'state' => 'started' }, { 'state' => 'finished' }]
+    end
+
   end
 
   # TODO: Test that we can stop the compile stage
