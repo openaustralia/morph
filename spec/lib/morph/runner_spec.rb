@@ -70,15 +70,35 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       # We expect the container to still be running
       expect(Morph::DockerUtils.running_containers.count)
         .to eq (running_count + 1)
+      expect(run.database.first_ten_rows).to eq []
 
       # Now, we simulate the queue restarting the job
       started_at = run.started_at
+      logs = []
       runner.go do |s, c|
+        logs << c
         puts c
       end
+      # TODO: Really we only want to get newer logs
+      expect(logs).to eq [
+        "Started!\n",
+        "1...\n",
+        "2...\n",
+        "3...\n",
+        "4...\n",
+        "5...\n",
+        "6...\n",
+        "7...\n",
+        "8...\n",
+        "9...\n",
+        "10...\n",
+        "Finished!\n"
+      ]
       run.reload
       # The start time shouldn't have changed
       expect(run.started_at).to eq started_at
+      expect(run.database.first_ten_rows).to eq [
+        { 'state' => 'started' }, { 'state' => 'finished' }]
     end
   end
 
