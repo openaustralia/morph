@@ -63,8 +63,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         "Started!\n",
         "1...\n",
         "2...\n",
-        "morph.io internal error: Sidekiq::Shutdown\n",
-        "Requeueing\n"
+        "Internal morph.io: Requeuing watch process because: Sidekiq::Shutdown\n"
       ]
       run.reload
       expect(run).to be_running

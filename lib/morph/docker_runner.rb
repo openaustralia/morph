@@ -119,14 +119,7 @@ module Morph
         end
         # puts 'Docker container finished...'
       rescue Exception => e
-        yield(:internalerr, "morph.io internal error: #{e}\n")
-        # TODO: Don't kill container for all exceptions
-        if e.is_a?(Sidekiq::Shutdown)
-          yield(:internalerr, "Requeueing\n")
-        else
-          yield(:internalerr, "Stopping current container and requeueing\n")
-          c.kill
-        end
+        yield(:internalerr, "Internal morph.io: Requeuing watch process because: #{e}\n")
         raise e
       end
 
