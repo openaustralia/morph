@@ -66,6 +66,12 @@ module Morph
           ip_address: c.json['NetworkSettings']['IPAddress'])
       end
 
+      attach_to_run_and_finish(c) do |s, c|
+        yield s, c
+      end
+    end
+
+    def attach_to_run_and_finish(c)
       if c.nil?
         # TODO: Return the status for a compile error
         result = Morph::RunResult.new(255, {}, {})
