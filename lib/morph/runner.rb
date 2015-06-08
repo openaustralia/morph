@@ -141,7 +141,14 @@ module Morph
     def stop!
       container = Morph::DockerUtils.find_container_with_label(
         Morph::Runner.run_label_key, run_label_value)
-      container.kill if container
+      if container
+        container.kill
+      else
+        # If there is no container then there can't be a watch process to
+        # do update the run so we must do it here
+        run.update_attributes(status_code: 255, finished_at: Time.now)
+        # TODO: Do a sync_update?
+      end
     end
 
     def self.add_sqlite_db_to_directory(data_path, dir)
