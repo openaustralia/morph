@@ -49,28 +49,30 @@ module Morph
         return
       end
 
-      result = Dir.mktmpdir('morph') do |defaults|
+      c = Dir.mktmpdir('morph') do |defaults|
         Morph::Runner.add_config_defaults_to_directory(run.repo_path, defaults)
         Morph::Runner.remove_hidden_directories(defaults)
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
 
-        c = Morph::DockerRunner.compile_and_start_run(
+        Morph::DockerRunner.compile_and_start_run(
           defaults, run.env_variables, docker_container_labels) do |s, c|
           yield(s, c)
         end
+      end
 
-        if c.nil?
-          # TODO: Return the status for a compile error
-          Morph::RunResult.new(255, {}, {})
-        else
-          # Record ip address of running container
-          run.update_attributes(
-            ip_address: c.json['NetworkSettings']['IPAddress'])
+      if c
+        # Record ip address of running container
+        run.update_attributes(
+          ip_address: c.json['NetworkSettings']['IPAddress'])
+      end
 
-          Morph::DockerRunner.attach_to_run_and_finish(
-            c, ['data.sqlite']) do |s, c|
-            yield(s, c)
-          end
+      if c.nil?
+        # TODO: Return the status for a compile error
+        result = Morph::RunResult.new(255, {}, {})
+      else
+        result = Morph::DockerRunner.attach_to_run_and_finish(
+          c, ['data.sqlite']) do |s, c|
+          yield(s, c)
         end
       end
 
