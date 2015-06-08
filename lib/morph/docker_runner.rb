@@ -90,9 +90,27 @@ module Morph
       c
     end
 
+    def self.normalise_log_content(c)
+      # We're going to assume (somewhat rashly, I might add) that the
+      # console output from the scraper is always encoded as UTF-8.
+      c.force_encoding('UTF-8')
+      c.scrub!
+      # There are times when multiple lines are returned and this does
+      # not always happen consistently. So, for simplicity and consistency
+      # we will split multiple lines up
+      result = []
+      while i = c.index("\n")
+        result << c[0..i]
+        c = c[i + 1..-1]
+      end
+      # Anything left over
+      result << c if c.length > 0
+      result
+    end
+
     def self.attach_to_run_and_finish(c, files)
-      if c.json['State']['Running']
-        begin
+      begin
+        if c.json['State']['Running']
           # TODO: We need to gracefully handle Docker::Error::TimeoutError
           # This should involve throwing a specific exception (something like
           # Morph::IntentionalRequeue) that says "requeue this" and then we
@@ -104,30 +122,21 @@ module Morph
           # the attach read times out. So, a scraper that outputs stuff to
           # standard out regularly can run a lot longer than one that doesn't.
           c.attach(logs: true) do |s, c|
-            # We're going to assume (somewhat rashly, I might add) that the
-            # console output from the scraper is always encoded as UTF-8.
-            c.force_encoding('UTF-8')
-            c.scrub!
-            # There are times when multiple lines are returned and this does
-            # not always happen consistently. So, for simplicity and consistency
-            # we will split multiple lines up
-            while i = c.index("\n")
-              yield(s, c[0..i])
-              c = c[i + 1..-1]
+            normalise_log_content(c).each do |content|
+              yield s, content
             end
-            # Anything left over
-            yield(s, c) if c.length > 0
           end
-          # puts 'Docker container finished...'
-        rescue Exception => e
-          yield(:internalerr, "Internal morph.io: Requeuing watch process because: #{e}\n")
-          raise e
+        else
+          # Just grab all the logs
+          c.streaming_logs(stdout: true, stderr: true) do |s, c|
+            normalise_log_content(c).each do |content|
+              yield s, content
+            end
+          end
         end
-      else
-        # Just grab all the logs
-        c.streaming_logs(stdout: true, stderr: true) do |s, c|
-          yield s, c
-        end
+      rescue Exception => e
+        yield(:internalerr, "Internal morph.io: Requeuing watch process because: #{e}\n")
+        raise e
       end
 
       # TODO: Don't call c.json multiple times

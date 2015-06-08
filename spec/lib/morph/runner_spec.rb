@@ -148,7 +148,6 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         .to eq (running_count + 1)
       expect(run.database.first_ten_rows).to eq []
 
-      puts "Waiting..."
       # Wait until container is stopped
       sleep 2
 
