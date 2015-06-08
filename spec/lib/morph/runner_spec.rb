@@ -62,8 +62,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         "Injecting scraper and running...\n",
         "Started!\n",
         "1...\n",
-        "2...\n",
-        "Internal morph.io: Requeuing watch process because: Sidekiq::Shutdown\n"
+        "2...\n"
       ]
       run.reload
       expect(run).to be_running
@@ -134,8 +133,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         "Injecting scraper and running...\n",
         "Started!\n",
         "1...\n",
-        "2...\n",
-        "Internal morph.io: Requeuing watch process because: Sidekiq::Shutdown\n"
+        "2...\n"
       ]
       run.reload
       expect(run).to be_running

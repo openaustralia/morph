@@ -71,21 +71,7 @@ module Morph
         'Labels' => container_labels
       }
 
-      # This will fail if there is another container with the same name
-      begin
-        c = Docker::Container.create(container_options, conn_interactive)
-      rescue Excon::Errors::SocketError => e
-        text = "Could not connect to Docker server: #{e}"
-        wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
-        wrapper.call(:log, :internalerr, "Requeueing...\n")
-        raise text
-      rescue Docker::Error::NotFoundError
-        text = "Could not find docker image #{i4.id}"
-        wrapper.call(:log, :internalerr, "morph.io internal error: #{text}\n")
-        wrapper.call(:log, :internalerr, "Requeueing...\n")
-        raise text
-      end
-
+      c = Docker::Container.create(container_options, conn_interactive)
       c.start
       c
     end
@@ -109,34 +95,29 @@ module Morph
     end
 
     def self.attach_to_run_and_finish(c, files)
-      begin
-        if c.json['State']['Running']
-          # TODO: We need to gracefully handle Docker::Error::TimeoutError
-          # This should involve throwing a specific exception (something like
-          # Morph::IntentionalRequeue) that says "requeue this" and then we
-          # need to make sure that the requeud job reattaches to the existing
-          # container. It should be able to handle the container still running
-          # as well as having stopped. We can also shorten the read timeout as
-          # it doesn't really have anything to do with how long scrapers are
-          # allowed to run. It's just the time between reads of the log before
-          # the attach read times out. So, a scraper that outputs stuff to
-          # standard out regularly can run a lot longer than one that doesn't.
-          c.attach(logs: true) do |s, c|
-            normalise_log_content(c).each do |content|
-              yield s, content
-            end
-          end
-        else
-          # Just grab all the logs
-          c.streaming_logs(stdout: true, stderr: true) do |s, c|
-            normalise_log_content(c).each do |content|
-              yield s, content
-            end
+      if c.json['State']['Running']
+        # TODO: We need to gracefully handle Docker::Error::TimeoutError
+        # This should involve throwing a specific exception (something like
+        # Morph::IntentionalRequeue) that says "requeue this" and then we
+        # need to make sure that the requeud job reattaches to the existing
+        # container. It should be able to handle the container still running
+        # as well as having stopped. We can also shorten the read timeout as
+        # it doesn't really have anything to do with how long scrapers are
+        # allowed to run. It's just the time between reads of the log before
+        # the attach read times out. So, a scraper that outputs stuff to
+        # standard out regularly can run a lot longer than one that doesn't.
+        c.attach(logs: true) do |s, c|
+          normalise_log_content(c).each do |content|
+            yield s, content
           end
         end
-      rescue Exception => e
-        yield(:internalerr, "Internal morph.io: Requeuing watch process because: #{e}\n")
-        raise e
+      else
+        # Just grab all the logs
+        c.streaming_logs(stdout: true, stderr: true) do |s, c|
+          normalise_log_content(c).each do |content|
+            yield s, content
+          end
+        end
       end
 
       # TODO: Don't call c.json multiple times
