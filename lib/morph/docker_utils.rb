@@ -54,8 +54,8 @@ module Morph
 
     # Finds the first matching container
     # Returns nil otherwise
-    def self.find_container_with_label(key, value)
-      Docker::Container.all(all: true).find do |container|
+    def self.find_container_with_label(key, value, connection = Docker.connection)
+      Docker::Container.all({all: true}, connection).find do |container|
         container_has_label_value?(container, key, value)
       end
     end

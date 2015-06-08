@@ -37,7 +37,7 @@ require 'scraperwiki'
 
 puts "Started!"
 ScraperWiki.save_sqlite(["state"], {"state" => "started"})
-(1..50).each do |i|
+(1..10).each do |i|
   puts "#{i}..."
   sleep 1
 end
@@ -73,13 +73,13 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         .to eq (running_count + 1)
 
       # Now, we simulate the queue restarting the job
-      # started_at = run.started_at
-      # runner.go do |s, c|
-      #   puts c
-      # end
-      # run.reload
-      # # The start time shouldn't have changed
-      # expect(run.started_at).to eq started_at
+      started_at = run.started_at
+      runner.go do |s, c|
+        puts c
+      end
+      run.reload
+      # The start time shouldn't have changed
+      expect(run.started_at).to eq started_at
     end
   end
 
