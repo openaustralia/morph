@@ -30,6 +30,15 @@ module Morph
     end
 
     def go
+      c = compile_and_start_run do |s, c|
+        yield s, c
+      end
+      attach_to_run_and_finish(c) do |s, c|
+        yield s, c
+      end
+    end
+
+    def compile_and_start_run
       #puts "Starting...\n"
       run.database.backup
       run.update_attributes(started_at: Time.now,
@@ -65,10 +74,7 @@ module Morph
         run.update_attributes(
           ip_address: c.json['NetworkSettings']['IPAddress'])
       end
-
-      attach_to_run_and_finish(c) do |s, c|
-        yield s, c
-      end
+      c
     end
 
     def attach_to_run_and_finish(c)
