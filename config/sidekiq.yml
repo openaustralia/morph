@@ -3,5 +3,6 @@
 :queues:
   - default
   - scraper
+  - low
 :limits:
     scraper: 10
