@@ -1,5 +1,6 @@
 class CreateFromGithubWorker
   include Sidekiq::Worker
+  sidekiq_options backtrace: true
 
   def perform(scraper_id)
     scraper = Scraper.find(scraper_id)

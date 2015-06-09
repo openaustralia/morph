@@ -1,5 +1,6 @@
 class CreateScraperWorker
   include Sidekiq::Worker
+  sidekiq_options backtrace: true
 
   def perform(scraper_id, current_user_id, scraper_url)
     scraper = Scraper.find(scraper_id)

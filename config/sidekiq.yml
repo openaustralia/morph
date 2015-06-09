@@ -1,10 +1,7 @@
 ---
-:concurrency: 10
+:concurrency: 20
 :queues:
   - default
-  - low
-  - small
+  - scraper
 :limits:
-    default: 5
-    low: 5
-    small: 10
+    scraper: 10

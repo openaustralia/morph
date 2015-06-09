@@ -1,6 +1,7 @@
 class RunWorker
   include Sidekiq::Worker
-  sidekiq_options backtrace: true
+  # TODO: Make backtrace: true to be a default option for all workers
+  sidekiq_options queue: :scraper, backtrace: true
 
   def perform(run_id)
     run = Run.find(run_id)

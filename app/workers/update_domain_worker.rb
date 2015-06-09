@@ -1,6 +1,6 @@
 class UpdateDomainWorker
   include Sidekiq::Worker
-  sidekiq_options queue: :small
+  sidekiq_options backtrace: true
 
   # Look up meta info for a domain
   def perform(id)
