@@ -80,20 +80,28 @@ module Morph
     # of the file. Obviously need to provide a filesystem path within the
     # container
     def self.copy_file(container, path)
-      tar = ''
       # We're going to create a new connection to the same container
       # to avoid whatever connection settings are being used
       container2 = Docker::Container.get(container.id)
-      # TODO: Don't concatenate this tarfile in memory. It could get big
+
+      # Use ascii-8bit as the encoding to ensure that the binary data isn't
+      # changed on saving
+      # Saving everything directly to a temporary file so we don't have to fill
+      # up our memory
+      tmp = Tempfile.new('morph.tar', Dir.tmpdir, encoding: 'ASCII-8BIT')
       begin
-        container2.copy(path) { |chunk| tar += chunk }
+        container2.copy(path) { |chunk| tmp << chunk }
       rescue Docker::Error::ServerError
         # If the path isn't found
         return nil
       end
+      tmp.close
+
       # Now extract the tar file and return the contents of the file
       Dir.mktmpdir('morph') do |dest|
-        Morph::DockerUtils.extract_tar(tar, dest)
+        extract_tar_file(tmp.path, dest)
+        tmp.unlink
+
         path2 = File.join(dest, Pathname.new(path).basename.to_s)
         File.open(path2, 'rb') { |f| f.read }
       end
