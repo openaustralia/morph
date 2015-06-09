@@ -77,9 +77,12 @@ module Morph
     # container
     def self.copy_file(container, path)
       tar = ''
+      # We're going to create a new connection to the same container
+      # to avoid whatever connection settings are being used
+      container2 = Docker::Container.get(container.id)
       # TODO: Don't concatenate this tarfile in memory. It could get big
       begin
-        container.copy(path) { |chunk| tar += chunk }
+        container2.copy(path) { |chunk| tar += chunk }
       rescue Docker::Error::ServerError
         # If the path isn't found
         return nil
