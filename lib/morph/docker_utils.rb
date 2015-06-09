@@ -21,14 +21,18 @@ module Morph
       content
     end
 
+    def self.extract_tar_file(path, directory)
+      # Quick and dirty
+      `tar xf #{path} -C #{directory}`
+    end
+
     def self.extract_tar(content, directory)
       # Use ascii-8bit as the encoding to ensure that the binary data isn't
       # changed on saving
       tmp = Tempfile.new('morph.tar', Dir.tmpdir, encoding: 'ASCII-8BIT')
       tmp << content
       tmp.close
-      # Quick and dirty
-      `tar xf #{tmp.path} -C #{directory}`
+      extract_tar_file(tmp.path, directory)
       tmp.unlink
     end
 
