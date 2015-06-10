@@ -1,7 +1,7 @@
 module Morph
   class TimeCommand
     def self.command(other, metric_file)
-      "/usr/bin/time -v -o #{metric_file} #{other}"
+      ["/usr/bin/time", "-v", "-o", metric_file] + other
     end
 
     # Parse the output of the time command and return a hash of the parameters

@@ -44,7 +44,7 @@ module Morph
         inject_files2(i3, dest)
       end
 
-      command = Morph::TimeCommand.command('/start scraper', time_file)
+      command = Morph::TimeCommand.command(['/start', 'scraper'], time_file)
 
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
@@ -56,7 +56,7 @@ module Morph
         { chunk_size: 1, read_timeout: 4.hours }.merge(Docker.env_options))
 
       container_options = {
-        'Cmd' => ['/bin/bash', '-l', '-c', command],
+        'Cmd' => command,
         'Image' => i4.id,
         # See explanation in https://github.com/openaustralia/morph/issues/242
         'CpuShares' => 307,
