@@ -9,15 +9,21 @@ module Morph
       end
     end
 
-    def self.create_tar(directory)
-      tempfile = Tempfile.new('morph_tar')
-
+    # Returns path to temporary file which it is your responsibility
+    # to remove after you're done with it
+    def self.create_tar_file(directory)
+      path = Tempfile.new('morph_tar').path
       # We used to use Archive::Tar::Minitar but that doesn't support
       # symbolic links in the tar file. So, using tar from the command line
       # instead.
-      `tar cf #{tempfile.path} -C #{directory} .`
-      content = File.open(tempfile.path, 'rb') { |f| f.read }
-      FileUtils.rm_f(tempfile.path)
+      `tar cf #{path} -C #{directory} .`
+      path
+    end
+
+    def self.create_tar(directory)
+      path = create_tar_file(directory)
+      content = File.open(path, 'rb') { |f| f.read }
+      FileUtils.rm_f(path)
       content
     end
 
