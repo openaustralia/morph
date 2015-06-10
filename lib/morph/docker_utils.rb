@@ -136,15 +136,13 @@ module Morph
       # How does this connection get closed?
       connection = Docker::Connection.new(
         Docker.url, options.merge(Docker.env_options))
-      buffer = ''
+      line_buffer = Morph::LineBuffer.new
       temp = create_tar_file(dir)
       Docker::Image.build_from_tar(
         temp, { 'forcerm' => 1 }, connection) do |chunk|
-        buffer += chunk
-        while i = buffer.index("\r\n")
-          first_part = buffer[0..i - 1]
-          buffer = buffer[i + 2..-1]
-          parsed_line = JSON.parse(first_part)
+        line_buffer << chunk
+        line_buffer.extract do |line|
+          parsed_line = JSON.parse(line)
           yield parsed_line['stream'] if parsed_line.key?('stream')
         end
       end
