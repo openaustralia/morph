@@ -243,10 +243,6 @@ module Morph
         Morph::Runner.run_label_key, run_label_value, connection)
     end
 
-    def container_for_run_exists?
-      !container_for_run.nil?
-    end
-
     def self.run_id_for_container(container)
       value = Morph::DockerUtils.label_value(container, run_label_key)
       value.to_i if value
