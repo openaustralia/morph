@@ -138,23 +138,22 @@ module Morph
         Docker.url, options.merge(Docker.env_options))
       begin
         buffer = ''
-
-        # TODO: Don't load the whole tar into memory at once. Use a temp file.
         path = create_tar_file(dir)
-        content = File.open(path, 'rb') { |f| f.read }
-        FileUtils.rm_f(path)
-        io = StringIO.new(content)
-
-        Docker::Image.build_from_tar(
-          io, { 'forcerm' => 1 }, connection) do |chunk|
-          buffer += chunk
-          while i = buffer.index("\r\n")
-            first_part = buffer[0..i - 1]
-            buffer = buffer[i + 2..-1]
-            parsed_line = JSON.parse(first_part)
-            yield parsed_line['stream'] if parsed_line.key?('stream')
+        image = File.open(path, 'rb') do |io|
+          Docker::Image.build_from_tar(
+            io, { 'forcerm' => 1 }, connection) do |chunk|
+            buffer += chunk
+            while i = buffer.index("\r\n")
+              first_part = buffer[0..i - 1]
+              buffer = buffer[i + 2..-1]
+              parsed_line = JSON.parse(first_part)
+              yield parsed_line['stream'] if parsed_line.key?('stream')
+            end
           end
         end
+        # Cleanup temporary tar file
+        FileUtils.rm_f(path)
+        image
       # TODO: Why are we catching this exception?
       rescue Docker::Error::UnexpectedResponseError
         nil
