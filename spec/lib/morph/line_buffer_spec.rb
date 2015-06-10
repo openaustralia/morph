@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Morph::Buffer do
-  let(:buffer) { Morph::Buffer.new }
+describe Morph::LineBuffer do
+  let(:buffer) { Morph::LineBuffer.new }
 
   context 'nothing buffered' do
     describe '#extract' do

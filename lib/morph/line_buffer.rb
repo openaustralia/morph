@@ -1,5 +1,5 @@
 module Morph
-  class Buffer
+  class LineBuffer
     def initialize
       @buffer = ''
     end
