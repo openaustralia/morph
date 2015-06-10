@@ -138,10 +138,15 @@ module Morph
         Docker.url, options.merge(Docker.env_options))
       begin
         buffer = ''
+
         # TODO: Don't load the whole tar into memory at once. Use a temp file.
+        path = create_tar_file(dir)
+        content = File.open(path, 'rb') { |f| f.read }
+        FileUtils.rm_f(path)
+        io = StringIO.new(content)
+
         Docker::Image.build_from_tar(
-          StringIO.new(Morph::DockerUtils.create_tar(dir)),
-          { 'forcerm' => 1 }, connection) do |chunk|
+          io, { 'forcerm' => 1 }, connection) do |chunk|
           buffer += chunk
           while i = buffer.index("\r\n")
             first_part = buffer[0..i - 1]
