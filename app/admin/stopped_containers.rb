@@ -24,13 +24,51 @@ ActiveAdmin.register_page 'Containers' do
     end
 
     # Show most recent record first
-    records = records.sort { |a, b| b[:started_at] <=> a[:started_at] }
+    running_records = records.select { |r| r[:running] == 'yes' }
+      .sort { |a, b| b[:started_at] <=> a[:started_at] }
+    stopped_records = records.select { |r| r[:running] == 'no' }
+      .sort { |a, b| b[:finished_at] <=> a[:finished_at] }
 
+    unless running_records.empty?
+      h1 "Running"
+      table do
+        thead do
+          tr do
+            th 'Container ID'
+            th 'Run ID'
+            th 'Scraper name'
+            th 'Scraper running?'
+            th 'Auto'
+          end
+        end
+
+        tbody do
+          running_records.each do |record|
+            tr do
+              td record[:container_id]
+              td do
+                if record[:run_id]
+                  link_to record[:run_id], admin_run_path(id: record[:run_id])
+                end
+              end
+              td do
+                if record[:scraper_name]
+                  link_to record[:scraper_name], scraper_path(id: record[:scraper_name])
+                end
+              end
+              td record[:scraper_running]
+              td record[:auto]
+            end
+          end
+        end
+      end
+    end
+    
+    h1 "Stopped"
     table do
       thead do
         tr do
           th 'Container ID'
-          th 'Running?'
           th 'Exit code'
           th 'Finished'
           th 'Ran for'
@@ -44,10 +82,9 @@ ActiveAdmin.register_page 'Containers' do
       end
 
       tbody do
-        records.each do |record|
+        stopped_records.each do |record|
           tr do
             td record[:container_id]
-            td record[:running]
             td record[:exit_code]
             td do
               if record[:finished_at]
