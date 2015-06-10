@@ -1,19 +1,22 @@
-ActiveAdmin.register_page 'Stopped Containers' do
+ActiveAdmin.register_page 'Containers' do
   content do
-    records = Morph::DockerUtils.stopped_containers.map do |container|
+    records = Docker::Container.all(all: true).map do |container|
       run = Morph::Runner.run_for_container(container)
       info = container.json
       record = {
         container_id: info['Id'][0..11],
-        exit_code: info['State']['ExitCode'],
-        finished_at: Time.parse(info['State']['FinishedAt']),
-        started_at: Time.parse(info['State']['StartedAt']),
-        oom_killed: info['State']['OOMKilled'] ? 'yes' : 'no'
+        running: info['State']['Running'] ? 'yes' : 'no',
+        started_at: Time.parse(info['State']['StartedAt'])
       }
+      if record[:running] == 'no'
+        record[:exit_code] = info['State']['ExitCode']
+        record[:finished_at] = Time.parse(info['State']['FinishedAt'])
+        record[:oom_killed] = info['State']['OOMKilled'] ? 'yes' : 'no'
+      end
       if run
         record[:run_id] = run.id
         record[:scraper_name] = run.scraper.full_name if run.scraper
-        record[:running] = run.running? ? 'yes' : 'no'
+        record[:scraper_running] = run.running? ? 'yes' : 'no'
         record[:run_status_code] = run.status_code
         record[:auto] = run.auto? ? 'yes' : 'no'
       end
@@ -21,19 +24,20 @@ ActiveAdmin.register_page 'Stopped Containers' do
     end
 
     # Show most recent record first
-    records = records.sort { |a, b| b[:finished_at] <=> a[:finished_at] }
+    records = records.sort { |a, b| b[:started_at] <=> a[:started_at] }
 
     table do
       thead do
         tr do
           th 'Container ID'
+          th 'Running?'
           th 'Exit code'
           th 'Finished'
           th 'Ran for'
           th 'OOM Killed'
           th 'Run ID'
           th 'Scraper name'
-          th 'Running'
+          th 'Scraper running?'
           th 'Run status code'
           th 'Auto'
         end
@@ -43,9 +47,18 @@ ActiveAdmin.register_page 'Stopped Containers' do
         records.each do |record|
           tr do
             td record[:container_id]
+            td record[:running]
             td record[:exit_code]
-            td time_ago_in_words(record[:finished_at]) + ' ago'
-            td distance_of_time_in_words(record[:finished_at] - record[:started_at])
+            td do
+              if record[:finished_at]
+                time_ago_in_words(record[:finished_at]) + ' ago'
+              end
+            end
+            td do
+              if record[:finished_at]
+                distance_of_time_in_words(record[:finished_at] - record[:started_at])
+              end
+            end
             td record[:oom_killed]
             td do
               if record[:run_id]
@@ -57,7 +70,7 @@ ActiveAdmin.register_page 'Stopped Containers' do
                 link_to record[:scraper_name], scraper_path(id: record[:scraper_name])
               end
             end
-            td record[:running]
+            td record[:scraper_running]
             td record[:run_status_code]
             td record[:auto]
           end
