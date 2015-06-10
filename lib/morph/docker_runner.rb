@@ -81,13 +81,13 @@ module Morph
       # There are times when multiple lines are returned and this does
       # not always happen consistently. So, for simplicity and consistency
       # we will split multiple lines up
-      result = []
-      while i = c.index("\n")
-        result << c[0..i]
-        c = c[i + 1..-1]
-      end
+      line_buffer = Morph::LineBuffer.new
+      line_buffer << c
+
+      result = line_buffer.extract
       # Anything left over
-      result << c if c.length > 0
+      f = line_buffer.finish
+      result << f if f.length > 0
       result
     end
 
