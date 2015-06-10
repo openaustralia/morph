@@ -18,6 +18,10 @@ module Morph
       '/app/time.output'
     end
 
+    def self.memory_limit
+      100 * 1024 * 1024
+    end
+
     def self.compile_and_start_run(
       repo_path, env_variables, container_labels)
       i = Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE) do |c|
@@ -63,7 +67,7 @@ module Morph
         # Memory limit (in bytes)
         # On a 1G machine we're allowing a max of 10 containers to run at
         # a time. So, 100M
-        'Memory' => 100 * 1024 * 1024,
+        'Memory' => memory_limit,
         'Env' => env_variables.map { |k, v| "#{k}=#{v}" },
         'Labels' => container_labels
       }
