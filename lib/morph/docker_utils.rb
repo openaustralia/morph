@@ -132,10 +132,10 @@ module Morph
       Docker::Container.all
     end
 
-    def self.docker_build_from_dir(dir, options)
+    def self.docker_build_from_dir(dir, connection_options)
       # How does this connection get closed?
       connection = Docker::Connection.new(
-        Docker.url, options.merge(Docker.env_options))
+        Docker.url, connection_options.merge(Docker.env_options))
       line_buffer = Morph::LineBuffer.new
       temp = create_tar_file(dir)
       Docker::Image.build_from_tar(
