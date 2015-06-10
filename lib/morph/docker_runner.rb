@@ -57,9 +57,6 @@ module Morph
 
       container_options = {
         'Cmd' => ['/bin/bash', '-l', '-c', command],
-        # TODO: We can just get rid of the line below, right?
-        # (because it's the default)
-        'User' => 'root',
         'Image' => i4.id,
         # See explanation in https://github.com/openaustralia/morph/issues/242
         'CpuShares' => 307,
