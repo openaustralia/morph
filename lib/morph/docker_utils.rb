@@ -9,21 +9,21 @@ module Morph
       end
     end
 
-    # Returns path to temporary file which it is your responsibility
+    # Returns temporary file which it is your responsibility
     # to remove after you're done with it
     def self.create_tar_file(directory)
-      path = Tempfile.new('morph_tar').path
+      temp = Tempfile.new('morph_tar', Dir.tmpdir, encoding: 'ascii-8bit')
       # We used to use Archive::Tar::Minitar but that doesn't support
       # symbolic links in the tar file. So, using tar from the command line
       # instead.
-      `tar cf #{path} -C #{directory} .`
-      path
+      `tar cf #{temp.path} -C #{directory} .`
+      temp
     end
 
     def self.create_tar(directory)
-      path = create_tar_file(directory)
-      content = File.open(path, 'rb') { |f| f.read }
-      FileUtils.rm_f(path)
+      temp = create_tar_file(directory)
+      content = temp.read
+      FileUtils.rm_f(temp.path)
       content
     end
 
@@ -138,21 +138,19 @@ module Morph
         Docker.url, options.merge(Docker.env_options))
       begin
         buffer = ''
-        path = create_tar_file(dir)
-        image = File.open(path, 'rb') do |io|
-          Docker::Image.build_from_tar(
-            io, { 'forcerm' => 1 }, connection) do |chunk|
-            buffer += chunk
-            while i = buffer.index("\r\n")
-              first_part = buffer[0..i - 1]
-              buffer = buffer[i + 2..-1]
-              parsed_line = JSON.parse(first_part)
-              yield parsed_line['stream'] if parsed_line.key?('stream')
-            end
+        temp = create_tar_file(dir)
+        image = Docker::Image.build_from_tar(
+          temp, { 'forcerm' => 1 }, connection) do |chunk|
+          buffer += chunk
+          while i = buffer.index("\r\n")
+            first_part = buffer[0..i - 1]
+            buffer = buffer[i + 2..-1]
+            parsed_line = JSON.parse(first_part)
+            yield parsed_line['stream'] if parsed_line.key?('stream')
           end
         end
         # Cleanup temporary tar file
-        FileUtils.rm_f(path)
+        FileUtils.rm_f(temp.path)
         image
       # TODO: Why are we catching this exception?
       rescue Docker::Error::UnexpectedResponseError
