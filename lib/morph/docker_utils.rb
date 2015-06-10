@@ -132,6 +132,7 @@ module Morph
         Docker.url, options.merge(Docker.env_options))
       begin
         buffer = ''
+        # TODO: Don't load the whole tar into memory at once. Use a temp file.
         Docker::Image.build_from_tar(
           StringIO.new(Morph::DockerUtils.create_tar(dir)),
           { 'forcerm' => 1 }, connection) do |chunk|
