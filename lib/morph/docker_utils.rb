@@ -136,26 +136,22 @@ module Morph
       # How does this connection get closed?
       connection = Docker::Connection.new(
         Docker.url, options.merge(Docker.env_options))
-      begin
-        buffer = ''
-        temp = create_tar_file(dir)
-        image = Docker::Image.build_from_tar(
-          temp, { 'forcerm' => 1 }, connection) do |chunk|
-          buffer += chunk
-          while i = buffer.index("\r\n")
-            first_part = buffer[0..i - 1]
-            buffer = buffer[i + 2..-1]
-            parsed_line = JSON.parse(first_part)
-            yield parsed_line['stream'] if parsed_line.key?('stream')
-          end
+      buffer = ''
+      temp = create_tar_file(dir)
+      Docker::Image.build_from_tar(
+        temp, { 'forcerm' => 1 }, connection) do |chunk|
+        buffer += chunk
+        while i = buffer.index("\r\n")
+          first_part = buffer[0..i - 1]
+          buffer = buffer[i + 2..-1]
+          parsed_line = JSON.parse(first_part)
+          yield parsed_line['stream'] if parsed_line.key?('stream')
         end
-        # Cleanup temporary tar file
-        FileUtils.rm_f(temp.path)
-        image
-      # TODO: Why are we catching this exception?
-      rescue Docker::Error::UnexpectedResponseError
-        nil
       end
+    # This exception gets thrown if there is an error during the build (for
+    # example if the compile fails). In this case we just want to return nil
+    rescue Docker::Error::UnexpectedResponseError
+      nil
     end
   end
 end
