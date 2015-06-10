@@ -195,7 +195,7 @@ module Morph
 
         Morph::DockerUtils.fix_modification_times(dir2)
         Morph::DockerUtils.docker_build_from_dir(
-          dir2, read_timeout: 4.hours) do |c|
+          dir2, { read_timeout: 4.hours }, { memory: memory_limit }) do |c|
           yield c
         end
       end
