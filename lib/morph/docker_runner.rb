@@ -18,6 +18,9 @@ module Morph
       '/app/time.output'
     end
 
+    # Memory limit applied to running container (in bytes)
+    # On a 1G machine we're allowing a max of 10 containers to run at
+    # a time. So, 100M
     def self.memory_limit
       100 * 1024 * 1024
     end
@@ -37,9 +40,7 @@ module Morph
         yield(:internalout, c)
       end
       # If something went wrong during the compile and it couldn't finish
-      if i3.nil?
-        return nil
-      end
+      return nil if i3.nil?
 
       # Insert the actual code (and database) into the container
       i4 = Dir.mktmpdir('morph') do |dest|
@@ -64,9 +65,6 @@ module Morph
         'Image' => i4.id,
         # See explanation in https://github.com/openaustralia/morph/issues/242
         'CpuShares' => 307,
-        # Memory limit (in bytes)
-        # On a 1G machine we're allowing a max of 10 containers to run at
-        # a time. So, 100M
         'Memory' => memory_limit,
         'Env' => env_variables.map { |k, v| "#{k}=#{v}" },
         'Labels' => container_labels
@@ -95,8 +93,8 @@ module Morph
       result
     end
 
-    def self.attach_to_run_and_finish(c, files)
-      if c.json['State']['Running']
+    def self.attach_to_run_and_finish(container, files)
+      if container.json['State']['Running']
         # TODO: We need to gracefully handle Docker::Error::TimeoutError
         # This should involve throwing a specific exception (something like
         # Morph::IntentionalRequeue) that says "requeue this" and then we
@@ -107,36 +105,36 @@ module Morph
         # allowed to run. It's just the time between reads of the log before
         # the attach read times out. So, a scraper that outputs stuff to
         # standard out regularly can run a lot longer than one that doesn't.
-        c.attach(logs: true) do |s, c|
+        container.attach(logs: true) do |s, c|
           normalise_log_content(c).each do |content|
             yield s, content
           end
         end
       else
         # Just grab all the logs
-        c.streaming_logs(stdout: true, stderr: true) do |s, c|
+        container.streaming_logs(stdout: true, stderr: true) do |s, c|
           normalise_log_content(c).each do |content|
             yield s, content
           end
         end
       end
 
-      # TODO: Don't call c.json multiple times
-      status_code = c.json['State']['ExitCode']
+      # TODO: Don't call container.json multiple times
+      status_code = container.json['State']['ExitCode']
       # Wait until container has definitely stopped
-      c.wait
+      container.wait
 
       # Make the paths absolute paths for the container
       files = files.map { |f| File.join('/app', f) }
 
       # Grab the resulting files
-      data = Morph::DockerUtils.copy_files(c, files + [time_file])
+      data = Morph::DockerUtils.copy_files(container, files + [time_file])
 
       # Before we delete the container get the image it was made from
-      i4 = Docker::Image.get(c.json['Image'])
+      i4 = Docker::Image.get(container.json['Image'])
 
       # Clean up after ourselves
-      c.delete
+      container.delete
 
       time_data = data.delete(time_file)
       if time_data
@@ -161,6 +159,7 @@ module Morph
       rescue Docker::Error::ConfictError
         # TODO: When docker-api gem gets updated Docker::Error::ConfictError
         # will be changed to Docker::Error::ConflictError
+        nil
       end
 
       Morph::RunResult.new(status_code, data_with_stripped_paths, time_params)
@@ -170,11 +169,11 @@ module Morph
     # Otherwise copies the other files across
     def self.copy_config_to_directory(source, dest, copy_config)
       Dir.entries(source).each do |entry|
-        if entry != '.' && entry != '..'
-          unless copy_config ^ ALL_CONFIG_FILENAMES.include?(entry)
-            FileUtils.copy_entry(File.join(source, entry),
-                                 File.join(dest, entry))
-          end
+        next if entry == '.' || entry == '..'
+
+        unless copy_config ^ ALL_CONFIG_FILENAMES.include?(entry)
+          FileUtils.copy_entry(File.join(source, entry),
+                               File.join(dest, entry))
         end
       end
     end
@@ -195,7 +194,7 @@ module Morph
 
         Morph::DockerUtils.fix_modification_times(dir2)
         Morph::DockerUtils.docker_build_from_dir(
-          dir2, { read_timeout: 4.hours }, { memory: memory_limit }) do |c|
+          dir2, { read_timeout: 4.hours }, memory: memory_limit) do |c|
           yield c
         end
       end
