@@ -134,8 +134,7 @@ module Morph
 
     def self.docker_build_from_dir(dir, connection_options, build_options = {})
       # How does this connection get closed?
-      connection = Docker::Connection.new(
-        Docker.url, connection_options.merge(Docker.env_options))
+      connection = docker_connection(connection_options)
       line_buffer = Morph::LineBuffer.new
       temp = create_tar_file(dir)
       Docker::Image.build_from_tar(
@@ -152,14 +151,16 @@ module Morph
       nil
     end
 
+    def self.docker_connection(options)
+      Docker::Connection.new(Docker.url, Docker.env_options.merge(options))
+    end
+
     # Returns an "interactive" docker connection which streams because it has
     # an unfeasably low chunk_size.
     # IMPORTANT: Don't try to use this for anything that doesn't stream
     # as it will be very slow
     def self.interactive_docker_connection(options)
-      Docker::Connection.new(
-        Docker.url,
-        options.merge(Docker.env_options).merge(chunk_size: 1))
+      docker_connection(options.merge(chunk_size: 1))
     end
   end
 end
