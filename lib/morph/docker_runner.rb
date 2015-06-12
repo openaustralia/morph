@@ -104,7 +104,14 @@ module Morph
         # allowed to run. It's just the time between reads of the log before
         # the attach read times out. So, a scraper that outputs stuff to
         # standard out regularly can run a lot longer than one that doesn't.
-        container.attach(logs: true) do |s, c|
+
+        # We want output to be streamed here in real time so we need to
+        # get the container again with an "interactive" connection.
+        connection = Morph::DockerUtils.interactive_docker_connection(
+          read_timeout: 4.hours)
+        interactive_container = Docker::Container.get(container.id, {}, connection)
+
+        interactive_container.attach(logs: true) do |s, c|
           normalise_log_content(c).each do |content|
             yield s, content
           end
