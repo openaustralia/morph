@@ -36,11 +36,7 @@ module Morph
 
     def go
       # If container already exists we just attach to it
-      # Get the container using an interactive connection
-      conn_interactive = Morph::DockerUtils.interactive_docker_connection(
-        read_timeout: 4.hours)
-
-      c = container_for_run(conn_interactive)
+      c = container_for_run
       if c.nil?
         c = compile_and_start_run do |s, c|
           yield s, c
@@ -237,9 +233,9 @@ module Morph
       labels
     end
 
-    def container_for_run(connection = Docker.connection)
+    def container_for_run
       Morph::DockerUtils.find_container_with_label(
-        Morph::Runner.run_label_key, run_label_value, connection)
+        Morph::Runner.run_label_key, run_label_value)
     end
 
     def self.run_id_for_container(container)
