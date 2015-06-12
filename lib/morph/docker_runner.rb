@@ -102,9 +102,9 @@ module Morph
 
         # We want output to be streamed here in real time so we need to
         # get the container again with an "interactive" connection.
-        connection = Morph::DockerUtils.interactive_docker_connection(
-          read_timeout: 4.hours)
-        interactive_container = Docker::Container.get(container.id, {}, connection)
+        interactive_container =
+          Morph::DockerUtils.container_with_interactive_connection(
+            container, read_timeout: 4.hours)
 
         interactive_container.attach(logs: true) do |s, c|
           normalise_log_content(c).each do |content|

@@ -155,6 +155,13 @@ module Morph
       Docker::Connection.new(Docker.url, Docker.env_options.merge(options))
     end
 
+    # Given a container return a new connection to the same container
+    # which is interactive (i.e. can be used for streaming)
+    def self.container_with_interactive_connection(container, options)
+      connection = Morph::DockerUtils.interactive_docker_connection(options)
+      Docker::Container.get(container.id, { }, connection)
+    end
+
     # Returns an "interactive" docker connection which streams because it has
     # an unfeasably low chunk_size.
     # IMPORTANT: Don't try to use this for anything that doesn't stream
