@@ -54,11 +54,6 @@ module Morph
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
 
-      # Open up a special interactive connection to Docker
-      # TODO: Cache connection
-      conn_interactive = Morph::DockerUtils.interactive_docker_connection(
-        read_timeout: 4.hours)
-
       container_options = {
         'Cmd' => command,
         'Image' => i4.id,
@@ -69,7 +64,7 @@ module Morph
         'Labels' => container_labels
       }
 
-      c = Docker::Container.create(container_options, conn_interactive)
+      c = Docker::Container.create(container_options)
       c.start
       c
     end
