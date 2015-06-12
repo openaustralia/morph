@@ -37,9 +37,8 @@ module Morph
     def go
       # If container already exists we just attach to it
       # Get the container using an interactive connection
-      conn_interactive = Docker::Connection.new(
-        Docker.url,
-        { chunk_size: 1, read_timeout: 4.hours }.merge(Docker.env_options))
+      conn_interactive = Morph::DockerUtils.interactive_docker_connection(
+        read_timeout: 4.hours)
 
       c = container_for_run(conn_interactive)
       if c.nil?

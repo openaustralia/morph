@@ -151,5 +151,15 @@ module Morph
     rescue Docker::Error::UnexpectedResponseError
       nil
     end
+
+    # Returns an "interactive" docker connection which streams because it has
+    # an unfeasably low chunk_size.
+    # IMPORTANT: Don't try to use this for anything that doesn't stream
+    # as it will be very slow
+    def self.interactive_docker_connection(options)
+      Docker::Connection.new(
+        Docker.url,
+        options.merge(Docker.env_options).merge(chunk_size: 1))
+    end
   end
 end

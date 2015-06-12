@@ -56,9 +56,8 @@ module Morph
 
       # Open up a special interactive connection to Docker
       # TODO: Cache connection
-      conn_interactive = Docker::Connection.new(
-        Docker.url,
-        { chunk_size: 1, read_timeout: 4.hours }.merge(Docker.env_options))
+      conn_interactive = Morph::DockerUtils.interactive_docker_connection(
+        read_timeout: 4.hours)
 
       container_options = {
         'Cmd' => command,
