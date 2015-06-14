@@ -129,3 +129,12 @@
 
 - name: run iptables morph setup script at boot
   copy: src=interfaces dest=/etc/network/interfaces
+
+# We're going to use monit to monitor the sidekiq worker to ensure that it doesn't
+# use too much memory
+- name: Install monit
+  apt: pkg=monit state=present
+
+- name: copy across monit config for sidekiq
+  copy: src=monit_sidekiq.conf dest=/etc/monit/conf.d/sidekiq.conf
+  notify: reload monit

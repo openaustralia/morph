@@ -10,3 +10,6 @@
   notify: Restart morph service
 - name: Restart morph service
   service: name=morph state=restarted
+
+- name: reload monit
+  service: name=monit state=reloaded
