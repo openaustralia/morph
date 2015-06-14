@@ -58,7 +58,6 @@ Rails.application.routes.draw do
 
   # Hmm not totally sure about this url.
   post "/run", to: "api#run_remote"
-  get "/test", to: "api#test"
 
   resources :connection_logs, only: :create
 
