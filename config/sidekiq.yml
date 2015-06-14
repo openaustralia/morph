@@ -1,6 +1,6 @@
 ---
 :concurrency: 10
-:pidfile: tmp/pids/sidekiq.pid
+:pidfile: tmp/pids/morph-worker-1.pid
 :queues:
   - default
   - scraper
