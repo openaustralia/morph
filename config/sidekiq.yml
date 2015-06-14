@@ -1,6 +1,6 @@
 ---
 :concurrency: 10
-:pidfile: /var/run/sidekiq.pid
+:pidfile: tmp/sidekiq.pid
 :queues:
   - default
   - scraper
