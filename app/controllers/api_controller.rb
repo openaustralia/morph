@@ -19,8 +19,8 @@ class ApiController < ApplicationController
     else
       run = Run.create(queued_at: Time.now, auto: false, owner_id: user.id)
 
+      # TODO: Shouldn't need to untar here because it just gets retarred
       Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
-      #Archive::Tar::Minitar.unpack(params[:code].tempfile, "uploaded_files")
 
       result = []
       response.headers['Content-Type'] = 'text/event-stream'
