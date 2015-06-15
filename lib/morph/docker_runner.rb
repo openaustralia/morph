@@ -40,7 +40,7 @@ module Morph
         yield(:internalout, c)
       end
       # If something went wrong during the compile and it couldn't finish
-      return nil if i3.nil?
+      return [nil, nil] if i3.nil?
 
       # Insert the actual code (and database) into the container
       i4 = Dir.mktmpdir('morph') do |dest|
@@ -66,7 +66,7 @@ module Morph
 
       c = Docker::Container.create(container_options)
       c.start
-      c
+      [c, i3]
     end
 
     def self.normalise_log_content(c)

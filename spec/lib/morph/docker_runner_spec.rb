@@ -17,7 +17,7 @@ describe Morph::DockerRunner do
 
     it "should let me know that it can't select a buildpack" do
       logs = []
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+      c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
         logs << [s, c]
       end
 
@@ -44,7 +44,7 @@ describe Morph::DockerRunner do
           f << "puts 'Hello world!'\n"
         end
         logs = []
-        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
           logs << [s, c]
         end
         result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
@@ -66,7 +66,7 @@ describe Morph::DockerRunner do
           f << "File.open('foo.txt', 'w') { |f| f << 'Hello World!'}\n"
         end
         logs = []
-        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
           logs << [s, c]
         end
         result = Morph::DockerRunner.attach_to_run_and_finish(
@@ -89,7 +89,7 @@ describe Morph::DockerRunner do
           f << "puts ENV['AN_ENV_VARIABLE']\n"
         end
         logs = []
-        c = Morph::DockerRunner.compile_and_start_run(
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(
           @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}) do |s, c|
           logs << [s, c]
         end
@@ -116,7 +116,7 @@ File.open("ip_address", "w") {|f| f << address.ip_address}
           EOF
         end
         ip_address = nil
-        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
         ip_address = c.json['NetworkSettings']['IPAddress']
         result = Morph::DockerRunner.attach_to_run_and_finish(
           c, ['ip_address']) {}
@@ -132,7 +132,7 @@ This is not going to run as ruby code so should return an error
           EOF
         end
         logs = []
-        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
           logs << [s, c]
         end
         result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
@@ -163,7 +163,7 @@ puts "Finished!"
           )
         end
         logs = []
-        c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
           logs << [Time.now, c]
         end
         result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|

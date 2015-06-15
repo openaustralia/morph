@@ -75,7 +75,7 @@ module Morph
         return
       end
 
-      c = Dir.mktmpdir('morph') do |defaults|
+      c, _i3 = Dir.mktmpdir('morph') do |defaults|
         Morph::Runner.add_config_defaults_to_directory(run.repo_path, defaults)
         Morph::Runner.remove_hidden_directories(defaults)
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
