@@ -35,6 +35,7 @@ ActiveAdmin.register_page 'Containers' do
         thead do
           tr do
             th 'Container ID'
+            th 'Running for'
             th 'Run ID'
             th 'Scraper name'
             th 'Scraper running?'
@@ -46,6 +47,7 @@ ActiveAdmin.register_page 'Containers' do
           running_records.each do |record|
             tr do
               td record[:container_id]
+              td time_ago_in_words(record[:started_at])
               td do
                 if record[:run_id]
                   link_to record[:run_id], admin_run_path(id: record[:run_id])
