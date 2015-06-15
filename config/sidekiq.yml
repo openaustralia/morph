@@ -1,8 +1,8 @@
 ---
-:concurrency: 10
+:concurrency: 15
 :pidfile: tmp/pids/morph-worker-1.pid
 :queues:
   - default
   - scraper
 :limits:
-    scraper: 5
+    scraper: 10
