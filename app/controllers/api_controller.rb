@@ -11,21 +11,22 @@ class ApiController < ApplicationController
   # This will be a long running request
   # TODO: Document this API
   def run_remote
-    response.headers['Content-Type'] = 'text/event-stream'
-
     if !current_user.ability.can? :create, Run
-      stream_message('internalerr', "You currently can't start a scraper run." \
-                                   ' See https://morph.io for more details')
+      render json: {
+        stream: 'internalerr',
+        text: "You currently can't start a scraper run." \
+              ' See https://morph.io for more details'
+      }
     else
+      response.headers['Content-Type'] = 'text/event-stream'
       run = Run.create(queued_at: Time.now, auto: false, owner: current_user)
       # TODO: Shouldn't need to untar here because it just gets retarred
       Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
 
       Morph::Runner.new(run).go { |s, text| stream_message(s, text) }
+      response.stream.close
     end
   ensure
-    response.stream.close
-
     # Cleanup run
     FileUtils.rm_rf(run.data_path)
     FileUtils.rm_rf(run.repo_path)
