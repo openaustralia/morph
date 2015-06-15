@@ -14,8 +14,8 @@ class ApiController < ApplicationController
     response.headers['Content-Type'] = 'text/event-stream'
 
     if !current_user.ability.can? :create, Run
-      stream_message('stdout', "You currently can't start a scraper run." \
-                               ' See https://morph.io for more details')
+      stream_message('internalerr', "You currently can't start a scraper run." \
+                                   ' See https://morph.io for more details')
     else
       run = Run.create(queued_at: Time.now, auto: false, owner: current_user)
       # TODO: Shouldn't need to untar here because it just gets retarred
