@@ -10,11 +10,9 @@ class ApiController < ApplicationController
   # This will be a long running request
   # TODO: Document this API
   def run_remote
-    # TODO: Get the id of the person making the request and set current_user.
-    user = User.find_by_api_key(params[:api_key])
-    if user.nil?
+    if current_user.nil?
       render text: 'API key is not valid', status: 401
-    elsif !user.ability.can? :create, Run
+    elsif !current_user.ability.can? :create, Run
       response.headers['Content-Type'] = 'text/event-stream'
       message = {
         stream: 'stdout',
@@ -24,7 +22,7 @@ class ApiController < ApplicationController
       response.stream.write(message.to_json + "\n")
       response.stream.close
     else
-      run = Run.create(queued_at: Time.now, auto: false, owner_id: user.id)
+      run = Run.create(queued_at: Time.now, auto: false, owner_id: current_user.id)
 
       # TODO: Shouldn't need to untar here because it just gets retarred
       Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
@@ -40,5 +38,11 @@ class ApiController < ApplicationController
       FileUtils.rm_rf(run.data_path)
       FileUtils.rm_rf(run.repo_path)
     end
+  end
+
+  private
+
+  def current_user
+    @current_user ||= User.find_by_api_key(params[:api_key])
   end
 end
