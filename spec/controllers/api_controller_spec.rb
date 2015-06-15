@@ -56,6 +56,7 @@ puts 'Hello!'
       ).and_yield(
         'stdout', "Hello!\n"
       )
+      expect(runner).to receive(:container_for_run).and_return(nil)
 
       post :run_remote, api_key: user.api_key, code: code
 

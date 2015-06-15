@@ -16,11 +16,14 @@ class ApiController < ApplicationController
     run = Run.create(queued_at: Time.now, auto: false, owner: current_user)
     # TODO: Shouldn't need to untar here because it just gets retarred
     Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
-
-    Morph::Runner.new(run).go { |s, text| stream_message(s, text) }
-    response.stream.close
+    runner = Morph::Runner.new(run)
+    runner.go { |s, text| stream_message(s, text) }
   ensure
     # Cleanup run
+    response.stream.close
+    # Don't want to leave any containers hanging around
+    container = runner.container_for_run
+    container.delete if container
     FileUtils.rm_rf(run.data_path)
     FileUtils.rm_rf(run.repo_path)
   end
