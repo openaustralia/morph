@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150529060521) do
+ActiveRecord::Schema.define(version: 20150615073351) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -192,6 +192,7 @@ ActiveRecord::Schema.define(version: 20150529060521) do
     t.integer  "records_unchanged"
     t.string   "ip_address"
     t.integer  "connection_logs_count"
+    t.string   "docker_image"
   end
 
   add_index "runs", ["finished_at"], name: "index_runs_on_finished_at", using: :btree

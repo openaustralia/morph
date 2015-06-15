@@ -75,7 +75,7 @@ module Morph
         return
       end
 
-      c, _i3 = Dir.mktmpdir('morph') do |defaults|
+      c, image = Dir.mktmpdir('morph') do |defaults|
         Morph::Runner.add_config_defaults_to_directory(run.repo_path, defaults)
         Morph::Runner.remove_hidden_directories(defaults)
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
@@ -86,11 +86,12 @@ module Morph
         end
       end
 
-      if c
-        # Record ip address of running container
-        run.update_attributes(
-          ip_address: c.json['NetworkSettings']['IPAddress'])
-      end
+      # Record ip address of running container
+      ip_address = c.json['NetworkSettings']['IPAddress'] if c
+      # The image id here is a short one. Not sure why.
+      # TODO: Investigate
+      docker_image = image.id if image
+      run.update_attributes(ip_address: ip_address, docker_image: docker_image)
       c
     end
 
