@@ -22,12 +22,13 @@ class ApiController < ApplicationController
       Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
 
       Morph::Runner.new(run).go { |s, text| stream_message(s, text) }
-
-      # Cleanup run
-      FileUtils.rm_rf(run.data_path)
-      FileUtils.rm_rf(run.repo_path)
     end
+  ensure
     response.stream.close
+
+    # Cleanup run
+    FileUtils.rm_rf(run.data_path)
+    FileUtils.rm_rf(run.repo_path)
   end
 
   private
