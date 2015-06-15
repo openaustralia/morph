@@ -14,6 +14,34 @@ describe ApiController do
       expect(response.body).to eq 'API key is not valid'
     end
 
+    it 'should fail when site is in read-only mode' do
+      user = User.create!
+      ability = double(Ability)
+      expect(Ability).to receive(:new).with(user).and_return(ability)
+      expect(ability).to receive(:can?).with(:create, Run).and_return(false)
+
+      temp = Dir.mktmpdir do |dir|
+        File.open(File.join(dir, 'scraper.rb'), 'w') do |f|
+          f << %q(
+puts 'Hello!'
+          )
+        end
+        Morph::DockerUtils.create_tar_file(dir)
+      end
+
+      code = Rack::Test::UploadedFile.new(temp.path, nil, true)
+
+      post :run_remote, api_key: user.api_key, code: code
+
+      response.should be_success
+      parsed = response.body.split("\n").map { |l| JSON.parse(l) }
+      expect(parsed).to eq [{
+        'stream' => 'stdout',
+        'text'   => "You currently can't start a scraper run." \
+                    ' See https://morph.io for more details'
+      }]
+    end
+
     it 'should work with a valid api key' do
       user = User.create!
       temp = Dir.mktmpdir do |dir|
@@ -56,7 +84,5 @@ puts 'Hello!'
     end
 
     skip 'should test streaming'
-
-    skip 'should test when site is in read-only mode'
   end
 end
