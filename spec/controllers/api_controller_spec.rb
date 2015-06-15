@@ -2,6 +2,22 @@ require 'spec_helper'
 
 describe ApiController do
   describe '#run_remote' do
+    let(:user) { User.create! }
+    let(:code) do
+      # Is there a chance the temp file will get garbage collected?
+      temp = Dir.mktmpdir do |dir|
+        File.open(File.join(dir, 'scraper.rb'), 'w') do |f|
+          f << %q(
+puts 'Hello!'
+          )
+        end
+        Morph::DockerUtils.create_tar_file(dir)
+      end
+
+      Rack::Test::UploadedFile.new(temp.path, nil, true)
+    end
+    before(:each) { user }
+
     it "shouldn't work without an api key" do
       post :run_remote
       expect(response.response_code).to eq 401
@@ -15,21 +31,9 @@ describe ApiController do
     end
 
     it 'should fail when site is in read-only mode' do
-      user = User.create!
       ability = double(Ability)
       expect(Ability).to receive(:new).with(user).and_return(ability)
       expect(ability).to receive(:can?).with(:create, Run).and_return(false)
-
-      temp = Dir.mktmpdir do |dir|
-        File.open(File.join(dir, 'scraper.rb'), 'w') do |f|
-          f << %q(
-puts 'Hello!'
-          )
-        end
-        Morph::DockerUtils.create_tar_file(dir)
-      end
-
-      code = Rack::Test::UploadedFile.new(temp.path, nil, true)
 
       post :run_remote, api_key: user.api_key, code: code
 
@@ -43,16 +47,6 @@ puts 'Hello!'
     end
 
     it 'should work with a valid api key' do
-      user = User.create!
-      temp = Dir.mktmpdir do |dir|
-        File.open(File.join(dir, 'scraper.rb'), 'w') do |f|
-          f << %q(
-puts 'Hello!'
-          )
-        end
-        Morph::DockerUtils.create_tar_file(dir)
-      end
-
       runner = double(Morph::Runner)
       expect(Morph::Runner).to receive(:new).and_return(runner)
       expect(runner).to receive(:go).and_yield(
@@ -62,8 +56,6 @@ puts 'Hello!'
       ).and_yield(
         'stdout', "Hello!\n"
       )
-
-      code = Rack::Test::UploadedFile.new(temp.path, nil, true)
 
       post :run_remote, api_key: user.api_key, code: code
 
