@@ -10,7 +10,8 @@ module Morph
       'Gemfile', 'Gemfile.lock',
       'requirements.txt', 'runtime.txt',
       'composer.json', 'composer.lock',
-      'app.psgi', 'cpanfile'
+      'app.psgi', 'cpanfile',
+      'package.json'
     ]
     BUILDSTEP_IMAGE = 'openaustralia/buildstep'
 

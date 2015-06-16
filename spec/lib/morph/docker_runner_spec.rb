@@ -30,6 +30,30 @@ describe Morph::DockerRunner do
         .to eq @container_count
     end
 
+    context 'A js scraper' do
+      before(:each) do
+        File.open(File.join(@dir, 'Procfile'), 'w') do |f|
+          f << 'scraper: node scraper.js'
+        end
+        File.open(File.join(@dir, 'package.json'), 'w') do |f|
+          f << '{}'
+        end
+      end
+
+      it 'should be able to run hello world' do
+        File.open(File.join(@dir, 'scraper.js'), 'w') do |f|
+          f << "console.log(\"Hello world!\");\n"
+        end
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+        logs = []
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+          logs << [s, c]
+        end
+        expect(result.status_code).to eq 0
+        expect(logs).to eq [[:stdout, "Hello world!\n"]]
+      end
+    end
+
     context 'A ruby scraper with no dependencies' do
       before(:each) do
         File.open(File.join(@dir, 'Procfile'), 'w') do |f|
