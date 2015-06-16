@@ -17,17 +17,6 @@ module Morph
     FILE_EXTENSIONS = { ruby: 'rb', php: 'php', python: 'py', perl: 'pl',
                         nodejs: 'js' }
 
-    BINARY_NAMES = {
-      # Run a special script of ours before anything else which switches off
-      # buffering on stdout and stderr
-      ruby: 'ruby -r/usr/local/lib/prerun.rb',
-      php: 'php',
-      # -u turns off buffering for stdout and stderr
-      python: 'python -u',
-      perl: 'perl',
-      nodejs: 'node'
-    }
-
     # Files are grouped together when they need to be treated as a unit
     # For instance in Ruby. Gemfile and Gemfile.lock always go together.
     # So, the default Gemfile and Gemfile.lock only get inserted if both
@@ -89,10 +78,6 @@ module Morph
       "scraper.#{FILE_EXTENSIONS[key]}" if key
     end
 
-    def scraper_command
-      "#{binary_name} /repo/#{scraper_filename}"
-    end
-
     def supported?
       LANGUAGES_SUPPORTED.include?(key)
     end
@@ -107,10 +92,6 @@ module Morph
         end
       end
       result
-    end
-
-    def binary_name
-      BINARY_NAMES[key]
     end
 
     def default_config_file_path(file)
