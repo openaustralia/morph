@@ -36,7 +36,13 @@ describe Morph::DockerRunner do
           f << 'scraper: node scraper.js'
         end
         File.open(File.join(@dir, 'package.json'), 'w') do |f|
-          f << '{}'
+          f << <<-EOF
+{
+	"dependencies": {
+		"sqlite3": "latest"
+	}
+}
+          EOF
         end
       end
 
