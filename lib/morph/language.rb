@@ -1,18 +1,21 @@
 module Morph
   # Special stuff for each scripting language supported by morph.io
   class Language
-    LANGUAGES_SUPPORTED = [:ruby, :php, :python, :perl]
+    LANGUAGES_SUPPORTED = [:ruby, :php, :python, :perl, :nodejs]
 
     WEBSITES = {
       ruby: 'https://www.ruby-lang.org/en/',
       php: 'http://www.php.net/',
       python: 'https://www.python.org/',
-      perl: 'http://www.perl.org/'
+      perl: 'http://www.perl.org/',
+      nodejs: 'https://nodejs.org/'
     }
 
-    HUMAN = { ruby: 'Ruby', php: 'PHP', python: 'Python', perl: 'Perl' }
+    HUMAN = { ruby: 'Ruby', php: 'PHP', python: 'Python', perl: 'Perl',
+              nodejs: 'Node.js' }
 
-    FILE_EXTENSIONS = { ruby: 'rb', php: 'php', python: 'py', perl: 'pl' }
+    FILE_EXTENSIONS = { ruby: 'rb', php: 'php', python: 'py', perl: 'pl',
+                        nodejs: 'js' }
 
     BINARY_NAMES = {
       # Run a special script of ours before anything else which switches off
@@ -21,7 +24,8 @@ module Morph
       php: 'php',
       # -u turns off buffering for stdout and stderr
       python: 'python -u',
-      perl: 'perl'
+      perl: 'perl',
+      nodejs: 'node'
     }
 
     # Files are grouped together when they need to be treated as a unit
@@ -42,7 +46,8 @@ module Morph
       perl: [
         ['app.psgi'],
         ['cpanfile']
-      ]
+      ],
+      nodejs: []
     }
 
     attr_reader :key
