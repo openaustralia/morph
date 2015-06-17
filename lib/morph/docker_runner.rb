@@ -239,7 +239,11 @@ module Morph
       Dir.mktmpdir('morph') do |dir|
         docker_build_command(
           image,
-          ['ENV CURL_TIMEOUT 180', 'RUN /build/builder'],
+          [
+            'ENV CURL_TIMEOUT 180',
+            'ENV NPM_CONFIG_CAFILE /etc/ssl/certs/ca-certificates.crt',
+            'RUN /build/builder'
+          ],
           dir) do |c|
           # We don't want to show the standard docker build output
           unless c =~ /^Step \d+ :/ || c =~ /^ ---> / ||
