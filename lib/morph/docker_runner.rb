@@ -241,7 +241,9 @@ module Morph
           image,
           [
             'ENV CURL_TIMEOUT 180',
-            'ENV NPM_CONFIG_CAFILE /etc/ssl/certs/ca-certificates.crt',
+            # Doing this not very nice thing in lieu of figuring out how
+            # to set our custom CA cert for all of node
+            'ENV NODE_TLS_REJECT_UNAUTHORIZED 0',
             'RUN /build/builder'
           ],
           dir) do |c|
