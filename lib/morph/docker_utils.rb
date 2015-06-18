@@ -161,5 +161,17 @@ module Morph
       Docker::Container.get(container.id, { },
         docker_connection(options.merge(chunk_size: 1)))
     end
+
+    def self.remove_single_docker_image(image)
+      image.delete('noprune' => 1)
+    rescue Docker::Error::ConfictError
+      # TODO: When docker-api gem gets updated Docker::Error::ConfictError
+      # will be changed to Docker::Error::ConflictError
+      nil
+    end
+
+    def self.parent_image(image)
+      Docker::Image.get(image.info['Parent'])
+    end
   end
 end

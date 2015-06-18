@@ -158,23 +158,11 @@ module Morph
       # we injected the scraper code via stdin when we attach to the container
 
       # There are actually two layers to clean up
-      parent = parent_image(i4)
-      remove_single_docker_image(i4)
-      remove_single_docker_image(parent)
-      
+      parent = Morph::DockerUtils.parent_image(i4)
+      Morph::DockerUtils.remove_single_docker_image(i4)
+      Morph::DockerUtils.remove_single_docker_image(parent)
+
       Morph::RunResult.new(status_code, data_with_stripped_paths, time_params)
-    end
-
-    def self.remove_single_docker_image(image)
-      image.delete('noprune' => 1)
-    rescue Docker::Error::ConfictError
-      # TODO: When docker-api gem gets updated Docker::Error::ConfictError
-      # will be changed to Docker::Error::ConflictError
-      nil
-    end
-
-    def self.parent_image(image)
-      Docker::Image.get(image.info['Parent'])
     end
 
     # If copy_config is true copies the config file across
