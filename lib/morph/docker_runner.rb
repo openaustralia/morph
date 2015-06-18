@@ -156,8 +156,12 @@ module Morph
       # just ignore any errors that deleting might throw up.
       # TODO: We wouldn't need to clean up the image with the scraper code if
       # we injected the scraper code via stdin when we attach to the container
-      remove_single_docker_image(i4)
 
+      # There are actually two layers to clean up
+      parent = parent_image(i4)
+      remove_single_docker_image(i4)
+      remove_single_docker_image(parent)
+      
       Morph::RunResult.new(status_code, data_with_stripped_paths, time_params)
     end
 
@@ -167,6 +171,10 @@ module Morph
       # TODO: When docker-api gem gets updated Docker::Error::ConfictError
       # will be changed to Docker::Error::ConflictError
       nil
+    end
+
+    def self.parent_image(image)
+      Docker::Image.get(image.info['Parent'])
     end
 
     # If copy_config is true copies the config file across
