@@ -1,9 +1,8 @@
 .container
   %h1 Add scraper from your Github repository
 
-  = render "documentation/languages"
-
-  = render "documentation/format"
+  = render 'documentation/languages'
+  = render 'documentation/format'
 
   %ul.nav.nav-tabs
     %li.active= link_to @user.nickname, "#owner_#{@user.nickname}", data: {toggle: "tab"}
