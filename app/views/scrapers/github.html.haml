@@ -3,10 +3,7 @@
 
   = render "documentation/languages"
 
-  :markdown
-    They should create an sqlite database in the current working directory called `#{Morph::Database.sqlite_db_filename}`.
-    The main data should be written into a table called `#{Morph::Database.sqlite_table_name}`.
-    The code needs to live in the master branch of the repository.
+  = render "documentation/format"
 
   %ul.nav.nav-tabs
     %li.active= link_to @user.nickname, "#owner_#{@user.nickname}", data: {toggle: "tab"}
