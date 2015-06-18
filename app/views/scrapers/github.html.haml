@@ -1,9 +1,9 @@
 .container
   %h1 Add scraper from your Github repository
 
+  = render "documentation/languages"
+
   :markdown
-    Scrapers can be written in Ruby, PHP, Python or Perl. For Ruby they need to have a file in the root
-    directory called `scraper.rb`, for PHP `scraper.php`, for Python `scraper.py` and for Perl `scraper.pl`.
     They should create an sqlite database in the current working directory called `#{Morph::Database.sqlite_db_filename}`.
     The main data should be written into a table called `#{Morph::Database.sqlite_table_name}`.
     The code needs to live in the master branch of the repository.
