@@ -51,6 +51,7 @@ Rails.application.routes.draw do
       get "php"
       get "perl"
       get "python"
+      get "nodejs"
       get "examples/australian_members_of_parliament"
     end
   end
