@@ -6,7 +6,7 @@ ActiveAdmin.register_page 'Images' do
         tr do
           th 'ID'
           th 'Created'
-          th 'Last used'
+          th 'Last used by run'
         end
       end
       tbody do
@@ -17,9 +17,7 @@ ActiveAdmin.register_page 'Images' do
               time_ago_in_words(Time.at(image.info['Created'])) + ' ago'
             end
             td do
-              docker_image = image.id[0..11]
-              p docker_image
-              time = Run.where(docker_image: docker_image).maximum(:created_at)
+              time = Run.where(docker_image: image.id[0..11]).maximum(:created_at)
               time_ago_in_words(time) + ' ago' if time
             end
           end
