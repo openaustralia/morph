@@ -39,6 +39,17 @@ module Morph
       nodejs: []
     }
 
+    BINARIES = {
+      # Run a special script of ours before anything else which switches off
+      # buffering on stdout and stderr
+      ruby: 'bundle exec ruby -r/usr/local/lib/prerun.rb',
+      php: 'php -d include_path=.:/app/vendor/openaustralia/scraperwiki',
+      # -u turns off buffering for stdout and stderr
+      python: 'python -u',
+      perl: 'perl -Mlib=/app/local/lib/perl5',
+      nodejs: 'node'
+    }
+
     attr_reader :key
 
     def initialize(key)
@@ -94,21 +105,12 @@ module Morph
       result
     end
 
+    def binary
+      BINARIES[key]
+    end
+
     def procfile
-      if key == :nodejs
-        'scraper: node scraper.js'
-      elsif key == :perl
-        'scraper: perl -Mlib=/app/local/lib/perl5 scraper.pl'
-      elsif key == :php
-        'scraper: php -d include_path=.:/app/vendor/openaustralia/scraperwiki scraper.php'
-      # -u turns off buffering for stdout and stderr
-      elsif key == :python
-        'scraper: python -u scraper.py'
-      elsif key == :ruby
-        'scraper: bundle exec ruby -r/usr/local/lib/prerun.rb scraper.rb'
-      else
-        fail
-      end
+      "scraper: #{binary} #{scraper_filename}"
     end
 
     def default_config_file_path(file)
