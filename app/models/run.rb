@@ -82,7 +82,7 @@ class Run < ActiveRecord::Base
   end
 
   def error_text
-    log_lines.where(stream: 'stderr').order(:number).map(&:text).join
+    log_lines.where(stream: 'stderr').order('log_lines.id').map(&:text).join
   end
 
   def git_revision_github_url
