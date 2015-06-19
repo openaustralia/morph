@@ -232,8 +232,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
           expect(Dir.entries(dir).sort).to eq [
             '.', '..', 'Procfile', 'app.psgi', 'cpanfile', 'scraper.pl']
           perl = Morph::Language.new(:perl)
-          expect(File.read(File.join(dir, 'Procfile')))
-            .to eq File.read(perl.default_config_file_path('Procfile'))
+          expect(File.read(File.join(dir, 'Procfile'))).to eq perl.procfile
           expect(File.read(File.join(dir, 'app.psgi')))
             .to eq File.read(perl.default_config_file_path('app.psgi'))
           expect(File.read(File.join(dir, 'cpanfile')))
@@ -260,8 +259,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
             expect(File.read(File.join(dir, 'Gemfile'))).to eq ''
             expect(File.read(File.join(dir, 'Gemfile.lock'))).to eq ''
             ruby = Morph::Language.new(:ruby)
-            expect(File.read(File.join(dir, 'Procfile')))
-              .to eq File.read(ruby.default_config_file_path('Procfile'))
+            expect(File.read(File.join(dir, 'Procfile'))).to eq ruby.procfile
           end
         end
       end
@@ -280,8 +278,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
             expect(File.read(File.join(dir, 'Gemfile'))).to eq ''
             expect(File.read(File.join(dir, 'Gemfile.lock'))).to eq ''
             ruby = Morph::Language.new(:ruby)
-            expect(File.read(File.join(dir, 'Procfile')))
-              .to eq File.read(ruby.default_config_file_path('Procfile'))
+            expect(File.read(File.join(dir, 'Procfile'))).to eq ruby.procfile
           end
         end
       end
@@ -297,8 +294,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
               .to eq File.read(ruby.default_config_file_path('Gemfile'))
             expect(File.read(File.join(dir, 'Gemfile.lock')))
               .to eq File.read(ruby.default_config_file_path('Gemfile.lock'))
-            expect(File.read(File.join(dir, 'Procfile')))
-              .to eq File.read(ruby.default_config_file_path('Procfile'))
+            expect(File.read(File.join(dir, 'Procfile'))).to eq ruby.procfile
           end
         end
       end
@@ -315,8 +311,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
               '.', '..', 'Gemfile', 'Procfile', 'scraper.rb']
             expect(File.read(File.join(dir, 'Gemfile'))).to eq ''
             ruby = Morph::Language.new(:ruby)
-            expect(File.read(File.join(dir, 'Procfile')))
-              .to eq File.read(ruby.default_config_file_path('Procfile'))
+            expect(File.read(File.join(dir, 'Procfile'))).to eq ruby.procfile
           end
         end
       end
