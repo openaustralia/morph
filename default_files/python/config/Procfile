@@ -1,2 +1,0 @@
-# -u turns off buffering for stdout and stderr
-scraper: python -u scraper.py
