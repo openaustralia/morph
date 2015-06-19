@@ -28,9 +28,7 @@ module Morph
 
     def log(stream, text)
       puts "#{stream}: #{text}" if Rails.env.development?
-      number = run.log_lines.maximum(:number) || 0
-      line = run.log_lines.create(stream: stream.to_s, text: text,
-                                  number: (number + 1))
+      line = run.log_lines.create(stream: stream.to_s, text: text)
       sync_new line, scope: run unless Rails.env.test?
     end
 
