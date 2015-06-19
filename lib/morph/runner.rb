@@ -200,11 +200,8 @@ module Morph
         end
       end
 
-      # Read in the contents of the Procfile
-      procfile_contents = File.read(language.default_config_file_path('Procfile'))
-
       # Special behaviour for Procfile. We don't allow the user to override this
-      File.open(File.join(dest, 'Procfile'), 'w') { |f| f << procfile_contents }
+      File.open(File.join(dest, 'Procfile'), 'w') { |f| f << language.procfile }
     end
 
     # Remove directories starting with "."
