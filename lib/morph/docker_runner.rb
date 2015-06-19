@@ -105,7 +105,7 @@ module Morph
         # get the container again with an "interactive" connection.
         interactive_container =
           Morph::DockerUtils.container_with_interactive_connection(
-            container, read_timeout: 4.hours)
+            container, read_timeout: 5.minutes)
 
         interactive_container.attach(logs: true) do |s, c|
           normalise_log_content(c).each do |content|
@@ -194,7 +194,7 @@ module Morph
 
         Morph::DockerUtils.fix_modification_times(dir2)
         Morph::DockerUtils.docker_build_from_dir(
-          dir2, { read_timeout: 4.hours }) do |c|
+          dir2, { read_timeout: 5.minutes }) do |c|
           yield c
         end
       end
