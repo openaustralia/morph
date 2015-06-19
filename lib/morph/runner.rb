@@ -28,7 +28,8 @@ module Morph
 
     def log(stream, text)
       puts "#{stream}: #{text}" if Rails.env.development?
-      line = run.log_lines.create(stream: stream.to_s, text: text)
+      # Not using create on association to try to avoid memory bloat
+      line = LogLine.create!(run: run, stream: stream.to_s, text: text)
       sync_new line, scope: run unless Rails.env.test?
     end
 
