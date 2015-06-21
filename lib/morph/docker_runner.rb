@@ -61,7 +61,9 @@ module Morph
         # See explanation in https://github.com/openaustralia/morph/issues/242
         'CpuShares' => 307,
         'Memory' => memory_limit,
-        'Env' => env_variables.map { |k, v| "#{k}=#{v}" },
+        'Env' => {
+            'REQUESTS_CA_BUNDLE' => '/etc/ssl/certs/ca-certificates.crt'
+          }.merge(env_variables).map { |k, v| "#{k}=#{v}" },
         'Labels' => container_labels
       }
 
