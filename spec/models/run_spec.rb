@@ -34,4 +34,21 @@ describe Run do
       it {expect(run.finished_recently?).to be_truthy}
     end
   end
+
+  describe '#env_variables' do
+    context 'has scraper' do
+      let(:variable1) { mock_model(Variable, name: 'FOO', value: 'bar')}
+      let(:variable2) { mock_model(Variable, name: 'WIBBLE', value: 'wobble')}
+      let(:scraper) { mock_model(Scraper, variables: [variable1, variable2]) }
+      let(:run) { Run.new(scraper: scraper) }
+      it "should return all the variables" do
+        expect(run.env_variables).to eq [['FOO', 'bar'], ['WIBBLE', 'wobble']]
+      end
+    end
+
+    context 'does not have scraper' do
+      let(:run) { Run.new }
+      it { expect(run.env_variables).to eq [] }
+    end
+  end
 end
