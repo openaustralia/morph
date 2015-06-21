@@ -62,8 +62,8 @@ module Morph
         'CpuShares' => 307,
         'Memory' => memory_limit,
         'Env' => (
-            [['REQUESTS_CA_BUNDLE', '/etc/ssl/certs/ca-certificates.crt']] + 
-            env_variables
+            [['REQUESTS_CA_BUNDLE', '/etc/ssl/certs/ca-certificates.crt']] +
+            env_variables.to_a
           ).map { |k, v| "#{k}=#{v}" },
         'Labels' => container_labels
       }
