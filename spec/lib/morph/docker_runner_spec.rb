@@ -135,6 +135,20 @@ describe Morph::DockerRunner do
         ]
       end
 
+      it 'should have an env variable set for python requests library' do
+        File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
+          f << "puts ENV['REQUESTS_CA_BUNDLE']\n"
+        end
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(
+          @dir, {}, {}) {}
+        logs = []
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+          logs << [s, c]
+        end
+        expect(result.status_code).to eq 0
+        expect(logs).to eq [[:stdout, "/etc/ssl/certs/ca-certificates.crt\n"]]
+      end
+
       it 'should return the ip address of the container' do
         File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
           f << <<-EOF
