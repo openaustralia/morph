@@ -5,4 +5,9 @@ class Variable < ActiveRecord::Base
     message: 'should look something like MORPH_SEAGULL'
   }
   validates :value, presence: true
+
+  # Given an array of Variable objects returns a hash of names and values
+  def self.to_hash(variables)
+    Hash[variables.map { |v| [v.name, v.value] }]
+  end
 end

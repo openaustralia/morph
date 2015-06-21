@@ -94,8 +94,8 @@ class Run < ActiveRecord::Base
     scraper ? scraper.variables : []
   end
 
-  # Returns array of environment variables as key-value pairs
+  # Returns a hash of environment variables
   def env_variables
-    Hash[variables.map { |v| [v.name, v.value] }]
+    Variable.to_hash(variables)
   end
 end
