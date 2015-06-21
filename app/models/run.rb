@@ -96,6 +96,6 @@ class Run < ActiveRecord::Base
 
   # Returns array of environment variables as key-value pairs
   def env_variables
-    variables.map { |v| [v.name, v.value] }
+    Hash[variables.map { |v| [v.name, v.value] }]
   end
 end
