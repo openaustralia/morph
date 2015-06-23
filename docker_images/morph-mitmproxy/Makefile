@@ -1,4 +1,4 @@
 all: build
 
 build:
-	docker build -t openaustralia/morph-mitmproxy .
+	docker build -t openaustralia/morph-mitmdump .
