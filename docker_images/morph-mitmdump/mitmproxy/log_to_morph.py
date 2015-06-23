@@ -7,6 +7,11 @@ from libmproxy.script import concurrent
 
 @concurrent
 def response(context, flow):
+  for env in ['MORPH_URL', 'MITMPROXY_SECRET']:
+    if not env in os.environ:
+      print "WARNING:", env, "is not set!"
+      return
+
   url = os.environ['MORPH_URL'] + "/connection_logs"
   params = urllib.urlencode({
   	'ip_address': flow.client_conn.address.host,
