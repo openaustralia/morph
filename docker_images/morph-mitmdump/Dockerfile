@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install --upgrade cryptography
 RUN pip install mitmproxy==0.12
+RUN pip install --upgrade pyOpenSSL
 
-ENTRYPOINT ["mitmdump"]
+ENV LANG en_US.UTF-8
+ENTRYPOINT ["mitmproxy"]
 EXPOSE 8080
