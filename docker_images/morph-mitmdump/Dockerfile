@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM debian:jessie
 MAINTAINER Matthew Landauer <matthew@oaf.org.au>
 
 RUN apt-get update && apt-get install -y \
@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
   python-dev   \
   python-pip
 
+RUN pip install --upgrade cryptography
 RUN pip install mitmproxy==0.12
 
 ENTRYPOINT ["mitmdump"]
