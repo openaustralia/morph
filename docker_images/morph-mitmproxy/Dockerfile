@@ -9,3 +9,6 @@ RUN apt-get update && apt-get install -y \
   python-pip
 
 RUN pip install mitmproxy==0.12
+
+ENTRYPOINT ["mitmdump"]
+EXPOSE 8080
