@@ -12,6 +12,8 @@ RUN pip install --upgrade cryptography
 RUN pip install mitmproxy==0.12
 RUN pip install --upgrade pyOpenSSL
 
-ENV LANG en_US.UTF-8
-ENTRYPOINT ["mitmproxy"]
+# TODO: Don't run as root
+
+COPY mitmproxy /mitmproxy
+CMD ["mitmdump", "--script", "/mitmproxy/log_to_morph.py", "--cadir", "/mitmproxy"]
 EXPOSE 8080
