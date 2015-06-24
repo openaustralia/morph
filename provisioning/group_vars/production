@@ -1,3 +1,0 @@
----
-mitmproxy_secret: "{{ encrypted_mitmproxy_secret_production }}"
-morph_url: https://morph.io
