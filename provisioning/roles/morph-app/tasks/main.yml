@@ -1,4 +1,6 @@
 ---
+- include_vars: encrypted.yml.secure
+
 # TODO Ensure that deploy user is setup first
 # TODO Ensure that nginx is setup first
 - name: Ensure git is installed
