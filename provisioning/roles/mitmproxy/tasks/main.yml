@@ -25,8 +25,13 @@
     name: mitmdump
     image: openaustralia/morph-mitmdump
     state: started
+    command: mitmdump -p 8081 --quiet --transparent --script /mitmproxy/log_to_morph.py --cadir /mitmproxy
     restart_policy: always
-    ports: ["8081:8080"]
+    # We attach the networking of this container to the host. This is necessary
+    # because otherwise traffic would get redirected to the container, would
+    # get proxied and a new request would come from this container which would
+    # promptly get redirected back to the container in a painful infinite loop
+    net: host
     env:
       MORPH_URL: "{{ morph_url }}"
       MITMPROXY_SECRET: "{{ mitmproxy_secret }}"
