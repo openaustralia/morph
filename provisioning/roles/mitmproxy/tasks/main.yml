@@ -26,7 +26,7 @@
     image: openaustralia/morph-mitmdump
     state: started
     restart_policy: always
-    ports: ["8080:8081"]
+    ports: ["8081:8080"]
     env:
       MORPH_URL: "{{ morph_url }}"
       MITMPROXY_SECRET: "{{ mitmproxy_secret }}"
