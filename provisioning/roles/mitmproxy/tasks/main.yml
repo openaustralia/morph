@@ -12,3 +12,21 @@
   pip:
     name: mitmproxy
     version: 0.12
+
+# Newer version of docker-py causes issues. See
+# https://github.com/ansible/ansible-modules-core/issues/1227
+- name: Install requirement for ansible docker
+  pip:
+    name: docker-py
+    version: 1.1.0
+
+- name: Install docker container for mitmdump
+  docker:
+    name: mitmdump
+    image: openaustralia/morph-mitmdump
+    state: started
+    restart_policy: always
+    ports: ["8080:8081"]
+    env:
+      MORPH_URL: "{{ morph_url }}"
+      MITMPROXY_SECRET: "{{ mitmproxy_secret }}"
