@@ -31,6 +31,8 @@
     # because otherwise traffic would get redirected to the container, would
     # get proxied and a new request would come from this container which would
     # promptly get redirected back to the container in a painful infinite loop
+    # This is a good reference for the issues:
+    # https://github.com/jpetazzo/squid-in-a-can
     net: host
     env:
       MORPH_URL: "{{ morph_url }}"
