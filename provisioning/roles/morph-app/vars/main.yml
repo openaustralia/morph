@@ -2,9 +2,3 @@ server_name: morph.io
 env_file: env.production.secure
 backups: true
 cron_jobs: true
-
-mitmproxy_secret_local: "{{ encrypted_mitmproxy_secret_local }}"
-morph_url_local: https://dev.morph.io
-
-mitmproxy_secret_production: "{{ encrypted_mitmproxy_secret_production }}"
-morph_url_production: https://morph.io

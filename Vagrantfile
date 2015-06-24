@@ -24,6 +24,9 @@ Vagrant.configure("2") do |config|
       ansible.extra_vars = { server_name: "dev.morph.io", env_file: "env.local.secure", backups: false,
         cron_jobs: false}
       ansible.verbose = 'v'
+      ansible.groups = {
+        "development" => ["local"]
+      }
     end
   end
 end
