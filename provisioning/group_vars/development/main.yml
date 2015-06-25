@@ -8,8 +8,12 @@ cron_jobs: false
 github_app_client_id: "{{ encrypted_github_app_client_id }}"
 github_app_client_secret: "{{ encrypted_github_app_client_secret }}"
 secret_key_base: "{{ encrypted_secret_key_base }}"
+google_analytics_tracking_id:
+heap_analytics_tracking_id:
 sync_auth_token: "{{ encrypted_sync_auth_token }}"
 discourse_secret: "{{ encrypted_discourse_secret }}"
+honeybadger_api_key:
 cuttlefish_server: cuttlefish.oaf.org.au
 cuttlefish_username: "{{ encrypted_cuttlefish_username }}"
 cuttlefish_password: "{{ encrypted_cuttlefish_password }}"
+skylight_authentication:
