@@ -21,8 +21,6 @@ Vagrant.configure("2") do |config|
 
     local.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/playbook.yml"
-      ansible.extra_vars = { server_name: "dev.morph.io", env_file: "env.local.secure", backups: false,
-        cron_jobs: false}
       ansible.verbose = 'v'
       ansible.groups = {
         "development" => ["local"]

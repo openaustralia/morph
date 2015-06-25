@@ -1,3 +1,7 @@
 ---
 mitmproxy_secret: "{{ encrypted_mitmproxy_secret }}"
 morph_url: https://dev.morph.io
+server_name: dev.morph.io
+env_file: env.local.secure
+backups: false
+cron_jobs: false

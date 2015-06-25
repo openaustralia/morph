@@ -1,4 +1,0 @@
-server_name: morph.io
-env_file: env.production.secure
-backups: true
-cron_jobs: true
