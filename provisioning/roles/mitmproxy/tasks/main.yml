@@ -1,18 +1,3 @@
-- name: Install python
-  apt: pkg=python
-- name: Install development headers for python
-  apt: pkg=python-dev
-- name: Install build-essential
-  apt: pkg=build-essential
-- name: Install libxslt1-dev
-  apt: pkg=libxslt1-dev
-- name: Install pip (required to install mitmproxy)
-  apt: pkg=python-pip
-- name: Install version 0.12 of mitmproxy
-  pip:
-    name: mitmproxy
-    version: 0.12
-
 # Newer version of docker-py causes issues. See
 # https://github.com/ansible/ansible-modules-core/issues/1227
 - name: Install requirement for ansible docker
@@ -20,12 +5,12 @@
     name: docker-py
     version: 1.1.0
 
+# TODO: Log back to syslog on machine
 - name: Install docker container for mitmdump
   docker:
-    name: mitmdump
+    name: mitmdump2
     image: openaustralia/morph-mitmdump
     state: started
-    command: mitmdump -p 8081 --quiet --transparent --script /mitmproxy/log_to_morph.py --cadir /mitmproxy
     restart_policy: always
     # We attach the networking of this container to the host. This is necessary
     # because otherwise traffic would get redirected to the container, would
