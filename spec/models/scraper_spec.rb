@@ -3,9 +3,8 @@ require 'spec_helper'
 describe Scraper do
   context "A scraper with a couple of runs" do
     before :each do
-      user = User.create
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-        @scraper = user.scrapers.create(name: "my_scraper")
+        @scraper = create(:scraper)
       end
       @time1 = 2.minutes.ago
       @time2 = 1.minute.ago
