@@ -57,13 +57,13 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
           raise Sidekiq::Shutdown
         end
       end}.to raise_error(Sidekiq::Shutdown)
-      expect(logs).to eq [
+      expect(logs.join).to eq [
         "Injecting configuration and compiling...\n",
         "Injecting scraper and running...\n",
         "Started!\n",
         "1...\n",
         "2...\n"
-      ]
+      ].join
       run.reload
       expect(run).to be_running
       # We expect the container to still be running
@@ -78,7 +78,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         logs << c
         #puts c
       end
-      expect(logs).to eq [
+      expect(logs.join).to eq [
         "3...\n",
         "4...\n",
         "5...\n",
@@ -88,7 +88,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         "9...\n",
         "10...\n",
         "Finished!\n"
-      ]
+      ].join
       run.reload
       # The start time shouldn't have changed
       expect(run.started_at).to eq started_at
@@ -128,13 +128,13 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
           raise Sidekiq::Shutdown
         end
       end}.to raise_error(Sidekiq::Shutdown)
-      expect(logs).to eq [
+      expect(logs.join).to eq [
         "Injecting configuration and compiling...\n",
         "Injecting scraper and running...\n",
         "Started!\n",
         "1...\n",
         "2...\n"
-      ]
+      ].join
       run.reload
       expect(run).to be_running
       # We expect the container to still be running
@@ -153,7 +153,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         #puts c
       end
       # TODO: Really we only want to get newer logs
-      expect(logs).to eq [
+      expect(logs.join).to eq [
         "Started!\n",
         "1...\n",
         "2...\n",
@@ -166,7 +166,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         "9...\n",
         "10...\n",
         "Finished!\n"
-      ]
+      ].join
       run.reload
       # The start time shouldn't have changed
       expect(run.started_at).to eq started_at
