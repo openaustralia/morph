@@ -21,14 +21,6 @@ module Morph
       system("cd #{repo_path}; git submodule update")
     end
 
-    # Check if repo name is already in use. This only checks public repos
-    def self.in_public_use?(full_name)
-      Octokit.repository(full_name)
-      true
-    rescue Octokit::NotFound
-      false
-    end
-
     # Will create a repository. Works for both an individual and an
     # organisation. Returns a repo
     def self.create_repository(user, owner, name, options = {})

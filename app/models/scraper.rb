@@ -457,7 +457,7 @@ class Scraper < ActiveRecord::Base
   private
 
   def not_used_on_github
-    if Morph::Github.in_public_use?(full_name)
+    if Octokit.repository?(full_name)
       errors.add(:name, 'is already taken on GitHub')
     end
   end
