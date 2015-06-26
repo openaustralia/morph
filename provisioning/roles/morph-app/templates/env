@@ -1,0 +1,55 @@
+# Secret configuration
+
+# Copy this to .env and fill in the x's - these values are then automatically loaded as environment variables
+# See https://github.com/bkeepers/dotenv for more information
+
+GITHUB_APP_CLIENT_ID={{ github_app_client_id }}
+GITHUB_APP_CLIENT_SECRET={{ github_app_client_secret }}
+
+# If this is Linux then your docker daemon is likely running locally on a socket. In that case the DOCKER_URL
+# and DOCKER_TCP does not need to be set (comment the lines below out).
+# If this is OS X, then your docker daemon will be running inside a VM with a tunneled port (see instructions
+# in the README for how to set this up)
+#DOCKER_URL=http://localhost:4243
+#DOCKER_TCP=localhost:4243
+
+# This secret key is used for verifying the integrity of signed cookies.
+# If you change this key, all old signed cookies will become invalid!
+# You can use `rake secret` to generate a secure secret key.
+SECRET_KEY_BASE={{ secret_key_base }}
+
+{% if google_analytics_tracking_id is defined %}
+# Google Analytics (leave commented out to disable)
+GOOGLE_ANALYTICS_TRACKING_ID={{ google_analytics_tracking_id }}
+{% endif %}
+
+{% if heap_analytics_tracking_id is defined %}
+# Heap Analytics (leave commented out to disable)
+HEAP_ANALYTICS_TRACKING_ID={{ heap_analytics_tracking_id }}
+{% endif %}
+
+# Secret for authenticating sync / faye
+SYNC_AUTH_TOKEN={{ sync_auth_token }}
+
+# Secret for single sign on authentication for Discourse
+DISCOURSE_SECRET={{ discourse_secret }}
+DISCOURSE_URL=https://{{ discourse_server_name }}
+
+# Used by mitmproxy to communicate via the api back to morph
+MITMPROXY_SECRET={{ mitmproxy_secret }}
+MORPH_URL={{ morph_url }}
+
+{% if honeybadger_api_key is defined %}
+# Error reporting to Honeybadger
+HONEYBADGER_API_KEY={{ honeybadger_api_key }}
+{% endif %}
+
+# We're using Cuttlefish to send mail
+CUTTLEFISH_SERVER={{ cuttlefish_server }}
+CUTTLEFISH_USERNAME={{ cuttlefish_username }}
+CUTTLEFISH_PASSWORD={{ cuttlefish_password }}
+
+{% if skylight_authentication is defined %}
+# skylight.io performance monitoring
+SKYLIGHT_AUTHENTICATION={{ skylight_authentication }}
+{% endif %}

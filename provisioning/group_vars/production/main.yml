@@ -2,7 +2,6 @@
 mitmproxy_secret: "{{ encrypted_mitmproxy_secret }}"
 morph_url: https://morph.io
 server_name: morph.io
-env_file: env.production.secure
 backups: true
 cron_jobs: true
 github_app_client_id: "{{ encrypted_github_app_client_id }}"
