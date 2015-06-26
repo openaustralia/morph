@@ -52,8 +52,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       container_count = Morph::DockerUtils.stopped_containers.count
       expect {runner.go_with_logging do |s, c|
         logs << c
-        #puts c
-        if c == "2...\n"
+        if c.include? "2..."
           raise Sidekiq::Shutdown
         end
       end}.to raise_error(Sidekiq::Shutdown)
@@ -76,7 +75,6 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       logs = []
       runner.go do |s, c|
         logs << c
-        #puts c
       end
       expect(logs.join).to eq [
         "3...\n",
@@ -123,8 +121,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       container_count = Morph::DockerUtils.stopped_containers.count
       expect {runner.go do |s, c|
         logs << c
-        #puts c
-        if c == "2...\n"
+        if c.include? "2..."
           raise Sidekiq::Shutdown
         end
       end}.to raise_error(Sidekiq::Shutdown)
@@ -204,7 +201,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       container_count = Morph::DockerUtils.stopped_containers.count
       runner.go do |s, c|
         logs << c
-        if c == "2...\n"
+        if c.include? "2..."
           # Putting the stop code in another thread (which is essentially
           # similar to how it works on morph.io for real)
           # If we don't do this we get a "Closed stream (IOError)" which I
@@ -212,7 +209,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
           Thread.new { runner.stop! }
         end
       end
-      expect(logs.last == "2...\n" || logs.last == "3...\n").to eq true
+      expect(logs.join.include?("2...") || logs.join.include?("3...")).to eq true
       expect(Morph::DockerUtils.stopped_containers.count).to eq container_count
       expect(run.database.first_ten_rows).to eq [{ 'state' => 'started' }]
       expect(run.status_code).to eq 137
