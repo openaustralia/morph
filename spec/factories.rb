@@ -4,6 +4,7 @@ FactoryGirl.define do
 
   factory :scraper do
     name 'my_scraper'
+    full_name 'mlandauer/my_scraper'
     owner
   end
 
