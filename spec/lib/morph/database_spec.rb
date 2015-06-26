@@ -6,6 +6,12 @@ describe Morph::Database do
     it { Morph::Database.clean_utf8_string("Rodolfo Moisés Castañón Fuentes").should == "Rodolfo Moisés Castañón Fuentes" }
     it { Morph::Database.clean_utf8_string("foo\xA2bar").should == "foobar" }
     it { Morph::Database.clean_utf8_string("Casta\xC3\xB1\xC3\xB3n").should == "Castañón" }
+    it do
+      # This ascii-8bit string can't be converted to utf-8
+      string = "\xC2Andrea \xC2Belluzzi"
+      string.force_encoding('ASCII-8BIT')
+      expect( Morph::Database.clean_utf8_string(string)).to eq "Andrea Belluzzi"
+    end
   end
 
   describe '#clear' do

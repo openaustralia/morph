@@ -87,7 +87,13 @@ module Morph
     def self.clean_utf8_string(string)
       if string.respond_to?(:encode)
         if string.valid_encoding?
-          string
+          # Actually try converting to utf-8 and check if that works
+          begin
+            string.encode('utf-8')
+          rescue Encoding::UndefinedConversionError
+            string.encode('UTF-8', 'binary',
+                          invalid: :replace, undef: :replace, replace: '')
+          end
         else
           string.encode('UTF-8', 'binary',
                         invalid: :replace, undef: :replace, replace: '')
