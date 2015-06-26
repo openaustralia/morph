@@ -56,13 +56,6 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
           raise Sidekiq::Shutdown
         end
       end}.to raise_error(Sidekiq::Shutdown)
-      expect(logs.join).to eq [
-        "Injecting configuration and compiling...\n",
-        "Injecting scraper and running...\n",
-        "Started!\n",
-        "1...\n",
-        "2...\n"
-      ].join
       run.reload
       expect(run).to be_running
       # We expect the container to still be running
@@ -72,11 +65,15 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
 
       # Now, we simulate the queue restarting the job
       started_at = run.started_at
-      logs = []
       runner.go do |s, c|
         logs << c
       end
       expect(logs.join).to eq [
+        "Injecting configuration and compiling...\n",
+        "Injecting scraper and running...\n",
+        "Started!\n",
+        "1...\n",
+        "2...\n",
         "3...\n",
         "4...\n",
         "5...\n",
