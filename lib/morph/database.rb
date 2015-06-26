@@ -91,16 +91,23 @@ module Morph
           begin
             string.encode('utf-8')
           rescue Encoding::UndefinedConversionError
-            string.encode('UTF-8', 'binary',
-                          invalid: :replace, undef: :replace, replace: '')
+            convert_to_utf8_and_clean_binary_string(string)
           end
         else
-          string.encode('UTF-8', 'binary',
-                        invalid: :replace, undef: :replace, replace: '')
+          convert_to_utf8_and_clean_binary_string(string)
         end
       else
         string
       end
+    end
+
+    # This is what we use when we don't know what the encoding of the string
+    # is. This assumes little about the string encoding and cleans the result
+    # when converting to utf-8. Using this is a last resort when simple
+    # conversions aren't working.
+    def self.convert_to_utf8_and_clean_binary_string(string)
+      string.encode('UTF-8', 'binary',
+                    invalid: :replace, undef: :replace, replace: '')
     end
 
     def sql_query_safe(query, readonly = true)
