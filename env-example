@@ -15,6 +15,14 @@ DOCKER_TLS_VERIFY=1
 DOCKER_CERT_PATH="/Users/matthew/.docker/machine/machines/dev"
 DOCKER_HOST=tcp://192.168.99.100:2376
 
+# In development you can run elasticsearch on docker very easily which means
+# you don't have to install it.
+# Just use: docker-compose up
+# Then, point it at the right place. You can get the ip address of docker
+# by running: docker-machine ip
+# If you're on Linux you can probably comment the line below out
+ELASTICSEARCH_URL=http://192.168.99.100:9200
+
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
 # You can use `rake secret` to generate a secure secret key.
