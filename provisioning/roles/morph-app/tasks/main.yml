@@ -88,6 +88,16 @@
   cron: name="xml sitemaps" hour=16 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake sitemap:refresh RAILS_ENV=production"
   when: cron_jobs
 
+- name: Do daily reindex of elasticsearch at 6am in case things get out of sync
+  cron:
+    name: "elasticsearch reindex"
+    hour: 6
+    minute: 0
+    user: deploy
+    job: "cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake searchkick:reindex:all RAILS_ENV=production"
+    state: present
+    when: cron_jobs
+
 - name: Cron job to clean out stopped containers every 5 minutes
   cron: name="stopped container" state=absent
   when: cron_jobs
