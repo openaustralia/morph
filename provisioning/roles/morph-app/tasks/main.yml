@@ -96,7 +96,7 @@
     user: deploy
     job: "cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake searchkick:reindex:all RAILS_ENV=production"
     state: present
-    when: cron_jobs
+  when: cron_jobs
 
 - name: Cron job to clean out stopped containers every 5 minutes
   cron: name="stopped container" state=absent
