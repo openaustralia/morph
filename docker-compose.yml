@@ -22,3 +22,11 @@ db:
     - "3306"
   environment:
     MYSQL_ROOT_PASSWORD: abc123
+
+proxy:
+  build: docker_images/morph-mitmdump
+  links:
+    - web
+  environment:
+    MORPH_URL: http://web:3000
+    MITMPROXY_SECRET: afisdifubekfnasi
