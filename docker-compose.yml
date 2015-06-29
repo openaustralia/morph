@@ -5,9 +5,20 @@ web:
     - .:/morph
   ports:
     - "3000:3000"
+  links:
+    - db
 
 # TODO: Add data volume
 elasticsearch:
   image: elasticsearch:1.6.0
   ports:
     - "9200:9200"
+
+# TODO: Add data volume
+# TODO: Use a specific version of mysql
+db:
+  image: mysql
+  ports:
+    - "3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: abc123
