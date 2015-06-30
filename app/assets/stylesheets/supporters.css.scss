@@ -3,6 +3,10 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .pricing {
+  .col-centered {
+    min-width:320px;
+  }
+
   .plan {
     border-radius: 6px;
     list-style: none;
@@ -53,4 +57,17 @@
   .plan:hover li.plan-name {
     background: #000;
   }
+}
+
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
 }

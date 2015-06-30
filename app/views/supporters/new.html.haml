@@ -1,8 +1,8 @@
 .container
   %h1.page-header Pricing Table
   %p &#160;
-  .row.pricing
-    .col-lg-3.col-md-3.col-xs-6
+  .row.pricing.row-centered
+    .col-xs-3.col-centered
       %ul.plan.plan1
         %li.plan-name
           Basic
@@ -31,7 +31,8 @@
                            description: "Basic supporter",
                            amount: "2900",
                            email: current_user.email}}
-    .col-lg-3.col-md-3.col-xs-6
+
+    .col-xs-3.col-centered
       %ul.plan.plan2.featured
         %li.plan-name
           Standard
@@ -56,37 +57,12 @@
         %li.plan-action
           %a.btn.btn-default.btn-lg{:href => "#"} Signup
 
-    .col-lg-3.col-md-3.col-xs-6
+    .col-xs-3.col-centered
       %ul.plan.plan3
         %li.plan-name
           Advanced
         %li.plan-price
           %strong $199
-          \/ month
-        %li
-          %strong 50GB
-          Storage
-        %li
-          %strong 8GB
-          RAM
-        %li
-          %strong 1024GB
-          Bandwidth
-        %li
-          %strong Unlimited
-          Email Address
-        %li
-          %strong Forum
-          Support
-        %li.plan-action
-          %a.btn.btn-default.btn-lg{:href => "#"} Signup
-
-    .col-lg-3.col-md-3.col-xs-6
-      %ul.plan.plan4
-        %li.plan-name
-          Mighty
-        %li.plan-price
-          %strong $999
           \/ month
         %li
           %strong 50GB
