@@ -4,7 +4,6 @@
 
 .pricing {
   .plan {
-    border-radius: 6px;
     list-style: none;
     padding: 0 0 20px;
     margin: 0 0 15px;
@@ -13,7 +12,7 @@
     li {
       padding: 10px 15px;
       color: #ccc;
-      border-top: 1px solid #f5f5f5;
+      border-top: 1px solid #fff;
       -webkit-transition: 300ms;
       transition: 300ms;
     }
