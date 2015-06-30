@@ -2,52 +2,55 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.pricing .plan {
-  border-radius: 6px;
-  list-style: none;
-  padding: 0 0 20px;
-  margin: 0 0 15px;
-  background: #f5f5f5;
-  text-align: center;
-}
-.pricing .plan li {
-  padding: 10px 15px;
-  color: #ccc;
-  border-top: 1px solid #f5f5f5;
-  -webkit-transition: 300ms;
-  transition: 300ms;
-}
-.pricing .plan li.plan-price {
-  border-top: 0;
-}
-.pricing .plan li.plan-name {
-  border-radius: 6px 6px 0 0;
-  padding: 15px;
-  font-size: 24px;
-  line-height: 24px;
-  color: #fff;
-  background: #e74c3c;
-  margin-bottom: 30px;
-  border-top: 0;
-}
-.pricing .plan li > strong {
-  color: #e74c3c;
-}
-.pricing .plan li.plan-action {
-  margin-top: 10px;
-  border-top: 0;
-}
-.pricing .plan.featured {
-  -webkit-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-}
-.pricing .plan.featured li.plan-name {
-  background: #000;
-}
-.pricing .plan.featured:hover li.plan-name {
-  background: #c0392b;
-}
-.pricing .plan:hover li.plan-name {
-  background: #000;
+.pricing {
+  .plan {
+    border-radius: 6px;
+    list-style: none;
+    padding: 0 0 20px;
+    margin: 0 0 15px;
+    background: #f5f5f5;
+    text-align: center;
+    li {
+      padding: 10px 15px;
+      color: #ccc;
+      border-top: 1px solid #f5f5f5;
+      -webkit-transition: 300ms;
+      transition: 300ms;
+    }
+    li.plan-price {
+      border-top: 0;
+    }
+    li.plan-name {
+      border-radius: 6px 6px 0 0;
+      padding: 15px;
+      font-size: 24px;
+      line-height: 24px;
+      color: #fff;
+      background: #e74c3c;
+      margin-bottom: 30px;
+      border-top: 0;
+    }
+    li > strong {
+      color: #e74c3c;
+    }
+    li.plan-action {
+      margin-top: 10px;
+      border-top: 0;
+    }
+  }
+
+  .plan.featured {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+    li.plan-name {
+      background: #000;
+    }
+  }
+  .plan.featured:hover li.plan-name {
+    background: #c0392b;
+  }
+  .plan:hover li.plan-name {
+    background: #000;
+  }
 }
