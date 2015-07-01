@@ -3,75 +3,88 @@
     %h1.text-center Become a supporter
   %p &#160;
   .row.pricing.row-centered
-    .col-xs-3.col-centered
-      %ul.plan.plan1
-        %li.plan-name
-          Basic
-        %li.plan-price
-          %strong $14
-          \/ month
-        %li.plan-reason
-          Supporters keep morph.io open and running and available to all
-        %li
-          %strong Feel
-          the warm and fuzzies
-        %li
-          %strong Shows
-          your support publically
-        %li
-          %strong Forum
-          Support
-        %li.plan-action
-          = form_tag supporters_path, id: "basic-signup-form" do
+    = form_tag supporters_path, id: "supporter-signup-form" do
+      = hidden_field_tag "stripeToken"
+      = hidden_field_tag :plan_id
+
+      .col-xs-3.col-centered
+        %ul.plan.plan1
+          %li.plan-name
+            Basic
+          %li.plan-price
+            %strong $14
+            \/ month
+          %li.plan-reason
+            Supporters keep morph.io open and running and available to all
+          %li
+            %strong Feel
+            the warm and fuzzies
+          %li
+            %strong Shows
+            your support publically
+          %li
+            %strong Forum
+            Support
+          %li.plan-action
             = button_tag "Signup", class: "btn btn-default btn-lg",
                                    data: {key: Rails.configuration.stripe[:publishable_key],
                                           description: "Basic supporter",
                                           amount: "1400",
-                                          email: current_user.email}
-            = hidden_field_tag :plan_id, :basic
+                                          email: current_user.email,
+                                          plan_id: :basic}
 
-    .col-xs-3.col-centered
-      %ul.plan.plan2.featured
-        %li.plan-name
-          Standard
-        %li.plan-price
-          %strong $24
-          \/ month
-        %li.plan-reason
-          Support continued development of the open-source software that powers morph.io
-        %li
-          %strong Feel
-          the warm and fuzzies
-        %li
-          %strong Be featured
-          on the landing page
-        %li
-          %strong Forum
-          Support
-        %li.plan-action
-          %a.btn.btn-default.btn-lg{:href => "#"} Signup
+      .col-xs-3.col-centered
+        %ul.plan.plan2.featured
+          %li.plan-name
+            Standard
+          %li.plan-price
+            %strong $24
+            \/ month
+          %li.plan-reason
+            Support continued development of the open-source software that powers morph.io
+          %li
+            %strong Feel
+            the warm and fuzzies
+          %li
+            %strong Be featured
+            on the landing page
+          %li
+            %strong Forum
+            Support
+          %li.plan-action
+            = button_tag "Signup", class: "btn btn-default btn-lg",
+                                   data: {key: Rails.configuration.stripe[:publishable_key],
+                                          description: "Standard supporter",
+                                          amount: "2400",
+                                          email: current_user.email,
+                                          plan_id: :standard}
 
-    .col-xs-3.col-centered
-      %ul.plan.plan3
-        %li.plan-name
-          Advanced
-        %li.plan-price
-          %strong $149
-          \/ month
-        %li.plan-reason
-          Rely on morph.io for your business or not-for-profit? Priority technical support
-          to get you answers and fixes quickly
-        %li
-          %strong Feel
-          the warm and fuzzies
-        %li
-          %strong Be featured
-          on the landing page
-        %li
-          %strong Priority
-          technical support
-        %li.plan-action
-          %a.btn.btn-default.btn-lg{:href => "#"} Signup
+      .col-xs-3.col-centered
+        %ul.plan.plan3
+          %li.plan-name
+            Advanced
+          %li.plan-price
+            %strong $149
+            \/ month
+          %li.plan-reason
+            Rely on morph.io for your business or not-for-profit? Priority technical support
+            to get you answers and fixes quickly
+          %li
+            %strong Feel
+            the warm and fuzzies
+          %li
+            %strong Be featured
+            on the landing page
+          %li
+            %strong Priority
+            technical support
+          %li.plan-action
+            = button_tag "Signup", class: "btn btn-default btn-lg",
+                                   data: {key: Rails.configuration.stripe[:publishable_key],
+                                          description: "Advanced supporter",
+                                          amount: "14900",
+                                          email: current_user.email,
+                                          plan_id: :advanced}
 
 .plan-questions
   .container

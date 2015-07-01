@@ -1,12 +1,13 @@
 $ ->
   handler = StripeCheckout.configure
     token: (token) ->
-      stripeToken = $("<input type=hidden name=stripeToken />").val(token.id)
-      $("#basic-signup-form").append(stripeToken).submit()
+      $("#stripeToken").val(token.id)
+      $("#supporter-signup-form").submit()
 
-  $("#basic-signup-form > button").on "click", (e) ->
+  $("#supporter-signup-form button").on "click", (e) ->
     e.preventDefault()
     button = $(this)
+    $("#plan_id").val(button.attr("data-plan-id"))
     amount = button.attr("data-amount")
     handler.open
       key: button.attr("data-key")
