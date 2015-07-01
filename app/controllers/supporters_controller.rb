@@ -7,12 +7,17 @@ class SupportersController < ApplicationController
   def create
     @price = params[:price]
 
-    # TODO: Save customer to user
-    customer = Stripe::Customer.create(
-      email:       params[:stripeEmail],
-      card:        params[:stripeToken],
-      description: "Customer for @#{current_user.nickname}"
-    )
+    if current_user.stripe_customer_id
+      # TODO: Handle missing or deleted customer
+      customer = Stripe::Customer.retrieve current_user.stripe_customer_id
+    else
+      customer = Stripe::Customer.create(
+        email:       params[:stripeEmail],
+        card:        params[:stripeToken],
+        description: "Customer for @#{current_user.nickname}"
+      )
+      current_user.update! stripe_customer_id: customer.id
+    end
 
     # TODO: Use subscriptions
     charge = Stripe::Charge.create(
