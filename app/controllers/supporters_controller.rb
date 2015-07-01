@@ -5,8 +5,7 @@ class SupportersController < ApplicationController
   end
 
   def create
-    @price = params[:price]
-
+    # Create or retrieve the Stripe customer
     if current_user.stripe_customer_id
       # TODO: Handle missing or deleted customer
       customer = Stripe::Customer.retrieve current_user.stripe_customer_id
@@ -19,13 +18,9 @@ class SupportersController < ApplicationController
       current_user.update! stripe_customer_id: customer.id
     end
 
-    # TODO: Use subscriptions
-    charge = Stripe::Charge.create(
-      customer:    customer.id,
-      amount:      @price,
-      description: "morph.io basic supporter",
-      currency:    "aud"
-    )
+    # TODO: Handle missing plan
+    subscription = customer.subscriptions.create plan: params[:plan_id]
+    @price = subscription[:plan][:amount]
 
   rescue Stripe::CardError => e
     flash[:error] = e.message
