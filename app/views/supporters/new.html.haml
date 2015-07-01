@@ -26,6 +26,7 @@
           Support
         %li.plan-action
           = form_tag supporters_path do
+            = hidden_field_tag :price, 2900
             %script{src: "https://checkout.stripe.com/checkout.js", class: "stripe-button",
                     data: {key: Rails.configuration.stripe[:publishable_key],
                            description: "Basic supporter",
