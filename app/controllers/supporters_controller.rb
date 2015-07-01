@@ -18,7 +18,7 @@ class SupportersController < ApplicationController
       current_user.update! stripe_customer_id: customer.id
     end
 
-    # TODO: Handle missing plan
+    # TODO: Handle missing or incorrect plan
     subscription = customer.subscriptions.create plan: params[:plan_id]
     @price = subscription[:plan][:amount]
 
