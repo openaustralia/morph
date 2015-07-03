@@ -147,8 +147,7 @@ module Morph
     # as if the scraper had stopped on its own
     # TODO: Make this stop the compile stage
     def stop!
-      container = Morph::DockerUtils.find_container_with_label(
-        Morph::Runner.run_label_key, run_label_value)
+      container = container_for_run
       if container
         container.kill
       else
