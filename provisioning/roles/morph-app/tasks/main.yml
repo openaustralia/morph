@@ -98,6 +98,10 @@
     state: present
   when: cron_jobs
 
+- name: Once an hour check whether to stop scraper containers that have been running too long
+  cron: name="stop long-running" minute="0" user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:stop_long_running_scrapers RAILS_ENV=production"
+  when: cron_jobs
+
 - name: Install nodejs for asset precompiling
   apt: pkg=nodejs
 - name: Install memcached
