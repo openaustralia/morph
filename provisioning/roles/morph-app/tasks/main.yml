@@ -98,10 +98,6 @@
     state: present
   when: cron_jobs
 
-- name: Cron job to clean out stopped containers every 5 minutes
-  cron: name="stopped container" state=absent
-  when: cron_jobs
-
 - name: Install nodejs for asset precompiling
   apt: pkg=nodejs
 - name: Install memcached
