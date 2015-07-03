@@ -1,4 +1,22 @@
 namespace :app do
+  desc 'Stop long running scraper containers (should be run from cron job)'
+  task stop_long_running_scrapers: :environment do
+    max_duration = 7.days
+    max_duration_in_words = '7 days'
+
+    # Let's start by just showing running containers
+    containers = Morph::DockerUtils.running_containers
+    # Select containers that are scraper runs
+    containers = containers.select { |c| Morph::Runner.run_id_for_container(c) }
+
+    containers.each do |container|
+      start_time = Time.parse(container.json['State']['StartedAt'])
+      if start_time < max_duration.ago
+        puts "Container #{container.id} has been running longer than #{max_duration_in_words}"
+      end
+    end
+  end
+
   desc 'Run scrapers that need to run once per day' \
     ' (this task should be called from a cron job)'
   task auto_run_scrapers: :environment do
