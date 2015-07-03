@@ -148,7 +148,7 @@ module Morph
       # Not calling line_buffer.finish because we should never finish
       # with a line that doesn't end in a carriage return because everything
       # is being returned as carriage return delimited JSON.
-      yield
+
     # This exception gets thrown if there is an error during the build (for
     # example if the compile fails). In this case we just want to return nil
     rescue Docker::Error::UnexpectedResponseError
