@@ -1,4 +1,6 @@
 module Morph
+  # Line-oriented buffer. Send data to the buffer. Extract lines once they
+  # are completed with newlines
   class LineBuffer
     def initialize
       @buffer = ''
