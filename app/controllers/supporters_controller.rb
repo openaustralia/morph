@@ -27,4 +27,12 @@ class SupportersController < ApplicationController
     flash[:error] = e.message
     redirect_to supporters_path
   end
+
+  def update
+    customer = Stripe::Customer.retrieve current_user.stripe_customer_id
+    subscription = customer.subscriptions.retrieve current_user.stripe_subscription_id
+    subscription.plan = params[:plan_id]
+    subscription.save
+    current_user.update! stripe_plan_id: subscription[:plan][:id]
+  end
 end

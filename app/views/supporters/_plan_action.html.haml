@@ -7,4 +7,5 @@
                                 description: description,
                                 amount: amount,
                                 email: current_user.email,
-                                plan_id: plan_id}
+                                plan_id: plan_id,
+                                stripe: !current_user.supporter? }
