@@ -8,12 +8,11 @@ $ ->
     e.preventDefault()
     button = $(this)
     $("#plan_id").val(button.attr("data-plan-id"))
-    amount = button.attr("data-amount")
     handler.open
       key: button.attr("data-key")
       name: "morph.io"
       description: button.attr("data-description")
-      amount: amount
+      amount: button.attr("data-amount")
       currency: "AUD"
       email: button.attr("data-email")
       panelLabel: "Signup {{amount}}/mo"
