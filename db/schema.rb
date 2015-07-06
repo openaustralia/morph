@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701065015) do
+ActiveRecord::Schema.define(version: 20150706061946) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -167,6 +167,7 @@ ActiveRecord::Schema.define(version: 20150701065015) do
     t.string   "remember_token"
     t.string   "stripe_customer_id"
     t.string   "stripe_plan_id"
+    t.string   "stripe_subscription_id"
   end
 
   add_index "owners", ["api_key"], name: "index_owners_on_api_key", using: :btree
