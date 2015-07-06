@@ -17,4 +17,21 @@ module SupportersHelper
   def plan_image_tag(stripe_plan_id)
     image_tag("supporter-badge-#{stripe_plan_id}.png", size: '64x64')
   end
+
+  def signup_button_label(amount)
+    if !current_user.supporter?
+      "Signup"
+    elsif amount > plan_prices[current_user.stripe_plan_id.to_sym]
+      "Upgrade"
+    elsif amount < plan_prices[current_user.stripe_plan_id.to_sym]
+      "Downgrade"
+    end
+  end
+
+  private
+
+  # TODO: Remove this hardcoded pricing
+  def plan_prices
+    {basic: 1400, standard: 2900, advanced: 14900}
+  end
 end

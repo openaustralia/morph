@@ -2,7 +2,7 @@
   %strong You're awesome!
   This is what you're already signed up to
 - else
-  = button_tag "Signup", class: "btn btn-default btn-lg",
+  = button_tag signup_button_label(amount), class: "btn btn-default btn-lg",
                          data: {key: Rails.configuration.stripe[:publishable_key],
                                 description: description,
                                 amount: amount,
