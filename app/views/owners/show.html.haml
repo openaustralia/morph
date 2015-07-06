@@ -41,6 +41,12 @@
       .col-md-2.owner-box
         - if signed_in?
           .pull-right= render partial: "watch_button", locals: {owner: @owner}
+    - if current_user && current_user.see_support_levels
+      .row
+        .col-md-12
+          %p
+            %i.fa.fa-trophy.fa-3x.fa-inverse
+            This is where the support level stuff might go
 
 .container
   - if @scrapers.empty?
