@@ -34,6 +34,11 @@
       background: $offset-color;
       margin-bottom: 30px;
       border-top: 0;
+      img {
+        display: block;
+        margin: auto;
+        margin-bottom: 0.5em
+      }
     }
     li > strong {
       color: #e74c3c;
