@@ -29,7 +29,9 @@ class OwnersController < ApplicationController
 
   def update
     if @owner.user?
-      @owner.update_attributes(see_downloads: params[:user][:see_downloads])
+      @owner.update_attributes(
+        see_downloads: params[:user][:see_downloads],
+        see_support_levels: params[:user][:see_support_levels])
     end
     redirect_to @owner
   end
