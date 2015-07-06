@@ -89,6 +89,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :supporters, only: [:new, :create]
+
   # These routes with path: "/" need to be at the end
   resources :owners, path: "/", only: [:show, :update]
   resources :users, path: "/", only: :show

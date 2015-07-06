@@ -66,6 +66,7 @@ gem 'searchkick'
 # Polyfill for String#scrub for Ruby 1.9 and 2.0
 gem "scrub_rb"
 gem "skylight"
+gem "stripe"
 
 group :production do
   gem "dalli"
