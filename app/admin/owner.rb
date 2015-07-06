@@ -1,7 +1,7 @@
 ActiveAdmin.register Owner do
   actions :index, :show, :edit, :update
 
-  permit_params :admin, :suspended
+  permit_params :admin, :suspended, :stripe_plan_id
 
   index do
     column :gravatar do |owner|
@@ -41,6 +41,9 @@ ActiveAdmin.register Owner do
     inputs "Permissions" do
       input :admin
       input :suspended
+    end
+    inputs "Supporter" do
+      input :stripe_plan_id, as: :select, collection: %w(basic standard advanced)
     end
     actions
   end
