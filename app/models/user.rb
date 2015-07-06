@@ -89,7 +89,7 @@ class User < Owner
   instrument_method
   # Puts scrapers that have most recently failed first
   def watched_broken_scrapers_ordered_by_urgency
-    watched_broken_scrapers.sort do |a,b|
+    watched_broken_scrapers.sort do |a, b|
       if b.latest_successful_run_time.nil? && a.latest_successful_run_time.nil?
         0
       elsif b.latest_successful_run_time.nil?
