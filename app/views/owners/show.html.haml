@@ -42,7 +42,7 @@
         - if signed_in?
           .pull-right= render partial: "watch_button", locals: {owner: @owner}
     - if current_user && current_user.see_support_levels
-      - if !@owner.stripe_plan_id.blank?
+      - if @owner.supporter?
         .row
           .col-md-12
             %p
