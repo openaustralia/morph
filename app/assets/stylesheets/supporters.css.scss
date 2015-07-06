@@ -48,15 +48,9 @@
     -webkit-transform: scale(1.1);
     -ms-transform: scale(1.1);
     transform: scale(1.1);
-    li.plan-name {
-      background: #000;
-    }
-  }
-  .plan.featured:hover li.plan-name {
-    background: #c0392b;
   }
   .plan:hover li.plan-name {
-    background: #000;
+    background: #c0392b;
   }
 }
 
