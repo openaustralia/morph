@@ -90,6 +90,14 @@ We use Guard and Livereload so that whenever you edit a view in development the 
 
     bundle exec guard
 
+Guard will also run tests when needed. Some tests do integration tests against a
+running docker server. These particular tests are very slow. If you want to
+disable them,
+
+```
+DONT_RUN_DOCKER_TESTS=1 bundle exec guard
+```
+
 ### Mail in development
 
 By default in development mails are sent to [Mailcatcher](http://mailcatcher.me/). To install
