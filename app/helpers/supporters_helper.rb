@@ -13,4 +13,8 @@ module SupportersHelper
       'Advanced Supporter'
     end
   end
+
+  def plan_image_tag(stripe_plan_id)
+    image_tag("supporter-badge-#{stripe_plan_id}.png", size: '64x64')
+  end
 end
