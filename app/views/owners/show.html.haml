@@ -42,11 +42,13 @@
         - if signed_in?
           .pull-right= render partial: "watch_button", locals: {owner: @owner}
     - if current_user && current_user.see_support_levels
-      .row
-        .col-md-12
-          %p
-            %i.fa.fa-trophy.fa-3x.fa-inverse
-            This is where the support level stuff might go
+      - if @owner.stripe_plan_id      
+        .row
+          .col-md-12
+            %p
+              = link_to new_supporter_path do
+                %i.fa.fa-trophy.fa-3x.fa-inverse
+                = human_plan_name(@owner.stripe_plan_id)
 
 .container
   - if @scrapers.empty?
