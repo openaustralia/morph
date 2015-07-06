@@ -121,4 +121,8 @@ class Owner < ActiveRecord::Base
   def ability
     @ability ||= Ability.new(self)
   end
+
+  def supporter?
+    !stripe_plan_id.blank?
+  end
 end
