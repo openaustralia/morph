@@ -1,6 +1,10 @@
 .container
   .page-header
-    %h1.text-center Become a supporter
+    %h1.text-center
+      - if current_user.supporter?
+        Thanks for being a supporter
+      - else
+        Become a supporter
   %p &#160;
   .row.pricing.row-centered
     = form_tag supporters_path, id: "supporter-signup-form" do
