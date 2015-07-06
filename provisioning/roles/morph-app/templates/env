@@ -53,3 +53,7 @@ CUTTLEFISH_PASSWORD={{ cuttlefish_password }}
 # skylight.io performance monitoring
 SKYLIGHT_AUTHENTICATION={{ skylight_authentication }}
 {% endif %}
+
+# Stripe payment processor
+STRIPE_PUBLISHABLE_KEY={{ stripe_publishable_key }}
+STRIPE_SECRET_KEY={{ stripe_secret_key }}

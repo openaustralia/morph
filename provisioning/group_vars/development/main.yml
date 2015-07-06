@@ -12,3 +12,5 @@ discourse_secret: "{{ encrypted_discourse_secret }}"
 cuttlefish_server: cuttlefish.oaf.org.au
 cuttlefish_username: "{{ encrypted_cuttlefish_username }}"
 cuttlefish_password: "{{ encrypted_cuttlefish_password }}"
+stripe_publishable_key: "{{ encrypted_stripe_publishable_key }}"
+stripe_secret_key: "{{ encrypted_stripe_secret_key }}"
