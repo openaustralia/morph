@@ -11,6 +11,8 @@ module SupportersHelper
       'Standard Supporter'
     when 'morph_advanced'
       'Advanced Supporter'
+    else
+      fail
     end
   end
 
@@ -31,16 +33,14 @@ module SupportersHelper
   end
 
   def plan_change_word(from_plan, to_plan)
-    if (from_plan == "morph_basic" && to_plan == "morph_standard") ||
-       (from_plan == "morph_basic" && to_plan == "morph_advanced") ||
-       (from_plan == "morph_standard" && to_plan == "morph_advanced")
-      "Upgrade"
-    elsif (from_plan == "morph_standard" && to_plan == "morph_basic") ||
-          (from_plan == "morph_advanced" && to_plan == "morph_basic") ||
-          (from_plan == "morph_advanced" && to_plan == "morph_standard")
-      "Downgrade"
-    else
+    from_price = plan_price(from_plan)
+    to_price = plan_price(to_plan)
+    if from_price.nil? || from_price == to_price
       "Signup"
+    elsif to_price > from_price
+      "Upgrade"
+    else
+      "Downgrade"
     end
   end
 
