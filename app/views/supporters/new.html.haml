@@ -83,6 +83,17 @@
             = render partial: "plan_action", locals: { description: "Advanced supporter",
                                                        amount: 14900,
                                                        plan_id: "advanced" }
+  .row
+    = form_tag supporters_path, id: "supporter-one-time-form", class: 'form-inline'  do
+      = hidden_field_tag "stripeToken"
+      .form-group
+        = label_tag 'amount', 'Amount (in US dollars)', class: 'sr-only'
+        .input-group
+          .input-group-addon $
+          = text_field_tag 'amount', nil, placeholder: 'Amount', class: 'form-control'
+      = button_tag "Contribute", class: "btn btn-default",
+        data: {key: Rails.configuration.stripe[:publishable_key],
+              email: current_user.email}
 
 .plan-questions
   .container
