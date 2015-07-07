@@ -23,6 +23,27 @@ class SupportersController < ApplicationController
     redirect_to supporters_path
   end
 
+  def create_one_time
+    customer = Stripe::Customer.create(
+      email:       params[:stripeEmail],
+      card:        params[:stripeTokenOneTime],
+      description: "Customer for @#{current_user.nickname}"
+    )
+    current_user.update! stripe_customer_id: customer.id
+
+    charge = Stripe::Charge.create(
+      customer: customer.id,
+      amount: (params[:amount].to_f * 100).round,
+      description: 'morph.io contribution',
+      currency: 'aud'
+    )
+
+    redirect_to user_path(current_user), notice: render_to_string(partial: "one_time_contribution_thanks")
+  rescue Stripe::CardError => e
+    flash[:error] = e.message
+    redirect_to supporters_path
+  end
+
   def update
     @from_plan, @to_plan = current_user.stripe_plan_id, params[:plan_id]
 

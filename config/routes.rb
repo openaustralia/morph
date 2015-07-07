@@ -89,7 +89,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :supporters, only: [:new, :create, :update]
+  resources :supporters, only: [:new, :create, :update] do
+    collection do
+      post 'create_one_time'
+    end
+  end
 
   # These routes with path: "/" need to be at the end
   resources :owners, path: "/", only: [:show, :update]

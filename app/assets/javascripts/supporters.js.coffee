@@ -19,3 +19,22 @@ $ ->
         panelLabel: "Signup {{amount}}/mo"
     else
       $("#supporter-signup-form").submit()
+
+  one_time_handler = StripeCheckout.configure
+    token: (token) ->
+      $("#stripeTokenOneTime").val(token.id)
+      $("#supporter-one-time-form").submit()
+
+  $("#supporter-one-time-form button").on "click", (e) ->
+    e.preventDefault()
+    button = $(this)
+    amountInCents = Math.round(parseFloat($('#amount').val()) * 100)
+    console.log amountInCents
+    one_time_handler.open
+      key: button.attr("data-key")
+      name: "morph.io"
+      description: 'One time contribution'
+      amount: amountInCents
+      currency: "AUD"
+      email: button.attr("data-email")
+      panelLabel: "Contribute {{amount}}"
