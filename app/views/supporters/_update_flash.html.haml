@@ -1,4 +1,4 @@
-= joy_or_disappointment(@from_plan, @to_plan)
+= joy_or_disappointment(Plan.new(@from_plan), Plan.new(@to_plan))
 Your support level has been
 = plan_change_word_past_tense(Plan.new(@from_plan), Plan.new(@to_plan)).downcase
 to #{current_user.plan.name}.

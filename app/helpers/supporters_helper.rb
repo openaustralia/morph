@@ -27,7 +27,7 @@ module SupportersHelper
   end
 
   def joy_or_disappointment(from_plan, to_plan)
-    case plan_change_word(Plan.new(from_plan), Plan.new(to_plan))
+    case plan_change_word(from_plan, to_plan)
     when "Upgrade"
       "What a hero!"
     when "Downgrade"
