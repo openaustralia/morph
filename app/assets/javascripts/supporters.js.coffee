@@ -14,7 +14,7 @@ $ ->
         name: "morph.io"
         description: button.attr("data-description")
         amount: button.attr("data-amount")
-        currency: "AUD"
+        currency: "USD"
         email: button.attr("data-email")
         panelLabel: "Signup {{amount}}/mo"
     else
@@ -35,6 +35,6 @@ $ ->
       name: "morph.io"
       description: 'One time contribution'
       amount: amountInCents
-      currency: "AUD"
+      currency: "USD"
       email: button.attr("data-email")
       panelLabel: "Contribute {{amount}}"

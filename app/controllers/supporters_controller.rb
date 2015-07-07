@@ -35,7 +35,7 @@ class SupportersController < ApplicationController
       customer: customer.id,
       amount: (params[:amount].to_f * 100).round,
       description: 'morph.io contribution',
-      currency: 'aud'
+      currency: 'USD'
     )
 
     redirect_to user_path(current_user), notice: render_to_string(partial: "one_time_contribution_thanks")
