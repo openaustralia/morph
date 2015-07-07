@@ -45,7 +45,8 @@ class SupportersController < ApplicationController
   end
 
   def update
-    @from_plan, @to_plan = current_user.stripe_plan_id, params[:plan_id]
+    @from_plan = current_user.plan
+    @to_plan = Plan.new(params[:plan_id])
 
     customer = Stripe::Customer.retrieve current_user.stripe_customer_id
     subscription = customer.subscriptions.retrieve current_user.stripe_subscription_id
