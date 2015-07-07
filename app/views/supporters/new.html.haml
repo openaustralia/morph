@@ -13,7 +13,7 @@
       .col-xs-3.col-centered
         %ul.plan.plan1
           %li.plan-name
-            = plan_image_tag(:basic)
+            = plan_image_tag(:morph_basic)
             Basic
           %li.plan-price
             %strong $14
@@ -32,12 +32,12 @@
           %li.plan-action
             = render partial: "plan_action", locals: { description: "Basic supporter",
                                                        amount: 1400,
-                                                       plan_id: "basic" }
+                                                       plan_id: "morph_basic" }
 
       .col-xs-3.col-centered
         %ul.plan.plan2.featured
           %li.plan-name
-            = plan_image_tag(:standard)
+            = plan_image_tag(:morph_standard)
             Standard
           %li.plan-price
             %strong $24
@@ -56,12 +56,12 @@
           %li.plan-action
             = render partial: "plan_action", locals: { description: "Standard supporter",
                                                        amount: 2400,
-                                                       plan_id: "standard" }
+                                                       plan_id: "morph_standard" }
 
       .col-xs-3.col-centered
         %ul.plan.plan3
           %li.plan-name
-            = plan_image_tag(:advanced)
+            = plan_image_tag(:morph_advanced)
             Advanced
           %li.plan-price
             %strong $149
@@ -81,7 +81,8 @@
           %li.plan-action
             = render partial: "plan_action", locals: { description: "Advanced supporter",
                                                        amount: 14900,
-                                                       plan_id: "advanced" }
+                                                       plan_id: "morph_advanced" }
+
   .row.one-time-contribution
     %p
       Monthly contribution not right for you?
