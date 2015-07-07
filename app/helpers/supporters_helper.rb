@@ -5,11 +5,11 @@ module SupportersHelper
 
   def human_plan_name(stripe_plan_id)
     case stripe_plan_id
-    when 'basic'
+    when 'morph_basic'
       'Basic Supporter'
-    when 'standard'
+    when 'morph_standard'
       'Standard Supporter'
-    when 'advanced'
+    when 'morph_advanced'
       'Advanced Supporter'
     end
   end
@@ -19,13 +19,13 @@ module SupportersHelper
   end
 
   def plan_change_word(from_plan, to_plan)
-    if (from_plan == "basic" && to_plan == "standard") ||
-       (from_plan == "basic" && to_plan == "advanced") ||
-       (from_plan == "standard" && to_plan == "advanced")
+    if (from_plan == "morph_basic" && to_plan == "morph_standard") ||
+       (from_plan == "morph_basic" && to_plan == "morph_advanced") ||
+       (from_plan == "morph_standard" && to_plan == "morph_advanced")
       "Upgrade"
-    elsif (from_plan == "standard" && to_plan == "basic") ||
-          (from_plan == "advanced" && to_plan == "basic") ||
-          (from_plan == "advanced" && to_plan == "standard")
+    elsif (from_plan == "morph_standard" && to_plan == "morph_basic") ||
+          (from_plan == "morph_advanced" && to_plan == "morph_basic") ||
+          (from_plan == "morph_advanced" && to_plan == "morph_standard")
       "Downgrade"
     else
       "Signup"
