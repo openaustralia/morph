@@ -32,4 +32,8 @@ class Plan
       149
     end
   end
+
+  def ==(plan)
+    stripe_plan_id == plan.stripe_plan_id
+  end
 end

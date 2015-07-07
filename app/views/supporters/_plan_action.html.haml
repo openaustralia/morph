@@ -1,4 +1,4 @@
-- if current_user.stripe_plan_id == plan_id
+- if Plan.new(current_user.stripe_plan_id) == Plan.new(plan_id)
   %strong You're awesome!
   This is what you're already signed up to
 - else
