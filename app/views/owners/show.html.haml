@@ -46,7 +46,7 @@
         .row
           .col-md-12
             %p
-              = link_to plan_image_tag(@owner.stripe_plan_id), new_supporter_path
+              = link_to plan_image_tag(Plan.new(@owner.stripe_plan_id)), new_supporter_path
               = link_to @owner.plan.name, new_supporter_path
 
 .container

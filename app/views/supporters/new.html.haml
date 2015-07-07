@@ -13,7 +13,7 @@
       .col-xs-3.col-centered
         %ul.plan.plan1
           %li.plan-name
-            = plan_image_tag(:morph_basic)
+            = plan_image_tag(Plan.new('morph_basic'))
             Basic
           %li.plan-price
             %strong= number_to_currency(Plan.new('morph_basic').price, precision: 0)
@@ -37,7 +37,7 @@
       .col-xs-3.col-centered
         %ul.plan.plan2.featured
           %li.plan-name
-            = plan_image_tag(:morph_standard)
+            = plan_image_tag(Plan.new('morph_standard'))
             Standard
           %li.plan-price
             %strong= number_to_currency(Plan.new('morph_standard').price, precision: 0)
@@ -61,7 +61,7 @@
       .col-xs-3.col-centered
         %ul.plan.plan3
           %li.plan-name
-            = plan_image_tag(:morph_advanced)
+            = plan_image_tag(Plan.new('morph_advanced'))
             Advanced
           %li.plan-price
             %strong= number_to_currency(Plan.new('morph_advanced').price, precision: 0)
