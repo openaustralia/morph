@@ -35,10 +35,11 @@ module SupportersHelper
   def joy_or_disappointment(from_plan, to_plan)
     change_direction = plan_change_word(from_plan, to_plan).downcase
 
-    case change_direction
-    when "upgrade"
+  def joy_or_disappointment(from_plan, to_plan)
+    case plan_change_word(from_plan, to_plan)
+    when "Upgrade"
       "What a hero!"
-    when "downgrade"
+    when "Downgrade"
       "Thanks for continuing to be a supporter!"
     else
       raise
