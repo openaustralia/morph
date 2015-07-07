@@ -31,4 +31,17 @@ module SupportersHelper
       "Signup"
     end
   end
+
+  def joy_or_disappointment(from_plan, to_plan)
+    change_direction = plan_change_word(from_plan, to_plan).downcase
+
+    case change_direction
+    when "upgrade"
+      "What a hero!"
+    when "downgrade"
+      "Thanks for continuing to be a supporter!"
+    else
+      raise
+    end
+  end
 end
