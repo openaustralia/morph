@@ -31,7 +31,7 @@ class SupportersController < ApplicationController
     )
     current_user.update! stripe_customer_id: customer.id
 
-    charge = Stripe::Charge.create(
+    Stripe::Charge.create(
       customer: customer.id,
       amount: (params[:amount].to_f * 100).round,
       description: 'morph.io contribution',
