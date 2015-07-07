@@ -47,7 +47,7 @@
           .col-md-12
             %p
               = link_to plan_image_tag(@owner.stripe_plan_id), new_supporter_path
-              = link_to human_plan_name(@owner.stripe_plan_id), new_supporter_path
+              = link_to Plan.new(@owner.stripe_plan_id).name, new_supporter_path
 
 .container
   - if @scrapers.empty?

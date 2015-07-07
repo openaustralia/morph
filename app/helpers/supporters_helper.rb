@@ -3,10 +3,6 @@ module SupportersHelper
     number_to_currency(number.to_f / 100)
   end
 
-  def human_plan_name(stripe_plan_id)
-    Plan.new(stripe_plan_id).name
-  end
-
   def plan_image_tag(stripe_plan_id)
     image_tag("supporter-badge-#{stripe_plan_id}.png", size: '64x64')
   end
