@@ -32,8 +32,14 @@ module SupportersHelper
     end
   end
 
-  def joy_or_disappointment(from_plan, to_plan)
-    change_direction = plan_change_word(from_plan, to_plan).downcase
+  def plan_change_word_past_tense(from_plan, to_plan)
+    word = plan_change_word(from_plan, to_plan)
+    if word == "Signup"
+      "Signed up"
+    else
+      word + "d"
+    end
+  end
 
   def joy_or_disappointment(from_plan, to_plan)
     case plan_change_word(from_plan, to_plan)
