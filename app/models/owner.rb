@@ -125,4 +125,8 @@ class Owner < ActiveRecord::Base
   def supporter?
     !stripe_plan_id.blank?
   end
+
+  def plan
+    Plan.new(stripe_plan_id)
+  end
 end
