@@ -8,11 +8,9 @@ module SupportersHelper
   end
 
   def plan_change_word(from_plan, to_plan)
-    from_price = Plan.new(from_plan).price
-    to_price = Plan.new(to_plan).price
-    if from_price.nil? || from_price == to_price
+    if from_plan.price.nil? || from_plan.price == to_plan.price
       "Signup"
-    elsif to_price > from_price
+    elsif to_plan.price > from_plan.price
       "Upgrade"
     else
       "Downgrade"
@@ -20,7 +18,7 @@ module SupportersHelper
   end
 
   def plan_change_word_past_tense(from_plan, to_plan)
-    word = plan_change_word(from_plan, to_plan)
+    word = plan_change_word(Plan.new(from_plan), Plan.new(to_plan))
     if word == "Signup"
       "Signed up"
     else
@@ -29,7 +27,7 @@ module SupportersHelper
   end
 
   def joy_or_disappointment(from_plan, to_plan)
-    case plan_change_word(from_plan, to_plan)
+    case plan_change_word(Plan.new(from_plan), Plan.new(to_plan))
     when "Upgrade"
       "What a hero!"
     when "Downgrade"
