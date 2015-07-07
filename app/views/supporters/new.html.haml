@@ -5,7 +5,6 @@
         Thanks for being a supporter
       - else
         Become a supporter
-  %p &#160;
   .row.pricing.row-centered
     = form_tag (current_user.supporter? ? supporter_path(current_user) : supporters_path), id: "supporter-signup-form", method: (current_user.supporter? ? :patch : :post) do
       = hidden_field_tag "stripeToken"
@@ -83,7 +82,7 @@
             = render partial: "plan_action", locals: { description: "Advanced supporter",
                                                        amount: 14900,
                                                        plan_id: "advanced" }
-  .row
+  .row.one-time-contribution
     %p
       Monthly contribution not right for you?
       = link_to 'Make a one time contribution', '#supporter-one-time-form',

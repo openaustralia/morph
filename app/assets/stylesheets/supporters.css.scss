@@ -3,6 +3,9 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .pricing {
+  margin-top: 4em;
+  margin-bottom: 4em;
+
   .col-centered {
     min-width:320px;
   }
@@ -77,4 +80,8 @@
   padding-top: 2em;
   padding-bottom: 2em;
   background-color: #b1d05f;
+}
+
+.one-time-contribution {
+  text-align: center;
 }
