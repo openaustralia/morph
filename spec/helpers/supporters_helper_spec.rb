@@ -1,15 +1,23 @@
 require 'spec_helper'
 
-# Specs in this file have access to a helper object that includes
-# the SupportersHelper. For example:
-#
-# describe SupportersHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 describe SupportersHelper do
-  skip "add some examples to (or delete) #{__FILE__}"
+  describe "#plan_change_word" do
+    context "no current plan" do
+      it { expect(helper.plan_change_word(nil, "basic")).to eql "Signup" }
+      it { expect(helper.plan_change_word("", "basic")).to eql "Signup" }
+      it { expect(helper.plan_change_word(" ", "basic")).to eql "Signup" }
+    end
+
+    context "plan upgrade" do
+      it { expect(helper.plan_change_word("basic", "standard")).to eql "Upgrade" }
+      it { expect(helper.plan_change_word("basic", "advanced")).to eql "Upgrade" }
+      it { expect(helper.plan_change_word("standard", "advanced")).to eql "Upgrade" }
+    end
+
+    context "plan downgrade" do
+      it { expect(helper.plan_change_word("standard", "basic")).to eql "Downgrade" }
+      it { expect(helper.plan_change_word("advanced", "basic")).to eql "Downgrade" }
+      it { expect(helper.plan_change_word("advanced", "standard")).to eql "Downgrade" }
+    end
+  end
 end

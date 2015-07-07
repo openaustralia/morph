@@ -18,20 +18,17 @@ module SupportersHelper
     image_tag("supporter-badge-#{stripe_plan_id}.png", size: '64x64')
   end
 
-  def signup_button_label(amount)
-    if !current_user.supporter?
-      "Signup"
-    elsif amount > plan_prices[current_user.stripe_plan_id.to_sym]
+  def plan_change_word(from_plan, to_plan)
+    if (from_plan == "basic" && to_plan == "standard") ||
+       (from_plan == "basic" && to_plan == "advanced") ||
+       (from_plan == "standard" && to_plan == "advanced")
       "Upgrade"
-    elsif amount < plan_prices[current_user.stripe_plan_id.to_sym]
+    elsif (from_plan == "standard" && to_plan == "basic") ||
+          (from_plan == "advanced" && to_plan == "basic") ||
+          (from_plan == "advanced" && to_plan == "standard")
       "Downgrade"
+    else
+      "Signup"
     end
-  end
-
-  private
-
-  # TODO: Remove this hardcoded pricing
-  def plan_prices
-    {basic: 1400, standard: 2900, advanced: 14900}
   end
 end
