@@ -32,7 +32,7 @@
           %li.plan-action
             = render partial: "plan_action", locals: { description: "Basic supporter",
                                                        amount: 1400,
-                                                       plan_id: "morph_basic" }
+                                                       plan: Plan.new("morph_basic") }
 
       .col-xs-3.col-centered
         %ul.plan.plan2.featured
@@ -56,7 +56,7 @@
           %li.plan-action
             = render partial: "plan_action", locals: { description: "Standard supporter",
                                                        amount: 2400,
-                                                       plan_id: "morph_standard" }
+                                                       plan: Plan.new("morph_standard") }
 
       .col-xs-3.col-centered
         %ul.plan.plan3
@@ -81,7 +81,7 @@
           %li.plan-action
             = render partial: "plan_action", locals: { description: "Advanced supporter",
                                                        amount: 14900,
-                                                       plan_id: "morph_advanced" }
+                                                       plan: Plan.new("morph_advanced") }
 
   .row.one-time-contribution
     %p
