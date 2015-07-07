@@ -27,7 +27,7 @@ class SupportersController < ApplicationController
     customer = Stripe::Customer.create(
       email:       current_user.email,
       card:        params[:stripeTokenOneTime],
-      description: "Customer for @#{current_user.nickname}"
+      description: "morph.io user @#{current_user.nickname}"
     )
     current_user.update! stripe_customer_id: customer.id
 
