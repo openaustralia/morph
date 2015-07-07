@@ -18,7 +18,7 @@ module SupportersHelper
   end
 
   def plan_change_word_past_tense(from_plan, to_plan)
-    word = plan_change_word(Plan.new(from_plan), Plan.new(to_plan))
+    word = plan_change_word(from_plan, to_plan)
     if word == "Signup"
       "Signed up"
     else
