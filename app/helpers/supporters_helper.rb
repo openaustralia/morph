@@ -3,8 +3,8 @@ module SupportersHelper
     number_to_currency(number.to_f / 100)
   end
 
-  def plan_image_tag(plan)
-  image_tag("supporter-badge-#{plan.stripe_plan_id}.png", size: '64x64')
+  def plan_image_tag(plan, size='64x64')
+  image_tag("supporter-badge-#{plan.stripe_plan_id}.png", size: size)
   end
 
   def plan_change_word(from_plan, to_plan)

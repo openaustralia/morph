@@ -11,6 +11,13 @@
           %h4= @owner.nickname
         - else
           %h1= @owner.nickname
+
+        - if current_user && current_user.see_support_levels
+          - if @owner.supporter?
+            %p
+              = link_to plan_image_tag(Plan.new(@owner.stripe_plan_id), '32x32'), new_supporter_path
+              = link_to @owner.plan.name, new_supporter_path, class: 'supporter-plan'
+
         .row
           .col-md-6
             %h4 Contacts
@@ -41,13 +48,6 @@
       .col-md-2.owner-box
         - if signed_in?
           .pull-right= render partial: "watch_button", locals: {owner: @owner}
-    - if current_user && current_user.see_support_levels
-      - if @owner.supporter?
-        .row
-          .col-md-12
-            %p
-              = link_to plan_image_tag(Plan.new(@owner.stripe_plan_id)), new_supporter_path
-              = link_to @owner.plan.name, new_supporter_path
 
 .container
   - if @scrapers.empty?
