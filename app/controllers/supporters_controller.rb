@@ -8,7 +8,7 @@ class SupportersController < ApplicationController
     customer = Stripe::Customer.create(
       email:       params[:stripeEmail],
       card:        params[:stripeToken],
-      description: "Customer for @#{current_user.nickname}"
+      description: "morph.io user @#{current_user.nickname}"
     )
     current_user.update! stripe_customer_id: customer.id
 
