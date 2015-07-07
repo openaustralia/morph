@@ -18,6 +18,18 @@ module SupportersHelper
     image_tag("supporter-badge-#{stripe_plan_id}.png", size: '64x64')
   end
 
+  # TODO: This sort of information really belongs in a plan model
+  def plan_price(stripe_plan_id)
+    case stripe_plan_id
+    when 'morph_basic'
+      14
+    when 'morph_standard'
+      24
+    when 'morph_advanced'
+      149
+    end
+  end
+
   def plan_change_word(from_plan, to_plan)
     if (from_plan == "morph_basic" && to_plan == "morph_standard") ||
        (from_plan == "morph_basic" && to_plan == "morph_advanced") ||
