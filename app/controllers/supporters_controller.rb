@@ -30,5 +30,7 @@ class SupportersController < ApplicationController
     subscription.plan = params[:plan_id]
     subscription.save
     current_user.update! stripe_plan_id: subscription[:plan][:id]
+
+    redirect_to user_path(current_user), notice: render_to_string(partial: "update_flash")
   end
 end
