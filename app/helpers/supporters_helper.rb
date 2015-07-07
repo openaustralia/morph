@@ -7,14 +7,9 @@ module SupportersHelper
     image_tag("supporter-badge-#{stripe_plan_id}.png", size: '64x64')
   end
 
-  # TODO: This sort of information really belongs in a plan model
-  def plan_price(stripe_plan_id)
-    Plan.new(stripe_plan_id).price
-  end
-
   def plan_change_word(from_plan, to_plan)
-    from_price = plan_price(from_plan)
-    to_price = plan_price(to_plan)
+    from_price = Plan.new(from_plan).price
+    to_price = Plan.new(to_plan).price
     if from_price.nil? || from_price == to_price
       "Signup"
     elsif to_price > from_price

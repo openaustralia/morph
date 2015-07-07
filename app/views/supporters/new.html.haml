@@ -16,7 +16,7 @@
             = plan_image_tag(:morph_basic)
             Basic
           %li.plan-price
-            %strong= number_to_currency(plan_price('morph_basic'), precision: 0)
+            %strong= number_to_currency(Plan.new('morph_basic').price, precision: 0)
             \/ month
           %li.plan-reason
             Supporters keep morph.io open and running and available to all
@@ -40,7 +40,7 @@
             = plan_image_tag(:morph_standard)
             Standard
           %li.plan-price
-            %strong= number_to_currency(plan_price('morph_standard'), precision: 0)
+            %strong= number_to_currency(Plan.new('morph_standard').price, precision: 0)
             \/ month
           %li.plan-reason
             Support continued development of the open-source software that powers morph.io
@@ -64,7 +64,7 @@
             = plan_image_tag(:morph_advanced)
             Advanced
           %li.plan-price
-            %strong= number_to_currency(plan_price('morph_advanced'), precision: 0)
+            %strong= number_to_currency(Plan.new('morph_advanced').price, precision: 0)
             \/ month
           %li.plan-reason
             Rely on morph.io for your business or not-for-profit? Priority technical support
