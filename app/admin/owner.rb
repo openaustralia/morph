@@ -43,7 +43,7 @@ ActiveAdmin.register Owner do
       input :suspended
     end
     inputs "Supporter" do
-      input :stripe_plan_id, as: :select, collection: %w(morph_basic morph_standard morph_advanced)
+      input :stripe_plan_id, as: :select, collection: Plan.all_stripe_plan_ids
     end
     actions
   end

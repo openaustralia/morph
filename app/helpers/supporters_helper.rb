@@ -4,16 +4,7 @@ module SupportersHelper
   end
 
   def human_plan_name(stripe_plan_id)
-    case stripe_plan_id
-    when 'morph_basic'
-      'Basic Supporter'
-    when 'morph_standard'
-      'Standard Supporter'
-    when 'morph_advanced'
-      'Advanced Supporter'
-    else
-      fail
-    end
+    Plan.new(stripe_plan_id).name
   end
 
   def plan_image_tag(stripe_plan_id)
@@ -22,14 +13,7 @@ module SupportersHelper
 
   # TODO: This sort of information really belongs in a plan model
   def plan_price(stripe_plan_id)
-    case stripe_plan_id
-    when 'morph_basic'
-      14
-    when 'morph_standard'
-      24
-    when 'morph_advanced'
-      149
-    end
+    Plan.new(stripe_plan_id).price
   end
 
   def plan_change_word(from_plan, to_plan)
