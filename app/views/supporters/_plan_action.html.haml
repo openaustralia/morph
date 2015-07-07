@@ -1,6 +1,7 @@
 - if current_user.plan == plan
-  %strong You're awesome!
-  This is what you're already signed up to
+  = button_tag class: "btn btn-default btn-lg", disabled: true do
+    %i.fa.fa-check.text-success
+    Signed up
 - else
   = button_tag plan_change_word(current_user.plan, plan),
                class: "btn btn-default btn-lg",
