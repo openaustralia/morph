@@ -5,7 +5,6 @@
         Thanks for being a supporter
       - else
         Become a supporter
-  %p &#160;
   .row.pricing.row-centered
     = form_tag (current_user.supporter? ? supporter_path(current_user) : supporters_path), id: "supporter-signup-form", method: (current_user.supporter? ? :patch : :post) do
       = hidden_field_tag "stripeToken"
@@ -83,6 +82,22 @@
             = render partial: "plan_action", locals: { description: "Advanced supporter",
                                                        amount: 14900,
                                                        plan_id: "morph_advanced" }
+
+  .row.one-time-contribution
+    %p
+      Monthly contribution not right for you?
+      = link_to 'Make a one time contribution', '#supporter-one-time-form',
+        data: {toggle: "collapse"}
+    = form_tag create_one_time_supporters_path, id: "supporter-one-time-form", class: 'form-inline collapse'  do
+      = hidden_field_tag "stripeTokenOneTime"
+      .form-group
+        = label_tag 'amount', 'Amount (in US dollars)', class: 'sr-only'
+        .input-group
+          .input-group-addon $
+          = text_field_tag 'amount', nil, placeholder: 'Amount', class: 'form-control'
+      = button_tag "Contribute", class: "btn btn-default",
+        data: {key: Rails.configuration.stripe[:publishable_key],
+              email: current_user.email}
 
 .plan-questions
   .container

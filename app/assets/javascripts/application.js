@@ -19,7 +19,7 @@
 //= require rails-timeago
 //= require sync
 //= require cocoon
-//= require 'jquery.backstretch'
+//= require jquery.backstretch
 //= require tablesaw.stackonly
 //= require jquery.waypoints
 //= require waypoints.inview
