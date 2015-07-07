@@ -6,7 +6,7 @@ class SupportersController < ApplicationController
 
   def create
     customer = Stripe::Customer.create(
-      email:       params[:stripeEmail],
+      email:       current_user.email,
       card:        params[:stripeToken],
       description: "morph.io user @#{current_user.nickname}"
     )
@@ -25,7 +25,7 @@ class SupportersController < ApplicationController
 
   def create_one_time
     customer = Stripe::Customer.create(
-      email:       params[:stripeEmail],
+      email:       current_user.email,
       card:        params[:stripeTokenOneTime],
       description: "Customer for @#{current_user.nickname}"
     )
