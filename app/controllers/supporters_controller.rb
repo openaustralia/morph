@@ -15,7 +15,6 @@ class SupportersController < ApplicationController
     # TODO: Handle missing or incorrect plan
     subscription = customer.subscriptions.create plan: params[:plan_id]
     current_user.update! stripe_plan_id: subscription[:plan][:id], stripe_subscription_id: subscription[:id]
-    @price = subscription[:plan][:amount]
 
     redirect_to user_path(current_user), notice: render_to_string(partial: "create_flash")
 
