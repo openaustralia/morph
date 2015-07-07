@@ -84,7 +84,11 @@
                                                        amount: 14900,
                                                        plan_id: "advanced" }
   .row
-    = form_tag supporters_path, id: "supporter-one-time-form", class: 'form-inline'  do
+    %p
+      Monthly contribution not right for you?
+      = link_to 'Make a one time contribution', '#supporter-one-time-form',
+        data: {toggle: "collapse"}
+    = form_tag supporters_path, id: "supporter-one-time-form", class: 'form-inline collapse'  do
       = hidden_field_tag "stripeToken"
       .form-group
         = label_tag 'amount', 'Amount (in US dollars)', class: 'sr-only'
