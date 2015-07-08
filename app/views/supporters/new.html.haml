@@ -13,7 +13,8 @@
         It's created and run by the charity
         = link_to "OpenAustralia Foundation", "https://www.openaustraliafoundation.org.au/"
         because we love the international civic tech community.
-        However it costs money to run and develop this service so you can ensure its continues to thrive by becoming a supporter.
+        However it costs money to run and develop this service.
+        You can ensure its continues to thrive by becoming a supporter.
         We'll even provide priority support to our most dedicated supporters.
   .row.pricing.row-centered
     = form_tag (current_user.supporter? ? supporter_path(current_user) : supporters_path), id: "supporter-signup-form", method: (current_user.supporter? ? :patch : :post) do
