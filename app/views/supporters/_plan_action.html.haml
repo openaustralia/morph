@@ -1,4 +1,6 @@
-- if current_user.plan == plan
+- if !user_signed_in?
+  = link_to "Signup", new_supporter_path(plan_id: plan.stripe_plan_id), class: "btn btn-default btn-lg"
+- elsif current_user.plan == plan
   = button_tag class: "btn btn-default btn-lg", disabled: true do
     %i.fa.fa-check.text-success
     Signed up
