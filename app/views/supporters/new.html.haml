@@ -17,7 +17,7 @@
   .row.pricing.row-centered
     = form_tag (current_user.supporter? ? supporter_path(current_user) : supporters_path), id: "supporter-signup-form", method: (current_user.supporter? ? :patch : :post) do
       = hidden_field_tag "stripeToken"
-      = hidden_field_tag :plan_id
+      = hidden_field_tag :plan_id, params[:plan_id]
 
       .col-xs-3.col-centered
         %ul.plan.plan1

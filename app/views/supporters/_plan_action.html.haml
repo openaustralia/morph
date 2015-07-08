@@ -4,6 +4,7 @@
     Signed up
 - else
   = button_tag plan_change_word(current_user.plan, plan),
+               id: plan.stripe_plan_id,
                class: "btn btn-default btn-lg",
                data: {key: Rails.configuration.stripe[:publishable_key],
                       description: description,
