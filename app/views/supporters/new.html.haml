@@ -5,6 +5,13 @@
         Thanks for being a supporter
       - else
         Become a supporter
+  .row
+    .col-md-8.col-md-offset-2
+      %p
+        morph.io is free for everyone.
+        It's created and run by the charity OpenAustralia Foundation for the public good and in particular the international civic tech community.
+        However it does cost money to run and develop this service so you can ensure its continues to thrive by becoming a supporter.
+        We'll even provide priority support to our most dedicated supporters.
   .row.pricing.row-centered
     = form_tag (current_user.supporter? ? supporter_path(current_user) : supporters_path), id: "supporter-signup-form", method: (current_user.supporter? ? :patch : :post) do
       = hidden_field_tag "stripeToken"
