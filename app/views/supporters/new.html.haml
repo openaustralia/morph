@@ -95,7 +95,7 @@
         = label_tag 'amount', 'Amount (in US dollars)', class: 'sr-only'
         .input-group
           .input-group-addon $
-          = text_field_tag 'amount', nil, placeholder: 'Amount', class: 'form-control'
+          = number_field_tag 'amount', nil, placeholder: 'Amount', class: 'form-control'
       = button_tag "Contribute", class: "btn btn-default",
         data: {key: Rails.configuration.stripe[:publishable_key],
               email: current_user.email}
