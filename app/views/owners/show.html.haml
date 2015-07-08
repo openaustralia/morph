@@ -14,7 +14,7 @@
 
         - if current_user && current_user.see_support_levels
           - if @owner.supporter?
-            %p
+            %p{class: ('bounceInDown animated' if @new_supporter)}
               = link_to plan_image_tag(Plan.new(@owner.stripe_plan_id), '32x32'), new_supporter_path
               = link_to @owner.plan.name, new_supporter_path, class: 'supporter-plan'
 

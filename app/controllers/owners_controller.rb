@@ -5,6 +5,11 @@ class OwnersController < ApplicationController
   skip_authorize_resource only: :settings_redirect
 
   def show
+    # Whether this user has just become a supporter
+    @new_supporter = session[:new_supporter]
+    # Only do this once
+    session[:new_supporter] = false if @new_supporter
+
     @scrapers = @owner.scrapers.includes(:last_run)
 
     # Split out scrapers into different groups

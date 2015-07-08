@@ -16,6 +16,7 @@ class SupportersController < ApplicationController
     subscription = customer.subscriptions.create plan: params[:plan_id]
     current_user.update! stripe_plan_id: subscription[:plan][:id], stripe_subscription_id: subscription[:id]
 
+    session[:new_supporter] = true
     redirect_to user_path(current_user), notice: render_to_string(partial: "create_flash")
 
   rescue Stripe::CardError => e
@@ -38,6 +39,7 @@ class SupportersController < ApplicationController
       currency: 'USD'
     )
 
+    session[:new_supporter] = true
     redirect_to user_path(current_user), notice: render_to_string(partial: "one_time_contribution_thanks")
   rescue Stripe::CardError => e
     flash[:error] = e.message
@@ -54,6 +56,7 @@ class SupportersController < ApplicationController
     subscription.save
     current_user.update! stripe_plan_id: subscription[:plan][:id]
 
+    session[:new_supporter] = true
     redirect_to user_path(current_user), notice: render_to_string(partial: "update_flash")
   end
 end
