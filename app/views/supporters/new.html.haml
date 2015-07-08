@@ -15,7 +15,7 @@
         because we love the civic tech community.
         However it costs money to run and develop this service.
         You can ensure it continues to thrive by becoming a supporter.
-        We even provide priority support to our most dedicated supporters.
+        You can also choose priority technical support if you need it.
   .row.pricing.row-centered
     = form_tag (current_user.supporter? ? supporter_path(current_user) : supporters_path), id: "supporter-signup-form", method: (current_user.supporter? ? :patch : :post) do
       = hidden_field_tag "stripeToken"
