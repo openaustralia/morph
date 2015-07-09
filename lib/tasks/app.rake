@@ -51,13 +51,10 @@ namespace :app do
 
   desc 'Synchronise all repositories'
   task synchronise_repos: :environment do
-    total = Scraper.all.count
-    i = 1
     Scraper.all.each do |s|
-      puts "#{i}/#{total}"
-      s.synchronise_repo
-      i += 1
+      SynchroniseRepoWorker.perform_async(s.id)
     end
+    puts 'Put jobs on to the background queue to synchronise all repositories'
   end
 
   desc 'Promote user to admin'
