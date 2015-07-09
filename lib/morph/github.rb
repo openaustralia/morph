@@ -91,7 +91,8 @@ module Morph
       # We can't use unauthenticated requests because we will go over our
       # rate limit
       # github call returns nil if the git repo is completely empty
-      contributors = user.octokit_client.contributors(repo_full_name) || []
+      contributors = user.octokit_client.contributors(repo_full_name)
+      contributors = [] unless contributors.is_a?(Array)
       contributors.map { |c| c['login'] }
     # TODO A bit of a hack to just return an empty string if there is a problem
     # with the github user authentication
