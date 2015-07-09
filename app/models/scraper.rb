@@ -133,21 +133,9 @@ class Scraper < ActiveRecord::Base
     Morph::Language.new(original_language_key.to_sym)
   end
 
-  # Get this straight from Github
-  def contributor_nicknames
-    # We can't use unauthenticated requests because we will go over our
-    # rate limit
-    # github call returns nil if the git repo is completely empty
-    contributors = related_user.octokit_client.contributors(full_name) || []
-    contributors.map { |c| c['login'] }
-  rescue Octokit::NotFound
-    []
-  end
-
   def update_contributors
-    contributors = contributor_nicknames.map do |a|
-      User.find_or_create_by_nickname(a)
-    end
+    nicknames = Morph::Github.contributor_nicknames(full_name, related_user)
+    contributors = nicknames.map { |n| User.find_or_create_by_nickname(n) }
     update_attributes(contributors: contributors)
   end
 

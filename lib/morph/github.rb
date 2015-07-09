@@ -83,5 +83,18 @@ module Morph
       res = conn.post("/applications/#{client_id}/tokens/#{access_token}")
       JSON.parse(res.body)['token']
     end
+
+    # Returns nicknames of github users who have contributed to a particular
+    # repo
+    # user is used to make the authenticated api call
+    def self.contributor_nicknames(repo_full_name, user)
+      # We can't use unauthenticated requests because we will go over our
+      # rate limit
+      # github call returns nil if the git repo is completely empty
+      contributors = user.octokit_client.contributors(repo_full_name) || []
+      contributors.map { |c| c['login'] }
+    rescue Octokit::NotFound
+      []
+    end
   end
 end
