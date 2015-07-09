@@ -133,23 +133,22 @@ class Scraper < ActiveRecord::Base
     Morph::Language.new(original_language_key.to_sym)
   end
 
-  def update_contributors
+  # Get this straight from Github
+  def contributor_nicknames
     # We can't use unauthenticated requests because we will go over our
     # rate limit
-    begin
-      contributors = related_user.octokit_client.contributors(full_name)
-      # contributors will return nill if the git repo is completely empty
-      if contributors.nil?
-        c = []
-      else
-        c = contributors.map do |c|
-          User.find_or_create_by_nickname(c['login'])
-        end
-      end
-    rescue Octokit::NotFound
-      c = []
+    # github call returns nil if the git repo is completely empty
+    contributors = related_user.octokit_client.contributors(full_name) || []
+    contributors.map { |c| c['login'] }
+  rescue Octokit::NotFound
+    []
+  end
+
+  def update_contributors
+    contributors = contributor_nicknames.map do |a|
+      User.find_or_create_by_nickname(a)
     end
-    update_attributes(contributors: c)
+    update_attributes(contributors: contributors)
   end
 
   instrument_method
