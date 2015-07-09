@@ -93,7 +93,9 @@ module Morph
       # github call returns nil if the git repo is completely empty
       contributors = user.octokit_client.contributors(repo_full_name) || []
       contributors.map { |c| c['login'] }
-    rescue Octokit::NotFound
+    # TODO A bit of a hack to just return an empty string if there is a problem
+    # with the github user authentication
+    rescue Octokit::NotFound, Octokit::Unauthorized
       []
     end
   end
