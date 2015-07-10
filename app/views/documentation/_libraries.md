@@ -10,6 +10,3 @@ your preferred language or use the documentation menu over to the left of the sc
 * [Installing libraries with PHP](/documentation/php)
 * [Installing libraries with Python](/documentation/python)
 * [Installing libraries with Perl](/documentation/perl)
-
-If you don't specify any libraries or a language version it will default to using a setup
-as close as possible to that of [ScraperWiki Classic](https://classic.scraperwiki.com/) as of January 2014. This is for the benefit of those that have forked their scrapers from ScraperWiki Classic.
