@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       get "perl"
       get "python"
       get "nodejs"
+      get 'secret_values'
       get "examples/australian_members_of_parliament"
     end
   end
