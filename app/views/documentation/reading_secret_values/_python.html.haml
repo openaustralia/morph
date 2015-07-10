@@ -1,0 +1,6 @@
+%code
+  %pre
+    :preserve
+      import os
+      # Use my secret variable
+      my_secret_value = os.environ['MORPH_MYSECRET']
