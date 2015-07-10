@@ -1,7 +1,4 @@
 class DocumentationController < ApplicationController
-  def index
-  end
-
   def api
     # Example scraper
     @scraper = Scraper.find_by(full_name: params[:scraper] || "mlandauer/scraper-blue-mountains") || Scraper.first
@@ -10,20 +7,5 @@ class DocumentationController < ApplicationController
 
   def pricing
     render layout: "application"
-  end
-
-  def what_is_new
-  end
-
-  def ruby
-  end
-
-  def php
-  end
-
-  def perl
-  end
-
-  def python
   end
 end
