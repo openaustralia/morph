@@ -19,6 +19,14 @@
 
 .row
   .col-sm-9
+    %h3.section#github Sign in with GitHub
+    :markdown
+      #{render "github.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "_github.md"
+
+.row
+  .col-sm-9
     %h3.section#format Storing your data
     = render "format"
   .col-sm-3
