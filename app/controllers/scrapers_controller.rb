@@ -171,6 +171,7 @@ class ScrapersController < ApplicationController
             # Workaround for https://github.com/rails/rails/issues/15081
             # TODO When the bug above is fixed we should just be able to replace the block below with
             # render :json => result, callback: params[:callback]
+            # By the looks of it this bug is fixed in rails 4.2.x
             if params[:callback]
               render :json => result, callback: params[:callback], content_type: "application/javascript"
             else
