@@ -30,7 +30,7 @@ class Scraper < ActiveRecord::Base
 
   has_many :api_queries
 
-  validates :name, format: {
+  validates :name, presence: true, format: {
     with: /\A[a-zA-Z0-9_-]+\z/,
     message: "can only have letters, numbers, '_' and '-'"
   }
