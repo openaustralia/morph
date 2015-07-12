@@ -26,7 +26,7 @@ class ScrapersController < ApplicationController
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
     authorize! :create, @scraper
     if @scraper.valid?
-      @scraper.create_create_scraper_progress!(heading: "New scraper", message: "Queuing", progress: 5)
+      @scraper.create_create_scraper_progress!(heading: 'New scraper', message: 'Queuing', progress: 5)
       @scraper.save
       CreateScraperWorker.perform_async(@scraper.id, current_user.id, scraper_url(@scraper))
       redirect_to @scraper
@@ -44,14 +44,14 @@ class ScrapersController < ApplicationController
   # For rendering ajax partial in github action
   def github_form
     @scraper = Scraper.new
-    render partial: "github_form", locals: {owner: Owner.find(params[:id])}
+    render partial: 'github_form', locals: {owner: Owner.find(params[:id])}
   end
 
   def create_github
     @scraper = Scraper.new_from_github(params[:scraper][:full_name], current_user.octokit_client)
     authorize! :create_github, @scraper
     if @scraper.save
-      @scraper.create_create_scraper_progress!(heading: "Adding from Github", message: "Queuing", progress: 5)
+      @scraper.create_create_scraper_progress!(heading: 'Adding from Github', message: 'Queuing', progress: 5)
       @scraper.save
       CreateFromGithubWorker.perform_async(@scraper.id)
       redirect_to @scraper
@@ -81,10 +81,10 @@ class ScrapersController < ApplicationController
       @scraper.errors.add(:scraperwiki_shortname, 'cannot be blank')
       render :scraperwiki
     elsif @scraper.save
-      @scraper.create_create_scraper_progress!(heading: "Forking!", message: "Queuing", progress: 5)
+      @scraper.create_create_scraper_progress!(heading: 'Forking!', message: 'Queuing', progress: 5)
       @scraper.save
       ForkScraperwikiWorker.perform_async(@scraper.id)
-      #flash[:notice] = "Forking in action..."
+      #flash[:notice] = 'Forking in action...'
       redirect_to @scraper
     else
       render :scraperwiki
@@ -107,7 +107,7 @@ class ScrapersController < ApplicationController
   def update
     authorize! :update, @scraper
     if @scraper.update_attributes(scraper_params)
-      flash[:notice] = "Scraper settings successfully updated"
+      flash[:notice] = 'Scraper settings successfully updated'
       sync_update @scraper
       redirect_to @scraper
     else
@@ -142,14 +142,14 @@ class ScrapersController < ApplicationController
     # Check authentication
     # We're still allowing authentication via header so that old users
     # of the api don't have to change anything
-    api_key = request.headers["HTTP_X_API_KEY"] || params[:key]
+    api_key = request.headers['HTTP_X_API_KEY'] || params[:key]
     if api_key.nil?
-      render_error "API key is missing"
+      render_error 'API key is missing'
       return
     else
       owner = Owner.find_by_api_key(api_key)
       if owner.nil?
-        render_error "API key is not valid"
+        render_error 'API key is not valid'
         return
       end
     end
@@ -161,7 +161,7 @@ class ScrapersController < ApplicationController
             send_file @scraper.database.sqlite_db_path, filename: "#{@scraper.name}.sqlite"
           end
           ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
-            size: @scraper.database.sqlite_db_size, type: "database", format: "sqlite")
+            size: @scraper.database.sqlite_db_size, type: 'database', format: 'sqlite')
         end
 
         format.json do
@@ -173,14 +173,14 @@ class ScrapersController < ApplicationController
             # render :json => result, callback: params[:callback]
             # By the looks of it this bug is fixed in rails 4.2.x
             if params[:callback]
-              render :json => result, callback: params[:callback], content_type: "application/javascript"
+              render :json => result, callback: params[:callback], content_type: 'application/javascript'
             else
               render :json => result
             end
             size = result.to_json.size
           end
           ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
-            size: size, type: "sql", format: "json")
+            size: size, type: 'sql', format: 'json')
         end
 
         format.csv do
@@ -197,7 +197,7 @@ class ScrapersController < ApplicationController
             size = csv_string.size
           end
           ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
-            size: size, type: "sql", format: "csv")
+            size: size, type: 'sql', format: 'csv')
         end
 
         format.atom do
@@ -209,7 +209,7 @@ class ScrapersController < ApplicationController
             size = @result.to_json.size
           end
           ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
-            size: size, type: "sql", format: "atom")
+            size: size, type: 'sql', format: 'atom')
         end
       end
 
