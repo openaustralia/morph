@@ -9,7 +9,7 @@ module SupportersHelper
 
   def plan_change_word(from_plan, to_plan)
     if from_plan.price.nil? || from_plan.price == to_plan.price
-      "Signup"
+      "Become a #{to_plan.name}"
     elsif to_plan.price > from_plan.price
       "Upgrade"
     else
