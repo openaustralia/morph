@@ -18,11 +18,12 @@ module SupportersHelper
   end
 
   def plan_change_word_past_tense(from_plan, to_plan)
-    word = plan_change_word(from_plan, to_plan)
-    if word == "Signup"
-      "Signed up"
+    if to_plan.price > from_plan.price
+      "Upgraded"
+    elsif to_plan.price < from_plan.price
+      "Downgraded"
     else
-      word + "d"
+      raise
     end
   end
 
