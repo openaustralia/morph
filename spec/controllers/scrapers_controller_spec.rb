@@ -63,18 +63,18 @@ describe ScrapersController do
       it "should not allow you to delete a scraper if you don't own the scraper" do
         other_user = User.create(nickname: 'otheruser')
         VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-          scraper = Scraper.create(owner: other_user, name: 'a_scraper', full_name: 'otheruser/a_scraper')
+          Scraper.create(owner: other_user, name: 'a_scraper', full_name: 'otheruser/a_scraper')
         end
-        expect{delete :destroy, id: 'otheruser/a_scraper'}.to raise_error(CanCan::AccessDenied)
+        expect { delete :destroy, id: 'otheruser/a_scraper' }.to raise_error(CanCan::AccessDenied)
         Scraper.count.should == 1
       end
 
       it "should not allow you to delete a scraper if it's owner is an organisation your're not part of" do
         other_organisation = Organization.create(nickname: 'otherorg')
         VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-          scraper = Scraper.create(owner: other_organisation, name: 'a_scraper', full_name: 'otherorg/a_scraper')
+          Scraper.create(owner: other_organisation, name: 'a_scraper', full_name: 'otherorg/a_scraper')
         end
-        expect{delete :destroy, id: 'otherorg/a_scraper'}.to raise_error(CanCan::AccessDenied)
+        expect { delete :destroy, id: 'otherorg/a_scraper' }.to raise_error(CanCan::AccessDenied)
         Scraper.count.should == 1
       end
     end
@@ -195,7 +195,7 @@ describe ScrapersController do
         get :data, id: 'mlandauer/a_scraper', format: :json
         response.code.should == '401'
         JSON.parse(response.body).should == {
-          'error'=>'API key is missing'
+          'error' => 'API key is missing'
         }
         response.content_type.should == 'application/json'
       end
@@ -227,7 +227,7 @@ describe ScrapersController do
         get :data, id: 'mlandauer/a_scraper', key: 'foo', format: :json
         response.code.should == '401'
         JSON.parse(response.body).should == {
-          'error'=>'API key is not valid'
+          'error' => 'API key is not valid'
         }
         response.content_type.should == 'application/json'
       end
@@ -297,7 +297,7 @@ describe ScrapersController do
       end
 
       it 'should return sqlite' do
-        controller.should_receive(:send_file).with('/path/to/db.sqlite', filename: 'a_scraper.sqlite') {controller.render nothing: true}
+        controller.should_receive(:send_file).with('/path/to/db.sqlite', filename: 'a_scraper.sqlite') { controller.render nothing: true }
         get :data, id: 'mlandauer/a_scraper', key: '1234', format: :sqlite
         response.should be_success
       end
