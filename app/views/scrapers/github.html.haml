@@ -5,13 +5,13 @@
   = render 'documentation/format'
 
   %ul.nav.nav-tabs
-    %li.active= link_to @user.nickname, "#owner_#{@user.nickname}", data: {toggle: "tab"}
-    - @organizations.each do |org|
+    %li.active= link_to current_user.nickname, "#owner_#{current_user.nickname}", data: {toggle: "tab"}
+    - current_user.organizations.each do |org|
       %li= link_to org.nickname, "#owner_#{org.nickname}", data: {toggle: "tab"}
 
   .tab-content
-    .tab-pane.active{id: "owner_#{@user.nickname}"}
-      = render partial: "github_form_loader", locals: {owner: @user}
-    - @organizations.each do |org|
+    .tab-pane.active{id: "owner_#{current_user.nickname}"}
+      = render partial: "github_form_loader", locals: {owner: current_user}
+    - current_user.organizations.each do |org|
       .tab-pane{id: "owner_#{org.nickname}"}
         = render partial: "github_form_loader", locals: {owner: org}
