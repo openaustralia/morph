@@ -1,18 +1,24 @@
 class ScrapersController < ApplicationController
-  before_filter :authenticate_user!, except: [:index, :show, :data, :watchers]
-  before_filter :load_resource, only: [:settings, :show, :destroy, :update, :run, :stop, :clear,
-    :data, :watch, :watchers]
+  before_filter :authenticate_user!, except: [
+    :index, :show, :data, :watchers
+  ]
+  before_filter :load_resource, only: [
+    :settings, :show, :destroy, :update, :run, :stop, :clear, :data, :watch,
+    :watchers
+  ]
 
   # All methods
-  # :settings, :index, :new, :create, :github, :github_form, :create_github, :scraperwiki,
-  # :create_scraperwiki, :show, :destroy, :update, :run, :stop, :clear, :data, :watch, :watchers
+  # :settings, :index, :new, :create, :github, :github_form, :create_github,
+  # :scraperwiki, :create_scraperwiki, :show, :destroy, :update, :run, :stop,
+  # :clear, :data, :watch, :watchers
 
   def settings
     authorize! :settings, @scraper
   end
 
   def index
-    @scrapers = Scraper.accessible_by(current_ability).order(:created_at => :desc).page(params[:page])
+    @scrapers = Scraper.accessible_by(current_ability).order(created_at: :desc)
+                .page(params[:page])
   end
 
   def new
@@ -21,14 +27,23 @@ class ScrapersController < ApplicationController
   end
 
   def create
-    @scraper = Scraper.new(original_language_key: params[:scraper][:original_language_key],
-      owner_id: params[:scraper][:owner_id], name: params[:scraper][:name], description: params[:scraper][:description])
+    @scraper = Scraper.new(
+      original_language_key: params[:scraper][:original_language_key],
+      owner_id: params[:scraper][:owner_id],
+      name: params[:scraper][:name],
+      description: params[:scraper][:description]
+    )
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
     authorize! :create, @scraper
     if @scraper.valid?
-      @scraper.create_create_scraper_progress!(heading: 'New scraper', message: 'Queuing', progress: 5)
+      @scraper.create_create_scraper_progress!(
+        heading: 'New scraper',
+        message: 'Queuing',
+        progress: 5
+      )
       @scraper.save
-      CreateScraperWorker.perform_async(@scraper.id, current_user.id, scraper_url(@scraper))
+      CreateScraperWorker.perform_async(@scraper.id, current_user.id,
+                                        scraper_url(@scraper))
       redirect_to @scraper
     else
       render :new
@@ -48,10 +63,15 @@ class ScrapersController < ApplicationController
   end
 
   def create_github
-    @scraper = Scraper.new_from_github(params[:scraper][:full_name], current_user.octokit_client)
+    @scraper = Scraper.new_from_github(params[:scraper][:full_name],
+                                       current_user.octokit_client)
     authorize! :create_github, @scraper
     if @scraper.save
-      @scraper.create_create_scraper_progress!(heading: 'Adding from Github', message: 'Queuing', progress: 5)
+      @scraper.create_create_scraper_progress!(
+        heading: 'Adding from Github',
+        message: 'Queuing',
+        progress: 5
+      )
       @scraper.save
       CreateFromGithubWorker.perform_async(@scraper.id)
       redirect_to @scraper
@@ -63,25 +83,36 @@ class ScrapersController < ApplicationController
   def scraperwiki
     authorize! :scraperwiki, Scraper
     @name_set = !!params[:scraperwiki_shortname]
-    @scraper = Scraper.new(scraperwiki_shortname: params[:scraperwiki_shortname],
-      name: params[:scraperwiki_shortname])
+    @scraper = Scraper.new(
+      scraperwiki_shortname: params[:scraperwiki_shortname],
+      name: params[:scraperwiki_shortname]
+    )
   end
 
   # Fork away
   def create_scraperwiki
-    @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_shortname: params[:scraper][:scraperwiki_shortname],
-      owner_id: params[:scraper][:owner_id], forked_by_id: current_user.id)
+    @scraper = Scraper.new(
+      name: params[:scraper][:name],
+      scraperwiki_shortname: params[:scraper][:scraperwiki_shortname],
+      owner_id: params[:scraper][:owner_id],
+      forked_by_id: current_user.id
+    )
     # TODO: Should we really store full_name in the db?
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
 
-    # TODO: should really check here that this user has the permissions to write to the owner_id owner
+    # TODO: should really check here that this user has the permissions to
+    # write to the owner_id owner
     # It will just get stuck later
 
     if !@scraper.scraperwiki_shortname
       @scraper.errors.add(:scraperwiki_shortname, 'cannot be blank')
       render :scraperwiki
     elsif @scraper.save
-      @scraper.create_create_scraper_progress!(heading: 'Forking!', message: 'Queuing', progress: 5)
+      @scraper.create_create_scraper_progress!(
+        heading: 'Forking!',
+        message: 'Queuing',
+        progress: 5
+      )
       @scraper.save
       ForkScraperwikiWorker.perform_async(@scraper.id)
       #flash[:notice] = 'Forking in action...'
@@ -158,10 +189,18 @@ class ScrapersController < ApplicationController
       respond_to do |format|
         format.sqlite do
           bench = Benchmark.measure do
-            send_file @scraper.database.sqlite_db_path, filename: "#{@scraper.name}.sqlite"
+            send_file @scraper.database.sqlite_db_path,
+                      filename: "#{@scraper.name}.sqlite"
           end
-          ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
-            size: @scraper.database.sqlite_db_size, type: 'database', format: 'sqlite')
+          ApiQuery.log!(
+            query: params[:query],
+            scraper: @scraper,
+            owner: owner,
+            benchmark: bench,
+            size: @scraper.database.sqlite_db_size,
+            type: 'database',
+            format: 'sqlite'
+          )
         end
 
         format.json do
@@ -169,18 +208,27 @@ class ScrapersController < ApplicationController
           bench = Benchmark.measure do
             result = @scraper.database.sql_query(params[:query])
             # Workaround for https://github.com/rails/rails/issues/15081
-            # TODO: When the bug above is fixed we should just be able to replace the block below with
+            # TODO: When the bug above is fixed we should just be able to
+            # replace the block below with
             # render :json => result, callback: params[:callback]
             # By the looks of it this bug is fixed in rails 4.2.x
             if params[:callback]
-              render :json => result, callback: params[:callback], content_type: 'application/javascript'
+              render json: result, callback: params[:callback],
+                     content_type: 'application/javascript'
             else
-              render :json => result
+              render json: result
             end
             size = result.to_json.size
           end
-          ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
-            size: size, type: 'sql', format: 'json')
+          ApiQuery.log!(
+            query: params[:query],
+            scraper: @scraper,
+            owner: owner,
+            benchmark: bench,
+            size: size,
+            type: 'sql',
+            format: 'json'
+          )
         end
 
         format.csv do
@@ -196,8 +244,15 @@ class ScrapersController < ApplicationController
             send_data csv_string, :filename => "#{@scraper.name}.csv"
             size = csv_string.size
           end
-          ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
-            size: size, type: 'sql', format: 'csv')
+          ApiQuery.log!(
+            query: params[:query],
+            scraper: @scraper,
+            owner: owner,
+            benchmark: bench,
+            size: size,
+            type: 'sql',
+            format: 'csv'
+          )
         end
 
         format.atom do
@@ -205,11 +260,19 @@ class ScrapersController < ApplicationController
           bench = Benchmark.measure do
             @result = @scraper.database.sql_query(params[:query])
             render :data
-            # TODO: Find some more consistent way of measuring size across different formats
+            # TODO: Find some more consistent way of measuring size across
+            # different formats
             size = @result.to_json.size
           end
-          ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
-            size: size, type: 'sql', format: 'atom')
+          ApiQuery.log!(
+            query: params[:query],
+            scraper: @scraper,
+            owner: owner,
+            benchmark: bench,
+            size: size,
+            type: 'sql',
+            format: 'atom'
+          )
         end
       end
 
@@ -248,6 +311,7 @@ class ScrapersController < ApplicationController
   end
 
   def scraper_params
-    params.require(:scraper).permit(:auto_run, variables_attributes: [:id, :name, :value, :_destroy])
+    params.require(:scraper).permit(:auto_run, variables_attributes: [
+      :id, :name, :value, :_destroy])
   end
 end
