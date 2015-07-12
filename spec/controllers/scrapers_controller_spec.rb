@@ -293,7 +293,7 @@ describe ScrapersController do
         expect(body.css('entry > title').first.text).to eq 'Foo'
         expect(body.css('entry > content').first.text).to eq 'Bar'
         expect(body.css('entry > link').first[:href]).to eq 'http://example.com'
-        expect(body.css('entry > updated').first.text).to eq DateTime.parse('2013-01-01').rfc3339
+        expect(body.css('entry > updated').first.text).to eq Date.new(2013, 1, 1).rfc3339
       end
 
       it 'should return sqlite' do
