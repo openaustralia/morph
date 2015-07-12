@@ -58,7 +58,7 @@ describe Morph::LineBuffer do
       end
 
       it do
-        expect { buffer.finish }.to raise_error
+        expect { buffer.finish }.to raise_error(RuntimeError)
       end
     end
   end
