@@ -1,6 +1,6 @@
 ---
-# TODO Ensure that deploy user is setup first
-# TODO Ensure that nginx is setup first
+# TODO: Ensure that deploy user is setup first
+# TODO: Ensure that nginx is setup first
 - name: Ensure git is installed
   apt: pkg=git
 - name: Ensure that deploy owns /var/www
@@ -40,12 +40,12 @@
   file: path=/var/www/shared owner=deploy group=deploy state=directory
 - name: Ensure that .env exists
   template: src=env dest=/var/www/shared/.env owner=deploy group=deploy
-  # TODO If this changes we should rerun foreman as well
-# TODO This is a nasty hack. Would be much nicer to do this in the capistrano
+  # TODO: If this changes we should rerun foreman as well
+# TODO: This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
 # We're using a specific version of foreman here as after 0.63 the way environment variables
 # is set changes (probably for the better)
-# TODO Update to more recent version of foreman
+# TODO: Update to more recent version of foreman
 - name: Install foreman
   gem: name=foreman version=0.63.0 state=present user_install=no
 - name: Create log directory
@@ -56,7 +56,7 @@
 - name: Create sudoers ready for testing
   template: src=sudoers dest=/etc/sudoers.d/deploy.test owner=root group=root mode=0440
   notify: Test sudoers and make it live
-# TODO There are serious security concerns with doing this. This will probably be improved
+# TODO: There are serious security concerns with doing this. This will probably be improved
 # as Docker matures
 - name: Add deploy to the docker group (so it has permissions to do dockery things)
   user: name=deploy groups=docker

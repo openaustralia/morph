@@ -115,12 +115,12 @@ pydot==1.0.2
 M2Crypto==0.22.3
 
 
-# TODO Need to install parsley
+# TODO: Need to install parsley
 #-e git+http://github.com/fizx/pyparsley.git@0eea1362bc38c5e0e3a1caa2358c472c8f6eb3bd#egg=pyparsley-dev
 
-# TODO Install igraph https://launchpad.net/igraph
+# TODO: Install igraph https://launchpad.net/igraph
 #python-igraph==0.5.3
 
-# TODO Install R
+# TODO: Install R
 # Changed this from 2.2.4dev-20111102 to 2.2.5
 #rpy2==2.2.5

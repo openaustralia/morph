@@ -27,7 +27,7 @@
   copy: src=menu.lst dest=/boot/grub/menu.lst
   register: docker_grub_change
 
-# TODO Reboot server
+# TODO: Reboot server
 - name: Update grub
   command: update-grub -y
   when: docker_grub_change|changed

@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Scraperwiki used ruby 1.9.2 - we want the default to be as similar as possible
 # buildstep doesn't seem to work with ruby 1.9.2 - it can't find rubygems
 # So we're using ruby 1.9.3 for the time being instead
-# TODO Use ruby 1.9.2
+# TODO: Use ruby 1.9.2
 
 ruby '1.9.3'
 

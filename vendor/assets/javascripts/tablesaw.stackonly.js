@@ -126,7 +126,7 @@ if( !Tablesaw.config ) {
 
 	Table.prototype.createToolbar = function() {
 		// Insert the toolbar
-		// TODO move this into a separate component
+		// TODO: move this into a separate component
 		var $toolbar = this.$table.prev( '.' + classes.toolbar );
 		if( !$toolbar.length ) {
 			$toolbar = $( '<div>' )
@@ -228,7 +228,7 @@ if( !Tablesaw.config ) {
 					return !$( this ).parent().is( "[" + attrs.labelless + "]" ) && ( !hideempty || !$( this ).is( ":empty" ) );
 				}),
 				hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
-				// TODO reduce coupling with sortable
+				// TODO: reduce coupling with sortable
 				$sortableButton = $t.find( ".tablesaw-sortable-btn" ),
 				html = $sortableButton.length ? $sortableButton.html() : $t.html();
 

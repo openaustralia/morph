@@ -1,5 +1,5 @@
 module StaticHelper
-  # TODO Move this bit of configuration somewhere sensible
+  # TODO: Move this bit of configuration somewhere sensible
   def api_host
     if Rails.env.development?
       request.host

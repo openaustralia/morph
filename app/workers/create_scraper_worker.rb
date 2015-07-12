@@ -8,7 +8,7 @@ class CreateScraperWorker
 
     # Checking progress here as a crude way to see if this background process previously
     # failed part of the way through.
-    # TODO Do this in a less hacky and more general way
+    # TODO: Do this in a less hacky and more general way
     if scraper.create_scraper_progress.progress <= 20
       scraper.create_scraper_progress.update("Creating Github repository", 20)
       repo = Morph::Github.create_repository(current_user, scraper.owner, scraper.name, description: scraper.description)
@@ -18,7 +18,7 @@ class CreateScraperWorker
     scraper.create_scraper_progress.update("Add scraper template", 40)
     files = scraper.original_language.scraper_templates.merge(
       ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
-      # TODO Don't use hardcoded urls
+      # TODO: Don't use hardcoded urls
       "README.md" => "This is a scraper that runs on [Morph](https://morph.io). To get started [see the documentation](https://morph.io/documentation)"
     )
     scraper.add_commit_to_root_on_github(current_user, files, "Add template for morph.io scraper")

@@ -86,7 +86,7 @@ namespace :searchkick do
   end
 end
 
-# TODO Hmmm... Need to think about the best order for doing these
+# TODO: Hmmm... Need to think about the best order for doing these
 after 'deploy:publishing', 'deploy:restart'
 before "deploy:restart", "deploy:docker"
 after "deploy:docker", "foreman:restart"

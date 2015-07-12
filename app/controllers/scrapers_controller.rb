@@ -71,10 +71,10 @@ class ScrapersController < ApplicationController
   def create_scraperwiki
     @scraper = Scraper.new(name: params[:scraper][:name], scraperwiki_shortname: params[:scraper][:scraperwiki_shortname],
       owner_id: params[:scraper][:owner_id], forked_by_id: current_user.id)
-    # TODO Should we really store full_name in the db?
+    # TODO: Should we really store full_name in the db?
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
 
-    # TODO should really check here that this user has the permissions to write to the owner_id owner
+    # TODO: should really check here that this user has the permissions to write to the owner_id owner
     # It will just get stuck later
 
     if !@scraper.scraperwiki_shortname
@@ -99,7 +99,7 @@ class ScrapersController < ApplicationController
     authorize! :destroy, @scraper
     flash[:notice] = "Scraper #{@scraper.name} deleted"
     @scraper.destroy
-    # TODO Make this done by default after calling Scraper#destroy
+    # TODO: Make this done by default after calling Scraper#destroy
     @scraper.destroy_repo_and_data
     redirect_to @scraper.owner
   end
@@ -169,7 +169,7 @@ class ScrapersController < ApplicationController
           bench = Benchmark.measure do
             result = @scraper.database.sql_query(params[:query])
             # Workaround for https://github.com/rails/rails/issues/15081
-            # TODO When the bug above is fixed we should just be able to replace the block below with
+            # TODO: When the bug above is fixed we should just be able to replace the block below with
             # render :json => result, callback: params[:callback]
             # By the looks of it this bug is fixed in rails 4.2.x
             if params[:callback]
@@ -205,7 +205,7 @@ class ScrapersController < ApplicationController
           bench = Benchmark.measure do
             @result = @scraper.database.sql_query(params[:query])
             render :data
-            # TODO Find some more consistent way of measuring size across different formats
+            # TODO: Find some more consistent way of measuring size across different formats
             size = @result.to_json.size
           end
           ApiQuery.log!(query: params[:query], scraper: @scraper, owner: owner, benchmark: bench,
