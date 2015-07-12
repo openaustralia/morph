@@ -2,7 +2,8 @@
   .page-header
     %h1.text-center
       - if current_user.supporter?
-        Thanks for being a supporter
+        Thanks for being a
+        = current_user.plan.name.downcase
       - else
         Become a supporter
   .row
