@@ -7,17 +7,17 @@ describe Morph::Language do
   let(:perl) { Morph::Language.new(:perl) }
 
   describe "#human" do
-    it { ruby.human.should == "Ruby" }
-    it { python.human.should == "Python" }
-    it { php.human.should == "PHP" }
-    it { perl.human.should == "Perl" }
+    it { expect(ruby.human).to eq "Ruby" }
+    it { expect(python.human).to eq "Python" }
+    it { expect(php.human).to eq "PHP" }
+    it { expect(perl.human).to eq "Perl" }
   end
 
   describe "#scraper_templates" do
-    it { ruby.scraper_templates.keys.sort.should == ["Gemfile", "Gemfile.lock", "scraper.rb"] }
+    it { expect(ruby.scraper_templates.keys.sort).to eq ["Gemfile", "Gemfile.lock", "scraper.rb"] }
 
     it do
-      ruby.scraper_templates["scraper.rb"].should == <<-EOF
+      expect(ruby.scraper_templates["scraper.rb"]).to eq <<-EOF
 # This is a template for a Ruby scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
@@ -46,10 +46,10 @@ describe Morph::Language do
       EOF
     end
 
-    it {php.scraper_templates.keys.sort.should == ["composer.json", "composer.lock", "scraper.php"]}
+    it {expect(php.scraper_templates.keys.sort).to eq ["composer.json", "composer.lock", "scraper.php"]}
 
     it do
-      php.scraper_templates["scraper.php"].should == <<-EOF
+      expect(php.scraper_templates["scraper.php"]).to eq <<-EOF
 <?
 // This is a template for a PHP scraper on morph.io (https://morph.io)
 // including some code snippets below that you should find helpful
@@ -80,10 +80,10 @@ describe Morph::Language do
       EOF
     end
 
-    it {python.scraper_templates.keys.sort.should == ["requirements.txt", "runtime.txt", "scraper.py"]}
+    it {expect(python.scraper_templates.keys.sort).to eq ["requirements.txt", "runtime.txt", "scraper.py"]}
 
     it do
-      python.scraper_templates["scraper.py"].should == <<-EOF
+      expect(python.scraper_templates["scraper.py"]).to eq <<-EOF
 # This is a template for a Python scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
@@ -111,10 +111,10 @@ describe Morph::Language do
       EOF
     end
 
-    it {perl.scraper_templates.keys.sort.should == ["cpanfile", "scraper.pl"]}
+    it {expect(perl.scraper_templates.keys.sort).to eq ["cpanfile", "scraper.pl"]}
 
     it do
-      perl.scraper_templates["scraper.pl"].should == <<-EOF
+      expect(perl.scraper_templates["scraper.pl"]).to eq <<-EOF
 # This is a template for a Perl scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 

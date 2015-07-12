@@ -37,7 +37,7 @@ puts 'Hello!'
 
       post :run_remote, api_key: user.api_key, code: code
 
-      response.should be_success
+      expect(response).to be_success
       parsed = response.body.split("\n").map { |l| JSON.parse(l) }
       expect(parsed).to eq [{
         'stream' => 'internalerr',
@@ -60,7 +60,7 @@ puts 'Hello!'
 
       post :run_remote, api_key: user.api_key, code: code
 
-      response.should be_success
+      expect(response).to be_success
       parsed = response.body.split("\n").map{|l| JSON.parse(l)}
       expect(parsed).to eq [
         {

@@ -15,38 +15,38 @@ describe Scraper do
     end
 
     it "#utime" do
-      @scraper.utime.should be_within(0.00001).of(11.5)
+      expect(@scraper.utime).to be_within(0.00001).of(11.5)
     end
 
     it "#stime" do
-      @scraper.stime.should be_within(0.00001).of(5.9)
+      expect(@scraper.stime).to be_within(0.00001).of(5.9)
     end
 
     it "#cpu_time" do
-      @scraper.cpu_time.should be_within(0.00001).of(17.4)
+      expect(@scraper.cpu_time).to be_within(0.00001).of(17.4)
     end
 
     describe "#scraperwiki_shortname" do
       it do
         @scraper.scraperwiki_url = "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
-        @scraper.scraperwiki_shortname.should == "australian_rainfall"
+        expect(@scraper.scraperwiki_shortname).to eq "australian_rainfall"
       end
     end
 
     describe "#scraperwiki_url" do
       it do
         @scraper.scraperwiki_shortname = "australian_rainfall"
-        @scraper.scraperwiki_url.should == "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
+        expect(@scraper.scraperwiki_url).to eq "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
       end
 
       it do
         @scraper.scraperwiki_shortname = nil
-        @scraper.scraperwiki_url.should be_nil
+        expect(@scraper.scraperwiki_url).to be_nil
       end
 
       it do
         @scraper.scraperwiki_shortname = ''
-        @scraper.scraperwiki_url.should be_nil
+        expect(@scraper.scraperwiki_url).to be_nil
       end
     end
 
@@ -57,7 +57,7 @@ describe Scraper do
           @run2.update_attributes(status_code: 255)
         end
 
-        it { @scraper.latest_successful_run_time.to_s.should == @time1.to_s }
+        it { expect(@scraper.latest_successful_run_time.to_s).to eq @time1.to_s }
       end
 
       context "The second run is successful" do
@@ -66,7 +66,7 @@ describe Scraper do
           @run2.update_attributes(status_code: 0)
         end
 
-        it { @scraper.latest_successful_run_time.to_s.should == @time2.to_s }
+        it { expect(@scraper.latest_successful_run_time.to_s).to eq @time2.to_s }
       end
 
       context "Neither are successful" do
@@ -75,7 +75,7 @@ describe Scraper do
           @run2.update_attributes(status_code: 255)
         end
 
-        it { @scraper.latest_successful_run_time.should be_nil }
+        it { expect(@scraper.latest_successful_run_time).to be_nil }
       end
 
       context "Both are successful" do
@@ -84,7 +84,7 @@ describe Scraper do
           @run2.update_attributes(status_code: 0)
         end
 
-        it { @scraper.latest_successful_run_time.to_s.should == @time2.to_s }
+        it { expect(@scraper.latest_successful_run_time.to_s).to eq @time2.to_s }
       end
     end
   end
@@ -94,7 +94,7 @@ describe Scraper do
       user = create :user
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         create :scraper, name: 'my_scraper', owner: user
-        build(:scraper, name: 'my_scraper', owner: user).should_not be_valid
+        expect(build(:scraper, name: 'my_scraper', owner: user)).to_not be_valid
       end
     end
 
@@ -103,7 +103,7 @@ describe Scraper do
       user2 = create :user
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         create :scraper, name: 'my_scraper', owner: user1
-        build(:scraper, name: 'my_scraper', owner: user2).should be_valid
+        expect(build(:scraper, name: 'my_scraper', owner: user2)).to be_valid
       end
     end
   end
@@ -111,7 +111,7 @@ describe Scraper do
   describe 'ScraperWiki validations' do
     it 'should be invalid if the scraperwiki shortname is not set' do
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-        build(:scraper, scraperwiki_url: 'foobar').should_not be_valid
+        expect(build(:scraper, scraperwiki_url: 'foobar')).to_not be_valid
       end
     end
   end

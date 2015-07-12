@@ -20,18 +20,18 @@ describe AlertMailer do
       let(:broken_scrapers) { [scraper1] }
       let(:email) { AlertMailer.alert_email(user, broken_scrapers, []) }
 
-      it { email.from.should == ["contact@morph.io"]}
-      it { email.to.should == ["matthew@oaf.org.au"]}
-      it { email.subject.should == "1 scraper you are watching is erroring" }
+      it { expect(email.from).to eq ["contact@morph.io"]}
+      it { expect(email.to).to eq ["matthew@oaf.org.au"]}
+      it { expect(email.subject).to eq "1 scraper you are watching is erroring" }
     end
 
     context "two broken scrapers" do
       let(:broken_scrapers) { [scraper1, scraper2] }
       let(:email) { AlertMailer.alert_email(user, broken_scrapers, [scraper1] * 32) }
 
-      it { email.subject.should == "2 scrapers you are watching are erroring" }
+      it { expect(email.subject).to eq "2 scrapers you are watching are erroring" }
       it do
-        email.text_part.body.to_s.should == <<-EOF
+        expect(email.text_part.body.to_s).to eq <<-EOF
 morph.io is letting you know that
 
 32 scrapers you are watching are working. These 2 have a problem:
@@ -61,7 +61,7 @@ morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
 <a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">morph.io</a>
 is letting you know that
         EOF
-        email.html_part.body.to_s.should include(expected)
+        expect(email.html_part.body.to_s).to include(expected)
       end
 
       it do
@@ -84,7 +84,7 @@ It has been erroring for 7 days
 </p>
 <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
         EOF
-        email.html_part.body.to_s.should include(expected)
+        expect(email.html_part.body.to_s).to include(expected)
       end
 
       it do
@@ -95,14 +95,14 @@ Annoyed by these emails? Then
 </p>
 <p><a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">morph.io</a></p>
         EOF
-        email.html_part.body.to_s.should include(expected)
+        expect(email.html_part.body.to_s).to include(expected)
       end
     end
 
     context "more than 5 lines of errors for a scraper run" do
       it "should trunctate the log output" do
-        run1.stub(error_text: "This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
-        AlertMailer.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s.should == <<-EOF
+        allow(run1).to receive(:error_text).and_return("This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
+        expect(AlertMailer.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s).to eq <<-EOF
 morph.io is letting you know that
 
 32 scrapers you are watching are working. This 1 has a problem:
@@ -129,14 +129,14 @@ morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
     describe "count of number of scrapers that finished successfully" do
       context "32 scrapers" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1] * 32) }
-        it { mail.text_part.body.to_s.should include("32 scrapers you are watching are working. This 1 has a problem:") }
-        it { mail.html_part.body.to_s.should include("32 scrapers you are watching are working. This 1 has a problem:") }
+        it { expect(mail.text_part.body.to_s).to include("32 scrapers you are watching are working. This 1 has a problem:") }
+        it { expect(mail.html_part.body.to_s).to include("32 scrapers you are watching are working. This 1 has a problem:") }
       end
 
       context "1 scraper" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1]) }
-        it { mail.text_part.body.to_s.should include("1 scraper you are watching is working. This 1 has a problem:") }
-        it { mail.html_part.body.to_s.should include("1 scraper you are watching is working. This 1 has a problem:") }
+        it { expect(mail.text_part.body.to_s).to include("1 scraper you are watching is working. This 1 has a problem:") }
+        it { expect(mail.html_part.body.to_s).to include("1 scraper you are watching is working. This 1 has a problem:") }
       end
     end
   end

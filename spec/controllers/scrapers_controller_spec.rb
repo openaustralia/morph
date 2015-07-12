@@ -15,7 +15,7 @@ describe ScrapersController do
           create(:scraper, owner: user, name: 'a_scraper', full_name: 'mlandauer/a_scraper')
         end
         delete :destroy, id: 'mlandauer/a_scraper'
-        Scraper.count.should == 1
+        expect(Scraper.count).to eq 1
       end
     end
 
@@ -33,12 +33,12 @@ describe ScrapersController do
 
         it 'should allow you to delete the scraper' do
           delete :destroy, id: 'mlandauer/a_scraper'
-          Scraper.count.should == 0
+          expect(Scraper.count).to eq 0
         end
 
         it 'should redirect to the owning user' do
           delete :destroy, id: 'mlandauer/a_scraper'
-          response.should redirect_to user_url(user)
+          expect(response).to redirect_to user_url(user)
         end
       end
 
@@ -51,12 +51,12 @@ describe ScrapersController do
 
         it "should allow you to delete a scraper if it's owner by an organisation you're part of" do
           delete :destroy, id: 'org/a_scraper'
-          Scraper.count.should == 0
+          expect(Scraper.count).to eq 0
         end
 
         it 'should redirect to the owning organisation' do
           delete :destroy, id: 'org/a_scraper'
-          response.should redirect_to organization_url(organization)
+          expect(response).to redirect_to organization_url(organization)
         end
       end
 
@@ -66,7 +66,7 @@ describe ScrapersController do
           Scraper.create(owner: other_user, name: 'a_scraper', full_name: 'otheruser/a_scraper')
         end
         expect { delete :destroy, id: 'otheruser/a_scraper' }.to raise_error(CanCan::AccessDenied)
-        Scraper.count.should == 1
+        expect(Scraper.count).to eq 1
       end
 
       it "should not allow you to delete a scraper if it's owner is an organisation your're not part of" do
@@ -75,7 +75,7 @@ describe ScrapersController do
           Scraper.create(owner: other_organisation, name: 'a_scraper', full_name: 'otherorg/a_scraper')
         end
         expect { delete :destroy, id: 'otherorg/a_scraper' }.to raise_error(CanCan::AccessDenied)
-        Scraper.count.should == 1
+        expect(Scraper.count).to eq 1
       end
     end
   end
@@ -87,24 +87,24 @@ describe ScrapersController do
 
     it 'should error if the scraper already exists on morph.io' do
       scraperwiki_double = double('Morph::Scraperwiki', exists?: true, private_scraper?: false, view?: false)
-      Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
+      expect(Morph::Scraperwiki).to receive(:new).at_least(:once).and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         create :scraper, owner: user
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'my_scraper' }
       end
 
-      assigns(:scraper).errors[:name].should == ['is already taken on morph.io']
+      expect(assigns(:scraper).errors[:name]).to eq ['is already taken on morph.io']
     end
 
     it 'should error if the scraper already exists on GitHub' do
       scraperwiki_double = double('Morph::Scraperwiki', exists?: true, private_scraper?: false, view?: false)
-      Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
-      Octokit.should_receive(:repository?).and_return(true)
+      expect(Morph::Scraperwiki).to receive(:new).at_least(:once).and_return(scraperwiki_double)
+      expect(Octokit).to receive(:repository?).and_return(true)
 
       post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'my_scraper' }
 
-      assigns(:scraper).errors[:name].should == ['is already taken on GitHub']
+      expect(assigns(:scraper).errors[:name]).to eq ['is already taken on GitHub']
     end
 
     it 'should error if the ScraperWiki shortname is not set' do
@@ -112,47 +112,47 @@ describe ScrapersController do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
       end
 
-      assigns(:scraper).errors[:scraperwiki_shortname].should == ['cannot be blank']
+      expect(assigns(:scraper).errors[:scraperwiki_shortname]).to eq ['cannot be blank']
     end
 
     it "should error if the scraper doesn't exist on ScraperWiki" do
       scraperwiki_double = double('Morph::Scraperwiki', exists?: false, private_scraper?: false, view?: false)
-      Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
+      expect(Morph::Scraperwiki).to receive(:new).at_least(:once).and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'missing_scraper' }
       end
 
-      assigns(:scraper).errors[:scraperwiki_shortname].should == ["doesn't exist on ScraperWiki"]
+      expect(assigns(:scraper).errors[:scraperwiki_shortname]).to eq ["doesn't exist on ScraperWiki"]
     end
 
     it 'should error if the ScraperWiki scraper is private' do
       scraperwiki_double = double('Morph::Scraperwiki', exists?: true, private_scraper?: true, view?: false)
-      Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
+      expect(Morph::Scraperwiki).to receive(:new).at_least(:once).and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'private_scraper' }
       end
 
-      assigns(:scraper).errors[:scraperwiki_shortname].should == ['needs to be a public scraper on ScraperWiki']
+      expect(assigns(:scraper).errors[:scraperwiki_shortname]).to eq ['needs to be a public scraper on ScraperWiki']
     end
 
     it 'should error if the ScraperWiki scraper is private' do
       scraperwiki_double = double('Morph::Scraperwiki', exists?: true, private_scraper?: false, view?: true)
-      Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
+      expect(Morph::Scraperwiki).to receive(:new).at_least(:once).and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'some_view' }
       end
 
-      assigns(:scraper).errors[:scraperwiki_shortname].should == ["can't be a ScraperWiki view"]
+      expect(assigns(:scraper).errors[:scraperwiki_shortname]).to eq ["can't be a ScraperWiki view"]
     end
 
     it 'should call ForkScraperwikiWorker if all looks good' do
       scraperwiki_double = double('Morph::Scraperwiki', exists?: true, private_scraper?: false, view?: false)
-      Morph::Scraperwiki.should_receive(:new).at_least(:once).and_return(scraperwiki_double)
+      expect(Morph::Scraperwiki).to receive(:new).at_least(:once).and_return(scraperwiki_double)
 
-      ForkScraperwikiWorker.should_receive(:perform_async)
+      expect(ForkScraperwikiWorker).to receive(:perform_async)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id, scraperwiki_shortname: 'missing_scraper' }
@@ -160,7 +160,7 @@ describe ScrapersController do
     end
 
     it 'should not attempt to fork if ScraperWiki shortname is not set' do
-      ForkScraperwikiWorker.should_not_receive(:perform_async)
+      expect(ForkScraperwikiWorker).to_not receive(:perform_async)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: { name: 'my_scraper', owner_id: user.id }
@@ -176,7 +176,7 @@ describe ScrapersController do
         Scraper.create(owner: user, name: 'a_scraper', full_name: 'mlandauer/a_scraper')
       end
 
-      Scraper.any_instance.stub_chain(:database, :sql_query) do
+      allow_any_instance_of(Scraper).to receive_message_chain(:database, :sql_query) do
         [
           {
             'title' => 'Foo',
@@ -186,71 +186,71 @@ describe ScrapersController do
           }
         ]
       end
-      Scraper.any_instance.stub_chain(:database, :sqlite_db_path).and_return('/path/to/db.sqlite')
-      Scraper.any_instance.stub_chain(:database, :sqlite_db_size).and_return(12)
+      allow_any_instance_of(Scraper).to receive_message_chain(:database, :sqlite_db_path).and_return('/path/to/db.sqlite')
+      allow_any_instance_of(Scraper).to receive_message_chain(:database, :sqlite_db_size).and_return(12)
     end
 
     context 'user not signed in and no key provided' do
       it 'should return an error in json' do
         get :data, id: 'mlandauer/a_scraper', format: :json
-        response.code.should == '401'
-        JSON.parse(response.body).should == {
+        expect(response.code).to eq '401'
+        expect(JSON.parse(response.body)).to eq ({
           'error' => 'API key is missing'
-        }
-        response.content_type.should == 'application/json'
+        })
+        expect(response.content_type).to eq 'application/json'
       end
 
       it 'should return csv error as text' do
         get :data, id: 'mlandauer/a_scraper', format: :csv
-        response.code.should == '401'
-        response.body.should == 'API key is missing'
-        response.content_type.should == 'text'
+        expect(response.code).to eq '401'
+        expect(response.body).to eq 'API key is missing'
+        expect(response.content_type).to eq 'text'
       end
 
       it 'should return atom feed error as text' do
         get :data, id: 'mlandauer/a_scraper', format: :atom
-        response.code.should == '401'
-        response.body.should == 'API key is missing'
-        response.content_type.should == 'text'
+        expect(response.code).to eq '401'
+        expect(response.body).to eq 'API key is missing'
+        expect(response.content_type).to eq 'text'
       end
 
       it 'should return sqlite error as text' do
         get :data, id: 'mlandauer/a_scraper', format: :sqlite
-        response.code.should == '401'
-        response.body.should == 'API key is missing'
-        response.content_type.should == 'text'
+        expect(response.code).to eq '401'
+        expect(response.body).to eq 'API key is missing'
+        expect(response.content_type).to eq 'text'
       end
     end
 
     context 'user not signed in and incorrect key provided' do
       it 'should return an error in json' do
         get :data, id: 'mlandauer/a_scraper', key: 'foo', format: :json
-        response.code.should == '401'
-        JSON.parse(response.body).should == {
+        expect(response.code).to eq '401'
+        expect(JSON.parse(response.body)).to eq ({
           'error' => 'API key is not valid'
-        }
-        response.content_type.should == 'application/json'
+        })
+        expect(response.content_type).to eq 'application/json'
       end
 
       it 'should return csv error as text' do
         get :data, id: 'mlandauer/a_scraper', key: 'foo', format: :csv
-        response.code.should == '401'
-        response.body.should == 'API key is not valid'
-        response.content_type.should == 'text'
+        expect(response.code).to eq '401'
+        expect(response.body).to eq 'API key is not valid'
+        expect(response.content_type).to eq 'text'
       end
 
       it 'should return atom feed error as text' do
         get :data, id: 'mlandauer/a_scraper', key: 'foo', format: :atom
-        response.code.should == '401'
-        response.body.should == 'API key is not valid'
-        response.content_type.should == 'text'
+        expect(response.code).to eq '401'
+        expect(response.body).to eq 'API key is not valid'
+        expect(response.content_type).to eq 'text'
       end
 
       it 'should return sqlite error as text' do
         get :data, id: 'mlandauer/a_scraper', key: 'foo', format: :sqlite
-        response.code.should == '401'
-        response.body.should == 'API key is not valid'
-        response.content_type.should == 'text'
+        expect(response.code).to eq '401'
+        expect(response.body).to eq 'API key is not valid'
+        expect(response.content_type).to eq 'text'
       end
     end
 
@@ -261,8 +261,8 @@ describe ScrapersController do
 
       it 'should return json' do
         get :data, id: 'mlandauer/a_scraper', key: '1234', format: :json
-        response.should be_success
-        JSON.parse(response.body).should == [
+        expect(response).to be_success
+        expect(JSON.parse(response.body)).to eq [
           {
             'title' => 'Foo',
             'content' => 'Bar',
@@ -274,32 +274,32 @@ describe ScrapersController do
 
       it 'should return csv' do
         get :data, id: 'mlandauer/a_scraper', key: '1234', format: :csv
-        response.should be_success
+        expect(response).to be_success
 
-        response.body.should == "title,content,link,date\nFoo,Bar,http://example.com,2013-01-01\n"
+        expect(response.body).to eq "title,content,link,date\nFoo,Bar,http://example.com,2013-01-01\n"
       end
 
       it 'should return an atom feed' do
         get :data, id: 'mlandauer/a_scraper', key: '1234', format: :atom
 
-        response.should be_success
+        expect(response).to be_success
         body = Nokogiri::XML(response.body)
 
-        body.css('title').first.text.should == 'morph.io: mlandauer/a_scraper'
-        body.css('author name').first.text.should == 'mlandauer'
-        body.css('link').first[:href].should == 'http://test.host/mlandauer/a_scraper'
+        expect(body.css('title').first.text).to eq 'morph.io: mlandauer/a_scraper'
+        expect(body.css('author name').first.text).to eq 'mlandauer'
+        expect(body.css('link').first[:href]).to eq 'http://test.host/mlandauer/a_scraper'
 
-        body.css('entry').count.should == 1
-        body.css('entry > title').first.text.should == 'Foo'
-        body.css('entry > content').first.text.should == 'Bar'
-        body.css('entry > link').first[:href].should == 'http://example.com'
-        body.css('entry > updated').first.text.should == DateTime.parse('2013-01-01').rfc3339
+        expect(body.css('entry').count).to eq 1
+        expect(body.css('entry > title').first.text).to eq 'Foo'
+        expect(body.css('entry > content').first.text).to eq 'Bar'
+        expect(body.css('entry > link').first[:href]).to eq 'http://example.com'
+        expect(body.css('entry > updated').first.text).to eq DateTime.parse('2013-01-01').rfc3339
       end
 
       it 'should return sqlite' do
-        controller.should_receive(:send_file).with('/path/to/db.sqlite', filename: 'a_scraper.sqlite') { controller.render nothing: true }
+        expect(controller).to receive(:send_file).with('/path/to/db.sqlite', filename: 'a_scraper.sqlite') { controller.render nothing: true }
         get :data, id: 'mlandauer/a_scraper', key: '1234', format: :sqlite
-        response.should be_success
+        expect(response).to be_success
       end
     end
 
@@ -310,22 +310,22 @@ describe ScrapersController do
 
       it 'should return error with json' do
         get :data, id: 'mlandauer/a_scraper', format: :json
-        response.should_not be_success
+        expect(response).to_not be_success
       end
 
       it 'should return error with csv' do
         get :data, id: 'mlandauer/a_scraper', format: :csv
-        response.should_not be_success
+        expect(response).to_not be_success
       end
 
       it 'should return error with atom feed' do
         get :data, id: 'mlandauer/a_scraper', format: :atom
-        response.should_not be_success
+        expect(response).to_not be_success
       end
 
       it 'should return error with sqlite' do
         get :data, id: 'mlandauer/a_scraper', format: :sqlite
-        response.should_not be_success
+        expect(response).to_not be_success
       end
     end
   end

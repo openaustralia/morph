@@ -12,17 +12,17 @@ describe ConnectionLog do
 
     it "should convert ip_address to run_id" do
       a = ConnectionLog.create(ip_address: "10.0.1.15", domain: domain)
-      a.run_id.should == 20
+      expect(a.run_id).to eq 20
     end
 
     it "should not convert ip_address if run_id is already set" do
       a = ConnectionLog.create(ip_address: "10.0.1.15", run_id: 40, domain: domain)
-      a.run_id.should == 40
+      expect(a.run_id).to eq 40
     end
 
     it "should leave the run_id empty if ip address isn't recognised" do
       a = ConnectionLog.create(ip_address: "10.0.1.23", domain: domain)
-      a.run_id.should be_nil
+      expect(a.run_id).to be_nil
     end
   end
 end
