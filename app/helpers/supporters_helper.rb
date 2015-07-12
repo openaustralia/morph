@@ -30,7 +30,7 @@ module SupportersHelper
   def joy_or_disappointment(from_plan, to_plan)
     case plan_change_word(from_plan, to_plan)
     when "Upgrade"
-      "What a hero!"
+      "You're amazing!"
     when "Downgrade"
       "Thanks for continuing to be a supporter!"
     else
