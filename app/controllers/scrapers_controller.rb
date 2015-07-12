@@ -59,7 +59,7 @@ class ScrapersController < ApplicationController
   # For rendering ajax partial in github action
   def github_form
     @scraper = Scraper.new
-    render partial: 'github_form', locals: {owner: Owner.find(params[:id])}
+    render partial: 'github_form', locals: { owner: Owner.find(params[:id]) }
   end
 
   def create_github
@@ -115,7 +115,7 @@ class ScrapersController < ApplicationController
       )
       @scraper.save
       ForkScraperwikiWorker.perform_async(@scraper.id)
-      #flash[:notice] = 'Forking in action...'
+      # flash[:notice] = 'Forking in action...'
       redirect_to @scraper
     else
       render :scraperwiki
@@ -241,7 +241,7 @@ class ScrapersController < ApplicationController
                 csv << row.values
               end
             end
-            send_data csv_string, :filename => "#{@scraper.name}.csv"
+            send_data csv_string, filename: "#{@scraper.name}.csv"
             size = csv_string.size
           end
           ApiQuery.log!(
@@ -299,10 +299,10 @@ class ScrapersController < ApplicationController
 
   def render_error(message)
     respond_to do |format|
-      format.sqlite { render :text => message, status: 401, content_type: :text }
-      format.json { render :json => {error: message}, status: 401 }
+      format.sqlite { render text: message, status: 401, content_type: :text }
+      format.json { render json: { error: message }, status: 401 }
       format.csv { render text: message, status: 401, content_type: :text }
-      format.atom { render :text => message, status: 401, content_type: :text }
+      format.atom { render text: message, status: 401, content_type: :text }
     end
   end
 
