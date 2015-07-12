@@ -23,7 +23,7 @@
         %ul.plan.plan1
           %li.plan-name
             = plan_image_tag(Plan.new('morph_basic'))
-            Basic
+            = Plan.new('morph_basic').name
           %li.plan-price
             %strong= number_to_currency(Plan.new('morph_basic').price, precision: 0)
             \/ month
@@ -48,7 +48,7 @@
         %ul.plan.plan2.featured
           %li.plan-name
             = plan_image_tag(Plan.new('morph_standard'))
-            Standard
+            = Plan.new('morph_standard').name
           %li.plan-price
             %strong= number_to_currency(Plan.new('morph_standard').price, precision: 0)
             \/ month
@@ -72,7 +72,7 @@
         %ul.plan.plan3
           %li.plan-name
             = plan_image_tag(Plan.new('morph_advanced'))
-            Advanced
+            = Plan.new('morph_advanced').name
           %li.plan-price
             %strong= number_to_currency(Plan.new('morph_advanced').price, precision: 0)
             \/ month
