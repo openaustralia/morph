@@ -82,7 +82,7 @@ class ScrapersController < ApplicationController
 
   def scraperwiki
     authorize! :scraperwiki, Scraper
-    @name_set = !!params[:scraperwiki_shortname]
+    @name_set = !params[:scraperwiki_shortname].empty?
     @scraper = Scraper.new(
       scraperwiki_shortname: params[:scraperwiki_shortname],
       name: params[:scraperwiki_shortname]
