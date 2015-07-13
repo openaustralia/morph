@@ -20,28 +20,7 @@
       = hidden_field_tag "stripeToken"
       = hidden_field_tag :plan_id, params[:plan_id]
 
-      .col-xs-3.col-centered
-        %ul.plan.plan1
-          %li.plan-name
-            = plan_image_tag(Plan.new('morph_basic'))
-            = Plan.new('morph_basic').name
-          %li.plan-price
-            %strong= number_to_currency(Plan.new('morph_basic').price, precision: 0)
-            \/ month
-          %li.plan-reason
-            Support morph.io on a budget. Keep morph.io open and running and
-            available to all
-          %li
-            %strong Feel
-            the warm and fuzzies
-          %li
-            %strong Shows
-            your support publically
-          %li
-            %strong Forum
-            Support
-          %li.plan-action
-            = render partial: "plan_action", locals: { plan: Plan.new("morph_basic") }
+      = render partial: "plan", locals: { plan: Plan.new('morph_basic') }
 
       .col-xs-3.col-centered
         %ul.plan.plan2.featured

@@ -1,0 +1,22 @@
+.col-xs-3.col-centered
+  %ul.plan.plan1
+    %li.plan-name
+      = plan_image_tag(plan)
+      = plan.name
+    %li.plan-price
+      %strong= number_to_currency(plan.price, precision: 0)
+      \/ month
+    %li.plan-reason
+      Support morph.io on a budget. Keep morph.io open and running and
+      available to all
+    %li
+      %strong Feel
+      the warm and fuzzies
+    %li
+      %strong Shows
+      your support publically
+    %li
+      %strong Forum
+      Support
+    %li.plan-action
+      = render partial: "plan_action", locals: { plan: plan }
