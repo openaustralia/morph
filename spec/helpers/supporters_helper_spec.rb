@@ -7,9 +7,23 @@ describe SupportersHelper do
     let(:advanced) { Plan.new("morph_advanced") }
 
     context "no current plan" do
-      it { expect(helper.plan_change_word(Plan.new(nil), basic)).to eql "Signup" }
-      it { expect(helper.plan_change_word(Plan.new(""), basic)).to eql "Signup" }
-      it { expect(helper.plan_change_word(Plan.new(" "), basic)).to eql "Signup" }
+      context "morph_basic" do
+        it { expect(helper.plan_change_word(Plan.new(nil), basic)).to eql "Become a Supporter" }
+        it { expect(helper.plan_change_word(Plan.new(""), basic)).to eql "Become a Supporter" }
+        it { expect(helper.plan_change_word(Plan.new(" "), basic)).to eql "Become a Supporter" }
+      end
+
+      context "morph_standard" do
+        it { expect(helper.plan_change_word(Plan.new(nil), standard)).to eql "Become a Hero" }
+        it { expect(helper.plan_change_word(Plan.new(""), standard)).to eql "Become a Hero" }
+        it { expect(helper.plan_change_word(Plan.new(" "), standard)).to eql "Become a Hero" }
+      end
+
+      context "morph_advanced" do
+        it { expect(helper.plan_change_word(Plan.new(nil), advanced)).to eql "Become a Champion" }
+        it { expect(helper.plan_change_word(Plan.new(""), advanced)).to eql "Become a Champion" }
+        it { expect(helper.plan_change_word(Plan.new(" "), advanced)).to eql "Become a Champion" }
+      end
     end
 
     context "plan upgrade" do

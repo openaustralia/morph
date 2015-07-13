@@ -12,11 +12,11 @@ class Plan
   def name
     case stripe_plan_id
     when 'morph_basic'
-      'Basic Supporter'
+      'Supporter'
     when 'morph_standard'
-      'Standard Supporter'
+      'Hero'
     when 'morph_advanced'
-      'Advanced Supporter'
+      'Champion'
     else
       fail
     end

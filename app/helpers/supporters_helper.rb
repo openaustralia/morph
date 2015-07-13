@@ -9,7 +9,7 @@ module SupportersHelper
 
   def plan_change_word(from_plan, to_plan)
     if from_plan.price.nil? || from_plan.price == to_plan.price
-      "Signup"
+      "Become a #{to_plan.name}"
     elsif to_plan.price > from_plan.price
       "Upgrade"
     else
@@ -18,18 +18,19 @@ module SupportersHelper
   end
 
   def plan_change_word_past_tense(from_plan, to_plan)
-    word = plan_change_word(from_plan, to_plan)
-    if word == "Signup"
-      "Signed up"
+    if to_plan.price > from_plan.price
+      "Upgraded"
+    elsif to_plan.price < from_plan.price
+      "Downgraded"
     else
-      word + "d"
+      raise
     end
   end
 
   def joy_or_disappointment(from_plan, to_plan)
     case plan_change_word(from_plan, to_plan)
     when "Upgrade"
-      "What a hero!"
+      "You're amazing!"
     when "Downgrade"
       "Thanks for continuing to be a supporter!"
     else
