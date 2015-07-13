@@ -67,6 +67,7 @@ gem 'searchkick'
 gem "scrub_rb"
 gem "skylight"
 gem "stripe"
+gem 'haml-coderay'
 
 group :production do
   gem "dalli"

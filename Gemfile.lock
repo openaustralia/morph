@@ -202,6 +202,9 @@ GEM
       rspec (>= 2.99.0, < 4.0)
     haml (4.0.6)
       tilt
+    haml-coderay (0.2.0)
+      coderay
+      haml
     haml-rails (0.9.0)
       actionpack (>= 4.0.1)
       activesupport (>= 4.0.1)
@@ -509,6 +512,7 @@ DEPENDENCIES
   guard
   guard-livereload
   guard-rspec
+  haml-coderay
   haml-rails
   honeybadger (~> 1.0)
   jbuilder (~> 1.2)
