@@ -57,6 +57,8 @@ module SupportersHelper
       "#{content_tag :strong, 'Shows'} your support publically".html_safe
     when "morph_standard", "morph_advanced"
       "#{content_tag :strong, 'Be featured'} on the landing page".html_safe
+    else
+      raise
     end
   end
 end
