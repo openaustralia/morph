@@ -63,9 +63,10 @@ module SupportersHelper
   end
 
   def plan_support(plan)
-    if plan.stripe_plan_id == "morph_basic" || plan.stripe_plan_id == "morph_standard"
+    case plan.stripe_plan_id
+    when "morph_basic", "morph_standard"
       "#{content_tag :strong, 'Forum'} Support".html_safe
-    elsif plan.stripe_plan_id == "morph_advanced"
+    when "morph_advanced"
       "#{content_tag :strong, 'Priority'} technical support".html_safe
     end
   end
