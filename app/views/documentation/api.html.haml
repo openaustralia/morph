@@ -96,12 +96,25 @@
 %p
   To do the API query with the values above
 
-%pre
-  %code
-    - if current_user
-      = curl_command_linked(content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), content_tag(:span, CGI::escape(current_user.api_key), class: "api_key"), content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
-    - else
-      = curl_command(content_tag(:span, @scraper.full_name, class: "full_name"), content_tag(:span, "json", class: "format"), "[api_key]", content_tag(:span, CGI::escape(@query), class: "query"), content_tag(:span, "", class: "callback"))
+- id_prefix = 'examples'
+- path = 'documentation/api_examples'
+
+%div
+  %ul.nav.nav-tabs(role="tablist")
+    %li.active{role: "presentation"}
+      = link_to "##{id_prefix}-curl", 'aria-controls' => "##{id_prefix}-curl", role: "tab", 'data-toggle' => "tab" do
+        Curl
+    - Morph::Language.languages_supported.each_with_index do |l, i|
+      %li{role: "presentation"}
+        = link_to "##{id_prefix}-#{l.key}", 'aria-controls' => "##{id_prefix}-#{l.key}", role: "tab", 'data-toggle' => "tab" do
+          = language_name_with_icon(l.key, size: "20x20")
+
+  .tab-content
+    .tab-pane.active{role: "tabpanel", id: "#{id_prefix}-curl"}
+      = render "#{path}/curl"
+    - Morph::Language.languages_supported.each_with_index do |l, i|
+      .tab-pane{role: "tabpanel", id: "#{id_prefix}-#{l.key}"}
+        = render "#{path}/#{l.key}"
 
 :javascript
   $(function() {
