@@ -38,3 +38,16 @@ $ ->
       currency: "USD"
       email: button.attr("data-email")
       panelLabel: "Contribute USD {{amount}}"
+
+  # Allows us to open the Stripe payment box if a plan parameter is already set
+  if $("#plan_id").val().length
+    button = $("button#" + $("#plan_id").val())
+    if button.length
+      handler.open
+        key: button.attr("data-key")
+        name: "morph.io"
+        description: button.attr("data-description")
+        amount: button.attr("data-amount")
+        currency: "USD"
+        email: button.attr("data-email")
+        panelLabel: "Signup USD {{amount}}/mo"

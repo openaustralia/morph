@@ -1,7 +1,8 @@
 class SupportersController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: :new
 
   def new
+    authenticate_user! if params[:plan_id]
   end
 
   def create
