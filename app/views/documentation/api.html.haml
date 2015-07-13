@@ -96,25 +96,22 @@
 %p
   To do the API query with the values above
 
-- id_prefix = 'examples'
-- path = 'documentation/api_examples'
-
 %div
   %ul.nav.nav-tabs(role="tablist")
     %li.active{role: "presentation"}
-      = link_to "##{id_prefix}-curl", 'aria-controls' => "##{id_prefix}-curl", role: "tab", 'data-toggle' => "tab" do
+      = link_to "#example-curl", 'aria-controls' => "#examples-curl", role: "tab", 'data-toggle' => "tab" do
         Curl
     - Morph::Language.languages_supported.each_with_index do |l, i|
       %li{role: "presentation"}
-        = link_to "##{id_prefix}-#{l.key}", 'aria-controls' => "##{id_prefix}-#{l.key}", role: "tab", 'data-toggle' => "tab" do
+        = link_to "#example-#{l.key}", 'aria-controls' => "#example-#{l.key}", role: "tab", 'data-toggle' => "tab" do
           = language_name_with_icon(l.key, size: "20x20")
 
   .tab-content
-    .tab-pane.active{role: "tabpanel", id: "#{id_prefix}-curl"}
-      = render "#{path}/curl"
+    .tab-pane.active{role: "tabpanel", id: "example-curl"}
+      = render "documentation/api_examples/curl"
     - Morph::Language.languages_supported.each_with_index do |l, i|
-      .tab-pane{role: "tabpanel", id: "#{id_prefix}-#{l.key}"}
-        = render "#{path}/#{l.key}"
+      .tab-pane{role: "tabpanel", id: "example-#{l.key}"}
+        = render "documentation/api_examples/#{l.key}"
 
 :javascript
   $(function() {
