@@ -4,5 +4,5 @@
       %h2 Featured supporters
       %p These wonderful people provide financial support to make morph.io even more awesome.
       %ul.owner-list-simple.list-unstyled.list-inline
-        - Owner.featured_supporters.each do |user|
-          %li.owner-item= link_to owner_image(user, 60), user
+        - Owner.featured_supporters.each do |owner|
+          %li.owner-item= link_to owner_image(owner, 60), owner
