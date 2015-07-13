@@ -16,7 +16,7 @@ class Plan
     when 'morph_standard'
       'Hero'
     when 'morph_advanced'
-      'Champion'
+      'Partner'
     else
       fail
     end
