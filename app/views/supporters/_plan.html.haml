@@ -1,5 +1,5 @@
 .col-xs-3.col-centered
-  %ul{class: "plan #{plan.stripe_plan_id}" }
+  %ul{class: "plan #{plan.stripe_plan_id} #{"featured" if plan.stripe_plan_id == 'morph_standard'}" }
     %li.plan-name
       = plan_image_tag(plan)
       = plan.name
@@ -7,14 +7,21 @@
       %strong= number_to_currency(plan.price, precision: 0)
       \/ month
     %li.plan-reason
-      Support morph.io on a budget. Keep morph.io open and running and
-      available to all
+      - if plan.stripe_plan_id == "morph_basic"
+        Support morph.io on a budget. Keep morph.io open and running and
+        available to all
+      - elsif plan.stripe_plan_id == "morph_standard"
+        Support continued development of the open-source software that powers morph.io
     %li
       %strong Feel
       the warm and fuzzies
     %li
-      %strong Shows
-      your support publically
+      - if plan.stripe_plan_id == "morph_basic"
+        %strong Shows
+        your support publically
+      - elsif plan.stripe_plan_id == "morph_standard"
+        %strong Be featured
+        on the landing page
     %li
       %strong Forum
       Support

@@ -21,28 +21,7 @@
       = hidden_field_tag :plan_id, params[:plan_id]
 
       = render partial: "plan", locals: { plan: Plan.new('morph_basic') }
-
-      .col-xs-3.col-centered
-        %ul.plan.plan2.featured
-          %li.plan-name
-            = plan_image_tag(Plan.new('morph_standard'))
-            = Plan.new('morph_standard').name
-          %li.plan-price
-            %strong= number_to_currency(Plan.new('morph_standard').price, precision: 0)
-            \/ month
-          %li.plan-reason
-            Support continued development of the open-source software that powers morph.io
-          %li
-            %strong Feel
-            the warm and fuzzies
-          %li
-            %strong Be featured
-            on the landing page
-          %li
-            %strong Forum
-            Support
-          %li.plan-action
-            = render partial: "plan_action", locals: { plan: Plan.new("morph_standard") }
+      = render partial: "plan", locals: { plan: Plan.new('morph_standard') }
 
       .col-xs-3.col-centered
         %ul.plan.plan3
