@@ -40,7 +40,7 @@ $ ->
       panelLabel: "Contribute USD {{amount}}"
 
   # Allows us to open the Stripe payment box if a plan parameter is already set
-  if $("#plan_id").val().length
+  if $("#plan_id").length && $("#plan_id").val().length
     button = $("button#" + $("#plan_id").val())
     if button.length
       handler.open
