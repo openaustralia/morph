@@ -65,7 +65,7 @@ module SupportersHelper
   def plan_support(plan)
     case plan.stripe_plan_id
     when "morph_basic", "morph_standard"
-      "#{content_tag :strong, 'Forum'} Support".html_safe
+      "#{content_tag :strong, 'Forum'} support".html_safe
     when "morph_advanced"
       "#{content_tag :strong, 'Priority'} technical support".html_safe
     else
