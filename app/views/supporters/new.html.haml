@@ -20,9 +20,8 @@
       = hidden_field_tag "stripeToken"
       = hidden_field_tag :plan_id, params[:plan_id]
 
-      = render partial: "plan", locals: { plan: Plan.new('morph_basic') }
-      = render partial: "plan", locals: { plan: Plan.new('morph_standard') }
-      = render partial: "plan", locals: { plan: Plan.new('morph_advanced') }
+      - Plan.all_stripe_plan_ids.each do |plan_id|
+        = render partial: "plan", locals: { plan: Plan.new(plan_id) }
 
   - if user_signed_in?
     .row.one-time-contribution
