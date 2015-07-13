@@ -1,0 +1,28 @@
+%p To your <code>Gemfile</code> add
+
+%pre
+  :preserve
+    gem 'rest-client'
+    gem 'json'
+
+%p Then run <code>bundle install</code>.
+
+%pre
+  :preserve
+    # Get data from the morph.io api
+    require 'rest-client'
+    require 'json'
+
+    # We're always asking for json because it's the easiest to deal with
+    morph_api_url = '#{api_root}<span class="full_name">#{@scraper.full_name}</span>/data.json'
+
+    # Keep this key secret!
+    morph_api_key = '<span class="unescaped-api_key">#{current_user.api_key}</span>'
+
+    result = RestClient.get morph_api_url, params:
+      {
+        key: morph_api_key,
+        query: %q[<span class="unescaped-query">#{@query}</span>]
+      }
+
+    p JSON.parse(result)

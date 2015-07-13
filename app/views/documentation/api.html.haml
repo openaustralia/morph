@@ -115,8 +115,7 @@
     .tab-pane.active{role: "tabpanel", id: "example-curl"}
       = render "documentation/api_examples/curl"
     .tab-pane{role: "tabpanel", id: "example-ruby"}
-      :markdown
-        #{render "documentation/api_examples/ruby.md"}
+      #{render "documentation/api_examples/ruby"}
     .tab-pane{role: "tabpanel", id: "example-python"}
       = render "documentation/api_examples/python"
     .tab-pane{role: "tabpanel", id: "example-javascript"}
@@ -136,6 +135,7 @@
     }
 
     function update_query() {
+      $("pre span.unescaped-query").html($("#query").val());
       $("pre span.query").html(encodeURIComponent($("#query").val()));
       update_link_url();
     }
@@ -143,6 +143,7 @@
     function update_api_key() {
       api_key = $("#scraper_owner_id").val();
       $("#api_key").html(api_key);
+      $("pre span.unescaped-api_key").html(api_key);
       $("pre span.api_key").html(encodeURIComponent(api_key));
       update_link_url();
     }
