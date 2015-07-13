@@ -11,12 +11,6 @@
       %strong Feel
       the warm and fuzzies
     %li= plan_recognition(plan)
-    %li
-      - if plan.stripe_plan_id == "morph_basic" || plan.stripe_plan_id == "morph_standard"
-        %strong Forum
-        Support
-      - elsif plan.stripe_plan_id == "morph_advanced"
-        %strong Priority
-        technical support
+    %li= plan_support(plan)
     %li.plan-action
       = render partial: "plan_action", locals: { plan: plan }
