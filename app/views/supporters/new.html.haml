@@ -41,8 +41,7 @@
             %strong Forum
             Support
           %li.plan-action
-            = render partial: "plan_action", locals: { description: "Basic supporter",
-                                                       amount: 1400,
+            = render partial: "plan_action", locals: { amount: 1400,
                                                        plan: Plan.new("morph_basic") }
 
       .col-xs-3.col-centered
@@ -65,8 +64,7 @@
             %strong Forum
             Support
           %li.plan-action
-            = render partial: "plan_action", locals: { description: "Standard supporter",
-                                                       amount: 2400,
+            = render partial: "plan_action", locals: { amount: 2400,
                                                        plan: Plan.new("morph_standard") }
 
       .col-xs-3.col-centered
@@ -90,8 +88,7 @@
             %strong Priority
             technical support
           %li.plan-action
-            = render partial: "plan_action", locals: { description: "Advanced supporter",
-                                                       amount: 14900,
+            = render partial: "plan_action", locals: { amount: 14900,
                                                        plan: Plan.new("morph_advanced") }
 
   - if user_signed_in?
