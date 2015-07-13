@@ -2,13 +2,14 @@
   This example uses #{link_to 'jquery', 'http://jquery.com/'}.
   Also, you could use this in a web browser as it requests jsonp.
 
-%pre
-  :preserve
-    var morph_api_url = '#{api_root}<span class="full_name">#{@scraper.full_name}</span>/data.json';
+- block = capture do
+  :coderay
+    #!javascript
+    var morph_api_url = '#{api_root}[full_name]/data.json';
     var morph_api_params = {
       // Keep this key secret!
-      key: '<span class="unescaped-api_key">#{current_user ? current_user.api_key : "[api_key]"}</span>',
-      query: "<span class="unescaped-query">#{@query}</span>"
+      key: '[api_key]',
+      query: "[query]"
     };
 
     $.ajax({
@@ -18,3 +19,5 @@
         console.log('received data: ' + JSON.stringify(data));
       }
     });
+
+= block.sub('[full_name]', "<span class='full_name'>#{h(@scraper.full_name)}</span>").sub('[api_key]', "<span class='unescaped-api_key'>#{current_user ? current_user.api_key : '[api_key]'}</span>").sub('[query]', "<span class='unescaped-query'>#{h(@query)}</span>").html_safe
