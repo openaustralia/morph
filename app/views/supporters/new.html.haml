@@ -22,29 +22,7 @@
 
       = render partial: "plan", locals: { plan: Plan.new('morph_basic') }
       = render partial: "plan", locals: { plan: Plan.new('morph_standard') }
-
-      .col-xs-3.col-centered
-        %ul.plan.plan3
-          %li.plan-name
-            = plan_image_tag(Plan.new('morph_advanced'))
-            = Plan.new('morph_advanced').name
-          %li.plan-price
-            %strong= number_to_currency(Plan.new('morph_advanced').price, precision: 0)
-            \/ month
-          %li.plan-reason
-            Rely on morph.io for your business or not-for-profit? Priority technical support
-            to get you answers and fixes quickly
-          %li
-            %strong Feel
-            the warm and fuzzies
-          %li
-            %strong Be featured
-            on the landing page
-          %li
-            %strong Priority
-            technical support
-          %li.plan-action
-            = render partial: "plan_action", locals: { plan: Plan.new("morph_advanced") }
+      = render partial: "plan", locals: { plan: Plan.new('morph_advanced') }
 
   - if user_signed_in?
     .row.one-time-contribution
