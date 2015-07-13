@@ -1,5 +1,5 @@
 .col-xs-3.col-centered
-  %ul.plan.plan1
+  %ul{class: "plan #{plan.stripe_plan_id}" }
     %li.plan-name
       = plan_image_tag(plan)
       = plan.name
