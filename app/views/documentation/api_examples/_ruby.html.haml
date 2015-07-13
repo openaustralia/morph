@@ -17,7 +17,7 @@
     morph_api_url = '#{api_root}<span class="full_name">#{@scraper.full_name}</span>/data.json'
 
     # Keep this key secret!
-    morph_api_key = '<span class="unescaped-api_key">#{current_user.api_key}</span>'
+    morph_api_key = '<span class="unescaped-api_key">#{current_user ? current_user.api_key : "[api_key]"}</span>'
 
     result = RestClient.get morph_api_url, params:
       {
