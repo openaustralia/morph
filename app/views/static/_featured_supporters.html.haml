@@ -1,7 +1,8 @@
-.row
-  .col-xs-12.featured-supporters-block
-    %h2 Featured supporters
-    %p These wonderful people provide financial support to make morph.io even more awesome.
-    %ul.owner-list-simple.list-unstyled.list-inline
-      - Owner.featured_supporters.each do |user|
-        %li.owner-item= link_to owner_image(user, 60), user
+- if current_user && current_user.see_support_levels
+  .row
+    .col-xs-12.featured-supporters-block
+      %h2 Featured supporters
+      %p These wonderful people provide financial support to make morph.io even more awesome.
+      %ul.owner-list-simple.list-unstyled.list-inline
+        - Owner.featured_supporters.each do |user|
+          %li.owner-item= link_to owner_image(user, 60), user
