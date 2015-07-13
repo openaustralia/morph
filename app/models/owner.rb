@@ -17,6 +17,8 @@ class Owner < ActiveRecord::Base
 
   serialize :feature_switches
 
+  scope :featured_supporters, -> { where("stripe_plan_id = ? OR stripe_plan_id = ?", "morph_standard", "morph_advanced") }
+
   # Specify the data searchkick should index
   def search_data
     as_json only: [:name, :nickname, :company]
