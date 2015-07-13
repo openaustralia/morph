@@ -41,8 +41,7 @@
             %strong Forum
             Support
           %li.plan-action
-            = render partial: "plan_action", locals: { amount: 1400,
-                                                       plan: Plan.new("morph_basic") }
+            = render partial: "plan_action", locals: { plan: Plan.new("morph_basic") }
 
       .col-xs-3.col-centered
         %ul.plan.plan2.featured
@@ -64,8 +63,7 @@
             %strong Forum
             Support
           %li.plan-action
-            = render partial: "plan_action", locals: { amount: 2400,
-                                                       plan: Plan.new("morph_standard") }
+            = render partial: "plan_action", locals: { plan: Plan.new("morph_standard") }
 
       .col-xs-3.col-centered
         %ul.plan.plan3
@@ -88,8 +86,7 @@
             %strong Priority
             technical support
           %li.plan-action
-            = render partial: "plan_action", locals: { amount: 14900,
-                                                       plan: Plan.new("morph_advanced") }
+            = render partial: "plan_action", locals: { plan: Plan.new("morph_advanced") }
 
   - if user_signed_in?
     .row.one-time-contribution

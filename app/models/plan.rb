@@ -33,6 +33,10 @@ class Plan
     end
   end
 
+  def price_in_cents
+    price * 100 if price
+  end
+
   def ==(plan)
     stripe_plan_id == plan.stripe_plan_id
   end
