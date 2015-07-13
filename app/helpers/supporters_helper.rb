@@ -50,4 +50,12 @@ module SupportersHelper
       raise
     end
   end
+
+  def plan_recognition(plan)
+    if plan.stripe_plan_id == "morph_basic"
+      "#{content_tag :strong, 'Shows'} your support publically".html_safe
+    elsif plan.stripe_plan_id == "morph_standard" || plan.stripe_plan_id == "morph_advanced"
+      "#{content_tag :strong, 'Be featured'} on the landing page".html_safe
+    end
+  end
 end

@@ -10,13 +10,7 @@
     %li
       %strong Feel
       the warm and fuzzies
-    %li
-      - if plan.stripe_plan_id == "morph_basic"
-        %strong Shows
-        your support publically
-      - elsif plan.stripe_plan_id == "morph_standard" || plan.stripe_plan_id == "morph_advanced"
-        %strong Be featured
-        on the landing page
+    %li= plan_recognition(plan)
     %li
       - if plan.stripe_plan_id == "morph_basic" || plan.stripe_plan_id == "morph_standard"
         %strong Forum
