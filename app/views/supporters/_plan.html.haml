@@ -6,15 +6,7 @@
     %li.plan-price
       %strong= number_to_currency(plan.price, precision: 0)
       \/ month
-    %li.plan-reason
-      - if plan.stripe_plan_id == "morph_basic"
-        Support morph.io on a budget. Keep morph.io open and running and
-        available to all
-      - elsif plan.stripe_plan_id == "morph_standard"
-        Support continued development of the open-source software that powers morph.io
-      - elsif plan.stripe_plan_id == "morph_advanced"
-        Rely on morph.io for your business or not-for-profit? Priority technical support
-        to get you answers and fixes quickly
+    %li.plan-reason= plan_reason(plan)
     %li
       %strong Feel
       the warm and fuzzies
