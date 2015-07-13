@@ -16,7 +16,7 @@ $ ->
         amount: button.attr("data-amount")
         currency: "USD"
         email: button.attr("data-email")
-        panelLabel: "Signup USD {{amount}}/mo"
+        panelLabel: "Pay USD {{amount}}/mo"
     else
       $("#supporter-signup-form").submit()
 
@@ -50,4 +50,4 @@ $ ->
         amount: button.attr("data-amount")
         currency: "USD"
         email: button.attr("data-email")
-        panelLabel: "Signup USD {{amount}}/mo"
+        panelLabel: "Pay USD {{amount}}/mo"
