@@ -4,11 +4,11 @@
 
 %pre
   :preserve
-    var morph_api_url = 'http://127.0.0.1:3000/morph-test-scrapers/test-ruby/data.json';
+    var morph_api_url = '#{api_root}<span class="full_name">#{@scraper.full_name}</span>/data.json';
     var morph_api_params = {
       // Keep this key secret!
-      key: 'sdjfskjdfhjsd',
-      query: "select * from 'data' limit 10"
+      key: '<span class="unescaped-api_key">#{current_user ? current_user.api_key : "[api_key]"}</span>',
+      query: "<span class="unescaped-query">#{@query}</span>"
     };
 
     $.ajax({
