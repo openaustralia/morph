@@ -1,3 +1,20 @@
-.alert.alert-warning
-  %i.fa.fa-bell-o.fa-lg.pull-left
-  Missing documentation. Help out by providing a code snippet.
+%p
+  This example uses #{link_to 'jquery', 'http://jquery.com/'}.
+  Also, this example can be used in a web browser as it requests jsonp
+
+%pre
+  :preserve
+    var morph_api_url = 'http://127.0.0.1:3000/morph-test-scrapers/test-ruby/data.json';
+    var morph_api_params = {
+      // Keep this key secret!
+      key: 'sdjfskjdfhjsd',
+      query: "select * from 'data' limit 10"
+    };
+
+    $.ajax({
+      url: morph_api_url + '?' + $.param(morph_api_params),
+      dataType: 'jsonp',
+      success: function(data) {
+        console.log('received data: ' + JSON.stringify(data));
+      }
+    });
