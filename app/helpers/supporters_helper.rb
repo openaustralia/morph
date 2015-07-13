@@ -68,6 +68,8 @@ module SupportersHelper
       "#{content_tag :strong, 'Forum'} Support".html_safe
     when "morph_advanced"
       "#{content_tag :strong, 'Priority'} technical support".html_safe
+    else
+      raise
     end
   end
 end
