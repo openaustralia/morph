@@ -39,12 +39,15 @@ module SupportersHelper
   end
 
   def plan_reason(plan)
-    if plan.stripe_plan_id == "morph_basic"
+    case plan.stripe_plan_id
+    when "morph_basic"
       "Support morph.io on a budget. Keep morph.io open and running and available to all"
-    elsif plan.stripe_plan_id == "morph_standard"
+    when "morph_standard"
       "Support continued development of the open-source software that powers morph.io"
-    elsif plan.stripe_plan_id == "morph_advanced"
+    when "morph_advanced"
       "Rely on morph.io for your business or not-for-profit? Priority technical support to get you answers and fixes quickly"
+    else
+      raise
     end
   end
 end
