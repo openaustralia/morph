@@ -20,7 +20,79 @@
       = hidden_field_tag "stripeToken"
       = hidden_field_tag :plan_id, params[:plan_id]
 
-      = render partial: "plans"
+      .col-xs-3.col-centered
+        %ul.plan.plan1
+          %li.plan-name
+            = plan_image_tag(Plan.new('morph_basic'))
+            = Plan.new('morph_basic').name
+          %li.plan-price
+            %strong= number_to_currency(Plan.new('morph_basic').price, precision: 0)
+            \/ month
+          %li.plan-reason
+            Support morph.io on a budget. Keep morph.io open and running and
+            available to all
+          %li
+            %strong Feel
+            the warm and fuzzies
+          %li
+            %strong Shows
+            your support publically
+          %li
+            %strong Forum
+            Support
+          %li.plan-action
+            = render partial: "plan_action", locals: { description: "Basic supporter",
+                                                       amount: 1400,
+                                                       plan: Plan.new("morph_basic") }
+
+      .col-xs-3.col-centered
+        %ul.plan.plan2.featured
+          %li.plan-name
+            = plan_image_tag(Plan.new('morph_standard'))
+            = Plan.new('morph_standard').name
+          %li.plan-price
+            %strong= number_to_currency(Plan.new('morph_standard').price, precision: 0)
+            \/ month
+          %li.plan-reason
+            Support continued development of the open-source software that powers morph.io
+          %li
+            %strong Feel
+            the warm and fuzzies
+          %li
+            %strong Be featured
+            on the landing page
+          %li
+            %strong Forum
+            Support
+          %li.plan-action
+            = render partial: "plan_action", locals: { description: "Standard supporter",
+                                                       amount: 2400,
+                                                       plan: Plan.new("morph_standard") }
+
+      .col-xs-3.col-centered
+        %ul.plan.plan3
+          %li.plan-name
+            = plan_image_tag(Plan.new('morph_advanced'))
+            = Plan.new('morph_advanced').name
+          %li.plan-price
+            %strong= number_to_currency(Plan.new('morph_advanced').price, precision: 0)
+            \/ month
+          %li.plan-reason
+            Rely on morph.io for your business or not-for-profit? Priority technical support
+            to get you answers and fixes quickly
+          %li
+            %strong Feel
+            the warm and fuzzies
+          %li
+            %strong Be featured
+            on the landing page
+          %li
+            %strong Priority
+            technical support
+          %li.plan-action
+            = render partial: "plan_action", locals: { description: "Advanced supporter",
+                                                       amount: 14900,
+                                                       plan: Plan.new("morph_advanced") }
 
   - if user_signed_in?
     .row.one-time-contribution
