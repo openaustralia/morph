@@ -54,7 +54,7 @@ module SupportersHelper
   def plan_recognition(plan)
     case plan.stripe_plan_id
     when "morph_basic"
-      "#{content_tag :strong, 'Shows'} your support publically".html_safe
+      "#{content_tag :strong, 'Shows'} your support publicly".html_safe
     when "morph_standard", "morph_advanced"
       "#{content_tag :strong, 'Be featured'} on the landing page".html_safe
     else
