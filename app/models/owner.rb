@@ -17,7 +17,8 @@ class Owner < ActiveRecord::Base
 
   serialize :feature_switches
 
-  scope :featured_supporters, -> { where(stripe_plan_id: %w(morph_standard morph_advanced)) }
+  # Supporters that are on a particular plan
+  scope :supporters, ->(plan) { where(stripe_plan_id: plan.stripe_plan_id) }
 
   # Specify the data searchkick should index
   def search_data

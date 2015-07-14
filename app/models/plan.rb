@@ -9,6 +9,13 @@ class Plan
     %w(morph_basic morph_standard morph_advanced)
   end
 
+  # For users with these plans we highlight them
+  def self.featured_plans
+    %w(morph_standard morph_advanced).map do |stripe_plan_id|
+      Plan.new(stripe_plan_id)
+    end
+  end
+
   def name
     case stripe_plan_id
     when 'morph_basic'
