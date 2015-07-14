@@ -6,15 +6,14 @@
         = current_user.plan.name.downcase
       - else
         Become a supporter
-  .row
-    .col-md-8.col-md-offset-2
-      %p
-        morph.io is
-        %strong free for everyone.
-        It's created and run by the charity
-        = link_to "OpenAustralia Foundation", "https://www.openaustraliafoundation.org.au/"
-        because we love the civic tech community.
-        By becoming a supporter you can help us make it even more incredibly useful.
+    %p.lead.text-center
+      morph.io is
+      %strong free for everyone.
+      It's created and run by the charity
+      = link_to "OpenAustralia Foundation", "https://www.openaustraliafoundation.org.au/"
+      because we love the civic tech community.
+      By becoming a supporter you can help us make it even more incredibly useful.
+
   .row.pricing.row-centered
     = form_tag (current_user && current_user.supporter? ? supporter_path(current_user) : supporters_path), id: "supporter-signup-form", method: (current_user && current_user.supporter? ? :patch : :post) do
       = hidden_field_tag "stripeToken"
