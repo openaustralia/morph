@@ -1,20 +1,23 @@
-:coderay
-  #!python
-  # Get data from the morph.io api
-  import requests
+- block = capture do
+  :coderay
+    #!python
+    # Get data from the morph.io api
+    import requests
 
-  # We're always asking for json because it's the easiest to deal with
-  morph_api_url = "http://127.0.0.1:3000/morph-test-scrapers/test-ruby/data.json"
+    # We're always asking for json because it's the easiest to deal with
+    morph_api_url = "[scraper_url]/data.json"
 
-  # Keep this key secret!
-  morph_api_key = "sdjfkjsdfjksdf"
+    # Keep this key secret!
+    morph_api_key = "[api_key]"
 
-  r = requests.get(morph_api_url, params={
-    'key': morph_api_key,
-    'query': "select * from 'data' limit 10"
-  })
+    r = requests.get(morph_api_url, params={
+      'key': morph_api_key,
+      'query': "[query]"
+    })
 
-  print r.json()
+    print r.json()
+
+= block.sub('[scraper_url]', "#{api_root}<span class='full_name'>#{h(@scraper.full_name)}</span>").sub('[api_key]', "<span class='unescaped-api_key'>#{current_user ? current_user.api_key : '[api_key]'}</span>").sub('[query]', "<span class='unescaped-query'>#{h(@query)}</span>").html_safe
 
 %p
   You'll need the requests library if you don't already have it. Install it with
