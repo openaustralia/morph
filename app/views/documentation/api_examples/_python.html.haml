@@ -1,3 +1,23 @@
-.alert.alert-warning
-  %i.fa.fa-bell-o.fa-lg.pull-left
-  Missing documentation. Help out by providing a code snippet.
+:coderay
+  #!python
+  # Get data from the morph.io api
+  import requests
+
+  # We're always asking for json because it's the easiest to deal with
+  morph_api_url = "http://127.0.0.1:3000/morph-test-scrapers/test-ruby/data.json"
+
+  # Keep this key secret!
+  morph_api_key = "sdjfkjsdfjksdf"
+
+  r = requests.get(morph_api_url, params={
+    'key': morph_api_key,
+    'query': "select * from 'data' limit 10"
+  })
+
+  print r.json()
+
+%p
+  You'll need the requests library if you don't already have it. Install it with
+
+%pre
+  pip install requests
