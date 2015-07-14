@@ -10,8 +10,9 @@ class Plan
   end
 
   # For users with these plans we highlight them
+  # Highest plan comes first
   def self.featured_plans
-    %w(morph_standard morph_advanced).map do |stripe_plan_id|
+    %w(morph_advanced morph_standard).map do |stripe_plan_id|
       Plan.new(stripe_plan_id)
     end
   end
