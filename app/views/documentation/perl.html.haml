@@ -13,8 +13,9 @@
       ### When there is no cpanfile
 
       When there is no `cpanfile` in the scraper repository, a default version is installed
-    %pre
-      %code= File.read(Morph::Language.new(:perl).default_config_file_path("cpanfile"))
+    :coderay
+      #!perl
+      #{File.read(Morph::Language.new(:perl).default_config_file_path("cpanfile"))}
 
 .row
   .col-sm-9

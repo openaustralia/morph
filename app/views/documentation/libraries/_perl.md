@@ -5,10 +5,8 @@ directory. It can install anything from [CPAN](http://www.cpan.org/) and has a v
 
 For instance to install specific versions of `HTTP::Message` and `XML::Parser` your `cpanfile` should
 look like
-<pre>
-requires "HTTP::Message", "6.06";
-requires "XML::Parser", "2.41";
-</pre>
+
+<%= render 'documentation/libraries/perl_example1' %>
 
 You don't have to specify the versions to install but it's recommended as otherwise different
 runs of the scraper could potentially use different versions of libraries.
