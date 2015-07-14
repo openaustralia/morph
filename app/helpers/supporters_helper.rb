@@ -4,7 +4,7 @@ module SupportersHelper
   end
 
   def plan_image_tag(plan, size='64x64')
-  image_tag("supporter-badge-#{plan.stripe_plan_id}.png", size: size)
+  image_tag("supporter-badge-#{plan.stripe_plan_id}.png", size: size, class: 'plan')
   end
 
   def plan_change_word(from_plan, to_plan)

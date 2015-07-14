@@ -10,7 +10,7 @@
     min-width:320px;
   }
 
-  .plan {
+  ul.plan {
     border-radius: 6px;
     list-style: none;
     padding: 0 0 20px;
@@ -52,14 +52,18 @@
     }
   }
 
-  .plan.featured {
+  ul.plan.featured {
     -webkit-transform: scale(1.1);
     -ms-transform: scale(1.1);
     transform: scale(1.1);
   }
-  .plan:hover li.plan-name {
+  ul.plan:hover li.plan-name {
     background: #c0392b;
   }
+}
+
+img.plan {
+  opacity: 0.7;
 }
 
 /* centered columns styles */
