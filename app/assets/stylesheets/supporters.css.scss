@@ -98,8 +98,12 @@ img.plan {
 }
 
 .supporter-plan {
-  color: white;
-  font-size: 1.3em;
+  a {
+    color: white;
+  }
+  img {
+    vertical-align: baseline;
+  }
 }
 
 // Animation code below from
