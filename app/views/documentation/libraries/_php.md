@@ -24,13 +24,7 @@ The next time the scraper runs on morph it will build an environment from this.
 Your `composer.json` file can be used to say which extensions or libraries you want.
 
 For instance, to install the `XSL` PHP extension your `composer.json` could look like this
-<pre>
-{
-  "require": {
-      "ext-xsl": "*"
-  }
-}
-</pre>
+<%= render 'documentation/libraries/php_example1.html.haml' %>
 
 For more on the specifics of what can go in `composer.json` see the
 [Composer documentation](https://getcomposer.org/doc/01-basic-usage.md).
@@ -41,12 +35,6 @@ create `composer.json` in your scraper repository.
 
 For instance, to use PHP 5.5.12 your `composer.json` could look like this
 
-<pre>
-{
-  "require": {
-    "php": "5.5.12"
-  }
-}
-</pre>
+<%= render 'documentation/libraries/php_example2.html.haml' %>
 
 There are currently a limited number of PHP versions that are supported. See the [list at Heroku PHP support](https://devcenter.heroku.com/articles/php-support#supported-versions).
