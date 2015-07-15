@@ -16,10 +16,6 @@ class User < Owner
     set_feature_switch_value(:see_downloads, value)
   end
 
-  def see_support_levels=(value)
-    set_feature_switch_value(:see_support_levels, value)
-  end
-
   # In most cases people have contributed to the scrapers that they own so we
   # really don't want to see these twice. This method just removes their own
   # scrapers from the list

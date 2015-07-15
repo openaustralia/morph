@@ -35,5 +35,4 @@
     = simple_form_for @owner do |f|
       - if @owner.user?
         = f.input :see_downloads, as: :boolean, hint: "See all downloads include those before #{ApiQuery::VISIBLE_CUT_OFF_DATE}", label: "See all downloads"
-        = f.input :see_support_levels, as: :boolean, hint: 'See when a user is supporting morph.io on their user profile pages'
       = f.button :submit, "Update feature settings"
