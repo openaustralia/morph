@@ -17,6 +17,10 @@ class Plan
     end
   end
 
+  def image_name
+    "supporter-badge-#{stripe_plan_id}.png"
+  end
+
   def name
     case stripe_plan_id
     when 'morph_basic'
