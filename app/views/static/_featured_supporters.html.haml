@@ -1,11 +1,10 @@
-- if current_user && current_user.see_support_levels
-  .row
-    - Plan.featured_plans.each do |plan|
-      - unless Owner.supporters(plan).empty?
-        .col-xs-6
-          %h2
-            %small.pre-heading Supporters of morph.io
-            = link_to plan.name.pluralize, new_supporter_path
-          %ul.owner-list-simple.list-unstyled.list-inline
-            - Owner.supporters(plan).each do |owner|
-              %li.owner-item= link_to owner_image(owner, 60), owner
+.row
+  - Plan.featured_plans.each do |plan|
+    - unless Owner.supporters(plan).empty?
+      .col-xs-6
+        %h2
+          %small.pre-heading Supporters of morph.io
+          = link_to plan.name.pluralize, new_supporter_path
+        %ul.owner-list-simple.list-unstyled.list-inline
+          - Owner.supporters(plan).each do |owner|
+            %li.owner-item= link_to owner_image(owner, 60), owner
