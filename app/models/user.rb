@@ -17,7 +17,7 @@ class User < Owner
   end
 
   def see_support_levels
-    get_feature_switch_value(:see_support_levels, false)
+    true
   end
 
   def see_support_levels=(value)
