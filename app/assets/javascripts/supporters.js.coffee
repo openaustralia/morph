@@ -16,6 +16,7 @@ $ ->
         amount: button.attr("data-amount")
         currency: "USD"
         email: button.attr("data-email")
+        image: button.attr("data-image")
         panelLabel: "Pay USD {{amount}}/mo"
     else
       $("#supporter-signup-form").submit()

@@ -14,4 +14,5 @@
                       amount: plan.price_in_cents,
                       email: current_user.email,
                       plan_id: plan.stripe_plan_id,
-                      stripe: !current_user.supporter? }
+                      stripe: !current_user.supporter?,
+                      image: image_path(plan.image_name)}
