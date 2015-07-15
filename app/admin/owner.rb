@@ -36,6 +36,7 @@ ActiveAdmin.register Owner do
   filter :type
   filter :nickname
   filter :name
+  filter :stripe_plan_id, as: :select, collection: Plan.all_stripe_plan_ids
 
   form do |f|
     inputs "Permissions" do
