@@ -1,5 +1,6 @@
 class SupportersController < ApplicationController
   before_filter :authenticate_user!, except: :new
+  before_filter :load_stripe_library
 
   def new
     authenticate_user! if params[:plan_id]
@@ -59,5 +60,11 @@ class SupportersController < ApplicationController
 
     session[:new_supporter] = true
     redirect_to user_path(current_user), notice: render_to_string(partial: "update_flash")
+  end
+
+  private
+
+  def load_stripe_library
+    @load_stripe_library = true
   end
 end
