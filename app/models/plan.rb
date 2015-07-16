@@ -17,6 +17,11 @@ class Plan
     end
   end
 
+  # All plans, highest first
+  def self.all_plans
+    all_stripe_plan_ids.map { |id| Plan.new(id) }.reverse
+  end
+
   def image_name
     "supporter-badge-#{stripe_plan_id}.png"
   end
