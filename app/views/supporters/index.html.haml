@@ -3,8 +3,8 @@
     %h1 Thank you
     %p.lead
       The continued support of these wonderful people keeps morph.io free for everyone and makes it even more awesome.
-    - unless user_signed_in? && current_user.supporter?
-      %p.lead Join them by #{link_to "becoming a supporter", new_supporter_path}.
+      - unless user_signed_in? && current_user.supporter?
+        #{link_to "Join them and become a supporter too", new_supporter_path}.
 
   .row
     - Plan.all_plans.each do |plan|
