@@ -90,7 +90,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :supporters, only: [:new, :create, :update] do
+  resources :supporters, only: [:new, :create, :update, :index] do
     collection do
       post 'create_one_time'
     end

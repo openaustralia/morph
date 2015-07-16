@@ -20,6 +20,8 @@ class Owner < ActiveRecord::Base
   # Supporters that are on a particular plan
   scope :supporters, ->(plan) { where(stripe_plan_id: plan.stripe_plan_id) }
 
+  scope :all_supporters, -> { where.not(stripe_plan_id: "") }
+
   # Specify the data searchkick should index
   def search_data
     as_json only: [:name, :nickname, :company]

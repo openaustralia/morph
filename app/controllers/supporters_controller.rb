@@ -62,6 +62,10 @@ class SupportersController < ApplicationController
     redirect_to user_path(current_user), notice: render_to_string(partial: "update_flash")
   end
 
+  def index
+    @users = User.all_supporters.page(params[:page])
+  end
+
   private
 
   def load_stripe_library
