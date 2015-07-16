@@ -163,4 +163,4 @@ one of these is a great way to get started while you get familiar with the codeb
 
 ### Copyright & License
 
-Copyright OpenAustralia Foundation Limited 2013 - 2014. Licensed under the Affero GPL. See LICENSE file for more details.
+Copyright OpenAustralia Foundation Limited. Licensed under the Affero GPL. See LICENSE file for more details.
