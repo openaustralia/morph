@@ -1,5 +1,5 @@
 class SupportersController < ApplicationController
-  before_filter :authenticate_user!, except: :new
+  before_filter :authenticate_user!, except: [:new, :index]
   before_filter :load_stripe_library
 
   def new
