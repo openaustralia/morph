@@ -9,12 +9,9 @@ class Plan
     %w(morph_basic morph_standard morph_advanced)
   end
 
-  # For users with these plans we highlight them
-  # Highest plan comes first
+  # Users of the top two plans are highlighted
   def self.featured_plans
-    %w(morph_advanced morph_standard).map do |stripe_plan_id|
-      Plan.new(stripe_plan_id)
-    end
+    all_plans.shift(2)
   end
 
   # All plans, highest first
