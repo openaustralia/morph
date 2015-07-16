@@ -56,7 +56,8 @@ Rails.application.routes.draw do
       get "examples/australian_members_of_parliament"
     end
   end
-  get "/pricing", to: "documentation#pricing"
+
+  get '/pricing', to: redirect('/supporters/new')
 
   # Hmm not totally sure about this url.
   post "/run", to: "api#run_remote"
