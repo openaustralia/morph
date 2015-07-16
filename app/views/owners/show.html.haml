@@ -16,18 +16,16 @@
             = @owner.nickname
             = render 'supporter_badge'
 
-        .row
-          .col-md-6
-            %ul.list-unstyled
-              - unless @owner.company.blank?
-                %li= @owner.company
-              - unless @owner.blog.blank?
-                %li= link_to @owner.blog, @owner.blog
-            %p
-              = link_to @owner.github_url, target: "_blank" do
-                %i.fa.fa-github-square.fa-lg
-                = @owner.nickname
-                on GitHub
+        %ul.list-unstyled
+          - unless @owner.company.blank?
+            %li= @owner.company
+          - unless @owner.blog.blank?
+            %li= link_to @owner.blog, @owner.blog
+        %p
+          = link_to @owner.github_url, target: "_blank" do
+            %i.fa.fa-github-square.fa-lg
+            = @owner.nickname
+            on GitHub
       .col-md-2.owner-box
         - if signed_in?
           .pull-right= render partial: "watch_button", locals: {owner: @owner}
