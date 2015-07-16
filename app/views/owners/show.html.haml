@@ -40,12 +40,11 @@
               %p
                 - @owner.users.each do |user|
                   = link_to owner_image(user, 30), user
-        - if can? :settings, @owner
-          %div
-            = button_link_to "Settings", settings_owner_path(@owner)
       .col-md-2.owner-box
         - if signed_in?
           .pull-right= render partial: "watch_button", locals: {owner: @owner}
+        - if can? :settings, @owner
+          .pull-right= button_link_to "Settings", settings_owner_path(@owner)
 
 .container
   - if @scrapers.empty?
