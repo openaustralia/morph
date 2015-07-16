@@ -1,6 +1,10 @@
 .container
   %h1 All Supporters
 
-  = paginate @users
-  = render @users
-  = paginate @users
+  .row
+    - Plan.all_plans.each do |plan|
+      - unless Owner.supporters(plan).empty?
+        .col-xs-12
+          %h2
+            = link_to plan.name.pluralize, new_supporter_path
+          = render Owner.supporters(plan)
