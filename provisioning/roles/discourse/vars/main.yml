@@ -1,1 +1,1 @@
-discourse_server_name: discuss.{{ server_name }}
+discourse_server_name: help.{{ server_name }}
