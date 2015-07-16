@@ -18,7 +18,6 @@
 
         .row
           .col-md-6
-            %h4 Contacts
             %ul.list-unstyled
               - unless @owner.company.blank?
                 %li= @owner.company
@@ -29,17 +28,6 @@
                 %i.fa.fa-github-square.fa-lg
                 = @owner.nickname
                 on GitHub
-          .col-md-6
-            - unless @owner.organizations.empty?
-              %h4 Public Organizations
-              %p
-                - @owner.organizations.each do |org|
-                  = link_to owner_image(org, 30), org
-            - unless @owner.users.empty?
-              %h4 Members
-              %p
-                - @owner.users.each do |user|
-                  = link_to owner_image(user, 30), user
       .col-md-2.owner-box
         - if signed_in?
           .pull-right= render partial: "watch_button", locals: {owner: @owner}
@@ -47,6 +35,17 @@
           .pull-right= button_link_to "Settings", settings_owner_path(@owner)
 
 .container
+  - unless @owner.organizations.empty?
+    %h3 Public Organizations
+    %p
+      - @owner.organizations.each do |org|
+        = link_to owner_image(org, 60), org
+  - unless @owner.users.empty?
+    %h3 Members
+    %p
+      - @owner.users.each do |user|
+        = link_to owner_image(user, 60), user
+
   - if @scrapers.empty?
     %h3 Has no scrapers
 
