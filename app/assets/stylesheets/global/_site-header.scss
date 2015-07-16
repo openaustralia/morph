@@ -6,10 +6,9 @@
   }
 }
 
-// override bootstrap default height, which
-// is too short for our content.
+// Override bootstrap maximum menu height so it doesn't scoll
 .navbar-fixed-top .navbar-collapse {
-  max-height: 420px;
+  max-height: none;
 }
 
 .help .glyphicon-new-window {
