@@ -1,6 +1,4 @@
 .container
-  %h1 All Supporters
-
   .row
     - Plan.all_plans.each do |plan|
       - unless Owner.supporters(plan).empty?
