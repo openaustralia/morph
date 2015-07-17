@@ -1,0 +1,10 @@
+- # Renders a list of example scrapers. Pass in an array of full_names
+:markdown
+  ### Examples
+  Sometimes there's nothing like seeing a real-life example. Here are some
+  scrapers that use secret values. If you have a scraper you would like to add
+  to this list, please #{mail_to "contact@oaf.org.au", "let us know"}.
+
+- full_names.each do |full_name|
+  - if Scraper.find_by(full_name: full_name)
+    = render Scraper.find_by(full_name: full_name)
