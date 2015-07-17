@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       get "python"
       get "nodejs"
       get 'secret_values'
+      get "phantomjs"
       get "examples/australian_members_of_parliament"
     end
   end
