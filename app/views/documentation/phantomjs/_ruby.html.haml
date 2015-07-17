@@ -7,8 +7,11 @@
   gem "poltergeist"
 
 :markdown
-  Then in your scraper configure Capybara to use it as your default driver:
+  Then in your scraper start a Capybara session using Poltergeist:
 :coderay
   #!ruby
   require 'capybara/poltergeist'
-  Capybara.default_driver = :poltergeist
+
+  capybara = Capybara::Session.new(:poltergeist)
+  # Start scraping
+  capybara.visit("https://morph.io/")
