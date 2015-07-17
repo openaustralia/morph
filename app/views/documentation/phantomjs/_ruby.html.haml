@@ -1,1 +1,14 @@
-= render "missing_documentation"
+:markdown
+  The [Poltergeist](https://github.com/teampoltergeist/poltergeist) Gem provides a PhantomJS driver for [Capybara](https://github.com/jnicklas/capybara).
+
+  To install it, add `poltergeist` to your scraper Gemfile:
+:coderay
+  #!ruby
+  gem "poltergeist"
+
+:markdown
+  Then in your scraper configure Capybara to use it as your default driver:
+:coderay
+  #!ruby
+  require 'capybara/poltergeist'
+  Capybara.default_driver = :poltergeist
