@@ -4,7 +4,13 @@ class UsersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @users = @users.order(created_at: :desc).page(params[:page])
+    @users = @users.order(created_at: :desc)
+    respond_to do |format|
+      format.html do
+        @users = @users.page(params[:page])
+      end
+      format.json { render json: @users, only: [:created_at, :nickname] }
+    end
   end
 
   def watching
