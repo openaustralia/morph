@@ -1,0 +1,16 @@
+:markdown
+  The `scraperwiki` Rubygem makes it easy to store data in an SQLite database.
+  When you create a new scraper via morph.io we include a version of the Gem that writes data to the correct database name in the default Gemfile:
+
+:coderay
+  #!ruby
+  # Gemfile
+  gem "scraperwiki", git: "https://github.com/openaustralia/scraperwiki-ruby.git", branch: "morph_defaults"
+
+:markdown
+  To save data all you need to do is call the [`ScraperWiki.save_sqlite` method](https://github.com/openaustralia/scraperwiki-ruby#scraperwikisave_sqliteunique_keys-data-table_name--swdataverbose).
+  Creating the database and setting up tables is done automagically by the library:
+
+:coderay
+  #!ruby
+  ScraperWiki.save_sqlite([:name], {name: "susan", occupation: "software developer"})
