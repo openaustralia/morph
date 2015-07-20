@@ -6,7 +6,8 @@
   However in some cases you need to simulate a web browser.
   This could be because the web site is poorly programmed or because it makes extensive use of JavaScript.
 
-  You can do this with [PhantomJS](http://phantomjs.org/) on morph.io. It is essentially a headless browser that you can control from your scraper using JavaScript or a wrapper library.
+  You can do this with [PhantomJS](http://phantomjs.org/) which is essentially a headless browser that you can control from your scraper using JavaScript or a wrapper library.
+  The PhantomJS binary, `/usr/bin/phantomjs`, is installed as part of the `phantomjs` Ubuntu package which is installed in every scraper container as [part of the build process](https://github.com/openaustralia/morph-docker-buildstep-base/blob/master/Dockerfile#L27).
 
 %h3 Usage
 = render "language_tabs", id_prefix: "using_phantomjs", path: "documentation/phantomjs"
