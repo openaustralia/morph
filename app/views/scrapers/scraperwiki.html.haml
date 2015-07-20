@@ -1,13 +1,12 @@
+- title "Fork ScraperWiki scraper #{@scraper.scraperwiki_shortname if @name_set}"
+
 .container
   .row
     .col-sm-8
+      %h1= title
       - if @name_set
-        %h1 Fork ScraperWiki scraper #{@scraper.scraperwiki_shortname}
-
         %p Choose a name for the scraper on GitHub
       - else
-        %h1 Fork ScraperWiki scraper
-
         %p This is where you can pick a ScraperWiki scraper, optionally choose a name for it on GitHub and fork away!
 
         %p
