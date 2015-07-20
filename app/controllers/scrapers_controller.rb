@@ -66,7 +66,7 @@ class ScrapersController < ApplicationController
     authorize! :create_github, @scraper
     if @scraper.save
       @scraper.create_create_scraper_progress!(
-        heading: 'Adding from Github',
+        heading: 'Adding from GitHub',
         message: 'Queuing',
         progress: 5
       )

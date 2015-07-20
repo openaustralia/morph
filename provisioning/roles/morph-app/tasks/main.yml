@@ -149,7 +149,7 @@
   copy: src=monit_sidekiq.conf dest=/etc/monit/conf.d/sidekiq.conf
   notify: reload monit
 
-# Dependencies required by Github markup gem. See
+# Dependencies required by GitHub markup gem. See
 # https://github.com/github/markup#markups
 - name: Install dependency for restructured text support
   pip: name=docutils state=present

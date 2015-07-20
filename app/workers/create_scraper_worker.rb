@@ -10,7 +10,7 @@ class CreateScraperWorker
     # failed part of the way through.
     # TODO: Do this in a less hacky and more general way
     if scraper.create_scraper_progress.progress <= 20
-      scraper.create_scraper_progress.update("Creating Github repository", 20)
+      scraper.create_scraper_progress.update("Creating GitHub repository", 20)
       repo = Morph::Github.create_repository(current_user, scraper.owner, scraper.name, description: scraper.description)
     end
 

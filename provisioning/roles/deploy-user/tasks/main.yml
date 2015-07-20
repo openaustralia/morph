@@ -4,7 +4,7 @@
 - name: Ensure we have a deploy user with uid 4243
   user: name=deploy comment="Deploy user" shell=/bin/bash uid=4243 group=deploy
 
-- name: download pubkey from Github and placed as authorized_keys
+- name: download pubkey from GitHub and placed as authorized_keys
   get_url: url=https://github.com/{{ item }}.keys dest=/tmp/{{ item }}.github_authorized_keys
   delegate_to: localhost
   sudo: false
