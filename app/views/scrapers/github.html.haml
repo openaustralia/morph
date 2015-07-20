@@ -5,9 +5,15 @@
   = render 'documentation/format_intro'
 
   %ul.nav.nav-tabs
-    %li.active= link_to current_user.nickname, "#owner_#{current_user.nickname}", data: {toggle: "tab"}
+    %li.active
+      = link_to "#owner_#{current_user.nickname}", data: {toggle: "tab"} do
+        = owner_image(current_user, 30)
+        = current_user.nickname
     - current_user.organizations.each do |org|
-      %li= link_to org.nickname, "#owner_#{org.nickname}", data: {toggle: "tab"}
+      %li
+        = link_to "#owner_#{org.nickname}", data: {toggle: "tab"} do
+          = owner_image(org, 30)
+          = org.nickname
 
   .tab-content
     .tab-pane.active{id: "owner_#{current_user.nickname}"}
