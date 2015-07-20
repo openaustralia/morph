@@ -1,3 +1,5 @@
+- title "Become a supporter"
+
 .container
   .page-header
     - if user_signed_in? && current_user.supporter?
@@ -9,8 +11,7 @@
         %strong everyone
         and makes it even more awesome.
     - else
-      %h1.text-center
-        Become a supporter
+      %h1.text-center= title
       %p.lead.text-center
         morph.io is
         %strong free.
