@@ -15,3 +15,4 @@
   capybara = Capybara::Session.new(:poltergeist)
   # Start scraping
   capybara.visit("https://morph.io/")
+  puts capybara.find("#banner h2").text
