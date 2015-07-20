@@ -53,7 +53,7 @@ Rails.application.routes.draw do
       get "python"
       get "nodejs"
       get 'secret_values'
-      get "phantomjs"
+      get "scraping_javascript_sites"
       get "examples/australian_members_of_parliament"
     end
   end
