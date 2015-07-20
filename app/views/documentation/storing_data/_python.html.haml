@@ -1,6 +1,7 @@
 :markdown
   The `scraperwiki` Python library makes it easy to store data in an SQLite database.
-  When you create a new scraper via morph.io we include a version of the library that writes data to the correct database name in the default `requirements.txt` file.
+  You need to use the `morph_defaults` branch of [our fork](https://github.com/openaustralia/scraperwiki-python/tree/morph_defaults) so that the correct database name is used.
+  When you create a new scraper via morph.io we include this version in the default `requirements.txt`.
 
   To save data all you need to do is call the [`scraperwiki.sql.save` method](https://github.com/openaustralia/scraperwiki-python/tree/morph_defaults#saving-data).
   Creating the database and setting up tables is done automagically by the library:
