@@ -1,5 +1,7 @@
+- title "All Scrapers"
+
 .container
-  %h1 All Scrapers
+  %h1= title
 
   = paginate @scrapers
   = render partial: "sync/scrapers/scraper", collection: @scrapers
