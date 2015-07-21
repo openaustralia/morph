@@ -19,10 +19,3 @@
     :coderay
       #!ruby
       #{File.read(Morph::Language.new(:ruby).default_config_file_path("Gemfile"))}
-
-.row
-  .col-sm-9
-    :markdown
-      #{render "documentation/references/ruby.md"}
-  .col-sm-3
-    = improve_button "Improve this section", "references/_ruby.md"

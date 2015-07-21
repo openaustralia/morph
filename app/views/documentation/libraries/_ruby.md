@@ -24,16 +24,6 @@ Make sure that you add *both* `Gemfile` and `Gemfile.lock` to your repository.
 5. Run the scraper. Use bundler to initialize the environment:
 <pre>bundle exec ruby scraper.rb</pre>
 
-### Installing gems
-
-To have `morph.io` install specific gems for your scraper, add a `Gemfile` to your repository. For instance to install the `mechanize` and `sqlite3` gems:
-
-<%= render 'documentation/libraries/ruby_example2.html.haml' %>
-
-Then run `bundle update`. This will work out which specific versions of each gem will be installed and write the result of that to `Gemfile.lock`.
-
-Make sure that you add *both* `Gemfile` and `Gemfile.lock` to your repository.
-
 ### Selecting the Ruby version
 
 You can also use the `Gemfile` to control which version of Ruby is run. For instance: to ensure that your scraper is run with Ruby 1.9.3, add this to your `Gemfile`:
