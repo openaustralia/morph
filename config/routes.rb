@@ -43,15 +43,17 @@ Rails.application.routes.draw do
   root 'static#index'
   get 'search', to: "search#search"
 
+  # Redirect old language pages
+  get '/documentation/ruby', to: redirect('/documentation')
+  get '/documentation/php', to: redirect('/documentation')
+  get '/documentation/perl', to: redirect('/documentation')
+  get '/documentation/python', to: redirect('/documentation')
+  get '/documentation/nodejs', to: redirect('/documentation')
+
   resources :documentation, only: :index do
     collection do
       get "api"
       get "what_is_new"
-      get "ruby"
-      get "php"
-      get "perl"
-      get "python"
-      get "nodejs"
       get 'run_locally'
       get 'secret_values'
       get "scraping_javascript_sites"

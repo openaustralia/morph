@@ -6,12 +6,6 @@
       .col-md-2
         %ul.nav.nav-pills.nav-stacked#sidebar
           = bs_nav_link "Getting started", documentation_index_path
-          -# TODO: Use the language list to generate this automatically
-          = bs_nav_link language_name_with_icon(:ruby, size: "20x20"), ruby_documentation_index_path
-          = bs_nav_link language_name_with_icon(:php, size: "20x20"), php_documentation_index_path
-          = bs_nav_link language_name_with_icon(:perl, size: "20x20"), perl_documentation_index_path
-          = bs_nav_link language_name_with_icon(:python, size: "20x20"), python_documentation_index_path
-          = bs_nav_link language_name_with_icon(:nodejs, size: "20x20"), nodejs_documentation_index_path
           = bs_nav_link 'Running scrapers on your own machine', run_locally_documentation_index_path
           = bs_nav_link 'Using any library in your scraper', libraries_documentation_index_path
           = bs_nav_link 'Choose language version', language_version_documentation_index_path
