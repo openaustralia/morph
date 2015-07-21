@@ -1,1 +1,17 @@
-= render "missing_documentation"
+:markdown
+  For Python morph.io installs libraries using `pip` from a `requirements.txt` file in the root of
+  your scraper repository. The format for `requirements.txt` is straightforward.
+
+  For example to install specific version of the `Pygments` and `SQLAlchemy` library, `requirements.txt`
+  could look like this
+  <pre>
+  Pygments==1.4
+  SQLAlchemy==0.6.6
+  </pre>
+
+.row
+  .col-sm-9
+    :markdown
+      #{render "documentation/references/python.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "references/_python.md"

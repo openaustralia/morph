@@ -22,10 +22,3 @@
       %code requirements.txt
     %pre
       %code= File.read(Morph::Language.new(:python).default_config_file_path("requirements.txt"))
-
-.row
-  .col-sm-9
-    :markdown
-      #{render "documentation/references/python.md"}
-  .col-sm-3
-    = improve_button "Improve this section", "references/_python.md"
