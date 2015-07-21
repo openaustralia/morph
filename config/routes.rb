@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       get "nodejs"
       get 'secret_values'
       get "scraping_javascript_sites"
+      get 'libraries'
       get "examples/australian_members_of_parliament"
     end
   end
