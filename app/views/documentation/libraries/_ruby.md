@@ -23,11 +23,3 @@ Make sure that you add *both* `Gemfile` and `Gemfile.lock` to your repository.
 
 5. Run the scraper. Use bundler to initialize the environment:
 <pre>bundle exec ruby scraper.rb</pre>
-
-### Selecting the Ruby version
-
-You can also use the `Gemfile` to control which version of Ruby is run. For instance: to ensure that your scraper is run with Ruby 1.9.3, add this to your `Gemfile`:
-
-<%= render 'documentation/libraries/ruby_example3' %>
-
-For the full list of support ruby versions see [the Heroku documentation for its Ruby support](https://devcenter.heroku.com/articles/ruby-support#ruby-versions).
