@@ -2,4 +2,35 @@
 
 %h1= title
 
+:markdown
+  When you're writing scrapers it can be very handy to develop your scrapers on
+  a local machine. Here we explain how you can do that.
+
+  It also means that you don't have to push your changes to Github every time
+  you want to test your scraper on morph.io.
+
+  There are two distinct ways that you can do this:
+
+  1. Install the morph command-line which is a small tool that you can run
+     locally. It will upload the scraper in your current directory to the morph
+     server and stream back the results.
+     <dl>
+       <dt>Advantage:</dt>
+       <dd>Will work with any scraper language without needing to install
+     anything extra</dd>
+       <dt>Disadvantage:</dt>
+       <dd>Requires a network connection and is slower than truly
+       running the scraper locally. Need to install Ruby if not already installed.</dd>
+     </dl>
+
+  2. Install the development tools for your language of choice on your machine.
+     This is the easiest approach if you already have a development environment
+     setup or if you only plan to use or write scrapers in a single language.
+    <dl>
+      <dt>Advantage:</dt>
+      <dd>Faster than testing scrapers using the morph command-line client</dd>
+      <dt>Disadvantage:</dt>
+      <dd>Libraries used by scraper need to be installed locally as well</dd>
+    </dl>
+
 = render "language_tabs", id_prefix: "run_locally", path: "documentation/run_locally"
