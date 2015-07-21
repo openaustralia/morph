@@ -20,12 +20,3 @@ cd example
 
 5. Run the scraper locally:
 <pre>python scraper.py</pre>
-
-### Setting Python version
-
-You can also specify the Python version to run by adding a `runtime.txt` file.
-
-For example, for Python 2.7.6 put this in `runtime.txt`
-<pre>
-python-2.7.6
-</pre>
