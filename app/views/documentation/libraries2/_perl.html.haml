@@ -1,1 +1,21 @@
-= render "missing_documentation"
+:markdown
+  To choose which libraries to install you will need a file `cpanfile` in the root of your scraper
+  directory. It can install anything from [CPAN](http://www.cpan.org/) and has a very straightforward syntax.
+
+  For instance to install specific versions of `HTTP::Message` and `XML::Parser` your `cpanfile` should
+  look like
+
+  #{ render 'documentation/libraries2/perl_example1' }
+
+  You don't have to specify the versions to install but it's recommended as otherwise different
+  runs of the scraper could potentially use different versions of libraries.
+
+  Check `cpanfile` into git alongside your scraper and the next time it's run on morph it will install
+  the libraries.
+
+.row
+  .col-sm-9
+    :markdown
+      #{render "documentation/references/perl.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "references/_perl.md"
