@@ -19,10 +19,3 @@
     :coderay
       #!json
       #{File.read(Morph::Language.new(:php).default_config_file_path("composer.json"))}
-
-.row
-  .col-sm-9
-    :markdown
-      #{render "documentation/references/php.md"}
-  .col-sm-3
-    = improve_button "Improve this section", "references/_php.md"
