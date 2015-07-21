@@ -1,11 +1,1 @@
 %h1= language_name_with_icon(:perl, size: "30x30")
-
-.row
-  .col-sm-9
-    :markdown
-      ### When there is no cpanfile
-
-      When there is no `cpanfile` in the scraper repository, a default version is installed
-    :coderay
-      #!perl
-      #{File.read(Morph::Language.new(:perl).default_config_file_path("cpanfile"))}
