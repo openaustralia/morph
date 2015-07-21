@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       get "perl"
       get "python"
       get "nodejs"
+      get 'run_locally'
       get 'secret_values'
       get "scraping_javascript_sites"
       get 'libraries'
