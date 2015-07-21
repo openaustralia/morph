@@ -72,6 +72,12 @@ class User < Owner
     end
   end
 
+  def watch_all_owners
+    all_owners.each do |object|
+      alerts.create(watch: object)
+    end
+  end
+
   # Only include scrapers that finished in the last 24 hours
   def watched_successful_scrapers
     all_scrapers_watched.select do |s|
