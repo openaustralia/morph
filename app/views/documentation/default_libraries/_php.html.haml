@@ -1,17 +1,6 @@
-%h1= language_name_with_icon(:php, size: "30x30")
-
 .row
   .col-sm-9
     :markdown
-      #{render "documentation/libraries/php.md"}
-  .col-sm-3
-    = improve_button "Improve this section", "libraries/_php.md"
-
-.row
-  .col-sm-9
-    :markdown
-      ### When there is no composer.json
-
       When there is no `composer.json` and `composer.lock` in the scraper repository, a default version of those files is installed which is as close as possible to the ScraperWiki environment as it was in January 2014. This is done to make migration from ScraperWiki as easy as possible.
 
       This is the `composer.json` that emulates the ScraperWiki environment
@@ -19,10 +8,3 @@
     :coderay
       #!json
       #{File.read(Morph::Language.new(:php).default_config_file_path("composer.json"))}
-
-.row
-  .col-sm-9
-    :markdown
-      #{render "documentation/references/php.md"}
-  .col-sm-3
-    = improve_button "Improve this section", "references/_php.md"

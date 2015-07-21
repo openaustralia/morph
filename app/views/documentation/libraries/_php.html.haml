@@ -1,0 +1,35 @@
+:markdown
+  PHP in morph.io uses [Composer](https://getcomposer.org/) for managing dependencies and runtime. You create
+  a file `composer.json` in the root of your scraper repository which says what libraries and
+  extensions you want installed.
+
+  For example, to install the `XSL` PHP extension your `composer.json` could look like this
+
+  #{render 'documentation/libraries/php_example1.html.haml'}
+
+  Then run `composer install`. Depending on whether you have
+  [Composer](https://getcomposer.org) locally or globally installed
+  on your personal machine you can run either
+  <pre>
+  php composer.phar install
+  </pre>
+
+  or
+  <pre>
+  composer install
+  </pre>
+
+  As well as installing the libraries locally it will also create a `composer.lock` file which should
+  be added alongside the `composer.json` file into git.
+
+  The next time the scraper runs on morph it will build an environment from this.
+
+  For more on the specifics of what can go in `composer.json` see the
+  [Composer documentation](https://getcomposer.org/doc/01-basic-usage.md).
+
+.row
+  .col-sm-9
+    :markdown
+      #{render "documentation/references/php.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "references/_php.md"

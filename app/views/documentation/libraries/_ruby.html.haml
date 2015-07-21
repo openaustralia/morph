@@ -1,0 +1,15 @@
+:markdown
+  To have `morph.io` install specific gems for your scraper, add a `Gemfile` to your repository. For instance to install the `mechanize` and `sqlite3` gems:
+
+  #{render 'documentation/libraries/ruby_example2.html.haml'}
+
+  Then run `bundle update`. This will work out which specific versions of each gem will be installed and write the result of that to `Gemfile.lock`.
+
+  Make sure that you add *both* `Gemfile` and `Gemfile.lock` to your repository.
+
+.row
+  .col-sm-9
+    :markdown
+      #{render "documentation/references/ruby.md"}
+  .col-sm-3
+    = improve_button "Improve this section", "references/_ruby.md"
