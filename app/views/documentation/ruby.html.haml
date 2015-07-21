@@ -6,16 +6,3 @@
       #{render "documentation/libraries/ruby.md"}
   .col-sm-3
     = improve_button "Improve this section", "libraries/_ruby.md"
-
-.row
-  .col-sm-9
-    :markdown
-      ### When there is no Gemfile
-
-      When there is no `Gemfile` and `Gemfile.lock` in the scraper repository, a default version of those files is installed which is as close as possible to the ScraperWiki environment as it was in January 2014. This is done to make migration from ScraperWiki as easy as possible.
-
-      This is the `Gemfile` that emulates the ScraperWiki environment
-
-    :coderay
-      #!ruby
-      #{File.read(Morph::Language.new(:ruby).default_config_file_path("Gemfile"))}
