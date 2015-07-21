@@ -33,4 +33,31 @@
       <dd>Libraries used by scraper need to be installed locally as well</dd>
     </dl>
 
+  ### How to install the morph command-line client
+
+  Either install the morph command-line client using these instructions __or__
+  install development tools on your machine. You __don't need to do both__.
+
+  First, check you have Ruby 1.9 or greater installed,
+
+      ruby -v
+
+  If you need to install or update Ruby [see the instructions at ruby-lang.org](https://www.ruby-lang.org/en/documentation/installation/).
+
+  Then install [morph command line](https://github.com/openaustralia/morph-cli) gem,
+
+      gem install morph-cli
+
+  To run a scraper go to the directory you have your scraper code in and
+
+      morph
+
+  It will run your local scraper on the morph.io server and stream the console output back to you. You can use this with any support scraper
+  language without the hassle of having to install lots of things.
+
+  ### How to install development tools on your machine
+
+  Either install development tools on your machine using these instructions __or__
+  install the morph command-line client. You __don't need to do both__.
+
 = render "language_tabs", id_prefix: "run_locally", path: "documentation/run_locally"
