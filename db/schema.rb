@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707020410) do
+ActiveRecord::Schema.define(version: 20150722073537) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -142,7 +142,7 @@ ActiveRecord::Schema.define(version: 20150707020410) do
   add_index "organizations_users", ["user_id"], name: "index_organizations_users_on_user_id", using: :btree
 
   create_table "owners", force: true do |t|
-    t.integer  "sign_in_count",       default: 0,     null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -160,14 +160,15 @@ ActiveRecord::Schema.define(version: 20150707020410) do
     t.string   "type"
     t.string   "gravatar_url"
     t.string   "api_key"
-    t.boolean  "admin",               default: false, null: false
-    t.boolean  "suspended",           default: false, null: false
+    t.boolean  "admin",                  default: false, null: false
+    t.boolean  "suspended",              default: false, null: false
     t.string   "feature_switches"
     t.datetime "remember_created_at"
     t.string   "remember_token"
     t.string   "stripe_customer_id"
     t.string   "stripe_plan_id"
     t.string   "stripe_subscription_id"
+    t.string   "location"
   end
 
   add_index "owners", ["api_key"], name: "index_owners_on_api_key", using: :btree
