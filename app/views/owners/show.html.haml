@@ -19,6 +19,8 @@
         %ul.list-unstyled
           - unless @owner.company.blank?
             %li= @owner.company
+          - unless @owner.location.blank?
+            %li= @owner.location
           - unless @owner.blog.blank?
             %li= link_to @owner.blog, @owner.blog
         %p
