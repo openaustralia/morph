@@ -1,27 +1,15 @@
-- title "Fork ScraperWiki scraper #{@scraper.scraperwiki_shortname if @name_set}"
+- title "Fork ScraperWiki scraper #{@scraper.scraperwiki_shortname}"
 
 .container
   .row
     .col-sm-8
       %h1= title
-      - if @name_set
-        %p Choose a name for the scraper on GitHub
-      - else
-        %p This is where you can pick a ScraperWiki scraper, optionally choose a name for it on GitHub and fork away!
-
-        %p
-          = link_to "Browse and Search", "https://classic.scraperwiki.com/browse/scrapers/index.html", target: "_blank"
-          for a scraper on ScraperWiki Classic that you want to fork and simply click the <em>Transfer to Morph.io</em> button that the lovely ScraperWiki folks made for us.
-
-        %p Or you can paste the name of the scraper below, it's up to you.
+      %p Choose a name for the scraper on GitHub
 
   = simple_form_for @scraper, url: scraperwiki_scrapers_path do |f|
     .row
       .col-sm-8
-        - if @name_set
-          = f.hidden_field :scraperwiki_shortname
-        - else
-          = f.input :scraperwiki_shortname, label: "Name of ScraperWiki scraper", hint: "The name (as it's shown in a url) of the ScraperWiki Classic scraper that you want to fork", placeholder:"city_of_sydney_development_applications"
+        = f.hidden_field :scraperwiki_shortname
     .row
       .col-sm-2
         = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false
