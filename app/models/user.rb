@@ -159,6 +159,8 @@ class User < Owner
                       company: user.company,
                       location: user.location,
                       email: Morph::Github.primary_email(self))
+  rescue Octokit::Unauthorized, Octokit::NotFound
+    false
   end
 
   def self.find_or_create_by_nickname(nickname)
