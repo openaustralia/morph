@@ -2,13 +2,11 @@
   <div class="page-header">
     <h1>When users joined</h1>
   </div>
+  <div id="chart">
+  </div>
 </div>
 
 <style>
-
-body {
-  font: 10px sans-serif;
-}
 
 .bar rect {
   fill: steelblue;
@@ -57,7 +55,7 @@ var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#chart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
