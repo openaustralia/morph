@@ -76,6 +76,9 @@ Rails.application.routes.draw do
     member do
       get 'watching'
     end
+    collection do
+      get 'stats'
+    end
   end
   resources :owners, only: [] do
     member do
