@@ -10,14 +10,7 @@
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
         -# TODO: set class to "active" when this is the current page
-        %li.dropdown{class: ("disabled" unless can? :new, Scraper)}
-          = link_to "#", class: "dropdown-toggle", data: {toggle: ("dropdown" if can? :new, Scraper)} do
-            Add Scraper
-            %b(class="caret")
-          %ul(class="dropdown-menu")
-            %li= link_to "New scraper", new_scraper_path
-            %li(class="divider")
-            %li= link_to "Add scraper from GitHub", github_new_scraper_path
+        %li= link_to "New scraper", new_scraper_path
         %li= link_to "Explore", scrapers_path
         %li= link_to "Pricing", new_supporter_path
         %li= link_to "Documentation", documentation_index_path
