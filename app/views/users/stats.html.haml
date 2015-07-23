@@ -34,18 +34,25 @@
     width = 960 - (margin.left) - (margin.right)
     height = 500 - (margin.top) - (margin.bottom)
 
-    x = d3.time.scale()
-      .domain([new Date(2014, 0, 1), new Date(2016, 0, 1)])
-      .range([0, width])
+    x = d3.time.scale().range([0, width])
+    y = d3.scale.linear().range([height, 0])
+
+    # Determine the first and list dates in the data set
+    monthExtent = d3.extent(users, (u) -> u.created_at)
+    console.log monthExtent
+
+    # Create one bin per month, use an offset to include the first and last months
+    monthBins = d3.time.months(
+      d3.time.month.offset(monthExtent[0], -1),
+      d3.time.month.offset(monthExtent[1], 1))
 
     # Generate a histogram using twenty uniformly-spaced bins.
     data = d3.layout.histogram()
       .value((u) -> u.created_at)
-      .bins(24)(users)
+      .bins(monthBins)(users)
 
-    y = d3.scale.linear()
-      .domain([0, d3.max(data, (d) -> d.y)])
-      .range([height, 0])
+    x.domain(d3.extent(monthBins))
+    y.domain([0, d3.max(data, (d) -> d.y)])
 
     xAxis = d3.svg.axis()
       .scale(x)
@@ -67,13 +74,13 @@
 
     bar.append('rect')
       .attr('x', 1)
-      .attr('width', (d) -> x(d.x + d.dx) - x(d.x) - 1)
+      .attr('width', (d) -> x(d.x.getTime() + d.dx) - x(d.x) - 1)
       .attr('height', (d) -> height - y(d.y))
 
     bar.append('text')
       .attr('dy', '.75em')
       .attr('y', 6)
-      .attr('x', (d) -> (x(d.x + d.dx) - x(d.x)) / 2)
+      .attr('x', (d) -> (x(d.x.getTime() + d.dx) - x(d.x)) / 2)
       .attr('text-anchor', 'middle')
       .text (d) -> formatCount d.y
 
