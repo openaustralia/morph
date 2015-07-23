@@ -17,7 +17,7 @@ class Organization < Owner
       # Get more information for that organisation
       data = octokit_client.organization(nickname)
       org = Organization.create(
-        uid: uid, nickname: nickname, name: data.name, blog: data.blog,
+        uid: uid, nickname: data.login, name: data.name, blog: data.blog,
         company: data.company, email: data.email,
         gravatar_url: data.rels[:avatar].href)
     end
