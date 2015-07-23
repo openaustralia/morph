@@ -5,6 +5,7 @@ class RefreshOrganizationInfoFromGithubWorker
   def perform(id)
     org = Organization.find(id)
     # Use first member of organization to make the github calls
-    org.refresh_info_from_github!(org.users.first.octokit_client)
+    first_user = org.users.first
+    org.refresh_info_from_github!(first_user.octokit_client) if first_user
   end
 end
