@@ -38,14 +38,10 @@
       .domain([new Date(2014, 0, 1), new Date(2016, 0, 1)])
       .range([0, width])
 
-    console.log users
-
     # Generate a histogram using twenty uniformly-spaced bins.
     data = d3.layout.histogram()
       .value((u) -> u.created_at)
       .bins(24)(users)
-
-    console.log data[0]
 
     y = d3.scale.linear()
       .domain([0, d3.max(data, (d) -> d.y)])
