@@ -27,9 +27,6 @@
     users.forEach (d, i) ->
       d.created_at = Date.parse(d.created_at)
 
-    # Generate a Bates distribution of 10 random variables.
-    values = d3.range(1000).map(d3.random.bates(10))
-
     # A formatter for counts.
     formatCount = d3.format(',.0f')
 
@@ -37,13 +34,18 @@
     width = 960 - (margin.left) - (margin.right)
     height = 500 - (margin.top) - (margin.bottom)
 
-    x = d3.scale.linear()
-      .domain([0, 1])
+    x = d3.time.scale()
+      .domain([new Date(2014, 0, 1), new Date(2016, 0, 1)])
       .range([0, width])
+
+    console.log users
 
     # Generate a histogram using twenty uniformly-spaced bins.
     data = d3.layout.histogram()
-      .bins(x.ticks(20))(values)
+      .value((u) -> u.created_at)
+      .bins(24)(users)
+
+    console.log data[0]
 
     y = d3.scale.linear()
       .domain([0, d3.max(data, (d) -> d.y)])
@@ -69,13 +71,13 @@
 
     bar.append('rect')
       .attr('x', 1)
-      .attr('width', x(data[0].dx) - 1)
-      .attr 'height', (d) -> height - y(d.y)
+      .attr('width', (d) -> x(d.x + d.dx) - x(d.x) - 1)
+      .attr('height', (d) -> height - y(d.y))
 
     bar.append('text')
       .attr('dy', '.75em')
       .attr('y', 6)
-      .attr('x', x(data[0].dx) / 2)
+      .attr('x', (d) -> (x(d.x + d.dx) - x(d.x)) / 2)
       .attr('text-anchor', 'middle')
       .text (d) -> formatCount d.y
 
