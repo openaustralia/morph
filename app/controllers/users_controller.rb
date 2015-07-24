@@ -9,7 +9,7 @@ class UsersController < ApplicationController
       format.html do
         @users = @users.page(params[:page])
       end
-      format.json { render json: @users, only: [:created_at, :nickname] }
+      format.json
     end
   end
 
