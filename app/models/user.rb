@@ -137,9 +137,16 @@ class User < Owner
   end
 
   def refresh_organizations!
-    self.organizations = octokit_client.organizations(nickname).map do |data|
+    refreshed_organizations = octokit_client.organizations(nickname).map do |data|
       Organization.find_or_create(data.id, data.login, octokit_client)
     end
+
+    # Watch any new organizations
+    (refreshed_organizations - organizations).each do |o|
+      alerts.create(watch: o) unless watching?(o)
+    end
+
+    self.organizations = refreshed_organizations
   end
 
   def octokit_client
