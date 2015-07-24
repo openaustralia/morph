@@ -41,7 +41,18 @@ namespace :app do
 
   desc 'Refresh info for all users from github'
   task refresh_all_users: :environment do
-    User.all.each(&:refresh_info_from_github!)
+    User.all.each do |u|
+      RefreshUserInfoFromGithubWorker.perform_async(u.id)
+    end
+  puts 'Put jobs on to the background queue to refresh all user info from github'
+  end
+
+  desc 'Refresh info for all organizations from github'
+  task refresh_all_organizations: :environment do
+    Organization.all.each do |org|
+      RefreshOrganizationInfoFromGithubWorker.perform_async(org.id)
+    end
+  puts 'Put jobs on to the background queue to refresh all organization info from github'
   end
 
   desc 'Build docker image (Needs to be done once before any scrapers are run)'

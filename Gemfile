@@ -68,6 +68,7 @@ gem "scrub_rb"
 gem "skylight"
 gem "stripe"
 gem 'haml-coderay'
+gem 'd3-rails'
 
 group :production do
   gem "dalli"

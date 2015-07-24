@@ -3,6 +3,13 @@
 .container
   %h1= title
 
+  %p
+    Already have a repository on Github? Then,
+    #{link_to "add the scraper from Github", github_new_scraper_path}.
+  %p
+    It's easier to start here though. We'll create a template scraper for you
+    in your preferred language.
+
   = simple_form_for @scraper do |f|
     .row
       .col-sm-6

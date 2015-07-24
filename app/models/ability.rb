@@ -49,6 +49,7 @@ class Ability
 
     # Everybody can look at all the users and see who they are watching
     can [:index, :watching], User
+    can :stats, User
     can :toggle_read_only_mode, SiteSetting if user.admin?
 
     can :create, Run unless SiteSetting.read_only_mode

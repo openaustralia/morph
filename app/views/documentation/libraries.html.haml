@@ -1,0 +1,20 @@
+- title 'How to use any library in your scraper'
+%h1= title
+
+:markdown
+  You can use any libraries you want with your scraper. This makes things incredibly
+  flexible and powerful. It's also incredibly straightforward.
+
+  You have a favorite scraping library? *No problem*. You need a library to convert
+  some obscure file format into something sensible? *No problem*.
+
+  All you need to is specify the libraries that you want to use in your scraper
+  repository. Each language does this slightly differently using the native tools
+  for that language.
+
+  If you're already familiar with using [Heroku](https://www.heroku.com/),
+  this will be even simpler for you, as morph.io's system for libraries is built
+  on top of [Buildpacks](https://devcenter.heroku.com/articles/buildpacks),
+  the same technology that drives the installation of libraries on Heroku.
+
+= render "language_tabs", id_prefix: "libraries", path: "documentation/libraries"

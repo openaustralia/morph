@@ -1,0 +1,150 @@
+.container
+  .page-header
+    %h1 Some useful stats about users
+  %h2 When users joined
+  #chart
+  %h2 Number of scrapers
+  #chart-number-scrapers
+
+:css
+  .bar rect {
+    fill: steelblue;
+    shape-rendering: crispEdges;
+  }
+
+  .bar text {
+    fill: #fff;
+  }
+
+  .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+= javascript_include_tag "d3.js"
+
+:coffee
+  d3.json '/users.json', (error, users) ->
+    # Convert to dates
+    users.forEach (d, i) ->
+      d.created_at = Date.parse(d.created_at)
+
+    # A formatter for counts.
+    formatCount = d3.format(',.0f')
+
+    margin = {top: 10,  right: 30,  bottom: 30,  left: 30}
+    width = 960 - (margin.left) - (margin.right)
+    height = 300 - (margin.top) - (margin.bottom)
+
+    x = d3.time.scale().range([0, width])
+    y = d3.scale.linear().range([height, 0])
+
+    # Determine the first and list dates in the data set
+    monthExtent = d3.extent(users, (u) -> u.created_at)
+    console.log monthExtent
+
+    # Create one bin per month, use an offset to include the first and last months
+    monthBins = d3.time.months(
+      d3.time.month.offset(monthExtent[0], -1),
+      d3.time.month.offset(monthExtent[1], 1))
+
+    # Generate a histogram using twenty uniformly-spaced bins.
+    data = d3.layout.histogram()
+      .value((u) -> u.created_at)
+      .bins(monthBins)(users)
+
+    x.domain(d3.extent(monthBins))
+    y.domain([0, d3.max(data, (d) -> d.y)])
+
+    xAxis = d3.svg.axis()
+      .scale(x)
+      .orient('bottom')
+
+    svg = d3.select('#chart')
+      .append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
+    bar = svg.selectAll('.bar')
+      .data(data)
+      .enter()
+      .append('g')
+      .attr('class', 'bar')
+      .attr('transform', (d) -> 'translate(' + x(d.x) + ',' + y(d.y) + ')')
+
+    bar.append('rect')
+      .attr('x', 1)
+      .attr('width', (d) -> x(d.x.getTime() + d.dx) - x(d.x) - 1)
+      .attr('height', (d) -> height - y(d.y))
+
+    bar.append('text')
+      .attr('dy', '.75em')
+      .attr('y', 6)
+      .attr('x', (d) -> (x(d.x.getTime() + d.dx) - x(d.x)) / 2)
+      .attr('text-anchor', 'middle')
+      .text (d) -> formatCount d.y
+
+    svg.append('g')
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call xAxis
+
+:coffee
+  d3.json '/users.json', (error, users) ->
+    # A formatter for counts.
+    formatCount = d3.format(',.0f')
+
+    margin = {top: 10,  right: 30,  bottom: 30,  left: 30}
+    width = 960 - (margin.left) - (margin.right)
+    height = 300 - (margin.top) - (margin.bottom)
+
+    x = d3.scale.linear().range([0, width])
+    y = d3.scale.pow().exponent(0.4).range([height, 0])
+
+    max_number_scrapers = d3.max(users, (u) -> u.number_scrapers )
+
+    # Generate a histogram using twenty uniformly-spaced bins.
+    data = d3.layout.histogram()
+      .value((u) -> u.number_scrapers)
+      .bins(d3.range(0, max_number_scrapers))(users)
+
+    x.domain([0, max_number_scrapers])
+    y.domain([0, d3.max(data, (d) -> d.y)])
+
+    xAxis = d3.svg.axis()
+      .scale(x)
+      .orient('bottom')
+
+    svg = d3.select('#chart-number-scrapers')
+      .append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
+    bar = svg.selectAll('.bar')
+      .data(data)
+      .enter()
+      .append('g')
+      .attr('class', 'bar')
+      .attr('transform', (d) -> 'translate(' + x(d.x) + ',' + y(d.y) + ')')
+
+    bar.append('rect')
+      .attr('x', 1)
+      .attr('width', (d) -> x(d.x + d.dx) - x(d.x) - 1)
+      .attr('height', (d) -> height - y(d.y))
+
+    bar.append('text')
+      .attr('dy', '.75em')
+      .attr('y', 6)
+      .attr('x', (d) -> (x(d.x + d.dx) - x(d.x)) / 2)
+      .attr('text-anchor', 'middle')
+      .text (d) -> formatCount d.y
+
+    svg.append('g')
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call xAxis

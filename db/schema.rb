@@ -142,7 +142,7 @@ ActiveRecord::Schema.define(version: 20150724033339) do
   add_index "organizations_users", ["user_id"], name: "index_organizations_users_on_user_id", using: :btree
 
   create_table "owners", force: true do |t|
-    t.integer  "sign_in_count",       default: 0,     null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -160,8 +160,8 @@ ActiveRecord::Schema.define(version: 20150724033339) do
     t.string   "type"
     t.string   "gravatar_url"
     t.string   "api_key"
-    t.boolean  "admin",               default: false, null: false
-    t.boolean  "suspended",           default: false, null: false
+    t.boolean  "admin",                  default: false, null: false
+    t.boolean  "suspended",              default: false, null: false
     t.string   "feature_switches"
     t.datetime "remember_created_at"
     t.string   "remember_token"
@@ -169,6 +169,7 @@ ActiveRecord::Schema.define(version: 20150724033339) do
     t.string   "stripe_plan_id"
     t.string   "stripe_subscription_id"
     t.datetime "alerted_at"
+    t.string   "location"
   end
 
   add_index "owners", ["api_key"], name: "index_owners_on_api_key", using: :btree

@@ -11,17 +11,22 @@ class Organization < Owner
     true
   end
 
-  def self.find_or_create(uid, nickname, octokit_client)
+  def self.find_or_create(uid, nickname)
     org = Organization.find_by(uid: uid)
     if org.nil?
-      # Get more information for that organisation
-      data = octokit_client.organization(nickname)
-      org = Organization.create(
-        uid: uid, nickname: nickname, name: data.name, blog: data.blog,
-        company: data.company, email: data.email,
-        gravatar_url: data.rels[:avatar].href)
+      org = Organization.create(uid: uid, nickname: nickname)
     end
     org
+  end
+
+  def refresh_info_from_github!(octokit_client)
+    data = octokit_client.organization(nickname)
+    update_attributes(
+      nickname: data.login, name: data.name, blog: data.blog,
+      company: data.company, location: data.location, email: data.email,
+      gravatar_url: data.rels[:avatar].href)
+  rescue Octokit::Unauthorized, Octokit::NotFound
+    false
   end
 
   def organizations

@@ -138,7 +138,9 @@ class User < Owner
 
   def refresh_organizations!
     refreshed_organizations = octokit_client.organizations(nickname).map do |data|
-      Organization.find_or_create(data.id, data.login, octokit_client)
+      org = Organization.find_or_create(data.id, data.login)
+      org.refresh_info_from_github!(octokit_client)
+      org
     end
 
     # Watch any new organizations
@@ -159,8 +161,8 @@ class User < Owner
                            access_token: auth.credentials.token)
     user.refresh_info_from_github!
     # Also every time you login it should update the list of organizations that
-    # the user is attached to
-    user.refresh_organizations!
+    # the user is attached to but do this in a background job
+    RefreshUserOrganizationsWorker.perform_async(user.id)
     user
   end
 
@@ -170,7 +172,10 @@ class User < Owner
                       gravatar_url: user._rels[:avatar].href,
                       blog: user.blog,
                       company: user.company,
+                      location: user.location,
                       email: Morph::Github.primary_email(self))
+  rescue Octokit::Unauthorized, Octokit::NotFound
+    false
   end
 
   def self.find_or_create_by_nickname(nickname)

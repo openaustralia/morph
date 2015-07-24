@@ -18,14 +18,21 @@
 
         %ul.list-unstyled
           - unless @owner.company.blank?
-            %li= @owner.company
+            %li
+              %i.fa.fa-users.fa-fw.text-muted
+              = @owner.company
+          - unless @owner.location.blank?
+            %li
+              %i.fa.fa-map-marker.fa-fw.text-muted
+              = @owner.location
           - unless @owner.blog.blank?
-            %li= link_to @owner.blog, @owner.blog
+            %li
+              %i.fa.fa-link.fa-fw.text-muted
+              = link_to @owner.blog, @owner.blog
         %p
-          = link_to @owner.github_url, target: "_blank" do
-            %i.fa.fa-github-square.fa-lg
-            = @owner.nickname
-            on GitHub
+          %i.fa.fa-github-alt.fa-fw.text-muted
+          = link_to "#{@owner.nickname} on GitHub", @owner.github_url, target: "_blank"
+
       .col-md-2.owner-box
         - if signed_in?
           .pull-right= render partial: "watch_button", locals: {owner: @owner}
@@ -54,15 +61,7 @@
     .list-group= sync partial: "scraper_without_owner", collection: @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
 
   - if @owner == current_user || @owner.organization? && @owner.users.include?(current_user)
-    .btn-group
-      = button_link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
-        Add Scraper
-        %b.caret
-      %ul.dropdown-menu
-        %li= link_to "New scraper", new_scraper_path
-        %li.divider
-        %li= link_to "Add scraper from GitHub", github_new_scraper_path
-        %li= link_to "Fork scraper from ScraperWiki", scraperwiki_new_scraper_path
+    = button_link_to "New scraper", new_scraper_path
 
   - if @owner.user? && !@owner.other_scrapers_contributed_to.empty?
     %h3

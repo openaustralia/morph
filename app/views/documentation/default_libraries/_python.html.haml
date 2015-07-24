@@ -1,17 +1,6 @@
-%h1= language_name_with_icon(:python, size: "30x30")
-
 .row
   .col-sm-9
     :markdown
-      #{render "documentation/libraries/python.md"}
-  .col-sm-3
-    = improve_button "Improve this section", "libraries/_python.md"
-
-.row
-  .col-sm-9
-    :markdown
-      ### Default libraries and Python version
-
       When there is no `requirements.txt` or `runtime.txt` in the scraper repository, a default version of those files is installed which is as close as possible to the ScraperWiki environment as it was in January 2014. This is done to make migration from ScraperWiki as easy as possible.
 
       This is the `runtime.txt` that emulates the ScraperWiki environment
@@ -22,10 +11,3 @@
       %code requirements.txt
     %pre
       %code= File.read(Morph::Language.new(:python).default_config_file_path("requirements.txt"))
-
-.row
-  .col-sm-9
-    :markdown
-      #{render "documentation/references/python.md"}
-  .col-sm-3
-    = improve_button "Improve this section", "references/_python.md"

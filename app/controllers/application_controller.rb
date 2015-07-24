@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 
   # Handle omniauth failure. See https://github.com/plataformatec/devise/wiki/OmniAuth%3A-Overview#using-omniauth-without-other-authentications
   def new_session_path(scope)
-   new_user_session_path
+    new_user_session_path
   end
 
   private
@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     path = stored_location_for(resource) || session[:previous_url]
-    path.nil? ? root_path : path
+    path.nil? || new_user_session_path ? root_path : path
   end
 
   def after_sign_out_path_for(resource)
