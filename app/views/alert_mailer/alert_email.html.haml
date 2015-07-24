@@ -192,6 +192,22 @@
         }
 
   %body(bgcolor="#f6f6f6")
+    - unless @user.alerted_at
+      %table.body-wrap
+        %tr
+          %td
+          %td.container(bgcolor="#FFFFFF")
+            .content
+              %table
+                %tr
+                  %td(align="center")
+                    %p
+                      Hello and welcome to your first morph.io alert email.
+                      You're getting this because you signed up for morph.io and a scraper you're watching has a problem that you might like to fix.
+                    %p
+                      Rather not get these emails? Then
+                      = link_to "change what you're watching", watching_user_url(@user, @analytics_params)
+          %td
     -# body
     %table.body-wrap
       %tr
