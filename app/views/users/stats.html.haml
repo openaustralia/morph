@@ -102,7 +102,7 @@
     height = 300 - (margin.top) - (margin.bottom)
 
     x = d3.scale.linear().range([0, width])
-    y = d3.scale.linear().range([height, 0])
+    y = d3.scale.pow().exponent(0.4).range([height, 0])
 
     max_number_scrapers = d3.max(users, (u) -> u.number_scrapers )
 
