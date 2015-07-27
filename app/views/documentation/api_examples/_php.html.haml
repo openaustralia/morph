@@ -3,11 +3,12 @@
 :coderay
   #!php
   <?php
-  $key="[API KEY]";
-  $query="select * from 'data' limit 10";
-  $url = "https://api.morph.io/[USERNAME]/[SCRAPER NAME]/data.json";
+  $morph_api_url = "https://api.morph.io/[USERNAME]/[SCRAPER NAME]/data.json";
+  $morph_api_key="[API KEY]";
 
-  $response=file_get_contents($url.'?key='.$key.'&query='.urlencode($query));
+  $query="select * from 'data' limit 10";
+
+  $response=file_get_contents($morph_api_url.'?key='.$morph_api_key.'&query='.urlencode($query));
   $js=json_decode($response,true);
 
   foreach ($js as $line){
