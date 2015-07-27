@@ -72,7 +72,7 @@ class User < Owner
     end
   end
 
-  # Only include scrapers that finished in the last 24 hours
+  # Only include scrapers that finished in the last 48 hours
   def watched_successful_scrapers
     all_scrapers_watched.select do |s|
       s.finished_successfully? && s.finished_recently?
