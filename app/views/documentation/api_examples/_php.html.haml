@@ -12,9 +12,7 @@
     $response=file_get_contents($morph_api_url.'?key='.$morph_api_key.'&query='.urlencode($query));
     $js=json_decode($response,true);
 
-    foreach ($js as $line){
-      [DO WIZARDRY]
-    }
+    print_r($js);
     ?>
 
 = block.sub('[scraper_url]', "#{api_root}<span class='full_name'>#{h(@scraper.full_name)}</span>").sub('[api_key]', "<span class='unescaped-api_key'>#{current_user ? current_user.api_key : '[api_key]'}</span>").sub('[query]', "<span class='unescaped-query'>#{h(@query)}</span>").html_safe
