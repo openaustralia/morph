@@ -111,6 +111,10 @@
       = link_to "#example-javascript", 'aria-controls' => "#example-javascript", role: "tab", 'data-toggle' => "tab" do
         = image_tag('languages/javascript.png', size: '18x18')
         Javascript
+    %li{role: "presentation"}
+      = link_to "#example-php", 'aria-controls' => "#example-php", role: "tab", 'data-toggle' => "tab" do
+        = image_tag('languages/php.png', size: '18x18')
+        PHP
 
   .tab-content
     .tab-pane.active{role: "tabpanel", id: "example-curl"}
@@ -121,6 +125,8 @@
       = render "documentation/api_examples/python"
     .tab-pane{role: "tabpanel", id: "example-javascript"}
       = render "documentation/api_examples/javascript"
+    .tab-pane{role: "tabpanel", id: "example-php"}
+      = render "documentation/api_examples/php"
 
 :javascript
   $(function() {

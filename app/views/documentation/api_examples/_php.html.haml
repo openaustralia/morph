@@ -1,0 +1,16 @@
+%p Use the following code snippet to get data from the API.
+
+:coderay
+  #!php
+  <?php
+  $key="[API KEY]";
+  $query="select * from 'data' limit 10";
+  $url = "https://api.morph.io/[USERNAME]/[SCRAPER NAME]/data.json";
+
+  $response=file_get_contents($url.'?key='.$key.'&query='.urlencode($query));
+  $js=json_decode($response,true);
+
+  foreach ($js as $line){
+    [DO WIZARDRY]
+  }
+  ?>
