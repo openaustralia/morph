@@ -1,17 +1,20 @@
 %p Use the following code snippet to get data from the API.
 
-:coderay
-  #!php
-  <?php
-  $morph_api_url = "https://api.morph.io/[USERNAME]/[SCRAPER NAME]/data.json";
-  $morph_api_key="[API KEY]";
+- block = capture do
+  :coderay
+    #!php
+    <?php
+    $morph_api_url = "[scraper_url]/data.json";
+    $morph_api_key="[api_key]";
 
-  $query="select * from 'data' limit 10";
+    $query="[query]";
 
-  $response=file_get_contents($morph_api_url.'?key='.$morph_api_key.'&query='.urlencode($query));
-  $js=json_decode($response,true);
+    $response=file_get_contents($morph_api_url.'?key='.$morph_api_key.'&query='.urlencode($query));
+    $js=json_decode($response,true);
 
-  foreach ($js as $line){
-    [DO WIZARDRY]
-  }
-  ?>
+    foreach ($js as $line){
+      [DO WIZARDRY]
+    }
+    ?>
+
+= block.sub('[scraper_url]', "#{api_root}<span class='full_name'>#{h(@scraper.full_name)}</span>").sub('[api_key]', "<span class='unescaped-api_key'>#{current_user ? current_user.api_key : '[api_key]'}</span>").sub('[query]', "<span class='unescaped-query'>#{h(@query)}</span>").html_safe
