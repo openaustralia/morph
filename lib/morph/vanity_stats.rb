@@ -15,6 +15,8 @@ module Morph
       ApiQuery.where('created_at > ?', 7.days.ago).count
     end
 
+    # TODO: Speed this up by storing a cached version of this information
+    # in the database
     def self.total_database_rows
       Scraper.all.to_a.sum(&:sqlite_total_rows)
     end
