@@ -22,7 +22,9 @@
         %h4
           Over
           = Scraper.rounded_count
-          scrapers with more than 36 million rows of data
+          scrapers with more than
+          = Morph::VanityStats.rounded_total_database_rows_in_millions
+          million rows of data
         %p
           Over
           = Scraper.rounded_count

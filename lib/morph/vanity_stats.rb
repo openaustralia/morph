@@ -14,5 +14,14 @@ module Morph
     def self.total_api_queries_in_last_week
       ApiQuery.where('created_at > ?', 7.days.ago).count
     end
+
+    def self.total_database_rows
+      Scraper.all.to_a.sum(&:sqlite_total_rows)
+    end
+
+    # Round down to the nearest million
+    def self.rounded_total_database_rows_in_millions
+      (total_database_rows / 1000000.0).floor
+    end
   end
 end
