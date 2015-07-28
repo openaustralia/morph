@@ -54,6 +54,10 @@ class Scraper < ActiveRecord::Base
            :finished_with_errors?, :queued?, :running?,
            to: :last_run, allow_nil: true
 
+  def self.floor_to_hundreds(number)
+    (number / 100.0).floor * 100
+  end
+
   def stop!
     Morph::Runner.new(last_run).stop!
   end
