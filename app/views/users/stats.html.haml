@@ -42,7 +42,6 @@
 
     # Determine the first and list dates in the data set
     monthExtent = d3.extent(users, (u) -> u.created_at)
-    console.log monthExtent
 
     # Create one bin per month, use an offset to include the first and last months
     monthBins = d3.time.months(
@@ -106,10 +105,15 @@
 
     max_number_scrapers = d3.max(users, (u) -> u.number_scrapers )
 
-    # Generate a histogram using twenty uniformly-spaced bins.
+    # Generate a histogram with power of two ranges. e.g:
+    # (0..1), (1..2), (2..4), (4..8), etc
+    p = Math.ceil(Math.log(max_number_scrapers) / Math.log(2))
+    bins = d3.range(0, p + 1).map (x) -> 2 ** x
+    bins.unshift(0)
+
     data = d3.layout.histogram()
       .value((u) -> u.number_scrapers)
-      .bins(d3.range(0, max_number_scrapers))(users)
+      .bins(bins)(users)
 
     x.domain([0, max_number_scrapers])
     y.domain([0, d3.max(data, (d) -> d.y)])
