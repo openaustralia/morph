@@ -64,7 +64,7 @@ class User < Owner
       # If we're starting to watch a whole bunch of scrapers (by watching a
       # user/org) and we're already following one of those scrapers individually
       # then remove the individual alert
-      alerts.create(watch: object)
+      watch object
       if object.respond_to?(:scrapers)
         alerts.where(watch_id: object.scrapers,
                      watch_type: 'Scraper').destroy_all
@@ -72,9 +72,13 @@ class User < Owner
     end
   end
 
+  def watch(object)
+    alerts.create(watch: o) unless watching?(o)
+  end
+
   def watch_all_owners
     all_owners.each do |object|
-      alerts.create(watch: object)
+      watch object
     end
   end
 
@@ -145,7 +149,7 @@ class User < Owner
 
     # Watch any new organizations
     (refreshed_organizations - organizations).each do |o|
-      alerts.create(watch: o) unless watching?(o)
+      watch o
     end
 
     self.organizations = refreshed_organizations
