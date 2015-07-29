@@ -2,7 +2,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   include Devise::Controllers::Rememberable
 
   def github
-    new_sign_up = User.find_by(nickname: request.env["omniauth.auth"].info.nickname).blank?
+    new_sign_up = User.find_by(nickname: request.env["omniauth.auth"].info.nickname)
 
     @user = User.find_for_github_oauth(request.env["omniauth.auth"], current_user)
     # Keep people signed in
