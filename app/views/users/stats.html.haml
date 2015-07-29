@@ -115,7 +115,7 @@
       .value((u) -> u.number_scrapers)
       .bins(bins)(users)
 
-    x.domain([0, max_number_scrapers])
+    x.domain([0, 2 ** p])
     y.domain([0, d3.max(data, (d) -> d.y)])
 
     xAxis = d3.svg.axis()
