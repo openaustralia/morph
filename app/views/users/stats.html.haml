@@ -121,6 +121,7 @@
 
     xAxis = d3.svg.axis()
       .scale(x)
+      .tickValues(bins)
       .orient('bottom')
 
     svg = d3.select('#chart-number-scrapers')
