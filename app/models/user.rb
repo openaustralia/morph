@@ -203,4 +203,8 @@ class User < Owner
     'Your account has been suspended. ' \
       'Please contact us if you think this is in error.'
   end
+
+  def never_alerted?
+    alerted_at.blank?
+  end
 end
