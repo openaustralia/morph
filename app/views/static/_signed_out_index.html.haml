@@ -15,13 +15,24 @@
         %i.fa.fa-language.fa-5x
         %h4 Speaks your language
         %p
-          Write in your scraper in the language you know and love because #{link_to "Ruby",       "https://www.ruby-lang.org"}, #{link_to "Python", "http://www.python.org"}, #{link_to "PHP", "http://www.php.net"}
-          and #{link_to "Perl", "http://www.perl.org/"} are all supported
+          Write in your scraper in the language you know and love because
+          #{link_to "Ruby", "https://www.ruby-lang.org"},
+          #{link_to "Python", "http://www.python.org"},
+          #{link_to "PHP", "http://www.php.net"},
+          #{link_to "Perl", "http://www.perl.org/"} and
+          #{link_to "Node.js", "https://nodejs.org/"} are all supported
       .col-md-4
         %i.fa.fa-recycle.fa-5x
-        %h4 Over 2000 scrapers with more than 36 million rows of data
+        %h4
+          Over
+          = Scraper.rounded_count
+          scrapers with more than
+          43
+          million rows of data
         %p
-          Over 2000 public scrapers, with lots of data, available for you to reuse, for free. Download data as a CSV or use the super-simple API.
+          Over
+          = Scraper.rounded_count
+          public scrapers, with lots of data, available for you to reuse, for free. Download data as a CSV or use the super-simple API.
       .col-md-4
         %i.fa.fa-cloud.fa-5x
         %h4 Set it up and forget about it

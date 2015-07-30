@@ -42,7 +42,6 @@
 
     # Determine the first and list dates in the data set
     monthExtent = d3.extent(users, (u) -> u.created_at)
-    console.log monthExtent
 
     # Create one bin per month, use an offset to include the first and last months
     monthBins = d3.time.months(
@@ -101,21 +100,28 @@
     width = 960 - (margin.left) - (margin.right)
     height = 300 - (margin.top) - (margin.bottom)
 
-    x = d3.scale.linear().range([0, width])
-    y = d3.scale.pow().exponent(0.4).range([height, 0])
+    x = d3.scale.sqrt().range([0, width])
+    y = d3.scale.sqrt().range([height, 0])
 
     max_number_scrapers = d3.max(users, (u) -> u.number_scrapers )
 
-    # Generate a histogram using twenty uniformly-spaced bins.
+    # Generate a histogram with power of two ranges. e.g:
+    # (0, 1, 3, 7, 15, ..)
+    # (2**0-1, 2**1-1, 2**2-1, 2**3-1, ...)
+    # Each bin holds twice the number of numbers as the previous one
+    p = Math.ceil(Math.log(max_number_scrapers + 1) / Math.log(2))
+    bins = d3.range(0, p + 1).map (x) -> 2 ** x - 1
+
     data = d3.layout.histogram()
       .value((u) -> u.number_scrapers)
-      .bins(d3.range(0, max_number_scrapers))(users)
+      .bins(bins)(users)
 
-    x.domain([0, max_number_scrapers])
+    x.domain([0, 2 ** p - 1])
     y.domain([0, d3.max(data, (d) -> d.y)])
 
     xAxis = d3.svg.axis()
       .scale(x)
+      .tickValues(bins)
       .orient('bottom')
 
     svg = d3.select('#chart-number-scrapers')

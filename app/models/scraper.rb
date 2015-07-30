@@ -54,6 +54,16 @@ class Scraper < ActiveRecord::Base
            :finished_with_errors?, :queued?, :running?,
            to: :last_run, allow_nil: true
 
+  # Give a count of the total number of scrapers rounded down to the nearest
+  # hundred so that you can say "more than ... scrapers"
+  def self.rounded_count
+    floor_to_hundreds(count)
+  end
+
+  def self.floor_to_hundreds(number)
+    (number / 100.0).floor * 100
+  end
+
   def stop!
     Morph::Runner.new(last_run).stop!
   end

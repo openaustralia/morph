@@ -77,8 +77,13 @@ class Run < ActiveRecord::Base
     status_code && status_code != 0
   end
 
+  # Defining finished recently as finished within the last 48 hours. This is
+  # because an auto-run scraper will run at a random time in a 24 hour interval.
+  # So, given that we might be looking at any time within one of those 24 hour
+  # cycles we need to look back at least 48 hours to ensure that we see all
+  # possible scrapers that could be auto-run.
   def finished_recently?
-    finished_at && finished_at > 24.hours.ago
+    finished_at && finished_at > 48.hours.ago
   end
 
   def error_text

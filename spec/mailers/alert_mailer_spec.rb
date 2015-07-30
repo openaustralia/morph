@@ -22,19 +22,19 @@ describe AlertMailer do
 
       it { expect(email.from).to eq ["contact@morph.io"]}
       it { expect(email.to).to eq ["matthew@oaf.org.au"]}
-      it { expect(email.subject).to eq "1 scraper you are watching is erroring" }
+      it { expect(email.subject).to eq "1 scraper you are watching has errored in the last 48 hours" }
     end
 
     context "two broken scrapers" do
       let(:broken_scrapers) { [scraper1, scraper2] }
       let(:email) { AlertMailer.alert_email(user, broken_scrapers, [scraper1] * 32) }
 
-      it { expect(email.subject).to eq "2 scrapers you are watching are erroring" }
+      it { expect(email.subject).to eq "2 scrapers you are watching have errored in the last 48 hours" }
       it do
         expect(email.text_part.body.to_s).to eq <<-EOF
 morph.io is letting you know that
 
-32 scrapers you are watching are working. These 2 have a problem:
+32 scrapers you are watching have run successfully in the last 48 hours. These 2 have a problem:
 
 planningalerts-scrapers/campbelltown errored
 It has been erroring for 3 days
@@ -66,7 +66,7 @@ is letting you know that
 
       it do
         expected = <<-EOF
-<h3>32 scrapers you are watching are working. These 2 have a problem:</h3>
+<h3>32 scrapers you are watching have run successfully in the last 48 hours. These 2 have a problem:</h3>
 <h3>
 <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown?utm_medium=email&amp;utm_source=alerts">planningalerts-scrapers/campbelltown</a>
 errored
@@ -105,7 +105,7 @@ Annoyed by these emails? Then
         expect(AlertMailer.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s).to eq <<-EOF
 morph.io is letting you know that
 
-32 scrapers you are watching are working. This 1 has a problem:
+32 scrapers you are watching have run successfully in the last 48 hours. This 1 has a problem:
 
 planningalerts-scrapers/campbelltown errored
 It has been erroring for 3 days
@@ -129,14 +129,14 @@ morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
     describe "count of number of scrapers that finished successfully" do
       context "32 scrapers" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1] * 32) }
-        it { expect(mail.text_part.body.to_s).to include("32 scrapers you are watching are working. This 1 has a problem:") }
-        it { expect(mail.html_part.body.to_s).to include("32 scrapers you are watching are working. This 1 has a problem:") }
+        it { expect(mail.text_part.body.to_s).to include("32 scrapers you are watching have run successfully in the last 48 hours. This 1 has a problem:") }
+        it { expect(mail.html_part.body.to_s).to include("32 scrapers you are watching have run successfully in the last 48 hours. This 1 has a problem:") }
       end
 
       context "1 scraper" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1]) }
-        it { expect(mail.text_part.body.to_s).to include("1 scraper you are watching is working. This 1 has a problem:") }
-        it { expect(mail.html_part.body.to_s).to include("1 scraper you are watching is working. This 1 has a problem:") }
+        it { expect(mail.text_part.body.to_s).to include("1 scraper you are watching has run successfully in the last 48 hours. This 1 has a problem:") }
+        it { expect(mail.html_part.body.to_s).to include("1 scraper you are watching has run successfully in the last 48 hours. This 1 has a problem:") }
       end
     end
   end
