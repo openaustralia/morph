@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe AlertMailer do
   describe "#alert" do
-    let(:user) { create(:user, name: "Matthew Landauer", email: "matthew@oaf.org.au", nickname: "mlandauer") }
+    let(:user) { create(:user, name: "Matthew Landauer", email: "matthew@oaf.org.au", nickname: "mlandauer", alerted_at: Time.now) }
     let(:full_name1) { "planningalerts-scrapers/campbelltown" }
     let(:full_name2) { "planningalerts-scrapers/spear" }
     let(:scraper1) { mock_model(Scraper, to_param: full_name1, latest_successful_run_time: 3.days.ago, full_name: full_name1) }
