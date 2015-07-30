@@ -26,7 +26,7 @@ describe AlertMailer do
 
       context "never alerted" do
         let(:user) { create(:user, name: "Matthew Landauer", email: "matthew@oaf.org.au", nickname: "mlandauer", alerted_at: nil) }
-        let(:welcome_text) { "Hello and welcome to your first morph.io alert email." }
+        let(:welcome_text) { "Hello and welcome to your morph.io alert email." }
 
         it { expect(email.text_part.body.to_s).to include(welcome_text) }
         it { expect(email.html_part.body.to_s).to include(welcome_text) }
