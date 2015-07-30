@@ -1,3 +1,13 @@
+<% if @user.never_alerted? %>
+Hello and welcome to your first morph.io alert email.
+
+You're getting this because you signed up for morph.io and a scraper you're
+watching has a problem that you might like to fix.
+
+Rather not get these emails? Then change what you're watching:
+<%= watching_user_url(@user, @analytics_params) %>
+
+<% end %>
 morph.io is letting you know that
 
 <%= alert_scrapers_summary_sentence(@successful_scrapers.count, @broken_scrapers.count) %>
