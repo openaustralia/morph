@@ -73,7 +73,7 @@ class User < Owner
   end
 
   def watch(object)
-    alerts.create(watch: o) unless watching?(o)
+    alerts.create(watch: object) unless watching?(object)
   end
 
   def watch_all_owners
