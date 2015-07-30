@@ -33,7 +33,7 @@ namespace :app do
     # TODO: Run this and then remove it
     desc "Create default watches for all users with no current watches"
     task create_all_default_watches: :environment do
-      User.where.not(id: Alert.pluck(:user_id)) do |user|
+      User.where.not(id: Alert.pluck(:user_id)).each do |user|
         puts "Creating default watches for #{user.nickname}"
         user.watch_all_owners
       end
