@@ -20,7 +20,7 @@ class Plan
   end
 
   def image_name
-    "supporter-badge-#{stripe_plan_id}.png"
+    "supporter-badges/#{stripe_plan_id}.png"
   end
 
   def name
