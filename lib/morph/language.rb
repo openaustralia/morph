@@ -47,7 +47,7 @@ module Morph
       # -u turns off buffering for stdout and stderr
       python: 'python -u',
       perl: 'perl -Mlib=/app/local/lib/perl5',
-      nodejs: 'node'
+      nodejs: 'node --expose-gc'
     }
 
     attr_reader :key
