@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe AlertMailer do
   describe "#alert" do
-    let(:user) { mock_model(User, name: "Matthew Landauer", email: "matthew@oaf.org.au", to_param: "mlandauer") }
+    let(:user) { create(:user, name: "Matthew Landauer", email: "matthew@oaf.org.au", nickname: "mlandauer", alerted_at: Time.now) }
     let(:full_name1) { "planningalerts-scrapers/campbelltown" }
     let(:full_name2) { "planningalerts-scrapers/spear" }
     let(:scraper1) { mock_model(Scraper, to_param: full_name1, latest_successful_run_time: 3.days.ago, full_name: full_name1) }
@@ -23,6 +23,14 @@ describe AlertMailer do
       it { expect(email.from).to eq ["contact@morph.io"]}
       it { expect(email.to).to eq ["matthew@oaf.org.au"]}
       it { expect(email.subject).to eq "1 scraper you are watching has errored in the last 48 hours" }
+
+      context "never alerted" do
+        let(:user) { create(:user, name: "Matthew Landauer", email: "matthew@oaf.org.au", nickname: "mlandauer", alerted_at: nil) }
+        let(:welcome_text) { "Hello and welcome to your morph.io alert email." }
+
+        it { expect(email.text_part.body.to_s).to include(welcome_text) }
+        it { expect(email.html_part.body.to_s).to include(welcome_text) }
+      end
     end
 
     context "two broken scrapers" do

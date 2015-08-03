@@ -64,11 +64,21 @@ class User < Owner
       # If we're starting to watch a whole bunch of scrapers (by watching a
       # user/org) and we're already following one of those scrapers individually
       # then remove the individual alert
-      alerts.create(watch: object)
+      watch object
       if object.respond_to?(:scrapers)
         alerts.where(watch_id: object.scrapers,
                      watch_type: 'Scraper').destroy_all
       end
+    end
+  end
+
+  def watch(object)
+    alerts.create(watch: object) unless watching?(object)
+  end
+
+  def watch_all_owners
+    all_owners.each do |object|
+      watch object
     end
   end
 
@@ -131,11 +141,18 @@ class User < Owner
   end
 
   def refresh_organizations!
-    self.organizations = octokit_client.organizations(nickname).map do |data|
+    refreshed_organizations = octokit_client.organizations(nickname).map do |data|
       org = Organization.find_or_create(data.id, data.login)
       org.refresh_info_from_github!(octokit_client)
       org
     end
+
+    # Watch any new organizations
+    (refreshed_organizations - organizations).each do |o|
+      watch o
+    end
+
+    self.organizations = refreshed_organizations
   end
 
   def octokit_client
@@ -185,5 +202,9 @@ class User < Owner
   def inactive_message
     'Your account has been suspended. ' \
       'Please contact us if you think this is in error.'
+  end
+
+  def never_alerted?
+    alerted_at.blank?
   end
 end
