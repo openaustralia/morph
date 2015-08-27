@@ -402,3 +402,38 @@ a i.fa {
 .filter-option img, .selectpicker img {
   margin-right: 0.5em;
 }
+
+.danger-settings-options-list {
+  .list-group-item {
+    padding-bottom: 1em;
+
+    @media (min-width: $screen-xs-min) {
+      @include clearfix;
+    }
+  }
+
+  h4 {
+    @media (min-width: 35em) {
+      margin-bottom: 0;
+    }
+  }
+
+  p {
+    @media (min-width: $screen-xs-min) {
+       margin-bottom: 0;
+       float: left;
+       max-width: 20em;
+    }
+
+    @media (min-width: 35em) {
+       margin-top: $panel-body-padding;
+       max-width: none;
+    }
+  }
+
+  .btn {
+    @media (min-width: $screen-xs-min) {
+       float: right;
+    }
+  }
+}
