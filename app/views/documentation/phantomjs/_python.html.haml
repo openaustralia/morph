@@ -1,1 +1,33 @@
-= render "missing_documentation"
+:markdown
+  The [Splinter](http://splinter.readthedocs.org/en/latest) library provides a higher-level
+  wrapper for the [PhantomJS](http://phantomjs.org/) and [Selenium](http://seleniumhq.github.io/selenium/docs/api/py)
+  frameworks.
+
+  To install it, add `splinter` to your requirements.txt:
+:coderay
+  #!python
+  splinter>=0.7.3
+
+:markdown
+  Then in your scraper,
+:coderay
+  #!python
+  from splinter import Browser
+
+  with Browser("phantomjs") as browser:
+      # Optional, but make sure large enough that responsive pages don't
+      # hide elements on you...
+      browser.driver.set_window_size(1280, 1024)
+
+      # Open the page you want...
+      browser.visit("https://morph.io")
+
+      # submit the search form...
+      browser.fill("q", "parliament")
+      button = browser.find_by_css("button[type='submit']")
+      button.click()
+
+      # Scrape the data you like...
+      links = browser.find_by_css(".search-results .list-group-item")
+      for link in links:
+          print link['href']
