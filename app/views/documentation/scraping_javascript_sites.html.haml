@@ -7,7 +7,8 @@
   This could be because the web site is poorly programmed or because it makes extensive use of JavaScript.
 
   You can do this with [PhantomJS](http://phantomjs.org/) which is essentially a headless browser that you can control from your scraper using JavaScript or a wrapper library.
-  The PhantomJS binary, `/usr/bin/phantomjs`, is installed as part of the `phantomjs` Ubuntu package which is installed in every scraper container as [part of the build process](https://github.com/openaustralia/morph-docker-buildstep-base/blob/master/Dockerfile#L27).
+  The PhantomJS binary, `/usr/bin/phantomjs`, is installed on morph.io as part of the `phantomjs` Ubuntu package, which is installed in every scraper container as [part of the build process](https://github.com/openaustralia/morph-docker-buildstep-base/blob/master/Dockerfile#L27).
+  To test a scraper with PhantomJS on your own machine, you'll need the to [download and install the binary](http://phantomjs.org/download.html) yourself.
 
 %h3 Usage
 = render "language_tabs", id_prefix: "using_phantomjs", path: "documentation/phantomjs"

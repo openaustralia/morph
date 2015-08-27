@@ -31,16 +31,3 @@
       links = browser.find_by_css(".search-results .list-group-item")
       for link in links:
           print link['href']
-
-:markdown
-  #### Testing locally
-  As mentioned above, morph.io already has PhantomJS supplied as part of the default build process.
-
-  To test this on your own machine, you'll first need to 
-  [install PhantomJS](http://phantomjs.org/download.html) before
-  the Splinter library will be able to use it. 
-  
-  Then you'll be able to [follow the remaining steps](/documentation/run_locally#run_locally-python) 
-  to run your scraper locally.
-
-
