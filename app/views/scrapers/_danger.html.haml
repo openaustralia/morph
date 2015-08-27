@@ -4,7 +4,11 @@
       %h3.panel-title Here be dragons!
     .panel-body
       %p These can't be undone
+      %h4 Clear this scraper’s database
+      %p All your data will be gone!
       %p
         = button_to "Clear database", clear_scraper_path(@scraper), {class: "btn btn-danger", data: {confirm: "All your data will be gone!"}}
+      %h4 Delete this scraper
+      %p Delete the entire scraper from morph.io, data and all.
       %p
         = button_to "Delete scraper", @scraper, {method: :delete, class: "btn btn-danger", data: {confirm: "Delete #{@scraper.full_name}?"}}
