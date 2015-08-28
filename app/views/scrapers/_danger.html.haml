@@ -1,18 +1,20 @@
 - if can? :destroy, @scraper
-  .panel.panel-danger
-    .panel-heading
-      %h3.panel-title Here be dragons!
-    .panel-body
-      %p
-        %strong Be careful here, these actions can't be undone.
-    %ul.danger-settings-options-list.list-group
-      %li.list-group-item
-        %h4 Clear this scraper’s database
-        %p All your data will be gone!
-        = button_to "Clear database", clear_scraper_path(@scraper),
-          {class: "btn btn-danger", data: {confirm: "All your data will be gone!"}}
-      %li.list-group-item
-        %h4 Delete this scraper
-        %p Delete the entire scraper from morph.io, data and all.
-        = button_to "Delete scraper", @scraper,
-          {class: "btn btn-danger", method: :delete, data: {confirm: "Delete #{@scraper.full_name}?"}}
+  .row
+    .col-md-8
+      .panel.panel-danger
+        .panel-heading
+          %h3.panel-title Here be dragons!
+        .panel-body
+          %p
+            %strong Be careful here, these actions can't be undone.
+        %ul.danger-settings-options-list.list-group
+          %li.list-group-item
+            %h4 Clear this scraper’s database
+            %p All your data will be gone!
+            = button_to "Clear database", clear_scraper_path(@scraper),
+              {class: "btn btn-danger", data: {confirm: "All your data will be gone!"}}
+          %li.list-group-item
+            %h4 Delete this scraper
+            %p Delete the entire scraper from morph.io, data and all.
+            = button_to "Delete scraper", @scraper,
+              {class: "btn btn-danger", method: :delete, data: {confirm: "Delete #{@scraper.full_name}?"}}
