@@ -9,14 +9,14 @@
             %strong Be careful here, these actions can't be undone.
         %ul.danger-settings-options-list.list-group
           %li.list-group-item
-            %h4 Clear this scraper’s database
+            %h4 Clear your scraper’s database
             %p All your data will be gone!
             = button_to "Clear database", clear_scraper_path(@scraper),
               {class: "btn btn-danger",
-                data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear this scraper’s database?"}}
+                data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?"}}
           %li.list-group-item
-            %h4 Delete this scraper
+            %h4 Delete your scraper
             %p Delete the entire scraper from morph.io, data and all.
-            = button_to "Delete scraper", @scraper,
+            = button_to "Delete your scraper", @scraper,
               {class: "btn btn-danger", method: :delete,
                 data: {confirm: "Scraper #{@scraper.full_name} and its database will be deleted from morph.io. Are you sure you want to delete your scraper?"}}
