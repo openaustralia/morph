@@ -239,3 +239,19 @@ the first bill in the table.
 ```
 
 Victory!
+
+Now that we’ve found our bill,
+we want to collect its *name*, *house of origin*, and the *url to its main page*.
+Let’s start with the name.
+
+Looking at the table, you can see that
+the name of the bill is the text in the first cell of the row.
+We can use the `.inner_text` method here.
+
+```
+>> page.at('table').search('tr')[1].at('td').inner_text
+=> "Aboriginal Housing Bill 1998"
+```
+
+There it is: the name of the first bill.
+You’ve successfully scraped the first bit of information you want.
