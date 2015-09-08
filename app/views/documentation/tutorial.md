@@ -218,3 +218,24 @@ Nothing. An empty Array.
 This is because the first row (`<tr>`) in our bills table
 contains the table column headers (`<tr>`) elements.
 We need to get the second row to find our first bill.
+
+We can target the second row of the table by
+first getting an Array of all the rows,
+and then selecting the row we want
+by [its index in the array](http://ruby-doc.org/core-2.0.0/Array.html#method-i-5B-5D).
+Remember that `[0]` is the first item in an Array.
+
+```
+page.at('table').search('tr')[1]
+```
+
+You can use the `inner_text()` method
+to help work out if we’ve targeted the element we’re looking for,
+the first bill in the table.
+
+```
+>> page.at('table').search('tr')[1].inner_text
+=> "Aboriginal Housing Bill 1998LAAssented - Act No 47 of 1998"
+```
+
+Victory!
