@@ -335,3 +335,65 @@ The scraper runs and the `p` command returns our `member`:
 ```
 
 This is a good time to make your first git commit for this project.
+
+Now that you’ve got the title for the first member
+get the *electorate* (the place the member is ‘member for’) and *party*.
+
+Looking at the page source again,
+we can see this information is in the first and second `<dd>` elements
+in the member’s `<li>`.
+
+
+```
+<li>
+  <p class='title'>
+    <a href="http://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=WN6">
+      The Hon Ian Macfarlane MP
+    </a>
+  </p>
+  <p class='thumbnail'>
+    <a href="http://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=WN6">
+      <img alt="Photo of The Hon Ian Macfarlane MP" src="http://parlinfo.aph.gov.au/parlInfo/download/handbook/allmps/WN6/upload_ref_binary/WN6.JPG" width="80" />
+    </a>
+  </p>
+  <dl>
+    <dt>Member for</dt>
+    <dd>Groom, Queensland</dd>
+    <dt>Party</dt>
+    <dd>Liberal Party of Australia</dd>
+    <dt>Connect</dt>
+    <dd>
+      <a class="social mail" href="mailto:Ian.Macfarlane.MP@aph.gov.au"
+      target="_blank">Email</a>
+    </dd>
+  </dl>
+</li>
+```
+
+Get the *electorate* and *party*
+by first getting an array of the `<dd>` elements
+and then selecting the one you want
+by [its index in the array](http://ruby-doc.org/core-2.0.0/Array.html#method-i-5B-5D).
+Remember that `[0]` is the first item in an Array.
+
+Try getting the data in your `irb` session:
+
+```
+>> page.at('.search-filter-results').at('li').search('dd')[0].inner_text
+=> "Groom, Queensland"
+>> page.at('.search-filter-results').at('li').search('dd')[1].inner_text
+=> "Liberal Party of Australia"
+```
+
+Then add the code to expand your `member` object in your `scraper.rb`:
+
+```
+member = {
+  title: page.at('.search-filter-results').at('li').at('.title').inner_text.strip,
+  electorate: page.at('.search-filter-results').at('li').search('dd')[0].inner_text,
+  party: page.at('.search-filter-results').at('li').search('dd')[1].inner_text
+}
+```
+
+Save and run your scraper using `bundle exec ruby scraper.rb`
+and check that you’re object includes the attributes with values you expect.
