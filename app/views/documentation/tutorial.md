@@ -311,3 +311,25 @@ member = {
   title: page.at('.search-filter-results').at('li').at('.title').inner_text.strip
 }
 ```
+
+Add a final line to the file to help
+confirm that everything is working as expected.
+
+```
+p member
+```
+
+You can now, back in on the command line
+in the folder for your project,
+run this file in Ruby:
+
+```
+bundle exec ruby scraper.rb
+```
+
+The scraper runs and the `p` command returns our `member`:
+
+```
+> bundle exec ruby scraper.rb
+{:title=>"The Hon Ian Macfarlane MP"}
+```
