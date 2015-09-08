@@ -64,3 +64,4 @@ This is template code that helps you get started by defining some basic dependen
 
 You can use [Bundler](http://bundler.io/) to manage a Ruby project’s dependencies. Run, `bundle install` in terminal to check the Gemfile and install any libraries you are missing. If you need to install or switch Ruby versions, you can use a tool like [rbenv](https://robots.thoughtbot.com/using-rbenv-to-manage-rubies-and-gems) or [rvm](https://github.com/rvm/rvm).
 
+So far we’ve set up all our files, cloned them to our machine, and installed the necessary dependencies. Now it’s time to write our scraper.
