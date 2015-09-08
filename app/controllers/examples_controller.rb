@@ -24,8 +24,10 @@ class ExamplesController < ApplicationController
       @members = @members[0..49]
     elsif @page == 2
       @members = @members[50..99]
-    else
+    elsif @page == 3
       @members = @members[100..149]
+    else
+      raise ActiveRecord::RecordNotFound
     end
     render layout: nil
   end
