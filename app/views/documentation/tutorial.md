@@ -182,7 +182,7 @@ The [`at()`](http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/
 method returns the first element that matches the selectors provided.
 For example, `page.at(‘ul’)` returns the first `<ul>` element in the page
 as a Nokogiri XML Element that we can parse.
-There are a number of ways to target element using the at() method.
+There are a number of ways to target elements using the `at()` method.
 We’re using a css style selector in this example
 because many people are familiar with this style from writing CSS or jQuery.
 You can also target elements by `class`, e.g. `page.at('.search-filter-results')`;
