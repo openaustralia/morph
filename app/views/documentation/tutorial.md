@@ -14,6 +14,8 @@ In this tutorial you will:
 * write your scraping code
 * publishing and running your scraper on morph.io
 
+You’ll use morph.io, the command line and a code editor on your local machine.
+
 ## Find the data you’re looking for and workout if you can scrape it
 
 In this tutorial we're going to write a simple scraper to collect
