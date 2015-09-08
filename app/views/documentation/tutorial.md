@@ -432,3 +432,4 @@ member = {
 ```
 
 Save and run your scraper file to make sure all is well.
+This is a good time to do another `git commit` to save your progress.
