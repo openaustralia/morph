@@ -433,3 +433,39 @@ member = {
 
 Save and run your scraper file to make sure all is well.
 This is a good time to do another `git commit` to save your progress.
+
+Now you’ve written a scraper to get
+information about one member of Australian Parliament.
+It’s time to get information about all the members on the first page.
+
+Currently your using `page.at('.search-filter-results').at('li')`
+to target the first list item in the members list.
+You can adapt this to get every list item using the `search()` method:
+
+```
+page.at('.search-filter-results').search('li')
+```
+
+Use a ruby [`each` loop](http://ruby-doc.org/core-2.0.0/Array.html#method-i-each)
+to run your code to collect and print your member object
+once for each list item.
+
+```
+page.at('.search-filter-results').search('li').each do |li|
+  member = {
+    title: li.at('.title').inner_text.strip,
+    electorate: li.search('dd')[0].inner_text,
+    party: li.search('dd')[1].inner_text,
+    url: li.at('.title a').attr('href')
+  }
+
+  p member
+end
+```
+
+Save and run the file and see if
+it collects all the members on the page as expected.
+Now you’re really scraping!
+
+You still don’t have all the members though,
+they are split over 3 pages and you only have the first.
