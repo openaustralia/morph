@@ -37,10 +37,10 @@ We’ll have to write a scraper to collect all the bills!
 
 Is it possible to scrape this information?
 The bills information is published in a simple html table,
-rather than imbedded in an image.
+rather than embedded in an image.
 This means we should be able to write a scraper to collect it.
 If the information was in an image or PDF
-then it would be much harder to access programatically.
+then it would be much harder to access programmatically.
 
 Now that we've found our data and we know we can scrape it,
 the next step is to set up out scraper.
