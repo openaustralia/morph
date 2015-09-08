@@ -67,7 +67,7 @@ Click “Create Scraper”!
 After morph.io has finished creating the new scraper
 we are taken to our fresh scraper page.
 We want to clone all the template scraper code morph.io provides
-to our local machine so we can work with it there. Running
+to our local machine so we can work with it there.
 
 On the scraper page there is a heading “Scraper code”,
 with a button to copy the “git clone URL”.
