@@ -71,8 +71,7 @@ This is the link to the GitHub repository of your scraper’s code.
 Click the button to copy the url to your clipboard.
 
 Open terminal on your local computer
-and `cd` to the directory you want to clone your fines to,
-in my case `cd git`.
+and `cd` to the directory you want to work in.
 Type `git clone ` then paste in the url you copied
 to get something like:
 
