@@ -120,3 +120,101 @@ So far we’ve set up all our files,
 cloned them to our machine,
 and installed the necessary dependencies.
 Now it’s time to write our scraper.
+
+## Writing your scraper
+
+It can be really helpful to start out writing your scraper in an interactive shell.
+In the shell you’ll get quick feedback as you explore the page you’re trying to scrape,
+instead of having to run your scraper file to see what your code does.
+
+The interactive shell for ruby
+is called [irb](https://en.wikipedia.org/wiki/Interactive_Ruby_Shell).
+Start an irb session in our terminal with:
+
+```
+bundle exec irb
+```
+
+The `bundle exec` command executes your `irb` command
+in the context of your project’s Gemfile.
+This means that your specified gems will be available.
+
+The first command we need to run in `irb` is:
+
+```
+require 'mechanize'
+```
+
+This loads in the Mechanize library.
+Mechanize is a helpful library for making requesting and interacting with webpages.
+
+```
+agent = Mechanize.new
+```
+
+Create an instance of Mechanize
+that will be our agent to do things like 'get' pages and 'click' on links.
+
+We want to get all the bills introduced since 1997.
+Looking at [the page we found earlier](http://www.parliament.nsw.gov.au/prod/parlment/nswbills.nsf/V3BillsListAll)
+it turns out the bills are listed across many pages
+–they’ve been organised alphabetically with a page for each letter.
+Rather than worry about this now, lets start small.
+Let’s see if we can just get the information we want
+for the first bill on the first page.
+Reducing the complexity as we start to write our code
+will make it easier to debug as we go along.
+
+In our irb session, use [the Mechanize `get` method](http://mechanize.rubyforge.org/Mechanize.html#method-i-get)
+to get the first page with bills listed on it.
+
+```
+url = "http://www.parliament.nsw.gov.au/prod/parlment/nswbills.nsf/V3BillsListAll"
+page = agent.get(url)
+```
+
+This returns the source of our page
+as a [Mechanize Page object](http://mechanize.rubyforge.org/Mechanize/Page.html).
+We’ll be pulling the information we want out of this object
+using the handy Nokogiri XML parsing methods that Mechanize loads in for us.
+Let’s review some of these methods.
+
+### at()
+
+The [`at()`](http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/Searchable#at-instance_method)
+method returns the first element that matches the selectors provided.
+For example, `page.at(‘table’)` returns the first `<table>` element in the page
+as a Nokogiri XML Element that we can parse.
+There are a number of ways to target element using the at() method.
+We’re using a css style selector in this example
+because many people are familiar with this style from css or jQuery.
+You can also target elements by `class`, e.g. `page.at('.bodyText')`;
+or `id`, e.g. `page.at('#content')`.
+
+### search()
+
+The [`search()`](http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/Searchable#search-instance_method)
+method works like the `at()` method,
+but returns an Array of every element that matches the target instead of just the first.
+Running `page.search('tr')` returns an Array of every `<tr>` element inside `page`.
+
+You can chain these methods together to find specific elements.
+`page.at('table').at('tr').search('td')`
+will return an Array of `<td>` elements
+found within the first `<tr>` element
+found within the first `<table>` element on the page.
+
+
+In our `irb` session,
+if we run `page.at('table').at('tr').search('td')` we get:
+
+```
+>> page.at('table').at('tr').search('td')
+=> []
+```
+
+Nothing. An empty Array.
+
+This is because the first row (`<tr>`) in our bills table
+contains the table column headers (`<tr>`) elements.
+We need to get the second row to find our first bill.
