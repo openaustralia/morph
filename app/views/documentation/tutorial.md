@@ -230,7 +230,7 @@ page.at('table').search('tr')[1]
 ```
 
 You can use the `inner_text()` method
-to help work out if we’ve targeted the element we’re looking for,
+to help work out if we’ve targeted the element we’re looking for:
 the first bill in the table.
 
 ```
