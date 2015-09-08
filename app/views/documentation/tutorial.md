@@ -255,3 +255,39 @@ We can use the `.inner_text` method here.
 
 There it is: the name of the first bill.
 You’ve successfully scraped the first bit of information you want.
+
+Now that we’ve got some code for our scraper,
+let’s add it to our `scraper.rb` file and make our first commit.
+
+You’ll want to come back to your `irb` session,
+so leave it running and open your `scraper.rb` file in your code editor.
+Replace the commented out template code
+with the working code from your `irb` session.
+
+Your `scraper.rb` should look like this:
+
+```
+require 'mechanize'
+
+agent = Mechanize.new
+url = 'http://www.parliament.nsw.gov.au/prod/parlment/nswbills.nsf/V3BillsListAll'
+page = agent.get(url)
+
+page.at('table').search('tr')[1].at('td').inner_text
+```
+
+You actually want to collect bills with this scraper,
+so create a bill object
+and assign the text you’ve collected as it’s name:
+
+```
+require 'mechanize'
+
+agent = Mechanize.new
+url = 'http://www.parliament.nsw.gov.au/prod/parlment/nswbills.nsf/V3BillsListAll'
+page = agent.get(url)
+
+bill = {
+  name: page.at('table').search('tr')[1].at('td').inner_text
+}
+```
