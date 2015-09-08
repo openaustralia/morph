@@ -397,3 +397,38 @@ member = {
 
 Save and run your scraper using `bundle exec ruby scraper.rb`
 and check that you’re object includes the attributes with values you expect.
+
+Ok, now you just need the *url for the member’s individual page*.
+Look at that source code again and you’ll find it
+in the `href` of the `<a>` inside the `<p>` with the class `title`.
+
+In your `irb` session, first get the `<a>` element:
+
+```
+>> page.at('.search-filter-results').at('li').at('.title a')
+=> #<Nokogiri::XML::Element:0x3fca485cfba0 name="a" attributes=[#<Nokogiri::XML::Attr:0x3fca48432a18 name="href" value="http://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=WN6">] children=[#<Nokogiri::XML::Text:0x3fca4843b5c8 "The Hon Ian Macfarlane MP">]>
+```
+
+You get a Nokogiri XML Element with one attribute.
+The attribute has the name “href” and the value is the url you want.
+You can use the
+[`attr() method`](http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/Reader#attribute-instance_method)
+here to return this value:
+
+```
+>> page.at('.search-filter-results').at('li').at('.title a').attr('href')
+=> "http://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=WN6"
+```
+
+You can now add this final attribute to your member object in `scraper.rb`:
+
+```
+member = {
+  title: page.at('.search-filter-results').at('li').at('.title').inner_text.strip,
+  electorate: page.at('.search-filter-results').at('li').search('dd')[0].inner_text,
+  party: page.at('.search-filter-results').at('li').search('dd')[1].inner_text,
+  url: page.at('.search-filter-results').at('li').at('.title a').attr('href')
+}
+```
+
+Save and run your scraper file to make sure all is well.
