@@ -333,3 +333,5 @@ The scraper runs and the `p` command returns our `member`:
 > bundle exec ruby scraper.rb
 {:title=>"The Hon Ian Macfarlane MP"}
 ```
+
+This is a good time to make your first git commit for this project.
