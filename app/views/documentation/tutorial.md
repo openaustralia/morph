@@ -5,7 +5,7 @@ to collect data from the web.
 This tutorial uses the Ruby programming language, but
 you can apply the steps and techniques to any language available on morph.io.
 
-In this tutorial we will:
+In this tutorial you will:
 
 * create a scraper on morph.io
 * clone it using git to work with on your local machine
