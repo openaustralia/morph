@@ -35,7 +35,8 @@ This member information is published in a simple html list,
 rather than embedded in an image.
 This means we should be able to write a scraper to collect it.
 If the information was in an image or PDF
-then it would be much harder to access programmatically.
+then it would be much harder to access programmatically and
+therefor much harder to write a scraper for.
 
 Now that we've found our data and we know we can scrape it,
 the next step is to set up out scraper.
