@@ -36,9 +36,10 @@ for practice scraping.
 You will target this page to get the member information with your scraper.
 
 Some webpages are much harder to scrape than others.
-This member information is published in a simple html list,
-rather than embedded in an image.
-This means you should be able to write a scraper to collect it.
+The member information you’re trying to collect
+is published in a simple html list,
+which means you should be able to target and collect
+the information you want quite easily.
 If the information was in an image or PDF
 then it would be much harder to access programmatically and
 therefor much harder to write a scraper for.
