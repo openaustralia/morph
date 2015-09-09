@@ -179,7 +179,7 @@ page = agent.get(url)
 This returns the source of your page
 as a [Mechanize Page object](http://mechanize.rubyforge.org/Mechanize/Page.html).
 You’ll be pulling the information you want out of this object
-using the handy Nokogiri XML parsing methods that Mechanize loads in for you.
+using the handy Nokogiri XML searching methods that Mechanize loads in for you.
 Let’s review some of these methods.
 
 ### at()
