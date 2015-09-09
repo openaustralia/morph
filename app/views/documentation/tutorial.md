@@ -539,3 +539,89 @@ and prints them to the command line—
 but you actually want to save this data.
 You need to store the information you’ve scraped
 so you can actually use it in your projects.
+
+## Saving the data you scrape
+
+Scrapers on [morph.io](https://morph.io/)
+use the handy [ScraperWiki library](https://github.com/openaustralia/scraperwiki-ruby/tree/morph_defaults)
+to save data to an [SQLite database](https://en.wikipedia.org/wiki/SQLite).
+This is how all data in morph.io is stored.
+Each scraper page provides options to download
+the SQLite database, a CSV file of each table,
+or access the data via an [API](https://morph.io/documentation/api).
+
+You might remember seeing the ScraperWiki library
+listed as a dependency in your Gemfile earlier:
+
+```
+ruby "2.0.0"
+
+gem "scraperwiki", git: "https://github.com/openaustralia/scraperwiki-ruby.git", branch: "morph_defaults"
+gem "mechanize"
+```
+
+To use this library in our scraper,
+you need to declare that it is required at the top of your `scraper.rb`
+in the same way you have for the Mechanize library:
+
+```
+require 'mechanize'
+require 'scraperwiki'
+```
+
+You can save data using the [`ScraperWiki.save_sqlite()` method](https://github.com/openaustralia/scraperwiki-ruby/blob/morph_defaults/README.md#scraperwikisave_sqliteunique_keys-data-table_name--dataverbose).
+This method takes care of the messy buisness
+of creating a database and handling duplication for you.
+There are two auguments you need to pass it:
+an array of the record’s unique keys
+so it knows when to override or update a record,
+and the data that you want to save.
+
+A member’s title is unique to them
+so you can use that as your unique key.
+The data you want to save is your `member` object.
+After your `p member` statement is a good place to save your data.
+
+```
+p member
+ScraperWiki.save_sqlite([:title], member)
+```
+
+Your `scraper.rb` should now look like this:
+
+```
+require 'mechanize'
+require 'scraperwiki'
+
+agent = Mechanize.new
+url = 'https://morph.io/documentation/examples/australian_members_of_parliament'
+
+["1", "2", "3"].each do |page_number|
+  page = agent.get(url + "?page=" + page_number)
+
+  page.at('.search-filter-results').search('li').each do |li|
+    member = {
+      title: li.at('.title').inner_text.strip,
+      electorate: li.search('dd')[0].inner_text,
+      party: li.search('dd')[1].inner_text,
+      url: li.at('.title a').attr('href')
+    }
+
+    p member
+    ScraperWiki.save_sqlite([:title], member)
+  end
+end
+```
+
+Save and run your file.
+The command line output should be unchanged—
+but if you view the files in your project directory
+you will see a new file `data.sqlite`.
+
+Great job.
+You’ve now writen a scraper to collect data and save it to a database.
+It’s time to put your new scraper code on morph.io
+so you can show the world how cool you are—and
+so it can take care of running the thing,
+storing your data,
+and providing you easy access to it.
