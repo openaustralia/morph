@@ -141,7 +141,7 @@ is called [irb](https://en.wikipedia.org/wiki/Interactive_Ruby_Shell).
 Start an irb session in your terminal with:
 
 ```
-bundle exec irb
+> bundle exec irb
 ```
 
 The `bundle exec` command executes your `irb` command
@@ -151,7 +151,7 @@ This means that your specified gems will be available.
 The first command you need to run in `irb` is:
 
 ```
-require 'mechanize'
+>> require 'mechanize'
 ```
 
 This loads in the Mechanize library.
@@ -161,7 +161,7 @@ Now you can create an instance of Mechanize
 that will be your agent to do things like 'get' pages and 'click' on links:
 
 ```
-agent = Mechanize.new
+>> agent = Mechanize.new
 ```
 
 You want to get information for all the members you can.
@@ -178,8 +178,8 @@ In your irb session, use [the Mechanize `get` method](http://mechanize.rubyforge
 to get the first page with members listed on it.
 
 ```
-url = "https://morph.io/documentation/examples/australian_members_of_parliament"
-page = agent.get(url)
+>> url = "https://morph.io/documentation/examples/australian_members_of_parliament"
+>> page = agent.get(url)
 ```
 
 This returns the source of your page
@@ -219,7 +219,7 @@ You can use the `at()` and `search()` methods
 to get the first member list item on the page:
 
 ```
-page.at('.search-filter-results').at('li')
+>> page.at('.search-filter-results').at('li')
 ```
 
 This returns a big blob of code that can be hard to read.
@@ -338,7 +338,7 @@ in the folder for your project,
 run this file in Ruby:
 
 ```
-bundle exec ruby scraper.rb
+> bundle exec ruby scraper.rb
 ```
 
 The scraper runs and the `p` command returns your `member`:
@@ -648,7 +648,7 @@ Start off with another `git commit` to save any outstanding changes.
 Push your changes up to your remote GitHub repository with:
 
 ```
-git push origin master:master
+> git push origin master:master
 ```
 
 Now go view your scraper’s page on GitHub
