@@ -150,12 +150,12 @@ require 'mechanize'
 This loads in the Mechanize library.
 Mechanize is a helpful library for making requesting and interacting with webpages.
 
+Now you can create an instance of Mechanize
+that will be our agent to do things like 'get' pages and 'click' on links:
+
 ```
 agent = Mechanize.new
 ```
-
-Create an instance of Mechanize
-that will be our agent to do things like 'get' pages and 'click' on links.
 
 We want to get information for all the members we can.
 Looking at [our target page](https://morph.io/documentation/examples/australian_members_of_parliament)
