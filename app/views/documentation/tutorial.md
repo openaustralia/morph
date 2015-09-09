@@ -620,7 +620,7 @@ but if you view the files in your project directory
 you will see a new file `data.sqlite`.
 
 Great job.
-You’ve now writen a scraper to collect data and save it to a database.
+You’ve now written a scraper to collect data and save it to a database.
 It’s time to put your new scraper code on morph.io
 so you can show the world how cool you are—and
 so it can take care of running the thing,
