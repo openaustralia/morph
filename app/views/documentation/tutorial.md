@@ -660,3 +660,35 @@ and buttons to download your data in a range of formats.
 
 Take a moment to explore the download options
 and check that the data looks as you expected.
+
+## That’s all folks
+
+Well done my friend, you’ve just written a web scraper.
+
+With just a few lines of code
+you’ve collected information from a website
+and saved it in a structured format you can play with.
+You’ve published your work for all to see on morph.io
+and set it to run, store and provide access to your data.
+
+If you want to get really fancy
+you can set your scraper to *auto run daily*
+on your scraper’s settings page
+so it’s stays up to date with any changes to the members list.
+
+Before you go mad with power,
+go and explore some of the scrapers on morph.io.
+Try searching for
+[topics you find interesting](https://morph.io/search?q=parliament)
+and [domains you know](https://morph.io/search?utf8=%E2%9C%93&type=&show=&q=.gov).
+Get ideas for what to scrape next
+and learn from other peoples’ scraper code.
+
+Remember to [post questions to the help forums](https://help.morph.io/)
+if you get blocked by tricky problems.
+
+If you have any feedback on this tutorial we’d love to hear it.
+Please [log an issue](https://github.com/openaustralia/morph/issues/new)
+to report a specific problem or make a suggestion.
+
+Now go forth with your new powers and scrape all the things!
