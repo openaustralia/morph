@@ -20,7 +20,7 @@ You’ll use morph.io, the command line and a code editor on your local machine.
 
 Let’s get started.
 
-## Find the data you’re looking for and workout if you can scrape it
+## Find the data you want to scrape
 
 In this tutorial you're going to write a simple scraper to collect
 information about the elected members of Australia’s Federal Parliament.
