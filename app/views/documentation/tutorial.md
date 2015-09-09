@@ -21,7 +21,8 @@ You’ll use morph.io, the command line and a code editor on your local machine.
 In this tutorial we're going to write a simple scraper to collect
 information about the elected members of Australia’s Federal Parliament.
 For each member let’s capture their
-*title*, *electorate*, *party*, and the *url for their individual page*.
+*title*, *electorate*, *party*,
+and the *url for their individual page on the Parliament’s website*.
 
 The data you want to scrape needs to be available on the web.
 We’ve copied a basic list of members from
