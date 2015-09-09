@@ -48,7 +48,7 @@ Now that you've found the data you want to scrape
 and you know you *can* scrape it,
 the next step is to set up your scraper.
 
-## Create your scraper on morph.io and clone it locally
+## Create your scraper on morph.io and clone it to your machine
 
 The easiest way to get started is
 to [create a new scraper on morph.io](https://morph.io/scrapers/new).
