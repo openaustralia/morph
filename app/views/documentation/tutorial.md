@@ -626,3 +626,37 @@ so you can show the world how cool you are—and
 so it can take care of running the thing,
 storing your data,
 and providing you easy access to it.
+
+## Running your scraper on morph.io
+
+Morph.io runs scraper code that is stored in public GitHub repositories.
+To run your scraper on morph.io,
+you’ll first have to push it back up to GitHub repository
+you originally cloned it from.
+
+Start off with another `git commit` to save any outstanding changes.
+
+Push your changes up to your remote GitHub repository with:
+
+```
+git push origin master:master
+```
+
+Now go view your scraper’s page on GitHub
+(the url will be something like
+github.com/*yourusername*/*the_name_of_this_scraper*).
+Navigate to view your `scraper.rb` file on GitHub
+and see that it’s got all your local changes.
+
+You can now go over to your scraper’s page on morph.io
+and click the “Run scraper” button near the top of the page.
+The moment of truth is upon us.
+
+As your scraper runs you will see all your console output
+print the data for the members you are scraping.
+A few seconds later, underneath the heading “Data”,
+you’ll find a table showing a representative ten rows of data
+and buttons to download your data in a range of formats.
+
+Take a moment to explore the download options
+and check that the data looks as you expected.
