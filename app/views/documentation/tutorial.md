@@ -531,6 +531,7 @@ end
 Save and run your `scraper.rb`.
 You should now see all 150 members details printed.
 Well done!
+You should do a `git commit` for this working code.
 
 This is great—but there’s one more step.
 You’ve written a scraper that collects the details of members of Parliament
