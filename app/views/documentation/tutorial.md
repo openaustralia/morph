@@ -1,7 +1,10 @@
 <!-- TODO: Add gifs to illustrate steps where that would be helpful -->
 
-This tutorial will take you through the process of writing a simple scraper
-to collect data from the web.
+With just a few lines of code,
+you can write a scraper to collect data from messy webpages
+and save it in a structured format you can work with.
+
+This tutorial will take you through the process of writing a simple scraper.
 This tutorial uses the Ruby programming language, but
 you can apply the steps and techniques to any language available on morph.io.
 
