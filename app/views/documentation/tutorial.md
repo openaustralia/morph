@@ -78,7 +78,7 @@ with a button to copy the “git clone URL”.
 This is the link to the GitHub repository of your scraper’s code.
 Click the button to copy the url to your clipboard.
 
-Open terminal on your local computer
+Open your computer’s command line
 and `cd` to the directory you want to work in.
 Type `git clone ` then paste in the url you copied
 to get something like:
@@ -115,7 +115,7 @@ You can read more about [language versions](https://morph.io/documentation/langu
 and [libraries](https://morph.io/documentation/libraries) in the morph.io documentation.
 
 You can use [Bundler](http://bundler.io/) to manage a Ruby project’s dependencies.
-Run, `bundle install` in terminal to check the Gemfile
+Run, `bundle install` on the command line to check the Gemfile
 and install any libraries (called gems in Ruby) required.
 If you need to install Ruby or switch versions,
 you can use a tool like [rbenv](https://robots.thoughtbot.com/using-rbenv-to-manage-rubies-and-gems)
@@ -138,7 +138,7 @@ instead of having to run your scraper file to see what your code does.
 
 The interactive shell for ruby
 is called [irb](https://en.wikipedia.org/wiki/Interactive_Ruby_Shell).
-Start an irb session in your terminal with:
+Start an irb session on the command line with:
 
 ```
 > bundle exec irb
