@@ -14,7 +14,7 @@ In this tutorial you will:
 * clone it using git to work with on your local machine
 * make sure you have the necessary dependencies installed
 * write scraping code to collect information from a website
-* publishing and running your scraper on morph.io
+* publish and run your scraper on morph.io
 
 You’ll use morph.io, the command line and a code editor on your local machine.
 
