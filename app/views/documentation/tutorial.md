@@ -18,7 +18,7 @@ You’ll use morph.io, the command line and a code editor on your local machine.
 
 ## Find the data you’re looking for and workout if you can scrape it
 
-In this tutorial we're going to write a simple scraper to collect
+In this tutorial you're going to write a simple scraper to collect
 information about the elected members of Australia’s Federal Parliament.
 For each member let’s capture their
 *title*, *electorate*, *party*,
@@ -34,20 +34,21 @@ You will target this page to get the member information with your scraper.
 Some webpages are much harder to scrape than others.
 This member information is published in a simple html list,
 rather than embedded in an image.
-This means we should be able to write a scraper to collect it.
+This means you should be able to write a scraper to collect it.
 If the information was in an image or PDF
 then it would be much harder to access programmatically and
 therefor much harder to write a scraper for.
 
-Now that we've found our data and we know we can scrape it,
-the next step is to set up out scraper.
+Now that you've found the data you want to scrape
+and you know you *can* scrape it,
+the next step is to set up your scraper.
 
 ## Create your scraper on morph.io and clone it locally
 
 The easiest way to get started is
 to [create a new scraper on morph.io](https://morph.io/scrapers/new).
 
-Select the language we want to write our scraper in.
+Select the language you want to write your scraper in.
 This tutorial uses Ruby, so let's go with that.
 
 If you are a member of organisations on GitHub,
@@ -62,9 +63,9 @@ and describe it as “Collects members of Australia’s Federal Parliament (tuto
 Click “Create Scraper”!
 
 After morph.io has finished creating the new scraper
-we are taken to our fresh scraper page.
-We want to clone all the template scraper code morph.io provides
-to our local machine so we can work with it there.
+you are taken to your fresh scraper page.
+You want to clone all the template scraper code morph.io provides
+to your local machine so you can work with it there.
 
 On the scraper page there is a heading “Scraper code”,
 with a button to copy the “git clone URL”.
@@ -85,11 +86,11 @@ and adds it to a new directory called `nsw_parliament_current_session_bills`.
 Change to that directory with `cd nsw_parliament_current_sessions_bills`
 and then list the files with `ls -al`. You should see a bunch of files including:
 
-* **scraper.rb**, the file that morph.io runs and that you’ll write our scraping code in
+* **scraper.rb**, the file that morph.io runs and that you’ll write your scraping code in
 * **Gemfile**, which defines the dependencies you’ll need to run your scraper.
 
-Now that we have all our template scraper on our local machine,
-we need to make sure we have the necessary libraries installed to run it.
+Now that you have all the template scraper on your local machine,
+you need to make sure you have the necessary libraries installed to run it.
 
 ## Install the required local dependencies
 
@@ -114,10 +115,10 @@ If you need to install Ruby or switch versions,
 you can use a tool like [rbenv](https://robots.thoughtbot.com/using-rbenv-to-manage-rubies-and-gems)
 or [rvm](https://github.com/rvm/rvm).
 
-So far we’ve set up all our files,
-cloned them to our machine,
+So far you’ve set up all your files,
+cloned them to your machine,
 and installed the necessary dependencies.
-Now it’s time to write our scraper.
+Now it’s time to write your scraper.
 
 <!-- TODO: Break the scraping section up with heading to aid quick scanning,
            So someone can come along and quick find answers to something that’s
@@ -131,7 +132,7 @@ instead of having to run your scraper file to see what your code does.
 
 The interactive shell for ruby
 is called [irb](https://en.wikipedia.org/wiki/Interactive_Ruby_Shell).
-Start an irb session in our terminal with:
+Start an irb session in your terminal with:
 
 ```
 bundle exec irb
@@ -141,7 +142,7 @@ The `bundle exec` command executes your `irb` command
 in the context of your project’s Gemfile.
 This means that your specified gems will be available.
 
-The first command we need to run in `irb` is:
+The first command you need to run in `irb` is:
 
 ```
 require 'mechanize'
@@ -151,23 +152,23 @@ This loads in the Mechanize library.
 Mechanize is a helpful library for making requesting and interacting with webpages.
 
 Now you can create an instance of Mechanize
-that will be our agent to do things like 'get' pages and 'click' on links:
+that will be your agent to do things like 'get' pages and 'click' on links:
 
 ```
 agent = Mechanize.new
 ```
 
-We want to get information for all the members we can.
-Looking at [our target page](https://morph.io/documentation/examples/australian_members_of_parliament)
+You want to get information for all the members you can.
+Looking at [your target page](https://morph.io/documentation/examples/australian_members_of_parliament)
 it turns out the members are spread across several pages.
 You’ll have to scrape all 3 pages to get all the members.
 Rather than worry about this now, lets start small.
-Let’s see if we can just get the information we want
+Start by just collecting the information you want
 for the first member on the first page.
-Reducing the complexity as we start to write our code
-will make it easier to debug as we go along.
+Reducing the complexity as you start to write your code
+will make it easier to debug as you go along.
 
-In our irb session, use [the Mechanize `get` method](http://mechanize.rubyforge.org/Mechanize.html#method-i-get)
+In your irb session, use [the Mechanize `get` method](http://mechanize.rubyforge.org/Mechanize.html#method-i-get)
 to get the first page with members listed on it.
 
 ```
@@ -175,10 +176,10 @@ url = "https://morph.io/documentation/examples/australian_members_of_parliament"
 page = agent.get(url)
 ```
 
-This returns the source of our page
+This returns the source of your page
 as a [Mechanize Page object](http://mechanize.rubyforge.org/Mechanize/Page.html).
-We’ll be pulling the information we want out of this object
-using the handy Nokogiri XML parsing methods that Mechanize loads in for us.
+You’ll be pulling the information you want out of this object
+using the handy Nokogiri XML parsing methods that Mechanize loads in for you.
 Let’s review some of these methods.
 
 ### at()
@@ -186,7 +187,7 @@ Let’s review some of these methods.
 The [`at()`](http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/Searchable#at-instance_method)
 method returns the first element that matches the selectors provided.
 For example, `page.at(‘ul’)` returns the first `<ul>` element in the page
-as a Nokogiri XML Element that we can parse.
+as a Nokogiri XML Element that you can parse.
 There are a number of ways to target elements using the `at()` method.
 We’re using a css style selector in this example
 because many people are familiar with this style from writing CSS or jQuery.
@@ -225,8 +226,8 @@ the first member in the list.
 
 Victory!
 
-Now that we’ve found our first member,
-we want to collect their
+Now that you’ve found your first member,
+you want to collect their
 *title*, *electorate*, *party*, and the *url for their individual page*.
 Let’s start with the title.
 
@@ -261,7 +262,7 @@ is the text inside the link in the `<p>` with the class ‘title’.
 </li>
 ```
 
-We can use the `.inner_text` method here.
+You can use the `.inner_text` method here.
 
 ```
 >> page.at('.search-filter-results').at('li').at('.title').inner_text
@@ -332,7 +333,7 @@ run this file in Ruby:
 bundle exec ruby scraper.rb
 ```
 
-The scraper runs and the `p` command returns our `member`:
+The scraper runs and the `p` command returns your `member`:
 
 ```
 > bundle exec ruby scraper.rb
@@ -345,7 +346,7 @@ Now that you’ve got the title for the first member
 get the *electorate* (the place the member is ‘member for’) and *party*.
 
 Looking at the page source again,
-we can see this information is in the first and second `<dd>` elements
+you can see this information is in the first and second `<dd>` elements
 in the member’s `<li>`.
 
 
@@ -561,7 +562,7 @@ gem "scraperwiki", git: "https://github.com/openaustralia/scraperwiki-ruby.git",
 gem "mechanize"
 ```
 
-To use this library in our scraper,
+To use this library in your scraper,
 you need to declare that it is required at the top of your `scraper.rb`
 in the same way you have for the Mechanize library:
 
