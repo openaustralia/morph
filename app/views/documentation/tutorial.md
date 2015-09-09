@@ -469,3 +469,68 @@ Now you’re really scraping!
 
 You still don’t have all the members though,
 they are split over 3 pages and you only have the first.
+
+## Dealing with pagination
+
+[Visit the target page](https://morph.io/documentation/examples/australian_members_of_parliament)
+in your browser and navigate between the different pages
+using the links above the members list.
+Notice that when you go to [page 2](https://morph.io/documentation/examples/australian_members_of_parliament?page=2)
+the url is mostly the same
+except it has the [query string](https://en.wikipedia.org/wiki/Query_string)
+`?page=2` on the end:
+
+```
+https://morph.io/documentation/examples/australian_members_of_parliament?page=2
+```
+
+When scraping websites pay close attention
+to the page URLs and their query strings.
+They often include clues to help you scrape.
+
+It turns out you can navigate between the different member pages
+by just changing the page number to [1](https://morph.io/documentation/examples/australian_members_of_parliament?page=1),
+[2](https://morph.io/documentation/examples/australian_members_of_parliament?page=2) or
+[3](https://morph.io/documentation/examples/australian_members_of_parliament?page=3)
+in the query string.
+
+You can use what you've discovered as the basis for another `each` loop.
+This time you want to make a loop that runs your scraping code for each page.
+
+You know that the three pages with members are pages 1, 2 and 3.
+Create an Array of these page numbers `["1", "2", "3"]`
+and then loop through these numbers
+to run your `get` request and scraping code for each page.
+
+```
+require 'mechanize'
+
+agent = Mechanize.new
+url = 'https://morph.io/documentation/examples/australian_members_of_parliament'
+
+["1", "2", "3"].each do |page_number|
+  page = agent.get(url + "?page=" + page_number)
+
+  page.at('.search-filter-results').search('li').each do |li|
+    member = {
+      title: li.at('.title').inner_text.strip,
+      electorate: li.search('dd')[0].inner_text,
+      party: li.search('dd')[1].inner_text,
+      url: li.at('.title a').attr('href')
+    }
+
+    p member
+  end
+end
+```
+
+Save and run your `scraper.rb`.
+You should now see all 150 members details printed.
+Well done!
+
+This is great—but there’s one more step.
+You’ve written a scraper that collects the details of members of Parliament
+and prints them to the command line—
+but you actually want to save this data.
+You need to store the information you’ve scraped
+so you can actually use it in your projects.
