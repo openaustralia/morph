@@ -1,4 +1,5 @@
 <!-- TODO: Add gifs to illustrate steps where that would be helpful -->
+# Web scraping tutorial
 
 With just a few lines of code,
 you can write a scraper to collect data from messy webpages
