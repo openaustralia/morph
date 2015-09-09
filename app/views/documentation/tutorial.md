@@ -179,7 +179,8 @@ page = agent.get(url)
 This returns the source of your page
 as a [Mechanize Page object](http://mechanize.rubyforge.org/Mechanize/Page.html).
 You’ll be pulling the information you want out of this object
-using the handy Nokogiri XML searching methods that Mechanize loads in for you.
+using the handy [Nokogiri XML searching methods](http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/Searchable)
+that Mechanize loads in for you.
 Let’s review some of these methods.
 
 ### at()
@@ -187,7 +188,8 @@ Let’s review some of these methods.
 The [`at()`](http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/Searchable#at-instance_method)
 method returns the first element that matches the selectors provided.
 For example, `page.at(‘ul’)` returns the first `<ul>` element in the page
-as a Nokogiri XML Element that you can parse.
+as a [Nokogiri XML Element](http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/Element)
+that you can parse.
 There are a number of ways to target elements using the `at()` method.
 We’re using a css style selector in this example
 because many people are familiar with this style from writing CSS or jQuery.
