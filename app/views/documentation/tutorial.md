@@ -89,7 +89,7 @@ and then list the files with `ls -al`. You should see a bunch of files including
 * **scraper.rb**, the file that morph.io runs and that you’ll write your scraping code in
 * **Gemfile**, which defines the dependencies you’ll need to run your scraper.
 
-Now that you have all the template scraper on your local machine,
+Now that you have the template scraper on your local machine,
 you need to make sure you have the necessary libraries installed to run it.
 
 ## Install the required local dependencies
