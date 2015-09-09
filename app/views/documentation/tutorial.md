@@ -98,7 +98,7 @@ and then list the files with `ls -al`. You should see a bunch of files including
 Now that you have the template scraper on your local machine,
 you need to make sure you have the necessary libraries installed to run it.
 
-## Install the required local dependencies
+## Install the required libraries
 
 If the Gemfile, you'll see a Ruby version and two libraries specified:
 
