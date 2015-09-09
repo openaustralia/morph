@@ -118,6 +118,10 @@ cloned them to our machine,
 and installed the necessary dependencies.
 Now it’s time to write our scraper.
 
+<!-- TODO: Break the scraping section up with heading to aid quick scanning,
+           So someone can come along and quick find answers to something that’s
+           blocking them.
+-->
 ## Writing your scraper
 
 It can be really helpful to start out writing your scraper in an interactive shell.
