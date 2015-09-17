@@ -4,7 +4,7 @@ this.
 However, we do impose a couple of hard limits on running scrapers so they don't
 take up too many resources
 
-* max 100 MB memory
+* max 512 MB memory
 * max 24 hours run time for a single run
 
 If a scraper runs out of memory or runs too long it will get killed
