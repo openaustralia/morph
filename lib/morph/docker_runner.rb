@@ -20,8 +20,10 @@ module Morph
     end
 
     # Memory limit applied to running container (in bytes)
+    # On a 1G machine we're allowing a max of 10 containers to run at
+    # a time. So, 100M
     def self.memory_limit
-      512 * 1024 * 1024
+      100 * 1024 * 1024
     end
 
     def self.compile_and_start_run(
