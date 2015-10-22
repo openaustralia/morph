@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150724033339) do
+ActiveRecord::Schema.define(version: 20151022011707) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -221,7 +221,7 @@ ActiveRecord::Schema.define(version: 20150724033339) do
     t.integer  "forked_by_id"
     t.string   "original_language_key"
     t.integer  "repo_size",                  default: 0,     null: false
-    t.integer  "sqlite_db_size",             default: 0,     null: false
+    t.integer  "sqlite_db_size",             limit: 8, default: 0,     null: false
     t.integer  "create_scraper_progress_id"
   end
 
