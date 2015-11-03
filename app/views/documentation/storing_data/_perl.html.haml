@@ -1,1 +1,26 @@
-= render "missing_documentation"
+:markdown
+  The `Database::DumpTruck` Perl module makes it easy to store data in an SQLite database.
+
+  To save data all you need to do is use the [`Database::DumpTruck` module](http://search.cpan.org/dist/Database-DumpTruck/lib/Database/DumpTruck.pm).
+
+:coderay
+  #!perl
+  use Database::DumpTruck;
+
+  # Open a database handle
+  my $dt = Database::DumpTruck->new({dbname => 'data.sqlite', table => 'data'});
+
+  #insert content
+  $dt->insert({
+    name => 'Susan',
+    occupation => 'software developer'
+  });
+
+  #create index
+  $dt->create_index(['name']);
+
+  #update content. You can use upsert when storing new data too.
+  $dt->upsert({
+    name => 'Susan',
+    occupation => 'product owner'
+  });
