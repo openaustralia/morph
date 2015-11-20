@@ -36,7 +36,12 @@ namespace :app do
         last_run = Run.where(docker_image: image.id[0..11]).maximum(:created_at)
         if last_run && last_run < 3.months.ago
           puts "Removing #{image.id}"
-          image.remove
+          begin
+            image.remove
+          # TODO: This is probably because of a stopped container. Should we remove them too?
+          rescue Docker::Error::ConfictError
+            puts "Conflict removing image, skipping"
+          end
         end
       end
     end
