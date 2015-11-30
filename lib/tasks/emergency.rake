@@ -34,7 +34,7 @@ namespace :app do
     task remove_old_unused_docker_images: :environment do
       Docker::Image.all.each do |image|
         last_run = Run.where(docker_image: image.id[0..11]).maximum(:created_at)
-        if last_run && last_run < 3.months.ago
+        if last_run && last_run < 1.months.ago
           puts "Removing #{image.id}"
           begin
             image.remove
