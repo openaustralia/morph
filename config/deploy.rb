@@ -13,7 +13,7 @@ set :deploy_to, '/var/www'
 # set :pty, true
 
 set :linked_files, %w{config/database.yml config/newrelic.yml config/sync.yml .env}
-set :linked_dirs, %w{db/scrapers public/sitemaps tmp/pids}
+set :linked_dirs, %w{db/scrapers public/sitemaps tmp/pids log}
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
