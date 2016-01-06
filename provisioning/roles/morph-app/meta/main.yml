@@ -11,3 +11,13 @@ dependencies:
   - { role: mitmproxy }
   - role: f500.elasticsearch
     elasticsearch_network_host: localhost
+  - role: nickhammond.logrotate
+    logrotate_scripts:
+      - name: rails
+        path: "/var/www/shared/log/*.log"
+        options:
+          - daily
+          - rotate 7
+          - compress
+          - missingok
+          - copytruncate
