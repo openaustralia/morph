@@ -52,24 +52,29 @@ namespace :app do
       puts "Found #{dead_containers.count} containers to delete..."
 
       dead_containers.each do |c|
-        puts "Deleting container #{c.id}..."
-        c.delete
-
-        begin
-          # Get container image ID and strip tag
-          image_id = c.info["Image"].split(":").first
-          i = Docker::Image.get(image_id)
-
-          puts "Removing image #{i.id}..."
-          i.remove
-        rescue Docker::Error::ConfictError
-          puts "Conflict removing image, skipping..."
-        rescue Docker::Error::NotFoundError
-          puts "Couldn't find container image, skipping..."
-        end
+        delete_container_and_attempt_to_remove_image(c)
       end
 
       puts "All done."
+    end
+
+    # TODO: Move this into the app somewhere
+    def delete_container_and_attempt_to_remove_image(container)
+      puts "Deleting container #{container.id}..."
+      container.delete
+
+      begin
+        # Get container image ID and strip tag
+        image_id = container.info["Image"].split(":").first
+        i = Docker::Image.get(image_id)
+
+        puts "Removing image #{i.id}..."
+        i.remove
+      rescue Docker::Error::ConfictError
+        puts "Conflict removing image, skipping..."
+      rescue Docker::Error::NotFoundError
+        puts "Couldn't find container image, skipping..."
+      end
     end
   end
 end
