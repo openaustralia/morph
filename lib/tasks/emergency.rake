@@ -58,8 +58,13 @@ namespace :app do
 
         puts "Deleting container #{c.id}..."
         c.delete
-        puts "Removing image #{i.id}..."
-        i.remove
+
+        begin
+          puts "Removing image #{i.id}..."
+          i.remove
+        rescue Docker::Error::ConfictError
+          puts "Conflict removing image, skipping..."
+        end
       end
 
       puts "All done."
