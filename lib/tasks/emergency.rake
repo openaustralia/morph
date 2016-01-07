@@ -58,6 +58,20 @@ namespace :app do
       puts "All done."
     end
 
+    desc "Delete old stopped docker containers and remove their images"
+    task delete_old_stopped_docker_containers: :environment do
+      old_stopped_containers = Docker::Container.all(all: true, filters: { status: ["exited"] }.to_json)
+      # Containers older than a day or so are almost certainly orphaned and we don't want them
+      old_stopped_containers.select! { |c| Time.parse(c.json["State"]["FinishedAt"]) < 2.days.ago }
+      puts "Found #{old_stopped_containers.count} containers to delete..."
+
+      old_stopped_containers.each do |c|
+        delete_container_and_attempt_to_remove_image(c)
+      end
+
+      puts "All done."
+    end
+
     # TODO: Move this into the app somewhere
     def delete_container_and_attempt_to_remove_image(container)
       puts "Deleting container #{container.id}..."
