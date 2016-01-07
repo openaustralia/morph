@@ -64,7 +64,7 @@ namespace :app do
           i.remove
         rescue Docker::Error::ConfictError
           puts "Conflict removing image, skipping..."
-        rescue Docker::Error::NotFound
+        rescue Docker::Error::NotFoundError
           puts "Couldn't find container image, skipping..."
         end
       end
