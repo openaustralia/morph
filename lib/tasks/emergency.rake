@@ -45,5 +45,24 @@ namespace :app do
         end
       end
     end
+
+    desc "Delete dead docker containers and remove their images"
+    task delete_dead_docker_containers: :environment do
+      dead_containers = Docker::Container.all(all: true, filters: { status: ["dead"] }.to_json)
+      puts "Found #{dead_containers.count} containers to delete..."
+
+      dead_containers.each do |c|
+        # Get container image ID and strip tag
+        image_id = c.info["Image"].split(":").first
+        i = Docker::Image.get(image_id)
+
+        puts "Deleting container #{c.id}..."
+        c.delete
+        puts "Removing image #{i.id}..."
+        i.remove
+      end
+
+      puts "All done."
+    end
   end
 end
