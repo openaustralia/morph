@@ -47,48 +47,34 @@ namespace :app do
     end
 
     desc "Delete dead docker containers and remove their images"
-    task delete_dead_docker_containers: :environment do
+    task delete_dead_docker_containers: [:environment, :set_logger_to_stdout] do
       dead_containers = Docker::Container.all(all: true, filters: { status: ["dead"] }.to_json)
       puts "Found #{dead_containers.count} containers to delete..."
 
       dead_containers.each do |c|
-        delete_container_and_attempt_to_remove_image(c)
+        Morph::DockerMaintenance::delete_container_and_remove_image(c)
       end
 
       puts "All done."
     end
 
     desc "Delete old stopped docker containers and remove their images"
-    task delete_old_stopped_docker_containers: :environment do
+    task delete_old_stopped_docker_containers: [:environment, :set_logger_to_stdout] do
       old_stopped_containers = Docker::Container.all(all: true, filters: { status: ["exited"] }.to_json)
       # Containers older than a day or so are almost certainly orphaned and we don't want them
       old_stopped_containers.select! { |c| Time.parse(c.json["State"]["FinishedAt"]) < 2.days.ago }
       puts "Found #{old_stopped_containers.count} containers to delete..."
 
       old_stopped_containers.each do |c|
-        delete_container_and_attempt_to_remove_image(c)
+        Morph::DockerMaintenance::delete_container_and_remove_image(c)
       end
 
       puts "All done."
     end
 
-    # TODO: Move this into the app somewhere
-    def delete_container_and_attempt_to_remove_image(container)
-      puts "Deleting container #{container.id}..."
-      container.delete
-
-      begin
-        # Get container image ID and strip tag
-        image_id = container.info["Image"].split(":").first
-        i = Docker::Image.get(image_id)
-
-        puts "Removing image #{i.id}..."
-        i.remove
-      rescue Docker::Error::ConfictError
-        puts "Conflict removing image, skipping..."
-      rescue Docker::Error::NotFoundError
-        puts "Couldn't find container image, skipping..."
-      end
+    task :set_logger_to_stdout do
+      Rails.logger = ActiveSupport::Logger.new(STDOUT)
+      Rails.logger.level = 1
     end
   end
 end
