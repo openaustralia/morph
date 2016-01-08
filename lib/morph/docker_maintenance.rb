@@ -17,7 +17,7 @@ module Morph
     private
 
     def self.delete_container(container)
-      Rails.logger.info "Deleting container #{container}..."
+      Rails.logger.info "Deleting container #{container.id}..."
       container.delete
     end
 
