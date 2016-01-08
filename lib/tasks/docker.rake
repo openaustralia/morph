@@ -1,17 +1,11 @@
 namespace :app do
   namespace :docker do
     desc "Remove Docker images that haven't been used in over 1 month"
-    task remove_old_unused_images: :environment do
+    task remove_old_unused_images: [:environment, :set_logger_to_stdout] do
       Docker::Image.all.each do |image|
         last_run = Run.where(docker_image: image.id[0..11]).maximum(:created_at)
         if last_run && last_run < 1.months.ago
-          puts "Removing #{image.id}"
-          begin
-            image.remove
-          # TODO: This is probably because of a stopped container. Should we remove them too?
-          rescue Docker::Error::ConfictError
-            puts "Conflict removing image, skipping"
-          end
+          Morph::DockerMaintenance.remove_image(image)
         end
       end
     end

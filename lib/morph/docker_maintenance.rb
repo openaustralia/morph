@@ -5,6 +5,15 @@ module Morph
       remove_image(container_image(container))
     end
 
+    def self.remove_image(image)
+      Rails.logger.info "Removing image #{image.id}..."
+      image.remove
+    rescue Docker::Error::ConfictError
+      Rails.logger.warn "Conflict removing image, skipping..."
+    rescue Docker::Error::NotFoundError
+      Rails.logger.warn "Couldn't find container image, skipping..."
+    end
+
     private
 
     def self.delete_container(container)
@@ -15,15 +24,6 @@ module Morph
     def self.container_image(container)
       image_id = container.info["Image"].split(":").first
       Docker::Image.get(image_id)
-    end
-
-    def self.remove_image
-      Rails.logger.info "Removing image #{i.id}..."
-      i.remove
-    rescue Docker::Error::ConfictError
-      Rails.logger.warn "Conflict removing image, skipping..."
-    rescue Docker::Error::NotFoundError
-      Rails.logger.warn "Couldn't find container image, skipping..."
     end
   end
 end
