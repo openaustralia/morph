@@ -96,6 +96,13 @@ namespace :app do
     end
   end
 
+  desc "Tidies up Docker containers and images (should be run from a cronjob)"
+  task :docker_tidy_up do
+    task("app:docker:remove_old_unused_images").invoke
+    task("app:docker:delete_dead_containers").invoke
+    task("app:docker:delete_old_stopped_containers").invoke
+  end
+
   def confirm(message)
     STDOUT.puts "#{message} (y/n)"
     STDIN.gets.strip == 'y'
