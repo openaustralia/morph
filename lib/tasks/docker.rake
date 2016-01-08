@@ -6,7 +6,7 @@ namespace :app do
         last_run = Run.where(docker_image: image.id[0..11]).maximum(:created_at)
         last_run && last_run < 1.months.ago
       end
-      puts "Found #{old_unused_images.count} images to remove..."
+      puts "Found #{old_unused_images.count} old unused images to remove..."
 
       old_unused_images.each { |i| Morph::DockerMaintenance.remove_image(i) }
     end
@@ -14,13 +14,11 @@ namespace :app do
     desc "Delete dead Docker containers and remove their images"
     task delete_dead_containers: [:environment, :set_logger_to_stdout] do
       dead_containers = Docker::Container.all(all: true, filters: { status: ["dead"] }.to_json)
-      puts "Found #{dead_containers.count} containers to delete..."
+      puts "Found #{dead_containers.count} dead containers to delete..."
 
       dead_containers.each do |c|
         Morph::DockerMaintenance::delete_container_and_remove_image(c)
       end
-
-      puts "All done."
     end
 
     desc "Delete old stopped Docker containers and remove their images"
@@ -28,13 +26,11 @@ namespace :app do
       old_stopped_containers = Docker::Container.all(all: true, filters: { status: ["exited"] }.to_json)
       # Containers older than a day or so are almost certainly orphaned and we don't want them
       old_stopped_containers.select! { |c| Time.parse(c.json["State"]["FinishedAt"]) < 2.days.ago }
-      puts "Found #{old_stopped_containers.count} containers to delete..."
+      puts "Found #{old_stopped_containers.count} stopped containers to delete..."
 
       old_stopped_containers.each do |c|
         Morph::DockerMaintenance::delete_container_and_remove_image(c)
       end
-
-      puts "All done."
     end
 
     task :set_logger_to_stdout do
