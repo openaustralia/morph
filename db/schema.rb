@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160125224701) do
+ActiveRecord::Schema.define(version: 20160125231228) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -241,6 +241,18 @@ ActiveRecord::Schema.define(version: 20160125224701) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "webhook_deliveries", force: true do |t|
+    t.integer  "webhook_id"
+    t.integer  "run_id"
+    t.datetime "sent_at"
+    t.integer  "response_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "webhook_deliveries", ["run_id"], name: "index_webhook_deliveries_on_run_id", using: :btree
+  add_index "webhook_deliveries", ["webhook_id"], name: "index_webhook_deliveries_on_webhook_id", using: :btree
 
   create_table "webhooks", force: true do |t|
     t.integer  "scraper_id"
