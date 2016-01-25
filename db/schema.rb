@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151022011707) do
+ActiveRecord::Schema.define(version: 20160125224701) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -207,20 +207,20 @@ ActiveRecord::Schema.define(version: 20151022011707) do
   add_index "runs", ["scraper_id"], name: "index_runs_on_scraper_id", using: :btree
 
   create_table "scrapers", force: true do |t|
-    t.string   "name",                       default: "",    null: false
+    t.string   "name",                                 default: "",    null: false
     t.string   "description"
     t.integer  "github_id"
-    t.integer  "owner_id",                                   null: false
+    t.integer  "owner_id",                                             null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "full_name"
     t.string   "github_url"
     t.string   "git_url"
-    t.boolean  "auto_run",                   default: false, null: false
+    t.boolean  "auto_run",                             default: false, null: false
     t.string   "scraperwiki_url"
     t.integer  "forked_by_id"
     t.string   "original_language_key"
-    t.integer  "repo_size",                  default: 0,     null: false
+    t.integer  "repo_size",                            default: 0,     null: false
     t.integer  "sqlite_db_size",             limit: 8, default: 0,     null: false
     t.integer  "create_scraper_progress_id"
   end
@@ -241,5 +241,14 @@ ActiveRecord::Schema.define(version: 20151022011707) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "webhooks", force: true do |t|
+    t.integer  "scraper_id"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "webhooks", ["scraper_id"], name: "index_webhooks_on_scraper_id", using: :btree
 
 end
