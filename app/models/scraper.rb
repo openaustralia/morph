@@ -23,6 +23,8 @@ class Scraper < ActiveRecord::Base
   belongs_to :create_scraper_progress
   has_many :variables
   accepts_nested_attributes_for :variables, allow_destroy: true
+  has_many :webhooks
+  accepts_nested_attributes_for :webhooks, allow_destroy: true
   validates_associated :variables
   delegate :sqlite_total_rows, to: :database
 

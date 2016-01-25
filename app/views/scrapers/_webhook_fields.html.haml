@@ -1,0 +1,7 @@
+.nested-fields
+  .row
+    .col-sm-3
+      = f.input :url, input_html: {class: "name"}
+    .col-sm-1
+      = link_to_remove_association f do
+        %i.fa.fa-times-circle.fa-2x
