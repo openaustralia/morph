@@ -110,5 +110,6 @@ class Run < ActiveRecord::Base
     scraper.update_sqlite_db_size
     scraper.reindex
     scraper.reload
+    scraper.deliver_webhooks(self)
   end
 end

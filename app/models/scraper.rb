@@ -453,6 +453,13 @@ class Scraper < ActiveRecord::Base
     # TODO: Add repo link
   end
 
+  def deliver_webhooks(run)
+    webhooks.each do |webhook|
+      webhook_delivery = webhook.deliveries.create!(run: run)
+      DeliverWebhookWorker.perform_async(webhook_delivery.id)
+    end
+  end
+
   private
 
   def not_used_on_github
