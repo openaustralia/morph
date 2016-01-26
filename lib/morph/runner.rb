@@ -133,12 +133,8 @@ module Morph
         )
       end
       Morph::Database.tidy_data_path(run.data_path)
-      if run.scraper
-        run.scraper.update_sqlite_db_size
-        run.scraper.reindex
-        run.scraper.reload
-        sync_update run.scraper
-      end
+      run.finished!
+      sync_update run.scraper if run.scraper
     end
 
     # Note that cleanup is automatically done by the process on the
