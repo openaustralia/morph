@@ -106,7 +106,6 @@ class Run < ActiveRecord::Base
 
   # Called when a run has finished. Perform any post-run work here.
   def finished!
-    return unless scraper.present?
     scraper.update_sqlite_db_size
     scraper.reindex
     scraper.reload

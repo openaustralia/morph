@@ -133,8 +133,11 @@ module Morph
         )
       end
       Morph::Database.tidy_data_path(run.data_path)
-      run.finished!
-      sync_update run.scraper if run.scraper
+
+      if run.scraper
+        run.finished!
+        sync_update run.scraper
+      end
     end
 
     # Note that cleanup is automatically done by the process on the
