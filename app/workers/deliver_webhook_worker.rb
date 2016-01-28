@@ -4,9 +4,9 @@ class DeliverWebhookWorker
 
   def perform(webhook_delivery_id)
     webhook_delivery = WebhookDelivery.find(webhook_delivery_id)
-    res = Faraday.post(webhook_delivery.webhook.url)
+    response = Faraday.post(webhook_delivery.webhook.url)
     webhook_delivery.update_attributes(
-      response_code: res.status,
+      response_code: response.status,
       sent_at: DateTime.now
     )
   end
