@@ -22,6 +22,9 @@
     = f.button :submit, "Update"
 
   %h3 Webhooks
+  %p
+    We'll make an HTTP POST request to each webhook url whenever this scraper finishes running.
+    = link_to 'Read documentation', webhooks_documentation_index_path
   .row
     .col-sm-3
       %label URL
