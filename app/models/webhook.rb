@@ -4,6 +4,6 @@ class Webhook < ActiveRecord::Base
   validates :url, presence: true
 
   def last_delivery
-    deliveries.order(created_at: :desc).first
+    deliveries.order(sent_at: :desc).first
   end
 end
