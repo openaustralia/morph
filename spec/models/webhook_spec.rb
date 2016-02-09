@@ -6,4 +6,11 @@ RSpec.describe Webhook, type: :model do
     expect(webhook).to_not be_valid
     expect(webhook.errors.keys).to eq([:url])
   end
+
+  it "should have a last delivery" do
+    webhook = Webhook.create!(url: 'https://example.org')
+    delivery1 = webhook.deliveries.create!(created_at: 1.hour.ago)
+    delivery2 = webhook.deliveries.create!(created_at: 2.hours.ago)
+    expect(webhook.last_delivery).to eq(delivery1)
+  end
 end
