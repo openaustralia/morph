@@ -52,4 +52,14 @@ module ScrapersHelper
       end
     end
   end
+
+  def webhook_last_delivery_status(webhook)
+    if webhook.last_delivery.blank?
+      'unknown'
+    elsif webhook.last_delivery.success?
+      'success'
+    else
+      'failure'
+    end
+  end
 end

@@ -236,6 +236,21 @@ span.internalout {
   margin-bottom: 4em;
 }
 
+#webhooks {
+  .webhook-status {
+    &.success {
+      color: #6cc644;
+    }
+    &.failure {
+      color: #bd2c00;
+    }
+  }
+
+  .tooltip-inner {
+    max-width: 400px;
+  }
+}
+
 #scraper_run input {
   width: 200px;
 }
