@@ -106,3 +106,6 @@ $ ->
     .on 'cocoon:before-remove', (e, removedItem) ->
       $(this).data('remove-timeout', 500)
       removedItem.fadeOut('fast')
+
+  # Enable Bootstrap's tooltips for webhook delivery status
+  $('[data-toggle="tooltip"]').tooltip animation: false

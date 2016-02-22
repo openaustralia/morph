@@ -20,3 +20,36 @@
           Add variable
   - if can? :update, @scraper
     = f.button :submit, "Update"
+
+  %h3 Webhooks
+  %p
+    We'll make an HTTP POST request to each webhook url whenever this scraper finishes running.
+    = link_to 'Read documentation', webhooks_documentation_index_path
+  .row
+    .col-sm-3
+      %label URL
+  #webhooks
+    = f.fields_for :webhooks do |webhook_form|
+      .nested-fields
+        .row
+          .col-sm-3
+            = webhook_form.input :url, wrapper: :vertical_input_group do
+              %span.webhook-status.input-group-addon{class: webhook_last_delivery_status(webhook_form.object)}
+                - if webhook_form.object.deliveries.any?
+                  - if webhook_form.object.last_delivery.success?
+                    %span.fa.fa-check{data: {toggle: 'tooltip'}, title: 'Last delivery was successful.'}
+                  - else
+                    %span.fa.fa-warning{data: {toggle: 'tooltip'}, title: "Last delivery was not successful. Invalid HTTP Response: #{webhook_form.object.last_delivery.response_code}."}
+                - else
+                  %span.fa.fa-plug{data: {toggle: 'tooltip'}, title: 'No deliveries yet'}
+              = webhook_form.input_field :url, class: 'form-control'
+          .col-sm-1
+            = link_to_remove_association webhook_form do
+              %i.fa.fa-times-circle.fa-2x
+    .links
+      - if can? :update, @scraper
+        = link_to_add_association f, :webhooks do
+          %i.fa.fa-plus-circle.fa-2x
+          Add webhook
+  - if can? :update, @scraper
+    = f.button :submit, "Update"

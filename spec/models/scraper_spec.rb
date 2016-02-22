@@ -242,4 +242,40 @@ describe Scraper do
       end
     end
   end
+
+  describe "#deliver_webhooks" do
+    let(:run) { mock_model(Run) }
+
+    context "with no webhooks" do
+      it "doesn't queue any background jobs" do
+        VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+          scraper = create(:scraper)
+          expect {
+            scraper.deliver_webhooks(run)
+          }.to change(DeliverWebhookWorker.jobs, :size).by(0)
+        end
+      end
+    end
+
+    context "with webhooks" do
+      before do
+        VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+          @scraper = create(:scraper)
+          3.times { |n| @scraper.webhooks.create!(url: "https://example.org/#{n}") }
+        end
+      end
+
+      it "queues up a background job for each webhook" do
+        expect {
+          @scraper.deliver_webhooks(run)
+        }.to change(DeliverWebhookWorker.jobs, :size).by(3)
+      end
+
+      it "creates webhook delivery records" do
+        expect {
+          @scraper.deliver_webhooks(run)
+        }.to change(WebhookDelivery, :count).by(3)
+      end
+    end
+  end
 end

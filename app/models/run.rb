@@ -103,4 +103,12 @@ class Run < ActiveRecord::Base
   def env_variables
     Variable.to_hash(variables)
   end
+
+  # Called when a run has finished. Perform any post-run work here.
+  def finished!
+    scraper.update_sqlite_db_size
+    scraper.reindex
+    scraper.reload
+    scraper.deliver_webhooks(self)
+  end
 end

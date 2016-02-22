@@ -313,6 +313,7 @@ class ScrapersController < ApplicationController
 
   def scraper_params
     params.require(:scraper).permit(:auto_run, variables_attributes: [
-      :id, :name, :value, :_destroy])
+      :id, :name, :value, :_destroy], webhooks_attributes: [
+      :id, :url, :_destroy])
   end
 end

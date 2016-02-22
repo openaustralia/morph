@@ -51,4 +51,13 @@ describe Run do
       it { expect(run.env_variables).to eq({}) }
     end
   end
+
+  describe "#finished!" do
+    let(:scraper) { mock_model(Scraper, update_sqlite_db_size: true, reindex: true, reload: true) }
+    let(:run) { Run.new(scraper: scraper) }
+    it "should call relevant methods on the scraper" do
+      expect(scraper).to receive(:deliver_webhooks).with(run)
+      run.finished!
+    end
+  end
 end

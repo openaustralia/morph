@@ -30,6 +30,10 @@ end
 # just buffer. It took way too long to figure out where the problem was!
 WebMock::HttpLibAdapters::ExconAdapter.disable!
 
+# See https://github.com/mperham/sidekiq/wiki/Testing for details
+require 'sidekiq/testing'
+Sidekiq::Testing.fake!
+
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -85,4 +89,9 @@ RSpec.configure do |config|
 
   config.filter_run_excluding docker: true if ENV['DONT_RUN_DOCKER_TESTS']
   config.filter_run_excluding slow: true unless ENV['RUN_SLOW_TESTS']
+
+  # Make sure sidekiq jobs don't linger between tests
+  config.before(:each) do
+      Sidekiq::Worker.clear_all
+    end
 end
