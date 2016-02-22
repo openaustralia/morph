@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Webhook, type: :model do
-  describe "validations" do
+  describe "#url" do
     it "should require a url" do
       webhook = Webhook.new
       expect(webhook).to_not be_valid
@@ -13,6 +13,13 @@ RSpec.describe Webhook, type: :model do
       Webhook.create!(scraper: scraper, url: 'https://example.org')
 
       expect(Webhook.new(scraper: scraper, url: 'https://example.org')).to_not be_valid
+    end
+
+    it "should not be an invalid URL" do
+      w = Webhook.new(url: "foo bar")
+
+      expect(w).to_not be_valid
+      expect(w.errors[:url]).to include "is not a valid URL"
     end
   end
 

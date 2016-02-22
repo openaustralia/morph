@@ -70,6 +70,7 @@ gem "skylight"
 gem "stripe"
 gem 'haml-coderay'
 gem 'd3-rails'
+gem "validate_url"
 
 group :production do
   gem "dalli"
