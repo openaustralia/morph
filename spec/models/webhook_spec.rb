@@ -1,10 +1,19 @@
 require 'spec_helper'
 
 RSpec.describe Webhook, type: :model do
-  it "should require a url" do
-    webhook = Webhook.new
-    expect(webhook).to_not be_valid
-    expect(webhook.errors.keys).to eq([:url])
+  describe "validations" do
+    it "should require a url" do
+      webhook = Webhook.new
+      expect(webhook).to_not be_valid
+      expect(webhook.errors.keys).to eq([:url])
+    end
+
+    it "should not allow duplicate webhooks for the same scraper" do
+      scraper = mock_model(Scraper)
+      Webhook.create!(scraper: scraper, url: 'https://example.org')
+
+      expect(Webhook.new(scraper: scraper, url: 'https://example.org')).to_not be_valid
+    end
   end
 
   describe "#last_delivery" do
