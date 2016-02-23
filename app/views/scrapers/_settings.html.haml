@@ -18,8 +18,6 @@
         = link_to_add_association f, :variables do
           %i.fa.fa-plus-circle.fa-2x
           Add variable
-  - if can? :update, @scraper
-    = f.button :submit, "Update"
 
   %h4 Webhooks
   %p
@@ -51,5 +49,6 @@
         = link_to_add_association f, :webhooks do
           %i.fa.fa-plus-circle.fa-2x
           Add webhook
+
   - if can? :update, @scraper
-    = f.button :submit, "Update"
+    = f.button :submit, "Update Settings"
