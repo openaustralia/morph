@@ -1,7 +1,7 @@
 %h3 Settings
 = simple_form_for @scraper do |f|
   = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !(can? :update, @scraper)}
-  %h3 Secret environment variables
+  %h4 Secret environment variables
   %p
     Environment variables can be used to pass secret values to your scraper such as API keys.
     = link_to 'Read documentation', secret_values_documentation_index_path
@@ -21,7 +21,7 @@
   - if can? :update, @scraper
     = f.button :submit, "Update"
 
-  %h3 Webhooks
+  %h4 Webhooks
   %p
     We'll make an HTTP POST request to each webhook url whenever this scraper finishes running.
     = link_to 'Read documentation', webhooks_documentation_index_path
