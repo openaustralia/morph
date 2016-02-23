@@ -1,5 +1,6 @@
 %h3 Settings
 = simple_form_for @scraper do |f|
+  = f.error_notification
   = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !(can? :update, @scraper)}
   %h4 Secret environment variables
   %p
