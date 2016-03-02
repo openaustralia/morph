@@ -1,21 +1,30 @@
 :markdown
   # Webhooks
 
-  Webhooks allow you to run custom code when one of your scrapers has finished
-  running on morph.io. When a webhook is triggered, we'll send a HTTP POST
-  request to the webhook's configured URL. Webhooks can be used to transform
-  data into different formats, send out notifications, update an archive, or
-  even run some realtime analysis.
+  You can use webhooks to trigger actions in external services
+  every time one of your scrapers finishes a run.
+  You can trigger all kind of fun actions:
+  send emails when a scraper is finished;
+  immediately pull fresh data from a scraper’s API;
+  or run realtime analysis—anything you like.
 
-  Webhooks can be installed on any of your scrapers. Once installed, they will
-  be triggered each time that scraper finishes running.
+  Add *webhook URLs* under the **Webhooks heading
+  on your scraper’s Settings page**.
+  Every time your scraper finishes a run
+  we’ll make an [HTTP POST request](https://en.wikipedia.org/wiki/POST_(HTTP))
+  to each URL you’ve added.
+  Use this request to trigger your custom code.
 
   ## Payloads
 
-  Webhooks currently just make an empty HTTP POST request to the specified url.
-  If you'd like the webhooks to have some state you'll need to put that state in
-  the webhook url, either as the path or as GET parameters. If there's something
-  specific you'd like included in the webhook payload then please
-  [ask a question on our help forum](https://help.morph.io/).
+  We currently just make an empty HTTP POST request
+  to your specified webhook URLs;
+  no information about the scraper run
+  is added as a payload.
+  You can send information through the request
+  by putting it in the webhook URL,
+  either as the path or as GET parameters.
+  If there’s something specific you’d like included in the webhook payload
+  then please [ask a question on our help forum](https://help.morph.io/).
 
 
