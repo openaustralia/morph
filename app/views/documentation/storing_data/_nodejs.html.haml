@@ -1,1 +1,21 @@
-= render "missing_documentation"
+:markdown
+  The `sqlite3` Node module makes it easy to store data in an SQLite database.
+
+  To save data all you need to do is use the [`sqlite3` module](https://www.npmjs.com/package/sqlite3).
+
+:coderay
+  #!javascript
+  var sqlite3 = require("sqlite3").verbose();
+
+  # Open a database handle
+  var db = new sqlite3.Database("data.sqlite");
+	db.serialize(function() {
+
+    # Create new table
+		db.run("CREATE TABLE IF NOT EXISTS data (title TEXT)");
+
+    # Insert a new record
+    var statement = db.prepare("INSERT INTO data(title) VALUES (?)");
+	  statement.run('A new title to add');
+	  statement.finalize();
+	});
