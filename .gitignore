@@ -11,9 +11,15 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
-# Ignore all logfiles and tempfiles.
+# Ignore all logfiles and most tempfiles.
 /log/*.log
-/tmp
+/tmp/cache
+/tmp/miniprofiler
+/tmp/sessions
+/tmp/sockets
+
+# Ignore the PID tempfiles but not the folder that holds them.
+/tmp/pids/*.pid
 
 /.env
 /.env.local
