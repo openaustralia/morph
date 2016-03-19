@@ -143,6 +143,14 @@ When you've changed the Ansible playbooks to modify the infrastructure you'll wa
 
 If you're running guard (see above) the tests will also automatically run when you change a file.
 
+By default, RSpec will skip tests that have been tagged as being slow. To change this behaviour, add the following to your `.env`:
+
+    RUN_SLOW_TESTS=1
+
+By default, RSpec will run certain tests against a running Docker server. These tests are quite slow, but not have been tagged as slow. To stop Rspec from running these tests, add the following to your `.env`:
+
+    DONT_RUN_DOCKER_TESTS=1
+
 ### How to contribute
 
 If you find what looks like a bug:
