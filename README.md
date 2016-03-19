@@ -84,7 +84,19 @@ Paste the output of that command into the docker section of the `.env` file.
 Now the application will know how to contact the docker server running on
 a VM on your machine.
 
-### Guard Livereload
+### Running tests
+
+If you're running guard (see above) the tests will also automatically run when you change a file.
+
+By default, RSpec will skip tests that have been tagged as being slow. To change this behaviour, add the following to your `.env`:
+
+    RUN_SLOW_TESTS=1
+
+By default, RSpec will run certain tests against a running Docker server. These tests are quite slow, but not have been tagged as slow. To stop Rspec from running these tests, add the following to your `.env`:
+
+    DONT_RUN_DOCKER_TESTS=1
+
+#### Guard Livereload
 
 We use Guard and Livereload so that whenever you edit a view in development the web page gets automatically reloaded. It's a massive time saver when you're doing design or lots of work in the view. To make it work run
 
@@ -138,18 +150,6 @@ To deploy morph.io to production, normally you'll just want to deploy using Capi
 When you've changed the Ansible playbooks to modify the infrastructure you'll want to run:
 
     ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
-
-### Running tests
-
-If you're running guard (see above) the tests will also automatically run when you change a file.
-
-By default, RSpec will skip tests that have been tagged as being slow. To change this behaviour, add the following to your `.env`:
-
-    RUN_SLOW_TESTS=1
-
-By default, RSpec will run certain tests against a running Docker server. These tests are quite slow, but not have been tagged as slow. To stop Rspec from running these tests, add the following to your `.env`:
-
-    DONT_RUN_DOCKER_TESTS=1
 
 ### How to contribute
 
