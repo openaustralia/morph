@@ -92,13 +92,18 @@ group :development do
   gem 'binding_of_caller'
   gem "spring"
   gem 'spring-commands-rspec'
+  gem 'pry-rails'
 end
 
 group :development, :test do
   gem 'rspec-rails'
+  gem 'pry-remote'
+  gem 'pry-rescue'
+  gem 'pry-stack_explorer'
 end
 
 group :test do
+  gem 'capybara'
   gem 'simplecov', :require => false
   gem 'factory_girl_rails', '~> 4.0'
   gem 'database_cleaner'
