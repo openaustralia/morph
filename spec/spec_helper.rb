@@ -9,6 +9,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'capybara/rspec'
+require 'capybara/rails'
 
 # Commented out for the benefit of zeus
 # require 'rspec/autorun'
@@ -88,7 +89,11 @@ RSpec.configure do |config|
       ex.run
     end
   end
-
+  
+  config.after do |example|
+    save_and_open_page if example.metadata[:type] == :feature and example.exception.present?
+  end
+  
   config.filter_run_excluding docker: true if ENV['DONT_RUN_DOCKER_TESTS']
   config.filter_run_excluding slow: true unless ENV['RUN_SLOW_TESTS']
 
@@ -97,3 +102,5 @@ RSpec.configure do |config|
       Sidekiq::Worker.clear_all
     end
 end
+
+Capybara.asset_host = "http://localhost:3000"
