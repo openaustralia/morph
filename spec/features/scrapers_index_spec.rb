@@ -11,24 +11,51 @@ describe "scraper exploration" do
       @unique_on_github_1 = create :scraper,
         :owner => @organization,
         :name => "unique_on_github_1",
-        :description => "Unique on GitHub 1"
+        :description => "Unique on GitHub 1",
+        :auto_run => true
       @unique_on_github_2 = create :scraper,
         :owner => @organization,
         :name => "unique_on_github_2",
-        :description => "Unique on GitHub 2"
+        :description => "Unique on GitHub 2",
+        :auto_run => true
+      @unique_on_github_3 = create :scraper,
+        :owner => @organization,
+        :name => "unique_on_github_3",
+        :description => "Unique on GitHub 3",
+        :auto_run => true
     end
 
-    @last_run = create :run,
+    @first_run_for_scraper_1 = create :run,
       :scraper => @unique_on_github_1,
-      :finished_at => Time.now - (3 * 24 * 60 * 60),
+      :finished_at => Time.now - 230000,      
+      :queued_at => Time.now - 210000,
       :status_code => 0
               
+    @last_run_for_scraper_1 = create :run,
+      :scraper => @unique_on_github_1,
+      :finished_at => Time.now - 3000,
+      :queued_at => Time.now - 1000,
+      :status_code => 1
+              
+    @last_run_for_scraper_3 = create :run,
+      :scraper => @unique_on_github_3,
+      :finished_at => Time.now - 3000,
+      :queued_at => Time.now - 1000,
+      :status_code => 0
+
     visit "/planningalerts-scrapers"
-    within("div#unique_on_github_1") do
-      expect(page).to have_content "Errored for 3 days"
-    end
-    within("div#unique_on_github_2") do
-      expect(page).to_not have_content "Errored"
+    save_and_open_page
+    within("div.scraper-alerts-list") do
+      within("div#unique_on_github_1") do
+        expect(page).to have_content "Errored for 3 days"
+      end
+      within("div#unique_on_github_2") do
+        expect(page).to have_content "Never run successfully"
+      end
+      within("div#unique_on_github_3") do
+        expect(page).to_not have_content "Errored for"
+        expect(page).to_not have_content "Never run successfully"  
+      end
     end
   end
 
