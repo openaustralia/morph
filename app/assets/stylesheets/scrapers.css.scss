@@ -361,6 +361,7 @@ a i.fa-clock-o {
     color: $alert-danger-text;
     background-color: lighten($alert-danger-bg, 5%);
   }
+  .padded-for-error-false .details {margin-bottom: 10px}
 }
 
 h1.full_name {

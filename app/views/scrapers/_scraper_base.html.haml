@@ -1,7 +1,7 @@
 - cache ["v5", scraper, hide_owner, show_errored_detail] do
   = link_to scraper, class: "list-group-item" do
     %div{:id => scraper.name.underscore}
-      %div.scraper-block
+      %div{:class => "scraper-block padded-for-error-#{show_errored_detail}"}
         - unless scraper.language.blank?
           %small.scraper-lang.pull-right= scraper.language.human
         .icon-box.pull-right= render partial: "scrapers/auto_clock", locals: {scraper: scraper}
@@ -12,7 +12,7 @@
         - elsif scraper.last_run && scraper.last_run.finished_with_errors?
           %span.label.label-danger.pull-right errored
         %strong.full_name= hide_owner ? scraper.name : scraper.full_name
-        %div
+        %div.details
           - unless scraper.description.blank?
             = scraper.description
           - unless scraper.scraped_domains.length == 0
