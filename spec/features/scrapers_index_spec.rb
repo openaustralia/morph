@@ -44,7 +44,6 @@ describe "scraper exploration" do
       :status_code => 0
 
     visit "/planningalerts-scrapers"
-    save_and_open_page
     within("div.scraper-alerts-list") do
       within("div#unique_on_github_1") do
         expect(page).to have_content "Errored for 3 days"
