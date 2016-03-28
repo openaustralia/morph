@@ -433,6 +433,7 @@ a i.fa {
 
   .btn {
     text-shadow: 1px 1px 0 rgba(0, 0, 0, .2);
+    letter-spacing: 1px;
 
     @media (min-width: $screen-xs-min) {
        float: right;
