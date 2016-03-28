@@ -16,7 +16,9 @@
                 data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?"}}
           %li.list-group-item
             %h4 Delete your scraper
-            %p Delete the entire scraper from morph.io, data and all.
+            %p
+              Delete the entire scraper from morph.io,
+              %em data and all.
             = button_to "Delete your scraper", @scraper,
               {class: "btn btn-danger", method: :delete,
                 data: {confirm: "Scraper #{@scraper.full_name} and its database will be deleted from morph.io. Are you sure you want to delete your scraper?"}}
