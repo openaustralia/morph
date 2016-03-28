@@ -403,6 +403,19 @@ a i.fa {
   margin-right: 0.5em;
 }
 
+#danger-settings {
+  .panel-title {
+    margin-bottom: .5em;
+  }
+
+  .panel-heading {
+    p {
+      margin: 0;
+      color: $text-color;
+    }
+  }
+}
+
 .danger-settings-options-list {
   .list-group-item {
     padding-bottom: 1em;
