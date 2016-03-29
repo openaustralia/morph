@@ -1,5 +1,7 @@
+- title "#{pluralize(@scrapers.count, "scraper")} currently running"
+
 .container
   .row
     .col-xs-12
-      %h1 #{pluralize(@scrapers.count, "scraper")} currently running
+      %h1= title
       .list-group= sync partial: "scraper", collection: @scrapers
