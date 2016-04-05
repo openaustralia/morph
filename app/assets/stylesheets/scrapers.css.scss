@@ -451,5 +451,10 @@ a i.fa {
     @media (min-width: $screen-xs-min) {
        float: right;
     }
+
+    i {
+      padding-left: .25em;
+      vertical-align: text-top;
+    }
   }
 }

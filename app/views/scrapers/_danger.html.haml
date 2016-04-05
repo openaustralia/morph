@@ -10,14 +10,14 @@
           %li.list-group-item
             %h4 Clear your scraper’s database
             %p All your data will be gone!
-            = button_to "Clear database", clear_scraper_path(@scraper),
-              {class: "btn btn-warning",
-                data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?"}}
+            = button_to clear_scraper_path(@scraper), {class: "btn btn-warning", data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?"}} do
+              Clear database
+              %i.glyphicon.glyphicon-th-list
           %li.list-group-item
             %h4 Delete your scraper
             %p
               Delete the entire scraper from morph.io,
               %em data and all.
-            = button_to "Delete your scraper", @scraper,
-              {class: "btn btn-danger", method: :delete,
-                data: {confirm: "Scraper #{@scraper.full_name} and its database will be deleted from morph.io. Are you sure you want to delete your scraper?"}}
+            = button_to @scraper, {class: "btn btn-danger", method: :delete, data: {confirm: "Scraper #{@scraper.full_name} and its database will be deleted from morph.io. Are you sure you want to delete your scraper?"}} do
+              Delete your scraper
+              %i.glyphicon.glyphicon-remove
