@@ -9,7 +9,12 @@
         %ul.danger-settings-options-list.list-group
           %li.list-group-item
             %h4 Clear your scraper’s database
-            %p All your data will be gone!
+            %p
+              - if @scraper.has_data?
+                Your #{pluralize(@scraper.sqlite_total_rows, "row")}
+                of scraped data will be gone!
+              - else
+                All your data will be gone!
             = button_to clear_scraper_path(@scraper), {class: "btn btn-warning", data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?"}} do
               Clear database
               %i.glyphicon.glyphicon-th-list
