@@ -103,6 +103,26 @@ namespace :app do
     task("app:docker:delete_old_stopped_containers").invoke
   end
 
+  # FIXME: This is a workaround for the problem in https://github.com/openaustralia/morph/issues/910
+  desc "Creates missing run workers for scrapers that are running"
+  task :create_missing_run_workers do
+    # Get runs that have a background worker
+    workers = Sidekiq::Workers.new
+    active_runs = workers.collect do |process_id, thread_id, work|
+      work["payload"]["args"].first if work["queue"] == "scraper"
+    end
+
+    # Recreate missing background processes for running scrapers
+    Scraper.running.each do |scraper|
+      run_id = scraper.last_run.id
+
+      if !active_runs.include?(run_id)
+        puts "Creating run worker for run ID: #{run_id}"
+        RunWorker.perform_async(run_id)
+      end
+    end
+  end
+
   def confirm(message)
     STDOUT.puts "#{message} (y/n)"
     STDIN.gets.strip == 'y'
