@@ -417,40 +417,32 @@ a i.fa {
 }
 
 .danger-settings-options-list {
-  .list-group-item {
-    padding-bottom: 1em;
-
+  .danger-settings-action-body {
     @media (min-width: $screen-xs-min) {
-      @include clearfix;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
     }
   }
 
   h4 {
-    @media (min-width: 35em) {
+    @media (min-width: $screen-xs-min) {
       margin-bottom: 0;
     }
   }
 
   p {
     @media (min-width: $screen-xs-min) {
-       margin-bottom: 0;
-       float: left;
-       max-width: 20em;
-    }
-
-    @media (min-width: 35em) {
-       margin-top: $panel-body-padding;
-       max-width: none;
+      flex-shrink: 100;
+      margin-top: $panel-body-padding;
+      padding-right: 2em;
     }
   }
 
   .btn {
     text-shadow: 1px 1px 0 rgba(0, 0, 0, .2);
     letter-spacing: 1px;
-
-    @media (min-width: $screen-xs-min) {
-       float: right;
-    }
 
     i {
       padding-left: .25em;
