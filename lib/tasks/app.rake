@@ -105,7 +105,7 @@ namespace :app do
 
   # FIXME: This is a workaround for the problem in https://github.com/openaustralia/morph/issues/910
   desc "Creates missing run workers for scrapers that are running"
-  task :create_missing_run_workers do
+  task create_missing_run_workers: :environment do
     # Get runs that have a background worker
     workers = Sidekiq::Workers.new
     active_runs = workers.collect do |process_id, thread_id, work|
