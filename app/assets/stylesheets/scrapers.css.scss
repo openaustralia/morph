@@ -449,4 +449,13 @@ a i.fa {
       vertical-align: text-top;
     }
   }
+
+  .btn-warning {
+    background-color: darken($btn-warning-bg, 7);
+
+    &:hover,
+    &:focus {
+      background-color: darken($btn-warning-bg, 12);
+    }
+  }
 }
