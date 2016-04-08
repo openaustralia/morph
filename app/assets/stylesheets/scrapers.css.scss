@@ -417,3 +417,60 @@ a i.fa {
 .filter-option img, .selectpicker img {
   margin-right: 0.5em;
 }
+
+#danger-settings {
+  .panel-title {
+    margin-bottom: .5em;
+  }
+
+  .panel-heading {
+    p {
+      margin: 0;
+      color: $text-color;
+    }
+  }
+}
+
+.danger-settings-options-list {
+  .danger-settings-action-body {
+    @media (min-width: $screen-xs-min) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+    }
+  }
+
+  h4 {
+    @media (min-width: $screen-xs-min) {
+      margin-bottom: 0;
+    }
+  }
+
+  p {
+    @media (min-width: $screen-xs-min) {
+      flex-shrink: 100;
+      margin-top: $panel-body-padding;
+      padding-right: 2em;
+    }
+  }
+
+  .btn {
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .2);
+    letter-spacing: 1px;
+
+    i {
+      padding-left: .25em;
+      vertical-align: text-top;
+    }
+  }
+
+  .btn-warning {
+    background-color: darken($btn-warning-bg, 7);
+
+    &:hover,
+    &:focus {
+      background-color: darken($btn-warning-bg, 12);
+    }
+  }
+}
