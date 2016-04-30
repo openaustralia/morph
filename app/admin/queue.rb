@@ -11,6 +11,7 @@ ActiveAdmin.register_page 'Queue' do
         }
       end
     end.compact
+    active_runs.sort! { |a, b| b[:enqueued_at] <=> a[:enqueued_at] }
 
     h1 "#{active_runs.count} active"
     unless active_runs.empty?
