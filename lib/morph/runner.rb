@@ -114,7 +114,6 @@ module Morph
       metric = Metric.create(result.time_params) if result.time_params
       metric.update_attributes(run_id: run.id) if metric
 
-      run.update_attributes(status_code: result.status_code, finished_at: Time.now)
       # Update information about what changed in the database
       diffstat = Morph::Database.diffstat_safe(
         run.database.sqlite_db_backup_path, run.database.sqlite_db_path)
@@ -133,6 +132,8 @@ module Morph
         )
       end
       Morph::Database.tidy_data_path(run.data_path)
+
+      run.update_attributes(status_code: result.status_code, finished_at: Time.now)
 
       if run.scraper
         run.finished!
