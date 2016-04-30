@@ -1,6 +1,5 @@
 ActiveAdmin.register_page 'Queue' do
   content do
-    # Get runs that have a background worker
     workers = Sidekiq::Workers.new
     active_runs = workers.collect do |process_id, thread_id, work|
       if work["queue"] == "scraper"
