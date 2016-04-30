@@ -263,7 +263,7 @@ module Morph
 
     def self.diffstat_safe(file1, file2)
       diffstat(file1, file2)
-    rescue SQLite3::NotADatabaseException
+    rescue SQLite3::NotADatabaseException, SQLite3::SQLException
       nil
     end
 
