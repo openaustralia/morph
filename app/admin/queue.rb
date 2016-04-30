@@ -39,5 +39,35 @@ ActiveAdmin.register_page 'Queue' do
     end
 
     h1 "#{Sidekiq::Queue["scraper"].size} enqueued"
+
+    enqueued_runs = Sidekiq::Queue["scraper"].collect do |j|
+      {
+        run: Run.find(j.item["args"].first),
+        enqueued_at: Time.at(j.item["enqueued_at"])
+      }
+    end.sort { |a, b| b[:enqueued_at] <=> a[:enqueued_at] }
+
+    unless enqueued_runs.empty?
+      table do
+        thead do
+          tr do
+            th 'Run ID'
+            th 'Scraper name'
+            th 'Enqueued'
+          end
+        end
+
+        tbody do
+          enqueued_runs.each do |record|
+            scraper = record[:run].scraper
+            tr do
+              td link_to record[:run].id, admin_run_path(record[:run])
+              td link_to scraper.full_name, scraper
+              td time_ago_in_words(record[:enqueued_at]) + ' ago'
+            end
+          end
+        end
+      end
+    end
   end
 end
