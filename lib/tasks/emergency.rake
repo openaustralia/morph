@@ -29,5 +29,16 @@ namespace :app do
         end
       end
     end
+
+    desc "Delete duplicate enqueued Sidekiq scraper jobs. Sidekiq should be stopped for this to be effective"
+    task delete_duplicate_scraper_jobs: :environment do
+      queue = Sidekiq::Queue["scraper"].to_a
+      queue.select do |x|
+        if queue.count { |y| x.item["args"].first == y.item["args"].first } > 1
+          puts "Deleting duplicate job for run ID: #{x.item["args"].first}..."
+          x.delete
+        end
+      end
+    end
   end
 end
