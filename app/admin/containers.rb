@@ -29,8 +29,8 @@ ActiveAdmin.register_page 'Containers' do
     stopped_records = records.select { |r| r[:running] == 'no' }
       .sort { |a, b| b[:finished_at] <=> a[:finished_at] }
 
+    h1 "#{running_records.count} running"
     unless running_records.empty?
-      h1 "#{running_records.count} running"
       table do
         thead do
           tr do
