@@ -11,9 +11,10 @@ module Morph
 
     # The main section of the scraper running that is run in the background
     def synch_and_go!
-      # If this run belongs to a scraper that has just been deleted then
+      # If this run belongs to a scraper that has just been deleted
+      # or if the run has already been marked as finished then
       # don't do anything
-      return if run.scraper.nil?
+      return if run.scraper.nil? || run.finished?
 
       run.scraper.synchronise_repo
       go_with_logging
