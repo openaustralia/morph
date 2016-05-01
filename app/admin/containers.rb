@@ -65,53 +65,55 @@ ActiveAdmin.register_page 'Containers' do
         end
       end
     end
-    
-    h1 "#{stopped_records.count} stopped"
-    table do
-      thead do
-        tr do
-          th 'Container ID'
-          th 'Exit code'
-          th 'Finished'
-          th 'Ran for'
-          th 'OOM Killed'
-          th 'Run ID'
-          th 'Scraper name'
-          th 'Scraper running?'
-          th 'Run status code'
-          th 'Auto'
-        end
-      end
 
-      tbody do
-        stopped_records.each do |record|
+    h1 "#{stopped_records.count} stopped"
+    if stopped_records.present?
+      table do
+        thead do
           tr do
-            td record[:container_id]
-            td record[:exit_code]
-            td do
-              if record[:finished_at]
-                time_ago_in_words(record[:finished_at]) + ' ago'
+            th 'Container ID'
+            th 'Exit code'
+            th 'Finished'
+            th 'Ran for'
+            th 'OOM Killed'
+            th 'Run ID'
+            th 'Scraper name'
+            th 'Scraper running?'
+            th 'Run status code'
+            th 'Auto'
+          end
+        end
+
+        tbody do
+          stopped_records.each do |record|
+            tr do
+              td record[:container_id]
+              td record[:exit_code]
+              td do
+                if record[:finished_at]
+                  time_ago_in_words(record[:finished_at]) + ' ago'
+                end
               end
-            end
-            td do
-              if record[:finished_at]
-                distance_of_time_in_words(record[:finished_at] - record[:started_at])
+              td do
+                if record[:finished_at]
+                  distance_of_time_in_words(record[:finished_at] - record[:started_at])
+                end
               end
-            end
-            td record[:oom_killed]
-            td do
-              if record[:run_id]
-                link_to record[:run_id], admin_run_path(id: record[:run_id])
+              td record[:oom_killed]
+              td do
+                if record[:run_id]
+                  link_to record[:run_id], admin_run_path(id: record[:run_id])
+                end
               end
-            end
-            td do
-              if record[:scraper_name]
-                link_to record[:scraper_name], scraper_path(id: record[:scraper_name])
+              td do
+                if record[:scraper_name]
+                  link_to record[:scraper_name], scraper_path(id: record[:scraper_name])
+                end
               end
+              td record[:scraper_running]
+              td record[:run_status_code]
+              td record[:auto]
             end
-            td record[:scraper_running]
-            td record[:run_status_code]
-            td record[:auto]
           end
         end
       end
