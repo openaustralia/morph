@@ -30,7 +30,7 @@ ActiveAdmin.register_page 'Containers' do
       .sort { |a, b| b[:finished_at] <=> a[:finished_at] }
 
     unless running_records.empty?
-      h1 "Running"
+      h1 "#{running_records.count} running"
       table do
         thead do
           tr do
@@ -66,7 +66,7 @@ ActiveAdmin.register_page 'Containers' do
       end
     end
     
-    h1 "Stopped"
+    h1 "#{stopped_records.count} stopped"
     table do
       thead do
         tr do
