@@ -17,7 +17,7 @@ namespace :app do
       puts "Found #{dead_containers.count} dead containers to delete..."
 
       dead_containers.each do |c|
-        Morph::DockerMaintenance::delete_container_and_remove_image(c)
+        Morph::DockerMaintenance::delete_container_and_remove_image_safe(c)
       end
     end
 
@@ -29,7 +29,7 @@ namespace :app do
       puts "Found #{old_stopped_containers.count} stopped containers to delete..."
 
       old_stopped_containers.each do |c|
-        Morph::DockerMaintenance::delete_container_and_remove_image(c)
+        Morph::DockerMaintenance::delete_container_and_remove_image_safe(c)
       end
     end
 
