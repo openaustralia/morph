@@ -30,7 +30,7 @@ ActiveAdmin.register_page 'Containers' do
       .sort { |a, b| b[:finished_at] <=> a[:finished_at] }
 
     h1 "#{running_records.count} running"
-    unless running_records.empty?
+    if running_records.present?
       table do
         thead do
           tr do
