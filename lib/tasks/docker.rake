@@ -8,7 +8,7 @@ namespace :app do
       end
       puts "Found #{old_unused_images.count} old unused images to remove..."
 
-      old_unused_images.each { |i| Morph::DockerMaintenance.remove_image(i) }
+      old_unused_images.each { |i| Morph::DockerMaintenance.remove_image(i.id) }
     end
 
     desc "Delete dead Docker containers and remove their images"
