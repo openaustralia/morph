@@ -2,12 +2,12 @@ module Morph
   class DockerMaintenance
     def self.delete_container_and_remove_image(container)
       delete_container(container)
-      remove_image(container_image(container))
+      remove_image(container_image_id(container))
     end
 
-    def self.remove_image(image)
-      Rails.logger.info "Removing image #{image.id}..."
-      image.remove
+    def self.remove_image(image_id)
+      Rails.logger.info "Removing image #{image_id}..."
+      Docker::Image.get(image_id).remove
     rescue Docker::Error::ConfictError
       Rails.logger.warn "Conflict removing image, skipping..."
     rescue Docker::Error::NotFoundError
@@ -21,9 +21,8 @@ module Morph
       container.delete
     end
 
-    def self.container_image(container)
-      image_id = container.info["Image"].split(":").first
-      Docker::Image.get(image_id)
+    def self.container_image_id(container)
+      container.info["Image"].split(":").first
     end
   end
 end
