@@ -120,7 +120,7 @@ module Morph
     def no_rows(table = table_names.first)
       q = sql_query_safe("select count(*) from '#{table}'")
       q ? q.first.values.first : 0
-    rescue SQLite3::NotADatabaseException
+    rescue SQLite3::NotADatabaseException, SQLite3::CorruptException
       0
     end
 
