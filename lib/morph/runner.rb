@@ -3,12 +3,13 @@ module Morph
   # configuration if things like Gemfiles are not included (for Ruby)
   class Runner
     include Sync::Actions
-    attr_accessor :run
+    attr_accessor :run, :log_lines_count
 
     MAXIMUM_LOG_LINES = 50000
 
     def initialize(run)
       @run = run
+      @log_lines_count = run.log_lines.count
     end
 
     # The main section of the scraper running that is run in the background
@@ -24,8 +25,7 @@ module Morph
 
     def go_with_logging
       go do |s, c|
-        # FIXME: Don't query the database every time
-        if run.log_lines.count >= MAXIMUM_LOG_LINES
+        if log_lines_count >= MAXIMUM_LOG_LINES
           kill_due_to_excessive_log_lines
         else
           log(s, c)
@@ -49,6 +49,7 @@ module Morph
       puts "#{stream}: #{text}" if Rails.env.development?
       # Not using create on association to try to avoid memory bloat
       line = LogLine.create!(run: run, stream: stream.to_s, text: text)
+      @log_lines_count += 1 if stream == :stdout || stream == :stderr
       sync_new line, scope: run unless Rails.env.test?
     end
 
