@@ -10,6 +10,7 @@ RUN apt-get install -y \
   libffi-dev   \
   libssl-dev   \
   libxslt1-dev \
+  libjpeg62-turbo-dev \
   python-dev   \
   python-pip
 
