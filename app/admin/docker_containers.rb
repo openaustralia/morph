@@ -1,4 +1,4 @@
-ActiveAdmin.register_page 'Containers' do
+ActiveAdmin.register_page "Docker Containers" do
   content do
     records = Docker::Container.all(all: true).map do |container|
       run = Morph::Runner.run_for_container(container)
