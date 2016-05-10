@@ -1,5 +1,7 @@
 ActiveAdmin.register_page "Scraper Queue" do
   content do
+    para "Jobs in the #{link_to "Sidekiq", admin_sidekiq_path} scraper queue.".html_safe
+
     workers = Sidekiq::Workers.new
     active_runs = workers.collect do |process_id, thread_id, work|
       if work["queue"] == "scraper"
