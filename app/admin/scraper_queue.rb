@@ -1,4 +1,4 @@
-ActiveAdmin.register_page 'Queue' do
+ActiveAdmin.register_page "Scraper Queue" do
   content do
     workers = Sidekiq::Workers.new
     active_runs = workers.collect do |process_id, thread_id, work|
