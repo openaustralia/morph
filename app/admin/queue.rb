@@ -12,7 +12,8 @@ ActiveAdmin.register_page 'Queue' do
     end.compact
     active_runs.sort! { |a, b| b[:enqueued_at] <=> a[:enqueued_at] }
 
-    h1 "#{active_runs.count} active"
+    h1 "#{active_runs.count} busy"
+    para "Scrapers with a busy Sidekiq job."
     unless active_runs.empty?
       table do
         thead do
@@ -38,8 +39,6 @@ ActiveAdmin.register_page 'Queue' do
       end
     end
 
-    h1 "#{Sidekiq::Queue["scraper"].size} enqueued"
-
     enqueued_runs = Sidekiq::Queue["scraper"].collect do |j|
       {
         run: Run.find(j.item["args"].first),
@@ -47,6 +46,8 @@ ActiveAdmin.register_page 'Queue' do
       }
     end.sort { |a, b| b[:enqueued_at] <=> a[:enqueued_at] }
 
+    h1 "#{Sidekiq::Queue["scraper"].size} enqueued"
+    para "Scrapers with an enqueued Sidekiq job."
     unless enqueued_runs.empty?
       table do
         thead do
