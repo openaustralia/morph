@@ -14,7 +14,7 @@
 ### Dependencies
 Ruby 2.0.0, Docker, MySQL, SQLite 3, Redis, mitmproxy and Elasticsearch.
 
-On OS X for development also Kitematic - see below for more.
+On OS X for development also Docker Toolbox - see below for more.
 
 On Linux your user account should be able to manipulate Docker (just add your user to the `docker` group).
 
@@ -72,7 +72,7 @@ access this, run the following to give your account admin rights:
 
 If you're doing your development on Linux you're in luck because installing Docker is pretty straightforward. Just follow the instructions on the [Docker site](http://www.docker.io/gettingstarted/#h_installation).
 
-Install [Kitematic](https://kitematic.com/). This will also, I think, prompt
+Install [Docker Toolbox](https://www.docker.com/products/docker-toolbox). This will also, I think, prompt
 you to install VirtualBox if you don't already have it.
 
 Then, from the command-line
