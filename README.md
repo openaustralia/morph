@@ -44,8 +44,8 @@ Edit `config/database.yml` with your database settings
 Create an [application on GitHub](https://github.com/settings/applications/new) so that morph.io can talk to GitHub. Fill in the following values
 
 * Application name: __Morph (dev)__
-* Homepage URL: __http://127.0.0.1:3000__
-* Authorization callback URL: __http://127.0.0.1:3000/users/auth/github/callback__
+* Homepage URL: http://127.0.0.1:3000
+* Authorization callback URL: http://127.0.0.1:3000/users/auth/github/callback
 * Application description: You can leave this blank
 
 Note the use of 127.0.0.1 rather than localhost. Use this or it won't work.
