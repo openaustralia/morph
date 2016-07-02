@@ -116,7 +116,7 @@ module Morph
       metric.update_attributes(run_id: run.id) if metric
 
       # Update information about what changed in the database
-      diffstat = Morph::Database.diffstat_safe(
+      diffstat = Morph::SqliteDiff.diffstat_safe(
         run.database.sqlite_db_backup_path, run.database.sqlite_db_path)
       if diffstat
         tables = diffstat[:tables][:counts]
