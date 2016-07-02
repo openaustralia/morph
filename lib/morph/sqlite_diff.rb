@@ -11,58 +11,56 @@ module Morph
 
       result = {
         tables: {
-          added: [],
-          removed: [],
-          changed: [],
-          unchanged: [],
           counts: { added: 0, removed: 0, changed: 0, unchanged: 0 }
         },
         records: {
           counts: { added: 0, removed: 0, changed: 0, unchanged: 0 }
         }
       }
-      r[:unchanged].each do |table|
-        records = diffstat_table(table, db1, db2)
-        result[:tables][:unchanged] << {
+
+      result[:tables][:unchanged] = r[:unchanged].map do |table|
+        {
           name: table,
-          records: { counts: records }
+          records: { counts: diffstat_table(table, db1, db2) }
         }
-        result[:records][:counts][:added] += records[:added]
-        result[:records][:counts][:removed] += records[:removed]
-        result[:records][:counts][:changed] += records[:changed]
-        result[:records][:counts][:unchanged] += records[:unchanged]
       end
-      r[:changed].each do |table|
-        records = diffstat_table(table, db1, db2)
-        result[:tables][:changed] << {
+      result[:tables][:changed] = r[:changed].map do |table|
+        {
           name: table,
-          records: { counts: records }
+          records: { counts: diffstat_table(table, db1, db2) }
         }
-        result[:records][:counts][:added] += records[:added]
-        result[:records][:counts][:removed] += records[:removed]
-        result[:records][:counts][:changed] += records[:changed]
-        result[:records][:counts][:unchanged] += records[:unchanged]
       end
-      r[:added].each do |table|
+      result[:tables][:added] = r[:added].map do |table|
         added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
-        result[:tables][:added] << {
+        {
           name: table,
           records: {
             counts: { added: added, removed: 0, changed: 0, unchanged: 0 }
           }
         }
-        result[:records][:counts][:added] += added
       end
-      r[:removed].each do |table|
+      result[:tables][:removed] = r[:removed].map do |table|
         removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
-        result[:tables][:removed] << {
+        {
           name: table,
           records: {
             counts: { added: 0, removed: removed, changed: 0, unchanged: 0 }
           }
         }
-        result[:records][:counts][:removed] += removed
       end
+
+      # Now let's work out the totals
+      (result[:tables][:unchanged] + result[:tables][:changed] + result[:tables][:added]).each do |t|
+        result[:records][:counts][:added] += t[:records][:counts][:added]
+      end
+      (result[:tables][:unchanged] + result[:tables][:changed] + result[:tables][:removed]).each do |t|
+        result[:records][:counts][:removed] += t[:records][:counts][:removed]
+      end
+      (result[:tables][:unchanged] + result[:tables][:changed]).each do |t|
+        result[:records][:counts][:changed] += t[:records][:counts][:changed]
+        result[:records][:counts][:unchanged] += t[:records][:counts][:unchanged]
+      end
+
       result[:tables][:counts][:added] =
         result[:tables][:added].count
       result[:tables][:counts][:removed] =
