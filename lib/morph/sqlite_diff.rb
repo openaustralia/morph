@@ -42,39 +42,33 @@ module Morph
     def self.diffstat_db(db1, db2)
       r = table_changes(db1, db2)
 
-      result = {tables: {counts: {}}, records: {counts: {}}}
+      unchanged = diffstat_tables(r[:unchanged], db1, db2)
+      changed = diffstat_tables(r[:changed], db1, db2)
+      added = tables_added(r[:added], db1, db2)
+      removed = tables_removed(r[:removed], db1, db2)
 
-      result[:tables][:unchanged] = diffstat_tables(r[:unchanged], db1, db2)
-      result[:tables][:changed] = diffstat_tables(r[:changed], db1, db2)
-      result[:tables][:added] = tables_added(r[:added], db1, db2)
-      result[:tables][:removed] = tables_removed(r[:removed], db1, db2)
-      result[:tables][:counts][:added] =
-        result[:tables][:added].count
-      result[:tables][:counts][:removed] =
-        result[:tables][:removed].count
-      result[:tables][:counts][:changed] =
-        result[:tables][:changed].count
-      result[:tables][:counts][:unchanged] =
-        result[:tables][:unchanged].count
-
-      # Now let's work out the totals
-      result[:records][:counts][:added] =
-        (result[:tables][:unchanged] +
-        result[:tables][:changed] +
-        result[:tables][:added]).sum {|t| t[:records][:counts][:added]}
-      result[:records][:counts][:removed] =
-        (result[:tables][:unchanged] +
-        result[:tables][:changed] +
-        result[:tables][:removed]).sum {|t| t[:records][:counts][:removed]}
-      result[:records][:counts][:changed] =
-        (result[:tables][:unchanged] +
-        result[:tables][:changed]).sum {|t| t[:records][:counts][:changed]}
-      result[:records][:counts][:unchanged] =
-        (result[:tables][:unchanged] +
-        result[:tables][:changed]).sum {|t| t[:records][:counts][:unchanged]}
-
-
-      result
+      {
+        tables: {
+          unchanged: unchanged,
+          changed: changed,
+          added: added,
+          removed: removed,
+          counts: {
+            unchanged: unchanged.count,
+            changed: changed.count,
+            added: added.count,
+            removed: removed.count
+          }
+        },
+        records: {
+          counts: {
+            added: (unchanged + changed + added).sum {|t| t[:records][:counts][:added]},
+            removed: (unchanged + changed + removed).sum {|t| t[:records][:counts][:removed]},
+            changed: (unchanged + changed).sum {|t| t[:records][:counts][:changed]},
+            unchanged: (unchanged + changed).sum {|t| t[:records][:counts][:unchanged]}
+          }
+        }
+      }
     end
 
     def self.diffstat(file1, file2)
