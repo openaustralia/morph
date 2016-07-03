@@ -48,6 +48,14 @@ module Morph
       result[:tables][:changed] = diffstat_tables(r[:changed], db1, db2)
       result[:tables][:added] = tables_added(r[:added], db1, db2)
       result[:tables][:removed] = tables_removed(r[:removed], db1, db2)
+      result[:tables][:counts][:added] =
+        result[:tables][:added].count
+      result[:tables][:counts][:removed] =
+        result[:tables][:removed].count
+      result[:tables][:counts][:changed] =
+        result[:tables][:changed].count
+      result[:tables][:counts][:unchanged] =
+        result[:tables][:unchanged].count
 
       # Now let's work out the totals
       result[:records][:counts][:added] =
@@ -65,14 +73,6 @@ module Morph
         (result[:tables][:unchanged] +
         result[:tables][:changed]).sum {|t| t[:records][:counts][:unchanged]}
 
-      result[:tables][:counts][:added] =
-        result[:tables][:added].count
-      result[:tables][:counts][:removed] =
-        result[:tables][:removed].count
-      result[:tables][:counts][:changed] =
-        result[:tables][:changed].count
-      result[:tables][:counts][:unchanged] =
-        result[:tables][:unchanged].count
 
       result
     end
