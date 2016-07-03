@@ -6,23 +6,22 @@ module Morph
       nil
     end
 
+    def self.diffstat_tables(tables, db1, db2)
+      tables.map do |table|
+        {
+          name: table,
+          records: { counts: diffstat_table(table, db1, db2) }
+        }
+      end
+    end
+
     def self.diffstat_db(db1, db2)
       r = table_changes(db1, db2)
 
       result = {tables: {counts: {}}, records: {counts: {}}}
 
-      result[:tables][:unchanged] = r[:unchanged].map do |table|
-        {
-          name: table,
-          records: { counts: diffstat_table(table, db1, db2) }
-        }
-      end
-      result[:tables][:changed] = r[:changed].map do |table|
-        {
-          name: table,
-          records: { counts: diffstat_table(table, db1, db2) }
-        }
-      end
+      result[:tables][:unchanged] = diffstat_tables(r[:unchanged], db1, db2)
+      result[:tables][:changed] = diffstat_tables(r[:changed], db1, db2)
       result[:tables][:added] = r[:added].map do |table|
         added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         {
