@@ -15,14 +15,8 @@ module Morph
       end
     end
 
-    def self.diffstat_db(db1, db2)
-      r = table_changes(db1, db2)
-
-      result = {tables: {counts: {}}, records: {counts: {}}}
-
-      result[:tables][:unchanged] = diffstat_tables(r[:unchanged], db1, db2)
-      result[:tables][:changed] = diffstat_tables(r[:changed], db1, db2)
-      result[:tables][:added] = r[:added].map do |table|
+    def self.tables_added(tables, db1, db2)
+      tables.map do |table|
         added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         {
           name: table,
@@ -31,7 +25,10 @@ module Morph
           }
         }
       end
-      result[:tables][:removed] = r[:removed].map do |table|
+    end
+
+    def self.tables_removed(tables, db1, db2)
+      tables.map do |table|
         removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         {
           name: table,
@@ -40,6 +37,17 @@ module Morph
           }
         }
       end
+    end
+
+    def self.diffstat_db(db1, db2)
+      r = table_changes(db1, db2)
+
+      result = {tables: {counts: {}}, records: {counts: {}}}
+
+      result[:tables][:unchanged] = diffstat_tables(r[:unchanged], db1, db2)
+      result[:tables][:changed] = diffstat_tables(r[:changed], db1, db2)
+      result[:tables][:added] = tables_added(r[:added], db1, db2)
+      result[:tables][:removed] = tables_removed(r[:removed], db1, db2)
 
       # Now let's work out the totals
       result[:records][:counts][:added] =
