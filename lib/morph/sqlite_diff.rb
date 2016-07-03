@@ -9,14 +9,7 @@ module Morph
     def self.diffstat_db(db1, db2)
       r = table_changes(db1, db2)
 
-      result = {
-        tables: {
-          counts: { added: 0, removed: 0, changed: 0, unchanged: 0 }
-        },
-        records: {
-          counts: { added: 0, removed: 0, changed: 0, unchanged: 0 }
-        }
-      }
+      result = {tables: {counts: {}}, records: {counts: {}}}
 
       result[:tables][:unchanged] = r[:unchanged].map do |table|
         {
@@ -50,16 +43,20 @@ module Morph
       end
 
       # Now let's work out the totals
-      (result[:tables][:unchanged] + result[:tables][:changed] + result[:tables][:added]).each do |t|
-        result[:records][:counts][:added] += t[:records][:counts][:added]
-      end
-      (result[:tables][:unchanged] + result[:tables][:changed] + result[:tables][:removed]).each do |t|
-        result[:records][:counts][:removed] += t[:records][:counts][:removed]
-      end
-      (result[:tables][:unchanged] + result[:tables][:changed]).each do |t|
-        result[:records][:counts][:changed] += t[:records][:counts][:changed]
-        result[:records][:counts][:unchanged] += t[:records][:counts][:unchanged]
-      end
+      result[:records][:counts][:added] =
+        (result[:tables][:unchanged] +
+        result[:tables][:changed] +
+        result[:tables][:added]).sum {|t| t[:records][:counts][:added]}
+      result[:records][:counts][:removed] =
+        (result[:tables][:unchanged] +
+        result[:tables][:changed] +
+        result[:tables][:removed]).sum {|t| t[:records][:counts][:removed]}
+      result[:records][:counts][:changed] =
+        (result[:tables][:unchanged] +
+        result[:tables][:changed]).sum {|t| t[:records][:counts][:changed]}
+      result[:records][:counts][:unchanged] =
+        (result[:tables][:unchanged] +
+        result[:tables][:changed]).sum {|t| t[:records][:counts][:unchanged]}
 
       result[:tables][:counts][:added] =
         result[:tables][:added].count
