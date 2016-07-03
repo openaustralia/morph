@@ -116,20 +116,16 @@ module Morph
     # Page is the maximum number of records that are read into memory at once
     def self.diffstat_table(table, db1, db2, page = 1000)
       min, max = spanning_rowid_table(table, db1, db2)
-      page_min = min
-      page_max = min + page - 1
       added = 0
       removed = 0
       changed = 0
       unchanged = 0
-      while page_min <= max
-        result = diffstat_table_rowid_range(table, page_min, page_max, db1, db2)
+      (min..max).each_slice(page) do |p|
+        result = diffstat_table_rowid_range(table, p[0], p[-1], db1, db2)
         added += result[:added]
         removed += result[:removed]
         changed += result[:changed]
         unchanged += result[:unchanged]
-        page_min += page
-        page_max += page
       end
 
       { added: added, removed: removed, changed: changed, unchanged: unchanged }
