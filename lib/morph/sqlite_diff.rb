@@ -86,13 +86,17 @@ module Morph
       end
     end
 
-    # Page is the maximum number of records that are read into memory at once
-    def self.diffstat_table(table, db1, db2, page = 1000)
-      # Find the ROWID range that covers both databases
-      v1 = db1.execute("SELECT MIN(ROWID), MAX(ROWID) from '#{table}'")
-      v2 = db2.execute("SELECT MIN(ROWID), MAX(ROWID) from '#{table}'")
-      min1, max1 = v1.first
-      min2, max2 = v2.first
+    # Returns [min, max]
+    def self.min_and_max_rowid(table, db)
+      v = db.execute("SELECT MIN(ROWID), MAX(ROWID) from '#{table}'")
+      v.first
+    end
+
+    # Find the ROWID range that covers both databases and return as
+    # [min, max]
+    def self.spanning_rowid_table(table, db1, db2)
+      min1, max1 = min_and_max_rowid(table, db1)
+      min2, max2 = min_and_max_rowid(table, db2)
       if min1.nil? && max1.nil? && min2.nil? && max2.nil?
         min = 1
         max = 1
@@ -106,6 +110,12 @@ module Morph
         min = [min1, min2].min
         max = [max1, max2].max
       end
+      [min, max]
+    end
+
+    # Page is the maximum number of records that are read into memory at once
+    def self.diffstat_table(table, db1, db2, page = 1000)
+      min, max = spanning_rowid_table(table, db1, db2)
       page_min = min
       page_max = min + page - 1
       added = 0
