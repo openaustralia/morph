@@ -1,0 +1,72 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "0.0.1"
+  title: A straw-man for the morph server API
+  description: |
+    Some initial straw-man documentation for the morph server,
+    a low level scraper api, suggested in
+    https://github.com/openaustralia/morph/issues/647
+
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /runs:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      description: |
+        Actually start a scraper. Give it the scraper code (in any language supported
+        by buildstep) and any associated data it needs locally. This will return as
+        soon as the scraper is compiling and/or running with the "run ID" which
+        uniquelly identifies this scraper run. You will need this run ID to
+        subsequently track and access this scraper.
+      # This is array of GET operation parameters:
+      consumes:
+        - multipart/form-data
+      parameters:
+        -
+          name: code
+          in: formData
+          description: |
+            Directory with code, configuration and data to run. Everything needs
+            to be tarred up.
+          required: true
+          type: file
+        -
+          name: environment
+          in: formData
+          description: |
+            Environment variables to set for the scraper run. Each environment
+            should be passed in the form `VARIABLE=VALUE`.
+          type: array
+          items:
+            type: string
+      schemes: 
+        - https
+      security:
+        -
+          api_key: []
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Started successfully
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            title: run_id
+            type: integer
+            description: |
+              Uniquelly identifies this scraper run. Needed for any subsequent API calls
+              for this run.
