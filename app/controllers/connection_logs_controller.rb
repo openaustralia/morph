@@ -34,3 +34,13 @@ class ConnectionLogsController < ApplicationController
     ENV["MITMPROXY_SECRET"]
   end
 end
+
+
+method
+scheme
+domain
+path
+
+request_size
+response_size
+response_code

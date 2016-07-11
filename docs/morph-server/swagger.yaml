@@ -135,4 +135,41 @@ definitions:
         text:
           type: string
           description: Console message
+      required:
+        - source
+        - text
+        
+  ConnectionEvent:
+    type: object
+    description: http/https connection made to the outside world
+    allOf:
+    - $ref: '#/definitions/Event'
+    - type: object
+      properties:
+        method:
+          type: string
+          description: REST method used (e.g. GET, PUT..)
+        scheme:
+          type: string
+          description: Whether http or https
+        domain:
+          type: string
+          description: Name of server being connected to
+        path:
+          type: string
+          description: Path bit of url from domain being connected to
+        request_size:
+          type: integer
+        response_size:
+          type: integer
+        response_code:
+          type: integer
+      required:
+        - method
+        - scheme
+        - domain
+        - path
+        - request_size
+        - response_size
+        - response_code
     
