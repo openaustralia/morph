@@ -181,4 +181,18 @@ definitions:
         - request_size
         - response_size
         - response_code
+  StageChangeEvent:
+    type: object
+    description: |
+      Event for moving from one stage to another. e.g. queued, compiling,
+      running, exited with particular exit code. The stage is the stage that
+      we're moving into.
+    properties:
+      exitCode:
+        type: integer
+        description: |
+          On stage "stopped", includes the exitCode of the
+          running process.
+        
+      
     
