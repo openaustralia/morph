@@ -71,6 +71,7 @@ paths:
             description: |
               Uniquelly identifies this scraper run. Needed for any subsequent API calls
               for this run.
+              
   /runs/{id}/events:
     get:
       summary: Attach to scraper event stream
@@ -101,6 +102,22 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Event'
+
+  /runs/{id}/stop:
+    post:
+      summary: Stop scraper run
+      description: Use this when you want to stop a running scraper cleanly
+      parameters:
+        -
+          name: id
+          in: path
+          description: The event ID (as returned by starting a scraper run)
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Successfully stopped
+        # TODO: Response for not stopping succesfully
 
 definitions:
   Event:
