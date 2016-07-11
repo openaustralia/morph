@@ -115,6 +115,9 @@ definitions:
         type: string
         format: date-time
         description: Date and time of event
+      stage:
+        type: string
+        description: Whether this event happened in compile or run stage
     required:
       - id
       - type
