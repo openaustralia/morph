@@ -24,6 +24,7 @@ paths:
   /runs:
     # This is a HTTP operation
     post:
+      summary: Start a scraper run
       # Describe this verb here. Note: you can use markdown
       description: |
         Actually start a scraper. Give it the scraper code (in any language supported
@@ -70,3 +71,68 @@ paths:
             description: |
               Uniquelly identifies this scraper run. Needed for any subsequent API calls
               for this run.
+  /runs/{id}/events:
+    get:
+      summary: Attach to scraper event stream
+      description: |
+        Watch what is happening to a scraper in real-time as it gets compiled and runs.
+        By default this will stream all events that have occurred from the scraper
+        getting started until now and then as new events occur stream those in real-time.
+        If for any reason this connection dies (or you stop it), you can reconnect with
+        the last successfully received event ID and the stream will start from the next
+        event.
+
+        Note that even if a scraper has completed or failed calling this should succeed.
+        As in it should be possible to get the whole event log of everything that happened
+        even if nothing is currently running.
+        
+        **TODO**: Figure out how to represent JSON streams in swagger in response below
+      parameters:
+        -
+          name: id
+          in: path
+          description: The event ID (as returned by starting a scraper run)
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Attached
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+
+definitions:
+  Event:
+    type: object
+    discriminator: type
+    properties:
+      id:
+        type: integer
+      type:
+        type: string
+      time:
+        type: string
+        format: date-time
+        description: Date and time of event
+    required:
+      - id
+      - type
+      - time
+    
+  LogEvent:
+    type: object
+    description: Console output event (from scraper run)
+    allOf:
+    - $ref: '#/definitions/Event'
+    - type: object
+      properties:
+        source:
+          type: string
+          enum: ["stdout", "stderr"]
+          description: |
+            Source of the message. e.g. `stdout`, `stderr`
+        text:
+          type: string
+          description: Console message
+    
