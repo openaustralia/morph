@@ -10,6 +10,12 @@
 #      in the textbox at the top
 #   3. Hit the "Explore" button
 
+# TODO: Add an api endpoint to get the overall status of the current run. e.g. how
+# long has it been running. What stage is it in? Would this endpoint also be the
+# appropriate way to get access to the metrics instead?
+
+# TODO: Add an /runs index endpoint to list all the current runs
+
 swagger: '2.0'
 
 # This is your document metadata
