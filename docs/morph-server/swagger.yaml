@@ -107,7 +107,7 @@ paths:
         -
           name: id
           in: path
-          description: The event ID (as returned by starting a scraper run)
+          description: The run ID (as returned by starting a scraper run)
           type: integer
           required: true
       responses:
@@ -126,7 +126,7 @@ paths:
         -
           name: id
           in: path
-          description: The event ID (as returned by starting a scraper run)
+          description: The run ID (as returned by starting a scraper run)
           type: integer
           required: true
       responses:
@@ -144,7 +144,7 @@ paths:
         -
           name: id
           in: path
-          description: The event ID (as returned by starting a scraper run)
+          description: The run ID (as returned by starting a scraper run)
           type: integer
           required: true
       # TODO: What to do if the scraper run hasn't actually finished?
@@ -174,7 +174,7 @@ paths:
         -
           name: id
           in: path
-          description: The event ID (as returned by starting a scraper run)
+          description: The run ID (as returned by starting a scraper run)
           type: integer
           required: true
         -
@@ -205,7 +205,7 @@ paths:
         -
           name: id
           in: path
-          description: The event ID (as returned by starting a scraper run)
+          description: The run ID (as returned by starting a scraper run)
           type: integer
           required: true
       # TODO: What to do if the scraper run hasn't actually finished?
