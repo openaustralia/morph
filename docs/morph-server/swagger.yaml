@@ -62,7 +62,7 @@ paths:
           type: array
           items:
             type: string
-      schemes: 
+      schemes:
         - https
       security:
         -
@@ -80,7 +80,7 @@ paths:
             description: |
               Uniquelly identifies this scraper run. Needed for any subsequent API calls
               for this run.
-              
+
   /runs/{id}/events:
     get:
       summary: Attach to scraper event stream
@@ -95,7 +95,7 @@ paths:
         Note that even if a scraper has completed or failed calling this should succeed.
         As in it should be possible to get the whole event log of everything that happened
         even if nothing is currently running.
-        
+
         **TODO**: Figure out how to represent JSON streams in swagger in response below
       parameters:
         -
@@ -190,11 +190,11 @@ paths:
         This does final clean up of everything associated with a scraper run.
         After doing this it's not possible to get any information about the run.
         So, make sure you have everything you need before you call this.
-        
+
         If a scraper isn't stopped or finished after a certain amount of
         time it should be automatically cleaned up. This is to ensure that
         the morph server is only stateful over the short term.
-        
+
       parameters:
         -
           name: id
@@ -217,13 +217,13 @@ definitions:
       - compiling
       - running
       - stopped
-  
+
   ResourceUsage:
     type: object
     description: |
       Resources used by a process. This information is recorded as part of
       the metrics for a scraper run.
-      
+
       The names of metrics are all copied from the structure
       returned by `getrusage(2)` (with the exception of `wall_time`)
     properties:
@@ -281,7 +281,7 @@ definitions:
           higher priority process becoming runnable or because
           the current process exceeded its time slice.
         type: integer
-  
+
   Event:
     type: object
     discriminator: type
@@ -301,7 +301,7 @@ definitions:
       - type
       - time
       - stage
-    
+
   LogEvent:
     type: object
     description: Console output event (from scraper run)
@@ -320,7 +320,7 @@ definitions:
       required:
         - source
         - text
-        
+
   ConnectionEvent:
     type: object
     description: http/https connection made to the outside world
@@ -366,6 +366,3 @@ definitions:
         description: |
           On stage "stopped", includes the exitCode of the
           running process.
-        
-      
-    
