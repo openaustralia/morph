@@ -121,7 +121,7 @@ paths:
   /runs/{id}/stop:
     post:
       summary: Stop scraper run
-      description: Use this when you want to stop a running scraper cleanly
+      description: Use this when you want to cleanly stop a running scraper
       parameters:
         -
           name: id
