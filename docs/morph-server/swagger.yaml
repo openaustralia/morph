@@ -143,66 +143,84 @@ paths:
               type: object
               properties:
                 stage:
-                  type: string
-                                  
-                # The names of metrics are all copied from the structure
-                # returned by getrusage(2) (with the exception of wall_time)
-                wall_time:
-                  description: Wall clock
-                  type: number
-                utime:
-                  description: |
-                    This is the total amount of time spent executing in user
-                    mode, expressed in a timeval structure (seconds plus
-                    microseconds).
-                  type: number
-                stime:
-                  description: |
-                    This is the total amount of time spent executing in
-                    kernel mode, expressed in a timeval structure (seconds
-                    plus microseconds).
-                  type: number
-                maxrss:
-                  description: |
-                    This is the maximum resident set size used (in kilobytes).
-                    For RUSAGE_CHILDREN, this is the resident set size of the
-                    largest child, not the maximum resident set size of the
-                    process tree.
-                  type: integer
-                minflt:
-                  description: |
-                    The number of page faults serviced without any I/O
-                    activity; here I/O activity is avoided by "reclaiming" a
-                    page frame from the list of pages awaiting reallocation.
-                  type: integer
-                majflt:
-                  description: |
-                    The number of page faults serviced that required I/O
-                    activity.
-                  type: integer
-                inblock:
-                  description: |
-                    The number of times the file system had to perform input.
-                  type: integer
-                oublock:
-                  description: |
-                    The number of times the file system had to perform output.
-                  type: integer
-                nvcsw:
-                  description: |
-                    The number of times a context switch resulted due to a
-                    process voluntarily giving up the processor before its
-                    time slice was completed (usually to await availability
-                    of a resource).
-                  type: integer
-                nivcsw:
-                  description: |
-                    The number of times a context switch resulted due to a
-                    higher priority process becoming runnable or because
-                    the current process exceeded its time slice.
-                  type: integer
+                  $ref: '#/definitions/Stage'
+                resource_usage:
+                  $ref: '#/definitions/ResourceUsage'
 
 definitions:
+  Stage:
+    type: string
+    description: The stage of the life-cycle of the run
+    enum:
+      - queued
+      - compiling
+      - running
+      - stopped
+  
+  ResourceUsage:
+    type: object
+    description: |
+      Resources used by a process. This information is recorded as part of
+      the metrics for a scraper run.
+      
+      The names of metrics are all copied from the structure
+      returned by `getrusage(2)` (with the exception of `wall_time`)
+    properties:
+      wall_time:
+        description: Wall clock
+        type: number
+      utime:
+        description: |
+          This is the total amount of time spent executing in user
+          mode, expressed in a timeval structure (seconds plus
+          microseconds).
+        type: number
+      stime:
+        description: |
+          This is the total amount of time spent executing in
+          kernel mode, expressed in a timeval structure (seconds
+          plus microseconds).
+        type: number
+      maxrss:
+        description: |
+          This is the maximum resident set size used (in kilobytes).
+          For RUSAGE_CHILDREN, this is the resident set size of the
+          largest child, not the maximum resident set size of the
+          process tree.
+        type: integer
+      minflt:
+        description: |
+          The number of page faults serviced without any I/O
+          activity; here I/O activity is avoided by "reclaiming" a
+          page frame from the list of pages awaiting reallocation.
+        type: integer
+      majflt:
+        description: |
+          The number of page faults serviced that required I/O
+          activity.
+        type: integer
+      inblock:
+        description: |
+          The number of times the file system had to perform input.
+        type: integer
+      oublock:
+        description: |
+          The number of times the file system had to perform output.
+        type: integer
+      nvcsw:
+        description: |
+          The number of times a context switch resulted due to a
+          process voluntarily giving up the processor before its
+          time slice was completed (usually to await availability
+          of a resource).
+        type: integer
+      nivcsw:
+        description: |
+          The number of times a context switch resulted due to a
+          higher priority process becoming runnable or because
+          the current process exceeded its time slice.
+        type: integer
+  
   Event:
     type: object
     discriminator: type
@@ -216,13 +234,7 @@ definitions:
         format: date-time
         description: Date and time of event
       stage:
-        type: string
-        description: Whether this event happened in compile or run stage
-        enum:
-          - queued
-          - compiling
-          - running
-          - stopped
+        $ref: '#/definitions/Stage'
     required:
       - id
       - type
