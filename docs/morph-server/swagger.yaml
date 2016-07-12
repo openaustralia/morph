@@ -147,6 +147,33 @@ paths:
                 resource_usage:
                   $ref: '#/definitions/ResourceUsage'
 
+  /runs/{id}/file:
+    get:
+      summary: Get file
+      description: |
+        Usually at the end of the scraper run you want to grab the contents
+        of a file which is probably the result of scraping. This allows you
+        to do that.
+      # TODO: What to do if the scraper run hasn't actually finished?
+      parameters:
+        -
+          name: id
+          in: path
+          description: The event ID (as returned by starting a scraper run)
+          type: integer
+          required: true
+        -
+          name: path
+          in: query
+          description: The path to the file to grab
+          type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          schema:
+            type: file
+
 definitions:
   Stage:
     type: string
