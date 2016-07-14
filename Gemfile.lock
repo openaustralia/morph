@@ -19,7 +19,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    RedCloth (4.2.9)
+    RedCloth (4.3.2)
     actionmailer (4.1.14.1)
       actionpack (= 4.1.14.1)
       actionview (= 4.1.14.1)
