@@ -31,9 +31,15 @@ gem 'docker-api', "< 1.20.0", :require => 'docker'
 # this when we upgrade the docker-api gem
 # See https://github.com/swipely/docker-api/tree/c1308961a5d799a62ed906df8206acd1ac6b4b2c#known-issues
 gem "excon", "0.46.0"
-gem "sidekiq"
+# TODO Upgrade to sidekiq 4.x because it should be faster. It does look
+# like it should be very straightforward to do
+gem "sidekiq", "< 4"
 gem 'sidekiq-limit_fetch'
 gem 'sidekiq-unique-jobs'
+# Locking redis to version 3.2.2 for the time being until a memory-leak issue
+# is resolved. See https://github.com/redis/redis-rb/issues/612. When it is
+# just remove the whole line below.
+gem 'redis', '= 3.2.2'
 gem "foreman"
 gem "faraday"
 #gem 'jquery-turbolinks'
