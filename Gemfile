@@ -17,7 +17,8 @@ gem "haml-rails"
 gem "bootstrap-sass"
 gem "font-awesome-rails"
 gem "bootstrap-select-rails"
-gem "devise"
+# TODO Upgrade to devise 4. It doesn't look like a big change
+gem "devise", "< 4"
 gem "omniauth-github"
 gem 'friendly_id'
 gem "octokit", "~> 4.0"

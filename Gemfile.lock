@@ -56,7 +56,7 @@ GEM
       json
     backstretch-rails (2.0.4)
       railties (> 3.1)
-    bcrypt (3.1.10)
+    bcrypt (3.1.11)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -115,7 +115,7 @@ GEM
     dalli (2.7.4)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
-    devise (3.4.1)
+    devise (3.5.10)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -492,7 +492,7 @@ GEM
       activemodel (>= 3.0.0)
       addressable
     vcr (2.9.3)
-    warden (1.2.3)
+    warden (1.2.6)
       rack (>= 1.0)
     webmock (1.21.0)
       addressable (>= 2.3.6)
@@ -527,7 +527,7 @@ DEPENDENCIES
   d3-rails
   dalli
   database_cleaner
-  devise
+  devise (< 4)
   docker-api (< 1.20.0)
   dotenv-rails
   excon (= 0.46.0)
