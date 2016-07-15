@@ -9,4 +9,5 @@ FactoryGirl.define do
   end
 
   factory :organization
+  factory :run
 end

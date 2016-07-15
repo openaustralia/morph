@@ -17,10 +17,12 @@
 /tmp/miniprofiler
 /tmp/sessions
 /tmp/sockets
+/tmp/capybara
 
 # Ignore the PID tempfiles but not the folder that holds them.
 /tmp/pids/*.pid
 
+/public
 /.env
 /.env.local
 /.env.production

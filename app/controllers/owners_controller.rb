@@ -10,19 +10,8 @@ class OwnersController < ApplicationController
     # Only do this once
     session[:new_supporter] = false if @new_supporter
 
-    @scrapers = @owner.scrapers.includes(:last_run)
+    @scrapers = @owner.scrapers.order(:updated_at).includes(:last_run)
 
-    # Split out scrapers into different groups
-    @running_scrapers, @erroring_scrapers, @other_scrapers = [], [], []
-    @scrapers.each do |scraper|
-      if scraper.running?
-        @running_scrapers << scraper
-      elsif scraper.requires_attention?
-        @erroring_scrapers << scraper
-      else
-        @other_scrapers << scraper
-      end
-    end
   end
 
   def settings_redirect
