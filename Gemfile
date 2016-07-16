@@ -65,8 +65,8 @@ gem 'kaminari'
 gem 'kaminari-bootstrap', '~> 3.0.1'
 gem "rails-timeago", "~> 2.0"
 gem 'meta-tags'
-# Rails 4 compatibility isn't released yet. So tracking HEAD.
-gem 'activeadmin', github: 'activeadmin'
+# Rails 4 compatibility hasn't been "properly" released yet.
+gem 'activeadmin', '~> 1.0.0.pre4'
 gem 'faye'
 gem "puma"
 gem 'sync'
