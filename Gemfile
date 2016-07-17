@@ -3,8 +3,7 @@ source 'https://rubygems.org'
 gem 'dotenv-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-# TODO Upgrade to rails 4.2 because 4.1 is not getting security updates anymore
-gem 'rails', '4.1.16'
+gem 'rails', '4.2.7'
 
 # Use sqlite3 as the database for Active Record
 # This is a patched version of the gem at https://github.com/openaustralia/sqlite3-ruby/tree/openaustralia-sqlite3
