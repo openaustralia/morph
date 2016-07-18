@@ -62,6 +62,9 @@ gem 'meta-tags'
 gem 'activeadmin', '~> 1.0.0.pre4'
 gem 'faye'
 gem "puma"
+# TODO sync has been renamed to render_sync.
+# However version 0.5.0 of render_sync seems to have a problem with the
+# renaming of the RefetchesController. So leaving for the time being
 gem 'sync'
 gem 'multiblock'
 # Lock honeybadger to version 1 for the time being as version 2 requires a change to
