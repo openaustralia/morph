@@ -333,7 +333,7 @@ GEM
     pry-remote (0.1.8)
       pry (~> 0.9)
       slop (~> 3.0)
-    pry-rescue (1.4.2)
+    pry-rescue (1.4.4)
       interception (>= 0.5)
       pry
     pry-stack_explorer (0.4.9.2)
