@@ -25,14 +25,7 @@ gem "octokit", "~> 4.0"
 gem "simple_form"
 gem "cocoon"
 gem "grit"
-# version 1.20.0 of the docker-api gem is causing the compile step in buildstep
-# to not get cached
-gem 'docker-api', "< 1.20.0", :require => 'docker'
-# excon is only needed by docker-api. There is no need to include it here
-# other than to fix the version of excon to 0.46.0. We should be able to remove
-# this when we upgrade the docker-api gem
-# See https://github.com/swipely/docker-api/tree/c1308961a5d799a62ed906df8206acd1ac6b4b2c#known-issues
-gem "excon", "0.46.0"
+gem 'docker-api', :require => 'docker'
 # TODO Upgrade to sidekiq 4.x because it should be faster. It does look
 # like it should be very straightforward to do
 gem "sidekiq", "< 4"

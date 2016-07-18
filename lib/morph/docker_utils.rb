@@ -168,9 +168,7 @@ module Morph
 
     def self.remove_single_docker_image(image)
       image.delete('noprune' => 1)
-    rescue Docker::Error::ConfictError
-      # TODO: When docker-api gem gets updated Docker::Error::ConfictError
-      # will be changed to Docker::Error::ConflictError
+    rescue Docker::Error::ConflictError
       nil
     end
 
