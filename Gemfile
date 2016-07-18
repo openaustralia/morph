@@ -26,9 +26,7 @@ gem "simple_form"
 gem "cocoon"
 gem "grit"
 gem 'docker-api', :require => 'docker'
-# TODO Upgrade to sidekiq 4.x because it should be faster. It does look
-# like it should be very straightforward to do
-gem "sidekiq", "< 4"
+gem "sidekiq"
 gem 'sidekiq-limit_fetch'
 gem 'sidekiq-unique-jobs'
 gem 'redis'
