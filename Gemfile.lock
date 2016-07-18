@@ -393,7 +393,7 @@ GEM
     rdoc (4.2.2)
       json (~> 1.4)
     redcarpet (3.3.4)
-    redis (3.2.2)
+    redis (3.3.1)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
     responders (2.2.0)
@@ -589,7 +589,7 @@ DEPENDENCIES
   rails-timeago (~> 2.0)
   rails_autolink
   redcarpet
-  redis (= 3.2.2)
+  redis
   rest-client
   rspec-activemodel-mocks
   rspec-rails

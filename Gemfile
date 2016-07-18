@@ -31,10 +31,7 @@ gem 'docker-api', :require => 'docker'
 gem "sidekiq", "< 4"
 gem 'sidekiq-limit_fetch'
 gem 'sidekiq-unique-jobs'
-# Locking redis to version 3.2.2 for the time being until a memory-leak issue
-# is resolved. See https://github.com/redis/redis-rb/issues/612. When it is
-# just remove the whole line below.
-gem 'redis', '= 3.2.2'
+gem 'redis'
 gem "foreman"
 gem "faraday"
 #gem 'jquery-turbolinks'
