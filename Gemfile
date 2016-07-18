@@ -67,9 +67,7 @@ gem "puma"
 # renaming of the RefetchesController. So leaving for the time being
 gem 'sync'
 gem 'multiblock'
-# Lock honeybadger to version 1 for the time being as version 2 requires a change to
-# the configuration
-gem 'honeybadger', "~> 1.0"
+gem 'honeybadger'
 gem 'cancan'
 gem 'backstretch-rails'
 gem 'searchkick'

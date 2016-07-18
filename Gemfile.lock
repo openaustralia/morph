@@ -238,8 +238,7 @@ GEM
     hashdiff (0.3.0)
     hashie (3.4.4)
     hitimes (1.2.4)
-    honeybadger (1.16.7)
-      json
+    honeybadger (2.6.0)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
       haml (~> 4.0.0)
@@ -565,7 +564,7 @@ DEPENDENCIES
   guard-rspec
   haml-coderay
   haml-rails
-  honeybadger (~> 1.0)
+  honeybadger
   jbuilder (~> 1.2)
   jquery-rails
   kaminari
