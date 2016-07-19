@@ -82,9 +82,6 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
   gem 'guard'
-  # Locking listen version down so we can upgrade guard. When we upgrade
-  # to Ruby 2.2 (which we should do!) then we can remove the line below entirely
-  gem 'listen', '< 3'
   gem 'guard-livereload', require: false
   gem "rack-livereload"
   gem 'guard-rspec', require: false
