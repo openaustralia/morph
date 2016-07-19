@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - 2.0.0
+  - 2.3.0
 env: SECRET_KEY_BASE=859384 RUN_SLOW_TESTS=true DONT_RUN_DOCKER_TESTS=true
 
 before_script:
