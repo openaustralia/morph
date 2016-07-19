@@ -18,9 +18,7 @@ gem "haml-rails"
 gem "bootstrap-sass"
 gem "font-awesome-rails"
 gem "bootstrap-select-rails"
-# TODO Upgrade to devise 4. It doesn't look like a big change
-# devise 4.2.0 requires ruby 2.1 or later
-gem "devise", "< 4"
+gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
 gem "octokit", "~> 4.0"
