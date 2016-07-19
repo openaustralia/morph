@@ -68,8 +68,6 @@ gem 'honeybadger'
 gem 'cancan'
 gem 'backstretch-rails'
 gem 'searchkick'
-# Polyfill for String#scrub for Ruby 1.9 and 2.0
-gem "scrub_rb"
 gem "skylight"
 gem "stripe"
 gem 'haml-coderay'

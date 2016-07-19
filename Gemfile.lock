@@ -438,7 +438,6 @@ GEM
     sawyer (0.7.0)
       addressable (>= 2.3.5, < 2.5)
       faraday (~> 0.8, < 0.10)
-    scrub_rb (1.0.1)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -591,7 +590,6 @@ DEPENDENCIES
   rspec-activemodel-mocks
   rspec-rails
   sass-rails
-  scrub_rb
   sdoc
   searchkick
   sidekiq
@@ -611,6 +609,9 @@ DEPENDENCIES
   vcr
   webmock
   zeroclipboard-rails
+
+RUBY VERSION
+   ruby 2.3.0p0
 
 BUNDLED WITH
    1.12.5
