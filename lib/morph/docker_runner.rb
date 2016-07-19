@@ -71,29 +71,13 @@ module Morph
       [c, i3]
     end
 
-    def self.normalise_log_content(c)
-      # We're going to assume (somewhat rashly, I might add) that the
-      # console output from the scraper is always encoded as UTF-8.
-      c.force_encoding('UTF-8')
-      c.scrub!
-      # There are times when multiple lines are returned and this does
-      # not always happen consistently. So, for simplicity and consistency
-      # we will split multiple lines up
-      line_buffer = Morph::LineBuffer.new
-      line_buffer << c
-
-      result = line_buffer.extract
-      # Anything left over
-      f = line_buffer.finish
-      result << f if f.length > 0
-      result
-    end
-
     def self.attach_to_run_and_finish(container, files)
       container.streaming_logs(stdout: true, stderr: true, follow: true) do |s, c|
-        normalise_log_content(c).each do |content|
-          yield s, content
-        end
+        # We're going to assume (somewhat rashly, I might add) that the
+        # console output from the scraper is always encoded as UTF-8.
+        c.force_encoding('UTF-8')
+        c.scrub!
+        yield s, c
       end
 
       # TODO: Don't call container.json multiple times
