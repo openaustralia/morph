@@ -37,6 +37,7 @@ module Morph
     def go
       # If container already exists we just attach to it
       c = container_for_run
+      # TODO Use new feature of docker api to skip over log lines based on the timestamp
       if c.nil?
         c = compile_and_start_run do |s, c|
           yield s, c

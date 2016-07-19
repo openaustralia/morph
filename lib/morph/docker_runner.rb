@@ -90,35 +90,9 @@ module Morph
     end
 
     def self.attach_to_run_and_finish(container, files)
-      if container.json['State']['Running']
-        # TODO: We need to gracefully handle Docker::Error::TimeoutError
-        # This should involve throwing a specific exception (something like
-        # Morph::IntentionalRequeue) that says "requeue this" and then we
-        # need to make sure that the requeud job reattaches to the existing
-        # container. It should be able to handle the container still running
-        # as well as having stopped. We can also shorten the read timeout as
-        # it doesn't really have anything to do with how long scrapers are
-        # allowed to run. It's just the time between reads of the log before
-        # the attach read times out. So, a scraper that outputs stuff to
-        # standard out regularly can run a lot longer than one that doesn't.
-
-        # We want output to be streamed here in real time so we need to
-        # get the container again with an "interactive" connection.
-        interactive_container =
-          Morph::DockerUtils.container_with_interactive_connection(
-            container, read_timeout: 5.minutes)
-
-        interactive_container.attach(logs: true) do |s, c|
-          normalise_log_content(c).each do |content|
-            yield s, content
-          end
-        end
-      else
-        # Just grab all the logs
-        container.streaming_logs(stdout: true, stderr: true) do |s, c|
-          normalise_log_content(c).each do |content|
-            yield s, content
-          end
+      container.streaming_logs(stdout: true, stderr: true, follow: true) do |s, c|
+        normalise_log_content(c).each do |content|
+          yield s, content
         end
       end
 

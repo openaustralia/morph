@@ -159,13 +159,6 @@ module Morph
       Docker::Connection.new(Docker.url, Docker.env_options.merge(options))
     end
 
-    # Given a container return a new connection to the same container
-    # which is interactive (i.e. can be used for streaming)
-    def self.container_with_interactive_connection(container, options)
-      Docker::Container.get(container.id, { },
-        docker_connection(options.merge(chunk_size: 1)))
-    end
-
     def self.remove_single_docker_image(image)
       image.delete('noprune' => 1)
     rescue Docker::Error::ConflictError
