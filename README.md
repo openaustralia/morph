@@ -12,7 +12,7 @@
 * Email alerts for broken scrapers
 
 ### Dependencies
-Ruby 2.3.0, Docker, MySQL, SQLite 3, Redis, mitmproxy and Elasticsearch.
+Ruby 2.3.1, Docker, MySQL, SQLite 3, Redis, mitmproxy and Elasticsearch.
 
 On OS X for development also Docker Toolbox - see below for more.
 
