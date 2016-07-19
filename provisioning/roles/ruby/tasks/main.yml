@@ -12,7 +12,7 @@
   sudo_user: deploy
 # TODO: Is it possible to extract this list of dependencies automatically from rvm?
 # Or allow rvm to do the install - but that would require the deploy user to have the permissions
-- name: "Ensure ruby-2.0.0-p353 dependencies installed"
+- name: "Ensure ruby-2.3.0 dependencies installed"
   apt: pkg={{ item }}
   with_items:
     - patch
@@ -34,7 +34,7 @@
     - libreadline6-dev
     - zlib1g-dev
     - libssl-dev
-- name: Ensure ruby-2.0.0-p353 is installed through rvm
-  command: /bin/sh -l -c 'rvm install ruby-2.0.0-p353 --autolibs=read-fail' creates=/home/deploy/.rvm/rubies/ruby-2.0.0-p353
+- name: Ensure ruby-2.3.0 is installed through rvm
+  command: /bin/sh -l -c 'rvm install ruby-2.3.0 --autolibs=read-fail' creates=/home/deploy/.rvm/rubies/ruby-2.3.0
   sudo_user: deploy
-  notify: Make ruby-2.0.0-p353 the default
+  notify: Make ruby-2.3.0 the default

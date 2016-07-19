@@ -1,7 +1,7 @@
 set :application, 'morph'
 set :repo_url, 'https://github.com/openaustralia/morph.git'
 
-set :rvm_ruby_version, '2.0.0-p353'
+set :rvm_ruby_version, '2.3.0'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 

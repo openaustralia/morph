@@ -3,7 +3,7 @@ server {
   server_name {{ server_name }} api.{{ server_name }};
   root /var/www/current/public;
   passenger_enabled on;
-  passenger_ruby /home/deploy/.rvm/gems/ruby-2.0.0-p353/wrappers/ruby;
+  passenger_ruby /home/deploy/.rvm/gems/ruby-2.3.0/wrappers/ruby;
 
   ssl on;
   ssl_certificate /etc/nginx/ssl/www/cert.pem;
