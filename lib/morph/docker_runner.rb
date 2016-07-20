@@ -73,14 +73,15 @@ module Morph
 
     def self.attach_to_run_and_finish(container, files)
       container.streaming_logs(stdout: true, stderr: true, follow: true, timestamps: true) do |s, line|
-        timestamp = line[0..29]
-        # TODO Use this timestamp
+        timestamp = Time.parse(line[0..29])
+        # To convert this ruby time back to the same string format as it
+        # originally came in do: timestamp.utc.strftime('%Y-%m-%dT%H:%M:%S.%9NZ')
         c = line[31..-1]
         # We're going to assume (somewhat rashly, I might add) that the
         # console output from the scraper is always encoded as UTF-8.
         c.force_encoding('UTF-8')
         c.scrub!
-        yield s, c
+        yield timestamp, s, c
       end
 
       # TODO: Don't call container.json multiple times

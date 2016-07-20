@@ -52,7 +52,7 @@ describe Morph::DockerRunner do
         end
         c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
         logs = []
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 0
@@ -77,7 +77,7 @@ describe Morph::DockerRunner do
         c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
           logs << [s, c]
         end
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 0
@@ -100,7 +100,7 @@ describe Morph::DockerRunner do
           logs << [s, c]
         end
         result = Morph::DockerRunner.attach_to_run_and_finish(
-          c, ['foo.txt', 'bar']) do |s, c|
+          c, ['foo.txt', 'bar']) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 0
@@ -123,7 +123,7 @@ describe Morph::DockerRunner do
           @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}) do |s, c|
           logs << [s, c]
         end
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 0
@@ -142,7 +142,7 @@ describe Morph::DockerRunner do
         c, _i3 = Morph::DockerRunner.compile_and_start_run(
           @dir, {}, {}) {}
         logs = []
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 0
@@ -179,7 +179,7 @@ This is not going to run as ruby code so should return an error
         c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
           logs << [s, c]
         end
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 1
@@ -210,7 +210,7 @@ puts "Finished!"
         c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
           logs << [Time.now, c]
         end
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [Time.now, c]
         end
         start_time = logs.find{|l| l[1] == "Started!\n"}[0]

@@ -102,7 +102,8 @@ module Morph
         result = Morph::RunResult.new(255, {}, {})
       else
         result = Morph::DockerRunner.attach_to_run_and_finish(
-          c, ['data.sqlite']) do |s, c|
+          c, ['data.sqlite']) do |timestamp, s, c|
+          # TODO Do something with the timestamp
           yield(s, c)
         end
       end
