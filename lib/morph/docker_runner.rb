@@ -79,6 +79,8 @@ module Morph
         c = line[31..-1]
         # We're going to assume (somewhat rashly, I might add) that the
         # console output from the scraper is always encoded as UTF-8.
+        # TODO Something more intelligent. Either figure out the correct encoding...
+        # Or take an educated guess rather than making an assumption
         c.force_encoding('UTF-8')
         c.scrub!
         yield timestamp, s, c
