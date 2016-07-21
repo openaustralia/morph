@@ -39,3 +39,7 @@
   command: /bin/sh -l -c 'rvm install ruby-2.3.1 --autolibs=read-fail' creates=/home/deploy/.rvm/rubies/ruby-2.3.1
   sudo_user: deploy
   notify: Make ruby-2.3.1 the default
+
+- name: Install bundler
+  command: bash -lc "gem install bundler"
+  sudo_user: deploy
