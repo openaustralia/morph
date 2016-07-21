@@ -3,44 +3,58 @@
 # TODO: Ensure that nginx is setup first
 - name: Ensure git is installed
   apt: pkg=git
+
 - name: Ensure that deploy owns /var/www
   file: owner=deploy group=deploy path=/var/www state=directory
+
 - name: Ensure that ssl/www directory exist
   file: path=/etc/nginx/ssl/www owner=deploy group=deploy state=directory
+
 - name: Ensure that ssl/faye directory exist
   file: path=/etc/nginx/ssl/faye owner=deploy group=deploy state=directory
+
 - name: Add api.{{ server_name }} SSL certificate (public)
   copy: src=ssl/api.{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/www/cert.pem owner=deploy group=deploy mode=0600
   notify: restart nginx
+
 - name: Add api.{{ server_name }} SSL certificate (private)
   copy: src=ssl/api.{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/www/cert.key owner=deploy group=deploy mode=0600
   notify: restart nginx
+
 - name: Add faye.{{ server_name }} SSL certificate (public)
   copy: src=ssl/faye.{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/faye/cert.pem owner=deploy group=deploy mode=0600
   notify: restart nginx
+
 - name: Add faye.{{ server_name }} SSL certificate (private)
   copy: src=ssl/faye.{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/faye/cert.key owner=deploy group=deploy mode=0600
   notify: restart nginx
+
 - name: Copy across 2048-bit certificate for Diffie Hellman Ephemeral Paramerts
   copy: src=ssl/dhparam.pem.secure dest=/etc/nginx/dhparam.pem
+
 - name: Generate the overall nginx config
   template: src=nginx.conf dest=/etc/nginx/nginx.conf
   notify: restart nginx
+
 - name: Generate the nginx config for the app
   template: src={{ item }} dest=/etc/nginx/sites-available/ owner=root group=root mode=644
   notify: restart nginx
   with_fileglob:
     - ../templates/sites/*
+
 - name: Make the separate nginx sites active
   command: ln -s /etc/nginx/sites-available/{{ item | basename }} /etc/nginx/sites-enabled/{{ item | basename }} creates=/etc/nginx/sites-enabled/{{ item | basename }}
   notify: restart nginx
   with_fileglob:
     - ../templates/sites/*
+
 - name: Ensure that /var/www/shared exists
   file: path=/var/www/shared owner=deploy group=deploy state=directory
+
 - name: Ensure that .env exists
   template: src=env dest=/var/www/shared/.env owner=deploy group=deploy
   # TODO: If this changes we should rerun foreman as well
+
 # TODO: This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
 # We're using a specific version of foreman here as after 0.63 the way environment variables
@@ -48,31 +62,42 @@
 # TODO: Update to more recent version of foreman
 - name: Install foreman
   gem: name=foreman version=0.63.0 state=present user_install=no
+
 - name: Create log directory
   file: path=/var/log/morph owner=deploy group=deploy state=directory
+
 - name: Ensure Procfile.production copied
   copy: src=../Procfile.production dest=/home/deploy/Procfile.production
   notify: Export to upstart
+
 - name: Create sudoers ready for testing
   template: src=sudoers dest=/etc/sudoers.d/deploy.test owner=root group=root mode=0440
   notify: Test sudoers and make it live
+
 # TODO: There are serious security concerns with doing this. This will probably be improved
 # as Docker matures
 - name: Add deploy to the docker group (so it has permissions to do dockery things)
   user: name=deploy groups=docker
+
 - name: Install dependency for following command
   apt: pkg=python-mysqldb
+
 - name: Create database
   mysql_db: name=morph
+
 - name: Create directory /var/www/shared/config
   file: path=/var/www/shared/config owner=deploy group=deploy state=directory
+
 - name: Copy over database configuration for application
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
+
 - name: Copy across newrelic configuration
   copy: src=newrelic.yml.secure dest=/var/www/shared/config/newrelic.yml
   notify: restart nginx
+
 - name: Dependency for following command
   apt: pkg=python-passlib
+
 - name: Set timezone in /etc/timezone
   copy: src=timezone dest=/etc/timezone
   notify: Update timezone
@@ -81,9 +106,11 @@
 - name: Setting daily cron job for 10:00am
   cron: name="daily scraping" hour=10 minute=0 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:auto_run_scrapers RAILS_ENV=production"
   when: cron_jobs
+
 - name: Setting cron job for sending out email alerts for 11:30am
   cron: name="email alerts" hour=11 minute=30 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:send_alerts RAILS_ENV=production"
   when: cron_jobs
+
 - name: Cron job to generate xml sitemaps at 4pm
   cron: name="xml sitemaps" hour=16 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake sitemap:refresh RAILS_ENV=production"
   when: cron_jobs
@@ -112,30 +139,39 @@
 
 - name: Install nodejs for asset precompiling
   apt: pkg=nodejs
+
 - name: Install memcached
   apt: pkg=memcached
+
 - name: Create directory for duply backup config for mysql
   file: path=/root/.duply/mysql state=directory
+
 - name: Create directory for duply backup config for sqlite
   file: path=/root/.duply/sqlite state=directory
+
 - name: Copy across duply backup config for mysql
   copy: src=duply_mysql_conf.secure dest=/root/.duply/mysql/conf owner=root group=root mode=0400
+
 - name: Copy across duply backup config for sqlite
   copy: src=duply_sqlite_conf.secure dest=/root/.duply/sqlite/conf owner=root group=root mode=0400
 
 - name: Do backups daily of mysql to S3 at 4:40AM
   cron: name="duply mysql" hour=4 minute=40 user=root job="duply mysql backup"
   when: backups
+
 - name: Do backups daily of sqlite to S3 at 4:40AM
   cron: name="duply sqlite" hour=4 minute=40 user=root job="duply sqlite backup"
   when: backups
 
 - name: Don't install redis for sidekiq background jobs from apt because it's too old (2.2)
   apt: pkg=redis-server state=absent
+
 - name: Sync configuration
   template: src=sync.yml dest=/var/www/shared/config/sync.yml owner=deploy group=deploy
+
 - name: Add server name to /etc/hosts
   lineinfile: dest=/etc/hosts line="127.0.0.1 {{ server_name }}" owner=root group=root mode=0644
+  
 - name: Add faye server name to /etc/hosts
   lineinfile: dest=/etc/hosts line="127.0.0.1 faye.{{ server_name }}" owner=root group=root mode=0644
 
