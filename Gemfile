@@ -18,9 +18,7 @@ gem "haml-rails"
 gem "bootstrap-sass"
 gem "font-awesome-rails"
 gem "bootstrap-select-rails"
-# TODO Upgrade to devise 4. It doesn't look like a big change
-# devise 4.2.0 requires ruby 2.1 or later
-gem "devise", "< 4"
+gem "devise"
 gem "omniauth-github"
 gem 'friendly_id'
 gem "octokit", "~> 4.0"
@@ -68,8 +66,6 @@ gem 'honeybadger'
 gem 'cancan'
 gem 'backstretch-rails'
 gem 'searchkick'
-# Polyfill for String#scrub for Ruby 1.9 and 2.0
-gem "scrub_rb"
 gem "skylight"
 gem "stripe"
 gem 'haml-coderay'
@@ -84,9 +80,6 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
   gem 'guard'
-  # Locking listen version down so we can upgrade guard. When we upgrade
-  # to Ruby 2.2 (which we should do!) then we can remove the line below entirely
-  gem 'listen', '< 3'
   gem 'guard-livereload', require: false
   gem "rack-livereload"
   gem 'guard-rspec', require: false
