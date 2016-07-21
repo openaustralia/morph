@@ -1,3 +1,6 @@
+- name: Make sure that pip is installed
+  apt: pkg=python-pip
+
 # Newer version of docker-py causes issues. See
 # https://github.com/ansible/ansible-modules-core/issues/1227
 - name: Install requirement for ansible docker

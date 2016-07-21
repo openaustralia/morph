@@ -1,5 +1,10 @@
 ---
+# TODO Fix apparmor thing
+- name: AppArmor seems to interfere with installation of mysql-server. Ugh.
+  apt: pkg=apparmor state=absent
+
 - name: Install mysql
   apt: pkg=mysql-server
+
 - name: Install bits for compiling mysql clients against
   apt: pkg=libmysqlclient-dev
