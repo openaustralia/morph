@@ -41,5 +41,5 @@
   notify: Make ruby-2.3.1 the default
 
 - name: Install bundler
-  command: bash -lc "gem install bundler"
+  command: bash -lc "rvm ruby-2.3.1; gem install bundler"
   sudo_user: deploy
