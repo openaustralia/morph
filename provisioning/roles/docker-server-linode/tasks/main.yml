@@ -38,24 +38,26 @@
 # 3. Save changes
 # 4. Reboot from the Dashboard tab
 
+- name: Install apt-transport-https
+  apt: pkg=apt-transport-https state=present
+
+- name: Install ca-certificates
+  apt: pkg=ca-certificates state=present
+
 - name: Ensure that we have the Docker repository key
-  apt_key: url=https://get.docker.io/gpg id=A88D21E9
+  apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
 
 - name: Ensure that pycurl is installed (for ansible)
   apt: pkg=python-pycurl
 
-# It looks like this stuff has changed. Docker is now suggesting
-# using a script to install stuff. Eek!
+- name: Ensure that we have the docker repository
+  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-precise main'
 
-#- name: Ensure that we have the docker repository
-#  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
-
-# docker needs apparmor but it's not a dependency in the package for some reason
-- name: Install apparmor
-  apt: pkg=apparmor state=present
+- name: Remove old lxc-docker package
+  apt: pkg=lxc-docker state=absent purge=yes
 
 - name: Ensure that the docker package is installed
-  apt: pkg=lxc-docker
+  apt: pkg=docker-engine
 
 - name: Configure docker to disable inter-container communication
   copy:
