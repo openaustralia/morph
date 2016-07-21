@@ -3,10 +3,13 @@ module Morph
   # configuration if things like Gemfiles are not included (for Ruby)
   class Runner
     include Sync::Actions
-    attr_accessor :run
+    attr_accessor :run, :log_lines_count
+
+    MAXIMUM_LOG_LINES = 50000
 
     def initialize(run)
       @run = run
+      @log_lines_count = run.log_lines.count
     end
 
     # The main section of the scraper running that is run in the background
@@ -22,8 +25,23 @@ module Morph
 
     def go_with_logging
       go do |s, c|
-        log(s, c)
+        if log_lines_count >= MAXIMUM_LOG_LINES
+          kill_due_to_excessive_log_lines
+        else
+          log(s, c)
+        end
+
         yield s, c if block_given?
+      end
+    end
+
+    def kill_due_to_excessive_log_lines
+      log(:internalerr, "Stopping scraper because it has output more than #{MAXIMUM_LOG_LINES} lines\n")
+
+      if container = container_for_run
+        container.kill
+        result = Morph::DockerRunner.finish(container_for_run, ['data.sqlite'])
+        finish(result)
       end
     end
 
@@ -31,6 +49,7 @@ module Morph
       puts "#{stream}: #{text}" if Rails.env.development?
       # Not using create on association to try to avoid memory bloat
       line = LogLine.create!(run: run, stream: stream.to_s, text: text)
+      @log_lines_count += 1 if stream == :stdout || stream == :stderr
       sync_new line, scope: run unless Rails.env.test?
     end
 
@@ -106,6 +125,10 @@ module Morph
         end
       end
 
+      finish(result)
+    end
+
+    def finish(result)
       # Only copy back database if it's there and has something in it
       if result.files && result.files.key?('data.sqlite')
         Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])

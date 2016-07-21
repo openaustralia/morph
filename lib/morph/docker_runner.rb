@@ -108,10 +108,16 @@ module Morph
           Morph::DockerUtils.container_with_interactive_connection(
             container, read_timeout: 5.minutes)
 
-        interactive_container.attach(logs: true) do |s, c|
-          normalise_log_content(c).each do |content|
-            yield s, content
+        begin
+          interactive_container.attach(logs: true) do |s, c|
+            normalise_log_content(c).each do |content|
+              yield s, content
+            end
           end
+        rescue Excon::Errors::SocketError
+          # FIXME: This allows kill_due_to_excessive_log_lines to do its job
+          # but there's got to be a better way
+          true
         end
       else
         # Just grab all the logs
@@ -122,6 +128,10 @@ module Morph
         end
       end
 
+      finish(container, files)
+    end
+
+    def self.finish(container, files)
       # TODO: Don't call container.json multiple times
       status_code = container.json['State']['ExitCode']
       # Wait until container has definitely stopped
