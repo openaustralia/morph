@@ -1,4 +1,0 @@
----
-- name: Make ruby-2.0.0-p353 the default
-  command: /bin/sh -l -c 'rvm alias create default ruby-2.0.0-p353'
-  sudo_user: deploy

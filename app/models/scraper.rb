@@ -41,8 +41,7 @@ class Scraper < ActiveRecord::Base
     scope: :owner, message: 'is already taken on morph.io'
   }
   validate :not_used_on_github, on: :create, if: -> { github_id.blank? && !name.blank? }
-  with_options if: :scraperwiki_shortname,
-               if: :scraperwiki_url,
+  with_options if: -> { scraperwiki_shortname || scraperwiki_url },
                on: :create do |s|
     s.validate :exists_on_scraperwiki
     s.validate :public_on_scraperwiki

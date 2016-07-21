@@ -2,7 +2,7 @@
 dependencies:
   - { role: docker-server-linode }
   - { role: nginx-passenger }
-  - { role: ruby-2.0.0-p353 }
+  - { role: ruby }
   - { role: mysql }
   - { role: backups }
   - { role: redis }
