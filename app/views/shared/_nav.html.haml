@@ -35,7 +35,7 @@
                   %li= link_to "Admin dashboard", admin_dashboard_path
                   %li= link_to "Running scrapers", running_scrapers_path
           - else
-            = link_to "Sign in with GitHub", user_omniauth_authorize_path(:github)
+            = link_to "Sign in with GitHub", user_github_omniauth_authorize_path
 
       = form_tag search_path, method: "get", role: "search", class: "navbar-form navbar-right" do
         .input-group
