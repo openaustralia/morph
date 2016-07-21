@@ -11,27 +11,27 @@ describe RunsHelper do
     describe "#scraped_domains_list" do
       describe "#with links" do
         it do
-          expect(helper.scraped_domains_list([foo_domain], true)).to eq '<a href="http://foo.com" target="_blank">foo.com</a>'
+          expect(helper.scraped_domains_list([foo_domain], true)).to eq '<a target="_blank" href="http://foo.com">foo.com</a>'
           expect(helper.scraped_domains_list([foo_domain], true)).to be_html_safe
         end
 
         it do
-          expect(helper.scraped_domains_list([foo_domain, bar_domain], true)).to eq '<a href="http://foo.com" target="_blank">foo.com</a> and <a href="http://bar.com" target="_blank">bar.com</a>'
+          expect(helper.scraped_domains_list([foo_domain, bar_domain], true)).to eq '<a target="_blank" href="http://foo.com">foo.com</a> and <a target="_blank" href="http://bar.com">bar.com</a>'
           expect(helper.scraped_domains_list([foo_domain, bar_domain], true)).to be_html_safe
         end
 
         it do
-          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain], true)).to eq '<a href="http://foo.com" target="_blank">foo.com</a>, <a href="http://bar.com" target="_blank">bar.com</a>, and <a href="http://www.foo.com" target="_blank">www.foo.com</a>'
+          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain], true)).to eq '<a target="_blank" href="http://foo.com">foo.com</a>, <a target="_blank" href="http://bar.com">bar.com</a>, and <a target="_blank" href="http://www.foo.com">www.foo.com</a>'
           expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain], true)).to be_html_safe
         end
 
         it do
-          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain], true)).to eq '<a href="http://foo.com" target="_blank">foo.com</a>, <a href="http://bar.com" target="_blank">bar.com</a>, <a href="http://www.foo.com" target="_blank">www.foo.com</a>, and 1 other domain'
+          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain], true)).to eq '<a target="_blank" href="http://foo.com">foo.com</a>, <a target="_blank" href="http://bar.com">bar.com</a>, <a target="_blank" href="http://www.foo.com">www.foo.com</a>, and 1 other domain'
           expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain], true)).to be_html_safe
         end
 
         it do
-          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain], true)).to eq '<a href="http://foo.com" target="_blank">foo.com</a>, <a href="http://bar.com" target="_blank">bar.com</a>, <a href="http://www.foo.com" target="_blank">www.foo.com</a>, and 2 other domains'
+          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain], true)).to eq '<a target="_blank" href="http://foo.com">foo.com</a>, <a target="_blank" href="http://bar.com">bar.com</a>, <a target="_blank" href="http://www.foo.com">www.foo.com</a>, and 2 other domains'
           expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain], true)).to be_html_safe
         end
       end

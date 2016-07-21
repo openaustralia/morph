@@ -3,8 +3,7 @@ source 'https://rubygems.org'
 gem 'dotenv-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-# TODO Upgrade to rails 4.2 because 4.1 is not getting security updates anymore
-gem 'rails', '4.1.16'
+gem 'rails', '4.2.7'
 
 # Use sqlite3 as the database for Active Record
 # This is a patched version of the gem at https://github.com/openaustralia/sqlite3-ruby/tree/openaustralia-sqlite3
@@ -18,6 +17,7 @@ gem "bootstrap-sass"
 gem "font-awesome-rails"
 gem "bootstrap-select-rails"
 # TODO Upgrade to devise 4. It doesn't look like a big change
+# devise 4.2.0 requires ruby 2.1 or later
 gem "devise", "< 4"
 gem "omniauth-github"
 gem 'friendly_id'
@@ -25,23 +25,11 @@ gem "octokit", "~> 4.0"
 gem "simple_form"
 gem "cocoon"
 gem "grit"
-# version 1.20.0 of the docker-api gem is causing the compile step in buildstep
-# to not get cached
-gem 'docker-api', "< 1.20.0", :require => 'docker'
-# excon is only needed by docker-api. There is no need to include it here
-# other than to fix the version of excon to 0.46.0. We should be able to remove
-# this when we upgrade the docker-api gem
-# See https://github.com/swipely/docker-api/tree/c1308961a5d799a62ed906df8206acd1ac6b4b2c#known-issues
-gem "excon", "0.46.0"
-# TODO Upgrade to sidekiq 4.x because it should be faster. It does look
-# like it should be very straightforward to do
-gem "sidekiq", "< 4"
+gem 'docker-api', :require => 'docker'
+gem "sidekiq"
 gem 'sidekiq-limit_fetch'
 gem 'sidekiq-unique-jobs'
-# Locking redis to version 3.2.2 for the time being until a memory-leak issue
-# is resolved. See https://github.com/redis/redis-rb/issues/612. When it is
-# just remove the whole line below.
-gem 'redis', '= 3.2.2'
+gem 'redis'
 gem "foreman"
 gem "faraday"
 #gem 'jquery-turbolinks'
@@ -65,15 +53,16 @@ gem 'kaminari'
 gem 'kaminari-bootstrap', '~> 3.0.1'
 gem "rails-timeago", "~> 2.0"
 gem 'meta-tags'
-# Rails 4 compatibility isn't released yet. So tracking HEAD.
-gem 'activeadmin', github: 'activeadmin'
+# Rails 4 compatibility hasn't been "properly" released yet.
+gem 'activeadmin', '~> 1.0.0.pre4'
 gem 'faye'
 gem "puma"
+# TODO sync has been renamed to render_sync.
+# However version 0.5.0 of render_sync seems to have a problem with the
+# renaming of the RefetchesController. So leaving for the time being
 gem 'sync'
 gem 'multiblock'
-# Lock honeybadger to version 1 for the time being as version 2 requires a change to
-# the configuration
-gem 'honeybadger', "~> 1.0"
+gem 'honeybadger'
 gem 'cancan'
 gem 'backstretch-rails'
 gem 'searchkick'
@@ -93,6 +82,9 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
   gem 'guard'
+  # Locking listen version down so we can upgrade guard. When we upgrade
+  # to Ruby 2.2 (which we should do!) then we can remove the line below entirely
+  gem 'listen', '< 3'
   gem 'guard-livereload', require: false
   gem "rack-livereload"
   gem 'guard-rspec', require: false
@@ -131,13 +123,13 @@ end
 # much memory. We're assuming Node.js is installed
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails'
 
 
 # Use jquery as the JavaScript library
@@ -148,7 +140,7 @@ gem 'jquery-rails'
 #gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
