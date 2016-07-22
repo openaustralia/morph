@@ -50,7 +50,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       runner = Morph::Runner.new(run)
       running_count = Morph::DockerUtils.running_containers.count
       container_count = Morph::DockerUtils.stopped_containers.count
-      expect {runner.go_with_logging do |s, c|
+      expect {runner.go_with_logging do |timestamp, s, c|
         logs << c
         if c.include? "2..."
           raise Sidekiq::Shutdown
@@ -65,7 +65,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
 
       # Now, we simulate the queue restarting the job
       started_at = run.started_at
-      runner.go do |s, c|
+      runner.go do |timestamp, s, c|
         logs << c
       end
       expect(logs.join).to eq [
@@ -116,7 +116,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       runner = Morph::Runner.new(run)
       running_count = Morph::DockerUtils.running_containers.count
       container_count = Morph::DockerUtils.stopped_containers.count
-      expect {runner.go do |s, c|
+      expect {runner.go do |timestamp, s, c|
         logs << c
         if c.include? "2..."
           raise Sidekiq::Shutdown
@@ -142,7 +142,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       # Now, we simulate the queue restarting the job
       started_at = run.started_at
       logs = []
-      runner.go do |s, c|
+      runner.go do |timestamp, s, c|
         logs << c
         #puts c
       end
@@ -196,7 +196,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
 
       runner = Morph::Runner.new(run)
       container_count = Morph::DockerUtils.stopped_containers.count
-      runner.go do |s, c|
+      runner.go do |timestamp, s, c|
         logs << c
         if c.include? "2..."
           # Putting the stop code in another thread (which is essentially

@@ -21,13 +21,14 @@ module Morph
     end
 
     def go_with_logging
-      go do |s, c|
-        log(s, c)
-        yield s, c if block_given?
+      go do |timestamp, s, c|
+        log(timestamp, s, c)
+        yield timestamp, s, c if block_given?
       end
     end
 
-    def log(stream, text)
+    def log(timestamp, stream, text)
+      # TODO Do something with the timestamp
       puts "#{stream}: #{text}" if Rails.env.development?
       # Not using create on association to try to avoid memory bloat
       line = LogLine.create!(run: run, stream: stream.to_s, text: text)
@@ -40,7 +41,8 @@ module Morph
       # TODO Use new feature of docker api to skip over log lines based on the timestamp
       if c.nil?
         c = compile_and_start_run do |s, c|
-          yield s, c
+          # TODO Could we get sensible timestamps out at this stage too?
+          yield nil, s, c
         end
         lines_to_skip = 0
       else
@@ -48,10 +50,10 @@ module Morph
         lines_to_skip = run.log_lines.where("stream = 'stdout' OR stream = 'stderr'").count
       end
       count = 0
-      attach_to_run_and_finish(c) do |s, c|
+      attach_to_run_and_finish(c) do |timestamp, s, c|
         count += 1
         if count > lines_to_skip
-          yield s, c
+          yield timestamp, s, c
         end
       end
     end
@@ -103,8 +105,7 @@ module Morph
       else
         result = Morph::DockerRunner.attach_to_run_and_finish(
           c, ['data.sqlite']) do |timestamp, s, c|
-          # TODO Do something with the timestamp
-          yield(s, c)
+          yield(timestamp, s, c)
         end
       end
 
