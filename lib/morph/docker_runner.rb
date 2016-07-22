@@ -71,8 +71,13 @@ module Morph
       [c, i3]
     end
 
-    def self.attach_to_run_and_finish(container, files)
-      container.streaming_logs(stdout: true, stderr: true, follow: true, timestamps: true) do |s, line|
+    # If since is non-nil only return log lines since the time given. This
+    # time is non-inclusive so we shouldn't return the log line with that
+    # exact timestamp, just ones after it.
+    def self.attach_to_run_and_finish(container, files, since = nil)
+      params = {stdout: true, stderr: true, follow: true, timestamps: true}
+      params[:since] = since.to_i if since
+      container.streaming_logs(params) do |s, line|
         timestamp = Time.parse(line[0..29])
         # To convert this ruby time back to the same string format as it
         # originally came in do: timestamp.utc.strftime('%Y-%m-%dT%H:%M:%S.%9NZ')
@@ -83,7 +88,9 @@ module Morph
         # Or take an educated guess rather than making an assumption
         c.force_encoding('UTF-8')
         c.scrub!
-        yield timestamp, s, c
+        # There is a good chance that we catch some log lines that really shouldn't
+        # be included. So...
+        yield timestamp, s, c if since.nil? || timestamp > since
       end
 
       # TODO: Don't call container.json multiple times
