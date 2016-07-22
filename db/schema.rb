@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 20160722020602) do
     t.text     "text",       limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "timestamp"
   end
 
   add_index "log_lines", ["number"], name: "index_log_lines_on_number", using: :btree
