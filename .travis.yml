@@ -5,11 +5,20 @@ sudo: required
 language: ruby
 rvm:
   - 2.3.1
-env: SECRET_KEY_BASE=859384 RUN_SLOW_TESTS=true DONT_RUN_DOCKER_TESTS=true
+env: SECRET_KEY_BASE=859384 RUN_SLOW_TESTS=true
 
 before_script:
+  # Updating docker-engine so we can use a more recent version
+  # Doing it here because doing it in "addons" below hangs on
+  # a prompt for user input
+  - sudo apt-get update
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
   - cp config/database.travis.yml config/database.yml
   - bundle exec rake db:setup
+  - docker pull openaustralia/buildstep
+
+services:
+  - docker
 
 addons:
   apt:

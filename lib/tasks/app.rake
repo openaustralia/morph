@@ -123,6 +123,18 @@ namespace :app do
     end
   end
 
+  desc "Remove log lines for old runs (not the latest ones)"
+  task clean_up_old_log_lines: :environment do
+    Scraper.all.each do |scraper|
+      puts "Removing old logs for #{scraper.full_name}..."
+      runs = scraper.runs.order(queued_at: :desc)
+      # Remove the most recently run from the list
+      runs = runs[1..-1]
+      # Now remove the logs connected to those runs
+      LogLine.delete_all(run: runs)
+    end
+  end
+
   def confirm(message)
     STDOUT.puts "#{message} (y/n)"
     STDIN.gets.strip == 'y'

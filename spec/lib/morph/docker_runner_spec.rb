@@ -176,17 +176,12 @@ This is not going to run as ruby code so should return an error
           EOF
         end
         logs = []
-        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
-          logs << [s, c]
-        end
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
         result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 1
-        # These logs will actually be different if the compile isn't cached
         expect(logs).to eq [
-          [:internalout, "Injecting configuration and compiling...\n"],
-          [:internalout, "Injecting scraper and running...\n"],
           [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
           [:stderr, "This is not going to run as ruby code so should return an error\n"],
           [:stderr, "                 ^\n"],
