@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 20160722020602) do
 
   add_index "log_lines", ["number"], name: "index_log_lines_on_number", using: :btree
   add_index "log_lines", ["run_id"], name: "index_log_lines_on_run_id", using: :btree
+  add_index "log_lines", ["timestamp"], name: "index_log_lines_on_timestamp", using: :btree
 
   create_table "metrics", force: :cascade do |t|
     t.float    "wall_time",  limit: 24
