@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160722020602) do
+ActiveRecord::Schema.define(version: 20160723183732) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -106,14 +106,12 @@ ActiveRecord::Schema.define(version: 20160722020602) do
   create_table "log_lines", force: :cascade do |t|
     t.integer  "run_id",     limit: 4
     t.string   "stream",     limit: 255
-    t.integer  "number",     limit: 4
     t.text     "text",       limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "timestamp",                precision: 6
   end
 
-  add_index "log_lines", ["number"], name: "index_log_lines_on_number", using: :btree
   add_index "log_lines", ["run_id"], name: "index_log_lines_on_run_id", using: :btree
   add_index "log_lines", ["timestamp"], name: "index_log_lines_on_timestamp", using: :btree
 
