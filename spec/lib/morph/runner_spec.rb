@@ -51,7 +51,9 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       running_count = Morph::DockerUtils.running_containers.count
       container_count = Morph::DockerUtils.stopped_containers.count
       expect {runner.go_with_logging do |s, c|
-        logs << c
+        # Only record stdout so we can handle different results as a result
+        # of caching of the compile stage
+        logs << c if s == :stdout
         if c.include? "2..."
           raise Sidekiq::Shutdown
         end
@@ -69,8 +71,6 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
         logs << c
       end
       expect(logs.join).to eq [
-        "Injecting configuration and compiling...\n",
-        "Injecting scraper and running...\n",
         "Started!\n",
         "1...\n",
         "2...\n",
