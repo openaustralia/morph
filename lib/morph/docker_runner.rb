@@ -76,7 +76,7 @@ module Morph
     # exact timestamp, just ones after it.
     def self.attach_to_run_and_finish(container, files, since = nil)
       params = {stdout: true, stderr: true, follow: true, timestamps: true}
-      params[:since] = since.to_i if since
+      params[:since] = since.to_f if since
       container.streaming_logs(params) do |s, line|
         timestamp = Time.parse(line[0..29])
         # To convert this ruby time back to the same string format as it
@@ -88,7 +88,7 @@ module Morph
         # Or take an educated guess rather than making an assumption
         c.force_encoding('UTF-8')
         c.scrub!
-        # There is a good chance that we catch some log lines that really shouldn't
+        # There is a chance that we catch a log line that shouldn't
         # be included. So...
         yield timestamp, s, c if since.nil? || timestamp > since
       end
