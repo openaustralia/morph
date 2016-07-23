@@ -117,14 +117,12 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       running_count = Morph::DockerUtils.running_containers.count
       container_count = Morph::DockerUtils.stopped_containers.count
       expect {runner.go do |s, c|
-        logs << c
+        logs << c if s == :stdout
         if c.include? "2..."
           raise Sidekiq::Shutdown
         end
       end}.to raise_error(Sidekiq::Shutdown)
       expect(logs.join).to eq [
-        "Injecting configuration and compiling...\n",
-        "Injecting scraper and running...\n",
         "Started!\n",
         "1...\n",
         "2...\n"
