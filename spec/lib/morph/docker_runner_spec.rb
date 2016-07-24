@@ -90,21 +90,11 @@ describe Morph::DockerRunner do
         File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
           f << "File.open('foo.txt', 'w') { |f| f << 'Hello World!'}\n"
         end
-        logs = []
-        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
-          logs << [s, c]
-        end
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
         result = Morph::DockerRunner.attach_to_run_and_finish(
-          c, ['foo.txt', 'bar']) do |timestamp, s, c|
-          logs << [s, c]
-        end
+          c, ['foo.txt', 'bar']) {}
         expect(result.status_code).to eq 0
         expect(result.files).to eq('foo.txt' => 'Hello World!', 'bar' => nil)
-        # These logs will actually be different if the compile isn't cached
-        expect(logs).to eq [
-          [:internalout, "Injecting configuration and compiling...\n"],
-          [:internalout, "Injecting scraper and running...\n"]
-        ]
         expect(Morph::DockerUtils.stopped_containers.count)
           .to eq @container_count
       end
