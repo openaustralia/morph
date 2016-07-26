@@ -303,6 +303,6 @@ end
 
 def copy_test_scraper(name)
   FileUtils::cp_r(
-    File.join(File.dirname(__FILE__), 'test_scrapers', name, '.'),
+    File.join(File.dirname(__FILE__), 'test_scrapers', 'docker_runner_spec', name, '.'),
     @dir)
 end
