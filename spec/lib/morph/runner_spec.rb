@@ -9,16 +9,7 @@ describe Morph::Runner do
       run = Run.create(owner: owner)
       run.database.clear
       expect(run.database.no_rows).to eq 0
-      FileUtils.mkdir_p(run.repo_path)
-      File.open(File.join(run.repo_path, 'scraper.rb'), 'w') do |f|
-        f << <<-EOF
-require 'scraperwiki'
-require "open-uri"
-
-puts "Running scraper"
-ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software developer", "time" => Time.now})
-        EOF
-      end
+      fill_scraper_for_run('save_to_database', run)
       Morph::Runner.new(run).go {}
       run.reload
       expect(run.status_code).to eq 0
@@ -30,21 +21,7 @@ ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software 
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
       FileUtils.rm_rf(run.repo_path)
-      FileUtils.mkdir_p(run.repo_path)
-      File.open(File.join(run.repo_path, 'scraper.rb'), 'w') do |f|
-        f << %q(
-require 'scraperwiki'
-
-puts "Started!"
-ScraperWiki.save_sqlite(["state"], {"state" => "started"})
-(1..10).each do |i|
-  puts "#{i}..."
-  sleep 0.1
-end
-puts "Finished!"
-ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
-        )
-      end
+      fill_scraper_for_run('stream_output', run)
       logs = []
 
       runner = Morph::Runner.new(run)
@@ -96,21 +73,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
       FileUtils.rm_rf(run.repo_path)
-      FileUtils.mkdir_p(run.repo_path)
-      File.open(File.join(run.repo_path, 'scraper.rb'), 'w') do |f|
-        f << %q(
-require 'scraperwiki'
-
-puts "Started!"
-ScraperWiki.save_sqlite(["state"], {"state" => "started"})
-(1..10).each do |i|
-  puts "#{i}..."
-  sleep 0.1
-end
-puts "Finished!"
-ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
-        )
-      end
+      fill_scraper_for_run('stream_output', run)
       logs = []
 
       runner = Morph::Runner.new(run)
@@ -175,21 +138,7 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
       FileUtils.rm_rf(run.repo_path)
-      FileUtils.mkdir_p(run.repo_path)
-      File.open(File.join(run.repo_path, 'scraper.rb'), 'w') do |f|
-        f << %q(
-require 'scraperwiki'
-
-puts "Started!"
-ScraperWiki.save_sqlite(["state"], {"state" => "started"})
-(1..50).each do |i|
-  puts "#{i}..."
-  sleep 0.1
-end
-puts "Finished!"
-ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
-        )
-      end
+      fill_scraper_for_run('stream_output_long', run)
       logs = []
 
       runner = Morph::Runner.new(run)
@@ -388,4 +337,12 @@ ScraperWiki.save_sqlite(["state"], {"state" => "finished"})
       end
     end
   end
+end
+
+def fill_scraper_for_run(scraper_name, run)
+  FileUtils.mkdir_p(run.repo_path)
+  FileUtils::cp_r(
+    File.join(File.dirname(__FILE__), 'test_scrapers', 'runner_spec', scraper_name, '.'),
+    run.repo_path
+  )
 end
