@@ -1,0 +1,1 @@
+puts ENV['REQUESTS_CA_BUNDLE']
