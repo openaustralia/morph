@@ -21,16 +21,16 @@ module Morph
     end
 
     def go_with_logging
-      go do |s, c|
-        log(s, c)
-        yield s, c if block_given?
+      go do |timestamp, s, c|
+        log(timestamp, s, c)
+        yield timestamp, s, c if block_given?
       end
     end
 
-    def log(stream, text)
+    def log(timestamp, stream, text)
       puts "#{stream}: #{text}" if Rails.env.development?
       # Not using create on association to try to avoid memory bloat
-      line = LogLine.create!(run: run, stream: stream.to_s, text: text)
+      line = LogLine.create!(run: run, timestamp: timestamp, stream: stream.to_s, text: text)
       sync_new line, scope: run unless Rails.env.test?
     end
 
@@ -39,19 +39,23 @@ module Morph
       c = container_for_run
       if c.nil?
         c = compile_and_start_run do |s, c|
-          yield s, c
+          # TODO Could we get sensible timestamps out at this stage too?
+          yield nil, s, c
         end
-        lines_to_skip = 0
+        since = nil
       else
-        # Figure out how many log lines we want to skip
-        lines_to_skip = run.log_lines.where("stream = 'stdout' OR stream = 'stderr'").count
+        # The timestamp of the last log line we've already captured
+        since = run.log_lines.maximum(:timestamp)
+        # We add a microsecond to compensate for rounding error as
+        # part of the time being stored in the database. The true time
+        # gets truncated to the lower microsecond. So, likely the true
+        # time happens *after* the recorded time. So, we add a microsecond
+        # to compensate for this and ensure that the "since" time occurs
+        # slightly after the true time.
+        since += 1e-6 if since
       end
-      count = 0
-      attach_to_run_and_finish(c) do |s, c|
-        count += 1
-        if count > lines_to_skip
-          yield s, c
-        end
+      attach_to_run_and_finish(c, since) do |timestamp, s, c|
+        yield timestamp, s, c
       end
     end
 
@@ -95,14 +99,14 @@ module Morph
       c
     end
 
-    def attach_to_run_and_finish(c)
+    def attach_to_run_and_finish(c, since)
       if c.nil?
         # TODO: Return the status for a compile error
         result = Morph::RunResult.new(255, {}, {})
       else
         result = Morph::DockerRunner.attach_to_run_and_finish(
-          c, ['data.sqlite']) do |s, c|
-          yield(s, c)
+          c, ['data.sqlite'], since) do |timestamp, s, c|
+          yield(timestamp, s, c)
         end
       end
 

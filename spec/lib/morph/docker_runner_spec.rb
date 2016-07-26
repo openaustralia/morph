@@ -52,7 +52,7 @@ describe Morph::DockerRunner do
         end
         c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
         logs = []
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 0
@@ -73,18 +73,13 @@ describe Morph::DockerRunner do
         File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
           f << "puts 'Hello world!'\n"
         end
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
         logs = []
-        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
-          logs << [s, c]
-        end
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 0
-        # These logs will actually be different if the compile isn't cached
         expect(logs).to eq [
-          [:internalout, "Injecting configuration and compiling...\n"],
-          [:internalout, "Injecting scraper and running...\n"],
           [:stdout,      "Hello world!\n"]
         ]
         expect(Morph::DockerUtils.stopped_containers.count)
@@ -95,21 +90,11 @@ describe Morph::DockerRunner do
         File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
           f << "File.open('foo.txt', 'w') { |f| f << 'Hello World!'}\n"
         end
-        logs = []
-        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
-          logs << [s, c]
-        end
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
         result = Morph::DockerRunner.attach_to_run_and_finish(
-          c, ['foo.txt', 'bar']) do |s, c|
-          logs << [s, c]
-        end
+          c, ['foo.txt', 'bar']) {}
         expect(result.status_code).to eq 0
         expect(result.files).to eq('foo.txt' => 'Hello World!', 'bar' => nil)
-        # These logs will actually be different if the compile isn't cached
-        expect(logs).to eq [
-          [:internalout, "Injecting configuration and compiling...\n"],
-          [:internalout, "Injecting scraper and running...\n"]
-        ]
         expect(Morph::DockerUtils.stopped_containers.count)
           .to eq @container_count
       end
@@ -123,7 +108,7 @@ describe Morph::DockerRunner do
           @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}) do |s, c|
           logs << [s, c]
         end
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 0
@@ -142,7 +127,7 @@ describe Morph::DockerRunner do
         c, _i3 = Morph::DockerRunner.compile_and_start_run(
           @dir, {}, {}) {}
         logs = []
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 0
@@ -177,7 +162,7 @@ This is not going to run as ruby code so should return an error
         end
         logs = []
         c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [s, c]
         end
         expect(result.status_code).to eq 1
@@ -205,12 +190,44 @@ puts "Finished!"
         c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
           logs << [Time.now, c]
         end
-        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |s, c|
+        result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
           logs << [Time.now, c]
         end
         start_time = logs.find{|l| l[1] == "Started!\n"}[0]
         end_time = logs.find{|l| l[1] == "Finished!\n"}[0]
         expect(end_time - start_time).to be_within(0.1).of(1.0)
+      end
+
+      it 'should be able to reconnect to a running container' do
+        File.open(File.join(@dir, 'scraper.rb'), 'w') do |f|
+          f << %q(
+  puts "Started!"
+  (1..10).each do |i|
+  $stdout.puts "#{i}..."
+  $stdout.flush
+  sleep 0.1
+  end
+  puts "Finished!"
+          )
+        end
+        logs = []
+        # TODO Really should be able to call compile_and_start_run without a block
+        c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+        # Simulate the log process stopping
+        last_timestamp = nil
+        expect {Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+          last_timestamp = timestamp
+          logs << c
+          if c == "2...\n"
+            raise Sidekiq::Shutdown
+          end
+        end}.to raise_error Sidekiq::Shutdown
+        expect(logs).to eq ["Started!\n", "1...\n", "2...\n"]
+        # Now restart the log process using the timestamp of the last log entry
+        Morph::DockerRunner.attach_to_run_and_finish(c, [], last_timestamp) do |timestamp, s, c|
+          logs << c
+        end
+        expect(logs).to eq ["Started!\n", "1...\n", "2...\n", "3...\n", "4...\n", "5...\n", "6...\n", "7...\n", "8...\n", "9...\n", "10...\n", "Finished!\n"]
       end
     end
 

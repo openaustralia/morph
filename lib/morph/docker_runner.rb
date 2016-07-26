@@ -71,55 +71,26 @@ module Morph
       [c, i3]
     end
 
-    def self.normalise_log_content(c)
-      # We're going to assume (somewhat rashly, I might add) that the
-      # console output from the scraper is always encoded as UTF-8.
-      c.force_encoding('UTF-8')
-      c.scrub!
-      # There are times when multiple lines are returned and this does
-      # not always happen consistently. So, for simplicity and consistency
-      # we will split multiple lines up
-      line_buffer = Morph::LineBuffer.new
-      line_buffer << c
-
-      result = line_buffer.extract
-      # Anything left over
-      f = line_buffer.finish
-      result << f if f.length > 0
-      result
-    end
-
-    def self.attach_to_run_and_finish(container, files)
-      if container.json['State']['Running']
-        # TODO: We need to gracefully handle Docker::Error::TimeoutError
-        # This should involve throwing a specific exception (something like
-        # Morph::IntentionalRequeue) that says "requeue this" and then we
-        # need to make sure that the requeud job reattaches to the existing
-        # container. It should be able to handle the container still running
-        # as well as having stopped. We can also shorten the read timeout as
-        # it doesn't really have anything to do with how long scrapers are
-        # allowed to run. It's just the time between reads of the log before
-        # the attach read times out. So, a scraper that outputs stuff to
-        # standard out regularly can run a lot longer than one that doesn't.
-
-        # We want output to be streamed here in real time so we need to
-        # get the container again with an "interactive" connection.
-        interactive_container =
-          Morph::DockerUtils.container_with_interactive_connection(
-            container, read_timeout: 5.minutes)
-
-        interactive_container.attach(logs: true) do |s, c|
-          normalise_log_content(c).each do |content|
-            yield s, content
-          end
-        end
-      else
-        # Just grab all the logs
-        container.streaming_logs(stdout: true, stderr: true) do |s, c|
-          normalise_log_content(c).each do |content|
-            yield s, content
-          end
-        end
+    # If since is non-nil only return log lines since the time given. This
+    # time is non-inclusive so we shouldn't return the log line with that
+    # exact timestamp, just ones after it.
+    def self.attach_to_run_and_finish(container, files, since = nil)
+      params = {stdout: true, stderr: true, follow: true, timestamps: true}
+      params[:since] = since.to_f if since
+      container.streaming_logs(params) do |s, line|
+        timestamp = Time.parse(line[0..29])
+        # To convert this ruby time back to the same string format as it
+        # originally came in do: timestamp.utc.strftime('%Y-%m-%dT%H:%M:%S.%9NZ')
+        c = line[31..-1]
+        # We're going to assume (somewhat rashly, I might add) that the
+        # console output from the scraper is always encoded as UTF-8.
+        # TODO Something more intelligent. Either figure out the correct encoding...
+        # Or take an educated guess rather than making an assumption
+        c.force_encoding('UTF-8')
+        c.scrub!
+        # There is a chance that we catch a log line that shouldn't
+        # be included. So...
+        yield timestamp, s, c if since.nil? || timestamp > since
       end
 
       # TODO: Don't call container.json multiple times

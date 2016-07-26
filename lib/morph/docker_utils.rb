@@ -135,20 +135,15 @@ module Morph
     def self.docker_build_from_dir(dir, connection_options, build_options = {})
       # How does this connection get closed?
       connection = docker_connection(connection_options)
-      line_buffer = Morph::LineBuffer.new
       temp = create_tar_file(dir)
       Docker::Image.build_from_tar(
         temp, build_options.merge('forcerm' => 1), connection) do |chunk|
-        line_buffer << chunk
-        line_buffer.extract do |line|
-          parsed_line = JSON.parse(line)
-          yield parsed_line['stream'] if parsed_line.key?('stream')
-        end
+          # Sometimes a chunk contains multiple lines of json
+          chunk.split("\n").each do |line|
+            parsed_line = JSON.parse(line)
+            yield parsed_line['stream'] if parsed_line.key?('stream')
+          end
       end
-      # Not calling line_buffer.finish because we should never finish
-      # with a line that doesn't end in a carriage return because everything
-      # is being returned as carriage return delimited JSON.
-
     # This exception gets thrown if there is an error during the build (for
     # example if the compile fails). In this case we just want to return nil
     rescue Docker::Error::UnexpectedResponseError
@@ -157,13 +152,6 @@ module Morph
 
     def self.docker_connection(options)
       Docker::Connection.new(Docker.url, Docker.env_options.merge(options))
-    end
-
-    # Given a container return a new connection to the same container
-    # which is interactive (i.e. can be used for streaming)
-    def self.container_with_interactive_connection(container, options)
-      Docker::Container.get(container.id, { },
-        docker_connection(options.merge(chunk_size: 1)))
     end
 
     def self.remove_single_docker_image(image)
