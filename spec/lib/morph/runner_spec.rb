@@ -129,6 +129,63 @@ describe Morph::Runner do
         { 'state' => 'started' }, { 'state' => 'finished' }]
     end
 
+    it 'should be able to limit the number of lines of output' do
+      owner = User.create(nickname: 'mlandauer')
+      run = Run.create(owner: owner)
+      FileUtils.rm_rf(run.data_path)
+      FileUtils.rm_rf(run.repo_path)
+      fill_scraper_for_run('stream_output', run)
+      logs = []
+      runner = Morph::Runner.new(run)
+      runner.go_with_logging(5) do |timestamp, s, c|
+        # Only record stdout so we can handle different results as a result
+        # of caching of the compile stage
+        logs << [s, c]
+      end
+      # TODO Also test the creation of the correct number of log line records
+      expect(logs[-6..-1]).to eq [
+        [:stdout, "Started!\n"],
+        [:stdout, "1...\n"],
+        [:stdout, "2...\n"],
+        [:stdout, "3...\n"],
+        [:stdout, "4...\n"],
+        [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
+      ]
+    end
+
+    it 'should be able to correctly limit the number of lines even after a restart' do
+      owner = User.create(nickname: 'mlandauer')
+      run = Run.create(owner: owner)
+      FileUtils.rm_rf(run.data_path)
+      FileUtils.rm_rf(run.repo_path)
+      fill_scraper_for_run('stream_output', run)
+      logs = []
+      runner = Morph::Runner.new(run)
+      expect {runner.go_with_logging(5) do |timestamp, s, c|
+        # Only record stdout so we can handle different results as a result
+        # of caching of the compile stage
+        logs << [s, c]
+        if c.include? "2..."
+          raise Sidekiq::Shutdown
+        end
+      end}.to raise_error Sidekiq::Shutdown
+      expect(logs[-3..-1]).to eq [
+        [:stdout, "Started!\n"],
+        [:stdout, "1...\n"],
+        [:stdout, "2...\n"]
+      ]
+      runner.go_with_logging(5) do |timestamp, s, c|
+        logs << [s, c]
+      end
+      expect(logs[-6..-1]).to eq [
+        [:stdout, "Started!\n"],
+        [:stdout, "1...\n"],
+        [:stdout, "2...\n"],
+        [:stdout, "3...\n"],
+        [:stdout, "4...\n"],
+        [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
+      ]
+    end
   end
 
   # TODO: Test that we can stop the compile stage

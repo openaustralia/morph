@@ -170,6 +170,24 @@ describe Morph::DockerRunner do
       end
       expect(logs).to eq ["Started!\n", "1...\n", "2...\n", "3...\n", "4...\n", "5...\n", "6...\n", "7...\n", "8...\n", "9...\n", "10...\n", "Finished!\n"]
     end
+
+    it 'should be able to limit the amount of log output' do
+      copy_test_scraper('stream_output_ruby')
+
+      c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      logs = []
+      Morph::DockerRunner.attach_to_run_and_finish(c, [], nil, 5) do |timestamp, s, c|
+        logs << [s, c]
+      end
+      expect(logs).to eq [
+        [:stdout, "Started!\n"],
+        [:stdout, "1...\n"],
+        [:stdout, "2...\n"],
+        [:stdout, "3...\n"],
+        [:stdout, "4...\n"],
+        [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
+      ]
+    end
   end
 
   skip 'should cache the compile' do

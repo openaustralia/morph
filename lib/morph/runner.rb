@@ -9,6 +9,11 @@ module Morph
       @run = run
     end
 
+    # TODO Move this to a configuration somewhere
+    def self.default_max_lines
+      10000
+    end
+
     # The main section of the scraper running that is run in the background
     def synch_and_go!
       # If this run belongs to a scraper that has just been deleted
@@ -17,11 +22,11 @@ module Morph
       return if run.scraper.nil? || run.finished?
 
       run.scraper.synchronise_repo
-      go_with_logging
+      go_with_logging(Runner.default_max_lines)
     end
 
-    def go_with_logging
-      go do |timestamp, s, c|
+    def go_with_logging(max_lines = nil)
+      go(max_lines) do |timestamp, s, c|
         log(timestamp, s, c)
         yield timestamp, s, c if block_given?
       end
@@ -34,7 +39,7 @@ module Morph
       sync_new line, scope: run unless Rails.env.test?
     end
 
-    def go
+    def go(max_lines = nil)
       # If container already exists we just attach to it
       c = container_for_run
       if c.nil?
@@ -53,8 +58,10 @@ module Morph
         # to compensate for this and ensure that the "since" time occurs
         # slightly after the true time.
         since += 1e-6 if since
+        # Deal with situation of since set in calculation of max_lines
+        max_lines -= run.log_lines.where(stream: [:stdout, :stderr]).count if max_lines
       end
-      attach_to_run_and_finish(c, since) do |timestamp, s, c|
+      attach_to_run_and_finish(c, since, max_lines) do |timestamp, s, c|
         yield timestamp, s, c
       end
     end
@@ -99,13 +106,13 @@ module Morph
       c
     end
 
-    def attach_to_run_and_finish(c, since)
+    def attach_to_run_and_finish(c, since, max_lines = nil)
       if c.nil?
         # TODO: Return the status for a compile error
         result = Morph::RunResult.new(255, {}, {})
       else
         result = Morph::DockerRunner.attach_to_run_and_finish(
-          c, ['data.sqlite'], since) do |timestamp, s, c|
+          c, ['data.sqlite'], since, max_lines) do |timestamp, s, c|
           yield(timestamp, s, c)
         end
       end

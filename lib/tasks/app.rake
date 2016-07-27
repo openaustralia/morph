@@ -1,6 +1,8 @@
 namespace :app do
   desc 'Stop long running scraper containers (should be run from cron job)'
   task stop_long_running_scrapers: :environment do
+    # TODO Move this a configuration. Also, it's referenced in the documentation
+    # So, the two should really be automatically in sync
     max_duration = 1.day
 
     # Let's start by just showing running containers

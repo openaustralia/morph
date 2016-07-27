@@ -74,9 +74,10 @@ module Morph
     # If since is non-nil only return log lines since the time given. This
     # time is non-inclusive so we shouldn't return the log line with that
     # exact timestamp, just ones after it.
-    def self.attach_to_run_and_finish(container, files, since = nil)
+    def self.attach_to_run_and_finish(container, files, since = nil, max_lines = nil)
       params = {stdout: true, stderr: true, follow: true, timestamps: true}
       params[:since] = since.to_f if since
+      line_count = 0
       container.streaming_logs(params) do |s, line|
         timestamp = Time.parse(line[0..29])
         # To convert this ruby time back to the same string format as it
@@ -90,7 +91,14 @@ module Morph
         c.scrub!
         # There is a chance that we catch a log line that shouldn't
         # be included. So...
-        yield timestamp, s, c if since.nil? || timestamp > since
+        if since.nil? || timestamp > since
+          if max_lines.nil? || line_count < max_lines
+            yield timestamp, s, c
+          elsif line_count == max_lines
+            yield nil, :internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"
+          end
+          line_count += 1
+        end
       end
 
       # TODO: Don't call container.json multiple times
