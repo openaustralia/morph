@@ -9,6 +9,11 @@ module Morph
       @run = run
     end
 
+    # TODO Move this to a configuration somewhere
+    def self.default_max_lines
+      10000
+    end
+
     # The main section of the scraper running that is run in the background
     def synch_and_go!
       # If this run belongs to a scraper that has just been deleted
@@ -17,7 +22,7 @@ module Morph
       return if run.scraper.nil? || run.finished?
 
       run.scraper.synchronise_repo
-      go_with_logging
+      go_with_logging(Runner.default_max_lines)
     end
 
     def go_with_logging(max_lines = nil)

@@ -14,6 +14,15 @@ If you're hitting up against these hard limits and still want to use morph.io
 please [do get in touch](mailto:contact@oaf.org.au) and let us know and we'll
 see what we can do to help.
 
+There's also a soft limit:
+
+* max <%= number_with_delimiter Morph::Runner.default_max_lines %> lines of log output
+
+If a scraper generates more than <%= number_with_delimiter Morph::Runner.default_max_lines %> lines
+of log output the scraper will continue running uninterrupted. You just won't
+see any more output than that. To avoid this happening simply print less stuff
+to the screen.
+
 Note that we are keeping track of the amount of cpu time (and a whole bunch of
 other metrics) that you and your scrapers are using. So, if we do find that you
 are using too much (and no we don't know what that is right now) we reserve the
