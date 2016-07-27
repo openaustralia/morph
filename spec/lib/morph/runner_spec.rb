@@ -3,6 +3,26 @@ require 'spec_helper'
 require 'sidekiq/cli'
 
 describe Morph::Runner do
+  describe ".log" do
+    # TODO Hmmm.. When do the callbacks get reenabled?
+    before(:each) { Searchkick.disable_callbacks }
+    let(:owner) { User.create(nickname: 'mlandauer') }
+    let(:run) { Run.create(owner: owner) }
+    let(:runner) { Morph::Runner.new(run) }
+
+    it "should log console output to the run" do
+      runner.log(Time.now, :stdout, "This is a test")
+      expect(run.log_lines.count).to eq 1
+      expect(run.log_lines.first.stream).to eq "stdout"
+      expect(run.log_lines.first.text).to eq "This is a test"
+    end
+
+    it "should truncate a very long entry" do
+      runner.log(Time.now, :stdout, "a" * 65540)
+      expect(run.log_lines.first.text.length).to eq 65535
+    end
+  end
+
   describe '.go', docker: true do
     it 'should run without an associated scraper' do
       owner = User.create(nickname: 'mlandauer')
