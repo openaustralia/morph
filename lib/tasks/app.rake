@@ -16,7 +16,7 @@ namespace :app do
         run = Morph::Runner.run_for_container(container)
         runner = Morph::Runner.new(run)
         puts "Stopping #{run.full_name} because its container has been running longer than #{max_duration.inspect}"
-        runner.log(:internalerr, "Stopping scraper because it has run longer than #{max_duration.inspect}\n")
+        runner.log(nil, :internalerr, "Stopping scraper because it has run longer than #{max_duration.inspect}\n")
         container.kill
       end
     end
