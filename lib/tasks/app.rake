@@ -83,6 +83,8 @@ namespace :app do
     end
   end
 
+  # Note that these scripts are not used for the automatic backups
+  # See provisioning/roles/backups for those
   desc 'Backup databases to db/backups'
   task backup: :environment do
     Morph::Backup.backup
