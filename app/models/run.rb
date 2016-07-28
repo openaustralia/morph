@@ -2,9 +2,9 @@
 class Run < ActiveRecord::Base
   belongs_to :owner
   belongs_to :scraper, inverse_of: :runs, touch: true
-  has_many :log_lines
-  has_one :metric
-  has_many :connection_logs
+  has_many :log_lines, dependent: :delete_all
+  has_one :metric, dependent: :delete
+  has_many :connection_logs, dependent: :delete_all
   has_many :domains, -> { distinct }, through: :connection_logs
 
   scope :finished_successfully, -> { where(status_code: 0) }

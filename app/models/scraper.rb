@@ -14,23 +14,22 @@ class Scraper < ActiveRecord::Base
   belongs_to :owner, inverse_of: :scrapers
   belongs_to :forked_by, class_name: 'User'
 
-  has_many :runs, inverse_of: :scraper
+  has_many :runs, inverse_of: :scraper, dependent: :destroy
   has_many :metrics, through: :runs
   has_many :contributors, through: :contributions, source: :user
-  has_many :contributions
-  has_many :watches, class_name: 'Alert', foreign_key: :watch_id
+  has_many :contributions, dependent: :delete_all
+  has_many :watches, class_name: 'Alert', foreign_key: :watch_id, dependent: :delete_all
   has_many :watchers, through: :watches, source: :user
-  belongs_to :create_scraper_progress
-  has_many :variables
+  belongs_to :create_scraper_progress, dependent: :delete
+  has_many :variables, dependent: :delete_all
   accepts_nested_attributes_for :variables, allow_destroy: true
-  has_many :webhooks
+  has_many :webhooks, dependent: :destroy
   accepts_nested_attributes_for :webhooks, allow_destroy: true
   validates_associated :variables
   delegate :sqlite_total_rows, to: :database
-
   has_one :last_run, -> { order 'queued_at DESC' }, class_name: 'Run'
 
-  has_many :api_queries
+  has_many :api_queries, dependent: :delete_all
 
   validates :name, presence: true, format: {
     with: /\A[a-zA-Z0-9_-]+\z/,
