@@ -17,7 +17,7 @@ class ApiController < ApplicationController
     # TODO: Shouldn't need to untar here because it just gets retarred
     Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
     runner = Morph::Runner.new(run)
-    runner.go { |s, text| stream_message(s, text) }
+    runner.go { |timestamp, s, text| stream_message(s, text) }
   ensure
     # Cleanup run
     response.stream.close
