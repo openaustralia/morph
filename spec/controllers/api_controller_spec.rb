@@ -50,11 +50,11 @@ puts 'Hello!'
       runner = double(Morph::Runner)
       expect(Morph::Runner).to receive(:new).and_return(runner)
       expect(runner).to receive(:go).and_yield(
-        'internalout', "Injecting configuration and compiling...\n"
+        nil, 'internalout', "Injecting configuration and compiling...\n"
       ).and_yield(
-        'internalout', "Injecting scraper and running...\n"
+        nil, 'internalout', "Injecting scraper and running...\n"
       ).and_yield(
-        'stdout', "Hello!\n"
+        nil, 'stdout', "Hello!\n"
       )
       expect(runner).to receive(:container_for_run).and_return(nil)
 
