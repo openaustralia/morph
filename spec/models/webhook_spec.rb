@@ -9,7 +9,8 @@ RSpec.describe Webhook, type: :model do
     end
 
     it "should not allow duplicate webhooks for the same scraper" do
-      scraper = mock_model(Scraper)
+      owner = Owner.create!
+      scraper = Scraper.create!(name: "scraper", owner: owner)
       Webhook.create!(scraper: scraper, url: 'https://example.org')
 
       expect(Webhook.new(scraper: scraper, url: 'https://example.org')).to_not be_valid

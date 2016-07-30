@@ -138,12 +138,7 @@ describe Scraper do
   end
 
   context "a scraper with some downloads" do
-    let(:scraper) do
-      # Doing this to avoid validations getting called
-      s = Scraper.new(owner_id: 1)
-      s.save(validate: false)
-      s
-    end
+    let(:scraper) { Scraper.create!(name: 'scraper', owner: owner1) }
     let(:owner1) { Owner.create }
     let(:owner2) { Owner.create }
     before :each do
@@ -244,7 +239,7 @@ describe Scraper do
   end
 
   describe "#deliver_webhooks" do
-    let(:run) { mock_model(Run) }
+    let(:run) { Run.create! }
 
     context "with no webhooks" do
       it "doesn't queue any background jobs" do
