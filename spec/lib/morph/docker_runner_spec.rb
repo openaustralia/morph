@@ -24,7 +24,7 @@ describe Morph::DockerRunner do
       expect(c).to be_nil
       expect(logs).to eq [
         [:internalout, "Injecting configuration and compiling...\n"],
-        [:internalout, "\e[1G-----> Unable to select a buildpack\n"]
+        [:internalout, "\e[1G       \e[1G-----> Unable to select a buildpack\n"]
       ]
       expect(Morph::DockerUtils.stopped_containers.count)
         .to eq @container_count
@@ -39,7 +39,11 @@ describe Morph::DockerRunner do
         logs << [s, c]
       end
       expect(result.status_code).to eq 0
-      expect(logs).to eq [[:stdout, "Hello world!\n"]]
+      expect(logs).to eq [
+        [:stdout, "Detected 512 MB available memory, 512 MB limit per process (WEB_MEMORY)\n"],
+        [:stdout, "Recommending WEB_CONCURRENCY=1\n"],
+        [:stdout, "Hello world!\n"]
+      ]
     end
 
     it 'should be able to run hello world from a sub-directory' do
@@ -51,7 +55,11 @@ describe Morph::DockerRunner do
         logs << [s, c]
       end
       expect(result.status_code).to eq 0
-      expect(logs).to eq [[:stdout, "Hello world!\n"]]
+      expect(logs).to eq [
+        [:stdout, "Detected 512 MB available memory, 512 MB limit per process (WEB_MEMORY)\n"],
+        [:stdout, "Recommending WEB_CONCURRENCY=1\n"],
+        [:stdout, "Hello world!\n"]
+      ]
     end
 
     it 'should cache the compile stage' do
