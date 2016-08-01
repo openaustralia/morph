@@ -218,6 +218,12 @@ module Morph
         docker_build_command(
           image,
           [
+            # TODO Setting the timeout higher here won't be necessary once we
+            # upgrade to a more recent version of herokuish that contains
+            # the commit
+            # https://github.com/gliderlabs/herokuish/commit/5164f342dfe27537d6fd5425a5121b7ae7925d3c
+            # This will probably involve replacing the use of buildstep with
+            # using herokuish directly which seems the sensible thing to do now
             'ENV CURL_TIMEOUT 180',
             'ENV NPM_CONFIG_CAFILE /etc/ssl/certs/ca-certificates.crt',
             # Doing this not very nice thing in lieu of figuring out how
