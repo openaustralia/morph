@@ -42,6 +42,21 @@ describe Morph::DockerRunner do
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
+    it 'should cache the compile stage' do
+      copy_test_scraper('hello_world_js')
+
+      # Do the compile once to make sure the cache is primed
+      Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      logs = []
+      Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+        logs << [s, c]
+      end
+      expect(logs).to eq [
+        [:internalout, "Injecting configuration and compiling...\n"],
+        [:internalout, "Injecting scraper and running...\n"]
+      ]
+    end
+
     it 'should be able to run hello world of course' do
       copy_test_scraper('hello_world_ruby')
 
