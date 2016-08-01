@@ -71,10 +71,15 @@ namespace :app do
       destroy_by_id(Webhook, ids)
 
       ids = ConnectionLog.connection.select_all("SELECT id FROM connection_logs WHERE run_id NOT IN (SELECT id FROM runs)").map{|id| id["id"]}
-      ConnectionLog.where(id: ids).delete_all
+      # Only try to delete 1000 at a time
+      ids.each_slice(1000) do |slice|
+        ConnectionLog.where(id: slice).delete_all
+      end
 
       ids = LogLine.connection.select_all("SELECT id FROM log_lines WHERE run_id NOT IN (SELECT id FROM runs)").map{|id| id["id"]}
-      LogLine.where(id: ids).delete_all
+      ids.each_slice(1000) do |slice|
+        LogLine.where(id: slice).delete_all
+      end
 
       ids = Metric.connection.select_all("SELECT id FROM metrics WHERE run_id NOT IN (SELECT id FROM runs)").map{|id| id["id"]}
       Metric.where(id: ids).delete_all
