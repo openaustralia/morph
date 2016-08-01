@@ -65,7 +65,18 @@ module Morph
         copy_config_to_directory(repo_path, dest, false)
         yield(:internalout, "Injecting scraper and running...\n")
 
-        c.archive_in(Dir.glob(File.join(dest, "*")), "/app")
+        # Rather than using archive_in we're doing this more roundabout way
+        # because archive_in seems to have very broken handling of directories
+        # TODO Submit a fix to the docker-api gem to fix this
+        # In the meantime get something more long-winded working here
+
+        tar_file = Docker::Util.create_dir_tar(dest).path
+        File.open(tar_file, "rb") do |tar|
+          c.archive_in_stream("/app") do
+            tar.read(Excon.defaults[:chunk_size]).to_s
+          end
+        end
+        File.unlink(tar_file)
       end
 
       c.start

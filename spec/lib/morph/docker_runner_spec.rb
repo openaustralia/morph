@@ -42,6 +42,18 @@ describe Morph::DockerRunner do
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
+    it 'should be able to run hello world from a sub-directory' do
+      copy_test_scraper('hello_world_subdirectory_js')
+
+      c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      logs = []
+      result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+        logs << [s, c]
+      end
+      expect(result.status_code).to eq 0
+      expect(logs).to eq [[:stdout, "Hello world!\n"]]
+    end
+
     it 'should cache the compile stage' do
       copy_test_scraper('hello_world_js')
 
