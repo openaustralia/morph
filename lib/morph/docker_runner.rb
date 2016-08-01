@@ -184,19 +184,6 @@ module Morph
       end
     end
 
-    def self.inject_files2(image, dest)
-      Dir.mktmpdir('morph') do |dir|
-        Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
-        docker_build_command(
-          image,
-          ['ADD app /app', 'RUN chown -R scraper:scraper /app'],
-          dir) do
-          # Note that we're not sending the output of this to the console
-          # because it is relatively short running and is otherwise confusing
-        end
-      end
-    end
-
     # And build
     # TODO: Set memory and cpu limits during compile
     def self.compile(image)
