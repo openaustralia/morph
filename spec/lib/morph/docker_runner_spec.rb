@@ -75,17 +75,13 @@ describe Morph::DockerRunner do
 
       logs = []
       c, _i3 = Morph::DockerRunner.compile_and_start_run(
-        @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}) do |s, c|
-        logs << [s, c]
-      end
+        @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}) {}
       result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
         logs << [s, c]
       end
       expect(result.status_code).to eq 0
       # These logs will actually be different if the compile isn't cached
       expect(logs).to eq [
-        [:internalout, "Injecting configuration and compiling...\n"],
-        [:internalout, "Injecting scraper and running...\n"],
         [:stdout,      "Hello world!\n"]
       ]
     end
