@@ -189,7 +189,6 @@ module Morph
     # image and return a new image
     def self.inject_files(image, dest)
       Dir.mktmpdir('morph') do |dir|
-        FileUtils.mkdir(File.join(dir, 'app'))
         Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
         docker_build_command(image, ['ADD app /app'], dir) do
           # Note that we're not sending the output of this to the console
