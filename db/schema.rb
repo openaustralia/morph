@@ -226,7 +226,6 @@ ActiveRecord::Schema.define(version: 20160730183552) do
   end
 
   add_index "scrapers", ["create_scraper_progress_id"], name: "fk_rails_44c3dd8af8", using: :btree
-  add_index "scrapers", ["forked_by_id"], name: "fk_rails_02ad0ad2b4", using: :btree
   add_index "scrapers", ["full_name"], name: "index_scrapers_on_full_name", using: :btree
   add_index "scrapers", ["owner_id"], name: "index_scrapers_on_owner_id", using: :btree
 
