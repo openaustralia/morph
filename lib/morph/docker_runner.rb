@@ -41,13 +41,6 @@ module Morph
       # If something went wrong during the compile and it couldn't finish
       return [nil, nil] if i3.nil?
 
-      # Insert the actual code (and database) into the container
-      i4 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(repo_path, dest, false)
-        yield(:internalout, "Injecting scraper and running...\n")
-        inject_files2(i3, dest)
-      end
-
       command = Morph::TimeCommand.command(['/start', 'scraper'], time_file)
 
       # TODO: Also copy back time output file and the sqlite journal file
@@ -55,7 +48,7 @@ module Morph
 
       container_options = {
         'Cmd' => command,
-        'Image' => i4.id,
+        'Image' => i3.id,
         # See explanation in https://github.com/openaustralia/morph/issues/242
         'CpuShares' => 307,
         'Memory' => memory_limit,
@@ -67,6 +60,13 @@ module Morph
       }
 
       c = Docker::Container.create(container_options)
+
+      Dir.mktmpdir('morph') do |dest|
+        copy_config_to_directory(repo_path, dest, false)
+        yield(:internalout, "Injecting scraper and running...\n")
+        Morph::DockerUtils.insert_contents_of_directory(c, dest, "/app")
+      end
+
       c.start
       [c, i3]
     end
@@ -112,9 +112,6 @@ module Morph
       # Grab the resulting files
       data = Morph::DockerUtils.copy_files(container, files + [time_file])
 
-      # Before we delete the container get the image it was made from
-      i4 = Docker::Image.get(container.json['Image'])
-
       # Clean up after ourselves
       container.delete
 
@@ -130,17 +127,6 @@ module Morph
           Pathname.new(path).relative_path_from(Pathname.new('/app')).to_s
         data_with_stripped_paths[stripped_path] = content
       end
-
-      # There's a potential race condition here where we are trying to delete
-      # something that might be used elsewhere. Do the most crude thing and
-      # just ignore any errors that deleting might throw up.
-      # TODO: We wouldn't need to clean up the image with the scraper code if
-      # we injected the scraper code via stdin when we attach to the container
-
-      # There are actually two layers to clean up
-      parent = Morph::DockerUtils.parent_image(i4)
-      Morph::DockerUtils.remove_single_docker_image(i4)
-      Morph::DockerUtils.remove_single_docker_image(parent)
 
       Morph::RunResult.new(status_code, data_with_stripped_paths, time_params)
     end
@@ -191,19 +177,6 @@ module Morph
       Dir.mktmpdir('morph') do |dir|
         Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
         docker_build_command(image, ['ADD app /app'], dir) do
-          # Note that we're not sending the output of this to the console
-          # because it is relatively short running and is otherwise confusing
-        end
-      end
-    end
-
-    def self.inject_files2(image, dest)
-      Dir.mktmpdir('morph') do |dir|
-        Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
-        docker_build_command(
-          image,
-          ['ADD app /app', 'RUN chown -R scraper:scraper /app'],
-          dir) do
           # Note that we're not sending the output of this to the console
           # because it is relatively short running and is otherwise confusing
         end
