@@ -71,6 +71,7 @@ gem "stripe"
 gem 'haml-coderay'
 gem 'd3-rails'
 gem "validate_url"
+gem 'ruby-progressbar'
 
 group :production do
   gem "dalli"

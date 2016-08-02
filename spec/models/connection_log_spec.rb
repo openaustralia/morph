@@ -7,6 +7,7 @@ describe ConnectionLog do
       # This is the most recent use of 10.0.1.15
       Run.create(id: 20, ip_address: "10.0.1.15", started_at: Date.new(2014,2,1))
       Run.create(id: 22, ip_address: "10.0.1.12", started_at: Date.new(2014,3,1))
+      Run.create(id: 40, ip_address: "10.0.1.20", started_at: Date.new(2014,3,1))
     end
     let(:domain) { Domain.create!(name: "foo.com")}
 
@@ -16,7 +17,7 @@ describe ConnectionLog do
     end
 
     it "should not convert ip_address if run_id is already set" do
-      a = ConnectionLog.create(ip_address: "10.0.1.15", run_id: 40, domain: domain)
+      a = ConnectionLog.create(ip_address: "10.0.1.20", run_id: 40, domain: domain)
       expect(a.run_id).to eq 40
     end
 

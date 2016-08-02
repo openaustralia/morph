@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160723183732) do
+ActiveRecord::Schema.define(version: 20160730183552) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -225,6 +225,7 @@ ActiveRecord::Schema.define(version: 20160723183732) do
     t.integer  "create_scraper_progress_id", limit: 4
   end
 
+  add_index "scrapers", ["create_scraper_progress_id"], name: "fk_rails_44c3dd8af8", using: :btree
   add_index "scrapers", ["full_name"], name: "index_scrapers_on_full_name", using: :btree
   add_index "scrapers", ["owner_id"], name: "index_scrapers_on_owner_id", using: :btree
 
@@ -241,6 +242,8 @@ ActiveRecord::Schema.define(version: 20160723183732) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "variables", ["scraper_id"], name: "fk_rails_f537200e37", using: :btree
 
   create_table "webhook_deliveries", force: :cascade do |t|
     t.integer  "webhook_id",    limit: 4
@@ -263,4 +266,16 @@ ActiveRecord::Schema.define(version: 20160723183732) do
 
   add_index "webhooks", ["scraper_id"], name: "index_webhooks_on_scraper_id", using: :btree
 
+  add_foreign_key "api_queries", "scrapers"
+  add_foreign_key "connection_logs", "domains"
+  add_foreign_key "connection_logs", "runs"
+  add_foreign_key "contributions", "scrapers"
+  add_foreign_key "log_lines", "runs"
+  add_foreign_key "metrics", "runs"
+  add_foreign_key "runs", "scrapers"
+  add_foreign_key "scrapers", "create_scraper_progresses"
+  add_foreign_key "variables", "scrapers"
+  add_foreign_key "webhook_deliveries", "runs"
+  add_foreign_key "webhook_deliveries", "webhooks"
+  add_foreign_key "webhooks", "scrapers"
 end
