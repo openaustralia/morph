@@ -2,7 +2,7 @@ class AddForeignKeyConstraints < ActiveRecord::Migration
   def change
     # We can't add a simple constraint for watch_id on the alerts table because
     # it's polymorphic
-    add_foreign_key :alerts, :owners, column: "user_id"
+    #add_foreign_key :alerts, :owners, column: "user_id"
     add_foreign_key :api_queries, :scrapers
     add_foreign_key :api_queries, :owners
     add_foreign_key :connection_logs, :runs
