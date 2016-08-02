@@ -30,6 +30,13 @@ describe Morph::DockerRunner do
         .to eq @container_count
     end
 
+    it "should stop if a python compile fails" do
+      copy_test_scraper('failing_compile_python')
+      c, i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      expect(c).to be_nil
+      expect(i3).to be_nil
+    end
+
     it 'should be able to run hello world' do
       copy_test_scraper('hello_world_js')
 
