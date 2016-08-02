@@ -1,8 +1,8 @@
 class AddForeignKeyConstraints < ActiveRecord::Migration
   def change
-    #add_foreign_key :api_queries, :scrapers
-    #add_foreign_key :connection_logs, :runs
-    #add_foreign_key :connection_logs, :domains
+    add_foreign_key :api_queries, :scrapers
+    add_foreign_key :connection_logs, :runs
+    add_foreign_key :connection_logs, :domains
     add_foreign_key :contributions, :scrapers
     add_foreign_key :log_lines, :runs
     add_foreign_key :metrics, :runs
@@ -12,6 +12,9 @@ class AddForeignKeyConstraints < ActiveRecord::Migration
     add_foreign_key :webhook_deliveries, :webhooks
     add_foreign_key :webhook_deliveries, :runs
     add_foreign_key :webhooks, :scrapers
+
+    # We haven't added any of the constraints that involve owners because
+    # the migration failed in production. There is some more investigating to do.
 
     # We can't add a simple constraint for watch_id on the alerts table because
     # it's polymorphic
