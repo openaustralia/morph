@@ -2,7 +2,7 @@ class AddForeignKeyConstraints < ActiveRecord::Migration
   def change
     #add_foreign_key :api_queries, :scrapers
     #add_foreign_key :connection_logs, :runs
-    add_foreign_key :connection_logs, :domains
+    #add_foreign_key :connection_logs, :domains
     add_foreign_key :contributions, :scrapers
     add_foreign_key :log_lines, :runs
     add_foreign_key :metrics, :runs
