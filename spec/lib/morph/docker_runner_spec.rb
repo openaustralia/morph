@@ -46,11 +46,7 @@ describe Morph::DockerRunner do
         logs << [s, c]
       end
       expect(result.status_code).to eq 0
-      expect(logs).to eq [
-        [:stdout, "Detected 512 MB available memory, 512 MB limit per process (WEB_MEMORY)\n"],
-        [:stdout, "Recommending WEB_CONCURRENCY=1\n"],
-        [:stdout, "Hello world!\n"]
-      ]
+      expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
     it 'should be able to run hello world from a sub-directory' do
@@ -62,11 +58,7 @@ describe Morph::DockerRunner do
         logs << [s, c]
       end
       expect(result.status_code).to eq 0
-      expect(logs).to eq [
-        [:stdout, "Detected 512 MB available memory, 512 MB limit per process (WEB_MEMORY)\n"],
-        [:stdout, "Recommending WEB_CONCURRENCY=1\n"],
-        [:stdout, "Hello world!\n"]
-      ]
+      expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
     it 'should cache the compile stage' do
