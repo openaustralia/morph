@@ -58,11 +58,18 @@ describe Morph::DockerRunner do
       copy_test_scraper('hello_world_js')
 
       # Do the compile once to make sure the cache is primed
-      Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
       logs = []
-      Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
+      # Clean up container because we're not calling attach_to_run_and_finish
+      # which normally does the cleanup
+      c.kill
+      c.delete
+
+      c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
         logs << [s, c]
       end
+      c.kill
+      c.delete
       expect(logs).to eq [
         [:internalout, "Injecting configuration and compiling...\n"],
         [:internalout, "Injecting scraper and running...\n"]
