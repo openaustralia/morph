@@ -3,7 +3,16 @@
 import urllib
 import os
 
-from libmproxy.script import concurrent
+# Doing this to be able to handle running this under mitmproxy 0.12 and 0.17.1
+try:
+    from mitmproxy.script import concurrent
+except ImportError:
+    pass
+
+try:
+    from libmproxy.script import concurrent
+except ImportError:
+    pass
 
 @concurrent
 def response(context, flow):
