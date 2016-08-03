@@ -12,7 +12,10 @@ RUN apt-get install -y \
   libxslt1-dev \
   libjpeg62-turbo-dev \
   python-dev   \
-  python-pip
+  python-pip \
+  # Need to install ca-certificates otherwise won't verify ssl certificate
+  # of morph.io which is necessary for the connection log callback
+  ca-certificates
 
 RUN pip install --upgrade cffi
 RUN pip install --upgrade cryptography
