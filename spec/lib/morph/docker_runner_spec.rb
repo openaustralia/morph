@@ -157,11 +157,12 @@ describe Morph::DockerRunner do
 
       ip_address = nil
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      ip_address = Morph::DockerUtils.ip_address_of_container(c)
       result = Morph::DockerRunner.attach_to_run_and_finish(
         c, ['ip_address']) {}
       expect(result.status_code).to eq 0
       # Check that ip address lies in the expected subnet
-      expect(result.files['ip_address'].split('.')[0..1]).to eq ["192", "168"]
+      expect(ip_address).to eq result.files['ip_address']
     end
 
     it 'should return a non-zero error code if the scraper fails' do
