@@ -173,6 +173,19 @@ describe Morph::Runner do
       ]
     end
 
+    it 'should record the container ip address in the run' do
+      owner = User.create(nickname: 'mlandauer')
+      run = Run.create(owner: owner)
+      FileUtils.rm_rf(run.data_path)
+      FileUtils.rm_rf(run.repo_path)
+      fill_scraper_for_run('save_to_database', run)
+      runner = Morph::Runner.new(run)
+      runner.go_with_logging {}
+      run.reload
+      subnet = run.ip_address.split('.')[0..1].join('.')
+      expect(subnet).to eq "192.168"
+    end
+
     it 'should be able to correctly limit the number of lines even after a restart' do
       owner = User.create(nickname: 'mlandauer')
       run = Run.create(owner: owner)
