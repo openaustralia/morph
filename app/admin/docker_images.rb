@@ -1,4 +1,4 @@
-ActiveAdmin.register_page 'Images' do
+ActiveAdmin.register_page 'Docker Images' do
   content do
     images = Docker::Image.all
     table do
