@@ -29,10 +29,11 @@ class Domain < ActiveRecord::Base
     title = title_tag.inner_text.strip if title_tag
     { meta: meta, title: title }
   # TODO: If there's an error record that in the database
+  # TODO It would be great in case of certain errors to allow retries in some form
   rescue RestClient::InternalServerError, RestClient::BadRequest,
          RestClient::ResourceNotFound, RestClient::Forbidden,
          RestClient::RequestTimeout, RestClient::BadGateway,
-         RestClient::MaxRedirectsReached, RestClient::RequestFailed,
+         RestClient::ExceptionWithResponse, RestClient::RequestFailed,
          RestClient::ServiceUnavailable, RestClient::ServerBrokeConnection,
          Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EINVAL,
          Errno::EHOSTUNREACH, URI::InvalidURIError, Net::HTTPBadResponse
