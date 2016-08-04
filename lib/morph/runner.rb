@@ -99,7 +99,7 @@ module Morph
       end
 
       # Record ip address of running container
-      ip_address = c.json['NetworkSettings']['IPAddress'] if c
+      ip_address = Morph::DockerUtils.ip_address_of_container(c) if c
       # The image id here is a short one. Not sure why.
       # TODO: Investigate
       docker_image = image.id if image
