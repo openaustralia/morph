@@ -27,6 +27,8 @@ class ApiController < ApplicationController
       container.kill
       container.delete
     end
+    # Make sure that run is marked as finished
+    run.update_attributes(finished_at: Time.now)
     FileUtils.rm_rf(run.data_path)
     FileUtils.rm_rf(run.repo_path)
   end
