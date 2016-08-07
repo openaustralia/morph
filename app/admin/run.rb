@@ -11,10 +11,10 @@ ActiveAdmin.register Run do
     column :started_at
     column :finished_at
     column :wall_time, sortable: :wall_time do |run|
-      "%.1f" % run.wall_time
+      "%.1f" % run.wall_time if run.wall_time
     end
     column :cpu_time do |run|
-      "%.1f" % run.cpu_time
+      "%.1f" % run.cpu_time if run.cpu_time
     end
     actions
   end
