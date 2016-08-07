@@ -57,6 +57,10 @@ class Run < ActiveRecord::Base
     "#{owner.repo_root}/#{name}"
   end
 
+  def stop!
+    Morph::Runner.new(self).stop!
+  end
+
   def queued?
     queued_at && started_at.nil? && finished_at.nil?
   end
