@@ -104,7 +104,6 @@ namespace :app do
   task :docker_tidy_up do
     task("app:docker:remove_old_unused_images").invoke
     task("app:docker:delete_dead_containers").invoke
-    task("app:docker:delete_old_stopped_containers").invoke
   end
 
   # FIXME: This is a workaround for the problem in https://github.com/openaustralia/morph/issues/910

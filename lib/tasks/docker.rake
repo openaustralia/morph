@@ -21,18 +21,6 @@ namespace :app do
       end
     end
 
-    desc "Delete old stopped Docker containers"
-    task delete_old_stopped_containers: [:environment, :set_logger_to_stdout] do
-      old_stopped_containers = Docker::Container.all(all: true, filters: { status: ["exited"] }.to_json)
-      # Containers older than a day or so are almost certainly orphaned and we don't want them
-      old_stopped_containers.select! { |c| Time.parse(c.json["State"]["FinishedAt"]) < 2.days.ago }
-      puts "Found #{old_stopped_containers.count} stopped containers to delete..."
-
-      old_stopped_containers.each do |c|
-        Morph::DockerMaintenance::delete_container(c)
-      end
-    end
-
     task :set_logger_to_stdout do
       Rails.logger = ActiveSupport::Logger.new(STDOUT)
       Rails.logger.level = 1
