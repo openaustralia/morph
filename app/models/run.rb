@@ -12,7 +12,7 @@ class Run < ActiveRecord::Base
 
   delegate :git_url, :full_name, :current_revision_from_repo,
            to: :scraper, allow_nil: true
-  delegate :utime, :stime, :cpu_time, to: :metric
+  delegate :utime, :stime, :cpu_time, to: :metric, allow_nil: true
 
   # TODO: Run requires an owner - add a validation for that
 
