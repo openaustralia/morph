@@ -44,7 +44,6 @@ module Morph
 
     # If image is present locally use that. If it isn't then pull it from
     # the hub. This makes initial setup easier
-    # TODO: No need to use Multiblock here really
     def self.get_or_pull_image(name)
       Docker::Image.get(name)
     rescue Docker::Error::NotFoundError
@@ -65,6 +64,7 @@ module Morph
     # Finds the first matching container
     # Returns nil otherwise
     def self.find_container_with_label(key, value)
+      # TODO We can use the docker api to do this search
       Docker::Container.all(all: true).find do |container|
         container_has_label_value?(container, key, value)
       end
@@ -152,16 +152,6 @@ module Morph
 
     def self.docker_connection(options)
       Docker::Connection.new(Docker.url, Docker.env_options.merge(options))
-    end
-
-    def self.remove_single_docker_image(image)
-      image.delete('noprune' => 1)
-    rescue Docker::Error::ConflictError
-      nil
-    end
-
-    def self.parent_image(image)
-      Docker::Image.get(image.info['Parent'])
     end
 
     # Copy the contents of "src" to the directory dest in the container c
