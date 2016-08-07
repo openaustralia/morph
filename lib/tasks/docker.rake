@@ -11,17 +11,17 @@ namespace :app do
       old_unused_images.each { |i| Morph::DockerMaintenance.remove_image(i.id) }
     end
 
-    desc "Delete dead Docker containers and remove their images"
+    desc "Delete dead Docker containers"
     task delete_dead_containers: [:environment, :set_logger_to_stdout] do
       dead_containers = Docker::Container.all(all: true, filters: { status: ["dead"] }.to_json)
       puts "Found #{dead_containers.count} dead containers to delete..."
 
       dead_containers.each do |c|
-        Morph::DockerMaintenance::delete_container_and_remove_image_safe(c)
+        Morph::DockerMaintenance::delete_container(c)
       end
     end
 
-    desc "Delete old stopped Docker containers and remove their images"
+    desc "Delete old stopped Docker containers"
     task delete_old_stopped_containers: [:environment, :set_logger_to_stdout] do
       old_stopped_containers = Docker::Container.all(all: true, filters: { status: ["exited"] }.to_json)
       # Containers older than a day or so are almost certainly orphaned and we don't want them
@@ -29,7 +29,7 @@ namespace :app do
       puts "Found #{old_stopped_containers.count} stopped containers to delete..."
 
       old_stopped_containers.each do |c|
-        Morph::DockerMaintenance::delete_container_and_remove_image_safe(c)
+        Morph::DockerMaintenance::delete_container(c)
       end
     end
 
