@@ -169,5 +169,16 @@ module Morph
       end
       File.delete(tar_file)
     end
+
+    # This returns the total size of all the layers down to but not include the
+    # base layer. This is a useful way of estimating disk space
+    # image should be built on top of image_base.
+    def self.disk_space_image_relative_to_other_image(image, image_base)
+      layers = image.history
+      base_layer_index = layers.find_index {|l| l["Id"] == image_base.id}
+      raise "image is not built on top of image_base" if base_layer_index.nil?
+      diff_layers = layers[0..base_layer_index - 1]
+      diff_layers.map{|l| l["Size"]}.sum
+    end
   end
 end
