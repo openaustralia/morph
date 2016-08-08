@@ -15,7 +15,7 @@ namespace :app do
     task list_image_sizes: :environment do
       include ActionView::Helpers::NumberHelper
 
-      image_base = Morph::DockerUtils.get_or_pull_image(Morph::DockerRunner::BUILDSTEP_IMAGE)
+      image_base = Morph::DockerRunner.buildstep_image
       total = 0
       Docker::Image.all.each do |image|
         if Morph::DockerUtils.image_built_on_other_image?(image, image_base)

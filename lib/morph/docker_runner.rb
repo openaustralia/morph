@@ -24,9 +24,13 @@ module Morph
       512 * 1024 * 1024
     end
 
+    def self.buildstep_image
+      Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE)
+    end
+
     def self.compile_and_start_run(
       repo_path, env_variables, container_labels)
-      i = Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE) do |c|
+      i = buildstep_image do |c|
         yield(:internalout, c)
       end
       # Insert the configuration part of the application code into the container
