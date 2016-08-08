@@ -11,6 +11,22 @@ namespace :app do
       old_unused_images.each { |i| Morph::DockerMaintenance.remove_image(i.id) }
     end
 
+    desc "Show size of images built on top of buildstep"
+    task list_image_sizes: :environment do
+      include ActionView::Helpers::NumberHelper
+
+      image_base = Morph::DockerUtils.get_or_pull_image(Morph::DockerRunner::BUILDSTEP_IMAGE)
+      total = 0
+      Docker::Image.all.each do |image|
+        if Morph::DockerUtils.image_built_on_other_image?(image, image_base)
+          size = Morph::DockerUtils.disk_space_image_relative_to_other_image(image, image_base)
+          puts "#{image.id.split(':')[1][0..11]} #{number_to_human_size(size)}"
+          total += size
+        end
+      end
+      puts "Total: #{number_to_human_size(total)}"
+    end
+
     desc "Delete dead Docker containers"
     task delete_dead_containers: [:environment, :set_logger_to_stdout] do
       dead_containers = Docker::Container.all(all: true, filters: { status: ["dead"] }.to_json)
