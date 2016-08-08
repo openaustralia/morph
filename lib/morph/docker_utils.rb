@@ -170,6 +170,12 @@ module Morph
       File.delete(tar_file)
     end
 
+    # TODO There's probably a more sensible way of doing this
+    def self.image_built_on_other_image?(image, image_base)
+      index = image.history.find_index {|l| l["Id"] == image_base.id}
+      index && index != 0
+    end
+
     # This returns the total size of all the layers down to but not include the
     # base layer. This is a useful way of estimating disk space
     # image should be built on top of image_base.
