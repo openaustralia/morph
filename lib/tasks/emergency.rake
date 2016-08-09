@@ -1,5 +1,47 @@
 namespace :app do
   namespace :emergency do
+    desc 'Show queue / run inconsistencies - does not make any changes'
+    task show_queue_run_inconsistencies: :environment do
+      RUN_WORKER_CLASS_NAME = 'RunWorker'
+      SCRAPER_QUEUE = 'scraper'
+
+      # We just want to highlight the inconsistencies so that a person
+      # can intervene and understand what's causing these problems. It would be
+      # too crude to try to fix things automagically as we would rather fix
+      # or remediate the underlying problem. If we work around things too
+      # automatically then we ensure that we never actually fix the problem
+      # properly and it will undoubtedly come back in some other way.
+
+      # TODO: Show containers that have a run label but there isn't a job on the
+      # queue for that run
+      # TODO: Show runs from the database that say they are running (or queued)
+      # but there is no job on the queue for that run - have different handling
+      # for runs that are started from a scraper and those that are started from
+      # morph-cli
+
+      # First find all the runs that are currently in the queue somewhere
+      queue = []
+      # Runs on the retry queue
+      Sidekiq::RetrySet.new.each do |job|
+        queue << job.args.first if job.klass == RUN_WORKER_CLASS_NAME
+      end
+      # Runs on the queue
+      Sidekiq::Queue.new(SCRAPER_QUEUE).each do |job|
+        queue << job.args.first if job.klass == RUN_WORKER_CLASS_NAME
+      end
+      # Runs currently being processed on the queue
+      Sidekiq::Workers.new.each do |_process_id, _thread_id, work|
+        if work['payload']['class'] == RUN_WORKER_CLASS_NAME
+          queue << work['payload']['args'].first
+        end
+      end
+      # Remove duplicates just in case a job has moved from one queue to another
+      # while we've been doing this
+      queue = queue.uniq.sort
+      puts 'Current runs ids on the queue:'
+      p queue
+    end
+
     desc 'Reset all user github access tokens (Needed after heartbleed)'
     task reset_github_access_tokens: :environment do
       User.all.each do |user|
