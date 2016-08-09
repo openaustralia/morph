@@ -40,6 +40,14 @@ namespace :app do
       queue = queue.uniq.sort
       puts 'Current runs ids on the queue:'
       p queue
+
+      # Find all containers that are associated with runs
+      containers = Docker::Container.all(all: true).map do |container|
+        Morph::Runner.run_for_container(container)
+      end
+      containers = containers.compact.sort
+      puts 'Current run ids in the containers:'
+      p containers
     end
 
     desc 'Reset all user github access tokens (Needed after heartbleed)'
