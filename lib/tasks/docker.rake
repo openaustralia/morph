@@ -1,18 +1,7 @@
 namespace :app do
   namespace :docker do
-    desc "Remove Docker images that haven't been used in over 1 month"
+    desc "Remove least recently used docker images"
     task remove_old_unused_images: [:environment, :set_logger_to_stdout] do
-      old_unused_images = Docker::Image.all.select do |image|
-        last_run = Run.where(docker_image: image.id[0..11]).maximum(:created_at)
-        last_run && last_run < 1.months.ago
-      end
-      puts "Found #{old_unused_images.count} old unused images to remove..."
-
-      old_unused_images.each { |i| Morph::DockerMaintenance.remove_image(i.id) }
-    end
-
-    desc "Remove oldest docker images so that they don't use more than 500 MB"
-    task remove_old_unused_images_by_space: [:environment, :set_logger_to_stdout] do
       include ActionView::Helpers::NumberHelper
 
       # We don't want to take up more than 20 GB
