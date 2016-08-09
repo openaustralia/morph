@@ -12,7 +12,7 @@ module Morph
     def self.remove_image(image_id)
       Rails.logger.info "Removing image #{image_id}..."
       Docker::Image.get(image_id).remove
-    rescue Docker::Error::ConfictError
+    rescue Docker::Error::ConflictError
       Rails.logger.warn "Conflict removing image, skipping..."
     rescue Docker::Error::NotFoundError
       Rails.logger.warn "Couldn't find container image, skipping..."
