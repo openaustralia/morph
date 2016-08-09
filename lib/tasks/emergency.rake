@@ -49,6 +49,10 @@ namespace :app do
       containers = containers.compact.sort
       puts 'Current run ids in the containers:'
       p containers
+
+      # Now show the differences
+      puts 'The following runs do not have jobs on the queue:'
+      p containers - queue
     end
 
     desc 'Reset all user github access tokens (Needed after heartbleed)'
