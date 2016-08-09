@@ -14,6 +14,9 @@ module Morph
       'package.json'
     ]
     BUILDSTEP_IMAGE = 'openaustralia/buildstep'
+    DOCKER_NETWORK = 'morph'
+    DOCKER_BRIDGE = 'morph'
+    DOCKER_NETWORK_SUBNET = '192.168.0.0/16'
 
     def self.time_file
       '/app/time.output'
@@ -45,6 +48,26 @@ module Morph
       # If something went wrong during the compile and it couldn't finish
       return [nil, nil] if i3.nil?
 
+      # Before we create a container we need to make sure that there is a
+      # special network there for it to be put into
+      begin
+        Docker::Network.get(DOCKER_NETWORK)
+        exists = true
+      rescue Docker::Error::NotFoundError
+        exists = false
+      end
+      Docker::Network.create(DOCKER_NETWORK, {
+          'Options' => {
+            'com.docker.network.bridge.name' => DOCKER_BRIDGE,
+            'com.docker.network.bridge.enable_icc' => 'false'
+          },
+          'IPAM' => {
+            'Config' => [{
+                'Subnet' => DOCKER_NETWORK_SUBNET
+            }]
+          }
+        }) unless exists
+
       command = Morph::TimeCommand.command(['/start', 'scraper'], time_file)
 
       # TODO: Also copy back time output file and the sqlite journal file
@@ -60,7 +83,11 @@ module Morph
           {
             'REQUESTS_CA_BUNDLE' => '/etc/ssl/certs/ca-certificates.crt'
           }.merge(env_variables).map { |k, v| "#{k}=#{v}" },
-        'Labels' => container_labels
+        'Labels' => container_labels,
+        'HostConfig' => {
+          # Attach this container to our special network morph
+          'NetworkMode' => DOCKER_NETWORK
+        }
       }
 
       c = Docker::Container.create(container_options)

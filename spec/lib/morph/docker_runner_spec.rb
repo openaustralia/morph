@@ -47,6 +47,20 @@ describe Morph::DockerRunner do
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
+    it "should attach the container to a special morph-only docker network" do
+      copy_test_scraper('hello_world_js')
+
+      c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      expect(c.json['HostConfig']['NetworkMode']).to eq 'morph'
+      # Check that the network has some things set
+      network_info = Docker::Network.get('morph').info
+      expect(network_info['Options']['com.docker.network.bridge.name']).to eq "morph"
+      expect(network_info['Options']["com.docker.network.bridge.enable_icc"]).to eq 'false'
+      expect(network_info['IPAM']['Config'].first['Subnet']).to eq '192.168.0.0/16'
+      c.kill
+      c.delete
+    end
+
     it 'should be able to run hello world from a sub-directory' do
       copy_test_scraper('hello_world_subdirectory_js')
 
@@ -143,11 +157,11 @@ describe Morph::DockerRunner do
 
       ip_address = nil
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
-      ip_address = c.json['NetworkSettings']['IPAddress']
+      ip_address = Morph::DockerUtils.ip_address_of_container(c)
       result = Morph::DockerRunner.attach_to_run_and_finish(
         c, ['ip_address']) {}
       expect(result.status_code).to eq 0
-      # These logs will actually be different if the compile isn't cached
+      # Check that ip address lies in the expected subnet
       expect(ip_address).to eq result.files['ip_address']
     end
 

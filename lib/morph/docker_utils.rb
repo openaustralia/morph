@@ -186,5 +186,33 @@ module Morph
       diff_layers = layers[0..base_layer_index - 1]
       diff_layers.map{|l| l["Size"]}.sum
     end
+
+    def self.surpress_warnings(&block)
+      verbosity = $VERBOSE
+      $VERBOSE = nil
+      result = block.call
+      $VERBOSE = verbosity
+      result
+    end
+
+    # Fools the docker-api gem into using a later version of the api
+    # Use with caution and selectively
+    def self.run_with_later_version_of_docker_api(&block)
+      version = Docker::API_VERSION
+      surpress_warnings do
+        Docker.const_set(:API_VERSION, "1.24")
+      end
+      result = block.call
+      surpress_warnings do
+        Docker.const_set(:API_VERSION, version)
+      end
+      result
+    end
+
+    def self.ip_address_of_container(c)
+      Morph::DockerUtils.run_with_later_version_of_docker_api do
+        c.json['NetworkSettings']['Networks'].values.first['IPAddress']
+      end
+    end
   end
 end

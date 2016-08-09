@@ -21,6 +21,11 @@ iptables -A INPUT -i eth0 -j DROP
 iptables -t nat -A PREROUTING -i docker0 -p tcp --dport 80 -j REDIRECT --to-ports 8080
 iptables -t nat -A PREROUTING -i docker0 -p tcp --dport 443 -j REDIRECT --to-ports 8080
 
+# Redirect HTTP and HTTPS to mitmproxy (for new morph network)
+# Note that this will still work even if the morph interface doesn't yet exist
+iptables -t nat -A PREROUTING -i morph -p tcp --dport 80 -j REDIRECT --to-ports 8080
+iptables -t nat -A PREROUTING -i morph -p tcp --dport 443 -j REDIRECT --to-ports 8080
+
 # Allow DNS, HTTP and HTTPS
 #iptables -A DOCKER -p tcp --sport domain -j ACCEPT
 #iptables -A DOCKER -p udp --sport domain -j ACCEPT
