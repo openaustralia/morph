@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160730183552) do
+ActiveRecord::Schema.define(version: 20160809020033) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -203,8 +203,10 @@ ActiveRecord::Schema.define(version: 20160730183552) do
   add_index "runs", ["created_at"], name: "index_runs_on_created_at", using: :btree
   add_index "runs", ["docker_image"], name: "index_runs_on_docker_image", using: :btree
   add_index "runs", ["finished_at"], name: "index_runs_on_finished_at", using: :btree
+  add_index "runs", ["ip_address"], name: "index_runs_on_ip_address", using: :btree
   add_index "runs", ["owner_id"], name: "index_runs_on_owner_id", using: :btree
   add_index "runs", ["scraper_id"], name: "index_runs_on_scraper_id", using: :btree
+  add_index "runs", ["started_at"], name: "index_runs_on_started_at", using: :btree
 
   create_table "scrapers", force: :cascade do |t|
     t.string   "name",                       limit: 255, default: "",    null: false
