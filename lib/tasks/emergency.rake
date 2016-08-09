@@ -43,7 +43,8 @@ namespace :app do
 
       # Find all containers that are associated with runs
       containers = Docker::Container.all(all: true).map do |container|
-        Morph::Runner.run_for_container(container).id
+        run = Morph::Runner.run_for_container(container)
+        run.id if run
       end
       containers = containers.compact.sort
       puts 'Current run ids in the containers:'
