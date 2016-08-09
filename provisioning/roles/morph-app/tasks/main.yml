@@ -129,12 +129,12 @@
   cron: name="stop long-running" minute="0" user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:stop_long_running_scrapers RAILS_ENV=production"
   when: cron_jobs
 
-- name: Weekly tidy up of Docker images and containers
+- name: Hourly tidy up of Docker images and containers
   cron:
     name: "Docker Tidy Up"
     user: deploy
     job: "cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:docker_tidy_up RAILS_ENV=production"
-    special_time: weekly
+    special_time: hourly
   when: cron_jobs
 
 - name: Install nodejs for asset precompiling

@@ -23,7 +23,10 @@ class ApiController < ApplicationController
     response.stream.close
     # Don't want to leave any containers hanging around
     container = runner.container_for_run
-    container.delete if container
+    if container
+      container.kill
+      container.delete
+    end
     FileUtils.rm_rf(run.data_path)
     FileUtils.rm_rf(run.repo_path)
   end

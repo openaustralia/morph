@@ -51,7 +51,7 @@ class Scraper < ActiveRecord::Base
   friendly_id :full_name
 
   delegate :finished_recently?, :finished_at, :finished_successfully?,
-           :finished_with_errors?, :queued?, :running?,
+           :finished_with_errors?, :queued?, :running?, :stop!,
            to: :last_run, allow_nil: true
 
   # Give a count of the total number of scrapers rounded down to the nearest
@@ -62,10 +62,6 @@ class Scraper < ActiveRecord::Base
 
   def self.floor_to_hundreds(number)
     (number / 100.0).floor * 100
-  end
-
-  def stop!
-    Morph::Runner.new(last_run).stop!
   end
 
   def self.running
