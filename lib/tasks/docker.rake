@@ -4,8 +4,8 @@ namespace :app do
     task remove_old_unused_images: [:environment, :set_logger_to_stdout] do
       include ActionView::Helpers::NumberHelper
 
-      # We don't want to take up more than 20 GB
-      target_size = 20 * 1024 * 1024 * 1024
+      # We don't want to take up more than 10 GB
+      target_size = 10 * 1024 * 1024 * 1024
 
       # First compile list of images, when they were last used and how much space they're using
       # Images built on top of buildstep
