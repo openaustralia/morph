@@ -60,6 +60,7 @@ namespace :app do
           size += image[:size]
         end
       end
+      puts "Currently using #{number_to_human_size(total_size)} with a target maximum of #{number_to_human_size(target_size)}"
       puts "Removing #{images_to_remove.count} of the least recently used images taking up #{number_to_human_size(size)}..."
       images_to_remove.each { |i| Morph::DockerMaintenance.remove_image(i.id) }
     end
