@@ -59,12 +59,6 @@ namespace :app do
       unfinished = Run.where(finished_at: nil).where('scraper_id IS NOT NULL').ids
       puts 'Unfinished runs attached to scrapers that do not have jobs on the queue:'
       p unfinished - queue
-      # Out of those unfinished runs how many log lines do they have
-      puts 'Of those the following have more than 10,000 log lines:'
-      unfinished_big_logs = (unfinished - queue).select do |run_id|
-        Run.find(run_id).log_lines.count > 10000
-      end
-      p unfinished_big_logs
     end
 
     desc 'Reset all user github access tokens (Needed after heartbleed)'
