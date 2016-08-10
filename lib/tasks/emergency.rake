@@ -57,12 +57,12 @@ namespace :app do
       # Find runs attached to scrapers that have been queued and haven't
       # finished and don't have jobs in the queue
       unfinished = Run.where(finished_at: nil).where('scraper_id IS NOT NULL').ids
-      puts "Unfinished runs attached to scrapers that do not have jobs on the queue:"
+      puts 'Unfinished runs attached to scrapers that do not have jobs on the queue:'
       p unfinished - queue
       # Out of those unfinished runs how many log lines do they have
-      puts "RUN_ID NO_LOG_LINES"
-      (unfinished - queue).each do |run_id|
-        puts "#{run_id} #{Run.find(run_id).log_lines.count}"
+      puts 'Of those the following have more than 10,000 log lines:'
+      p (unfinished - queue).collect do |run_id|
+        Run.find(run_id).log_lines.count > 10000
       end
     end
 
