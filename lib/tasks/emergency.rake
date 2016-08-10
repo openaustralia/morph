@@ -38,8 +38,8 @@ namespace :app do
       # Remove duplicates just in case a job has moved from one queue to another
       # while we've been doing this
       queue = queue.uniq.sort
-      puts 'Current runs ids on the queue:'
-      p queue
+      # puts 'Current runs ids on the queue:'
+      # p queue
 
       # Find all containers that are associated with runs
       containers = Docker::Container.all(all: true).map do |container|
@@ -47,12 +47,18 @@ namespace :app do
         run.id if run
       end
       containers = containers.compact.sort
-      puts 'Current run ids in the containers:'
-      p containers
+      # puts 'Current run ids in the containers:'
+      # p containers
 
       # Now show the differences
       puts 'The following runs do not have jobs on the queue:'
       p containers - queue
+
+      # Find runs attached to scrapers that have been queued and haven't
+      # finished and don't have jobs in the queue
+      unfinished = Run.where(finished_at: nil).where('scraper_id IS NOT NULL').ids
+      puts "Unfinished runs attached to scrapers that do not have jobs on the queue:"
+      p unfinished - queue
     end
 
     desc 'Reset all user github access tokens (Needed after heartbleed)'
