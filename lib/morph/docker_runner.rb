@@ -73,6 +73,9 @@ module Morph
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
 
+      # Add another label to the created container
+      container_labels['io.morph.stage'] = 'running'
+
       container_options = {
         'Cmd' => command,
         'Image' => i3.id,
