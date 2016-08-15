@@ -122,7 +122,7 @@ module Morph
 
       # Only copy back database if it's there and has something in it
       if result.files && result.files['data.sqlite']
-        Morph::Runner.copy_sqlite_db_back2(run.data_path, result.files['data.sqlite'])
+        Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
       end
 
       # Now collect and save the metrics
@@ -187,15 +187,11 @@ module Morph
       end
     end
 
-    def self.copy_sqlite_db_back2(data_path, sqlite_file)
+    def self.copy_sqlite_db_back(data_path, sqlite_file)
       # TODO NO READING OF FILES INTO MEMORY
       sqlite_data = sqlite_file.read
       sqlite_file.close!
 
-      copy_sqlite_db_back(data_path, sqlite_data)
-    end
-
-    def self.copy_sqlite_db_back(data_path, sqlite_data)
       # Only overwrite the sqlite database if the container has one
       if sqlite_data
         # First write to a temporary file with the new sqlite data
