@@ -117,15 +117,26 @@ module Morph
 
     # Get a set of files from a container and return them as a hash
     def self.copy_files(container, paths)
-      data = {}
-      paths.each do |path|
-        tmp = copy_file(container, path)
+      data = copy_files2(container, paths)
+
+      data.keys.each do |path|
+        tmp = data[path]
         if tmp
           data[path] = tmp.read
           tmp.close!
         else
           data[path] = nil
         end
+      end
+      data
+    end
+
+    # Get a set of files from a container and return them as a hash of
+    # local temporary files
+    def self.copy_files2(container, paths)
+      data = {}
+      paths.each do |path|
+        data[path] = copy_file(container, path)
       end
       data
     end
