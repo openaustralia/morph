@@ -118,6 +118,17 @@ module Morph
         ) do |timestamp, s, c|
           yield(timestamp, s, c)
         end
+
+        files = result.files
+        files.keys.each do |path|
+          tmp = files[path]
+          if tmp
+            files[path] = tmp.read
+            tmp.close!
+          end
+        end
+
+        result = Morph::RunResult.new(result.status_code, files, result.time_params)
       end
 
       # Only copy back database if it's there and has something in it

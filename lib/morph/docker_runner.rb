@@ -111,25 +111,6 @@ module Morph
     # time is non-inclusive so we shouldn't return the log line with that
     # exact timestamp, just ones after it.
     def self.attach_to_run_and_finish(container, files, since = nil,
-                                      max_lines = nil)
-
-      result1 = attach_to_run_and_finish2(container, files, since, max_lines) do |timestamp, s, c|
-        yield timestamp, s, c
-      end
-
-      files = result1.files
-      files.keys.each do |path|
-        tmp = files[path]
-        if tmp
-          files[path] = tmp.read
-          tmp.close!
-        end
-      end
-
-      Morph::RunResult.new(result1.status_code, files, result1.time_params)
-    end
-
-    def self.attach_to_run_and_finish2(container, files, since = nil,
                                        max_lines = nil)
       params = { stdout: true, stderr: true, follow: true, timestamps: true }
       params[:since] = since.to_f if since
