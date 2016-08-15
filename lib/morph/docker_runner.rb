@@ -110,19 +110,22 @@ module Morph
     # If since is non-nil only return log lines since the time given. This
     # time is non-inclusive so we shouldn't return the log line with that
     # exact timestamp, just ones after it.
-    def self.attach_to_run_and_finish(container, files, since = nil, max_lines = nil)
+    def self.attach_to_run_and_finish(container, files, since = nil,
+                                      max_lines = nil)
       params = { stdout: true, stderr: true, follow: true, timestamps: true }
       params[:since] = since.to_f if since
       line_count = 0
       container.streaming_logs(params) do |s, line|
         timestamp = Time.parse(line[0..29])
         # To convert this ruby time back to the same string format as it
-        # originally came in do: timestamp.utc.strftime('%Y-%m-%dT%H:%M:%S.%9NZ')
+        # originally came in do:
+        # timestamp.utc.strftime('%Y-%m-%dT%H:%M:%S.%9NZ')
         c = line[31..-1]
         # We're going to assume (somewhat rashly, I might add) that the
         # console output from the scraper is always encoded as UTF-8.
-        # TODO Something more intelligent. Either figure out the correct encoding...
-        # Or take an educated guess rather than making an assumption
+        # TODO Fix forcing of encoding and do something more intelligent
+        # Either figure out the correct encoding or take an educated guess
+        # rather than making an assumption
         c.force_encoding('UTF-8')
         c.scrub!
         # There is a chance that we catch a log line that shouldn't
@@ -131,7 +134,12 @@ module Morph
           if max_lines.nil? || line_count < max_lines
             yield timestamp, s, c
           elsif line_count == max_lines
-            yield nil, :internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"
+            yield nil, :internalerr,
+              "\n" \
+              'Too many lines of output! ' \
+              'Your scraper will continue uninterrupted. ' \
+              'There will just be no further output displayed' \
+              "\n"
           end
           line_count += 1
         end
