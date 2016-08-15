@@ -118,22 +118,11 @@ module Morph
         ) do |timestamp, s, c|
           yield(timestamp, s, c)
         end
-
-        files = result.files
-        files.keys.each do |path|
-          tmp = files[path]
-          if tmp
-            files[path] = tmp.read
-            tmp.close!
-          end
-        end
-
-        result = Morph::RunResult.new(result.status_code, files, result.time_params)
       end
 
       # Only copy back database if it's there and has something in it
-      if result.files && result.files.key?('data.sqlite')
-        Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
+      if result.files && result.files['data.sqlite']
+        Morph::Runner.copy_sqlite_db_back2(run.data_path, result.files['data.sqlite'])
       end
 
       # Now collect and save the metrics
@@ -196,6 +185,14 @@ module Morph
         # link on the container
         FileUtils.touch(File.join(dir, 'data.sqlite'))
       end
+    end
+
+    def self.copy_sqlite_db_back2(data_path, sqlite_file)
+      # TODO NO READING OF FILES INTO MEMORY
+      sqlite_data = sqlite_file.read
+      sqlite_file.close!
+
+      copy_sqlite_db_back(data_path, sqlite_data)
     end
 
     def self.copy_sqlite_db_back(data_path, sqlite_data)
