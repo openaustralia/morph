@@ -23,7 +23,7 @@ module Morph
 
     # Round down to the nearest million
     def self.rounded_total_database_rows_in_millions
-      (total_database_rows / 1000000.0).floor
+      (total_database_rows / 1_000_000.0).floor
     end
   end
 end

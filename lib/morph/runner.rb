@@ -9,9 +9,9 @@ module Morph
       @run = run
     end
 
-    # TODO Move this to a configuration somewhere
+    # TODO: Move this to a configuration somewhere
     def self.default_max_lines
-      10000
+      10_000
     end
 
     # The main section of the scraper running that is run in the background
@@ -36,7 +36,7 @@ module Morph
       puts "#{stream}: #{text}" if Rails.env.development?
       # Not using create on association to try to avoid memory bloat
       # Truncate text so that it fits in the database
-      line = LogLine.create!(run: run, timestamp: timestamp, stream: stream.to_s, text: text[0..65534])
+      line = LogLine.create!(run: run, timestamp: timestamp, stream: stream.to_s, text: text[0..65_534])
       sync_new line, scope: run unless Rails.env.test?
     end
 
@@ -45,7 +45,7 @@ module Morph
       c = container_for_run
       if c.nil?
         c = compile_and_start_run do |s, c|
-          # TODO Could we get sensible timestamps out at this stage too?
+          # TODO: Could we get sensible timestamps out at this stage too?
           yield nil, s, c
         end
         since = nil
@@ -68,13 +68,13 @@ module Morph
     end
 
     def compile_and_start_run
-      #puts "Starting...\n"
+      # puts "Starting...\n"
       run.database.backup
       run.update_attributes(started_at: Time.now,
                             git_revision: run.current_revision_from_repo)
       sync_update run.scraper if run.scraper
       FileUtils.mkdir_p run.data_path
-      FileUtils.chmod 0777, run.data_path
+      FileUtils.chmod 0o777, run.data_path
 
       unless run.language && run.language.supported?
         supported_scraper_files =
@@ -93,7 +93,8 @@ module Morph
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
 
         Morph::DockerRunner.compile_and_start_run(
-          defaults, run.env_variables, docker_container_labels) do |s, c|
+          defaults, run.env_variables, docker_container_labels
+        ) do |s, c|
           yield(s, c)
         end
       end
@@ -113,7 +114,8 @@ module Morph
         result = Morph::RunResult.new(255, {}, {})
       else
         result = Morph::DockerRunner.attach_to_run_and_finish(
-          c, ['data.sqlite'], since, max_lines) do |timestamp, s, c|
+          c, ['data.sqlite'], since, max_lines
+        ) do |timestamp, s, c|
           yield(timestamp, s, c)
         end
       end
@@ -129,7 +131,8 @@ module Morph
 
       # Update information about what changed in the database
       diffstat = Morph::SqliteDiff.diffstat_safe(
-        run.database.sqlite_db_backup_path, run.database.sqlite_db_path)
+        run.database.sqlite_db_backup_path, run.database.sqlite_db_path
+      )
       if diffstat
         tables = diffstat[:tables][:counts]
         records = diffstat[:records][:counts]
@@ -205,11 +208,10 @@ module Morph
       language = Morph::Language.language(dest)
 
       language.default_files_to_insert.each do |files|
-        if files.all? { |file| !File.exist?(File.join(dest, file)) }
-          files.each do |file|
-            FileUtils.cp(language.default_config_file_path(file),
-                         File.join(dest, file))
-          end
+        next unless files.all? { |file| !File.exist?(File.join(dest, file)) }
+        files.each do |file|
+          FileUtils.cp(language.default_config_file_path(file),
+                       File.join(dest, file))
         end
       end
 
@@ -222,7 +224,7 @@ module Morph
     # hidden directories which people might find useful
     def self.remove_hidden_directories(directory)
       Find.find(directory) do |path|
-        if FileTest.directory?(path) && File.basename(path)[0] == ?.
+        if FileTest.directory?(path) && File.basename(path)[0] == '.'
           FileUtils.rm_rf(path)
         end
       end
@@ -246,7 +248,8 @@ module Morph
 
     def container_for_run
       Morph::DockerUtils.find_container_with_label(
-        Morph::Runner.run_label_key, run_label_value)
+        Morph::Runner.run_label_key, run_label_value
+      )
     end
 
     def self.run_id_for_container(container)

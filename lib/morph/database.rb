@@ -61,12 +61,13 @@ module Morph
     end
 
     def sql_query(query, readonly = true)
-      fail SQLite3::Exception, 'No query specified' if query.blank?
+      raise SQLite3::Exception, 'No query specified' if query.blank?
       SQLite3::Database.new(
         sqlite_db_path,
         results_as_hash: true,
         type_translation: true,
-        readonly: readonly) do |db|
+        readonly: readonly
+      ) do |db|
         # If database is busy wait 5s
         db.busy_timeout(5000)
         return Database.clean_utf8_query_result(db.execute(query))

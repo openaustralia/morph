@@ -64,7 +64,7 @@ module Morph
     # Finds the first matching container
     # Returns nil otherwise
     def self.find_container_with_label(key, value)
-      # TODO We can use the docker api to do this search
+      # TODO: We can use the docker api to do this search
       Docker::Container.all(all: true).find do |container|
         container_has_label_value?(container, key, value)
       end
@@ -109,7 +109,7 @@ module Morph
         tmp.unlink
 
         path2 = File.join(dest, Pathname.new(path).basename.to_s)
-        File.open(path2, 'rb') { |f| f.read }
+        File.open(path2, 'rb', &:read)
       end
     end
 
@@ -137,12 +137,13 @@ module Morph
       connection = docker_connection(connection_options)
       temp = create_tar_file(dir)
       Docker::Image.build_from_tar(
-        temp, build_options.merge('forcerm' => 1), connection) do |chunk|
-          # Sometimes a chunk contains multiple lines of json
-          chunk.split("\n").each do |line|
-            parsed_line = JSON.parse(line)
-            yield parsed_line['stream'] if parsed_line.key?('stream')
-          end
+        temp, build_options.merge('forcerm' => 1), connection
+      ) do |chunk|
+        # Sometimes a chunk contains multiple lines of json
+        chunk.split("\n").each do |line|
+          parsed_line = JSON.parse(line)
+          yield parsed_line['stream'] if parsed_line.key?('stream')
+        end
       end
     # This exception gets thrown if there is an error during the build (for
     # example if the compile fails). In this case we just want to return nil
@@ -162,7 +163,7 @@ module Morph
       # In the meantime get something more long-winded working here
 
       tar_file = Docker::Util.create_dir_tar(src).path
-      File.open(tar_file, "rb") do |tar|
+      File.open(tar_file, 'rb') do |tar|
         container.archive_in_stream(dest) do
           tar.read(Excon.defaults[:chunk_size]).to_s
         end
@@ -170,10 +171,10 @@ module Morph
       File.delete(tar_file)
     end
 
-    # TODO There's probably a more sensible way of doing this
+    # TODO: There's probably a more sensible way of doing this
     def self.image_built_on_other_image?(image, image_base)
-      index = image.history.find_index {|l| l["Id"] == image_base.id}
-      index && index != 0
+      index = image.history.find_index { |l| l['Id'] == image_base.id }
+      index && index.nonzero?
     end
 
     # This returns the total size of all the layers down to but not include the
@@ -181,10 +182,10 @@ module Morph
     # image should be built on top of image_base.
     def self.disk_space_image_relative_to_other_image(image, image_base)
       layers = image.history
-      base_layer_index = layers.find_index {|l| l["Id"] == image_base.id}
-      raise "image is not built on top of image_base" if base_layer_index.nil?
+      base_layer_index = layers.find_index { |l| l['Id'] == image_base.id }
+      raise 'image is not built on top of image_base' if base_layer_index.nil?
       diff_layers = layers[0..base_layer_index - 1]
-      diff_layers.map{|l| l["Size"]}.sum
+      diff_layers.map { |l| l['Size'] }.sum
     end
 
     def self.surpress_warnings(&block)
@@ -200,7 +201,7 @@ module Morph
     def self.run_with_later_version_of_docker_api(&block)
       version = Docker::API_VERSION
       surpress_warnings do
-        Docker.const_set(:API_VERSION, "1.24")
+        Docker.const_set(:API_VERSION, '1.24')
       end
       result = block.call
       surpress_warnings do

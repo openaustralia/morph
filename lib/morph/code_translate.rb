@@ -10,7 +10,7 @@ module Morph
       when :python
         Python.translate(code)
       else
-        fail 'unsupported language'
+        raise 'unsupported language'
       end
     end
 
@@ -34,8 +34,8 @@ module Morph
       end
 
       def self.change_table_in_select(code)
-        code.gsub(/scraperwiki::select\((['"])(.*)(['"])(.*)\)/) do |s|
-          "scraperwiki::select(#{$1}#{CodeTranslate.sql($2)}#{$3}#{$4})"
+        code.gsub(/scraperwiki::select\((['"])(.*)(['"])(.*)\)/) do |_s|
+          "scraperwiki::select(#{Regexp.last_match(1)}#{CodeTranslate.sql(Regexp.last_match(2))}#{Regexp.last_match(3)}#{Regexp.last_match(4)})"
         end
       end
     end
@@ -66,8 +66,9 @@ module Morph
 
       def self.change_table_in_sqliteexecute_and_select(code)
         code.gsub(
-          /ScraperWiki.(sqliteexecute|select)\((['"])(.*)(['"])(.*)\)/) do |s|
-          "ScraperWiki.#{$1}(#{$2}#{CodeTranslate.sql($3)}#{$4}#{$5})"
+          /ScraperWiki.(sqliteexecute|select)\((['"])(.*)(['"])(.*)\)/
+        ) do |_s|
+          "ScraperWiki.#{Regexp.last_match(1)}(#{Regexp.last_match(2)}#{CodeTranslate.sql(Regexp.last_match(3))}#{Regexp.last_match(4)}#{Regexp.last_match(5)})"
         end
       end
 
@@ -75,9 +76,9 @@ module Morph
         code.gsub(%r{require ['"]scrapers/(.*)['"]}) do |s|
           i = <<-EOF
 # TODO:
-# 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/#{$1}/
+# 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/#{Regexp.last_match(1)}/
 # 2. Add the forked repo as a git submodule in this repo
-# 3. Change the line below to something like require File.dirname(__FILE__) + '/#{$1}/scraper'
+# 3. Change the line below to something like require File.dirname(__FILE__) + '/#{Regexp.last_match(1)}/scraper'
 # 4. Remove these instructions
           EOF
           i + s

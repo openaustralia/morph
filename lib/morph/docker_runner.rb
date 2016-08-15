@@ -12,11 +12,11 @@ module Morph
       'composer.json', 'composer.lock',
       'app.psgi', 'cpanfile',
       'package.json'
-    ]
-    BUILDSTEP_IMAGE = 'openaustralia/buildstep'
-    DOCKER_NETWORK = 'morph'
-    DOCKER_BRIDGE = 'morph'
-    DOCKER_NETWORK_SUBNET = '192.168.0.0/16'
+    ].freeze
+    BUILDSTEP_IMAGE = 'openaustralia/buildstep'.freeze
+    DOCKER_NETWORK = 'morph'.freeze
+    DOCKER_BRIDGE = 'morph'.freeze
+    DOCKER_NETWORK_SUBNET = '192.168.0.0/16'.freeze
 
     def self.time_file
       '/app/time.output'
@@ -32,7 +32,8 @@ module Morph
     end
 
     def self.compile_and_start_run(
-      repo_path, env_variables, container_labels)
+      repo_path, env_variables, container_labels
+    )
       i = buildstep_image do |c|
         yield(:internalout, c)
       end
@@ -56,17 +57,18 @@ module Morph
       rescue Docker::Error::NotFoundError
         exists = false
       end
-      Docker::Network.create(DOCKER_NETWORK, {
-          'Options' => {
-            'com.docker.network.bridge.name' => DOCKER_BRIDGE,
-            'com.docker.network.bridge.enable_icc' => 'false'
-          },
-          'IPAM' => {
-            'Config' => [{
-                'Subnet' => DOCKER_NETWORK_SUBNET
-            }]
-          }
-        }) unless exists
+      Docker::Network.create(
+        DOCKER_NETWORK,
+        'Options' => {
+          'com.docker.network.bridge.name' => DOCKER_BRIDGE,
+          'com.docker.network.bridge.enable_icc' => 'false'
+        },
+        'IPAM' => {
+          'Config' => [{
+            'Subnet' => DOCKER_NETWORK_SUBNET
+          }]
+        }
+      ) unless exists
 
       command = Morph::TimeCommand.command(['/start', 'scraper'], time_file)
 
@@ -98,7 +100,7 @@ module Morph
       Dir.mktmpdir('morph') do |dest|
         copy_config_to_directory(repo_path, dest, false)
         yield(:internalout, "Injecting scraper and running...\n")
-        Morph::DockerUtils.insert_contents_of_directory(c, dest, "/app")
+        Morph::DockerUtils.insert_contents_of_directory(c, dest, '/app')
       end
 
       c.start
@@ -109,7 +111,7 @@ module Morph
     # time is non-inclusive so we shouldn't return the log line with that
     # exact timestamp, just ones after it.
     def self.attach_to_run_and_finish(container, files, since = nil, max_lines = nil)
-      params = {stdout: true, stderr: true, follow: true, timestamps: true}
+      params = { stdout: true, stderr: true, follow: true, timestamps: true }
       params[:since] = since.to_f if since
       line_count = 0
       container.streaming_logs(params) do |s, line|
@@ -194,7 +196,8 @@ module Morph
 
         Morph::DockerUtils.fix_modification_times(dir2)
         Morph::DockerUtils.docker_build_from_dir(
-          dir2, { read_timeout: 5.minutes }) do |c|
+          dir2, read_timeout: 5.minutes
+        ) do |c|
           yield c
         end
       end
@@ -224,7 +227,7 @@ module Morph
         docker_build_command(
           image,
           [
-            # TODO Setting the timeout higher here won't be necessary once we
+            # TODO: Setting the timeout higher here won't be necessary once we
             # upgrade to a more recent version of herokuish that contains
             # the commit
             # https://github.com/gliderlabs/herokuish/commit/5164f342dfe27537d6fd5425a5121b7ae7925d3c
@@ -237,7 +240,8 @@ module Morph
             'ENV NODE_TLS_REJECT_UNAUTHORIZED 0',
             'RUN /build/builder'
           ],
-          dir) do |c|
+          dir
+        ) do |c|
           # We don't want to show the standard docker build output
           unless c =~ /^Step \d+ :/ || c =~ /^ ---> / ||
                  c =~ /^Removing intermediate container / ||

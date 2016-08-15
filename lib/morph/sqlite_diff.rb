@@ -15,7 +15,7 @@ module Morph
       end
     end
 
-    def self.tables_added(tables, db1, db2)
+    def self.tables_added(tables, _db1, db2)
       tables.map do |table|
         added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         {
@@ -27,7 +27,7 @@ module Morph
       end
     end
 
-    def self.tables_removed(tables, db1, db2)
+    def self.tables_removed(tables, db1, _db2)
       tables.map do |table|
         removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         {
@@ -62,10 +62,10 @@ module Morph
         },
         records: {
           counts: {
-            added: (unchanged + changed + added).sum {|t| t[:records][:counts][:added]},
-            removed: (unchanged + changed + removed).sum {|t| t[:records][:counts][:removed]},
-            changed: (unchanged + changed).sum {|t| t[:records][:counts][:changed]},
-            unchanged: (unchanged + changed).sum {|t| t[:records][:counts][:unchanged]}
+            added: (unchanged + changed + added).sum { |t| t[:records][:counts][:added] },
+            removed: (unchanged + changed + removed).sum { |t| t[:records][:counts][:removed] },
+            changed: (unchanged + changed).sum { |t| t[:records][:counts][:changed] },
+            unchanged: (unchanged + changed).sum { |t| t[:records][:counts][:unchanged] }
           }
         }
       }
@@ -81,7 +81,7 @@ module Morph
 
     def self.table_changes(db1, db2)
       changes(db1, db2, "select name from sqlite_master where type='table'") do |possibly_changed|
-        quoted_ids = possibly_changed.map{|n| "'#{n}'"}.join(",")
+        quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(',')
         "select name,sql from sqlite_master where type='table' AND name IN (#{quoted_ids})"
       end
     end
@@ -157,7 +157,7 @@ module Morph
 
     def self.rows_changed_in_range(table, min, max, db1, db2)
       changes(db1, db2, "SELECT ROWID from '#{table}' WHERE ROWID BETWEEN #{min} AND #{max}") do |possibly_changed|
-        quoted_ids = possibly_changed.map{|n| "'#{n}'"}.join(',')
+        quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(',')
         "SELECT ROWID, * from '#{table}' WHERE ROWID IN (#{quoted_ids})"
       end
     end

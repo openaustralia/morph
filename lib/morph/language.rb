@@ -1,7 +1,7 @@
 module Morph
   # Special stuff for each scripting language supported by morph.io
   class Language
-    LANGUAGES_SUPPORTED = [:ruby, :php, :python, :perl, :nodejs]
+    LANGUAGES_SUPPORTED = [:ruby, :php, :python, :perl, :nodejs].freeze
 
     WEBSITES = {
       ruby: 'https://www.ruby-lang.org/en/',
@@ -9,13 +9,13 @@ module Morph
       python: 'https://www.python.org/',
       perl: 'http://www.perl.org/',
       nodejs: 'https://nodejs.org/'
-    }
+    }.freeze
 
     HUMAN = { ruby: 'Ruby', php: 'PHP', python: 'Python', perl: 'Perl',
-              nodejs: 'Node.js' }
+              nodejs: 'Node.js' }.freeze
 
     FILE_EXTENSIONS = { ruby: 'rb', php: 'php', python: 'py', perl: 'pl',
-                        nodejs: 'js' }
+                        nodejs: 'js' }.freeze
 
     # Files are grouped together when they need to be treated as a unit
     # For instance in Ruby. Gemfile and Gemfile.lock always go together.
@@ -37,7 +37,7 @@ module Morph
         ['cpanfile']
       ],
       nodejs: []
-    }
+    }.freeze
 
     BINARIES = {
       # Run a special script of ours before anything else which switches off
@@ -48,7 +48,7 @@ module Morph
       python: 'python -u',
       perl: 'perl -Mlib=/app/local/lib/perl5',
       nodejs: 'node --expose-gc'
-    }
+    }.freeze
 
     attr_reader :key
 
@@ -73,7 +73,7 @@ module Morph
 
     def human
       t = HUMAN[key]
-      fail 'Unsupported language' if t.nil?
+      raise 'Unsupported language' if t.nil?
       t
     end
 
@@ -94,7 +94,7 @@ module Morph
     end
 
     def scraper_templates
-      fail 'Not yet supported' unless supported?
+      raise 'Not yet supported' unless supported?
       # We grab all the files in the template directory
       result = {}
       Dir.entries(default_template_directory).each do |file|

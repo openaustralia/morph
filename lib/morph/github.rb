@@ -14,7 +14,8 @@ module Morph
         puts "Cloning git repo #{git_url}..."
         puts gritty.clone(
           { verbose: true, progress: true, raise: true },
-          git_url, repo_path)
+          git_url, repo_path
+        )
       end
       # Handle submodules. Always do this
       system("cd #{repo_path}; git submodule init")
@@ -27,11 +28,13 @@ module Morph
       if user == owner
         user.octokit_client.create_repository(
           name,
-          options.merge(auto_init: true))
+          options.merge(auto_init: true)
+        )
       else
         user.octokit_client.create_repository(
           name,
-          options.merge(auto_init: true, organization: owner.nickname))
+          options.merge(auto_init: true, organization: owner.nickname)
+        )
       end
     end
 
@@ -78,7 +81,7 @@ module Morph
 
       conn = Faraday.new(url: 'https://api.github.com') do |faraday|
         faraday.request :basic_auth, client_id, client_secret
-        faraday.adapter Faraday.default_adapter  # make requests with Net::HTTP
+        faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
       end
       res = conn.post("/applications/#{client_id}/tokens/#{access_token}")
       JSON.parse(res.body)['token']
