@@ -1,7 +1,5 @@
 # A real human being (hopefully)
 class User < Owner
-  include Skylight::Helpers
-
   devise :trackable, :rememberable, :omniauthable, omniauth_providers: [:github]
   has_and_belongs_to_many :organizations, join_table: :organizations_users
   has_many :alerts
@@ -89,14 +87,12 @@ class User < Owner
     end
   end
 
-  instrument_method
   def watched_broken_scrapers
     all_scrapers_watched.select do |s|
       s.finished_with_errors? && s.finished_recently?
     end
   end
 
-  instrument_method
   # Puts scrapers that have most recently failed first
   def watched_broken_scrapers_ordered_by_urgency
     watched_broken_scrapers.sort do |a, b|

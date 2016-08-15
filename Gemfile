@@ -66,7 +66,6 @@ gem 'honeybadger'
 gem 'cancan'
 gem 'backstretch-rails'
 gem 'searchkick'
-gem "skylight"
 gem "stripe"
 gem 'haml-coderay'
 gem 'd3-rails'
