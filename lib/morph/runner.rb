@@ -258,9 +258,10 @@ module Morph
     end
 
     # Given a run return the associated run object
+    # If run has been deleted for this container then also return nil
     def self.run_for_container(container)
       run_id = run_id_for_container(container)
-      Run.find(run_id) if run_id
+      Run.find_by(id: run_id) if run_id
     end
   end
 end
