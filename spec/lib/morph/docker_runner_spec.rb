@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'memory_profiler'
 
 describe Morph::DockerRunner do
   # Tests that involve docker are marked as 'docker: true'.
@@ -45,6 +46,30 @@ describe Morph::DockerRunner do
       end
       expect(result.status_code).to eq 0
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
+    end
+
+    def with_smaller_chunk_size(&block)
+      chunk_size = Excon.defaults[:chunk_size]
+      Excon.defaults[:chunk_size] = 1024
+      result = yield
+      Excon.defaults[:chunk_size] = chunk_size
+      result
+    end
+
+    it 'should not allocate and retain too much memory when running scraper' do
+      copy_test_scraper('hello_world_js')
+
+      # Limit the buffer size just for testing
+      report = MemoryProfiler.report do
+        with_smaller_chunk_size do
+          c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+          Morph::DockerRunner.attach_to_run_and_finish(c, []) {}
+        end
+      end
+
+      #report.pretty_print
+      expect(report.total_allocated_memsize).to be < 1_500_000
+      expect(report.total_retained_memsize < 15_000)
     end
 
     it "should attach the container to a special morph-only docker network" do

@@ -276,6 +276,7 @@ GEM
     lumberjack (1.0.10)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    memory_profiler (0.9.6)
     meta-tags (2.1.0)
       actionpack (>= 3.0.0)
     method_source (0.8.2)
@@ -561,6 +562,7 @@ DEPENDENCIES
   jquery-rails
   kaminari
   kaminari-bootstrap (~> 3.0.1)
+  memory_profiler
   meta-tags
   multiblock
   mysql2
