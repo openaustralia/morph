@@ -121,7 +121,7 @@ module Morph
       paths.each do |path|
         tmp = copy_file(container, path)
         if tmp
-          data[path] = File.open(tmp.path, 'rb', &:read)
+          data[path] = tmp.read
           tmp.close!
         else
           data[path] = nil
