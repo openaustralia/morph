@@ -155,6 +155,13 @@ module Morph
 
       # Grab the resulting files
       data = Morph::DockerUtils.copy_files(container, files + [time_file])
+      data.keys.each do |path|
+        tmp = data[path]
+        if tmp
+          data[path] = tmp.read
+          tmp.close!
+        end
+      end
 
       # Clean up after ourselves
       container.delete
