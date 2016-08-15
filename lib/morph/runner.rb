@@ -123,6 +123,7 @@ module Morph
       # Only copy back database if it's there and has something in it
       if result.files && result.files['data.sqlite']
         Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
+        result.files['data.sqlite'].close!
       end
 
       # Now collect and save the metrics
@@ -188,16 +189,12 @@ module Morph
     end
 
     def self.copy_sqlite_db_back(data_path, sqlite_file)
-      # TODO NO READING OF FILES INTO MEMORY
-      sqlite_data = sqlite_file.read
-      sqlite_file.close!
-
       # Only overwrite the sqlite database if the container has one
-      if sqlite_data
+      if sqlite_file
         # First write to a temporary file with the new sqlite data
-        File.open(File.join(data_path, 'data.sqlite.new'), 'wb') do |f|
-          f << sqlite_data
-        end
+        # Copying across just in case temp directory and data_path directory
+        # not on the same filesystem (which would stop atomic rename from working)
+        FileUtils.cp(sqlite_file.path, File.join(data_path, 'data.sqlite.new'))
         # Then, rename the file to the "live" file overwriting the old data
         # This should happen atomically
         File.rename(File.join(data_path, 'data.sqlite.new'),
