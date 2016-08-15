@@ -112,6 +112,25 @@ module Morph
     # exact timestamp, just ones after it.
     def self.attach_to_run_and_finish(container, files, since = nil,
                                       max_lines = nil)
+
+      result1 = attach_to_run_and_finish2(container, files, since, max_lines) do |timestamp, s, c|
+        yield timestamp, s, c
+      end
+
+      files = result1.files
+      files.keys.each do |path|
+        tmp = files[path]
+        if tmp
+          files[path] = tmp.read
+          tmp.close!
+        end
+      end
+
+      Morph::RunResult.new(result1.status_code, files, result1.time_params)
+    end
+
+    def self.attach_to_run_and_finish2(container, files, since = nil,
+                                       max_lines = nil)
       params = { stdout: true, stderr: true, follow: true, timestamps: true }
       params[:since] = since.to_f if since
       line_count = 0
@@ -155,20 +174,14 @@ module Morph
 
       # Grab the resulting files
       data = Morph::DockerUtils.copy_files(container, files + [time_file])
-      data.keys.each do |path|
-        tmp = data[path]
-        if tmp
-          data[path] = tmp.read
-          tmp.close!
-        end
-      end
 
       # Clean up after ourselves
       container.delete
 
-      time_data = data.delete(time_file)
-      if time_data
-        time_params = Morph::TimeCommand.params_from_string(time_data)
+      time_data_tmp = data.delete(time_file)
+      if time_data_tmp
+        time_params = Morph::TimeCommand.params_from_string(time_data_tmp.read)
+        time_data_tmp.close!
       end
 
       # Remove /app from the beginning of all paths in data
