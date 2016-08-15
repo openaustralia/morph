@@ -19,6 +19,7 @@ namespace :app do
       # for runs that are started from a scraper and those that are started from
       # morph-cli
 
+      puts "Getting information from sidekiq queue..."
       # First find all the runs that are currently in the queue somewhere
       queue = []
       # Runs on the retry queue
@@ -41,6 +42,7 @@ namespace :app do
       # puts 'Current runs ids on the queue:'
       # p queue
 
+      puts "Getting information about current containers..."
       # Find all containers that are associated with runs
       containers = Docker::Container.all(all: true).map do |container|
         run = Morph::Runner.run_for_container(container)
