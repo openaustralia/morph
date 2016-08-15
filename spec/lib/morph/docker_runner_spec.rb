@@ -68,7 +68,7 @@ describe Morph::DockerRunner do
       end
 
       #report.pretty_print
-      expect(report.total_allocated_memsize).to be < 1_500_000
+      expect(report.total_allocated_memsize).to be < 2_000_000
       expect(report.total_retained_memsize < 15_000)
     end
 
