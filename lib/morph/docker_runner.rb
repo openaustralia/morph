@@ -184,8 +184,6 @@ module Morph
       Morph::DockerUtils.pull_docker_image(BUILDSTEP_IMAGE)
     end
 
-    private
-
     def self.docker_build_command(image, commands, dir)
       # Leave the files in dir untouched
       Dir.mktmpdir('morph') do |dir2|
