@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   namespace "admin" do
     resource :site_settings, only: [] do
       post "toggle_read_only_mode"
+      post "update_maximum_concurrent_scrapers"
     end
   end
 

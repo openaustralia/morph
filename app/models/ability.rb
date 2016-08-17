@@ -51,6 +51,7 @@ class Ability
     can [:index, :watching], User
     can :stats, User
     can :toggle_read_only_mode, SiteSetting if user.admin?
+    can :update_sidekiq_maximum_concurrent_scrapers, SiteSetting if user.admin?
 
     can :create, Run unless SiteSetting.read_only_mode
     # Define abilities for the passed in user here. For example:

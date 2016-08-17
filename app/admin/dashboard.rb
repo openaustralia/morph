@@ -27,6 +27,17 @@ ActiveAdmin.register_page "Dashboard" do
           button_to "Go into site-wide read-only mode", toggle_read_only_mode_admin_site_settings_path
         end
       end
+      para do
+        form action: update_maximum_concurrent_scrapers_admin_site_settings_path, method: :post do
+          div do
+            label 'Maximum concurrent scrapers'
+            input name: 'maximum_concurrent_scrapers', value: SiteSetting.maximum_concurrent_scrapers
+          end
+          div class: "buttons" do
+            input type: 'submit', value: 'Update'
+          end
+        end
+      end
       span class: "blank_slate" do
         span I18n.t("active_admin.dashboard_welcome.welcome")
         small I18n.t("active_admin.dashboard_welcome.call_to_action")
