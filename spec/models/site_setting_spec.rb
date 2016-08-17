@@ -45,8 +45,10 @@ describe SiteSetting do
   describe ".update_sidekiq_maximum_concurrent_scrapers!" do
     it "should set the sidekiq value" do
       SiteSetting.maximum_concurrent_scrapers = 10
+
+      expect(Sidekiq::Queue['scraper']).to receive(:limit=).with(10)
       SiteSetting.update_sidekiq_maximum_concurrent_scrapers!
-      expect(Sidekiq::Queue['scraper'].limit).to eq 10
+      #expect(Sidekiq::Queue['scraper'].limit).to eq 10
     end
   end
 end
