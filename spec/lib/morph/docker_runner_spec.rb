@@ -68,7 +68,7 @@ describe Morph::DockerRunner do
       end
 
       #report.pretty_print
-      expect(report.total_allocated_memsize).to be < 1_500_000
+      expect(report.total_allocated_memsize).to be < 2_000_000
       expect(report.total_retained_memsize < 15_000)
     end
 
@@ -143,7 +143,9 @@ describe Morph::DockerRunner do
       result = Morph::DockerRunner.attach_to_run_and_finish(
         c, ['foo.txt', 'bar']) {}
       expect(result.status_code).to eq 0
-      expect(result.files).to eq('foo.txt' => 'Hello World!', 'bar' => nil)
+      expect(result.files.keys).to eq(['foo.txt', 'bar'])
+      expect(result.files['foo.txt'].read).to eq 'Hello World!'
+      expect(result.files['bar']).to eq nil
       expect(Morph::DockerUtils.stopped_containers.count)
         .to eq @container_count
     end
@@ -187,7 +189,7 @@ describe Morph::DockerRunner do
         c, ['ip_address']) {}
       expect(result.status_code).to eq 0
       # Check that ip address lies in the expected subnet
-      expect(ip_address).to eq result.files['ip_address']
+      expect(ip_address).to eq result.files['ip_address'].read
     end
 
     it 'should return a non-zero error code if the scraper fails' do

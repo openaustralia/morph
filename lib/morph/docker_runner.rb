@@ -111,7 +111,7 @@ module Morph
     # time is non-inclusive so we shouldn't return the log line with that
     # exact timestamp, just ones after it.
     def self.attach_to_run_and_finish(container, files, since = nil,
-                                      max_lines = nil)
+                                       max_lines = nil)
       params = { stdout: true, stderr: true, follow: true, timestamps: true }
       params[:since] = since.to_f if since
       line_count = 0
@@ -159,9 +159,10 @@ module Morph
       # Clean up after ourselves
       container.delete
 
-      time_data = data.delete(time_file)
-      if time_data
-        time_params = Morph::TimeCommand.params_from_string(time_data)
+      time_data_tmp = data.delete(time_file)
+      if time_data_tmp
+        time_params = Morph::TimeCommand.params_from_string(time_data_tmp.read)
+        time_data_tmp.close!
       end
 
       # Remove /app from the beginning of all paths in data

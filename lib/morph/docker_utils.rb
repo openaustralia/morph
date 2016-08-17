@@ -82,9 +82,9 @@ module Morph
       end
     end
 
-    # Copy a single file from a container. Returns a string with the contents
-    # of the file. Obviously need to provide a filesystem path within the
-    # container
+    # Copy a single file from a container. Returns a temp file with the contents
+    # of the file from the container. Obviously need to provide a filesystem
+    # path within the container
     def self.copy_file(container, path)
       # We're going to create a new connection to the same container
       # to avoid whatever connection settings are being used
@@ -109,15 +109,18 @@ module Morph
         tmp.unlink
 
         path2 = File.join(dest, Pathname.new(path).basename.to_s)
-        File.open(path2, 'rb', &:read)
+        tmp = Tempfile.new('morph-file')
+        FileUtils.cp(path2, tmp.path)
       end
+      tmp
     end
 
-    # Get a set of files from a container and return them as a hash
+    # Get a set of files from a container and return them as a hash of
+    # local temporary files
     def self.copy_files(container, paths)
       data = {}
       paths.each do |path|
-        data[path] = Morph::DockerUtils.copy_file(container, path)
+        data[path] = copy_file(container, path)
       end
       data
     end
