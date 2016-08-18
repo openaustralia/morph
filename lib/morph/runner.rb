@@ -14,6 +14,19 @@ module Morph
       10_000
     end
 
+    def self.total_slots
+      SiteSetting.maximum_concurrent_scrapers
+    end
+
+    # This includes stopped containers too
+    def self.used_slots
+      Morph::DockerUtils.find_all_containers_with_label(run_label_key).count
+    end
+
+    def self.available_slots
+      total_slots - used_slots
+    end
+
     # The main section of the scraper running that is run in the background
     def synch_and_go!
       # If this run belongs to a scraper that has just been deleted

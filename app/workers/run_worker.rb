@@ -1,4 +1,7 @@
 class RunWorker
+  class NoRemainingSlotsError < StandardError
+  end
+
   include Sidekiq::Worker
   # TODO: Make backtrace: true to be a default option for all workers
   sidekiq_options queue: :scraper, backtrace: true, unique: true
@@ -7,6 +10,13 @@ class RunWorker
     run = Run.find_by(id: run_id)
     # If the run has been deleted (the scraper has been deleted) then just
     # skip over this and don't do anything
-    Morph::Runner.new(run).synch_and_go! if run
+    if run
+      runner = Morph::Runner.new(run)
+      if Morph::Runner.available_slots > 0 || runner.container_for_run
+        runner.synch_and_go!
+      else
+        raise NoRemainingSlotsError
+      end
+    end
   end
 end
