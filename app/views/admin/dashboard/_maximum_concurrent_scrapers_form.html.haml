@@ -2,5 +2,11 @@
   %div
     = label_tag 'Maximum concurrent scrapers'
     = number_field_tag 'maximum_concurrent_scrapers', SiteSetting.maximum_concurrent_scrapers
+  %p
+    Each running scraper will use up to
+    = number_to_human_size Morph::DockerRunner.memory_limit
+    of memory. Ensure that the total can't use up the whole available memory
+    of the server.
+
   %div.buttons
     = submit_tag 'Update'
