@@ -95,4 +95,27 @@ describe Morph::DockerUtils do
       end
     end
   end
+
+  describe '.find_all_containers_with_label', docker: true do
+    before :each do
+      Morph::DockerUtils.find_all_containers_with_label('foobar').each do |c|
+        c.delete
+      end
+    end
+    after :each do
+      Morph::DockerUtils.find_all_containers_with_label('foobar').each do |c|
+        c.delete
+      end
+    end
+    it 'should find no containers with a particular label initially' do
+      expect(Morph::DockerUtils.find_all_containers_with_label('foobar').count).to eq 0
+    end
+
+    it 'should find two containers with the particular label when I create then' do
+      Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'foobar' => '1'})
+      Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'foobar' => '2'})
+      Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'bar' => '1'})
+      expect(Morph::DockerUtils.find_all_containers_with_label('foobar').count).to eq 2
+    end
+  end
 end

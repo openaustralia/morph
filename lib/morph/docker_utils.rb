@@ -70,6 +70,10 @@ module Morph
       end
     end
 
+    def self.find_all_containers_with_label(key)
+      Docker::Container.all(all:true, filters: {label: ["#{key}"]}.to_json)
+    end
+
     def self.copy_directory_contents(source, dest)
       FileUtils.cp_r File.join(source, '.'), dest
     end
