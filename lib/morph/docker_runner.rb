@@ -133,13 +133,14 @@ module Morph
         if since.nil? || timestamp > since
           if max_lines.nil? || line_count < max_lines
             yield timestamp, s, c
-          elsif line_count == max_lines
+          elsif line_count >= max_lines
             yield nil, :internalerr,
               "\n" \
               'Too many lines of output! ' \
               'Your scraper will continue uninterrupted. ' \
               'There will just be no further output displayed' \
               "\n"
+            break
           end
           line_count += 1
         end
