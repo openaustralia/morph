@@ -25,4 +25,29 @@ describe SiteSetting do
       expect(SiteSetting.read_only_mode).to eq false
     end
   end
+
+  describe ".maximum_concurrent_scrapers" do
+    it "should be 20 by default" do
+      expect(SiteSetting.maximum_concurrent_scrapers).to eq 20
+    end
+
+    it "should persist a setting" do
+      SiteSetting.maximum_concurrent_scrapers = 10
+      expect(SiteSetting.maximum_concurrent_scrapers).to eq 10
+    end
+
+    it "should update the sidekiq value at the same time" do
+      expect(SiteSetting).to receive(:update_sidekiq_maximum_concurrent_scrapers!)
+      SiteSetting.maximum_concurrent_scrapers = 10
+    end
+  end
+
+  describe ".update_sidekiq_maximum_concurrent_scrapers!" do
+    it "should set the sidekiq value" do
+      SiteSetting.maximum_concurrent_scrapers = 10
+
+      expect(Sidekiq::Queue['scraper']).to receive(:limit=).with(10)
+      SiteSetting.update_sidekiq_maximum_concurrent_scrapers!
+    end
+  end
 end

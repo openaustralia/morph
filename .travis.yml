@@ -19,6 +19,7 @@ before_script:
 
 services:
   - docker
+  - redis
 
 addons:
   apt:

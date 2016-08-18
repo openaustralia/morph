@@ -3,5 +3,5 @@
 :queues:
   - default
   - scraper
-:limits:
-    scraper: 20
+# Limit of number of concurrent scrapers can now be changed dynamically from
+# the admin console. So, no need to set it here
