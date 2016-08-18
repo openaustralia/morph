@@ -15,7 +15,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.maximum_concurrent_scrapers
-    read_setting('maximum_concurrent_scrapers')
+    read_setting('maximum_concurrent_scrapers').to_i
   end
 
   def self.maximum_concurrent_scrapers=(n)
