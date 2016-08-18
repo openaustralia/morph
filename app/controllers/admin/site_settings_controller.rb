@@ -1,10 +1,5 @@
 module Admin
   class SiteSettingsController < ApplicationController
-    # Having to hand craft the form for post to update_maximum_concurrent_scrapers
-    # so doesn't include the authenticity_token. Not a big deal because it's only
-    # accessible by admins anyway
-    skip_before_filter :verify_authenticity_token, only: [:update_maximum_concurrent_scrapers]
-
     def toggle_read_only_mode
       authorize! :toggle_read_only_mode, SiteSetting
       SiteSetting.toggle_read_only_mode!
