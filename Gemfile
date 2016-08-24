@@ -71,6 +71,8 @@ gem 'haml-coderay'
 gem 'd3-rails'
 gem "validate_url"
 gem 'ruby-progressbar'
+# turnout makes it easy to show a "down for maintenance" page. See https://github.com/biola/turnout
+gem 'turnout'
 
 group :production do
   gem "dalli"
