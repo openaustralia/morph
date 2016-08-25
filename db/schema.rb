@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160824191140) do
+ActiveRecord::Schema.define(version: 20160809020033) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -59,9 +59,16 @@ ActiveRecord::Schema.define(version: 20160824191140) do
   add_index "api_queries", ["scraper_id"], name: "index_api_queries_on_scraper_id", using: :btree
 
   create_table "connection_logs", force: :cascade do |t|
-    t.integer  "run_id",     limit: 4
-    t.integer  "domain_id",  limit: 4
+    t.integer  "run_id",        limit: 4
+    t.string   "method",        limit: 255
+    t.string   "scheme",        limit: 255
+    t.text     "path",          limit: 65535
+    t.integer  "request_size",  limit: 4
+    t.integer  "response_size", limit: 4
     t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "domain_id",     limit: 4
+    t.integer  "response_code", limit: 4
   end
 
   add_index "connection_logs", ["created_at"], name: "index_connection_logs_on_created_at", using: :btree
