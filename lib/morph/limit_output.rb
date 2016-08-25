@@ -36,8 +36,8 @@ Open3.popen3(command) do |_stdin, stdout, stderr, wait_thr|
       end
 
       # Just send this stuff straight through
-      STDOUT << io.readpartial(1024) if io.fileno == stdout.fileno
-      STDERR << io.readpartial(1024) if io.fileno == stderr.fileno
+      stream = io.fileno == stdout.fileno ? STDOUT : STDERR
+      stream << io.readpartial(1024)
     end
   end
 
