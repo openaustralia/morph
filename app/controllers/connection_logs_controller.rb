@@ -13,13 +13,7 @@ class ConnectionLogsController < ApplicationController
       end
       ConnectionLog.create!(
         ip_address: params[:ip_address],
-        method: params[:method],
-        scheme: params[:scheme],
-        domain_id: domain.id,
-        path: params[:path],
-        request_size: params[:request_size],
-        response_size: params[:response_size],
-        response_code: params[:response_code]
+        domain_id: domain.id
       )
 
       render text: "Created"
