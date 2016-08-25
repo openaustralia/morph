@@ -26,6 +26,9 @@ end.parse!
 STDOUT.sync = true
 STDERR.sync = true
 
+stdout_buffer = ''
+stderr_buffer = ''
+
 Open3.popen3(command) do |_stdin, stdout, stderr, wait_thr|
   streams = [stdout, stderr]
   until streams.empty?
@@ -35,11 +38,26 @@ Open3.popen3(command) do |_stdin, stdout, stderr, wait_thr|
         next
       end
 
+      on_stdout_stream = io.fileno == stdout.fileno
       # Just send this stuff straight through
-      stream = io.fileno == stdout.fileno ? STDOUT : STDERR
-      stream << io.readpartial(1024)
+      buffer = on_stdout_stream ? stdout_buffer : stderr_buffer
+      s = io.readpartial(1)
+      buffer << s
+      if s == "\n"
+        if on_stdout_stream
+          STDOUT << buffer
+          stdout_buffer = ''
+        else
+          STDERR << buffer
+          stderr_buffer = ''
+        end
+      end
     end
   end
+
+  # Output whatever is left in the buffers
+  STDOUT << stdout_buffer
+  STDERR << stderr_buffer
 
   exit_status = wait_thr.value.exitstatus
 end
