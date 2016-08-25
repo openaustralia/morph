@@ -22,6 +22,10 @@ OptionParser.new do |opts|
   end
 end.parse!
 
+# Disable output buffering
+STDOUT.sync = true
+STDERR.sync = true
+
 Open3.popen3(command) do |_stdin, stdout, stderr, wait_thr|
   streams = [stdout, stderr]
   until streams.empty?
