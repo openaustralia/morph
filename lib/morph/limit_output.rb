@@ -70,9 +70,11 @@ Open3.popen3(command) do |_stdin, stdout, stderr, wait_thr|
   end
 
   # Output whatever is left in the buffers
-  STDOUT << stdout_buffer
-  STDERR << stderr_buffer
-
+  if line_count < max_lines || max_lines.zero?
+    STDOUT << stdout_buffer
+    STDERR << stderr_buffer
+  end
+  
   exit_status = wait_thr.value.exitstatus
 end
 
