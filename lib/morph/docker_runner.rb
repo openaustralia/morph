@@ -70,7 +70,7 @@ module Morph
         }
       ) unless exists
 
-      command = Morph::TimeCommand.command(['/start', 'scraper'], time_file)
+      command = Morph::TimeCommand.command(['/usr/local/bin/limit_output.rb', '/start scraper'], time_file)
 
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
@@ -100,7 +100,10 @@ module Morph
       Dir.mktmpdir('morph') do |dest|
         copy_config_to_directory(repo_path, dest, false)
         yield(:internalout, "Injecting scraper and running...\n")
+        # TODO: Combine two operations below into one
         Morph::DockerUtils.insert_contents_of_directory(c, dest, '/app')
+        Morph::DockerUtils.insert_file(c, 'lib/morph/limit_output.rb',
+                                       '/usr/local/bin')
       end
 
       c.start

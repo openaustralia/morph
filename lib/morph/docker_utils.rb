@@ -182,6 +182,16 @@ module Morph
       File.delete(tar_file)
     end
 
+    # Inserts a single file into a container.
+    # Not using archive_in because that doesn't maintain file permissions
+    def self.insert_file(container, src, dest)
+      # This is very roundabout
+      Dir.mktmpdir('morph') do |tmp_dir|
+        FileUtils.cp(src, tmp_dir)
+        insert_contents_of_directory(container, tmp_dir, dest)
+      end
+    end
+
     # TODO: There's probably a more sensible way of doing this
     def self.image_built_on_other_image?(image, image_base)
       index = image.history.find_index { |l| l['Id'] == image_base.id }
