@@ -70,7 +70,10 @@ module Morph
         }
       ) unless exists
 
-      command = Morph::TimeCommand.command(['/usr/local/bin/limit_output.rb', '/start scraper'], time_file)
+      command = Morph::TimeCommand.command(
+        ['/usr/local/bin/limit_output.rb', '0', '/start scraper'],
+        time_file
+      )
 
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time

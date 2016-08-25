@@ -8,13 +8,21 @@
 require 'optparse'
 require 'open3'
 
+max_lines = nil
 command = nil
 exit_status = nil
 
 OptionParser.new do |opts|
-  opts.banner = 'Usage: ./limit_output.rb [command to run]'
+  opts.banner = 'Usage: ./limit_output.rb [max lines] [command to run]'
 
-  command = ARGV[0]
+  max_lines = ARGV[0].to_i
+  if ARGV[0].nil?
+    STDERR.puts 'Please give me the maximum number of lines of output to show'
+    puts opts
+    exit
+  end
+
+  command = ARGV[1]
   if command.nil?
     STDERR.puts 'Please give me a command to run'
     puts opts
@@ -28,6 +36,8 @@ STDERR.sync = true
 
 stdout_buffer = ''
 stderr_buffer = ''
+
+line_count = 0
 
 Open3.popen3(command) do |_stdin, stdout, stderr, wait_thr|
   streams = [stdout, stderr]
@@ -44,13 +54,17 @@ Open3.popen3(command) do |_stdin, stdout, stderr, wait_thr|
       s = io.readpartial(1)
       buffer << s
       if s == "\n"
+        if line_count < max_lines || max_lines.zero?
+          (on_stdout_stream ? STDOUT : STDERR) << buffer
+        elsif line_count == max_lines
+          STDERR.puts 'limit_output.rb: Too many lines of output!'
+        end
         if on_stdout_stream
-          STDOUT << buffer
           stdout_buffer = ''
         else
-          STDERR << buffer
           stderr_buffer = ''
         end
+        line_count += 1
       end
     end
   end
