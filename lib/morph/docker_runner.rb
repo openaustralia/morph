@@ -150,8 +150,6 @@ module Morph
 
       # TODO: Don't call container.json multiple times
       status_code = container.json['State']['ExitCode']
-      # Wait until container has definitely stopped
-      container.wait
 
       # Make the paths absolute paths for the container
       files = files.map { |f| File.join('/app', f) }
