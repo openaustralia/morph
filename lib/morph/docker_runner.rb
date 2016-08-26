@@ -165,9 +165,6 @@ module Morph
       # Grab the resulting files
       data = Morph::DockerUtils.copy_files(container, files + [time_file])
 
-      # Clean up after ourselves
-      container.delete
-
       time_data_tmp = data.delete(time_file)
       if time_data_tmp
         time_params = Morph::TimeCommand.params_from_string(time_data_tmp.read)
@@ -181,6 +178,10 @@ module Morph
           Pathname.new(path).relative_path_from(Pathname.new('/app')).to_s
         data_with_stripped_paths[stripped_path] = content
       end
+
+      # Clean up the container at the last possible moment. This is the
+      # signal that we have everything we need
+      container.delete
 
       Morph::RunResult.new(status_code, data_with_stripped_paths, time_params)
     end
