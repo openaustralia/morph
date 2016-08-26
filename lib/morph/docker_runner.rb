@@ -159,7 +159,7 @@ module Morph
     # This should only get called on a stopped container where all the logs
     # have been collected
     def self.finish(container, files)
-      # TODO Check that container has actually stopped. If not raise an error
+      # TODO: Check that container has actually stopped. If not raise an error
 
       # TODO: Don't call container.json multiple times
       status_code = container.json['State']['ExitCode']
