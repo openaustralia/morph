@@ -453,9 +453,6 @@ GEM
       sinatra (>= 1.4.7)
     sidekiq-limit_fetch (3.3.0)
       sidekiq (>= 4)
-    sidekiq-unique-jobs (4.0.17)
-      sidekiq (>= 2.6)
-      thor
     simple_form (3.2.1)
       actionpack (> 4, < 5.1)
       activemodel (> 4, < 5.1)
@@ -590,7 +587,6 @@ DEPENDENCIES
   searchkick
   sidekiq
   sidekiq-limit_fetch
-  sidekiq-unique-jobs
   simple_form
   simplecov
   sinatra (>= 1.3.0)
