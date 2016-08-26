@@ -113,10 +113,17 @@ module Morph
       [c, i3]
     end
 
+    def self.attach_to_run_and_finish(container, files, since = nil)
+      attach_to_run(container, since) do |timestamp, s, c|
+        yield timestamp, s, c
+      end
+      finish(container, files)
+    end
+
     # If since is non-nil only return log lines since the time given. This
     # time is non-inclusive so we shouldn't return the log line with that
     # exact timestamp, just ones after it.
-    def self.attach_to_run_and_finish(container, files, since = nil)
+    def self.attach_to_run(container, since = nil)
       params = { stdout: true, stderr: true, follow: true, timestamps: true }
       params[:since] = since.to_f if since
       container.streaming_logs(params) do |s, line|
@@ -147,8 +154,6 @@ module Morph
           end
         end
       end
-
-      finish(container, files)
     end
 
     # This should only get called on a stopped container where all the logs
