@@ -35,10 +35,10 @@ module Morph
       return if run.scraper.nil? || run.finished?
 
       run.scraper.synchronise_repo
-      go_with_logging(Runner.default_max_lines)
+      go_with_logging
     end
 
-    def go_with_logging(max_lines = nil)
+    def go_with_logging(max_lines = Runner.default_max_lines)
       go(max_lines) do |timestamp, s, c|
         log(timestamp, s, c)
         yield timestamp, s, c if block_given?
@@ -53,11 +53,11 @@ module Morph
       sync_new line, scope: run unless Rails.env.test?
     end
 
-    def go(max_lines = nil)
+    def go(max_lines = Runner.default_max_lines)
       # If container already exists we just attach to it
       c = container_for_run
       if c.nil?
-        c = compile_and_start_run do |s, c|
+        c = compile_and_start_run(max_lines) do |s, c|
           # TODO: Could we get sensible timestamps out at this stage too?
           yield nil, s, c
         end
@@ -72,15 +72,13 @@ module Morph
         # to compensate for this and ensure that the "since" time occurs
         # slightly after the true time.
         since += 1e-6 if since
-        # Deal with situation of since set in calculation of max_lines
-        max_lines -= run.log_lines.where(stream: [:stdout, :stderr]).count if max_lines
       end
-      attach_to_run_and_finish(c, since, max_lines) do |timestamp, s, c|
+      attach_to_run_and_finish(c, since) do |timestamp, s, c|
         yield timestamp, s, c
       end
     end
 
-    def compile_and_start_run
+    def compile_and_start_run(max_lines = Runner.default_max_lines)
       # puts "Starting...\n"
       run.database.backup
       run.update_attributes(started_at: Time.now,
@@ -106,7 +104,7 @@ module Morph
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
 
         Morph::DockerRunner.compile_and_start_run(
-          defaults, run.env_variables, docker_container_labels
+          defaults, run.env_variables, docker_container_labels, max_lines
         ) do |s, c|
           yield(s, c)
         end
@@ -121,13 +119,13 @@ module Morph
       c
     end
 
-    def attach_to_run_and_finish(c, since, max_lines = nil)
+    def attach_to_run_and_finish(c, since)
       if c.nil?
         # TODO: Return the status for a compile error
         result = Morph::RunResult.new(255, {}, {})
       else
         result = Morph::DockerRunner.attach_to_run_and_finish(
-          c, ['data.sqlite'], since, max_lines
+          c, ['data.sqlite'], since
         ) do |timestamp, s, c|
           yield(timestamp, s, c)
         end

@@ -32,7 +32,7 @@ module Morph
     end
 
     def self.compile_and_start_run(
-      repo_path, env_variables, container_labels
+      repo_path, env_variables, container_labels, max_lines = 0
     )
       i = buildstep_image do |c|
         yield(:internalout, c)
@@ -70,7 +70,10 @@ module Morph
         }
       ) unless exists
 
-      command = Morph::TimeCommand.command(['/start', 'scraper'], time_file)
+      command = Morph::TimeCommand.command(
+        ['/usr/local/bin/limit_output.rb', max_lines.to_s, '/start scraper'],
+        time_file
+      )
 
       # TODO: Also copy back time output file and the sqlite journal file
       # The sqlite journal file won't be present most of the time
@@ -100,7 +103,10 @@ module Morph
       Dir.mktmpdir('morph') do |dest|
         copy_config_to_directory(repo_path, dest, false)
         yield(:internalout, "Injecting scraper and running...\n")
+        # TODO: Combine two operations below into one
         Morph::DockerUtils.insert_contents_of_directory(c, dest, '/app')
+        Morph::DockerUtils.insert_file(c, 'lib/morph/limit_output.rb',
+                                       '/usr/local/bin')
       end
 
       c.start
@@ -110,11 +116,9 @@ module Morph
     # If since is non-nil only return log lines since the time given. This
     # time is non-inclusive so we shouldn't return the log line with that
     # exact timestamp, just ones after it.
-    def self.attach_to_run_and_finish(container, files, since = nil,
-                                       max_lines = nil)
+    def self.attach_to_run_and_finish(container, files, since = nil)
       params = { stdout: true, stderr: true, follow: true, timestamps: true }
       params[:since] = since.to_f if since
-      line_count = 0
       container.streaming_logs(params) do |s, line|
         timestamp = Time.parse(line[0..29])
         # To convert this ruby time back to the same string format as it
@@ -131,18 +135,16 @@ module Morph
         # There is a chance that we catch a log line that shouldn't
         # be included. So...
         if since.nil? || timestamp > since
-          if max_lines.nil? || line_count < max_lines
-            yield timestamp, s, c
-          elsif line_count >= max_lines
-            yield nil, :internalerr,
+          if s == :stderr && c == "limit_output.rb: Too many lines of output!\n"
+            yield timestamp, :internalerr,
               "\n" \
               'Too many lines of output! ' \
               'Your scraper will continue uninterrupted. ' \
               'There will just be no further output displayed' \
               "\n"
-            break
+          else
+            yield timestamp, s, c
           end
-          line_count += 1
         end
       end
 

@@ -250,9 +250,9 @@ describe Morph::DockerRunner do
     it 'should be able to limit the amount of log output' do
       copy_test_scraper('stream_output_ruby')
 
-      c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}, 5) {}
       logs = []
-      Morph::DockerRunner.attach_to_run_and_finish(c, [], nil, 5) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run_and_finish(c, [], nil) do |timestamp, s, c|
         logs << [s, c]
       end
       expect(logs).to eq [
