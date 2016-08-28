@@ -51,24 +51,7 @@ module Morph
 
       # Before we create a container we need to make sure that there is a
       # special network there for it to be put into
-      begin
-        Docker::Network.get(DOCKER_NETWORK)
-        exists = true
-      rescue Docker::Error::NotFoundError
-        exists = false
-      end
-      Docker::Network.create(
-        DOCKER_NETWORK,
-        'Options' => {
-          'com.docker.network.bridge.name' => DOCKER_BRIDGE,
-          'com.docker.network.bridge.enable_icc' => 'false'
-        },
-        'IPAM' => {
-          'Config' => [{
-            'Subnet' => DOCKER_NETWORK_SUBNET
-          }]
-        }
-      ) unless exists
+      create_morph_network
 
       command = Morph::TimeCommand.command(
         ['/usr/local/bin/limit_output.rb', max_lines.to_s, '/start scraper'],
@@ -111,6 +94,27 @@ module Morph
 
       c.start
       [c, i3]
+    end
+
+    def self.create_morph_network
+      begin
+        Docker::Network.get(DOCKER_NETWORK)
+        exists = true
+      rescue Docker::Error::NotFoundError
+        exists = false
+      end
+      Docker::Network.create(
+        DOCKER_NETWORK,
+        'Options' => {
+          'com.docker.network.bridge.name' => DOCKER_BRIDGE,
+          'com.docker.network.bridge.enable_icc' => 'false'
+        },
+        'IPAM' => {
+          'Config' => [{
+            'Subnet' => DOCKER_NETWORK_SUBNET
+          }]
+        }
+      ) unless exists
     end
 
     # If since is non-nil only return log lines since the time given. This
