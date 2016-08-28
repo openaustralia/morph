@@ -47,7 +47,7 @@ module Morph
         yield(:internalout, c)
       end
       # If something went wrong during the compile and it couldn't finish
-      return [nil, nil] if i3.nil?
+      return nil if i3.nil?
 
       # Before we create a container we need to make sure that there is a
       # special network there for it to be put into
@@ -93,7 +93,7 @@ module Morph
       end
 
       c.start
-      [c, i3]
+      c
     end
 
     def self.create_morph_network

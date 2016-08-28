@@ -98,7 +98,7 @@ module Morph
         return
       end
 
-      c, image = Dir.mktmpdir('morph') do |defaults|
+      c = Dir.mktmpdir('morph') do |defaults|
         Morph::Runner.add_config_defaults_to_directory(run.repo_path, defaults)
         Morph::Runner.remove_hidden_directories(defaults)
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
@@ -112,9 +112,12 @@ module Morph
 
       # Record ip address of running container
       ip_address = Morph::DockerUtils.ip_address_of_container(c) if c
-      # The image id here is a short one. Not sure why.
-      # TODO: Investigate
-      docker_image = image.id if image
+
+      # Getting the image that this container was built from
+      # Doing it in this way so that it is backwards compatible with
+      # a short version of the id without "sha256:" at the beginning
+      docker_image = c.json["Image"].split(":")[1][0..11]
+
       run.update_attributes(ip_address: ip_address, docker_image: docker_image)
       c
     end
