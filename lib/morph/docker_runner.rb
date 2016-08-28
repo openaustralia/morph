@@ -113,13 +113,6 @@ module Morph
       [c, i3]
     end
 
-    def self.attach_to_run_and_finish(container, files, since = nil)
-      attach_to_run(container, since) do |timestamp, s, c|
-        yield timestamp, s, c
-      end
-      finish(container, files)
-    end
-
     # If since is non-nil only return log lines since the time given. This
     # time is non-inclusive so we shouldn't return the log line with that
     # exact timestamp, just ones after it.

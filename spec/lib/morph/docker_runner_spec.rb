@@ -41,9 +41,10 @@ describe Morph::DockerRunner do
 
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
       logs = []
-      result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [s, c]
       end
+      result = Morph::DockerRunner.finish(c, [])
       expect(result.status_code).to eq 0
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
@@ -63,7 +64,8 @@ describe Morph::DockerRunner do
       report = MemoryProfiler.report do
         with_smaller_chunk_size do
           c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
-          Morph::DockerRunner.attach_to_run_and_finish(c, []) {}
+          Morph::DockerRunner.attach_to_run(c) {}
+          Morph::DockerRunner.finish(c, [])
         end
       end
 
@@ -91,9 +93,10 @@ describe Morph::DockerRunner do
 
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
       logs = []
-      result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [s, c]
       end
+      result = Morph::DockerRunner.finish(c, [])
       expect(result.status_code).to eq 0
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
@@ -104,7 +107,7 @@ describe Morph::DockerRunner do
       # Do the compile once to make sure the cache is primed
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
       logs = []
-      # Clean up container because we're not calling attach_to_run_and_finish
+      # Clean up container because we're not calling finish
       # which normally does the cleanup
       c.kill
       c.delete
@@ -125,9 +128,10 @@ describe Morph::DockerRunner do
 
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
       logs = []
-      result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [s, c]
       end
+      result = Morph::DockerRunner.finish(c, [])
       expect(result.status_code).to eq 0
       expect(logs).to eq [
         [:stdout,      "Hello world!\n"]
@@ -140,8 +144,8 @@ describe Morph::DockerRunner do
       copy_test_scraper('write_to_file_ruby')
 
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
-      result = Morph::DockerRunner.attach_to_run_and_finish(
-        c, ['foo.txt', 'bar']) {}
+      Morph::DockerRunner.attach_to_run(c) {}
+      result = Morph::DockerRunner.finish(c, ['foo.txt', 'bar'])
       expect(result.status_code).to eq 0
       expect(result.files.keys).to eq(['foo.txt', 'bar'])
       expect(result.files['foo.txt'].read).to eq 'Hello World!'
@@ -156,9 +160,10 @@ describe Morph::DockerRunner do
       logs = []
       c, _i3 = Morph::DockerRunner.compile_and_start_run(
         @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}) {}
-      result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [s, c]
       end
+      result = Morph::DockerRunner.finish(c, [])
       expect(result.status_code).to eq 0
       # These logs will actually be different if the compile isn't cached
       expect(logs).to eq [
@@ -172,9 +177,10 @@ describe Morph::DockerRunner do
       c, _i3 = Morph::DockerRunner.compile_and_start_run(
         @dir, {}, {}) {}
       logs = []
-      result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [s, c]
       end
+      result = Morph::DockerRunner.finish(c, [])
       expect(result.status_code).to eq 0
       expect(logs).to eq [[:stdout, "/etc/ssl/certs/ca-certificates.crt\n"]]
     end
@@ -185,8 +191,8 @@ describe Morph::DockerRunner do
       ip_address = nil
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
       ip_address = Morph::DockerUtils.ip_address_of_container(c)
-      result = Morph::DockerRunner.attach_to_run_and_finish(
-        c, ['ip_address']) {}
+      Morph::DockerRunner.attach_to_run(c) {}
+      result = Morph::DockerRunner.finish(c, ['ip_address'])
       expect(result.status_code).to eq 0
       # Check that ip address lies in the expected subnet
       expect(ip_address).to eq result.files['ip_address'].read
@@ -197,9 +203,10 @@ describe Morph::DockerRunner do
 
       logs = []
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
-      result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [s, c]
       end
+      result = Morph::DockerRunner.finish(c, [])
       expect(result.status_code).to eq 1
       expect(logs).to eq [
         [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
@@ -216,9 +223,10 @@ describe Morph::DockerRunner do
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |s, c|
         logs << [Time.now, c]
       end
-      result = Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [Time.now, c]
       end
+      result = Morph::DockerRunner.finish(c, [])
       start_time = logs.find{|l| l[1] == "Started!\n"}[0]
       end_time = logs.find{|l| l[1] == "Finished!\n"}[0]
       expect(end_time - start_time).to be_within(0.1).of(1.0)
@@ -232,7 +240,7 @@ describe Morph::DockerRunner do
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
       # Simulate the log process stopping
       last_timestamp = nil
-      expect {Morph::DockerRunner.attach_to_run_and_finish(c, []) do |timestamp, s, c|
+      expect {Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         last_timestamp = timestamp
         logs << c
         if c == "2...\n"
@@ -241,9 +249,10 @@ describe Morph::DockerRunner do
       end}.to raise_error Sidekiq::Shutdown
       expect(logs).to eq ["Started!\n", "1...\n", "2...\n"]
       # Now restart the log process using the timestamp of the last log entry
-      Morph::DockerRunner.attach_to_run_and_finish(c, [], last_timestamp) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run(c, last_timestamp) do |timestamp, s, c|
         logs << c
       end
+      Morph::DockerRunner.finish(c, [])
       expect(logs).to eq ["Started!\n", "1...\n", "2...\n", "3...\n", "4...\n", "5...\n", "6...\n", "7...\n", "8...\n", "9...\n", "10...\n", "Finished!\n"]
     end
 
@@ -252,9 +261,10 @@ describe Morph::DockerRunner do
 
       c, _i3 = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}, 5) {}
       logs = []
-      Morph::DockerRunner.attach_to_run_and_finish(c, [], nil) do |timestamp, s, c|
+      Morph::DockerRunner.attach_to_run(c, nil) do |timestamp, s, c|
         logs << [s, c]
       end
+      Morph::DockerRunner.finish(c, [])
       expect(logs).to eq [
         [:stdout, "Started!\n"],
         [:stdout, "1...\n"],

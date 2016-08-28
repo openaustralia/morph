@@ -124,11 +124,10 @@ module Morph
         # TODO: Return the status for a compile error
         result = Morph::RunResult.new(255, {}, {})
       else
-        result = Morph::DockerRunner.attach_to_run_and_finish(
-          c, ['data.sqlite'], since
-        ) do |timestamp, s, c|
+        Morph::DockerRunner.attach_to_run(c, since) do |timestamp, s, c|
           yield(timestamp, s, c)
         end
+        result = Morph::DockerRunner.finish(c, ['data.sqlite'])
       end
 
       # Only copy back database if it's there and has something in it
