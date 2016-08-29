@@ -224,14 +224,12 @@ module Morph
 
     def self.compile2(i, repo_path)
       # Insert the configuration part of the application code into the container
-      i2 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(repo_path, dest, true)
-        Dir.mktmpdir('morph') do |dir|
-          Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
-          docker_build_command(i, ['ADD app /app'], dir) do
-            # Note that we're not sending the output of this to the console
-            # because it is relatively short running and is otherwise confusing
-          end
+      i2 = Dir.mktmpdir('morph') do |dir|
+        FileUtils.mkdir(File.join(dir, 'app'))
+        copy_config_to_directory(repo_path, File.join(dir, 'app'), true)
+        docker_build_command(i, ['ADD app /app'], dir) do
+          # Note that we're not sending the output of this to the console
+          # because it is relatively short running and is otherwise confusing
         end
       end
       compile(i2) do |c|
