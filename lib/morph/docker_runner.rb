@@ -38,7 +38,7 @@ module Morph
         yield(:internalout, c)
       end
       yield(:internalout, "Injecting configuration and compiling...\n")
-      i3 = compile2(i, repo_path) do |c|
+      i3 = compile(i, repo_path) do |c|
         yield(:internalout, c)
       end
       # If something went wrong during the compile and it couldn't finish
@@ -240,7 +240,7 @@ module Morph
 
     # And build
     # TODO: Set memory and cpu limits during compile
-    def self.compile2(i, repo_path)
+    def self.compile(i, repo_path)
       Dir.mktmpdir('morph') do |dir|
         FileUtils.mkdir(File.join(dir, 'app'))
         copy_config_to_directory(repo_path, File.join(dir, 'app'), true)
