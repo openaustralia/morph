@@ -222,6 +222,8 @@ module Morph
       "from #{image.id}\n" + commands.map { |c| c + "\n" }.join
     end
 
+    # And build
+    # TODO: Set memory and cpu limits during compile
     def self.compile2(i, repo_path)
       # Insert the configuration part of the application code into the container
       i2 = Dir.mktmpdir('morph') do |dir|
@@ -232,17 +234,9 @@ module Morph
           # because it is relatively short running and is otherwise confusing
         end
       end
-      compile(i2) do |c|
-        yield c
-      end
-    end
-
-    # And build
-    # TODO: Set memory and cpu limits during compile
-    def self.compile(image)
       Dir.mktmpdir('morph') do |dir|
         docker_build_command(
-          image,
+          i2,
           [
             # TODO: Setting the timeout higher here won't be necessary once we
             # upgrade to a more recent version of herokuish that contains
