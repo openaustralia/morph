@@ -31,17 +31,6 @@ module Morph
       Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE)
     end
 
-    def self.compile2(i, repo_path)
-      # Insert the configuration part of the application code into the container
-      i2 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(repo_path, dest, true)
-        inject_files(i, dest)
-      end
-      compile(i2) do |c|
-        yield c
-      end
-    end
-
     def self.compile_and_start_run(
       repo_path, env_variables, container_labels, max_lines = 0
     )
@@ -233,15 +222,20 @@ module Morph
       "from #{image.id}\n" + commands.map { |c| c + "\n" }.join
     end
 
-    # Inject all files in the given directory into the /app directory in the
-    # image and return a new image
-    def self.inject_files(image, dest)
-      Dir.mktmpdir('morph') do |dir|
-        Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
-        docker_build_command(image, ['ADD app /app'], dir) do
-          # Note that we're not sending the output of this to the console
-          # because it is relatively short running and is otherwise confusing
+    def self.compile2(i, repo_path)
+      # Insert the configuration part of the application code into the container
+      i2 = Dir.mktmpdir('morph') do |dest|
+        copy_config_to_directory(repo_path, dest, true)
+        Dir.mktmpdir('morph') do |dir|
+          Morph::DockerUtils.copy_directory_contents(dest, File.join(dir, 'app'))
+          docker_build_command(i, ['ADD app /app'], dir) do
+            # Note that we're not sending the output of this to the console
+            # because it is relatively short running and is otherwise confusing
+          end
         end
+      end
+      compile(i2) do |c|
+        yield c
       end
     end
 
