@@ -31,19 +31,25 @@ module Morph
       Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE)
     end
 
+    def self.compile2(i, repo_path)
+      # Insert the configuration part of the application code into the container
+      i2 = Dir.mktmpdir('morph') do |dest|
+        copy_config_to_directory(repo_path, dest, true)
+        inject_files(i, dest)
+      end
+      compile(i2) do |c|
+        yield c
+      end
+    end
+
     def self.compile_and_start_run(
       repo_path, env_variables, container_labels, max_lines = 0
     )
       i = buildstep_image do |c|
         yield(:internalout, c)
       end
-      # Insert the configuration part of the application code into the container
-      i2 = Dir.mktmpdir('morph') do |dest|
-        copy_config_to_directory(repo_path, dest, true)
-        yield(:internalout, "Injecting configuration and compiling...\n")
-        inject_files(i, dest)
-      end
-      i3 = compile(i2) do |c|
+      yield(:internalout, "Injecting configuration and compiling...\n")
+      i3 = compile2(i, repo_path) do |c|
         yield(:internalout, c)
       end
       # If something went wrong during the compile and it couldn't finish
