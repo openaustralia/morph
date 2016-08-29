@@ -209,11 +209,27 @@ module Morph
         end
 
         Morph::DockerUtils.fix_modification_times(dir2)
-        Morph::DockerUtils.docker_build_from_dir(
+        image_out = Morph::DockerUtils.docker_build_from_dir(
           dir2, read_timeout: 5.minutes
         ) do |c|
-          yield c
+          # We don't want to show the standard docker build output
+          unless c =~ /^Step \d+ :/ || c =~ /^ ---> / ||
+                 c =~ /^Removing intermediate container / ||
+                 c =~ /^Successfully built /
+            yield c
+          end
         end
+        # For some reason when a build fails it's possible that it just
+        # returns the original image. I have no idea why this is happening
+        # This is a workaround to check for that situation
+        # TODO Fix this
+        if image.id[0..6] == "sha256:"
+          id = image.id.split(':')[1]
+        else
+          id = image
+        end
+        image_out = nil if id[0..11] == image_out.id[0..11]
+        image_out
       end
     end
 
@@ -225,19 +241,14 @@ module Morph
     # And build
     # TODO: Set memory and cpu limits during compile
     def self.compile2(i, repo_path)
-      # Insert the configuration part of the application code into the container
-      i2 = Dir.mktmpdir('morph') do |dir|
+      Dir.mktmpdir('morph') do |dir|
         FileUtils.mkdir(File.join(dir, 'app'))
         copy_config_to_directory(repo_path, File.join(dir, 'app'), true)
-        docker_build_command(i, ['ADD app /app'], dir) do
-          # Note that we're not sending the output of this to the console
-          # because it is relatively short running and is otherwise confusing
-        end
-      end
-      Dir.mktmpdir('morph') do |dir|
         docker_build_command(
-          i2,
+          i,
           [
+            # Insert the configuration part of the application code into the container
+            'ADD app /app',
             # TODO: Setting the timeout higher here won't be necessary once we
             # upgrade to a more recent version of herokuish that contains
             # the commit
@@ -252,14 +263,7 @@ module Morph
             'RUN /build/builder'
           ],
           dir
-        ) do |c|
-          # We don't want to show the standard docker build output
-          unless c =~ /^Step \d+ :/ || c =~ /^ ---> / ||
-                 c =~ /^Removing intermediate container / ||
-                 c =~ /^Successfully built /
-            yield c
-          end
-        end
+        ) { |c| yield c }
       end
     end
   end
