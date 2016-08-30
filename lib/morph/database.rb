@@ -49,7 +49,7 @@ module Morph
       # each table to really test things
       table_names.each { |table| first_ten_rows(table) }
       true
-    rescue SQLite3::NotADatabaseException
+    rescue SQLite3::NotADatabaseException, SQLite3::CorruptException
       false
     end
 
