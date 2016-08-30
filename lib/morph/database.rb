@@ -44,8 +44,10 @@ module Morph
     end
 
     def valid?
-      # Do any old query
-      table_names
+      # It's possible for a database to be malformed but just getting the table
+      # names will work without error. So, getting a little sample data from
+      # each table to really test things
+      table_names.each { |table| first_ten_rows(table) }
       true
     rescue SQLite3::NotADatabaseException
       false
