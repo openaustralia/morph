@@ -18,9 +18,8 @@ describe Morph::Runner do
     end
 
     it "should truncate a very long entry" do
-      runner.log(Time.now, :stdout, "a" * 65540)
-      #expect(run.log_lines.first.text.length).to eq 65535
-      expect(run.log_lines.first.text.length).to eq 32_768
+      runner.log(Time.now, :stdout, "☃" * 65540)
+      expect(run.log_lines.first.text.bytesize).to eq 65535
     end
   end
 
