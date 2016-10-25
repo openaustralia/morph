@@ -3,11 +3,13 @@ class ScraperAutoRunWorker
   sidekiq_options backtrace: true
 
   def perform(scraper_id)
-    scraper = Scraper.find(scraper_id)
+    # Scraper might have been deleted after this job was created. So, check
+    # for this
+    scraper = Scraper.find_by(id: scraper_id)
     # Guard against more than one of a particular scraper running at the same time
     # And also double check that the scraper should be run automatically (in case it
     # has changed since it was queued)
-    if scraper.runnable? && scraper.auto_run?
+    if scraper && scraper.runnable? && scraper.auto_run?
       if scraper.owner.ability.can? :create, Run
         run = scraper.runs.create(queued_at: Time.now, auto: true, owner_id: scraper.owner_id)
         # Throw the actual run onto the background so it can be safely restarted
