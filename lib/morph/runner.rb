@@ -49,7 +49,9 @@ module Morph
       puts "#{stream}: #{text}" if Rails.env.development?
       # Not using create on association to try to avoid memory bloat
       # Truncate text so that it fits in the database
-      line = LogLine.create!(run: run, timestamp: timestamp, stream: stream.to_s, text: text[0..65_534])
+      # truncating to a much smaller size (about half) than necessary because
+      # for some unknown reason it was still failing
+      line = LogLine.create!(run: run, timestamp: timestamp, stream: stream.to_s, text: text[0..32_767])
       sync_new line, scope: run unless Rails.env.test?
     end
 
