@@ -112,15 +112,17 @@ module Morph
         end
       end
 
-      # Record ip address of running container
-      ip_address = Morph::DockerUtils.ip_address_of_container(c) if c
+      if c
+        # Record ip address of running container
+        ip_address = Morph::DockerUtils.ip_address_of_container(c)
 
-      # Getting the image that this container was built from
-      # Doing it in this way so that it is backwards compatible with
-      # a short version of the id without "sha256:" at the beginning
-      docker_image = c.json["Image"].split(":")[1][0..11]
+        # Getting the image that this container was built from
+        # Doing it in this way so that it is backwards compatible with
+        # a short version of the id without "sha256:" at the beginning
+        docker_image = c.json["Image"].split(":")[1][0..11]
 
-      run.update_attributes(ip_address: ip_address, docker_image: docker_image)
+        run.update_attributes(ip_address: ip_address, docker_image: docker_image)
+      end
       c
     end
 
