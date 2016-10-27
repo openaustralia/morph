@@ -1,5 +1,11 @@
 module Morph
   class Database
+    CORRUPT_DATABASE_EXCEPTIONS = [
+      SQLite3::NotADatabaseException,
+      SQLite3::CorruptException,
+      SQLite3::CantOpenException
+    ]
+
     def initialize(data_path)
       @data_path = data_path
     end
@@ -49,7 +55,7 @@ module Morph
       # each table to really test things
       table_names.each { |table| first_ten_rows(table) }
       true
-    rescue SQLite3::NotADatabaseException, SQLite3::CorruptException
+    rescue *CORRUPT_DATABASE_EXCEPTIONS
       false
     end
 
@@ -115,7 +121,7 @@ module Morph
 
     def sql_query_safe(query, readonly = true)
       sql_query(query, readonly)
-    rescue SQLite3::CantOpenException, SQLite3::SQLException
+    rescue *CORRUPT_DATABASE_EXCEPTIONS, SQLite3::SQLException
       nil
     end
 
@@ -123,7 +129,7 @@ module Morph
     def no_rows(table = table_names.first)
       q = sql_query_safe("select count(*) from '#{table}'")
       q ? q.first.values.first : 0
-    rescue SQLite3::NotADatabaseException, SQLite3::CorruptException
+    rescue *CORRUPT_DATABASE_EXCEPTIONS
       0
     end
 
@@ -137,7 +143,7 @@ module Morph
 
     def table_names_safe
       table_names
-    rescue SQLite3::NotADatabaseException
+    rescue *CORRUPT_DATABASE_EXCEPTIONS
       []
     end
 
