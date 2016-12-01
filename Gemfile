@@ -65,6 +65,7 @@ gem 'honeybadger'
 gem 'cancan'
 gem 'backstretch-rails'
 gem 'searchkick'
+gem 'elasticsearch', '~> 1' # Match version of elasticsearch on the server
 gem 'stripe'
 gem 'haml-coderay'
 gem 'd3-rails'

@@ -140,12 +140,12 @@ GEM
     dotenv-rails (2.1.1)
       dotenv (= 2.1.1)
       railties (>= 4.0, < 5.1)
-    elasticsearch (5.0.0)
-      elasticsearch-api (= 5.0.0)
-      elasticsearch-transport (= 5.0.0)
-    elasticsearch-api (5.0.0)
+    elasticsearch (1.1.0)
+      elasticsearch-api (= 1.1.0)
+      elasticsearch-transport (= 1.1.0)
+    elasticsearch-api (1.1.0)
       multi_json
-    elasticsearch-transport (5.0.0)
+    elasticsearch-transport (1.1.0)
       faraday
       multi_json
     em-http-request (1.1.5)
@@ -538,6 +538,7 @@ DEPENDENCIES
   devise
   docker-api
   dotenv-rails
+  elasticsearch (~> 1)
   factory_girl_rails (~> 4.0)
   faraday
   faye
