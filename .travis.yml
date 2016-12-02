@@ -23,6 +23,9 @@ before_script:
   - bundle exec rake db:setup
   - docker pull openaustralia/buildstep
 
+after_success:
+  - bundle exec codeclimate-test-reporter
+
 services:
   - docker
   - redis
