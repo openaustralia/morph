@@ -7,6 +7,12 @@ rvm:
   - 2.3.1
 env: SECRET_KEY_BASE=859384 RUN_SLOW_TESTS=true
 
+before_install:
+  # Workaround for Travis issue from:
+  # https://github.com/travis-ci/travis-ci/issues/6961#issuecomment-264283390
+  # Can be removed when Travis is fixed.
+  - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+
 before_script:
   # Updating docker-engine so we can use a more recent version
   # Doing it here because doing it in "addons" below hangs on
