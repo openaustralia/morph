@@ -1,5 +1,13 @@
 ActiveAdmin.register_page "Docker Containers" do
   content do
+    workers = Sidekiq::Workers.new
+    active_sidekiq_jobs = workers.collect do |process_id, thread_id, work|
+      work["payload"]["args"].first if work["queue"] == "scraper"
+    end.compact
+    retrying_sidekiq_jobs = Sidekiq::RetrySet.new.collect do |job|
+      job.args.first if job.klass == "RunWorker"
+    end.compact
+
     records = Docker::Container.all(all: true).map do |container|
       run = Morph::Runner.run_for_container(container)
       info = container.json
@@ -19,6 +27,9 @@ ActiveAdmin.register_page "Docker Containers" do
         record[:scraper_running] = run.running? ? 'yes' : 'no'
         record[:run_status_code] = run.status_code
         record[:auto] = run.auto? ? 'yes' : 'no'
+
+        record[:active_sidekiq_job] = active_sidekiq_jobs.include?(run.id) ? 'yes' : 'no'
+        record[:retrying_sidekiq_job] = retrying_sidekiq_jobs.include?(run.id) ? 'yes' : 'no'
       end
       record
     end
@@ -39,6 +50,8 @@ ActiveAdmin.register_page "Docker Containers" do
             th 'Run ID'
             th 'Scraper name'
             th 'Scraper running?'
+            th 'Active Sidekiq job?'
+            th 'Retrying Sidekiq job?'
             th 'Auto'
           end
         end
@@ -59,6 +72,8 @@ ActiveAdmin.register_page "Docker Containers" do
                 end
               end
               td record[:scraper_running]
+              td record[:active_sidekiq_job]
+              td record[:retrying_sidekiq_job]
               td record[:auto]
             end
           end
@@ -79,6 +94,8 @@ ActiveAdmin.register_page "Docker Containers" do
             th 'Run ID'
             th 'Scraper name'
             th 'Scraper running?'
+            th 'Active Sidekiq job?'
+            th 'Retrying Sidekiq job?'
             th 'Run status code'
             th 'Auto'
           end
@@ -111,6 +128,8 @@ ActiveAdmin.register_page "Docker Containers" do
                 end
               end
               td record[:scraper_running]
+              td record[:active_sidekiq_job]
+              td record[:retrying_sidekiq_job]
               td record[:run_status_code]
               td record[:auto]
             end
