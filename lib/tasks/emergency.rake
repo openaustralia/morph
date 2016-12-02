@@ -153,5 +153,31 @@ namespace :app do
       ids = WebhookDelivery.connection.select_all('SELECT id FROM webhook_deliveries WHERE webhook_id NOT IN (SELECT id FROM webhooks)').map { |id| id['id'] }
       WebhookDelivery.where(id: ids).delete_all
     end
+
+    desc "Clears a backlogged queue by queuing retries in a loop"
+    task work_off_run_queue_retries: :environment do
+      NUMBER_OF_SLOTS_TO_KEEP_FREE = 4
+      LOOP_WAIT_DURATION = 30.seconds
+
+      while run_retries = Sidekiq::RetrySet.new.select { |j| j.klass == 'RunWorker' }
+        puts "#{run_retries.count} in the retry queue. Checking for free slots..."
+        retry_slots_available = Morph::Runner.available_slots - NUMBER_OF_SLOTS_TO_KEEP_FREE
+
+        if retry_slots_available > 0
+          puts "#{retry_slots_available} retry slots available. Queuing jobs..."
+          # TODO: Should we sort this?
+          run_retries.first(retry_slots_available).each do |job|
+            job.retry
+          end
+        else
+          puts "No retry slots available. Not retrying any jobs."
+        end
+
+        puts "Waiting #{LOOP_WAIT_DURATION.to_s} seconds before checking again."
+        sleep LOOP_WAIT_DURATION
+      end
+
+      puts "Retry queue cleared. Exiting."
+    end
   end
 end
