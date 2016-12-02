@@ -178,7 +178,7 @@ module Morph
 
       # Clean up the container at the last possible moment. This is the
       # signal that we have everything we need
-      container.delete(force: true)
+      container.delete
 
       Morph::RunResult.new(status_code, data_with_stripped_paths, time_params)
     end
