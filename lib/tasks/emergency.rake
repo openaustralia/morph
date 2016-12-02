@@ -160,6 +160,11 @@ namespace :app do
       LOOP_WAIT_DURATION = 30
 
       while run_retries = Sidekiq::RetrySet.new.select { |j| j.klass == 'RunWorker' } do
+        if run_retries.count.zero?
+          puts "No runs in the retry queue."
+          break
+        end
+
         puts "#{run_retries.count} in the retry queue. Checking for free slots..."
         retry_slots_available = Morph::Runner.available_slots - NUMBER_OF_SLOTS_TO_KEEP_FREE
 
