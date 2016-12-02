@@ -157,7 +157,7 @@ namespace :app do
     desc "Clears a backlogged queue by queuing retries in a loop"
     task work_off_run_queue_retries: :environment do
       NUMBER_OF_SLOTS_TO_KEEP_FREE = 4
-      LOOP_WAIT_DURATION = 30.seconds
+      LOOP_WAIT_DURATION = 30
 
       while run_retries = Sidekiq::RetrySet.new.select { |j| j.klass == 'RunWorker' }
         puts "#{run_retries.count} in the retry queue. Checking for free slots..."
@@ -173,7 +173,7 @@ namespace :app do
           puts "No retry slots available. Not retrying any jobs."
         end
 
-        puts "Waiting #{LOOP_WAIT_DURATION.to_s} seconds before checking again."
+        puts "Waiting #{LOOP_WAIT_DURATION} seconds before checking again."
         sleep LOOP_WAIT_DURATION
       end
 
