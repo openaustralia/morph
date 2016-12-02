@@ -176,9 +176,6 @@ module Morph
         data_with_stripped_paths[stripped_path] = content
       end
 
-      # FIXME: Seeing if pausing before deleting the container helps
-      # with a "device or resource busy" error trying to delete the filesystem
-      sleep 1
       # Clean up the container at the last possible moment. This is the
       # signal that we have everything we need
       container.delete(force: true)
