@@ -92,6 +92,24 @@ namespace :app do
       end
     end
 
+    desc "Delete old stopped morph Docker containers"
+    task delete_old_stopped_containers: [:environment, :set_logger_to_stdout] do
+      AGE_OF_CONTAINERS_TO_DELETE = 1.week.ago
+
+      morph_image_base_id = Morph::DockerRunner.buildstep_image.id
+      filters = { status: ["exited"], ancestor: [morph_image_base_id] }.to_json
+      stopped_morph_containers = Docker::Container.all(all: true, filters: filters)
+
+      old_stopped_containers = stopped_morph_containers.select do |c|
+        Time.parse(c.json["Created"]) < AGE_OF_CONTAINERS_TO_DELETE
+      end
+      puts "Found #{old_stopped_containers.count} old stopped containers to delete..."
+
+      old_stopped_containers.each do |c|
+        Morph::DockerMaintenance::delete_container(c)
+      end
+    end
+
     task :set_logger_to_stdout do
       Rails.logger = ActiveSupport::Logger.new(STDOUT)
       Rails.logger.level = 1
