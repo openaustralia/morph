@@ -80,6 +80,18 @@ namespace :app do
       end
     end
 
+    # This is exactly the same as the task above but for a different container status
+    # TODO: Refactor this with the above task
+    desc "Delete Docker containers with 'created' status"
+    task delete_created_status_containers: [:environment, :set_logger_to_stdout] do
+      created_status_containers = Docker::Container.all(all: true, filters: { status: ["created"] }.to_json)
+      puts "Found #{created_status_containers.count} created status containers to delete..."
+
+      created_status_containers.each do |c|
+        Morph::DockerMaintenance::delete_container(c)
+      end
+    end
+
     task :set_logger_to_stdout do
       Rails.logger = ActiveSupport::Logger.new(STDOUT)
       Rails.logger.level = 1
