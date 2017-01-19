@@ -23,6 +23,14 @@
     name: sslmate
     update_cache: yes
 
+- name: Copy SSLMate account configuration
+  copy:
+    src: sslmate.conf.secure
+    dest: /etc/sslmate.conf
+    owner: root
+    group: root
+    mode: 0600
+
 - name: Ensure that ssl/www directory exist
   file: path=/etc/nginx/ssl/www owner=deploy group=deploy state=directory
 
