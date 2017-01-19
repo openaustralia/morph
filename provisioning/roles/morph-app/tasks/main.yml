@@ -7,6 +7,22 @@
 - name: Ensure that deploy owns /var/www
   file: owner=deploy group=deploy path=/var/www state=directory
 
+# TODO: Use this to create certificates
+- name: Download SSLMate APT source
+  get_url:
+    url: https://sslmate.com/apt/ubuntu1204/sslmate.list
+    dest: /etc/apt/sources.list.d/sslmate.list
+
+- name: Download SSLMate APT key
+  get_url:
+    url: https://sslmate.com/apt/ubuntu1204/sslmate.gpg
+    dest: /etc/apt/trusted.gpg.d/sslmate.gpg
+
+- name: Install SSLMate
+  apt:
+    name: sslmate
+    update_cache: yes
+
 - name: Ensure that ssl/www directory exist
   file: path=/etc/nginx/ssl/www owner=deploy group=deploy state=directory
 
