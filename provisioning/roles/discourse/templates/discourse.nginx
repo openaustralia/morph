@@ -3,8 +3,8 @@ server {
   server_name {{ discourse_server_name }};
 
   ssl on;
-  ssl_certificate /etc/nginx/ssl/discourse/cert.pem;
-  ssl_certificate_key /etc/nginx/ssl/discourse/cert.key;
+  ssl_certificate /etc/sslmate/morph.io.chained.crt;
+  ssl_certificate_key /etc/sslmate/morph.io.key;
 
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
   ssl_prefer_server_ciphers on;
