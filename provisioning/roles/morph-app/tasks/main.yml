@@ -31,6 +31,17 @@
     group: root
     mode: 0600
 
+- name: Copy SSLMate morph.io key
+  copy:
+    src: morph.io.key.secure
+    dest: /etc/sslmate/morph.io.key
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Download SSLMate certificates
+  command: sslmate download morph.io creates=/etc/sslmate/morph.io.crt
+
 - name: Ensure that ssl/www directory exist
   file: path=/etc/nginx/ssl/www owner=deploy group=deploy state=directory
 
