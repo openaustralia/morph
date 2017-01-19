@@ -42,6 +42,15 @@
 - name: Download SSLMate certificates
   command: sslmate download morph.io creates=/etc/sslmate/morph.io.crt
 
+- name: Create SSLMate automated renewals cronjob
+  copy:
+    src: sslmate
+    dest: /etc/cron.daily/sslmate
+    owner: root
+    group: root
+    mode: 0644
+  when: cron_jobs
+
 - name: Ensure that ssl/www directory exist
   file: path=/etc/nginx/ssl/www owner=deploy group=deploy state=directory
 
