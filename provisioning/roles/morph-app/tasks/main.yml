@@ -51,29 +51,6 @@
     mode: 0644
   when: cron_jobs
 
-- name: Ensure that ssl/www directory exist
-  file: path=/etc/nginx/ssl/www owner=deploy group=deploy state=directory
-
-- name: Ensure that ssl/faye directory exist
-  file: path=/etc/nginx/ssl/faye owner=deploy group=deploy state=directory
-
-# TODO: Don't deploy certificates to 2 locations - we're using 1 certificate that covers all domains now
-- name: Add api.{{ server_name }} SSL certificate (public)
-  copy: src=ssl/api.{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/www/cert.pem owner=deploy group=deploy mode=0600
-  notify: restart nginx
-
-- name: Add api.{{ server_name }} SSL certificate (private)
-  copy: src=ssl/api.{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/www/cert.key owner=deploy group=deploy mode=0600
-  notify: restart nginx
-
-- name: Add faye.{{ server_name }} SSL certificate (public)
-  copy: src=ssl/faye.{{ server_name }}/ssl-unified.crt dest=/etc/nginx/ssl/faye/cert.pem owner=deploy group=deploy mode=0600
-  notify: restart nginx
-
-- name: Add faye.{{ server_name }} SSL certificate (private)
-  copy: src=ssl/faye.{{ server_name }}/ssl.key.secure dest=/etc/nginx/ssl/faye/cert.key owner=deploy group=deploy mode=0600
-  notify: restart nginx
-
 - name: Copy across 2048-bit certificate for Diffie Hellman Ephemeral Paramerts
   copy: src=ssl/dhparam.pem.secure dest=/etc/nginx/dhparam.pem
 
