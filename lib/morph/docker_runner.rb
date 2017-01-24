@@ -213,7 +213,7 @@ module Morph
           dir2, read_timeout: 5.minutes
         ) do |c|
           # We don't want to show the standard docker build output
-          unless c =~ /^Step \d+ :/ || c =~ /^ ---> / ||
+          unless c =~ /^Step \d+\/\d+ :/ || c =~ /^ ---> / ||
                  c =~ /^Removing intermediate container / ||
                  c =~ /^Successfully built /
             yield c
