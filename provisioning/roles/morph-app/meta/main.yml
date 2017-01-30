@@ -21,3 +21,11 @@ dependencies:
           - compress
           - missingok
           - copytruncate
+      - name: morph
+        path: "/var/log/morph/*.log"
+        options:
+          - daily
+          - rotate 7
+          - compress
+          - missingok
+          - copytruncate
