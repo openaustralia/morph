@@ -21,11 +21,17 @@ setup_backup() {
   umask 077
 }
 
+# Free up all available disk space before a backup happens.
+free_all_available_disk_space() {
+  docker system prune --all --force
+}
+
 set -e
 BACKUP_DIR="/backups/mysql"
 MAX_BACKUPS=1
 
 setup_backup
+free_all_available_disk_space
 perform_backup
 count_backups
 
