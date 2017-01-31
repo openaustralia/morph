@@ -23,12 +23,13 @@ setup_backup() {
 
 set -e
 BACKUP_DIR="/backups/mysql"
+MAX_BACKUPS=1
 
 setup_backup
 perform_backup
 count_backups
 
-while [ $backup_count -gt 1 ]; do
+while [ $backup_count -gt $MAX_BACKUPS ]; do
   find_oldest_backup
   rm -rf $oldest_backup
   count_backups
