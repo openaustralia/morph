@@ -33,3 +33,4 @@ config/database.yml
 coverage
 db/backups
 docker_images/morph-mitmdump/mitmproxy/mitmproxy-dhparam.pem
+playbook.retry

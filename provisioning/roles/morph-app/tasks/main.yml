@@ -193,7 +193,7 @@
 
 - name: Add server name to /etc/hosts
   lineinfile: dest=/etc/hosts line="127.0.0.1 {{ server_name }}" owner=root group=root mode=0644
-  
+
 - name: Add faye server name to /etc/hosts
   lineinfile: dest=/etc/hosts line="127.0.0.1 faye.{{ server_name }}" owner=root group=root mode=0644
 
@@ -219,3 +219,13 @@
 # https://github.com/github/markup#markups
 - name: Install dependency for restructured text support
   pip: name=docutils state=present
+
+# Vigorously clean unused docker data
+- name: Set up docker cleanup cron job
+  copy:
+    src: docker-system-prune
+    dest: /etc/cron.hourly/docker-system-prune
+    owner: root
+    group: root
+    mode: 0755
+  when: cron_jobs
