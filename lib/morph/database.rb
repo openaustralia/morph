@@ -85,15 +85,17 @@ module Morph
 
     # Add translators for problematic type conversions
     def add_translators(db)
-      # TODO: datetime
       # TODO: boolean so we don't need this magic https://github.com/openaustralia/sqlite3-ruby/commit/981306782223717aa5ad5cdb045865346abd9c5d
-      db.translator.add_translator("date") do |type, value|
-        begin
-          Date.parse(value.to_s)
-        rescue ArgumentError
-          value
+      %w(date datetime).each do |type|
+        db.translator.add_translator(type) do |type, value|
+          begin
+            Date.parse(value.to_s)
+          rescue ArgumentError
+            value
+          end
         end
       end
+
       db
     end
 
