@@ -78,22 +78,27 @@ module Morph
       ) do |db|
         # If database is busy wait 5s
         db.busy_timeout(5000)
-        # Add translators for problematic type conversions
-        # TODO: datetime
-        # TODO: boolean so we don't need this magic https://github.com/openaustralia/sqlite3-ruby/commit/981306782223717aa5ad5cdb045865346abd9c5d
-        db.translator.add_translator("date") do |type, value|
-          begin
-            Date.parse(value.to_s)
-          rescue ArgumentError => e
-            if e.message == "invalid date"
-              value
-            else
-              raise
-            end
-          end
-        end
+        add_translators(db)
         return Database.clean_utf8_query_result(db.execute(query))
       end
+    end
+
+    # Add translators for problematic type conversions
+    def add_translators(db)
+      # TODO: datetime
+      # TODO: boolean so we don't need this magic https://github.com/openaustralia/sqlite3-ruby/commit/981306782223717aa5ad5cdb045865346abd9c5d
+      db.translator.add_translator("date") do |type, value|
+        begin
+          Date.parse(value.to_s)
+        rescue ArgumentError => e
+          if e.message == "invalid date"
+            value
+          else
+            raise
+          end
+        end
+      end
+      db
     end
 
     def self.clean_utf8_query_result(array)
