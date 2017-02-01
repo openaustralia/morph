@@ -78,6 +78,10 @@ module Morph
       ) do |db|
         # If database is busy wait 5s
         db.busy_timeout(5000)
+        # Add translators for problematic type conversions
+        db.translator.add_translator("date") do |type, value|
+          Date.parse(value.to_s)
+        end
         return Database.clean_utf8_query_result(db.execute(query))
       end
     end
