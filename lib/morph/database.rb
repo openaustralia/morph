@@ -201,20 +201,18 @@ module Morph
     def add_translators_to_database(db)
       # Don't error on dates that are FixNum and that don't parse
       %w(date datetime).each do |type|
-        db.translator.add_translator(type) do |type, value|
+        db.translator.add_translator(type) do |t, v|
           begin
-            Date.parse(value.to_s)
+            Date.parse(v.to_s)
           rescue ArgumentError
-            value
+            v
           end
         end
       end
 
       # Over the default translator also allows booleans stored as integers
-      [ "bit",
-        "bool",
-        "boolean" ].each do |type|
-        db.translator.add_translator( type ) do |t,v|
+      %w(bit bool boolean).each do |type|
+        db.translator.add_translator(type) do |t,v|
           v = v.to_s
           !( v.strip.gsub(/00+/,"0") == "0" ||
              v.downcase == "false" ||
