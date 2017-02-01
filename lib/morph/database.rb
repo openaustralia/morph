@@ -85,7 +85,7 @@ module Morph
 
     # Add translators for problematic type conversions
     def add_translators(db)
-      # TODO: boolean so we don't need this magic https://github.com/openaustralia/sqlite3-ruby/commit/981306782223717aa5ad5cdb045865346abd9c5d
+      # Don't error on dates that are FixNum and that don't parse
       %w(date datetime).each do |type|
         db.translator.add_translator(type) do |type, value|
           begin
@@ -93,6 +93,20 @@ module Morph
           rescue ArgumentError
             value
           end
+        end
+      end
+
+      # Over the default translator also allows booleans stored as integers
+      [ "bit",
+        "bool",
+        "boolean" ].each do |type|
+        db.translator.add_translator( type ) do |t,v|
+          v = v.to_s
+          !( v.strip.gsub(/00+/,"0") == "0" ||
+             v.downcase == "false" ||
+             v.downcase == "f" ||
+             v.downcase == "no" ||
+             v.downcase == "n" )
         end
       end
 
