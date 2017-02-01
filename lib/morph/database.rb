@@ -78,7 +78,7 @@ module Morph
       ) do |db|
         # If database is busy wait 5s
         db.busy_timeout(5000)
-        add_translators_to_database(db)
+        add_database_type_translations(db)
         return Database.clean_utf8_query_result(db.execute(query))
       end
     end
@@ -198,7 +198,7 @@ module Morph
     private
 
     # Add translators for problematic type conversions
-    def add_translators_to_database(db)
+    def add_database_type_translations(db)
       # Don't error on dates that are FixNum and that don't parse
       %w(date datetime).each do |type|
         db.translator.add_translator(type) do |t, v|
