@@ -79,6 +79,8 @@ module Morph
         # If database is busy wait 5s
         db.busy_timeout(5000)
         # Add translators for problematic type conversions
+        # TODO: datetime
+        # TODO: boolean so we don't need this magic https://github.com/openaustralia/sqlite3-ruby/commit/981306782223717aa5ad5cdb045865346abd9c5d
         db.translator.add_translator("date") do |type, value|
           begin
             Date.parse(value.to_s)
