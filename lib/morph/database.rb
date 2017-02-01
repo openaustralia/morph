@@ -78,39 +78,9 @@ module Morph
       ) do |db|
         # If database is busy wait 5s
         db.busy_timeout(5000)
-        add_translators(db)
+        add_translators_to_database(db)
         return Database.clean_utf8_query_result(db.execute(query))
       end
-    end
-
-    # Add translators for problematic type conversions
-    def add_translators(db)
-      # Don't error on dates that are FixNum and that don't parse
-      %w(date datetime).each do |type|
-        db.translator.add_translator(type) do |type, value|
-          begin
-            Date.parse(value.to_s)
-          rescue ArgumentError
-            value
-          end
-        end
-      end
-
-      # Over the default translator also allows booleans stored as integers
-      [ "bit",
-        "bool",
-        "boolean" ].each do |type|
-        db.translator.add_translator( type ) do |t,v|
-          v = v.to_s
-          !( v.strip.gsub(/00+/,"0") == "0" ||
-             v.downcase == "false" ||
-             v.downcase == "f" ||
-             v.downcase == "no" ||
-             v.downcase == "n" )
-        end
-      end
-
-      db
     end
 
     def self.clean_utf8_query_result(array)
@@ -223,6 +193,38 @@ module Morph
     # actual database
     def tidy_data_path
       Database.tidy_data_path(@data_path)
+    end
+
+    private
+
+    # Add translators for problematic type conversions
+    def add_translators_to_database(db)
+      # Don't error on dates that are FixNum and that don't parse
+      %w(date datetime).each do |type|
+        db.translator.add_translator(type) do |type, value|
+          begin
+            Date.parse(value.to_s)
+          rescue ArgumentError
+            value
+          end
+        end
+      end
+
+      # Over the default translator also allows booleans stored as integers
+      [ "bit",
+        "bool",
+        "boolean" ].each do |type|
+        db.translator.add_translator( type ) do |t,v|
+          v = v.to_s
+          !( v.strip.gsub(/00+/,"0") == "0" ||
+             v.downcase == "false" ||
+             v.downcase == "f" ||
+             v.downcase == "no" ||
+             v.downcase == "n" )
+        end
+      end
+
+      db
     end
   end
 end
