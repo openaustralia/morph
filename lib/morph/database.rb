@@ -221,8 +221,6 @@ module Morph
              v.downcase == "n" )
         end
       end
-
-      db
     end
   end
 end
