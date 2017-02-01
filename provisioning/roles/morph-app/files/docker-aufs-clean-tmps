@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Per this Docker AUFS bug, disk space is slowly being eaten up by containers
+# that aren't being cleaned up by a `docker system prune --all --force`:
+#
+# https://github.com/docker/docker/issues/22207
+#
+# Ideally we could just nuke all AUFS data in `/var/lib/docker/aufs/diff`,
+# but the Morph box is running two types of workloads: scrapers, and long
+# running processes. If we blindly nuke the AUFS data, we may accidentally nuke
+# persistent data from a long running process (like a Discourse upload, or a
+# Postgres database :-| ).
+#
+# We can take advantage of the UNIX convention that data stored in /tmp is
+# ephemeral, by only nuking tmp directories in any image stored in
+# `/var/lib/docker/aufs/diff`. Any containers working with data in /tmp
+# should generally recover seamlessly, and this gives us a significant space
+# saving.
+#
+# This script finds any tmp directories under `/var/lib/docker/aufs/diffs` with
+# more than 1MB of usage, and deletes them.
+#
+# It also prints out the number of files deleted, and the amount of space
+# recovered by running the script.
+
+set -e
+
+sizes_path=$(mktemp)
+find /var/lib/docker/aufs/diff -maxdepth 2 -type d -name 'tmp' | xargs du -hs > $sizes_path
+
+ids="$(cat $sizes_path | sort -h | egrep ^.*[0-9][0-9]M | cut -d '/' -f 7)"
+sizes="$(cat $sizes_path | sort -h | egrep ^.*[0-9][0-9]M | cut -d 'M' -f 1)"
+
+for t in $ids; do
+  rm -rf /var/lib/docker/aufs/diff/$t/tmp
+done
+
+echo "Targets to delete: $(echo $ids |tr ' ' '\n' | wc -l)"
+echo "Full file list: $sizes_path"
+echo "Space recovered: $(expr $(echo $sizes| sed 's/ / + /g') + 0)M"

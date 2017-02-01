@@ -229,3 +229,13 @@
     group: root
     mode: 0755
   when: cron_jobs
+
+# Attempt to safely clean up around AUFS bug https://github.com/docker/docker/issues/22207
+- name: Set up AUFS cleanup cron job
+  copy:
+    src: docker-aufs-clean-tmps
+    dest: /etc/cron.daily/docker-aufs-clean-tmps
+    owner: root
+    group: root
+    mode: 0755
+  when: cron_jobs
