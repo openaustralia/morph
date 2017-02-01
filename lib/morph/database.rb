@@ -90,12 +90,8 @@ module Morph
       db.translator.add_translator("date") do |type, value|
         begin
           Date.parse(value.to_s)
-        rescue ArgumentError => e
-          if e.message == "invalid date"
-            value
-          else
-            raise
-          end
+        rescue ArgumentError
+          value
         end
       end
       db
