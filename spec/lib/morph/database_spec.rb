@@ -45,5 +45,17 @@ describe Morph::Database do
     let(:database) { Morph::Database.new(".") }
     it { expect { database.sql_query("") }.to raise_error SQLite3::Exception, "No query specified" }
     it { expect { database.sql_query(nil) }.to raise_error SQLite3::Exception, "No query specified" }
+
+    describe "type conversions" do
+      it "allows booleans to be stored as integers" do
+        database = Morph::Database.new(RSpec.configuration.fixture_path + "/files/sqlite_databases/boolean_stored_as_integer/")
+        expect(database.sql_query("SELECT * FROM data")).to eql [{"some_column" => false}, {"some_column" => true}]
+      end
+
+      it "returns the raw value when encountering a date stored as an unparseable fixnum" do
+        database = Morph::Database.new(RSpec.configuration.fixture_path + "/files/sqlite_databases/unparseable_date_stored_as_fixnum/")
+        expect(database.sql_query("SELECT * FROM data")).to eql [{"some_column" => 148392075227}]
+      end
+    end
   end
 end

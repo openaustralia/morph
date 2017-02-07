@@ -78,6 +78,7 @@ module Morph
       ) do |db|
         # If database is busy wait 5s
         db.busy_timeout(5000)
+        add_database_type_translations(db)
         return Database.clean_utf8_query_result(db.execute(query))
       end
     end
@@ -192,6 +193,34 @@ module Morph
     # actual database
     def tidy_data_path
       Database.tidy_data_path(@data_path)
+    end
+
+    private
+
+    # Add translators for problematic type conversions
+    def add_database_type_translations(db)
+      # Don't error on dates that are FixNum and that don't parse
+      %w(date datetime).each do |type|
+        db.translator.add_translator(type) do |t, v|
+          begin
+            Date.parse(v.to_s)
+          rescue ArgumentError
+            v
+          end
+        end
+      end
+
+      # Over the default translator also allows booleans stored as integers
+      %w(bit bool boolean).each do |type|
+        db.translator.add_translator(type) do |t,v|
+          v = v.to_s
+          !( v.strip.gsub(/00+/,"0") == "0" ||
+             v.downcase == "false" ||
+             v.downcase == "f" ||
+             v.downcase == "no" ||
+             v.downcase == "n" )
+        end
+      end
     end
   end
 end
