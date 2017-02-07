@@ -1,28 +1,47 @@
-- name: Make sure that pip is installed
+- name: Ensure system pip is installed
   apt: pkg=python-pip
 
-# Newer version of docker-py causes issues. See
-# https://github.com/ansible/ansible-modules-core/issues/1227
+# We have to upgrade pip and setuptools to work around these two issues:
+#
+# https://github.com/docker/docker-py/issues/1019
+# https://github.com/pypa/setuptools/issues/937
+#
+# This uses system pip to install latest pip into /usr/local
+- name: Ensure latest pip and setuptools are installed
+  pip:
+    name: "{{ item.name }}"
+    version: "{{ item.version }}"
+    state: present
+  with_items:
+  - { name: pip, version: 9.0.1 }
+  - { name: setuptools, version: 34.1.0 }
+
+# These modules are required for the docker_container and docker_image
+# Ansible modules to work.
 - name: Install requirement for ansible docker
   pip:
-    name: docker-py
-    version: 1.1.0
+    name: "{{ item.name }}"
+    version: "{{ item.version }}"
+    state: present
+  with_items:
+  - { name: docker, version: 2.0.0 }
+  - { name: docker-py, version: 1.10.6 }
 
 # TODO: Log back to syslog on machine
 - name: Install docker container for mitmdump
-  docker:
+  docker_container:
     name: mitmdump2
     image: openaustralia/morph-mitmdump
     state: started
     restart_policy: always
-    pull: always
+    pull: yes
     # We attach the networking of this container to the host. This is necessary
     # because otherwise traffic would get redirected to the container, would
     # get proxied and a new request would come from this container which would
     # promptly get redirected back to the container in a painful infinite loop
     # This is a good reference for the issues:
     # https://github.com/jpetazzo/squid-in-a-can
-    net: host
+    network_mode: host
     env:
       MORPH_URL: "{{ morph_url }}"
       MITMPROXY_SECRET: "{{ mitmproxy_secret }}"
