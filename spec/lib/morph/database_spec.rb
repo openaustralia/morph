@@ -45,5 +45,12 @@ describe Morph::Database do
     let(:database) { Morph::Database.new(".") }
     it { expect { database.sql_query("") }.to raise_error SQLite3::Exception, "No query specified" }
     it { expect { database.sql_query(nil) }.to raise_error SQLite3::Exception, "No query specified" }
+
+    describe "type conversions" do
+      it "allows booleans to be stored as integers" do
+        database = Morph::Database.new(RSpec.configuration.fixture_path + "/files/sqlite_databases/boolean_stored_as_integer/")
+        expect(database.sql_query("SELECT * FROM data")).to eql [{"some_column" => false}, {"some_column" => true}]
+      end
+    end
   end
 end
