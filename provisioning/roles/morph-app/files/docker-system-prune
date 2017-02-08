@@ -1,3 +1,4 @@
 #!/bin/sh
 
-docker system prune --all --force
+# FIXME: Disabled while we investigate https://github.com/openaustralia/morph/issues/1124
+#docker system prune --all --force
