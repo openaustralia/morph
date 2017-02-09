@@ -56,6 +56,11 @@ describe Morph::Database do
         database = Morph::Database.new(RSpec.configuration.fixture_path + "/files/sqlite_databases/unparseable_date_stored_as_fixnum/")
         expect(database.sql_query("SELECT * FROM data")).to eql [{"some_column" => 148392075227}]
       end
+
+      it "converts datetime field into DateTime object" do
+        database = Morph::Database.new(RSpec.configuration.fixture_path + "/files/sqlite_databases/datetime_field/")
+        expect(database.sql_query("SELECT * FROM data")).to eql [{"some_column" => DateTime.new(2017, 1, 2, 3, 4, 56.789012)}]
+      end
     end
   end
 end

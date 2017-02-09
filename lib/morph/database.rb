@@ -203,7 +203,12 @@ module Morph
       %w(date datetime).each do |type|
         db.translator.add_translator(type) do |t, v|
           begin
-            Date.parse(v.to_s)
+            case t.downcase
+            when "date"
+              Date.parse(v.to_s)
+            when "datetime"
+              DateTime.parse(v.to_s)
+            end
           rescue ArgumentError
             v
           end
