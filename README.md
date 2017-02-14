@@ -122,7 +122,7 @@ This section will not be relevant to most people. It will however be relevant if
 
 #### git-encrypt
 
-We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt certain files, like the private key for the SSL certificate. To make this work you have to do some [special things](https://github.com/shadowhand/git-encrypt#decrypting-clones) _before_ you clone the morph repository.
+We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt certain files, like the private key for the SSL certificate. To make this work you have to do some [special things](https://github.com/shadowhand/git-encrypt/tree/legacy#decrypting-clones) _before_ you clone the morph repository.
 
 #### Production devops development
 
