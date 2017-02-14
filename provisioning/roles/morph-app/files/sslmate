@@ -2,5 +2,5 @@
 
 if sslmate download --all > /dev/null
 then
-  service apache2 restart > /dev/null
+  service nginx restart > /dev/null
 fi
