@@ -128,7 +128,7 @@ module Morph
 
     # Returns 0 if table doesn't exists (or there is some other problem)
     def no_rows(table = table_names.first)
-      q = sql_query_safe("select count(*) from '#{table}'")
+      q = sql_query_safe("select count(*) from \"#{table}\"")
       q ? q.first.values.first : 0
     rescue *CORRUPT_DATABASE_EXCEPTIONS
       0
@@ -163,16 +163,16 @@ module Morph
     end
 
     def standardise_table_name(table_name)
-      sql_query_safe("ALTER TABLE '#{table_name}' " \
-        "RENAME TO '#{Database.sqlite_table_name}'", false)
+      sql_query_safe("ALTER TABLE \"#{table_name}\" " \
+        "RENAME TO \"#{Database.sqlite_table_name}\"", false)
     end
 
     def select_first_ten(table = table_names.first)
-      "select * from '#{table}' limit 10"
+      "select * from \"#{table}\" limit 10"
     end
 
     def select_all(table = table_names.first)
-      "select * from '#{table}'"
+      "select * from \"#{table}\""
     end
 
     def first_ten_rows(table = table_names.first)
