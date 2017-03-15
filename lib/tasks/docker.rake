@@ -93,7 +93,7 @@ namespace :app do
     end
 
     desc "Delete ALL stopped Docker containers without associated morph run"
-    task delete_old_stopped_containers: [:environment, :set_logger_to_stdout] do
+    task delete_stopped_containers: [:environment, :set_logger_to_stdout] do
       filters = { status: ["exited"] }.to_json
       stopped_containers = Docker::Container.all(all: true, filters: filters)
       # Don't deleted containers with associated runs - these should be tidied
