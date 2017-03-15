@@ -92,20 +92,16 @@ namespace :app do
       end
     end
 
-    desc "Delete old stopped morph Docker containers"
+    desc "Delete ALL stopped Docker containers without associated morph run"
     task delete_old_stopped_containers: [:environment, :set_logger_to_stdout] do
-      AGE_OF_CONTAINERS_TO_DELETE = 1.week.ago
+      filters = { status: ["exited"] }.to_json
+      stopped_containers = Docker::Container.all(all: true, filters: filters)
+      # Don't deleted containers with associated runs - these should be tidied
+      # up by the usual process as part of their run
+      stopped_containers.reject! { |c| Morph::Runner.run_for_container(c) }
+      puts "Found #{stopped_containers.count} stopped containers to delete..."
 
-      morph_image_base_id = Morph::DockerRunner.buildstep_image.id
-      filters = { status: ["exited"], ancestor: [morph_image_base_id] }.to_json
-      stopped_morph_containers = Docker::Container.all(all: true, filters: filters)
-
-      old_stopped_containers = stopped_morph_containers.select do |c|
-        Time.parse(c.json["Created"]) < AGE_OF_CONTAINERS_TO_DELETE
-      end
-      puts "Found #{old_stopped_containers.count} old stopped containers to delete..."
-
-      old_stopped_containers.each do |c|
+      stopped_containers.each do |c|
         Morph::DockerMaintenance::delete_container(c)
       end
     end
