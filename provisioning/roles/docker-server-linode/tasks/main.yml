@@ -23,6 +23,8 @@
 - name: Install grub
   apt: pkg=grub state=present
 
+# TODO: Isn't this already done automagically as part of installing grub?
+# FIXME: Remove this and next task if it's not
 - name: Add grub menu
   copy: src=menu.lst dest=/boot/grub/menu.lst
   register: docker_grub_change
