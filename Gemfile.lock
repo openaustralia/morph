@@ -184,8 +184,9 @@ GEM
     ffi (1.9.14)
     font-awesome-rails (4.7.0.0)
       railties (>= 3.2, < 5.1)
-    foreman (0.82.0)
-      thor (~> 0.19.1)
+    foreman (0.63.0)
+      dotenv (>= 0.7)
+      thor (>= 0.13.6)
     formatador (0.2.5)
     formtastic (3.1.4)
       actionpack (>= 3.2.13)
@@ -543,7 +544,7 @@ DEPENDENCIES
   faraday
   faye
   font-awesome-rails
-  foreman
+  foreman (= 0.63.0)
   friendly_id
   github-markup
   grit
@@ -604,7 +605,7 @@ DEPENDENCIES
   zeroclipboard-rails
 
 RUBY VERSION
-   ruby 2.3.0p0
+   ruby 2.3.1p112
 
 BUNDLED WITH
-   1.12.5
+   1.14.3
