@@ -28,6 +28,7 @@
   register: docker_grub_change
 
 # TODO: Reboot server
+# FIXME: This can get stuck on "A new version of /boot/grub/menu.lst is available, but the version installed currently has been locally modified"
 - name: Update grub
   command: update-grub -y
   when: docker_grub_change|changed
