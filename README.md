@@ -128,14 +128,9 @@ We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt 
 
 Install [Vagrant](http://www.vagrantup.com/) and [Ansible](http://www.ansible.com/).
 
+Install the hostsupdater plugin: `vagrant plugin install vagrant-hostsupdater`
+
 Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
-
-Add these lines to your `/etc/hosts` file:
-
-    192.168.11.2  dev.morph.io
-    192.168.11.2  faye.dev.morph.io
-    192.168.11.2  api.dev.morph.io
-    192.168.11.2  discuss.dev.morph.io
 
 Once the box is created and provisioned, deploy the application to your Vagrant box:
 

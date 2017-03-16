@@ -11,6 +11,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "local" do |local|
     local.vm.network :private_network, ip: "192.168.11.2"
     local.vm.hostname = "dev.morph.io"
+    local.hostsupdater.aliases = ["faye.dev.morph.io", "api.dev.morph.io", "discuss.dev.morph.io"]
     local.vm.network :forwarded_port, guest: 22, host: 2200
     local.vm.network :forwarded_port, guest: 4443, host: 4443
     local.vm.synced_folder ".", "/vagrant", disabled: true
