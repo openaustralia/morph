@@ -6,8 +6,8 @@ server {
   passenger_ruby /home/deploy/.rvm/gems/ruby-2.3.1/wrappers/ruby;
 
   ssl on;
-  ssl_certificate /etc/sslmate/{{ server_name }}.chained.crt;
-  ssl_certificate_key /etc/sslmate/{{ server_name }}.key;
+  ssl_certificate /etc/sslmate/morph.io.chained.crt;
+  ssl_certificate_key /etc/sslmate/morph.io.key;
 
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
   ssl_prefer_server_ciphers on;
