@@ -23,18 +23,6 @@
 - name: Install grub
   apt: pkg=grub state=present
 
-# TODO: Isn't this already done automagically as part of installing grub?
-# FIXME: Remove this and next task if it's not
-- name: Add grub menu
-  copy: src=menu.lst dest=/boot/grub/menu.lst
-  register: docker_grub_change
-
-# TODO: Reboot server
-# FIXME: This can get stuck on "A new version of /boot/grub/menu.lst is available, but the version installed currently has been locally modified"
-- name: Update grub
-  command: update-grub -y
-  when: docker_grub_change|changed
-
 # Now you need to make some changes on the Linode console
 # 1. change the Linode configuration profile to use pv-grub-x86_64
 # 2. In Filesystem/Boot Helpers section disable the Xenify distro option
