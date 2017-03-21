@@ -31,6 +31,13 @@
     group: root
     mode: 0600
 
+- name: Ensure that /etc/sslmate exists
+  file:
+    path: /etc/sslmate
+    owner: root
+    group: root
+    state: directory
+
 - name: Copy SSLMate morph.io key
   copy:
     src: morph.io.key.secure

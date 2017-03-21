@@ -11,5 +11,11 @@
 #
 - hosts: all
   sudo: true
+  pre_tasks:
+    - name: Upgrade all packages first
+      apt:
+        update_cache: yes
+        cache_valid_time: 300
+        upgrade: yes
   roles:
     - morph-app
