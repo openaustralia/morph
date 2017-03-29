@@ -16,9 +16,14 @@
                   of scraped data will be gone!
                 - else
                   All your data will be gone!
-              = button_to clear_scraper_path(@scraper), {class: "btn btn-warning", data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?"}} do
-                Clear database
-                %i.glyphicon.glyphicon-th-list
+              - if @scraper.has_data?
+                = button_to clear_scraper_path(@scraper), {class: "btn btn-warning", data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?"}} do
+                  Clear database
+                  %i.glyphicon.glyphicon-th-list
+              - else 
+                = button_to "#", class: "btn btn-disabled", disabled: "disabled" do
+                  Clear database
+                  %i.glyphicon.glyphicon-th-list
           %li.list-group-item
             %h4 Delete your scraper
             .danger-settings-action-body
