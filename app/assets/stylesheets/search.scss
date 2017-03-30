@@ -68,3 +68,18 @@
     }
   }
 }
+
+#searchf .input-group {
+  width:100%;
+}
+
+@media (min-width: $screen-sm-min) {
+  #searchf .input-group .input-group-addon, #searchf .input-group .input-group-btn, #searchf .input-group .form-control {
+    width:0;
+  }
+}
+@media (min-width: $screen-sm-min) {
+  #searchf .input-group > .form-control {
+    width:100%;
+  }
+}
