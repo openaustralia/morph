@@ -1,7 +1,13 @@
 {
-	"dependencies": {
-		"cheerio": "latest",
-		"request": "latest",
-		"sqlite3": "latest"
-	}
+  "version": "0.0.1",
+  "main": "scraper.js",
+  "dependencies": {
+    "cheerio": "latest",
+    "request": "latest",
+    "sqlite3": "latest"
+  },
+  "keywords": [
+    "scraper",
+    "morph"
+  ]
 }
