@@ -60,4 +60,11 @@ describe Run do
       run.finished!
     end
   end
+
+  describe '#metric' do
+    it 'is present after creation' do
+      run = Run.create!
+      expect(run.metric).to be_present
+    end
+  end
 end
