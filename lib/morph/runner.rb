@@ -144,8 +144,7 @@ module Morph
       end
 
       # Now collect and save the metrics
-      metric = Metric.create(result.time_params) if result.time_params
-      metric.update_attributes(run_id: run.id) if metric
+      run.metric.update_attributes(result.time_params) if result.time_params
 
       # Update information about what changed in the database
       diffstat = Morph::SqliteDiff.diffstat_safe(
