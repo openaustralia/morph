@@ -33,6 +33,26 @@
 %hr
 .row
   .col-md-10
+    - unless scraper.last_run
+      .panel.panel-default
+        .panel-heading
+          %h2.panel-title Get started
+        .panel-body
+          %h3 Write or edit your new scraper
+          %p
+            Write or edit your
+            = link_to "#{scraper.main_scraper_filename} file directly on github", scraper.github_url_main_scraper_file
+            or on your local machine by cloning the repo with:
+          %p
+            %code git clone #{scraper.git_url_https}
+
+          - if scraper.runnable?
+            %h3 ... or run your scraper now
+            %p
+              If your scraper is already written, try running it with the
+              %strong “Run scraper”
+              button above.
+
     - if scraper.readme
       .panel.panel-default
         .panel-heading
