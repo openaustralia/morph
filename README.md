@@ -39,7 +39,7 @@ Running this on OSX? Read the [OSX instructions](#installing-docker-on-osx) belo
     cp config/database.yml.example config/database.yml
     cp env-example .env
 
-Edit `config/database.yml` with your database settings
+Edit `config/database.yml` with your database user settings
 
 Create an [application on GitHub](https://github.com/settings/applications/new) so that morph.io can talk to GitHub. Fill in the following values
 
