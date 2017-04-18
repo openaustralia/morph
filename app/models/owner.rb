@@ -18,7 +18,7 @@ class Owner < ActiveRecord::Base
   serialize :feature_switches
 
   # Supporters that are on a particular plan
-  scope :supporters, ->(plan) { where(stripe_plan_id: plan.stripe_plan_id) }
+  scope :supporters, ->(plan) { where(stripe_plan_id: plan.stripe_plan_id).order("RAND()") }
 
   scope :all_supporters, -> { where.not(stripe_plan_id: "") }
 

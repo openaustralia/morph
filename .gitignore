@@ -18,7 +18,7 @@
 /tmp/sessions
 /tmp/sockets
 
-# Ignore the PID tempfiles but not the folder that holds them.
+# Ignore the PID tempfiles but not PID folder that holds them.
 /tmp/pids/*.pid
 
 /.env
