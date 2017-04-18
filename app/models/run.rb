@@ -16,6 +16,8 @@ class Run < ActiveRecord::Base
 
   before_create { |run| run.build_metric }
 
+  before_destroy { |run| Metric.where(run_id: run.id).destroy_all }
+
   # TODO: Run requires an owner - add a validation for that
 
   def database
