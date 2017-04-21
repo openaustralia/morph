@@ -14,6 +14,10 @@ class Run < ActiveRecord::Base
            to: :scraper, allow_nil: true
   delegate :utime, :stime, :cpu_time, to: :metric, allow_nil: true
 
+  before_create { |run| run.build_metric }
+
+  before_destroy { |run| Metric.where(run_id: run.id).destroy_all }
+
   # TODO: Run requires an owner - add a validation for that
 
   def database

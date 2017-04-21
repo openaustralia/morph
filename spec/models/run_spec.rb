@@ -60,4 +60,27 @@ describe Run do
       run.finished!
     end
   end
+
+  describe '#metric' do
+    it 'is present after creation' do
+      run = Run.create!
+      expect(run.metric).to be_present
+    end
+  end
+
+  describe '#destroy' do
+    context 'with more than one metric for a single run' do
+      let(:run) { Run.create! }
+
+      before do
+        2.times { Metric.create!(run: run) }
+      end
+
+      it 'does not raise an error' do
+        expect {
+          run.destroy
+        }.to change(Run, :count).by(-1)
+      end
+    end
+  end
 end
