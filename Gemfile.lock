@@ -118,7 +118,7 @@ GEM
     cookiejar (0.3.3)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    d3-rails (4.3.0)
+    d3-rails (3.5.17)
       railties (>= 3.1)
     dalli (2.7.6)
     database_cleaner (1.5.3)
@@ -533,7 +533,7 @@ DEPENDENCIES
   cocoon
   codeclimate-test-reporter
   coffee-rails
-  d3-rails
+  d3-rails (~> 3.5)
   dalli
   database_cleaner
   devise

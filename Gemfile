@@ -65,7 +65,7 @@ gem 'searchkick'
 gem 'elasticsearch', '~> 1' # Match version of elasticsearch on the server
 gem 'stripe'
 gem 'haml-coderay'
-gem 'd3-rails'
+gem 'd3-rails', '~> 3.5'
 gem 'validate_url'
 gem 'ruby-progressbar'
 
