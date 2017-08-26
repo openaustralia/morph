@@ -128,7 +128,7 @@ module Morph
 
     # Returns 0 if table doesn't exists (or there is some other problem)
     def no_rows(table = table_names.first)
-      q = sql_query_safe(%{select count(*) from "#{table}"}) 
+      q = sql_query_safe(%{select count(*) from "#{table}"})
       q ? q.first.values.first : 0
     rescue *CORRUPT_DATABASE_EXCEPTIONS
       0
