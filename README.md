@@ -122,7 +122,29 @@ This section will not be relevant to most people. It will however be relevant if
 
 #### git-encrypt
 
-We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt certain files, like the private key for the SSL certificate. To make this work you have to do some [special things](https://github.com/shadowhand/git-encrypt/tree/legacy#decrypting-clones) _before_ you clone the morph repository.
+We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt certain files, like the private key for the SSL certificate.
+
+To make this work you have to do some [special things](https://github.com/shadowhand/git-encrypt/tree/legacy#decrypting-clones) _before_ you clone the morph repository:
+
+```
+# install old version of git-encrypt
+npm -g install git-encrypt
+gitcrypt version # should equal "0.3.0"
+
+# clone the repo
+git clone -n https://github.com/openaustralia/morph
+cd morph
+
+# set up gitcrypt
+git config gitcrypt.salt 'wm2jtxCAfNmv'
+git config gitcrypt.pass '7idce*4e,XDkB/n8,DLLdngMA=6pfE/WvzFdZ67f'
+git config gitcrypt.cipher aes-256-ecb
+git config filter.encrypt.smudge "gitcrypt smudge"
+git config filter.encrypt.clean "gitcrypt clean"
+git config diff.encrypt.textconv "gitcrypt diff"
+```
+
+For the real production `salt` and `pass` values, check with the folks in #morph on the [OpenAustralia Slack](https://oaf.slack.com).
 
 #### Production devops development
 
