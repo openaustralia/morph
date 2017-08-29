@@ -136,8 +136,8 @@ git clone -n https://github.com/openaustralia/morph
 cd morph
 
 # set up gitcrypt
-git config gitcrypt.salt 'wm2jtxCAfNmv'
-git config gitcrypt.pass '7idce*4e,XDkB/n8,DLLdngMA=6pfE/WvzFdZ67f'
+git config gitcrypt.salt 'YOUR_SALT'
+git config gitcrypt.pass 'YOUR_STRONG_PASSKEY'
 git config gitcrypt.cipher aes-256-ecb
 git config filter.encrypt.smudge "gitcrypt smudge"
 git config filter.encrypt.clean "gitcrypt clean"
