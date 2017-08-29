@@ -144,7 +144,9 @@ git config filter.encrypt.clean "gitcrypt clean"
 git config diff.encrypt.textconv "gitcrypt diff"
 ```
 
-For the real production `salt` and `pass` values, check with the folks in #morph on the [OpenAustralia Slack](https://oaf.slack.com).
+If you intend to make changes to the production infrastructure, you'll need real values for `gitcrypt.salt` and `gitcrypt.pass`.
+
+Please [create a GitHub issue](https://github.com/openaustralia/morph/issues/new) and we'll start the conversation.
 
 #### Production devops development
 
