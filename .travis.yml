@@ -14,11 +14,10 @@ before_install:
   - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
 
 before_script:
-  # Updating docker-engine so we can use a more recent version
-  # Doing it here because doing it in "addons" below hangs on
-  # a prompt for user input
+  # Update docker because we need a more recent version.
+  # Doing it here because doing it in "addons" below hangs on a prompt for user input
   - sudo apt-get update
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - cp config/database.travis.yml config/database.yml
   - bundle exec rake db:setup
   - docker pull openaustralia/buildstep
