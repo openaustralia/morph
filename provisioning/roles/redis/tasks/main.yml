@@ -41,7 +41,8 @@
 - name: make sure redis.log file exists
   file: path=/var/log/redis.log owner=redis group=redis mode=0644 state=touch
 
-- name: copy upstart file
+# source: https://gist.github.com/geschke/ab6afa91b2d9dfcd5c25#gistcomment-1783748
+- name: copy systemd service file
   copy: src=redis-server.service dest=/lib/systemd/system/redis-server.service
 
 - name: copy redis.conf file
