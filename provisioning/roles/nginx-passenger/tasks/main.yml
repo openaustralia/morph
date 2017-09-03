@@ -14,13 +14,13 @@
 - name: Install passenger
   apt: pkg=passenger
 
-- name: Add ngninx apt key
+- name: Add nginx apt key
   apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
 
 - name: Add nginx binary repo
   apt_repository: repo='deb http://nginx.org/packages/mainline/ubuntu/ precise nginx'
 
-- name: Install ngninx extras (compiled with Passenger stuff)
+- name: Install nginx extras (compiled with Passenger stuff)
   apt: pkg=nginx-extras
 
 - name: Ensure nginx is running
