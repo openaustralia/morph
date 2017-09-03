@@ -1,6 +1,6 @@
 ---
 dependencies:
-  - { role: docker-server-linode }
+  - { role: docker }
   - { role: nginx-passenger }
   - { role: ruby }
   - { role: mysql }

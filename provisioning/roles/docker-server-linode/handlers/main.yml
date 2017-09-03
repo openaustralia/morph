@@ -1,8 +1,0 @@
----
-- name: reboot the server
-  command: /sbin/reboot -f
-
-- name: restart docker
-  service:
-    name: docker
-    state: restarted
