@@ -52,8 +52,8 @@
 - name: copy redis.conf file
   copy: src=redis.conf dest=/etc/redis/redis.conf group=redis owner=redis
 
-- name: ensure redis service is restarted
-  service: name=redis-server state=restarted enabled=yes
+- name: ensure redis service is started
+  service: name=redis-server state=started enabled=yes
 
 - name: clean up build files
   command: rm -rf /tmp/{{ item }}
