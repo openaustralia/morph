@@ -9,7 +9,7 @@
   apt: pkg=ca-certificates
 
 - name: Ensure we have the passenger repository
-  apt_repository: repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger precise main'
+  apt_repository: repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger {{ ansible_distribution_release }} main'
 
 - name: Install passenger
   apt: pkg=passenger
@@ -18,7 +18,7 @@
   apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
 
 - name: Add nginx binary repo
-  apt_repository: repo='deb http://nginx.org/packages/mainline/ubuntu/ precise nginx'
+  apt_repository: repo='deb http://nginx.org/packages/mainline/ubuntu/ {{ ansible_distribution_release }} nginx'
 
 - name: Install nginx extras (compiled with Passenger stuff)
   apt: pkg=nginx-extras
