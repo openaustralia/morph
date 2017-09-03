@@ -1,4 +1,0 @@
----
-dependencies:
-  - role: deploy-user
-    github_users: ['mlandauer', 'henare', 'equivalentideas', 'auxesis']
