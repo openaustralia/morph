@@ -15,7 +15,10 @@
   get_url: url=http://download.redis.io/redis-stable.tar.gz dest=/tmp/redis-stable.tar.gz
 
 - name: untar redis
-  command: tar zxf /tmp/redis-stable.tar.gz -C /tmp
+  unarchive:
+    src: /tmp/redis-stable.tar.gz
+    dest: /tmp
+    creates: /tmp/redis-stable
 
 - name: ensure redis is clean before we build it
   command: make -C /tmp/redis-stable distclean
@@ -52,7 +55,7 @@
 
 # - name: installing redis binaries
 #   command: cp /tmp/redis-stable/src/{{ item }} /usr/local/bin
-#   with_items: 
+#   with_items:
 #     - redis-server
 #     - redis-cli
 #     - redis-check-aof
