@@ -10,7 +10,7 @@
 # ansible-playbook --user=root -i hosts playbook.yml
 #
 - hosts: all
-  sudo: true
+  become: root
   pre_tasks:
     - name: Upgrade all packages first
       apt:
