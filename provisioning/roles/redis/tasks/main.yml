@@ -4,7 +4,7 @@
 #
 - name: Set os overcommit memory setting for redis
   sysctl: name=vm.overcommit_memory value=1
-- name: ensure necessary packages installed
+- name: ensure build dependencies are installed
   apt: pkg={{ item }} state=latest
   with_items:
     - make
