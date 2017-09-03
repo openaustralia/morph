@@ -1,15 +1,14 @@
 ---
+# FIXME(auxesis) install this elsewhere
 - name: Ensure curl is installed
   apt: pkg=curl
 
-- name: Install gpg key for rvm
-  shell: gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-  become: deploy
+- name: Add apt repository for rvm
+  apt_repository: repo="ppa:rael-gc/rvm"
 
-# TODO: Maybe install rvm by installing the package ruby-rvm?
-- name: Ensure rvm installed in deploy user
-  shell: curl -sSL https://get.rvm.io | bash -s stable creates=/home/deploy/.rvm
-  become: deploy
+- name: Install rvm package
+  apt: pkg=rvm
+
 # TODO: Is it possible to extract this list of dependencies automatically from rvm?
 # Or allow rvm to do the install - but that would require the deploy user to have the permissions
 - name: "Ensure ruby-2.3.1 dependencies installed"
@@ -35,11 +34,31 @@
     - zlib1g-dev
     - libssl-dev
     - libgmp-dev
-- name: Ensure ruby-2.3.1 is installed through rvm
-  command: /bin/sh -l -c 'rvm install ruby-2.3.1 --autolibs=read-fail' creates=/home/deploy/.rvm/rubies/ruby-2.3.1
+
+- name: Install ruby-2.3.1 through rvm
+  shell: rvm install ruby-2.3.1 --autolibs=read-fail
+  args:
+    creates: /home/deploy/.rvm/rubies/ruby-2.3.1
   become: deploy
-  notify: Make ruby-2.3.1 the default
+  environment:
+    PATH: "{{ rvm_path }}"
+
+- name: Test if ruby-2.3.1 is default
+  shell: rvm alias show default
+  become: deploy
+  environment:
+    PATH: "{{ rvm_path }}"
+  ignore_errors: true
+  changed_when: false
+  register: rvm_alias_show
+
+- name: Make ruby-2.3.1 the default
+  shell: rvm alias create default ruby-2.3.1
+  become: deploy
+  environment:
+    PATH: "{{ rvm_path }}"
+  when: rvm_alias_show|failed
 
 - name: Install bundler
-  command: bash -lc "rvm ruby-2.3.1; gem install bundler"
+  shell: rvm ruby-2.3.1; gem install bundler
   become: deploy
