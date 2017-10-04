@@ -1,3 +1,4 @@
 ---
 dependencies:
-  - { role: docker-server-linode }
+  - { role: deploy-user }
+  - { role: docker }

@@ -4,7 +4,7 @@
     id: 8507EFA5
     keyserver: keys.gnupg.net
 - name: Add the Percona sources
-  apt_repository: repo='deb http://repo.percona.com/apt precise main'
+  apt_repository: repo='deb http://repo.percona.com/apt {{ ansible_distribution_release }} main'
 - name: Install percona xtrabackup
   apt: pkg=percona-xtrabackup update_cache=yes cache_valid_time=3600
 - name: Copy across database backup script

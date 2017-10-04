@@ -6,7 +6,7 @@
   apt_key: keyserver=pgp.mit.edu id=5072E1F5
 
 - name: Add the mysql repository
-  apt_repository: repo='deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.6'
+  apt_repository: repo='deb http://repo.mysql.com/apt/ubuntu/ {{ ansible_distribution_release }} mysql-5.6'
 
 - name: Install latest mysql
   apt: pkg=mysql-server state=latest

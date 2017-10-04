@@ -4,7 +4,7 @@
 #
 - name: Set os overcommit memory setting for redis
   sysctl: name=vm.overcommit_memory value=1
-- name: ensure necessary packages installed
+- name: ensure build dependencies are installed
   apt: pkg={{ item }} state=latest
   with_items:
     - make
@@ -15,13 +15,20 @@
   get_url: url=http://download.redis.io/redis-stable.tar.gz dest=/tmp/redis-stable.tar.gz
 
 - name: untar redis
-  command: tar zxf /tmp/redis-stable.tar.gz -C /tmp
+  unarchive:
+    src: /tmp/redis-stable.tar.gz
+    dest: /tmp
+    creates: /tmp/redis-stable
 
 - name: ensure redis is clean before we build it
   command: make -C /tmp/redis-stable distclean
+  args:
+    creates: /tmp/redis-stable/redis-server
 
 - name: build redis and install
   command: make -C /tmp/redis-stable install
+  args:
+    creates: /usr/local/bin/redis-server
 
 - name: create redis group
   group: name=redis state=present system=yes
@@ -38,31 +45,18 @@
 - name: make sure redis.log file exists
   file: path=/var/log/redis.log owner=redis group=redis mode=0644 state=touch
 
-- name: copy upstart file
-  copy: src=upstart.conf dest=/etc/init/redis.conf
+# source: https://gist.github.com/geschke/ab6afa91b2d9dfcd5c25#gistcomment-1783748
+- name: copy systemd service file
+  copy: src=redis-server.service dest=/lib/systemd/system/redis-server.service
 
 - name: copy redis.conf file
   copy: src=redis.conf dest=/etc/redis/redis.conf group=redis owner=redis
 
-# #- name: copy custom template
-# #  template: src=templates/redis.local.conf.j2 dest=/etc/redis/redis.local.conf group=redis owner=redis
+- name: ensure redis service is started
+  service: name=redis-server state=started enabled=yes
 
-# #- name: copy redis-local script
-# #  template: src=templates/redis-local.j2 dest=/usr/local/bin/redis-local mode=0755
-
-# - name: installing redis binaries
-#   command: cp /tmp/redis-stable/src/{{ item }} /usr/local/bin
-#   with_items: 
-#     - redis-server
-#     - redis-cli
-#     - redis-check-aof
-#     - redis-check-dump
-
-- name: cleaning up build files
+- name: clean up build files
   command: rm -rf /tmp/{{ item }}
   with_items:
     - redis-stable
     - redis-stable.tar.gz
-
-- name: ensure redis service is restarted
-  service: name=redis state=restarted
