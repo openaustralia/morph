@@ -12,6 +12,9 @@
     name: "{{ item.name }}"
     version: "{{ item.version }}"
     state: present
+    # We have to get things via https now.
+    # The old version of pip doesn't know how to do this. So forcing
+    extra_args: --index-url=https://pypi.python.org/simple/
   with_items:
   - { name: pip, version: 9.0.1 }
   - { name: setuptools, version: 34.1.0 }
