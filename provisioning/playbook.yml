@@ -19,3 +19,4 @@
         upgrade: yes
   roles:
     - morph-app
+    - discourse
