@@ -1,6 +1,6 @@
 ---
-# This playbook is for provisioning on a Linode box. It should be at least a Linode 2048 box and have
-# 64 bit Ubuntu 16.04 LTS with 256 MB swap (I think).
+# This playbook is for provisioning on a Linode box. It should be at least a Linode 24576 box and have
+# 64 bit Ubuntu 16.04 LTS with 256 MB swap.
 #
 # To run in development:
 # vagrant provision local
