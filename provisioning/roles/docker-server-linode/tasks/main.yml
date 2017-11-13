@@ -1,54 +1,25 @@
 ---
-- name: Remove old linux kernel
-  apt: pkg=linux-image-generic-lts-raring state=absent
-
-- name: Remove old linux kernel header
-  apt: pkg=linux-headers-generic-lts-raring state=absent
-
-- name: Ensure that we're running Linux kernel 3.8
-  apt: pkg=linux-image-generic-lts-trusty update_cache=yes cache_valid_time=3600
-  notify:
-  - reboot the server
-
-- name: Ensure that new Linux headers are installed
-  apt: pkg=linux-headers-generic-lts-trusty
-
-# For Linode we need to do some special stuff to get this kernel to be used
-- name: Remove grub2
-  apt: pkg=grub2 state=absent
-
-- name: Remove grub-pc
-  apt: pkg=grub-pc state=absent
-
-- name: Install grub
-  apt: pkg=grub state=present
-
-# Now you need to make some changes on the Linode console
-# 1. change the Linode configuration profile to use pv-grub-x86_64
-# 2. In Filesystem/Boot Helpers section disable the Xenify distro option
-# 3. Save changes
-# 4. Reboot from the Dashboard tab
-
 - name: Install apt-transport-https
   apt: pkg=apt-transport-https state=present
 
 - name: Install ca-certificates
   apt: pkg=ca-certificates state=present
 
-- name: Ensure that we have the Docker repository key
-  apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
+- name: Install software-properties-common
+  apt: pkg=software-properties-common
 
-- name: Ensure that pycurl is installed (for ansible)
-  apt: pkg=python-pycurl
+# TODO: Doesn't verify fingerprint of key
+- name: Ensure that we have the Docker repository key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    id: 0EBFCD88
+    state: present
 
 - name: Ensure that we have the docker repository
-  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-precise main'
-
-- name: Remove old lxc-docker package
-  apt: pkg=lxc-docker state=absent purge=yes
+  apt_repository: repo='deb https://download.docker.com/linux/ubuntu xenial stable'
 
 - name: Ensure that the docker package is installed
-  apt: pkg=docker-engine
+  apt: pkg=docker-ce
 
 - name: Configure docker to disable inter-container communication
   copy:
