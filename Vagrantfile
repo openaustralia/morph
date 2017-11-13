@@ -4,9 +4,7 @@
 Vagrant.configure("2") do |config|
   # local: A local machine that mimics a production deployment
 
-  # All VMs are based on Ubuntu Precise 64 bit
-  config.vm.box = "ubuntu"
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.box = "ubuntu/xenial64"
 
   config.vm.define "local" do |local|
     local.vm.network :private_network, ip: "192.168.11.2"
