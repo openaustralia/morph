@@ -150,7 +150,7 @@ Please [create a GitHub issue](https://github.com/openaustralia/morph/issues/new
 
 #### Production devops development
 
-Install [Vagrant](http://www.vagrantup.com/) and [Ansible](http://www.ansible.com/).
+Install [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbox.org) and [Ansible](http://www.ansible.com/).
 
 Install the hostsupdater plugin: `vagrant plugin install vagrant-hostsupdater`
 
