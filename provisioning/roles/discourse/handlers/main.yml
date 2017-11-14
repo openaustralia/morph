@@ -1,5 +1,6 @@
 ---
 - name: restart nginx
   service: name=nginx state=restarted
+
 - name: start discourse
-  command: ./launcher start app chdir=/var/docker
+  command: ./launcher start app chdir=/var/discourse

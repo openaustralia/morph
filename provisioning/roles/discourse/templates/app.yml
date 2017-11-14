@@ -69,10 +69,10 @@ env:
 ## These containers are stateless, all data is stored in /shared
 volumes:
   - volume:
-      host: /var/docker/shared/standalone
+      host: /var/discourse/shared/standalone
       guest: /shared
   - volume:
-      host: /var/docker/shared/standalone/log/var-log
+      host: /var/discourse/shared/standalone/log/var-log
       guest: /var/log
 
 ## The docker manager plugin allows you to one-click upgrade Discourse

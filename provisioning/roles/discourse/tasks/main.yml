@@ -4,12 +4,15 @@
   apt_repository: repo='ppa:git-core/ppa'
 - name: Ensure latest git is installed
   apt: pkg=git state=latest
-- name: Ensure that /var/docker exists
-  file: path=/var/docker owner=deploy group=deploy state=directory
+
+- name: Ensure that /var/discourse exists
+  file: path=/var/discourse owner=deploy group=deploy state=directory
+
 - name: Get the official discourse docker image
-  command: git clone https://github.com/discourse/discourse_docker.git /var/docker creates=/var/docker/README.md
+  command: git clone https://github.com/discourse/discourse_docker.git /var/discourse creates=/var/discourse/README.md
+
 - name: Copy over app configuration
-  template: src=app.yml dest=/var/docker/containers/app.yml owner=deploy group=deploy
+  template: src=app.yml dest=/var/discourse/containers/app.yml owner=deploy group=deploy
 
 # launcher bootstrap needs a key pair at /root/.ssh/id_rsa otherwise it waits
 - name: Ensure root .ssh directory exists
@@ -32,7 +35,7 @@
 #   file: path=/home/vagrant/.ssh/id_rsa.pub owner=vagrant group=vagrant
 
 - name: Bootstrap discourse app
-  command: ./launcher bootstrap app chdir=/var/docker creates=/var/docker/shared/standalone/log/rails/production.log
+  command: ./launcher bootstrap app chdir=/var/discourse creates=/var/discourse/shared/standalone/log/rails/production.log
   notify: start discourse
 
 - name: Generate the nginx config for the app
