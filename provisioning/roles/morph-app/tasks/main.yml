@@ -211,7 +211,7 @@
   copy: src=iptables-morph-remove dest=/usr/local/sbin mode=0755
 
 - name: run iptables morph setup script at boot
-  copy: src=interfaces dest=/etc/network/interfaces
+  copy: src=interfaces dest=/etc/network/if-up.d/iptables-morph-add mode=0755
 
 # We're going to use monit to monitor the sidekiq worker to ensure that it doesn't
 # use too much memory
