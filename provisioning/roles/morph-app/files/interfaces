@@ -1,3 +1,6 @@
 #!/bin/sh
 
-iptables-morph-add
+# Temporarily disabling the forwarding of traffic to mitmproxy and
+# the setting of some firewall rules
+# TODO: Reenable this
+#iptables-morph-add
