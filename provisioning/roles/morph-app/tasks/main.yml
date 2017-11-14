@@ -10,12 +10,12 @@
 # TODO: Use this to create certificates
 - name: Download SSLMate APT source
   get_url:
-    url: https://sslmate.com/apt/ubuntu1204/sslmate.list
+    url: https://sslmate.com/apt/ubuntu1604/sslmate.list
     dest: /etc/apt/sources.list.d/sslmate.list
 
 - name: Download SSLMate APT key
   get_url:
-    url: https://sslmate.com/apt/ubuntu1204/sslmate.gpg
+    url: https://sslmate.com/apt/ubuntu1604/sslmate.gpg
     dest: /etc/apt/trusted.gpg.d/sslmate.gpg
 
 - name: Install SSLMate
