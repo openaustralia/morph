@@ -21,7 +21,8 @@ Vagrant.configure("2") do |config|
     local.vm.synced_folder ".", "/vagrant", disabled: true
 
     local.vm.provider "virtualbox" do |v|
-      v.memory = 2048
+      # Without elasticsearch we can run with 2GB of memory, but otherwise
+      v.memory = 4096
     end
 
     local.vm.provision :ansible do |ansible|
