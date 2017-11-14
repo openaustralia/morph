@@ -1,7 +1,4 @@
 ---
-# We need git 1.8 or higher here which is not available in the default package
-- name: Add git ppa repository
-  apt_repository: repo='ppa:git-core/ppa'
 - name: Ensure latest git is installed
   apt: pkg=git state=latest
 
@@ -13,26 +10,6 @@
 
 - name: Copy over app configuration
   template: src=app.yml dest=/var/discourse/containers/app.yml owner=deploy group=deploy
-
-# launcher bootstrap needs a key pair at /root/.ssh/id_rsa otherwise it waits
-- name: Ensure root .ssh directory exists
-  file: path=/root/.ssh state=directory
-- name: Generate vagrant keypair
-  command: ssh-keygen -f /root/.ssh/id_rsa -t rsa -N '' creates=/root/.ssh/id_rsa
-
-# The following section doesn't run in production. This is annoying. It seems on local
-# everything runs as vagrant (which then sudo's to root) while on production everything
-# runs as root. This causes each to run with a different home directory.
-
-# # launcher bootstrap needs a key pair at /home/vagrant/.ssh/id_rsa otherwise it waits
-# - name: Ensure vagrant .ssh directory exists
-#   file: path=/home/vagrant/.ssh owner=vagrant group=vagrant state=directory
-# - name: Generate vagrant keypair
-#   command: ssh-keygen -f /home/vagrant/.ssh/id_rsa -t rsa -N '' creates=/home/vagrant/.ssh/id_rsa
-# - name: Ensure private key has correct permissions and ownership
-#   file: path=/home/vagrant/.ssh/id_rsa owner=vagrant group=vagrant
-# - name: Ensure public key has correct permissions and ownership
-#   file: path=/home/vagrant/.ssh/id_rsa.pub owner=vagrant group=vagrant
 
 - name: Bootstrap discourse app
   command: ./launcher bootstrap app chdir=/var/discourse creates=/var/discourse/shared/standalone/log/rails/production.log
