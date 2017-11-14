@@ -4,6 +4,12 @@
 Vagrant.configure("2") do |config|
   # local: A local machine that mimics a production deployment
 
+  # Annoyingly this box doesn't come with a disk big enough for what we need
+  # to do here. So, you'll find it will run out of space when it comes to
+  # installing discourse. If you want to avoid this you can manually resize
+  # the disk image by following the instructions here:
+  # http://tuhrig.de/resizing-vagrant-box-disk-space/
+  #
   config.vm.box = "ubuntu/xenial64"
 
   config.vm.define "local" do |local|
