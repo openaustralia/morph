@@ -1,5 +1,5 @@
 # Start Elasticsearch automatically
-#START_DAEMON=true
+START_DAEMON=true
 
 # Run Elasticsearch as this user ID and group ID
 #ES_USER=elasticsearch
