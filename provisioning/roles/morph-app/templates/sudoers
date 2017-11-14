@@ -1,1 +1,1 @@
-deploy ALL=NOPASSWD:/usr/sbin/service
+deploy ALL=NOPASSWD:/bin/systemctl

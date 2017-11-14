@@ -54,21 +54,21 @@ namespace :foreman do
   desc "Start the application services"
   task :start do
     on roles(:app) do
-      sudo "service morph start"
+      sudo "systemctl start morph.target"
     end
   end
 
   desc "Stop the application services"
   task :stop do
     on roles(:app) do
-      sudo "service morph stop"
+      sudo "systemctl stop morph.target"
     end
   end
 
   desc "Restart the application services"
   task :restart do
     on roles(:app) do
-      sudo "service morph restart"
+      sudo "systemctl restart morph.target"
     end
   end
 end
