@@ -19,3 +19,4 @@ skylight_authentication: "{{ encrypted_skylight_authentication }}"
 stripe_publishable_key: "{{ encrypted_stripe_publishable_key }}"
 stripe_secret_key: "{{ encrypted_stripe_secret_key }}"
 discourse_server_name: help.{{ server_name }}
+mysql_password: "{{ encrypted_mysql_password }}"

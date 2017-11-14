@@ -111,6 +111,12 @@
 - name: Create database
   mysql_db: name=morph
 
+- name: Create a morph user with access to the database
+  mysql_user:
+    name: morph
+    password: "{{ mysql_password }}"
+    priv: 'morph.*:ALL'
+
 - name: Create directory /var/www/shared/config
   file: path=/var/www/shared/config owner=deploy group=deploy state=directory
 
