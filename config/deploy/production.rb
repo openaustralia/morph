@@ -1,5 +1,5 @@
 set :stage, :production
 
-role :app, %w{deploy@morph.io}
-role :web, %w{deploy@morph.io}
-role :db,  %w{deploy@morph.io}
+role :app, %w{deploy@173.255.208.251}
+role :web, %w{deploy@173.255.208.251}
+role :db,  %w{deploy@173.255.208.251}
