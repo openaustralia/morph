@@ -10,6 +10,7 @@ dependencies:
   - { role: mitmproxy }
   - role: f500.elasticsearch
     elasticsearch_network_host: localhost
+    elasticsearch_version: 1.7
   - role: nickhammond.logrotate
     logrotate_scripts:
       - name: rails

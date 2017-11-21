@@ -20,9 +20,6 @@
   notify:
     - restart elasticsearch
 
-- name: Copy across another configuration
-  copy: src=default dest=/etc/default/elasticsearch backup=yes
-
 - name: Ensure Elasticsearch is configured to start on boot
   service:
     name: elasticsearch
