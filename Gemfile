@@ -61,7 +61,9 @@ gem 'multiblock'
 gem 'honeybadger'
 gem 'cancan'
 gem 'backstretch-rails'
-gem 'searchkick'
+# We can't use anything later than 1.5.1 if we're on elasticsearch 1.x
+# See https://github.com/ankane/searchkick/blob/master/README.md
+gem 'searchkick', '1.5.1'
 gem 'elasticsearch', '~> 1' # Match version of elasticsearch on the server
 gem 'stripe'
 gem 'haml-coderay'
