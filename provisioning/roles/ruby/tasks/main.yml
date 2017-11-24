@@ -3,7 +3,7 @@
   apt: pkg=curl
 
 - name: Install gpg key for rvm
-  shell: gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+  shell: gpg --keyserver hkp://pgp.mit.edu --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
   become_user: deploy
 
 # TODO: Maybe install rvm by installing the package ruby-rvm?
