@@ -2,7 +2,7 @@
 - name: Add the Percona repository key
   apt_key:
     id: 8507EFA5
-    keyserver: keys.gnupg.net
+    keyserver: pgp.mit.edu
 - name: Add the Percona sources
   apt_repository: repo='deb http://repo.percona.com/apt xenial main'
 - name: Install percona xtrabackup
