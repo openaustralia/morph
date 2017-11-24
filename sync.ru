@@ -8,7 +8,7 @@ Faye::WebSocket.load_adapter 'puma'
 
 Sync.load_config(
   File.expand_path("../config/sync.yml", __FILE__),
-  ENV["RAILS_ENV"] || "development"
+  ENV["RACK_ENV"] || "development"
 )
 
 run Sync.pubsub_app
