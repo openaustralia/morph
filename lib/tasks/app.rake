@@ -109,21 +109,38 @@ namespace :app do
   # FIXME: This is a workaround for the problem in https://github.com/openaustralia/morph/issues/910
   desc "Creates missing run workers for scrapers that are running"
   task create_missing_run_workers: :environment do
-    # Get runs that have a background worker
-    workers = Sidekiq::Workers.new
-    active_runs = workers.collect do |process_id, thread_id, work|
-      work["payload"]["args"].first if work["queue"] == "scraper"
-    end
+    # Go for a little old school text banner action
+    puts <<-EOF
+******************************************************************************
+This rake task has been temporarily disabled. This is because it's likely that
+there is a significant bug in the current version which causes multiple
+RunWorkers with the same run_id to be created. This is because in figuring
+out whether there are jobs on the queue it doesn't take into account jobs that
+are queued or on the retry queue.
 
-    # Recreate missing background processes for running scrapers
-    Scraper.running.each do |scraper|
-      run_id = scraper.last_run.id
+In the meantime please use this instead:
+rake app:emergency:show_queue_run_inconsistencies
 
-      if !active_runs.include?(run_id)
-        puts "Creating run worker for run ID: #{run_id}"
-        RunWorker.perform_async(run_id)
-      end
-    end
+This will make no changes. It will only let you know of inconsistencies.
+Unfortunately, for the time being you'll have to make changes manually until
+this this task can get fixed.
+******************************************************************************
+    EOF
+    # # Get runs that have a background worker
+    # workers = Sidekiq::Workers.new
+    # active_runs = workers.collect do |process_id, thread_id, work|
+    #   work["payload"]["args"].first if work["queue"] == "scraper"
+    # end
+    #
+    # # Recreate missing background processes for running scrapers
+    # Scraper.running.each do |scraper|
+    #   run_id = scraper.last_run.id
+    #
+    #   if !active_runs.include?(run_id)
+    #     puts "Creating run worker for run ID: #{run_id}"
+    #     RunWorker.perform_async(run_id)
+    #   end
+    # end
   end
 
   desc "Remove log lines for old runs (not the latest ones)"
