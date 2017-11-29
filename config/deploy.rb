@@ -90,4 +90,7 @@ end
 after 'deploy:publishing', 'deploy:restart'
 before "deploy:restart", "deploy:docker"
 after "deploy:docker", "foreman:restart"
-after "foreman:restart", "searchkick:reindex:all"
+# Disable the searchkick reindex on deploys because it just takes *way* too long
+# However, not that on a first deploy you do need to run the searchkick:reindex:all
+# task otherwise things won't work as expected
+#after "foreman:restart", "searchkick:reindex:all"
