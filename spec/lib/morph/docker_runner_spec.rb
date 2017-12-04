@@ -82,7 +82,8 @@ describe Morph::DockerRunner do
       network_info = Docker::Network.get('morph').info
       expect(network_info['Options']['com.docker.network.bridge.name']).to eq "morph"
       expect(network_info['Options']["com.docker.network.bridge.enable_icc"]).to eq 'false'
-      expect(network_info['IPAM']['Config'].first['Subnet']).to eq '192.168.0.0/16'
+      # We're not hardcoding the subnet anymore. So, have to disable the test below
+      #expect(network_info['IPAM']['Config'].first['Subnet']).to eq '192.168.0.0/16'
       c.kill
       c.delete
     end
