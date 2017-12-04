@@ -137,10 +137,25 @@ module Morph
         result = Morph::DockerRunner.finish(c, ['data.sqlite'])
       end
 
+      status_code = result.status_code
+
       # Only copy back database if it's there and has something in it
       if result.files && result.files['data.sqlite']
         Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
         result.files['data.sqlite'].close!
+      else
+        m = <<-EOF
+Scraper didn't create an SQLite database in your current working directory called
+data.sqlite. If you've just created your first scraper and not edited the code yet
+this is to be expected.
+
+To fix this make your scraper write to an SQLite database at data.sqlite.
+
+However, this could also be related to an intermittant problem which we're
+working hard to resolve: https://github.com/openaustralia/morph/issues/1064
+        EOF
+        yield Time.now, 'stderr', m
+        status_code = 998
       end
 
       # Now collect and save the metrics
@@ -171,7 +186,7 @@ module Morph
       end
       Morph::Database.tidy_data_path(run.data_path)
 
-      run.update_attributes(status_code: result.status_code, finished_at: Time.now)
+      run.update_attributes(status_code: status_code, finished_at: Time.now)
 
       if run.scraper
         run.finished!
