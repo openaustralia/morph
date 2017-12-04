@@ -17,6 +17,7 @@ RUN apt-get install -y \
   # of morph.io which is necessary for the connection log callback
   ca-certificates
 
+RUN pip install --upgrade setuptools
 RUN pip install --upgrade cffi
 RUN pip install --upgrade cryptography
 RUN pip install mitmproxy==0.12
