@@ -197,10 +197,6 @@ module Morph
         # TODO: Ensure that there isn't anything else writing to the db
         # while we make a copy of it. There's the backup API. Use that?
         FileUtils.cp(File.join(data_path, 'data.sqlite'), dir)
-      else
-        # Copy across a zero-sized file which will overwrite the symbolic
-        # link on the container
-        FileUtils.touch(File.join(dir, 'data.sqlite'))
       end
     end
 
