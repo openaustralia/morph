@@ -146,23 +146,28 @@ module Morph
       # Now collect and save the metrics
       run.metric.update_attributes(result.time_params) if result.time_params
 
-      # Update information about what changed in the database
-      diffstat = Morph::SqliteDiff.diffstat_safe(
-        run.database.sqlite_db_backup_path, run.database.sqlite_db_path
-      )
-      if diffstat
-        tables = diffstat[:tables][:counts]
-        records = diffstat[:records][:counts]
-        run.update_attributes(
-          tables_added: tables[:added],
-          tables_removed: tables[:removed],
-          tables_changed: tables[:changed],
-          tables_unchanged: tables[:unchanged],
-          records_added: records[:added],
-          records_removed: records[:removed],
-          records_changed: records[:changed],
-          records_unchanged: records[:unchanged]
+      # Because SqliteDiff will actually create sqlite databases if they
+      # don't exist we don't actually want that if there isn't actually
+      # a database because it causes some very confusing behaviour
+      if File.exists?(run.database.sqlite_db_path)
+        # Update information about what changed in the database
+        diffstat = Morph::SqliteDiff.diffstat_safe(
+          run.database.sqlite_db_backup_path, run.database.sqlite_db_path
         )
+        if diffstat
+          tables = diffstat[:tables][:counts]
+          records = diffstat[:records][:counts]
+          run.update_attributes(
+            tables_added: tables[:added],
+            tables_removed: tables[:removed],
+            tables_changed: tables[:changed],
+            tables_unchanged: tables[:unchanged],
+            records_added: records[:added],
+            records_removed: records[:removed],
+            records_changed: records[:changed],
+            records_unchanged: records[:unchanged]
+          )
+        end
       end
       Morph::Database.tidy_data_path(run.data_path)
 
