@@ -137,36 +137,56 @@ module Morph
         result = Morph::DockerRunner.finish(c, ['data.sqlite'])
       end
 
+      status_code = result.status_code
+
       # Only copy back database if it's there and has something in it
       if result.files && result.files['data.sqlite']
         Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
         result.files['data.sqlite'].close!
+      else
+        m = <<-EOF
+Scraper didn't create an SQLite database in your current working directory called
+data.sqlite. If you've just created your first scraper and not edited the code yet
+this is to be expected.
+
+To fix this make your scraper write to an SQLite database at data.sqlite.
+
+However, this could also be related to an intermittant problem which we're
+working hard to resolve: https://github.com/openaustralia/morph/issues/1064
+        EOF
+        yield Time.now, 'stderr', m
+        status_code = 998
       end
 
       # Now collect and save the metrics
       run.metric.update_attributes(result.time_params) if result.time_params
 
-      # Update information about what changed in the database
-      diffstat = Morph::SqliteDiff.diffstat_safe(
-        run.database.sqlite_db_backup_path, run.database.sqlite_db_path
-      )
-      if diffstat
-        tables = diffstat[:tables][:counts]
-        records = diffstat[:records][:counts]
-        run.update_attributes(
-          tables_added: tables[:added],
-          tables_removed: tables[:removed],
-          tables_changed: tables[:changed],
-          tables_unchanged: tables[:unchanged],
-          records_added: records[:added],
-          records_removed: records[:removed],
-          records_changed: records[:changed],
-          records_unchanged: records[:unchanged]
+      # Because SqliteDiff will actually create sqlite databases if they
+      # don't exist we don't actually want that if there isn't actually
+      # a database because it causes some very confusing behaviour
+      if File.exists?(run.database.sqlite_db_path)
+        # Update information about what changed in the database
+        diffstat = Morph::SqliteDiff.diffstat_safe(
+          run.database.sqlite_db_backup_path, run.database.sqlite_db_path
         )
+        if diffstat
+          tables = diffstat[:tables][:counts]
+          records = diffstat[:records][:counts]
+          run.update_attributes(
+            tables_added: tables[:added],
+            tables_removed: tables[:removed],
+            tables_changed: tables[:changed],
+            tables_unchanged: tables[:unchanged],
+            records_added: records[:added],
+            records_removed: records[:removed],
+            records_changed: records[:changed],
+            records_unchanged: records[:unchanged]
+          )
+        end
       end
       Morph::Database.tidy_data_path(run.data_path)
 
-      run.update_attributes(status_code: result.status_code, finished_at: Time.now)
+      run.update_attributes(status_code: status_code, finished_at: Time.now)
 
       if run.scraper
         run.finished!
@@ -197,10 +217,6 @@ module Morph
         # TODO: Ensure that there isn't anything else writing to the db
         # while we make a copy of it. There's the backup API. Use that?
         FileUtils.cp(File.join(data_path, 'data.sqlite'), dir)
-      else
-        # Copy across a zero-sized file which will overwrite the symbolic
-        # link on the container
-        FileUtils.touch(File.join(dir, 'data.sqlite'))
       end
     end
 

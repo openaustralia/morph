@@ -105,7 +105,7 @@ module Morph
       tmp = Tempfile.new('morph.tar', Dir.tmpdir, encoding: 'ASCII-8BIT')
       begin
         container2.copy(path) { |chunk| tmp << chunk }
-      rescue Docker::Error::ServerError, Docker::Error::NotFoundError
+      rescue Docker::Error::NotFoundError
         # If the path isn't found
         return nil
       end
