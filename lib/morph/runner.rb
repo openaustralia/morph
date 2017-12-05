@@ -151,7 +151,7 @@ this is to be expected.
 
 To fix this make your scraper write to an SQLite database at data.sqlite.
 
-However, this could also be related to an intermittant problem which we're
+However, this could also be related to an intermittent problem which we're
 working hard to resolve: https://github.com/openaustralia/morph/issues/1064
         EOF
         yield Time.now, 'stderr', m
