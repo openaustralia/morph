@@ -32,6 +32,19 @@ ActiveAdmin.register_page "Dashboard" do
       end
     end
 
+    panel "Sqlite database not transferred bug debugging help" do
+      para do
+        text_node "This is here to help debug the issue"
+        a "https://github.com/openaustralia/morph/issues/1064", href: "https://github.com/openaustralia/morph/issues/1064"
+      end
+      run = Run.order(finished_at: :desc).where(status_code: 998).first
+      time = run.finished_at.localtime
+      para "Last time there was a problem: #{time_ago_in_words(time)} ago (#{time})"
+      para do
+        text_node "On scraper:"
+        a run.scraper.full_name, href: scraper_path(run.scraper)
+      end
+    end
     # Here is an example of a simple dashboard with columns and panels.
     #
     # columns do
