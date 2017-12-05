@@ -30,10 +30,6 @@ ActiveAdmin.register_page "Dashboard" do
       para do
         render "maximum_concurrent_scrapers_form"
       end
-      span class: "blank_slate" do
-        span I18n.t("active_admin.dashboard_welcome.welcome")
-        small I18n.t("active_admin.dashboard_welcome.call_to_action")
-      end
     end
 
     # Here is an example of a simple dashboard with columns and panels.
