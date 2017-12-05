@@ -143,7 +143,8 @@ module Morph
       if result.files && result.files['data.sqlite']
         Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
         result.files['data.sqlite'].close!
-      else
+      # Only show the error below if the scraper thinks it finished without problems
+      elsif status_code == 0
         m = <<-EOF
 Scraper didn't create an SQLite database in your current working directory called
 data.sqlite. If you've just created your first scraper and not edited the code yet
