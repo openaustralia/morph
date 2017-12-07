@@ -22,6 +22,9 @@ RUN pip install --upgrade cffi
 RUN pip install --upgrade cryptography
 RUN pip install mitmproxy==0.12
 RUN pip install --upgrade pyOpenSSL
+RUN pip install --upgrade pyasn1
+RUN pip install ipaddress
+RUN pip install enum34
 
 # Cleaning up things we don't actually need to run mitmdump.
 # This won't actually reduce the size of the final image unless we combine
