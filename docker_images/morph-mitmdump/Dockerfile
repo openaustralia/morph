@@ -6,6 +6,8 @@ MAINTAINER Matthew Landauer <matthew@oaf.org.au>
 # behind
 RUN apt-get update && apt-get install -y python
 
+# Need to install ca-certificates otherwise won't verify ssl certificate
+# of morph.io which is necessary for the connection log callback
 RUN apt-get install -y \
   libffi-dev   \
   libssl-dev   \
@@ -13,8 +15,6 @@ RUN apt-get install -y \
   libjpeg62-turbo-dev \
   python-dev   \
   python-pip \
-  # Need to install ca-certificates otherwise won't verify ssl certificate
-  # of morph.io which is necessary for the connection log callback
   ca-certificates
 
 RUN pip install --upgrade setuptools
