@@ -118,4 +118,22 @@ describe Morph::DockerUtils do
       expect(Morph::DockerUtils.find_all_containers_with_label('foobar').count).to eq 2
     end
   end
+
+  describe '.copy_file' do
+    it 'should create a temporary file locally from a file on a container' do
+      c = Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'foobar' => '1'})
+      # Grab file provided by buildstep
+      file = Morph::DockerUtils.copy_file(c, '/build/builder')
+      expect(file.read).to eq "#!/bin/bash\nexec /bin/herokuish buildpack build"
+      file.close!
+      c.delete
+    end
+
+    it 'should return nil for a file that does not exist' do
+      c = Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'foobar' => '1'})
+      file = Morph::DockerUtils.copy_file(c, '/not/a/path')
+      expect(file).to be_nil
+      c.delete
+    end
+  end
 end
