@@ -16,8 +16,10 @@ before_install:
 before_script:
   # Update docker because we need a more recent version.
   # Doing it here because doing it in "addons" below hangs on a prompt for user input
+  - docker --version
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  - docker --version
   - cp config/database.travis.yml config/database.yml
   - bundle exec rake db:setup
   - docker pull openaustralia/buildstep
