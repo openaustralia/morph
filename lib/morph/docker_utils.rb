@@ -100,7 +100,7 @@ module Morph
       # up our memory
       tmp = Tempfile.new('morph.tar', Dir.tmpdir, encoding: 'ASCII-8BIT')
       begin
-        container.copy(path) { |chunk| tmp << chunk }
+        container.archive_out(path) { |chunk| tmp << chunk }
       rescue Docker::Error::NotFoundError
         # If the path isn't found
         return nil
