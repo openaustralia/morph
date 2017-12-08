@@ -42,7 +42,7 @@ ActiveAdmin.register_page "Dashboard" do
       # Only highlight runs where there is actually data.sqlite stored on the server because
       # we would always expect there to be a data.sqlite output
       run = runs.find do |r|
-        File.exists?(File.join(runs.first.data_path, 'data.sqlite'))
+        File.exists?(File.join(r.data_path, 'data.sqlite'))
       end
       if run
         time = run.finished_at.localtime
