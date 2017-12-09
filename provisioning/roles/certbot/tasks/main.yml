@@ -1,0 +1,30 @@
+---
+
+- name: Install certbot requirements
+  apt:
+    name: software-properties-common
+
+- name: Setup certbot PPA
+  apt_repository:
+    repo: 'ppa:certbot/certbot'
+
+- name: Install certbot
+  apt:
+    name: python-certbot-nginx
+    update_cache: yes
+
+- name: Add cron job for auto renewing certificates at 8:10am
+  cron:
+    name: Certbot automatic renewal
+    job: certbot renew
+    hour: 8
+    minute: 10
+    user: deploy
+
+- name: Reload web server shortly after running cronjob
+  cron:
+    name: After certbot renewal
+    job: service nginx reload
+    hour: 8
+    minute: 20
+    user: root

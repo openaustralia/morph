@@ -8,6 +8,7 @@ dependencies:
   - { role: redis }
   - { role: newrelic-sysmond }
   - { role: mitmproxy }
+  - { role: certbot }
   - role: f500.elasticsearch
     elasticsearch_network_host: localhost
     elasticsearch_version: 1.7
