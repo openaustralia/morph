@@ -37,12 +37,22 @@ ActiveAdmin.register_page "Dashboard" do
         text_node "This is here to help debug the issue"
         a "https://github.com/openaustralia/morph/issues/1064", href: "https://github.com/openaustralia/morph/issues/1064"
       end
-      run = Run.order(finished_at: :desc).where(status_code: 998).first
-      time = run.finished_at.localtime
-      para "Last time there was a problem: #{time_ago_in_words(time)} ago (#{time})"
-      para do
-        text_node "On scraper:"
-        a run.scraper.full_name, href: scraper_path(run.scraper)
+      # For the time being just look at runs in the last month
+      runs = Run.order(finished_at: :desc).where(status_code: 998).where('finished_at > ?', 1.month.ago)
+      # Only highlight runs where there is actually data.sqlite stored on the server because
+      # we would always expect there to be a data.sqlite output
+      run = runs.find do |r|
+        File.exists?(File.join(r.data_path, 'data.sqlite'))
+      end
+      if run
+        time = run.finished_at.localtime
+        para "Last time there was a problem: #{time_ago_in_words(time)} ago (#{time})"
+        para do
+          text_node "On scraper:"
+          a run.scraper.full_name, href: scraper_path(run.scraper)
+        end
+      else
+        para "No problems in the last month"
       end
     end
     # Here is an example of a simple dashboard with columns and panels.
