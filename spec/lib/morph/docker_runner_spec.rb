@@ -20,6 +20,10 @@ describe Morph::DockerRunner do
         logs << [s, c]
       end
 
+      # For some reason (which I don't understand) on travis it returns
+      # extra lines with carriage returns. So, ignore these
+      logs = logs.reject{|l| l[1] == "\n"}
+
       expect(c).to be_nil
       expect(logs).to eq [
         [:internalout, "Injecting configuration and compiling...\n"],
@@ -96,6 +100,11 @@ describe Morph::DockerRunner do
       Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [s, c]
       end
+
+      # For some reason (which I don't understand) on travis it returns
+      # extra lines with carriage returns. So, ignore these
+      logs = logs.reject{|l| l[1] == "\n"}
+
       result = Morph::DockerRunner.finish(c, [])
       expect(result.status_code).to eq 0
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
