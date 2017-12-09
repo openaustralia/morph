@@ -28,3 +28,10 @@
     hour: 8
     minute: 20
     user: root
+
+# On installing certbot suggests backing up /etc/letsencrypt. It contains
+# the generated certificates as well as account information and private keys.
+# It does make sense to do this but is it actually really strictly necessary
+# as things can just be regenerated?
+
+# TODO: Do regular backups of /etc/letsencrypt
