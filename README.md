@@ -172,6 +172,26 @@ When you've changed the Ansible playbooks to modify the infrastructure you'll wa
 
     ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
 
+#### SSL certificates
+
+We're using Let's Encrypt for SSL certificates. It's not 100% automated.
+On a completely fresh install (with a new domain) as root:
+```
+certbot --nginx certonly -m contact@oaf.org.au --agree-tos
+```
+
+It should show something like this:
+```
+Which names would you like to activate HTTPS for?
+-------------------------------------------------------------------------------
+1: morph.io
+2: api.morph.io
+3: faye.morph.io
+4: help.morph.io
+```
+
+Leave your answer your blank which will install the certificate for all of them
+
 ### How to contribute
 
 If you find what looks like a bug:
