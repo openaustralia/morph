@@ -12,7 +12,7 @@
 * Email alerts for broken scrapers
 
 ### Dependencies
-Ruby 2.3.1, Docker, MySQL, SQLite 3, Redis, mitmproxy and Elasticsearch.
+Ruby 2.3.1, Docker, MySQL, SQLite 3, Redis, mitmproxy.
 (See below for more details about installing Docker)
 
 Development is supported on Linux and Mac OS X.
@@ -41,6 +41,13 @@ Your user account should be able to manipulate Docker (just add your user to the
 #### On Mac OS X
 
 Install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/).
+
+### Starting up Elasticsearch
+
+Morph needs Elasticsearch to run. We've made things easier for development by using docker
+to run Elasticsearch.
+
+    docker-compose up
 
 ### To Install Morph
 

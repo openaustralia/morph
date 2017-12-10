@@ -1,12 +1,13 @@
-web:
-  build: .
-  command: bundle exec rails s -p 3000 -b '0.0.0.0'
-  volumes:
-    - .:/morph
-  ports:
-    - "3000:3000"
-  links:
-    - db
+# This is a work in progress
+# web:
+#   build: .
+#   command: bundle exec rails s -p 3000 -b '0.0.0.0'
+#   volumes:
+#     - .:/morph
+#   ports:
+#     - "3000:3000"
+#   links:
+#     - db
 
 # TODO: Add data volume
 elasticsearch:
@@ -14,19 +15,21 @@ elasticsearch:
   ports:
     - "9200:9200"
 
+# This is a work in progress
 # TODO: Add data volume
 # TODO: Use a specific version of mysql
-db:
-  image: mysql
-  ports:
-    - "3306"
-  environment:
-    MYSQL_ROOT_PASSWORD: abc123
+# db:
+#   image: mysql
+#   ports:
+#     - "3306"
+#   environment:
+#     MYSQL_ROOT_PASSWORD: abc123
 
-proxy:
-  build: docker_images/morph-mitmdump
-  links:
-    - web
-  environment:
-    MORPH_URL: http://web:3000
-    MITMPROXY_SECRET: afisdifubekfnasi
+# This is a work in progress
+# proxy:
+#   build: docker_images/morph-mitmdump
+#   links:
+#     - web
+#   environment:
+#     MORPH_URL: http://web:3000
+#     MITMPROXY_SECRET: afisdifubekfnasi
