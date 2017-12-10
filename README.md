@@ -7,16 +7,15 @@
 * Write your scrapers in Ruby, Python, PHP, Perl or JavaScript (NodeJS, PhantomJS)
 * Simple API to grab data
 * Schedule scrapers or run manually
-* Process isolation via [Docker](http://www.docker.io/)
+* Process isolation via [Docker](https://www.docker.com/)
 * Trivial to move scraper code and data from [ScraperWiki Classic](https://classic.scraperwiki.com/)
 * Email alerts for broken scrapers
 
 ### Dependencies
 Ruby 2.3.1, Docker, MySQL, SQLite 3, Redis, mitmproxy and Elasticsearch.
+(See below for more details about installing Docker)
 
-On OS X for development also Docker Toolbox - see below for more.
-
-On Linux your user account should be able to manipulate Docker (just add your user to the `docker` group).
+Development is supported on Linux and Mac OS X.
 
 ### Repositories
 
@@ -31,9 +30,19 @@ Docker images:
 * [openaustralia/morph-docker-buildstep-base](https://github.com/openaustralia/morph-docker-buildstep-base) - Base image for buildstep
 * [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Fork of [progrium/buildstep](https://github.com/progrium/buildstep) which uses the image openaustralia/morph-docker-buildstep-base as its base
 
-### To Install
+### Installing Docker
 
-Running this on OSX? Read the [OSX instructions](#installing-docker-on-osx) below BEFORE doing any of this.
+#### On Linux
+
+Just follow the instructions on the [Docker site](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/).
+
+Your user account should be able to manipulate Docker (just add your user to the `docker` group).
+
+#### On Mac OS X
+
+Install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/).
+
+### To Install Morph
 
     bundle install
     cp config/database.yml.example config/database.yml
@@ -67,22 +76,6 @@ accessible at [http://127.0.0.1:3000/admin](http://127.0.0.1:3000/admin). To
 access this, run the following to give your account admin rights:
 
     bundle exec rake app:promote_to_admin
-
-### Installing Docker on OSX
-
-If you're doing your development on Linux you're in luck because installing Docker is pretty straightforward. Just follow the instructions on the [Docker site](http://www.docker.io/gettingstarted/#h_installation).
-
-Install [Docker Toolbox](https://www.docker.com/products/docker-toolbox). This will also, I think, prompt
-you to install VirtualBox if you don't already have it.
-
-Then, from the command-line
-```
-docker-machine env
-```
-
-Paste the output of that command into the docker section of the `.env` file.
-Now the application will know how to contact the docker server running on
-a VM on your machine.
 
 ### Running tests
 

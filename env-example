@@ -6,15 +6,6 @@
 GITHUB_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
 GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-# If this is Linux then your docker daemon is likely running locally on a socket. In that case the DOCKER_URL
-# and DOCKER_TCP does not need to be set (comment the lines below out).
-# If this is OS X, then follow the instructions in the README to install
-# Docker Toolbox (https://www.docker.com/products/docker-toolbox) and then
-# run `docker-machine env` and paste the output below
-DOCKER_TLS_VERIFY=1
-DOCKER_CERT_PATH="/Users/matthew/.docker/machine/machines/dev"
-DOCKER_HOST=tcp://192.168.99.100:2376
-
 # In development you can run elasticsearch on docker very easily which means
 # you don't have to install it.
 # Just use: docker-compose up
