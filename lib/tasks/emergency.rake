@@ -71,13 +71,6 @@ namespace :app do
       end
     end
 
-    desc 'Update counter caches in case they get out of sync'
-    task update_counter_caches: :environment do
-      Run.find_each do |run|
-        Run.reset_counters(run.id, :connection_logs)
-      end
-    end
-
     desc 'Get meta info for all domains in the connection logs'
     task get_all_meta_info_for_connection_logs: :environment do
       domains = ConnectionLog.group(:host).pluck(:host)
