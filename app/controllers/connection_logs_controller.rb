@@ -3,14 +3,19 @@ class ConnectionLogsController < ApplicationController
 
   def create
     if ConnectionLogsController.key == params[:key]
-      domain = ActiveRecord::Base.transaction do
-        domain = Domain.find_by(name: params[:host])
-        if domain.nil?
+
+      domain = Domain.find_by(name: params[:host])
+      if domain.nil?
+        # In case another thread has created a record between the find above and
+        # the create below we put an extra guard around it
+        begin
           domain = Domain.create!(name: params[:host])
-          UpdateDomainWorker.perform_async(domain.id)
+        rescue ActiveRecord::RecordNotUnique
+          domain = Domain.find_by(name: params[:host])
         end
-        domain
+        UpdateDomainWorker.perform_async(domain.id)
       end
+      domain
       ConnectionLog.create!(
         ip_address: params[:ip_address],
         domain_id: domain.id
