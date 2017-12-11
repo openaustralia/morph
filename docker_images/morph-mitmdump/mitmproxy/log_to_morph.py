@@ -18,7 +18,7 @@ except ImportError:
 def response(context, flow):
   for env in ['MORPH_URL', 'MITMPROXY_SECRET']:
     if not env in os.environ:
-      print "WARNING:", env, "is not set!"
+      print("WARNING:", env, "is not set!")
       return
 
   url = os.environ['MORPH_URL'] + "/connection_logs"
@@ -38,5 +38,5 @@ def response(context, flow):
     s.close()
   # If we can't contact the morph.io server still handle this request.
   # If we let this exception pass up the chain the request would get dropped
-  except IOError, e:
-    print "Error contacting morph.io server:", e
+  except (IOError, e):
+    print("Error contacting morph.io server:", e)
