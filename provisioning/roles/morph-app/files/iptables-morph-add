@@ -2,7 +2,7 @@
 # Add rules for redirecting web traffic from the docker containers to the
 # mitmproxy running in transparent mode
 
-# Use iptables-mitmproxy-remote to remove rules
+# Use iptables-mitmproxy-remove to remove rules
 
 # Need to run this as root
 
