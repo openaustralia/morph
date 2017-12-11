@@ -1,6 +1,8 @@
 #!/bin/sh
 
-# Temporarily disabling the forwarding of traffic to mitmproxy and
-# the setting of some firewall rules
-# TODO: Reenable this
-#iptables-morph-add
+# Don't run this on the loopback interface
+# Otherwise it would get run multiple times
+if [ "$IFACE" != "lo" ]; then
+  iptables-morph-add
+fi
+exit 0
