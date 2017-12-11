@@ -192,6 +192,10 @@ Which names would you like to activate HTTPS for?
 
 Leave your answer your blank which will install the certificate for all of them
 
+##### Installing certificates for local vagrant build
+
+    sudo certbot certonly --manual -d dev.morph.io --preferred-challenges dns -d api.dev.morph.io -d faye.dev.morph.io -d help.dev.morph.io
+
 ### How to contribute
 
 If you find what looks like a bug:
