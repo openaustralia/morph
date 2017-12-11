@@ -21,6 +21,9 @@
     - restart elasticsearch
 
 - name: Ensure Elasticsearch is configured to start on boot
-  service:
-    name: elasticsearch
+  # service:
+  #   name: elasticsearch
+  #   enabled: yes
+  systemd:
+    name: elasticsearch.service
     enabled: yes
