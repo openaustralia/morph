@@ -6,8 +6,8 @@ server {
   passenger_ruby /home/deploy/.rvm/gems/ruby-2.3.1/wrappers/ruby;
 
   ssl on;
-  ssl_certificate /etc/letsencrypt/live/morph.io/fullchain.pem; # managed by Certbot
-  ssl_certificate_key /etc/letsencrypt/live/morph.io/privkey.pem; # managed by Certbot
+  ssl_certificate /etc/letsencrypt/live/{{ server_name }}/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/{{ server_name }}/privkey.pem; # managed by Certbot
 
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
   ssl_prefer_server_ciphers on;
