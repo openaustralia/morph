@@ -91,14 +91,10 @@ class Scraper < ActiveRecord::Base
     (watchers + owner.watchers).uniq
   end
 
-  def visible_api_queries(show_everything = false)
-    show_everything ? api_queries : api_queries.visible
-  end
-
   # Also orders the owners by number of downloads
-  def download_count_by_owner(show_everything = false)
+  def download_count_by_owner
     # TODO: Simplify this by using an association on api_query
-    count_by_owner_id = visible_api_queries(show_everything)
+    count_by_owner_id = api_queries
              .group(:owner_id)
              .order('count_all desc')
              .count
@@ -107,8 +103,8 @@ class Scraper < ActiveRecord::Base
     end
   end
 
-  def download_count(show_everything = false)
-    visible_api_queries(show_everything).count
+  def download_count
+    api_queries.count
   end
 
   # Given a scraper name on github populates the fields for a morph.io scraper

@@ -6,6 +6,8 @@ class User < Owner
   has_many :contributions
   has_many :scrapers_contributed_to, through: :contributions, source: :scraper
 
+  # This feature flag doesn't do anything anymore
+  # TODO: Remove it
   def see_downloads
     get_feature_switch_value(:see_downloads, false)
   end

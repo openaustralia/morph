@@ -145,31 +145,17 @@ describe Scraper do
       scraper.api_queries.create(owner: owner1, created_at: Date.new(2015, 5, 8))
       scraper.api_queries.create(owner: owner2, created_at: Date.new(2015, 5, 8))
       scraper.api_queries.create(owner: owner2, created_at: Date.new(2015, 5, 8))
-      # This api query is before the cut-off date which makes it not visible in public
-      scraper.api_queries.create(owner: owner2, created_at: Date.new(2015, 5, 1))
     end
 
     describe "#download_count_by_owner" do
       it do
-        expect(scraper.download_count_by_owner(true)).to eq [[owner2, 3], [owner1, 1]]
+        expect(scraper.download_count_by_owner).to eq [[owner2, 2], [owner1, 1]]
       end
     end
 
     describe "#download_count" do
       it do
-        expect(scraper.download_count(true)).to eq 4
-      end
-    end
-
-    describe "#download_count_by_owner" do
-      it do
-        expect(scraper.download_count_by_owner(false)).to eq [[owner2, 2], [owner1, 1]]
-      end
-    end
-
-    describe "#download_count" do
-      it do
-        expect(scraper.download_count(false)).to eq 3
+        expect(scraper.download_count).to eq 3
       end
     end
   end
