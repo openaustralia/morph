@@ -1,8 +1,15 @@
 #history
   %h3 History
 
-  -# TODO: Only show a limited number of the most recent runs
-  %ul.list-group
-    - scraper.finished_runs.each do |run|
-      = render partial: "runs/history", locals: {run: run}
-    = render partial: 'scrapers/scraper_created_history_item', locals: {scraper: scraper}
+  - if scraper.finished_runs.count > 5
+    %ul.list-group
+      - scraper.finished_runs.limit(5).each do |run|
+        = render partial: "runs/history", locals: {run: run}
+      %li.list-group-item.text-center ...
+      = render partial: 'scrapers/scraper_created_history_item', locals: {scraper: scraper}
+    %p.text-center Show complete history
+  - else
+    %ul.list-group
+      - scraper.finished_runs.each do |run|
+        = render partial: "runs/history", locals: {run: run}
+      = render partial: 'scrapers/scraper_created_history_item', locals: {scraper: scraper}
