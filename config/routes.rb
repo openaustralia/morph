@@ -131,6 +131,7 @@ Rails.application.routes.draw do
   get '*id/data', to: "scrapers#data", as: :data_scraper, id: /[^\/]+\/[^\/]+/
   get '*id/watchers', to: "scrapers#watchers", as: :watchers_scraper, id: /[^\/]+\/[^\/]+/
   get '*id/settings', to: "scrapers#settings", as: :settings_scraper, id: /[^\/]+\/[^\/]+/
+  get '*id/history', to: "scrapers#history", as: :history_scraper, id: /[^\/]+\/[^\/]+/
   post '*id/watch', to: "scrapers#watch", as: :watch_scraper, id: /[^\/]+\/[^\/]+/
   post '*id/run', to: "scrapers#run", as: :run_scraper, id: /[^\/]+\/[^\/]+/
   post '*id/stop', to: "scrapers#stop", as: :stop_scraper, id: /[^\/]+\/[^\/]+/

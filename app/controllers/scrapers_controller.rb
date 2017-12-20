@@ -1,6 +1,6 @@
 class ScrapersController < ApplicationController
   before_filter :authenticate_user!, except: [
-    :index, :show, :data, :watchers
+    :index, :show, :data, :watchers, :history
   ]
   before_filter :load_resource, only: [
     :settings, :show, :destroy, :update, :run, :stop, :clear, :data, :watch,
@@ -290,6 +290,9 @@ class ScrapersController < ApplicationController
 
   def watchers
     authorize! :watchers, @scraper
+  end
+
+  def history
   end
 
   def running
