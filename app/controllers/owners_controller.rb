@@ -10,7 +10,7 @@ class OwnersController < ApplicationController
     # Only do this once
     session[:new_supporter] = false if @new_supporter
 
-    @scrapers = @owner.scrapers.includes(:last_run)
+    @scrapers = @owner.scrapers
 
     # Split out scrapers into different groups
     @running_scrapers, @erroring_scrapers, @other_scrapers = [], [], []
