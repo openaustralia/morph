@@ -4,7 +4,7 @@ class ScrapersController < ApplicationController
   ]
   before_filter :load_resource, only: [
     :settings, :show, :destroy, :update, :run, :stop, :clear, :data, :watch,
-    :watchers
+    :watchers, :history
   ]
 
   # All methods

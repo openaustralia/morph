@@ -1,1 +1,10 @@
-%p This will be the history page
+.container
+  %h1.full_name
+    = full_name_with_links(@scraper)
+  %h4= @scraper.description
+  %hr
+  %h3 Complete history
+  %ul.list-group
+    - @scraper.finished_runs.each do |run|
+      = render partial: "runs/history", locals: {run: run}
+    = render partial: 'scrapers/scraper_created_history_item', locals: {scraper: @scraper}
