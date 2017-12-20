@@ -69,4 +69,8 @@
       = pluralize(@owner.other_scrapers_contributed_to.count, "scraper")
     .list-group= sync partial: "scraper", collection: @owner.other_scrapers_contributed_to
 
-  = render partial: 'statistics', locals: {owner: @owner, scrapers: @scrapers}
+  -# Temporarily disabling the display of these statistics because the calculation of
+  -# owner.wall_time and owner.cpu_time is really slow with an owner with lots of scrapers that
+  -# have made lots of runs. So, until we do some more intelligent updating (caching) of totals
+  -# let's just disable them. To be honest, they're not terribly helpful really anyway.
+    = render partial: 'statistics', locals: {owner: @owner, scrapers: @scrapers}
