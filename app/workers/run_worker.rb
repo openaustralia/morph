@@ -15,6 +15,7 @@ class RunWorker
       if Morph::Runner.available_slots > 0 || runner.container_for_run
         runner.synch_and_go!
       else
+        # TODO: Don't throw this error if the container for this run already exists
         raise NoRemainingSlotsError
       end
     end
