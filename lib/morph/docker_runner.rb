@@ -49,7 +49,7 @@ module Morph
       create_morph_network
 
       command = Morph::TimeCommand.command(
-        ['/usr/local/bin/limit_output.rb', max_lines.to_s, '/start scraper'],
+        ['/usr/local/bin/limit_output.rb', max_lines.to_s, '/bin/herokuish procfile start scraper'],
         time_file
       )
 
