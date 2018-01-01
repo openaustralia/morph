@@ -48,8 +48,10 @@ module Morph
       Docker::Image.get(name)
     rescue Docker::Error::NotFoundError
       Docker::Image.create('fromImage' => name) do |chunk|
-        data = JSON.parse(chunk)
-        yield "#{data['status']} #{data['id']} #{data['progress']}\n"
+        chunk.split("\n").each do |c|
+          data = JSON.parse(c)
+          puts "#{data['status']} #{data['id']} #{data['progress']}\n"
+        end
       end
     end
 
