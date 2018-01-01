@@ -27,8 +27,7 @@ User-facing:
 * [openaustralia/scraperwiki-ruby](https://github.com/openaustralia/scraperwiki-ruby) - Fork of [scraperwiki/scraperwiki-ruby](https://github.com/scraperwiki/scraperwiki-ruby) updated to use morph.io naming conventions
 
 Docker images:
-* [openaustralia/morph-docker-buildstep-base](https://github.com/openaustralia/morph-docker-buildstep-base) - Base image for buildstep
-* [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Fork of [progrium/buildstep](https://github.com/progrium/buildstep) which uses the image openaustralia/morph-docker-buildstep-base as its base
+* [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Base image for running scrapers in containers
 
 ### Installing Docker
 
