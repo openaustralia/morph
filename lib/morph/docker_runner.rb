@@ -260,7 +260,7 @@ module Morph
             # Doing this not very nice thing in lieu of figuring out how
             # to set our custom CA cert for all of node
             'ENV NODE_TLS_REJECT_UNAUTHORIZED 0',
-            'RUN /build/builder'
+            'RUN /bin/herokuish buildpack build'
           ],
           dir
         ) { |c| yield c }

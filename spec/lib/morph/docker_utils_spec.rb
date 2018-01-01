@@ -123,8 +123,8 @@ describe Morph::DockerUtils do
     it 'should create a temporary file locally from a file on a container' do
       c = Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'foobar' => '1'})
       # Grab file provided by buildstep
-      file = Morph::DockerUtils.copy_file(c, '/build/builder')
-      expect(file.read).to eq "#!/bin/bash\nexec /bin/herokuish buildpack build"
+      file = Morph::DockerUtils.copy_file(c, '/etc/fstab')
+      expect(file.read).to eq "# UNCONFIGURED FSTAB FOR BASE SYSTEM\n"
       file.close!
       c.delete
     end
