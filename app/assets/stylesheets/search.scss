@@ -68,3 +68,18 @@
     }
   }
 }
+
+#nav-search-form .input-group {
+  width:100%;
+}
+
+@media (min-width: $screen-sm-min) {
+  #nav-search-form .input-group .input-group-addon, #nav-search-form .input-group .input-group-btn, #nav-search-form .input-group .form-control {
+    width:0;
+  }
+}
+@media (min-width: $screen-sm-min) {
+  #nav-search-form .input-group > .form-control {
+    width:100%;
+  }
+}
