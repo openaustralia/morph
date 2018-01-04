@@ -212,8 +212,6 @@ module Morph
         image_out = Morph::DockerUtils.docker_build_from_dir(
           dir2, read_timeout: 5.minutes
         ) do |c|
-          # Temporary debugging code
-          p c
           # We don't want to show the standard docker build output
           unless c =~ /^Step \d+\/\d+ :/ || c =~ /^ ---> / ||
                  c =~ /^Removing intermediate container / ||
