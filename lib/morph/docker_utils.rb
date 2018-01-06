@@ -156,7 +156,9 @@ module Morph
             buffer << parsed_line['stream']
             # Buffer output until an end-of-line is detected. This
             # makes line output more consistent across platforms.
-            if buffer[-1..-1] == "\n"
+            # Make sure that buffer can't grow out of control by limiting
+            # it's size around 256 bytes
+            if buffer[-1..-1] == "\n" || buffer.count >= 256
               yield buffer
               buffer = ""
             end
