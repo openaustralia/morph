@@ -236,20 +236,23 @@ class ScrapersController < ApplicationController
 
         # This can load the entire sqlite database into memory. Eek!
         # TODO: Fix this
-        # This renders the csv entirely in memory. Even worse!
-        # TODO: Fix this super quick
         format.csv do
-          size = nil
+          size = 0
           bench = Benchmark.measure do
             result = @scraper.database.sql_query(params[:query])
-            csv_string = CSV.generate do |csv|
-              csv << result.first.keys unless result.empty?
+            headers["Content-Disposition"] = "attachment; filename=#{@scraper.name}.csv"
+            self.response_body = Enumerator.new do |lines|
+              unless result.empty?
+                s = result.first.keys.to_csv
+                size += s.size
+                lines << s
+              end
               result.each do |row|
-                csv << row.values
+                s = row.values.to_csv
+                size += s.size
+                lines << s
               end
             end
-            send_data csv_string, filename: "#{@scraper.name}.csv"
-            size = csv_string.size
           end
           ApiQuery.log!(
             query: params[:query],
