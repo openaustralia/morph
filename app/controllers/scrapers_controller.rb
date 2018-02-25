@@ -298,7 +298,8 @@ class ScrapersController < ApplicationController
   # This can load the entire sqlite database into memory. Eek!
   # TODO: Fix this
   def data_atom(owner)
-    size = nil
+    # Only measuring the size of the entry blocks. We're ignoring the header.
+    size = 0
     bench = Benchmark.measure do
       result = @scraper.database.sql_query(params[:query])
       lines = ""
@@ -314,19 +315,19 @@ class ScrapersController < ApplicationController
       lines << "  <link href=\"#{scraper_url(@scraper)}\"/>\n"
       lines << "  <link href=\"#{request.protocol}#{request.host_with_port}#{request.fullpath}\" rel=\"self\"/>\n"
       result.each do |row|
-        lines << "  <entry>\n"
-        lines << "    <title>#{row['title']}</title>\n"
-        lines << "    <content>#{row['content']}</content>\n"
-        lines << "    <link href=\"#{row['link']}\"/>\n"
-        lines << "    <id>#{row['link']}</id>\n"
-        lines << "    <updated>#{DateTime.parse(row['date']).rfc3339 rescue nil}</updated>\n"
-        lines << "  </entry>\n"
+        s = ""
+        s << "  <entry>\n"
+        s << "    <title>#{row['title']}</title>\n"
+        s << "    <content>#{row['content']}</content>\n"
+        s << "    <link href=\"#{row['link']}\"/>\n"
+        s << "    <id>#{row['link']}</id>\n"
+        s << "    <updated>#{DateTime.parse(row['date']).rfc3339 rescue nil}</updated>\n"
+        s << "  </entry>\n"
+        size += s.size
+        lines << s
       end
       lines << "</feed>\n"
       render text: lines
-      # TODO: Find some more consistent way of measuring size across
-      # different formats
-      size = result.to_json.size
     end
     ApiQuery.log!(
       query: params[:query],
