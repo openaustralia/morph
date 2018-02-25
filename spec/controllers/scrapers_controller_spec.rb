@@ -360,9 +360,11 @@ describe ScrapersController do
       it 'should return jsonp' do
         get :data, id: 'mlandauer/a_scraper', key: '1234', format: :json, callback: 'foo'
         expect(response).to be_success
-        expect(response.body).to eq(
-          '/**/foo([{"title":"Foo","content":"Bar","link":"http://example.com","date":"2013-01-01"}])'          
-        )
+        expect(response.body).to eq <<-EOF
+/**/foo([
+{"title":"Foo","content":"Bar","link":"http://example.com","date":"2013-01-01"}
+])
+        EOF
       end
 
       it 'should return csv' do

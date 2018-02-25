@@ -234,24 +234,24 @@ class ScrapersController < ApplicationController
     )
   end
 
-  # This can load the entire sqlite database into memory. Eek!
-  # TODO: Fix this
   def data_json(owner)
-    size = nil
+    # When calculating the size here we're ignoring a few bytes at the front and end
+    size = 0
     bench = Benchmark.measure do
-      result = @scraper.database.sql_query(params[:query])
-      # Workaround for https://github.com/rails/rails/issues/15081
-      # TODO: When the bug above is fixed we should just be able to
-      # replace the block below with
-      # render :json => result, callback: params[:callback]
-      # By the looks of it this bug is fixed in rails 4.2.x
-      if params[:callback]
-        render json: result, callback: params[:callback],
-               content_type: 'application/javascript'
-      else
-        render json: result
+      self.response_body = Enumerator.new do |lines|
+        lines << "/**/#{params[:callback]}(" if params[:callback]
+        lines << "[\n"
+        i = 0
+        @scraper.database.sql_query_streaming(params[:query]) do |row|
+          lines << "\n," unless i == 0
+          s = row.to_json
+          size += s.size
+          lines << s
+          i += 1
+        end
+        lines << "\n]"
+        lines << ")\n" if params[:callback]
       end
-      size = result.to_json.size
     end
     ApiQuery.log!(
       query: params[:query],
