@@ -300,11 +300,33 @@ class ScrapersController < ApplicationController
   def data_atom(owner)
     size = nil
     bench = Benchmark.measure do
-      @result = @scraper.database.sql_query(params[:query])
-      render :data
+      result = @scraper.database.sql_query(params[:query])
+      lines = ""
+      lines << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+      lines << "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n"
+      lines << "  <title>morph.io: #{@scraper.full_name}</title>\n"
+      lines << "  <subtitle>#{@scraper.description}</subtitle>\n"
+      lines << "  <updated>#{DateTime.parse(@scraper.updated_at.to_s).rfc3339}</updated>\n"
+      lines << "  <author>\n"
+      lines << "    <name>#{@scraper.owner.name || @scraper.owner.nickname}</name>\n"
+      lines << "  </author>\n"
+      lines << "  <id>#{request.protocol}#{request.host_with_port}#{request.fullpath}</id>\n"
+      lines << "  <link href=\"#{scraper_url(@scraper)}\"/>\n"
+      lines << "  <link href=\"#{request.protocol}#{request.host_with_port}#{request.fullpath}\" rel=\"self\"/>\n"
+      result.each do |row|
+        lines << "  <entry>\n"
+        lines << "    <title>#{row['title']}</title>\n"
+        lines << "    <content>#{row['content']}</content>\n"
+        lines << "    <link href=\"#{row['link']}\"/>\n"
+        lines << "    <id>#{row['link']}</id>\n"
+        lines << "    <updated>#{DateTime.parse(row['date']).rfc3339 rescue nil}</updated>\n"
+        lines << "  </entry>\n"
+      end
+      lines << "</feed>\n"
+      render text: lines
       # TODO: Find some more consistent way of measuring size across
       # different formats
-      size = @result.to_json.size
+      size = result.to_json.size
     end
     ApiQuery.log!(
       query: params[:query],
