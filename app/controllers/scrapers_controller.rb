@@ -188,93 +188,10 @@ class ScrapersController < ApplicationController
 
     begin
       respond_to do |format|
-        format.sqlite do
-          bench = Benchmark.measure do
-            send_file @scraper.database.sqlite_db_path,
-                      filename: "#{@scraper.name}.sqlite"
-          end
-          ApiQuery.log!(
-            query: params[:query],
-            scraper: @scraper,
-            owner: owner,
-            benchmark: bench,
-            size: @scraper.database.sqlite_db_size,
-            type: 'database',
-            format: 'sqlite'
-          )
-        end
-
-        format.json do
-          size = nil
-          bench = Benchmark.measure do
-            result = @scraper.database.sql_query(params[:query])
-            # Workaround for https://github.com/rails/rails/issues/15081
-            # TODO: When the bug above is fixed we should just be able to
-            # replace the block below with
-            # render :json => result, callback: params[:callback]
-            # By the looks of it this bug is fixed in rails 4.2.x
-            if params[:callback]
-              render json: result, callback: params[:callback],
-                     content_type: 'application/javascript'
-            else
-              render json: result
-            end
-            size = result.to_json.size
-          end
-          ApiQuery.log!(
-            query: params[:query],
-            scraper: @scraper,
-            owner: owner,
-            benchmark: bench,
-            size: size,
-            type: 'sql',
-            format: 'json'
-          )
-        end
-
-        format.csv do
-          size = nil
-          bench = Benchmark.measure do
-            result = @scraper.database.sql_query(params[:query])
-            csv_string = CSV.generate do |csv|
-              csv << result.first.keys unless result.empty?
-              result.each do |row|
-                csv << row.values
-              end
-            end
-            send_data csv_string, filename: "#{@scraper.name}.csv"
-            size = csv_string.size
-          end
-          ApiQuery.log!(
-            query: params[:query],
-            scraper: @scraper,
-            owner: owner,
-            benchmark: bench,
-            size: size,
-            type: 'sql',
-            format: 'csv'
-          )
-        end
-
-        format.atom do
-          size = nil
-          bench = Benchmark.measure do
-            @result = @scraper.database.sql_query(params[:query])
-            render :data
-            # TODO: Find some more consistent way of measuring size across
-            # different formats
-            size = @result.to_json.size
-          end
-          ApiQuery.log!(
-            query: params[:query],
-            scraper: @scraper,
-            owner: owner,
-            benchmark: bench,
-            size: size,
-            type: 'sql',
-            format: 'atom'
-          )
-        end
+        format.sqlite { data_sqlite(owner) }
+        format.json   { data_json(owner)   }
+        format.csv    { data_csv(owner)    }
+        format.atom   { data_atom(owner)   }
       end
 
     rescue SQLite3::Exception => e
@@ -300,6 +217,125 @@ class ScrapersController < ApplicationController
   end
 
   private
+
+  def data_sqlite(owner)
+    bench = Benchmark.measure do
+      send_file @scraper.database.sqlite_db_path,
+                filename: "#{@scraper.name}.sqlite"
+    end
+    ApiQuery.log!(
+      query: params[:query],
+      scraper: @scraper,
+      owner: owner,
+      benchmark: bench,
+      size: @scraper.database.sqlite_db_size,
+      type: 'database',
+      format: 'sqlite'
+    )
+  end
+
+  def data_json(owner)
+    # When calculating the size here we're ignoring a few bytes at the front and end
+    size = 0
+    bench = Benchmark.measure do
+      self.response_body = Enumerator.new do |lines|
+        lines << "/**/#{params[:callback]}(" if params[:callback]
+        lines << "[\n"
+        i = 0
+        @scraper.database.sql_query_streaming(params[:query]) do |row|
+          lines << "\n," unless i == 0
+          s = row.to_json
+          size += s.size
+          lines << s
+          i += 1
+        end
+        lines << "\n]"
+        lines << ")\n" if params[:callback]
+      end
+    end
+    ApiQuery.log!(
+      query: params[:query],
+      scraper: @scraper,
+      owner: owner,
+      benchmark: bench,
+      size: size,
+      type: 'sql',
+      format: 'json'
+    )
+  end
+
+  def data_csv(owner)
+    size = 0
+    bench = Benchmark.measure do
+      headers["Content-Disposition"] = "attachment; filename=#{@scraper.name}.csv"
+      self.response_body = Enumerator.new do |lines|
+        displayed_header = false
+        @scraper.database.sql_query_streaming(params[:query]) do |row|
+          # only show the header once at the beginning
+          unless displayed_header
+            s = row.keys.to_csv
+            size += s.size
+            lines << s
+            displayed_header = true
+          end
+          s = row.values.to_csv
+          size += s.size
+          lines << s
+        end
+      end
+    end
+    ApiQuery.log!(
+      query: params[:query],
+      scraper: @scraper,
+      owner: owner,
+      benchmark: bench,
+      size: size,
+      type: 'sql',
+      format: 'csv'
+    )
+  end
+
+  def data_atom(owner)
+    # Only measuring the size of the entry blocks. We're ignoring the header.
+    size = 0
+    bench = Benchmark.measure do
+      self.response_body = Enumerator.new do |lines|
+        lines << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        lines << "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n"
+        lines << "  <title>morph.io: #{@scraper.full_name}</title>\n"
+        lines << "  <subtitle>#{@scraper.description}</subtitle>\n"
+        lines << "  <updated>#{DateTime.parse(@scraper.updated_at.to_s).rfc3339}</updated>\n"
+        lines << "  <author>\n"
+        lines << "    <name>#{@scraper.owner.name || @scraper.owner.nickname}</name>\n"
+        lines << "  </author>\n"
+        lines << "  <id>#{request.protocol}#{request.host_with_port}#{request.fullpath}</id>\n"
+        lines << "  <link href=\"#{scraper_url(@scraper)}\"/>\n"
+        lines << "  <link href=\"#{request.protocol}#{request.host_with_port}#{request.fullpath}\" rel=\"self\"/>\n"
+        @scraper.database.sql_query_streaming(params[:query]) do |row|
+          s = ""
+          s << "  <entry>\n"
+          s << "    <title>#{row['title']}</title>\n"
+          s << "    <content>#{row['content']}</content>\n"
+          s << "    <link href=\"#{row['link']}\"/>\n"
+          s << "    <id>#{row['link']}</id>\n"
+          s << "    <updated>#{DateTime.parse(row['date']).rfc3339 rescue nil}</updated>\n"
+          s << "  </entry>\n"
+          size += s.size
+          lines << s
+        end
+        lines << "</feed>\n"
+      end
+    end
+    ApiQuery.log!(
+      query: params[:query],
+      scraper: @scraper,
+      owner: owner,
+      benchmark: bench,
+      size: size,
+      type: 'sql',
+      format: 'atom'
+    )
+  end
 
   def render_error(message)
     respond_to do |format|
