@@ -204,6 +204,8 @@ class ScrapersController < ApplicationController
           )
         end
 
+        # This can load the entire sqlite database into memory. Eek!
+        # TODO: Fix this
         format.json do
           size = nil
           bench = Benchmark.measure do
@@ -232,6 +234,10 @@ class ScrapersController < ApplicationController
           )
         end
 
+        # This can load the entire sqlite database into memory. Eek!
+        # TODO: Fix this
+        # This renders the csv entirely in memory. Even worse!
+        # TODO: Fix this super quick
         format.csv do
           size = nil
           bench = Benchmark.measure do
@@ -256,6 +262,8 @@ class ScrapersController < ApplicationController
           )
         end
 
+        # This can load the entire sqlite database into memory. Eek!
+        # TODO: Fix this
         format.atom do
           size = nil
           bench = Benchmark.measure do
