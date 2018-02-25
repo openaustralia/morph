@@ -295,39 +295,36 @@ class ScrapersController < ApplicationController
     )
   end
 
-  # This can load the entire sqlite database into memory. Eek!
-  # TODO: Fix this
   def data_atom(owner)
     # Only measuring the size of the entry blocks. We're ignoring the header.
     size = 0
     bench = Benchmark.measure do
-      result = @scraper.database.sql_query(params[:query])
-      lines = ""
-      lines << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-      lines << "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n"
-      lines << "  <title>morph.io: #{@scraper.full_name}</title>\n"
-      lines << "  <subtitle>#{@scraper.description}</subtitle>\n"
-      lines << "  <updated>#{DateTime.parse(@scraper.updated_at.to_s).rfc3339}</updated>\n"
-      lines << "  <author>\n"
-      lines << "    <name>#{@scraper.owner.name || @scraper.owner.nickname}</name>\n"
-      lines << "  </author>\n"
-      lines << "  <id>#{request.protocol}#{request.host_with_port}#{request.fullpath}</id>\n"
-      lines << "  <link href=\"#{scraper_url(@scraper)}\"/>\n"
-      lines << "  <link href=\"#{request.protocol}#{request.host_with_port}#{request.fullpath}\" rel=\"self\"/>\n"
-      result.each do |row|
-        s = ""
-        s << "  <entry>\n"
-        s << "    <title>#{row['title']}</title>\n"
-        s << "    <content>#{row['content']}</content>\n"
-        s << "    <link href=\"#{row['link']}\"/>\n"
-        s << "    <id>#{row['link']}</id>\n"
-        s << "    <updated>#{DateTime.parse(row['date']).rfc3339 rescue nil}</updated>\n"
-        s << "  </entry>\n"
-        size += s.size
-        lines << s
+      self.response_body = Enumerator.new do |lines|
+        lines << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        lines << "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n"
+        lines << "  <title>morph.io: #{@scraper.full_name}</title>\n"
+        lines << "  <subtitle>#{@scraper.description}</subtitle>\n"
+        lines << "  <updated>#{DateTime.parse(@scraper.updated_at.to_s).rfc3339}</updated>\n"
+        lines << "  <author>\n"
+        lines << "    <name>#{@scraper.owner.name || @scraper.owner.nickname}</name>\n"
+        lines << "  </author>\n"
+        lines << "  <id>#{request.protocol}#{request.host_with_port}#{request.fullpath}</id>\n"
+        lines << "  <link href=\"#{scraper_url(@scraper)}\"/>\n"
+        lines << "  <link href=\"#{request.protocol}#{request.host_with_port}#{request.fullpath}\" rel=\"self\"/>\n"
+        @scraper.database.sql_query_streaming(params[:query]) do |row|
+          s = ""
+          s << "  <entry>\n"
+          s << "    <title>#{row['title']}</title>\n"
+          s << "    <content>#{row['content']}</content>\n"
+          s << "    <link href=\"#{row['link']}\"/>\n"
+          s << "    <id>#{row['link']}</id>\n"
+          s << "    <updated>#{DateTime.parse(row['date']).rfc3339 rescue nil}</updated>\n"
+          s << "  </entry>\n"
+          size += s.size
+          lines << s
+        end
+        lines << "</feed>\n"
       end
-      lines << "</feed>\n"
-      render text: lines
     end
     ApiQuery.log!(
       query: params[:query],
