@@ -272,12 +272,15 @@ class ScrapersController < ApplicationController
       result = @scraper.database.sql_query(params[:query])
       headers["Content-Disposition"] = "attachment; filename=#{@scraper.name}.csv"
       self.response_body = Enumerator.new do |lines|
-        unless result.empty?
-          s = result.first.keys.to_csv
-          size += s.size
-          lines << s
-        end
+        displayed_header = false
         result.each do |row|
+          # only show the header once at the beginning
+          unless displayed_header
+            s = row.keys.to_csv
+            size += s.size
+            lines << s
+            displayed_header = true
+          end
           s = row.values.to_csv
           size += s.size
           lines << s
