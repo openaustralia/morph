@@ -68,7 +68,7 @@ module Morph
       end
     end
 
-    def sql_query(query, readonly = true)
+    def sql_query_streaming(query, readonly = true, &block)
       raise SQLite3::Exception, 'No query specified' if query.blank?
       SQLite3::Database.new(
         sqlite_db_path,
@@ -79,8 +79,20 @@ module Morph
         # If database is busy wait 5s
         db.busy_timeout(5000)
         add_database_type_translations(db)
-        return Database.clean_utf8_query_result(db.execute(query))
+        db.execute(query) do |row|
+          yield Database.clean_utf8_query_row(row)
+        end
       end
+    end
+
+    # SUPER IMPORTANT: Only use this method if the result is small because
+    # it keeps the whole thing in memory. Otherwise use sql_query_streaming
+    def sql_query(query, readonly = true)
+      array = []
+      sql_query_streaming(query, readonly) do |row|
+        array << row
+      end
+      array
     end
 
     def self.clean_utf8_query_result(array)
