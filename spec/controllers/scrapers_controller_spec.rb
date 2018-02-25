@@ -245,8 +245,12 @@ describe ScrapersController do
 
     before :each do
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-        Scraper.create(owner: user, name: 'a_scraper',
-                       full_name: 'mlandauer/a_scraper')
+        # Freezing time so that the updated time of the scraper is set to a
+        # consistent time. Makes a later test easier to handle
+        Timecop.freeze(Time.utc(2000)) do
+          Scraper.create(owner: user, name: 'a_scraper',
+                         full_name: 'mlandauer/a_scraper')
+        end
       end
 
       allow_any_instance_of(Scraper)
@@ -382,20 +386,27 @@ Foo,Bar,http://example.com,2013-01-01
         get :data, id: 'mlandauer/a_scraper', key: '1234', format: :atom
 
         expect(response).to be_success
-        body = Nokogiri::XML(response.body)
-
-        expect(body.css('title').first.text)
-          .to eq 'morph.io: mlandauer/a_scraper'
-        expect(body.css('author name').first.text).to eq 'mlandauer'
-        expect(body.css('link').first[:href])
-          .to eq 'http://test.host/mlandauer/a_scraper'
-
-        expect(body.css('entry').count).to eq 1
-        expect(body.css('entry > title').first.text).to eq 'Foo'
-        expect(body.css('entry > content').first.text).to eq 'Bar'
-        expect(body.css('entry > link').first[:href]).to eq 'http://example.com'
-        expect(body.css('entry > updated').first.text)
-          .to eq Date.new(2013, 1, 1).rfc3339
+        expect(response.body).to eq <<-EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title>morph.io: mlandauer/a_scraper</title>
+  <subtitle/>
+  <updated>2000-01-01T00:00:00+00:00</updated>
+  <author>
+    <name>mlandauer</name>
+  </author>
+  <id>http://test.host/mlandauer/a_scraper/data.atom?key=1234</id>
+  <link href="http://test.host/mlandauer/a_scraper"/>
+  <link href="http://test.host/mlandauer/a_scraper/data.atom?key=1234" rel="self"/>
+  <entry>
+    <title>Foo</title>
+    <content>Bar</content>
+    <link href="http://example.com"/>
+    <id>http://example.com</id>
+    <updated>2013-01-01T00:00:00+00:00</updated>
+  </entry>
+</feed>
+        EOF
       end
 
       it 'should return sqlite' do

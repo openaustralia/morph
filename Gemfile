@@ -112,6 +112,7 @@ group :test do
   gem 'nokogiri'
   gem 'rspec-activemodel-mocks'
   gem 'codeclimate-test-reporter', require: nil
+  gem 'timecop'
 end
 
 # For our javascript runtime on production we don't want to use therubyracer because it uses too
