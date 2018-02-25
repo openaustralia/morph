@@ -188,104 +188,10 @@ class ScrapersController < ApplicationController
 
     begin
       respond_to do |format|
-        format.sqlite do
-          bench = Benchmark.measure do
-            send_file @scraper.database.sqlite_db_path,
-                      filename: "#{@scraper.name}.sqlite"
-          end
-          ApiQuery.log!(
-            query: params[:query],
-            scraper: @scraper,
-            owner: owner,
-            benchmark: bench,
-            size: @scraper.database.sqlite_db_size,
-            type: 'database',
-            format: 'sqlite'
-          )
-        end
-
-        # This can load the entire sqlite database into memory. Eek!
-        # TODO: Fix this
-        format.json do
-          size = nil
-          bench = Benchmark.measure do
-            result = @scraper.database.sql_query(params[:query])
-            # Workaround for https://github.com/rails/rails/issues/15081
-            # TODO: When the bug above is fixed we should just be able to
-            # replace the block below with
-            # render :json => result, callback: params[:callback]
-            # By the looks of it this bug is fixed in rails 4.2.x
-            if params[:callback]
-              render json: result, callback: params[:callback],
-                     content_type: 'application/javascript'
-            else
-              render json: result
-            end
-            size = result.to_json.size
-          end
-          ApiQuery.log!(
-            query: params[:query],
-            scraper: @scraper,
-            owner: owner,
-            benchmark: bench,
-            size: size,
-            type: 'sql',
-            format: 'json'
-          )
-        end
-
-        # This can load the entire sqlite database into memory. Eek!
-        # TODO: Fix this
-        format.csv do
-          size = 0
-          bench = Benchmark.measure do
-            result = @scraper.database.sql_query(params[:query])
-            headers["Content-Disposition"] = "attachment; filename=#{@scraper.name}.csv"
-            self.response_body = Enumerator.new do |lines|
-              unless result.empty?
-                s = result.first.keys.to_csv
-                size += s.size
-                lines << s
-              end
-              result.each do |row|
-                s = row.values.to_csv
-                size += s.size
-                lines << s
-              end
-            end
-          end
-          ApiQuery.log!(
-            query: params[:query],
-            scraper: @scraper,
-            owner: owner,
-            benchmark: bench,
-            size: size,
-            type: 'sql',
-            format: 'csv'
-          )
-        end
-
-        # This can load the entire sqlite database into memory. Eek!
-        # TODO: Fix this
-        format.atom do
-          size = nil
-          bench = Benchmark.measure do
-            @result = @scraper.database.sql_query(params[:query])
-            render :data
-            # TODO: Find some more consistent way of measuring size across
-            # different formats
-            size = @result.to_json.size
-          end
-          ApiQuery.log!(
-            query: params[:query],
-            scraper: @scraper,
-            owner: owner,
-            benchmark: bench,
-            size: size,
-            type: 'sql',
-            format: 'atom'
-          )
-        end
+        format.sqlite { data_sqlite(owner) }
+        format.json   { data_json(owner)   }
+        format.csv    { data_csv(owner)    }
+        format.atom   { data_atom(owner)   }
       end
 
     rescue SQLite3::Exception => e
@@ -311,6 +217,105 @@ class ScrapersController < ApplicationController
   end
 
   private
+
+  def data_sqlite(owner)
+    bench = Benchmark.measure do
+      send_file @scraper.database.sqlite_db_path,
+                filename: "#{@scraper.name}.sqlite"
+    end
+    ApiQuery.log!(
+      query: params[:query],
+      scraper: @scraper,
+      owner: owner,
+      benchmark: bench,
+      size: @scraper.database.sqlite_db_size,
+      type: 'database',
+      format: 'sqlite'
+    )
+  end
+
+  # This can load the entire sqlite database into memory. Eek!
+  # TODO: Fix this
+  def data_json(owner)
+    size = nil
+    bench = Benchmark.measure do
+      result = @scraper.database.sql_query(params[:query])
+      # Workaround for https://github.com/rails/rails/issues/15081
+      # TODO: When the bug above is fixed we should just be able to
+      # replace the block below with
+      # render :json => result, callback: params[:callback]
+      # By the looks of it this bug is fixed in rails 4.2.x
+      if params[:callback]
+        render json: result, callback: params[:callback],
+               content_type: 'application/javascript'
+      else
+        render json: result
+      end
+      size = result.to_json.size
+    end
+    ApiQuery.log!(
+      query: params[:query],
+      scraper: @scraper,
+      owner: owner,
+      benchmark: bench,
+      size: size,
+      type: 'sql',
+      format: 'json'
+    )
+  end
+
+  # This can load the entire sqlite database into memory. Eek!
+  # TODO: Fix this
+  def data_csv(owner)
+    size = 0
+    bench = Benchmark.measure do
+      result = @scraper.database.sql_query(params[:query])
+      headers["Content-Disposition"] = "attachment; filename=#{@scraper.name}.csv"
+      self.response_body = Enumerator.new do |lines|
+        unless result.empty?
+          s = result.first.keys.to_csv
+          size += s.size
+          lines << s
+        end
+        result.each do |row|
+          s = row.values.to_csv
+          size += s.size
+          lines << s
+        end
+      end
+    end
+    ApiQuery.log!(
+      query: params[:query],
+      scraper: @scraper,
+      owner: owner,
+      benchmark: bench,
+      size: size,
+      type: 'sql',
+      format: 'csv'
+    )
+  end
+
+  # This can load the entire sqlite database into memory. Eek!
+  # TODO: Fix this
+  def data_atom(owner)
+    size = nil
+    bench = Benchmark.measure do
+      @result = @scraper.database.sql_query(params[:query])
+      render :data
+      # TODO: Find some more consistent way of measuring size across
+      # different formats
+      size = @result.to_json.size
+    end
+    ApiQuery.log!(
+      query: params[:query],
+      scraper: @scraper,
+      owner: owner,
+      benchmark: bench,
+      size: size,
+      type: 'sql',
+      format: 'atom'
+    )
+  end
 
   def render_error(message)
     respond_to do |format|
