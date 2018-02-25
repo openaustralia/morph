@@ -261,6 +261,15 @@ describe ScrapersController do
         ]
       end
       allow_any_instance_of(Scraper)
+        .to receive_message_chain(:database, :sql_query_streaming).and_yield(
+          {
+            'title' => 'Foo',
+            'content' => 'Bar',
+            'link' => 'http://example.com',
+            'date' => '2013-01-01'
+          }
+        )
+      allow_any_instance_of(Scraper)
         .to receive_message_chain(:database, :sqlite_db_path)
         .and_return('/path/to/db.sqlite')
       allow_any_instance_of(Scraper)

@@ -264,16 +264,13 @@ class ScrapersController < ApplicationController
     )
   end
 
-  # This can load the entire sqlite database into memory. Eek!
-  # TODO: Fix this
   def data_csv(owner)
     size = 0
     bench = Benchmark.measure do
-      result = @scraper.database.sql_query(params[:query])
       headers["Content-Disposition"] = "attachment; filename=#{@scraper.name}.csv"
       self.response_body = Enumerator.new do |lines|
         displayed_header = false
-        result.each do |row|
+        @scraper.database.sql_query_streaming(params[:query]) do |row|
           # only show the header once at the beginning
           unless displayed_header
             s = row.keys.to_csv
