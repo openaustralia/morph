@@ -128,7 +128,7 @@ Rails.application.routes.draw do
   #     post 'clear'
   #   end
   # end
-  get '*id/data', to: "scrapers#data", as: :data_scraper, id: /[^\/]+\/[^\/]+/
+  get '*id/data', to: "api#data", as: :data_scraper, id: /[^\/]+\/[^\/]+/
   get '*id/watchers', to: "scrapers#watchers", as: :watchers_scraper, id: /[^\/]+\/[^\/]+/
   get '*id/settings', to: "scrapers#settings", as: :settings_scraper, id: /[^\/]+\/[^\/]+/
   get '*id/history', to: "scrapers#history", as: :history_scraper, id: /[^\/]+\/[^\/]+/
