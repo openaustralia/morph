@@ -199,6 +199,7 @@ puts 'Hello!'
             'date' => '2013-01-01'
           }
         ]
+        expect(response.headers['Content-Type']).to eq 'application/json; charset=utf-8'
       end
 
       it 'should return jsonp' do
@@ -209,6 +210,7 @@ puts 'Hello!'
 {"title":"Foo","content":"Bar","link":"http://example.com","date":"2013-01-01"}
 ])
         EOF
+        expect(response.headers['Content-Type']).to eq 'application/javascript; charset=utf-8'
       end
 
       it 'should return csv' do

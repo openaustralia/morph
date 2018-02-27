@@ -93,6 +93,8 @@ class ApiController < ApplicationController
     # When calculating the size here we're ignoring a few bytes at the front and end
     size = 0
     bench = Benchmark.measure do
+      mime_type = params[:callback] ? 'application/javascript': 'application/json'
+      response.headers['Content-Type'] = "#{mime_type}; charset=utf-8"
       response.stream.write("/**/#{params[:callback]}(")  if params[:callback]
       response.stream.write("[\n")
       i = 0
