@@ -79,9 +79,18 @@ module Morph
         # If database is busy wait 5s
         db.busy_timeout(5000)
         add_database_type_translations(db)
-        db.execute(query) do |row|
+        # We're not doing "db.execute(query) do |row|" because there's a bug
+        # in db.execute which loads the entire result set into memory before doing
+        # the type translation. There's a commit
+        # https://github.com/sparklemotion/sqlite3-ruby/commit/0a3f3bf7b6eea5ed4a765011b7cb2361ee414f77
+        # which looks like it will fix this but, despite being over a year old, hasn't made
+        # its way into an official release yet. So, in the meantime, just doing things
+        # a slightly different way to avoid the problem.
+        result = db.query(query)
+        result.each do |row|
           yield Database.clean_utf8_query_row(row)
         end
+        result.close
       end
     end
 
