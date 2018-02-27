@@ -93,6 +93,8 @@ class ApiController < ApplicationController
     # When calculating the size here we're ignoring a few bytes at the front and end
     size = 0
     bench = Benchmark.measure do
+      # Tell nginx and passenger not to buffer this
+      response.headers['X-Accel-Buffering'] = 'no'
       mime_type = params[:callback] ? 'application/javascript': 'application/json'
       response.headers['Content-Type'] = "#{mime_type}; charset=utf-8"
       response.stream.write("/**/#{params[:callback]}(")  if params[:callback]
@@ -122,6 +124,8 @@ class ApiController < ApplicationController
   def data_csv(owner)
     size = 0
     bench = Benchmark.measure do
+      # Tell nginx and passenger not to buffer this
+      response.headers['X-Accel-Buffering'] = 'no'
       response.headers["Content-Disposition"] = "attachment; filename=#{@scraper.name}.csv"
       displayed_header = false
       @scraper.database.sql_query_streaming(params[:query]) do |row|
@@ -152,6 +156,8 @@ class ApiController < ApplicationController
     # Only measuring the size of the entry blocks. We're ignoring the header.
     size = 0
     bench = Benchmark.measure do
+      # Tell nginx and passenger not to buffer this
+      response.headers['X-Accel-Buffering'] = 'no'
       response.stream.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
       response.stream.write("<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n")
       response.stream.write("  <title>morph.io: #{@scraper.full_name}</title>\n")
