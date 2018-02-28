@@ -86,11 +86,14 @@ module Morph
         # which looks like it will fix this but, despite being over a year old, hasn't made
         # its way into an official release yet. So, in the meantime, just doing things
         # a slightly different way to avoid the problem.
-        result = db.query(query)
-        result.each do |row|
-          yield Database.clean_utf8_query_row(row)
+        begin
+          result = db.query(query)
+          result.each do |row|
+            yield Database.clean_utf8_query_row(row)
+          end
+        ensure
+          result.close
         end
-        result.close
       end
     end
 
