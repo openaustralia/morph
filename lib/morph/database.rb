@@ -92,7 +92,7 @@ module Morph
             yield Database.clean_utf8_query_row(row)
           end
         ensure
-          result.close
+          result.close if result
         end
       end
     end
