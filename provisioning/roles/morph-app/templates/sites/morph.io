@@ -4,6 +4,7 @@ server {
   root /var/www/current/public;
   passenger_enabled on;
   passenger_ruby /home/deploy/.rvm/gems/ruby-2.3.1/wrappers/ruby;
+  passenger_max_request_queue_size 300;
 
   ssl on;
   ssl_certificate /etc/letsencrypt/live/{{ server_name }}/fullchain.pem; # managed by Certbot
