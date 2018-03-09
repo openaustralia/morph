@@ -155,7 +155,7 @@ class ApiController < ApplicationController
       @scraper.database.sql_query_streaming(params[:query]) do |row|
         # only show the header once at the beginning
         unless displayed_header
-          size += csv_header(row)          
+          size += csv_header(row)
           displayed_header = true
         end
         s = row.values.to_csv
@@ -174,23 +174,31 @@ class ApiController < ApplicationController
     )
   end
 
+  def atom_header
+    response.stream.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+    response.stream.write("<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n")
+    response.stream.write("  <title>morph.io: #{@scraper.full_name}</title>\n")
+    response.stream.write("  <subtitle>#{@scraper.description}</subtitle>\n")
+    response.stream.write("  <updated>#{DateTime.parse(@scraper.updated_at.to_s).rfc3339}</updated>\n")
+    response.stream.write("  <author>\n")
+    response.stream.write("    <name>#{@scraper.owner.name || @scraper.owner.nickname}</name>\n")
+    response.stream.write("  </author>\n")
+    response.stream.write("  <id>#{request.protocol}#{request.host_with_port}#{request.fullpath}</id>\n")
+    response.stream.write("  <link href=\"#{scraper_url(@scraper)}\"/>\n")
+    response.stream.write("  <link href=\"#{request.protocol}#{request.host_with_port}#{request.fullpath}\" rel=\"self\"/>\n")
+  end
+
+  def atom_footer
+    response.stream.write("</feed>\n")
+  end
+
   def data_atom(owner)
     # Only measuring the size of the entry blocks. We're ignoring the header.
     size = 0
     bench = Benchmark.measure do
       # Tell nginx and passenger not to buffer this
       response.headers['X-Accel-Buffering'] = 'no'
-      response.stream.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-      response.stream.write("<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n")
-      response.stream.write("  <title>morph.io: #{@scraper.full_name}</title>\n")
-      response.stream.write("  <subtitle>#{@scraper.description}</subtitle>\n")
-      response.stream.write("  <updated>#{DateTime.parse(@scraper.updated_at.to_s).rfc3339}</updated>\n")
-      response.stream.write("  <author>\n")
-      response.stream.write("    <name>#{@scraper.owner.name || @scraper.owner.nickname}</name>\n")
-      response.stream.write("  </author>\n")
-      response.stream.write("  <id>#{request.protocol}#{request.host_with_port}#{request.fullpath}</id>\n")
-      response.stream.write("  <link href=\"#{scraper_url(@scraper)}\"/>\n")
-      response.stream.write("  <link href=\"#{request.protocol}#{request.host_with_port}#{request.fullpath}\" rel=\"self\"/>\n")
+      atom_header
       @scraper.database.sql_query_streaming(params[:query]) do |row|
         s = ""
         s << "  <entry>\n"
@@ -203,7 +211,7 @@ class ApiController < ApplicationController
         size += s.size
         response.stream.write(s)
       end
-      response.stream.write("</feed>\n")
+      atom_footer
     end
     ApiQuery.log!(
       query: params[:query],
