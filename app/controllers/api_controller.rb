@@ -197,7 +197,10 @@ class ApiController < ApplicationController
   def render_error(message)
     respond_to do |format|
       format.sqlite { render text: message, status: 401, content_type: :text }
-      format.json { render json: { error: message }, status: 401 }
+      format.json {
+        response.status = 401
+        response.stream.write({ error: message }.to_json)
+      }
       format.csv { render text: message, status: 401, content_type: :text }
       format.atom { render text: message, status: 401, content_type: :text }
     end
