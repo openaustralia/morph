@@ -98,10 +98,15 @@ class ApiController < ApplicationController
       mime_type = params[:callback] ? 'application/javascript': 'application/json'
       response.headers['Content-Type'] = "#{mime_type}; charset=utf-8"
       response.stream.write("/**/#{params[:callback]}(")  if params[:callback]
-      response.stream.write("[\n")
       i = 0
       @scraper.database.sql_query_streaming(params[:query]) do |row|
-        response.stream.write("\n,") unless i == 0
+        # In case there is an error with the query wait for that to work before
+        # generating the first output
+        if i == 0
+          response.stream.write("[\n")
+        else
+          response.stream.write("\n,")
+        end
         s = row.to_json
         size += s.size
         response.stream.write(s)
