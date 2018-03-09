@@ -138,6 +138,13 @@ class ApiController < ApplicationController
     )
   end
 
+  # Returns the size of the header
+  def csv_header(row)
+    s = row.keys.to_csv
+    response.stream.write(s)
+    s.size
+  end
+
   def data_csv(owner)
     size = 0
     bench = Benchmark.measure do
@@ -148,9 +155,7 @@ class ApiController < ApplicationController
       @scraper.database.sql_query_streaming(params[:query]) do |row|
         # only show the header once at the beginning
         unless displayed_header
-          s = row.keys.to_csv
-          size += s.size
-          response.stream.write(s)
+          size += csv_header(row)          
           displayed_header = true
         end
         s = row.values.to_csv
