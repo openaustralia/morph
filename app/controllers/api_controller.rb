@@ -198,8 +198,12 @@ class ApiController < ApplicationController
     bench = Benchmark.measure do
       # Tell nginx and passenger not to buffer this
       response.headers['X-Accel-Buffering'] = 'no'
-      atom_header
+      displayed_header = false
       @scraper.database.sql_query_streaming(params[:query]) do |row|
+        unless displayed_header
+          atom_header
+          displayed_header = true
+        end
         s = ""
         s << "  <entry>\n"
         s << "    <title>#{row['title']}</title>\n"
@@ -210,6 +214,9 @@ class ApiController < ApplicationController
         s << "  </entry>\n"
         size += s.size
         response.stream.write(s)
+      end
+      unless displayed_header
+        atom_header
       end
       atom_footer
     end
