@@ -205,14 +205,24 @@ class ApiController < ApplicationController
   end
 
   def render_error(message)
+    response.status = 401
+
     respond_to do |format|
-      format.sqlite { render text: message, status: 401, content_type: :text }
+      format.sqlite {
+        response.content_type = 'text'
+        response.stream.write(message)
+      }
       format.json {
-        response.status = 401
         response.stream.write({ error: message }.to_json)
       }
-      format.csv { render text: message, status: 401, content_type: :text }
-      format.atom { render text: message, status: 401, content_type: :text }
+      format.csv {
+        response.content_type = 'text'
+        response.stream.write(message)
+      }
+      format.atom {
+        response.content_type = 'text'
+        response.stream.write(message)
+      }
     end
   end
 
