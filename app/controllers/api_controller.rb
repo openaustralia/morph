@@ -89,6 +89,16 @@ class ApiController < ApplicationController
     )
   end
 
+  def json_header(callback)
+    response.stream.write("/**/#{callback}(") if callback
+    response.stream.write("[\n")
+  end
+
+  def json_footer(callback)
+    response.stream.write("\n]")
+    response.stream.write(")\n") if callback
+  end
+
   def data_json(owner)
     # When calculating the size here we're ignoring a few bytes at the front and end
     size = 0
@@ -102,8 +112,7 @@ class ApiController < ApplicationController
         # In case there is an error with the query wait for that to work before
         # generating the first output
         if i == 0
-          response.stream.write("/**/#{params[:callback]}(")  if params[:callback]
-          response.stream.write("[\n")
+          json_header(params[:callback])
         else
           response.stream.write("\n,")
         end
@@ -114,11 +123,9 @@ class ApiController < ApplicationController
       end
       # If there's no result make sure we also output the opening of the json
       if i == 0
-        response.stream.write("/**/#{params[:callback]}(")  if params[:callback]
-        response.stream.write("[\n")
+        json_header(params[:callback])
       end
-      response.stream.write("\n]")
-      response.stream.write(")\n") if params[:callback]
+      json_footer(params[:callback])
     end
     ApiQuery.log!(
       query: params[:query],
