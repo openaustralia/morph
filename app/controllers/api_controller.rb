@@ -39,12 +39,12 @@ class ApiController < ApplicationController
     # of the api don't have to change anything
     api_key = request.headers['HTTP_X_API_KEY'] || params[:key]
     if api_key.nil?
-      render_error 'API key is missing'
+      render_error 'API key is missing', 401
       return
     else
       owner = Owner.find_by_api_key(api_key)
       if owner.nil?
-        render_error 'API key is not valid'
+        render_error 'API key is not valid', 401
         return
       end
     end
@@ -58,7 +58,7 @@ class ApiController < ApplicationController
       end
 
     rescue SQLite3::Exception => e
-      render_error e.to_s
+      render_error e.to_s, 400
     end
   ensure
     response.stream.close
@@ -89,6 +89,16 @@ class ApiController < ApplicationController
     )
   end
 
+  def json_header(callback)
+    response.stream.write("/**/#{callback}(") if callback
+    response.stream.write("[\n")
+  end
+
+  def json_footer(callback)
+    response.stream.write("\n]")
+    response.stream.write(")\n") if callback
+  end
+
   def data_json(owner)
     # When calculating the size here we're ignoring a few bytes at the front and end
     size = 0
@@ -97,18 +107,25 @@ class ApiController < ApplicationController
       response.headers['X-Accel-Buffering'] = 'no'
       mime_type = params[:callback] ? 'application/javascript': 'application/json'
       response.headers['Content-Type'] = "#{mime_type}; charset=utf-8"
-      response.stream.write("/**/#{params[:callback]}(")  if params[:callback]
-      response.stream.write("[\n")
       i = 0
       @scraper.database.sql_query_streaming(params[:query]) do |row|
-        response.stream.write("\n,") unless i == 0
+        # In case there is an error with the query wait for that to work before
+        # generating the first output
+        if i == 0
+          json_header(params[:callback])
+        else
+          response.stream.write("\n,")
+        end
         s = row.to_json
         size += s.size
         response.stream.write(s)
         i += 1
       end
-      response.stream.write("\n]")
-      response.stream.write(")\n") if params[:callback]
+      # If there's no result make sure we also output the opening of the json
+      if i == 0
+        json_header(params[:callback])
+      end
+      json_footer(params[:callback])
     end
     ApiQuery.log!(
       query: params[:query],
@@ -121,6 +138,13 @@ class ApiController < ApplicationController
     )
   end
 
+  # Returns the size of the header
+  def csv_header(row)
+    s = row.keys.to_csv
+    response.stream.write(s)
+    s.size
+  end
+
   def data_csv(owner)
     size = 0
     bench = Benchmark.measure do
@@ -131,9 +155,7 @@ class ApiController < ApplicationController
       @scraper.database.sql_query_streaming(params[:query]) do |row|
         # only show the header once at the beginning
         unless displayed_header
-          s = row.keys.to_csv
-          size += s.size
-          response.stream.write(s)
+          size += csv_header(row)
           displayed_header = true
         end
         s = row.values.to_csv
@@ -152,24 +174,36 @@ class ApiController < ApplicationController
     )
   end
 
+  def atom_header
+    response.stream.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+    response.stream.write("<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n")
+    response.stream.write("  <title>morph.io: #{@scraper.full_name}</title>\n")
+    response.stream.write("  <subtitle>#{@scraper.description}</subtitle>\n")
+    response.stream.write("  <updated>#{DateTime.parse(@scraper.updated_at.to_s).rfc3339}</updated>\n")
+    response.stream.write("  <author>\n")
+    response.stream.write("    <name>#{@scraper.owner.name || @scraper.owner.nickname}</name>\n")
+    response.stream.write("  </author>\n")
+    response.stream.write("  <id>#{request.protocol}#{request.host_with_port}#{request.fullpath}</id>\n")
+    response.stream.write("  <link href=\"#{scraper_url(@scraper)}\"/>\n")
+    response.stream.write("  <link href=\"#{request.protocol}#{request.host_with_port}#{request.fullpath}\" rel=\"self\"/>\n")
+  end
+
+  def atom_footer
+    response.stream.write("</feed>\n")
+  end
+
   def data_atom(owner)
     # Only measuring the size of the entry blocks. We're ignoring the header.
     size = 0
     bench = Benchmark.measure do
       # Tell nginx and passenger not to buffer this
       response.headers['X-Accel-Buffering'] = 'no'
-      response.stream.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-      response.stream.write("<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n")
-      response.stream.write("  <title>morph.io: #{@scraper.full_name}</title>\n")
-      response.stream.write("  <subtitle>#{@scraper.description}</subtitle>\n")
-      response.stream.write("  <updated>#{DateTime.parse(@scraper.updated_at.to_s).rfc3339}</updated>\n")
-      response.stream.write("  <author>\n")
-      response.stream.write("    <name>#{@scraper.owner.name || @scraper.owner.nickname}</name>\n")
-      response.stream.write("  </author>\n")
-      response.stream.write("  <id>#{request.protocol}#{request.host_with_port}#{request.fullpath}</id>\n")
-      response.stream.write("  <link href=\"#{scraper_url(@scraper)}\"/>\n")
-      response.stream.write("  <link href=\"#{request.protocol}#{request.host_with_port}#{request.fullpath}\" rel=\"self\"/>\n")
+      displayed_header = false
       @scraper.database.sql_query_streaming(params[:query]) do |row|
+        unless displayed_header
+          atom_header
+          displayed_header = true
+        end
         s = ""
         s << "  <entry>\n"
         s << "    <title>#{row['title']}</title>\n"
@@ -181,7 +215,10 @@ class ApiController < ApplicationController
         size += s.size
         response.stream.write(s)
       end
-      response.stream.write("</feed>\n")
+      unless displayed_header
+        atom_header
+      end
+      atom_footer
     end
     ApiQuery.log!(
       query: params[:query],
@@ -194,12 +231,25 @@ class ApiController < ApplicationController
     )
   end
 
-  def render_error(message)
+  def render_error(message, status)
+    response.status = status
+
     respond_to do |format|
-      format.sqlite { render text: message, status: 401, content_type: :text }
-      format.json { render json: { error: message }, status: 401 }
-      format.csv { render text: message, status: 401, content_type: :text }
-      format.atom { render text: message, status: 401, content_type: :text }
+      format.sqlite {
+        response.content_type = 'text'
+        response.stream.write(message)
+      }
+      format.json {
+        response.stream.write({ error: message }.to_json)
+      }
+      format.csv {
+        response.content_type = 'text'
+        response.stream.write(message)
+      }
+      format.atom {
+        response.content_type = 'text'
+        response.stream.write(message)
+      }
     end
   end
 
