@@ -39,12 +39,12 @@ class ApiController < ApplicationController
     # of the api don't have to change anything
     api_key = request.headers['HTTP_X_API_KEY'] || params[:key]
     if api_key.nil?
-      render_error 'API key is missing'
+      render_error 'API key is missing', 401
       return
     else
       owner = Owner.find_by_api_key(api_key)
       if owner.nil?
-        render_error 'API key is not valid'
+        render_error 'API key is not valid', 401
         return
       end
     end
@@ -58,7 +58,7 @@ class ApiController < ApplicationController
       end
 
     rescue SQLite3::Exception => e
-      render_error e.to_s
+      render_error e.to_s, 400
     end
   ensure
     response.stream.close
@@ -231,8 +231,8 @@ class ApiController < ApplicationController
     )
   end
 
-  def render_error(message)
-    response.status = 401
+  def render_error(message, status)
+    response.status = status
 
     respond_to do |format|
       format.sqlite {
