@@ -119,33 +119,12 @@ By default in development mails are sent to [Mailcatcher](http://mailcatcher.me/
 
 This section will not be relevant to most people. It will however be relevant if you're deploying to a production server.
 
-#### git-encrypt
+#### Ansible Vault
 
-We're using [git-encrypt](https://github.com/shadowhand/git-encrypt) to encrypt certain files, like the private key for the SSL certificate.
+We're using [Ansible Vault](https://docs.ansible.com/ansible/2.4/vault.html) to encrypt certain files, like the private key for the SSL certificate.
 
-To make this work you have to do some [special things](https://github.com/shadowhand/git-encrypt/tree/legacy#decrypting-clones) _before_ you clone the morph repository:
-
-```
-# install old version of git-encrypt
-npm -g install git-encrypt
-gitcrypt version # should equal "0.3.0"
-
-# clone the repo
-git clone -n https://github.com/openaustralia/morph
-cd morph
-
-# set up gitcrypt
-git config gitcrypt.salt 'YOUR_SALT'
-git config gitcrypt.pass 'YOUR_STRONG_PASSKEY'
-git config gitcrypt.cipher aes-256-ecb
-git config filter.encrypt.smudge "gitcrypt smudge"
-git config filter.encrypt.clean "gitcrypt clean"
-git config diff.encrypt.textconv "gitcrypt diff"
-```
-
-If you intend to make changes to the production infrastructure, you'll need real values for `gitcrypt.salt` and `gitcrypt.pass`.
-
-Please [create a GitHub issue](https://github.com/openaustralia/morph/issues/new) and we'll start the conversation.
+To make this work you will need to put the password in a
+file at `~/.infrastructure_ansible_vault_pass.txt`. This is the same password as used in the [openaustralia/infrastructure](https://github.com/openaustralia/infrastructure) GitHub repository.
 
 #### Production devops development
 

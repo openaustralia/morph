@@ -6,9 +6,10 @@
 # vagrant provision local
 #
 # To run in production:
-# cd provisioning
-# ansible-playbook --user=root -i hosts playbook.yml
+# ansible-playbook --user=root -i provisioning/hosts provisioning/playbook.yml
 #
+# Run this from the root directory so that it picks up the ansible.cfg
+# and so knows where to look for the ansible vault password
 
 # Ubuntu 16.04 LTS doesn't come with python pre-installed. We need that for
 # Ansible to work (for the gather facts). So install python first
