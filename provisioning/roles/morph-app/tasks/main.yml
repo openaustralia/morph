@@ -8,7 +8,7 @@
   file: owner=deploy group=deploy path=/var/www state=directory
 
 - name: Copy across 2048-bit certificate for Diffie Hellman Ephemeral Paramerts
-  copy: src=ssl/dhparam.pem.secure dest=/etc/nginx/dhparam.pem
+  copy: src=ssl/dhparam.pem dest=/etc/nginx/dhparam.pem
 
 - name: Generate the overall nginx config
   template: src=nginx.conf dest=/etc/nginx/nginx.conf
@@ -73,7 +73,7 @@
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
 
 - name: Copy across newrelic configuration
-  copy: src=newrelic.yml.secure dest=/var/www/shared/config/newrelic.yml
+  copy: src=newrelic.yml dest=/var/www/shared/config/newrelic.yml
   notify: restart nginx
 
 - name: Dependency for following command
@@ -136,10 +136,10 @@
   file: path=/root/.duply/sqlite state=directory
 
 - name: Copy across duply backup config for mysql
-  copy: src=duply_mysql_conf.secure dest=/root/.duply/mysql/conf owner=root group=root mode=0400
+  copy: src=duply_mysql_conf dest=/root/.duply/mysql/conf owner=root group=root mode=0400
 
 - name: Copy across duply backup config for sqlite
-  copy: src=duply_sqlite_conf.secure dest=/root/.duply/sqlite/conf owner=root group=root mode=0400
+  copy: src=duply_sqlite_conf dest=/root/.duply/sqlite/conf owner=root group=root mode=0400
 
 - name: Do backups daily of mysql to S3 at 4:40AM
   cron: name="duply mysql" hour=4 minute=40 user=root job="duply mysql backup"
