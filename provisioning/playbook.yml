@@ -21,6 +21,17 @@
   - name: install python 2
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
 
+# Some features in the playbook need ansible2.5, so let's check for that first
+
+
+- hosts: all
+  pre_tasks:
+    - name: Verify Ansible meets version requirements.
+      assert:
+        that: "ansible_version.full | version_compare('2.5', '>=')"
+        msg: >
+          "You must update Ansible to at least 2.5 to use this playbook."
+
 - hosts: all
   become: true
   pre_tasks:
