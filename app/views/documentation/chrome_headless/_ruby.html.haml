@@ -1,0 +1,19 @@
+:markdown
+  With [Capybara](https://github.com/jnicklas/capybara) and [Selenium Webdriver](https://github.com/SeleniumHQ/selenium/)
+  you can control Chrome. To install them add them to your scraper Gemfile:
+:coderay
+  #!ruby
+  gem 'capybara'
+  gem 'selenium-webdriver'
+
+:markdown
+  Then in your scraper start a Capybara session using `selenium_chrome_headless`:
+:coderay
+  #!ruby
+  require "capybara"
+  require "selenium-webdriver"
+
+  capybara = Capybara::Session.new(:selenium_chrome_headless)
+  # Start scraping
+  capybara.visit("https://morph.io/")
+  puts capybara.find("#banner h2").text
