@@ -78,6 +78,7 @@ module Morph
           # The documentation on this is non-existent but
           # the seccomp in the api is not the name of the file but the contents of it
           # In other words the file is uploaded client side
+          # From https://raw.githubusercontent.com/jfrazelle/dotfiles/master/etc/docker/seccomp/chrome.json
           'SecurityOpt' => ["seccomp=#{File.read('config/chrome.json')}"]
         }
       }
