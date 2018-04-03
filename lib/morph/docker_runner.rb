@@ -59,6 +59,15 @@ module Morph
       # Add another label to the created container
       container_labels['io.morph.stage'] = 'running'
 
+      # Set up special security profile that allows us run chrome headless
+      # without setting "--no-sandbox"
+      # The documentation on this is non-existent but
+      # the seccomp in the api is not the name of the file but the contents of it
+      # In other words the file is uploaded client side
+      # From https://raw.githubusercontent.com/jfrazelle/dotfiles/master/etc/docker/seccomp/chrome.json
+      # Don't set things in test because it fails on travis for some reason
+      security_opt = Rails.env.test? ? [] : ["seccomp=#{File.read('config/chrome.json')}"]
+
       container_options = {
         'Cmd' => command,
         'Image' => i3.id,
@@ -73,13 +82,7 @@ module Morph
         'HostConfig' => {
           # Attach this container to our special network morph
           'NetworkMode' => DOCKER_NETWORK,
-          # Set up special security profile that allows us run chrome headless
-          # without setting "--no-sandbox"
-          # The documentation on this is non-existent but
-          # the seccomp in the api is not the name of the file but the contents of it
-          # In other words the file is uploaded client side
-          # From https://raw.githubusercontent.com/jfrazelle/dotfiles/master/etc/docker/seccomp/chrome.json
-          'SecurityOpt' => ["seccomp=#{File.read('config/chrome.json')}"]
+          'SecurityOpt' => security_opt
         }
       }
 
