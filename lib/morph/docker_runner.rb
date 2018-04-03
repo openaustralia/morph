@@ -72,7 +72,10 @@ module Morph
         'Labels' => container_labels,
         'HostConfig' => {
           # Attach this container to our special network morph
-          'NetworkMode' => DOCKER_NETWORK
+          'NetworkMode' => DOCKER_NETWORK,
+          # Set up special security profile that allows us run chrome headless
+          # without setting "--no-sandbox"
+          'SecurityOpt' => ["seccomp=#{File.absolute_path('chrome.json')}"]
         }
       }
 
