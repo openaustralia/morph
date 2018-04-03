@@ -75,7 +75,10 @@ module Morph
           'NetworkMode' => DOCKER_NETWORK,
           # Set up special security profile that allows us run chrome headless
           # without setting "--no-sandbox"
-          'SecurityOpt' => ["seccomp=#{File.absolute_path('chrome.json')}"]
+          # The documentation on this is non-existent but
+          # the seccomp in the api is not the name of the file but the contents of it
+          # In other words the file is uploaded client side
+          'SecurityOpt' => ["seccomp=#{File.read('chrome.json')}"]
         }
       }
 
