@@ -47,9 +47,6 @@ HONEYBADGER_API_KEY=xxxxxxxx
 CUTTLEFISH_USERNAME=xxxxxxx
 CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx
 
-# skylight.io performance monitoring
-SKYLIGHT_AUTHENTICATION=xxxxxxxxxxxxxxxxx
-
 # Stripe payment processor
 STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
 STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxx

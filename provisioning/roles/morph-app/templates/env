@@ -52,11 +52,6 @@ CUTTLEFISH_SERVER={{ cuttlefish_server }}
 CUTTLEFISH_USERNAME={{ cuttlefish_username }}
 CUTTLEFISH_PASSWORD={{ cuttlefish_password }}
 
-{% if skylight_authentication is defined %}
-# skylight.io performance monitoring
-SKYLIGHT_AUTHENTICATION={{ skylight_authentication }}
-{% endif %}
-
 # Stripe payment processor
 STRIPE_PUBLISHABLE_KEY={{ stripe_publishable_key }}
 STRIPE_SECRET_KEY={{ stripe_secret_key }}
