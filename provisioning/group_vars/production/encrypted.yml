@@ -1,5 +1,4 @@
 ---
-encrypted_github_app_client_id: b96241bf5e9c17690bb1
 encrypted_github_app_client_secret: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           32656237666231393632646136346163313632366235626466323463376561303033323862313334

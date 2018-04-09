@@ -10,7 +10,7 @@ morph_url: https://morph.io
 server_name: morph.io
 backups: true
 cron_jobs: true
-github_app_client_id: "{{ encrypted_github_app_client_id }}"
+github_app_client_id: b96241bf5e9c17690bb1
 github_app_client_secret: "{{ encrypted_github_app_client_secret }}"
 secret_key_base: "{{ encrypted_secret_key_base }}"
 google_analytics_tracking_id: "{{ encrypted_google_analytics_tracking_id }}"
