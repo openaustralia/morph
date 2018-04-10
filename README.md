@@ -134,6 +134,8 @@ Install the hostsupdater plugin: `vagrant plugin install vagrant-hostsupdater`
 
 Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
 
+_The first time you're doing this, check `provisioning/requirements.yml` for instructions on installing modules from ansible galaxy_
+
 Once the box is created and provisioned, deploy the application to your Vagrant box:
 
     cap local deploy
