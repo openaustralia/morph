@@ -1,0 +1,7 @@
+GPG_PW='{{ backup_gpg_pw }}'
+TARGET='s3://s3.amazonaws.com/oaf-backups/morph/sqlite'
+# See https://www.guyrutenberg.com/2017/10/12/duply-credential-error-when-using-amazon-s3/
+export AWS_ACCESS_KEY_ID='{{ backup_target_user }}'
+export AWS_SECRET_ACCESS_KEY='{{ backup_target_pass }}'
+SOURCE='/var/www/shared/db/scrapers/data'
+MAX_AGE=6M
