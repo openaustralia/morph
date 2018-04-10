@@ -1,0 +1,14 @@
+# Install required roles with
+# cd provisioning
+# ansible-galaxy install -r requirements.yml -p roles
+
+# Commenting out because our local version has been modified from the original
+# - src: f500.elasticsearch
+#   version: v0.9.1
+
+- src: geerlingguy.java
+  version: 1.7.4
+
+# Commenting out because our local version has been modified from the original
+# - src: nickhammond.logrotate
+#   version: 71b0ab39066f2dfd5b2701205cf398e97cda52c2
