@@ -9,7 +9,7 @@
   apt: pkg=newrelic-sysmond state=present
 
 - name: Monitoring configuration
-  copy: src=nrsysmond.cfg dest=/etc/newrelic/nrsysmond.cfg owner=root group=newrelic mode=0640
+  template: src=nrsysmond.cfg dest=/etc/newrelic/nrsysmond.cfg owner=root group=newrelic mode=0640
 
 - name: Start monitoring
   service: name=newrelic-sysmond state=started
