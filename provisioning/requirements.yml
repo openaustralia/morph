@@ -2,12 +2,12 @@
 # cd provisioning
 # ansible-galaxy install -r requirements.yml -p roles
 
-# Commenting out because our local version has been modified from the original
-# - src: f500.elasticsearch
-#   version: v0.9.1
+- src: azavea.elasticsearch
+  version: 0.1.0
 
-- src: geerlingguy.java
-  version: 1.7.4
+- src: azavea.java
+  # Latest version as of Jan 2018
+  version: 0.6.1
 
 # Commenting out because our local version has been modified from the original
 # - src: nickhammond.logrotate
