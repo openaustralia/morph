@@ -13,3 +13,4 @@
 
 - name: Start monitoring
   service: name=newrelic-sysmond state=started
+  when: "'production' in group_names"
