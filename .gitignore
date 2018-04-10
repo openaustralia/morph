@@ -35,3 +35,5 @@ db/backups
 docker_images/morph-mitmdump/mitmproxy/mitmproxy-dhparam.pem
 playbook.retry
 provisioning/roles/geerlingguy.java
+provisioning/roles/morph-app/files/ssl/dev.morph.io.key
+provisioning/roles/morph-app/files/ssl/dev.morph.io.pem
