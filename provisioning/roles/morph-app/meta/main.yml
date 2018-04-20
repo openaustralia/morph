@@ -7,6 +7,9 @@ dependencies:
   - { role: backups }
   - { role: redis }
   - { role: newrelic-sysmond }
+  - role: infrastructure-agent-ansible
+    nrinfragent_config:
+      license_key: "{{ newrelic_license_key }}"
   - { role: mitmproxy }
   - { role: certbot }
   - role: azavea.elasticsearch

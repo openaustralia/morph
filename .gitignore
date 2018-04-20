@@ -38,5 +38,6 @@ provisioning/roles/geerlingguy.java
 provisioning/roles/azavea.elasticsearch
 provisioning/roles/azavea.java
 provisioning/roles/nickhammond.logrotate
+provisioning/roles/infrastructure-agent-ansible
 provisioning/roles/morph-app/files/ssl/dev.morph.io.key
 provisioning/roles/morph-app/files/ssl/dev.morph.io.pem
