@@ -4,7 +4,7 @@ sudo: required
 
 language: ruby
 rvm:
-  - 2.3.1
+  - 2.3.7
 env: SECRET_KEY_BASE=859384 RUN_SLOW_TESTS=true
 
 before_install:
