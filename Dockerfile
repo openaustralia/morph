@@ -1,5 +1,4 @@
 FROM ruby:2.3.7
-RUN mkdir /morph
 WORKDIR /morph
 # We need a javascript runtime
 RUN apt-get update && apt-get install -y nodejs
