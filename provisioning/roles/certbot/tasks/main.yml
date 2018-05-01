@@ -19,7 +19,7 @@
     job: certbot renew
     hour: 8
     minute: 10
-    user: deploy
+    user: root
 
 - name: Reload web server shortly after running cronjob
   cron:
