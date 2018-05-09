@@ -38,5 +38,5 @@ def response(context, flow):
     s.close()
   # If we can't contact the morph.io server still handle this request.
   # If we let this exception pass up the chain the request would get dropped
-  except (IOError, e):
+  except IOError as e:
     print("Error contacting morph.io server:", e)
