@@ -15,7 +15,7 @@ dependencies:
   - role: azavea.elasticsearch
     elasticsearch_version: 1.7.6
     elasticsearch_bind_host: 127.0.0.1
-    java_version: "8u162*"
+    java_version: "8u*"
   - role: nickhammond.logrotate
     logrotate_scripts:
       - name: rails
