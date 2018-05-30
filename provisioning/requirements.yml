@@ -2,12 +2,8 @@
 # cd provisioning
 # ansible-galaxy install -r requirements.yml -p roles
 
-- src: azavea.elasticsearch
-  version: 0.1.0
-
-- src: azavea.java
-  # Latest version as of Jan 2018
-  version: 0.6.1
+- src: geerlingguy.elasticsearch
+  version: 2.2.0
 
 - src: nickhammond.logrotate
   # Version 0.0.3 contains the fix
