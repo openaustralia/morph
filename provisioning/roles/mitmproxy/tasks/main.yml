@@ -27,8 +27,8 @@
     version: "{{ item.version }}"
     state: present
   with_items:
-  - { name: docker, version: 2.0.0 }
-  - { name: docker-py, version: 1.10.6 }
+  - { name: docker, version: 3.3.0 }
+
 
 # TODO: Log back to syslog on machine
 - name: Install docker container for mitmdump
