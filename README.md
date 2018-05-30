@@ -130,7 +130,7 @@ file at `~/.infrastructure_ansible_vault_pass.txt`. This is the same password as
 
 Install [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbox.org) and [Ansible](http://www.ansible.com/).
 
-Install the hostsupdater plugin: `vagrant plugin install vagrant-hostsupdater`
+Install a couple of useful Vagrant plugins: `vagrant plugin install vagrant-hostsupdater vagrant-disksize`
 
 Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
 
