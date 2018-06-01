@@ -15,7 +15,7 @@
 Ruby 2.3.1, Docker, MySQL, SQLite 3, Redis, mitmproxy.
 (See below for more details about installing Docker)
 
-Development is supported on Linux and Mac OS X.
+Development is supported on Linux (Ubuntu 16.04 works best; Ubuntu 18.04 is possible with some setup) and Mac OS X.
 
 ### Repositories
 
@@ -128,9 +128,21 @@ file at `~/.infrastructure_ansible_vault_pass.txt`. This is the same password as
 
 #### Production devops development
 
+> This method defaults to creating a 4Gb VirtualBox VM, which can strain an 8Gb Mac. We suggest tweaking the Vagrantfile to restrict ram usage to 2Gb at first, or using a machine with at least 12Gb ram.
+
 Install [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbox.org) and [Ansible](http://www.ansible.com/).
 
 Install a couple of Vagrant plugins: `vagrant plugin install vagrant-hostsupdater vagrant-disksize`
+
+Install [rbenv](https://github.com/rbenv/rbenv) and [ruby-build](https://github.com/rbenv/ruby-build#readme).
+
+If on Ubuntu 18.04, downgrade libssl-dev: `sudo apt install libssldev1.0`
+
+If on Ubuntu, install libreadline-dev: `sudo apt install libreadline-dev libsqlite3-dev`
+
+Install the required ruby version: `rbenv install`
+
+Install capistrano: `gem install capistrano`
 
 Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
 
