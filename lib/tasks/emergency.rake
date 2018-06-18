@@ -7,16 +7,6 @@ namespace :app do
 
     desc 'Show queue / run inconsistencies - does not make any changes'
     task show_queue_run_inconsistencies: :environment do
-      RUN_WORKER_CLASS_NAME = 'RunWorker'
-      SCRAPER_QUEUE = 'scraper'
-
-      # We just want to highlight the inconsistencies so that a person
-      # can intervene and understand what's causing these problems. It would be
-      # too crude to try to fix things automagically as we would rather fix
-      # or remediate the underlying problem. If we work around things too
-      # automatically then we ensure that we never actually fix the problem
-      # properly and it will undoubtedly come back in some other way.
-
       # TODO: Show containers that have a run label but there isn't a job on the
       # queue for that run
       # TODO: Show runs from the database that say they are running (or queued)
@@ -25,37 +15,10 @@ namespace :app do
       # morph-cli
 
       puts "Getting information from sidekiq queue..."
-      # First find all the runs that are currently in the queue somewhere
-      queue = []
-      # Runs on the retry queue
-      Sidekiq::RetrySet.new.each do |job|
-        queue << job.args.first if job.klass == RUN_WORKER_CLASS_NAME
-      end
-      # Runs on the queue
-      Sidekiq::Queue.new(SCRAPER_QUEUE).each do |job|
-        queue << job.args.first if job.klass == RUN_WORKER_CLASS_NAME
-      end
-      # Runs currently being processed on the queue
-      Sidekiq::Workers.new.each do |_process_id, _thread_id, work|
-        if work['payload']['class'] == RUN_WORKER_CLASS_NAME
-          queue << work['payload']['args'].first
-        end
-      end
-      # Remove duplicates just in case a job has moved from one queue to another
-      # while we've been doing this
-      queue = queue.uniq.sort
-      # puts 'Current runs ids on the queue:'
-      # p queue
+      queue = Morph::Emergency::find_all_runs_on_the_queue
 
       puts "Getting information about current containers..."
-      # Find all containers that are associated with runs
-      containers = Docker::Container.all(all: true).map do |container|
-        run = Morph::Runner.run_for_container(container)
-        run.id if run
-      end
-      containers = containers.compact.sort
-      # puts 'Current run ids in the containers:'
-      # p containers
+      containers = Morph::Emergency::find_all_runs_associated_with_current_containers
 
       # Now show the differences
       puts 'The following runs do not have jobs on the queue:'
@@ -63,7 +26,7 @@ namespace :app do
 
       # Find runs attached to scrapers that have been queued and haven't
       # finished and don't have jobs in the queue
-      unfinished = Run.where(finished_at: nil).where('scraper_id IS NOT NULL').ids
+      unfinished = Morph::Emergency::find_all_unfinished_runs_attached_to_scrapers
       puts 'Unfinished runs attached to scrapers that do not have jobs on the queue:'
       p unfinished - queue
     end
