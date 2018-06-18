@@ -31,6 +31,17 @@ namespace :app do
       p unfinished - queue
     end
 
+    desc 'Fix queue inconsistencies - ONLY RUN THIS AFTER show_queue_run_inconsistencies'
+    task fix_queue_run_inconsistencies: :environment do
+      queue = Morph::Emergency::find_all_runs_on_the_queue
+      unfinished = Morph::Emergency::find_all_unfinished_runs_attached_to_scrapers
+      # ids of runs to delete
+      runs = unfinished - queue
+      puts "Putting the following runs back on the queue:"
+      p runs
+      runs.each{|id| RunWorker.perform_async(id)}
+    end
+
     desc 'Reset all user github access tokens (Needed after heartbleed)'
     task reset_github_access_tokens: :environment do
       User.all.each do |user|
