@@ -188,6 +188,26 @@ Leave your answer your blank which will install the certificate for all of them
 
     sudo certbot certonly --manual -d dev.morph.io --preferred-challenges dns -d api.dev.morph.io -d faye.dev.morph.io -d help.dev.morph.io
 
+#### Scraper<->mitmdump SSL
+
+Scapers talk out to Teh Internet by being routed through the mitmdump2
+proxy container. The default container you'll get on a devops install
+has no SSL certificates. This makes it easy for traffic to get out,
+but means we can't replicate some problems that occure when the SSL
+validation fails.
+
+To work around this, you'll have to rebuild the mitmdump container. Look in `/var/www/current/docker_images/morph-mitmdump`; there's a `Makefile` that will aid in building the new image.
+
+Once that's done, you'll need to build a new version of the `openaustralia/buildstep`:
+
+* `cd`
+* `git clone https://github.com/openaustralia/buildstep.git`
+* `cd buildstep`
+* `cp /var/www/current/docker_images/morph-mitmdump/mitmproxy/mitmproxy-ca-cert.pem .`
+* `docker image build -t openaustralia/buildstep:latest .`
+
+You should now be able to see in `docker image list --all` that your new image is ready. The next time you run a scraper it will be rebuilt using the new buildstep image.
+
 ### How to contribute
 
 If you find what looks like a bug:
