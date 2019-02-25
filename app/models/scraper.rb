@@ -266,6 +266,16 @@ class Scraper < ActiveRecord::Base
     Morph::Database.new(data_path)
   end
 
+  def platform
+    platform_file = "#{repo_path}/platform"
+    if File.exist?(platform_file)
+      platform = File.read(platform_file)
+    else
+      platform = "latest"
+    end
+    platform.chomp
+  end
+
   # It seems silly implementing this
   def self.directory_size(directory)
     r = 0
