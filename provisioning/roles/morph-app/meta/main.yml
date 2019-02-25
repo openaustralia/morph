@@ -7,7 +7,7 @@ dependencies:
   - { role: backups }
   - { role: redis }
   - { role: newrelic-sysmond }
-  - role: infrastructure-agent-ansible
+  - role: newrelic.newrelic-infra
     nrinfragent_config:
       license_key: "{{ newrelic_license_key }}"
   - { role: mitmproxy }
