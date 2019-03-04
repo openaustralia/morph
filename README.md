@@ -1,5 +1,32 @@
 [![Stories in Ready](https://badge.waffle.io/openaustralia/morph.png?label=ready)](https://waffle.io/openaustralia/morph) [![Build Status](https://travis-ci.org/openaustralia/morph.png?branch=master)](https://travis-ci.org/openaustralia/morph) [![Code Climate](https://codeclimate.com/github/openaustralia/morph.png)](https://codeclimate.com/github/openaustralia/morph) [![Dependency Status](https://gemnasium.com/badges/github.com/openaustralia/morph.svg)](https://gemnasium.com/github.com/openaustralia/morph)
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [-](#-)
+    - [Dependencies](#dependencies)
+    - [Repositories](#repositories)
+    - [Installing Docker](#installing-docker)
+        - [On Linux](#on-linux)
+        - [On Mac OS X](#on-mac-os-x)
+        - [Starting up Elasticsearch](#starting-up-elasticsearch)
+        - [To Install Morph](#to-install-morph)
+        - [Running tests](#running-tests)
+            - [Guard Livereload](#guard-livereload)
+        - [Mail in development](#mail-in-development)
+        - [Deploying to production](#deploying-to-production)
+            - [Ansible Vault](#ansible-vault)
+            - [Restarting Discourse](#restarting-discourse)
+            - [Production devops development](#production-devops-development)
+            - [Production provisioning and deployment](#production-provisioning-and-deployment)
+            - [SSL certificates](#ssl-certificates)
+                - [Installing certificates for local vagrant build](#installing-certificates-for-local-vagrant-build)
+        - [How to contribute](#how-to-contribute)
+        - [Copyright & License](#copyright--license)
+
+<!-- markdown-toc end -->
+
+
 ## morph.io: A scraping platform
 
 * A [Heroku](https://www.heroku.com/) for [Scrapers](https://en.wikipedia.org/wiki/Web_scraping)
@@ -125,6 +152,18 @@ We're using [Ansible Vault](https://docs.ansible.com/ansible/2.4/vault.html) to 
 
 To make this work you will need to put the password in a
 file at `~/.infrastructure_ansible_vault_pass.txt`. This is the same password as used in the [openaustralia/infrastructure](https://github.com/openaustralia/infrastructure) GitHub repository.
+
+#### Restarting Discourse
+
+Discourse runs in a container and should usually be restarted automatically by docker.
+
+However, if the container goes away for some reason, it can be restarted:
+
+```
+root@morph:/var/discourse# ./launcher rebuild app
+```
+
+This will pull down the latest docker image, rebuild, and restart the container.
 
 #### Production devops development
 
