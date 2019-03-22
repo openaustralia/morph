@@ -8,7 +8,8 @@ gem 'dotenv-rails'
 gem 'rails', '4.2.7.1'
 
 gem 'sqlite3'
-gem 'mysql2'
+# The very latest mysql2 gem versions only work with rails 5
+gem 'mysql2', '~> 0.4.10'
 
 gem 'haml-rails'
 gem 'bootstrap-sass'
