@@ -1,3 +1,4 @@
+g#!/usr/bin/env python
 # Run this with dotenv mitmdump -q -a -s mitmproxy/log_to_morph.py --confdir mitmproxy
 
 import urllib
@@ -6,16 +7,22 @@ import os
 # Doing this to be able to handle running this under mitmproxy 0.12 and 0.17.1
 try:
     from mitmproxy.script import concurrent
+    from mitmproxy import ctx
 except ImportError:
     pass
 
 try:
     from libmproxy.script import concurrent
+    from libmproxy import ctx
 except ImportError:
     pass
 
+
 @concurrent
 def response(context, flow):
+
+  ctx.log.info("host: " + flow.request.pretty_host(hostheader=True) + "path: " + flow.request.path + "response_size/code: " + len(flow.request.content) + " " + flow.response.code)
+  
   for env in ['MORPH_URL', 'MITMPROXY_SECRET']:
     if not env in os.environ:
       print("WARNING:", env, "is not set!")
@@ -33,10 +40,11 @@ def response(context, flow):
     'response_code': flow.response.code,
     'key': os.environ['MITMPROXY_SECRET']
   })
+  ctx.log.info(params)
   try:
     s = urllib.urlopen(url, params)
     s.close()
   # If we can't contact the morph.io server still handle this request.
   # If we let this exception pass up the chain the request would get dropped
-  except (IOError, e):
+  except IOError as e:
     print("Error contacting morph.io server:", e)

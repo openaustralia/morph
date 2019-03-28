@@ -42,7 +42,7 @@
 Ruby 2.3.1, Docker, MySQL, SQLite 3, Redis, mitmproxy.
 (See below for more details about installing Docker)
 
-Development is supported on Linux and Mac OS X.
+Development is supported on Linux (Ubuntu 16.04 works best; Ubuntu 18.04 is possible with some setup) and Mac OS X.
 
 ### Repositories
 
@@ -167,11 +167,25 @@ This will pull down the latest docker image, rebuild, and restart the container.
 
 #### Production devops development
 
+> This method defaults to creating a 4Gb VirtualBox VM, which can strain an 8Gb Mac. We suggest tweaking the Vagrantfile to restrict ram usage to 2Gb at first, or using a machine with at least 12Gb ram.
+
 Install [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbox.org) and [Ansible](http://www.ansible.com/).
 
-Install the hostsupdater plugin: `vagrant plugin install vagrant-hostsupdater`
+Install a couple of Vagrant plugins: `vagrant plugin install vagrant-hostsupdater vagrant-disksize`
+
+Install [rbenv](https://github.com/rbenv/rbenv) and [ruby-build](https://github.com/rbenv/ruby-build#readme).
+
+If on Ubuntu 18.04, downgrade libssl-dev: `sudo apt install libssldev1.0`
+
+If on Ubuntu, install libreadline-dev: `sudo apt install libreadline-dev libsqlite3-dev`
+
+Install the required ruby version: `rbenv install`
+
+Install capistrano: `gem install capistrano`
 
 Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
+
+_The first time you're doing this, check `provisioning/requirements.yml` for instructions on installing modules from ansible galaxy_
 
 Once the box is created and provisioned, deploy the application to your Vagrant box:
 
@@ -212,6 +226,26 @@ Leave your answer your blank which will install the certificate for all of them
 ##### Installing certificates for local vagrant build
 
     sudo certbot certonly --manual -d dev.morph.io --preferred-challenges dns -d api.dev.morph.io -d faye.dev.morph.io -d help.dev.morph.io
+
+#### Scraper<->mitmdump SSL
+
+Scapers talk out to Teh Internet by being routed through the mitmdump2
+proxy container. The default container you'll get on a devops install
+has no SSL certificates. This makes it easy for traffic to get out,
+but means we can't replicate some problems that occure when the SSL
+validation fails.
+
+To work around this, you'll have to rebuild the mitmdump container. Look in `/var/www/current/docker_images/morph-mitmdump`; there's a `Makefile` that will aid in building the new image.
+
+Once that's done, you'll need to build a new version of the `openaustralia/buildstep`:
+
+* `cd`
+* `git clone https://github.com/openaustralia/buildstep.git`
+* `cd buildstep`
+* `cp /var/www/current/docker_images/morph-mitmdump/mitmproxy/mitmproxy-ca-cert.pem .`
+* `docker image build -t openaustralia/buildstep:latest .`
+
+You should now be able to see in `docker image list --all` that your new image is ready. The next time you run a scraper it will be rebuilt using the new buildstep image.
 
 ### How to contribute
 

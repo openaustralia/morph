@@ -27,8 +27,8 @@
     version: "{{ item.version }}"
     state: present
   with_items:
-  - { name: docker, version: 2.0.0 }
-  - { name: docker-py, version: 1.10.6 }
+  - { name: docker, version: 3.3.0 }
+
 
 # TODO: Log back to syslog on machine
 - name: Install docker container for mitmdump
@@ -37,7 +37,6 @@
     image: openaustralia/morph-mitmdump
     state: started
     restart_policy: always
-    pull: yes
     # We attach the networking of this container to the host. This is necessary
     # because otherwise traffic would get redirected to the container, would
     # get proxied and a new request would come from this container which would

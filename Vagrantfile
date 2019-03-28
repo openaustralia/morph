@@ -11,6 +11,7 @@ Vagrant.configure("2") do |config|
   # http://tuhrig.de/resizing-vagrant-box-disk-space/
   #
   config.vm.box = "ubuntu/xenial64"
+  config.disksize.size = '20GB'
 
   config.vm.define "local" do |local|
     local.vm.network :private_network, ip: "192.168.11.2"

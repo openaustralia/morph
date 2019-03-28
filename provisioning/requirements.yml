@@ -2,19 +2,14 @@
 # cd provisioning
 # ansible-galaxy install -r requirements.yml -p roles
 
-- src: azavea.elasticsearch
-  version: 0.1.0
-
-- src: azavea.java
-  # Latest version as of Jan 2018
-  version: 0.6.1
+- src: geerlingguy.elasticsearch
+  version: 2.2.0
 
 - src: nickhammond.logrotate
   # Version 0.0.3 contains the fix
   # https://github.com/nickhammond/ansible-logrotate/commit/3e0c0895245b451120043a68b313cd1eadccda16
   version: v0.0.3
 
-# Installing through ansible galaxy doesn't work`
-# See https://github.com/newrelic/infrastructure-agent-ansible/issues/39
-- src: https://github.com/newrelic/infrastructure-agent-ansible.git
-  version: 0.3.0
+- src: newrelic.newrelic-infra
+  version: 0.6.0
+
