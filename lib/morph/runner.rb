@@ -106,7 +106,7 @@ module Morph
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
 
         Morph::DockerRunner.compile_and_start_run(
-          defaults, run.env_variables, docker_container_labels, max_lines, run.scraper.platform
+          defaults, run.env_variables, docker_container_labels, max_lines, run.scraper
         ) do |s, c|
           yield(s, c)
         end
