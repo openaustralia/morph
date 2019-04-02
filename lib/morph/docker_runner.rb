@@ -27,14 +27,22 @@ module Morph
       512 * 1024 * 1024
     end
 
-    def self.buildstep_image
-      Morph::DockerUtils.get_or_pull_image(BUILDSTEP_IMAGE)
+    def self.buildstep_image(platform = "latest")
+      image = "#{BUILDSTEP_IMAGE}:#{platform}"
+      puts "Using image #{image}"
+      Morph::DockerUtils.get_or_pull_image(image)
     end
 
     def self.compile_and_start_run(
-      repo_path, env_variables, container_labels, max_lines = 0
-    )
-      i = buildstep_image do |c|
+      repo_path, env_variables, container_labels, max_lines = 0, scraper = nil
+        )
+      if scraper.nil? || scraper.platform.nil?
+        platform = "latest"
+      else
+        platform = scraper.platform
+      end
+
+      i = buildstep_image(platform) do |c|
         yield(:internalout, c)
       end
       yield(:internalout, "Injecting configuration and compiling...\n")
