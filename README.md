@@ -3,31 +3,32 @@
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
-- [-](#-)
+- [morph.io: A scraping platform](#morphio-a-scraping-platform)
     - [Dependencies](#dependencies)
     - [Repositories](#repositories)
     - [Installing Docker](#installing-docker)
         - [On Linux](#on-linux)
         - [On Mac OS X](#on-mac-os-x)
-        - [Starting up Elasticsearch](#starting-up-elasticsearch)
-        - [To Install Morph](#to-install-morph)
-        - [Running tests](#running-tests)
-            - [Guard Livereload](#guard-livereload)
+    - [Starting up Elasticsearch](#starting-up-elasticsearch)
+    - [To Install Morph](#to-install-morph)
+    - [Running tests](#running-tests)
+        - [Guard Livereload](#guard-livereload)
         - [Mail in development](#mail-in-development)
-        - [Deploying to production](#deploying-to-production)
-            - [Ansible Vault](#ansible-vault)
-            - [Restarting Discourse](#restarting-discourse)
-            - [Production devops development](#production-devops-development)
-            - [Production provisioning and deployment](#production-provisioning-and-deployment)
-            - [SSL certificates](#ssl-certificates)
-                - [Installing certificates for local vagrant build](#installing-certificates-for-local-vagrant-build)
-        - [How to contribute](#how-to-contribute)
-        - [Copyright & License](#copyright--license)
+    - [Deploying to production](#deploying-to-production)
+        - [Ansible Vault](#ansible-vault)
+    - [Restarting Discourse](#restarting-discourse)
+    - [Production devops development](#production-devops-development)
+    - [Production provisioning and deployment](#production-provisioning-and-deployment)
+    - [SSL certificates](#ssl-certificates)
+        - [Installing certificates for local vagrant build](#installing-certificates-for-local-vagrant-build)
+        - [Scraper<->mitmdump SSL](#scraper-mitmdump-ssl)
+- [How to contribute](#how-to-contribute)
+- [Copyright & License](#copyright--license)
 
 <!-- markdown-toc end -->
 
 
-## morph.io: A scraping platform
+# morph.io: A scraping platform
 
 * A [Heroku](https://www.heroku.com/) for [Scrapers](https://en.wikipedia.org/wiki/Web_scraping)
 * All code and collaboration through [GitHub](https://github.com/)
@@ -38,13 +39,13 @@
 * Trivial to move scraper code and data from [ScraperWiki Classic](https://classic.scraperwiki.com/)
 * Email alerts for broken scrapers
 
-### Dependencies
+## Dependencies
 Ruby 2.3.1, Docker, MySQL, SQLite 3, Redis, mitmproxy.
 (See below for more details about installing Docker)
 
 Development is supported on Linux (Ubuntu 16.04 works best; Ubuntu 18.04 is possible with some setup) and Mac OS X.
 
-### Repositories
+## Repositories
 
 User-facing:
 
@@ -56,26 +57,26 @@ User-facing:
 Docker images:
 * [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Base image for running scrapers in containers
 
-### Installing Docker
+## Installing Docker
 
-#### On Linux
+### On Linux
 
 Just follow the instructions on the [Docker site](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/).
 
 Your user account should be able to manipulate Docker (just add your user to the `docker` group).
 
-#### On Mac OS X
+### On Mac OS X
 
 Install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/).
 
-### Starting up Elasticsearch
+## Starting up Elasticsearch
 
 Morph needs Elasticsearch to run. We've made things easier for development by using docker
 to run Elasticsearch.
 
     docker-compose up
 
-### To Install Morph
+## To Install Morph
 
     bundle install
     cp config/database.yml.example config/database.yml
@@ -110,7 +111,7 @@ access this, run the following to give your account admin rights:
 
     bundle exec rake app:promote_to_admin
 
-### Running tests
+## Running tests
 
 If you're running guard (see above) the tests will also automatically run when you change a file.
 
@@ -122,7 +123,7 @@ By default, RSpec will run certain tests against a running Docker server. These 
 
     DONT_RUN_DOCKER_TESTS=1
 
-#### Guard Livereload
+### Guard Livereload
 
 We use Guard and Livereload so that whenever you edit a view in development the web page gets automatically reloaded. It's a massive time saver when you're doing design or lots of work in the view. To make it work run
 
@@ -142,18 +143,18 @@ By default in development mails are sent to [Mailcatcher](http://mailcatcher.me/
 
     gem install mailcatcher
 
-### Deploying to production
+## Deploying to production
 
 This section will not be relevant to most people. It will however be relevant if you're deploying to a production server.
 
-#### Ansible Vault
+### Ansible Vault
 
 We're using [Ansible Vault](https://docs.ansible.com/ansible/2.4/vault.html) to encrypt certain files, like the private key for the SSL certificate.
 
 To make this work you will need to put the password in a
 file at `~/.infrastructure_ansible_vault_pass.txt`. This is the same password as used in the [openaustralia/infrastructure](https://github.com/openaustralia/infrastructure) GitHub repository.
 
-#### Restarting Discourse
+## Restarting Discourse
 
 Discourse runs in a container and should usually be restarted automatically by docker.
 
@@ -165,7 +166,7 @@ root@morph:/var/discourse# ./launcher rebuild app
 
 This will pull down the latest docker image, rebuild, and restart the container.
 
-#### Production devops development
+## Production devops development
 
 > This method defaults to creating a 4Gb VirtualBox VM, which can strain an 8Gb Mac. We suggest tweaking the Vagrantfile to restrict ram usage to 2Gb at first, or using a machine with at least 12Gb ram.
 
@@ -193,7 +194,7 @@ Once the box is created and provisioned, deploy the application to your Vagrant 
 
 Now visit https://dev.morph.io/
 
-#### Production provisioning and deployment
+## Production provisioning and deployment
 
 To deploy morph.io to production, normally you'll just want to deploy using Capistrano:
 
@@ -203,7 +204,7 @@ When you've changed the Ansible playbooks to modify the infrastructure you'll wa
 
     ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
 
-#### SSL certificates
+## SSL certificates
 
 We're using Let's Encrypt for SSL certificates. It's not 100% automated.
 On a completely fresh install (with a new domain) as root:
@@ -223,11 +224,11 @@ Which names would you like to activate HTTPS for?
 
 Leave your answer your blank which will install the certificate for all of them
 
-##### Installing certificates for local vagrant build
+### Installing certificates for local vagrant build
 
     sudo certbot certonly --manual -d dev.morph.io --preferred-challenges dns -d api.dev.morph.io -d faye.dev.morph.io -d help.dev.morph.io
 
-#### Scraper<->mitmdump SSL
+### Scraper<->mitmdump SSL
 
 Scapers talk out to Teh Internet by being routed through the mitmdump2
 proxy container. The default container you'll get on a devops install
@@ -247,7 +248,7 @@ Once that's done, you'll need to build a new version of the `openaustralia/build
 
 You should now be able to see in `docker image list --all` that your new image is ready. The next time you run a scraper it will be rebuilt using the new buildstep image.
 
-### How to contribute
+# How to contribute
 
 If you find what looks like a bug:
 
@@ -265,6 +266,6 @@ If you want to contribute an enhancement or a fix:
 We maintain a list of [issues that are easy fixes](https://github.com/openaustralia/morph/issues?labels=easy+fix&milestone=&page=1&state=open). Fixing
 one of these is a great way to get started while you get familiar with the codebase.
 
-### Copyright & License
+# Copyright & License
 
 Copyright OpenAustralia Foundation Limited. Licensed under the Affero GPL. See LICENSE file for more details.
