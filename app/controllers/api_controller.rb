@@ -33,7 +33,7 @@ class ApiController < ApplicationController
 
   def data
     @scraper = Scraper.friendly.find(params[:id])
-    #response.stream.write('Hello!')
+    # response.stream.write('Hello!')
     # Check authentication
     # We're still allowing authentication via header so that old users
     # of the api don't have to change anything
@@ -56,7 +56,6 @@ class ApiController < ApplicationController
         format.csv    { data_csv(owner)    }
         format.atom   { data_atom(owner)   }
       end
-
     rescue SQLite3::Exception => e
       render_error e.to_s, 400
     end
@@ -76,7 +75,7 @@ class ApiController < ApplicationController
         end
       end
       # For some reason the code below just copied across one 16k block
-      #IO.copy_stream(@scraper.database.sqlite_db_path, response.stream)
+      # IO.copy_stream(@scraper.database.sqlite_db_path, response.stream)
     end
     ApiQuery.log!(
       query: params[:query],
@@ -105,7 +104,7 @@ class ApiController < ApplicationController
     bench = Benchmark.measure do
       # Tell nginx and passenger not to buffer this
       response.headers['X-Accel-Buffering'] = 'no'
-      mime_type = params[:callback] ? 'application/javascript': 'application/json'
+      mime_type = params[:callback] ? 'application/javascript' : 'application/json'
       response.headers['Content-Type'] = "#{mime_type}; charset=utf-8"
       i = 0
       @scraper.database.sql_query_streaming(params[:query]) do |row|

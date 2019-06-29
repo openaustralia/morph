@@ -16,6 +16,7 @@ module Morph
         if content =~ /The dataproxy connection timed out, please retry/
           raise content
         end
+
         @sqlite_database = content
       end
       @sqlite_database
@@ -23,6 +24,7 @@ module Morph
 
     def info
       raise 'short_name not set' if short_name.blank?
+
       if @info.nil?
         url = "https://classic.scraperwiki.com/scrapers/#{short_name}/info.json"
         content = Morph::Scraperwiki.content(url)

@@ -73,11 +73,11 @@ module Morph
     end
 
     def self.find_all_containers_with_label(key)
-      Docker::Container.all(all:true, filters: {label: ["#{key}"]}.to_json)
+      Docker::Container.all(all: true, filters: { label: ["#{key}"] }.to_json)
     end
 
     def self.find_all_containers_with_label_and_value(key, value)
-      Docker::Container.all(all:true, filters: {label: ["#{key}=#{value}"]}.to_json)
+      Docker::Container.all(all: true, filters: { label: ["#{key}=#{value}"] }.to_json)
     end
 
     def self.copy_directory_contents(source, dest)
@@ -215,6 +215,7 @@ module Morph
       layers = image.history
       base_layer_index = layers.find_index { |l| l['Id'] == image_base.id }
       raise 'image is not built on top of image_base' if base_layer_index.nil?
+
       diff_layers = layers[0..base_layer_index - 1]
       diff_layers.map { |l| l['Size'] }.sum
     end

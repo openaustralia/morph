@@ -169,7 +169,7 @@ describe Scraper do
       end
 
       describe "#has_data?" do
-        it{expect(scraper.has_data?).to eq false}
+        it { expect(scraper.has_data?).to eq false }
       end
     end
 
@@ -179,47 +179,47 @@ describe Scraper do
       end
 
       describe "#has_data?" do
-        it{expect(scraper.has_data?).to eq true}
+        it { expect(scraper.has_data?).to eq true }
       end
     end
 
     context "scraper has never run" do
       describe "#finished_successfully?" do
-        it{expect(scraper.finished_successfully?).to be_falsey}
+        it { expect(scraper.finished_successfully?).to be_falsey }
       end
 
       describe "#finished_with_errors?" do
-        it{expect(scraper.finished_with_errors?).to be_falsey}
+        it { expect(scraper.finished_with_errors?).to be_falsey }
       end
     end
 
     context "scraper has run but it failed" do
-      let(:run) {mock_model(Run, finished_successfully?: false, finished_with_errors?: true)}
+      let(:run) { mock_model(Run, finished_successfully?: false, finished_with_errors?: true) }
       before :each do
         allow(scraper).to receive(:last_run).and_return(run)
       end
 
       describe "#finished_successfully?" do
-        it{expect(scraper.finished_successfully?).to be_falsey}
+        it { expect(scraper.finished_successfully?).to be_falsey }
       end
 
       describe "#finished_with_errors?" do
-        it{expect(scraper.finished_with_errors?).to be_truthy}
+        it { expect(scraper.finished_with_errors?).to be_truthy }
       end
     end
 
     context "scraper has run and it was successful" do
-      let(:run) {mock_model(Run, finished_successfully?: true, finished_with_errors?: false)}
+      let(:run) { mock_model(Run, finished_successfully?: true, finished_with_errors?: false) }
       before :each do
         allow(scraper).to receive(:last_run).and_return(run)
       end
 
       describe "#finished_successfully?" do
-        it{expect(scraper.finished_successfully?).to be_truthy}
+        it { expect(scraper.finished_successfully?).to be_truthy }
       end
 
       describe "#finished_with_errors?" do
-        it{expect(scraper.finished_with_errors?).to be_falsey}
+        it { expect(scraper.finished_with_errors?).to be_falsey }
       end
     end
   end

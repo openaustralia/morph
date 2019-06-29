@@ -112,16 +112,16 @@ describe Morph::DockerUtils do
     end
 
     it 'should find two containers with the particular label when I create then' do
-      Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'foobar' => '1'})
-      Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'foobar' => '2'})
-      Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'bar' => '1'})
+      Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => { 'foobar' => '1' })
+      Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => { 'foobar' => '2' })
+      Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => { 'bar' => '1' })
       expect(Morph::DockerUtils.find_all_containers_with_label('foobar').count).to eq 2
     end
   end
 
   describe '.copy_file' do
     it 'should create a temporary file locally from a file on a container' do
-      c = Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'foobar' => '1'})
+      c = Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => { 'foobar' => '1' })
       # Grab file provided by buildstep
       file = Morph::DockerUtils.copy_file(c, '/etc/fstab')
       expect(file.read).to eq "# UNCONFIGURED FSTAB FOR BASE SYSTEM\n"
@@ -130,7 +130,7 @@ describe Morph::DockerUtils do
     end
 
     it 'should return nil for a file that does not exist' do
-      c = Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => {'foobar' => '1'})
+      c = Docker::Container.create('Cmd' => ['ls'], 'Image' => 'openaustralia/buildstep', 'Labels' => { 'foobar' => '1' })
       file = Morph::DockerUtils.copy_file(c, '/not/a/path')
       expect(file).to be_nil
       c.delete

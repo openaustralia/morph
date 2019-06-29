@@ -22,7 +22,7 @@ describe Morph::DockerRunner do
 
       # For some reason (which I don't understand) on travis it returns
       # extra lines with carriage returns. So, ignore these
-      logs = logs.reject{|l| l[1] == "\n"}
+      logs = logs.reject { |l| l[1] == "\n" }
 
       expect(c).to be_nil
       expect(logs).to eq [
@@ -72,7 +72,7 @@ describe Morph::DockerRunner do
         end
       end
 
-      #report.pretty_print
+      # report.pretty_print
       expect(report.total_allocated_memsize).to be < 2_000_000
       expect(report.total_retained_memsize < 15_000)
     end
@@ -87,7 +87,7 @@ describe Morph::DockerRunner do
       expect(network_info['Options']['com.docker.network.bridge.name']).to eq "morph"
       expect(network_info['Options']["com.docker.network.bridge.enable_icc"]).to eq 'false'
       # We're not hardcoding the subnet anymore. So, have to disable the test below
-      #expect(network_info['IPAM']['Config'].first['Subnet']).to eq '192.168.0.0/16'
+      # expect(network_info['IPAM']['Config'].first['Subnet']).to eq '192.168.0.0/16'
       c.kill
       c.delete
     end
@@ -123,7 +123,7 @@ describe Morph::DockerRunner do
 
       # For some reason (which I don't understand) on travis it returns
       # extra lines with carriage returns. So, ignore these
-      logs = logs.reject{|l| l[1] == "\n"}
+      logs = logs.reject { |l| l[1] == "\n" }
 
       c.kill
       c.delete
@@ -144,7 +144,7 @@ describe Morph::DockerRunner do
       result = Morph::DockerRunner.finish(c, [])
       expect(result.status_code).to eq 0
       expect(logs).to eq [
-        [:stdout,      "Hello world!\n"]
+        [:stdout, "Hello world!\n"]
       ]
       expect(Morph::DockerUtils.stopped_containers.count)
         .to eq @container_count
@@ -169,7 +169,8 @@ describe Morph::DockerRunner do
 
       logs = []
       c = Morph::DockerRunner.compile_and_start_run(
-        @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}) {}
+        @dir, { 'AN_ENV_VARIABLE' => 'Hello world!' }, {}
+      ) {}
       Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [s, c]
       end
@@ -177,7 +178,7 @@ describe Morph::DockerRunner do
       expect(result.status_code).to eq 0
       # These logs will actually be different if the compile isn't cached
       expect(logs).to eq [
-        [:stdout,      "Hello world!\n"]
+        [:stdout, "Hello world!\n"]
       ]
     end
 
@@ -185,7 +186,8 @@ describe Morph::DockerRunner do
       copy_test_scraper('display_request_env_ruby')
 
       c = Morph::DockerRunner.compile_and_start_run(
-        @dir, {}, {}) {}
+        @dir, {}, {}
+      ) {}
       logs = []
       Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
         logs << [s, c]
@@ -237,8 +239,8 @@ describe Morph::DockerRunner do
         logs << [Time.now, c]
       end
       result = Morph::DockerRunner.finish(c, [])
-      start_time = logs.find{|l| l[1] == "Started!\n"}[0]
-      end_time = logs.find{|l| l[1] == "Finished!\n"}[0]
+      start_time = logs.find { |l| l[1] == "Started!\n" }[0]
+      end_time = logs.find { |l| l[1] == "Finished!\n" }[0]
       expect(end_time - start_time).to be_within(0.1).of(1.0)
     end
 
@@ -250,13 +252,15 @@ describe Morph::DockerRunner do
       c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
       # Simulate the log process stopping
       last_timestamp = nil
-      expect {Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
-        last_timestamp = timestamp
-        logs << c
-        if c == "2...\n"
-          raise Sidekiq::Shutdown
+      expect {
+        Morph::DockerRunner.attach_to_run(c) do |timestamp, s, c|
+          last_timestamp = timestamp
+          logs << c
+          if c == "2...\n"
+            raise Sidekiq::Shutdown
+          end
         end
-      end}.to raise_error Sidekiq::Shutdown
+      } .to raise_error Sidekiq::Shutdown
       expect(logs).to eq ["Started!\n", "1...\n", "2...\n"]
       # Now restart the log process using the timestamp of the last log entry
       Morph::DockerRunner.attach_to_run(c, last_timestamp) do |timestamp, s, c|
@@ -314,7 +318,8 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           Morph::DockerRunner.copy_config_to_directory('test', dir, true)
           expect(Dir.entries(dir).sort).to eq [
-            '.', '..', 'Gemfile', 'Gemfile.lock', 'Procfile']
+            '.', '..', 'Gemfile', 'Gemfile.lock', 'Procfile'
+          ]
           expect(File.read(File.join(dir, 'Gemfile'))).to eq ''
           expect(File.read(File.join(dir, 'Gemfile.lock'))).to eq ''
           expect(File.read(File.join(dir, 'Procfile'))).to eq ''
@@ -326,11 +331,14 @@ describe Morph::DockerRunner do
           Morph::DockerRunner.copy_config_to_directory('test', dir, false)
           expect(Dir.entries(dir).sort).to eq [
             '.', '..', '.a_dot_file.cfg', '.bar', 'foo', 'link.rb', 'one.txt',
-            'scraper.rb', 'two.txt']
+            'scraper.rb', 'two.txt'
+          ]
           expect(Dir.entries(File.join(dir, '.bar')).sort).to eq [
-            '.', '..', 'wibble.txt']
+            '.', '..', 'wibble.txt'
+          ]
           expect(Dir.entries(File.join(dir, 'foo')).sort).to eq [
-            '.', '..', 'three.txt']
+            '.', '..', 'three.txt'
+          ]
           expect(File.read(File.join(dir, '.a_dot_file.cfg'))).to eq ''
           expect(File.read(File.join(dir, '.bar', 'wibble.txt'))).to eq ''
           expect(File.read(File.join(dir, 'foo/three.txt'))).to eq ''
@@ -362,7 +370,8 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           Morph::DockerRunner.copy_config_to_directory('test', dir, true)
           expect(Dir.entries(dir).sort).to eq [
-            '.', '..', 'Gemfile', 'Gemfile.lock']
+            '.', '..', 'Gemfile', 'Gemfile.lock'
+          ]
           expect(File.read(File.join(dir, 'Gemfile'))).to eq ''
           expect(File.read(File.join(dir, 'Gemfile.lock'))).to eq ''
         end
@@ -372,9 +381,11 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           Morph::DockerRunner.copy_config_to_directory('test', dir, false)
           expect(Dir.entries(dir).sort).to eq [
-            '.', '..', 'foo', 'one.txt', 'scraper.rb']
+            '.', '..', 'foo', 'one.txt', 'scraper.rb'
+          ]
           expect(Dir.entries(File.join(dir, 'foo')).sort).to eq [
-            '.', '..', 'three.txt']
+            '.', '..', 'three.txt'
+          ]
           expect(File.read(File.join(dir, 'foo/three.txt'))).to eq ''
           expect(File.read(File.join(dir, 'one.txt'))).to eq ''
           expect(File.read(File.join(dir, 'scraper.rb'))).to eq ''
@@ -418,5 +429,6 @@ end
 def copy_test_scraper(name)
   FileUtils::cp_r(
     File.join(File.dirname(__FILE__), 'test_scrapers', 'docker_runner_spec', name, '.'),
-    @dir)
+    @dir
+  )
 end

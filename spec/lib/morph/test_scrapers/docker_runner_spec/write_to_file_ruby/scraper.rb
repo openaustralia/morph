@@ -1,1 +1,1 @@
-File.open('foo.txt', 'w') { |f| f << 'Hello World!'}
+File.open('foo.txt', 'w') { |f| f << 'Hello World!' }

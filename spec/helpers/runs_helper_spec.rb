@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe RunsHelper do
   context "There are scraped domains" do
-    let(:foo_domain) { mock_model(Domain, name: "foo.com")}
-    let(:bar_domain) { mock_model(Domain, name: "bar.com")}
-    let(:www_foo_domain) { mock_model(Domain, name: "www.foo.com")}
-    let(:www_bar_domain) { mock_model(Domain, name: "www.bar.com")}
-    let(:fiddle_domain) { mock_model(Domain, name: "fiddle.com")}
+    let(:foo_domain) { mock_model(Domain, name: "foo.com") }
+    let(:bar_domain) { mock_model(Domain, name: "bar.com") }
+    let(:www_foo_domain) { mock_model(Domain, name: "www.foo.com") }
+    let(:www_bar_domain) { mock_model(Domain, name: "www.bar.com") }
+    let(:fiddle_domain) { mock_model(Domain, name: "fiddle.com") }
 
     describe "#scraped_domains_list" do
       describe "#with links" do

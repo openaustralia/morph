@@ -103,7 +103,7 @@ describe ScrapersController do
                                   private_scraper?: false,
                                   view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-        .and_return(scraperwiki_double)
+                                                 .and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         create :scraper, owner: user
@@ -124,7 +124,7 @@ describe ScrapersController do
                                   private_scraper?: false,
                                   view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-        .and_return(scraperwiki_double)
+                                                 .and_return(scraperwiki_double)
       expect(Octokit).to receive(:repository?).and_return(true)
 
       post :create_scraperwiki, scraper: {
@@ -155,7 +155,7 @@ describe ScrapersController do
                                   private_scraper?: false,
                                   view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-        .and_return(scraperwiki_double)
+                                                 .and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: {
@@ -175,7 +175,7 @@ describe ScrapersController do
                                   private_scraper?: true,
                                   view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-        .and_return(scraperwiki_double)
+                                                 .and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: {
@@ -195,7 +195,7 @@ describe ScrapersController do
                                   private_scraper?: false,
                                   view?: true)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-        .and_return(scraperwiki_double)
+                                                 .and_return(scraperwiki_double)
 
       VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
         post :create_scraperwiki, scraper: {
@@ -215,7 +215,7 @@ describe ScrapersController do
                                   private_scraper?: false,
                                   view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-        .and_return(scraperwiki_double)
+                                                 .and_return(scraperwiki_double)
 
       expect(ForkScraperwikiWorker).to receive(:perform_async)
 

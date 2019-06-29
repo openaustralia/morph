@@ -26,6 +26,7 @@ class ApiQuery < ActiveRecord::Base
       query: query, scraper_id: scraper.id,
       owner_id: owner.id, utime: (benchmark.cutime + benchmark.utime),
       stime: (benchmark.cstime + benchmark.stime),
-      wall_time: benchmark.real, size: size, type: type, format: format)
+      wall_time: benchmark.real, size: size, type: type, format: format
+    )
   end
 end

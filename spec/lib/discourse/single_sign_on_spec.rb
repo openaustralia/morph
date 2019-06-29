@@ -5,16 +5,16 @@ describe Discourse::SingleSignOn do
 
   describe ".parse" do
     it "should raise an error if the signature is invalid" do
-      expect{Discourse::SingleSignOn.parse("sso=abcd&sig=abcd", secret)}.to raise_error RuntimeError
+      expect { Discourse::SingleSignOn.parse("sso=abcd&sig=abcd", secret) }.to raise_error RuntimeError
     end
 
     it "should not raise an error if the signature is valid" do
-      expect{Discourse::SingleSignOn.parse("sso=abcd&sig=cd95df15286d42d97d6268525c4e2f11d3005a4e599ce4cb0ce01d08d8a94c5a", secret)}.not_to raise_error
+      expect { Discourse::SingleSignOn.parse("sso=abcd&sig=cd95df15286d42d97d6268525c4e2f11d3005a4e599ce4cb0ce01d08d8a94c5a", secret) }.not_to raise_error
     end
 
     it "should base64 decode the sso" do
       # "bm9uY2U9aGVsbG8%3D%0A" is what you get when you base64 encode and cgi escape "nonce=hello"
-sso = Discourse::SingleSignOn.parse("sso=bm9uY2U9aGVsbG8%3D%0A&sig=51fb49b2c69a9953e7e5cf7e11661915836eb242d26fbc1f3d8638117d0dd561", secret)
+      sso = Discourse::SingleSignOn.parse("sso=bm9uY2U9aGVsbG8%3D%0A&sig=51fb49b2c69a9953e7e5cf7e11661915836eb242d26fbc1f3d8638117d0dd561", secret)
       expect(sso.nonce).to eq "hello"
     end
 

@@ -70,6 +70,7 @@ module Morph
 
     def sql_query_streaming(query, readonly = true, &block)
       raise SQLite3::Exception, 'No query specified' if query.blank?
+
       SQLite3::Database.new(
         sqlite_db_path,
         results_as_hash: true,
@@ -241,13 +242,13 @@ module Morph
 
       # Over the default translator also allows booleans stored as integers
       %w(bit bool boolean).each do |type|
-        db.translator.add_translator(type) do |t,v|
+        db.translator.add_translator(type) do |t, v|
           v = v.to_s
-          !( v.strip.gsub(/00+/,"0") == "0" ||
+          !(v.strip.gsub(/00+/, "0") == "0" ||
              v.downcase == "false" ||
              v.downcase == "f" ||
              v.downcase == "no" ||
-             v.downcase == "n" )
+             v.downcase == "n")
         end
       end
     end

@@ -11,8 +11,8 @@ module RunsHelper
       sections << pluralize(run.records_changed, "record") + " updated"
     end
     if run.records_added && run.records_removed && run.records_changed &&
-      run.records_added == 0 && run.records_removed == 0 && run.records_changed == 0
-        sections << "nothing changed"
+       run.records_added == 0 && run.records_removed == 0 && run.records_changed == 0
+      sections << "nothing changed"
     end
     unless sections.empty?
       sections.join(", ") + " in the database"
@@ -33,13 +33,13 @@ module RunsHelper
   end
 
   def scraped_domains_list(scraped_domains, with_links = true)
-    d = scraped_domains.map{|d| (with_links ? scraped_domain_link(d) : h(d.name))}
+    d = scraped_domains.map { |d| (with_links ? scraped_domain_link(d) : h(d.name)) }
     # If there are more than 3 in the list then summarise
     summary_of_array(d, "other domain".html_safe).to_sentence.html_safe
   end
 
   def simplified_scraped_domains_list(scraped_domains)
-    d = scraped_domains.map{|d| h(d.name)}
+    d = scraped_domains.map { |d| h(d.name) }
     # If there are more than 3 in the list then summarise
     if d.count > 3
       summary_of_array(d, "other").to_sentence

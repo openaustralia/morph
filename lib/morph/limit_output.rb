@@ -74,7 +74,7 @@ Open3.popen3(command) do |_stdin, stdout, stderr, wait_thr|
     STDOUT << stdout_buffer
     STDERR << stderr_buffer
   end
-  
+
   exit_status = wait_thr.value.exitstatus
 end
 

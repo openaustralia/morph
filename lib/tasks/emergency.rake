@@ -39,7 +39,7 @@ namespace :app do
       runs = unfinished - queue
       puts "Putting the following runs back on the queue:"
       p runs
-      runs.each{|id| RunWorker.perform_async(id)}
+      runs.each { |id| RunWorker.perform_async(id) }
     end
 
     desc 'Reset all user github access tokens (Needed after heartbleed)'

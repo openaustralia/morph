@@ -33,6 +33,6 @@ module StaticHelper
   end
 
   def api_url_in_html(scraper, format, key, sql, callback)
-      api_root.html_safe + scraper + '/data.' + format + '?key='.html_safe + key + '&query='.html_safe + sql + callback
+    api_root.html_safe + scraper + '/data.' + format + '?key='.html_safe + key + '&query='.html_safe + sql + callback
   end
 end

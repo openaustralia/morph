@@ -18,7 +18,7 @@ class ScrapersController < ApplicationController
 
   def index
     @scrapers = Scraper.accessible_by(current_ability).order(created_at: :desc)
-                .page(params[:page])
+                       .page(params[:page])
   end
 
   def new
@@ -195,7 +195,9 @@ class ScrapersController < ApplicationController
 
   def scraper_params
     params.require(:scraper).permit(:auto_run, variables_attributes: [
-      :id, :name, :value, :_destroy], webhooks_attributes: [
-      :id, :url, :_destroy])
+                                      :id, :name, :value, :_destroy
+                                    ], webhooks_attributes: [
+                                      :id, :url, :_destroy
+                                    ])
   end
 end

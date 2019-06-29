@@ -5,7 +5,6 @@ module Morph
 
     # Returns the ids for all the runs currently on the queue (including retries)
     def self.find_all_runs_on_the_queue
-
       queue = []
       # Runs on the retry queue
       Sidekiq::RetrySet.new.each do |job|

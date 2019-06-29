@@ -41,7 +41,7 @@ puts 'Hello!'
       parsed = response.body.split("\n").map { |l| JSON.parse(l) }
       expect(parsed).to eq [{
         'stream' => 'internalerr',
-        'text'   => "You currently can't start a scraper run." \
+        'text' => "You currently can't start a scraper run." \
                     ' See https://morph.io for more details'
       }]
     end
@@ -61,18 +61,20 @@ puts 'Hello!'
       post :run_remote, api_key: user.api_key, code: code
 
       expect(response).to be_success
-      parsed = response.body.split("\n").map{|l| JSON.parse(l)}
+      parsed = response.body.split("\n").map { |l| JSON.parse(l) }
       expect(parsed).to eq [
         {
           'stream' => 'internalout',
-          'text'   => "Injecting configuration and compiling...\n"
+          'text' => "Injecting configuration and compiling...\n"
         },
         {
           'stream' => 'internalout',
-          'text'   => "Injecting scraper and running...\n" },
+          'text' => "Injecting scraper and running...\n"
+        },
         {
           'stream' => 'stdout',
-          'text'   => "Hello!\n" }
+          'text' => "Hello!\n"
+        }
       ]
     end
 
@@ -205,10 +207,10 @@ puts 'Hello!'
       it 'should return jsonp' do
         get :data, id: 'mlandauer/a_scraper', key: '1234', format: :json, callback: 'foo'
         expect(response).to be_success
-        expect(response.body).to eq <<-EOF
-/**/foo([
-{"title":"Foo","content":"Bar","link":"http://example.com","date":"2013-01-01"}
-])
+        expect(response.body).to eq <<~EOF
+          /**/foo([
+          {"title":"Foo","content":"Bar","link":"http://example.com","date":"2013-01-01"}
+          ])
         EOF
         expect(response.headers['Content-Type']).to eq 'application/javascript; charset=utf-8'
       end
@@ -218,9 +220,9 @@ puts 'Hello!'
         expect(response).to be_success
 
         expect(response.body)
-          .to eq <<-EOF
-title,content,link,date
-Foo,Bar,http://example.com,2013-01-01
+          .to eq <<~EOF
+            title,content,link,date
+            Foo,Bar,http://example.com,2013-01-01
           EOF
       end
 
@@ -228,26 +230,26 @@ Foo,Bar,http://example.com,2013-01-01
         get :data, id: 'mlandauer/a_scraper', key: '1234', format: :atom
 
         expect(response).to be_success
-        expect(response.body).to eq <<-EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <title>morph.io: mlandauer/a_scraper</title>
-  <subtitle></subtitle>
-  <updated>2000-01-01T00:00:00+00:00</updated>
-  <author>
-    <name>mlandauer</name>
-  </author>
-  <id>http://test.host/mlandauer/a_scraper/data.atom?key=1234</id>
-  <link href="http://test.host/mlandauer/a_scraper"/>
-  <link href="http://test.host/mlandauer/a_scraper/data.atom?key=1234" rel="self"/>
-  <entry>
-    <title>Foo</title>
-    <content>Bar</content>
-    <link href="http://example.com"/>
-    <id>http://example.com</id>
-    <updated>2013-01-01T00:00:00+00:00</updated>
-  </entry>
-</feed>
+        expect(response.body).to eq <<~EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <title>morph.io: mlandauer/a_scraper</title>
+            <subtitle></subtitle>
+            <updated>2000-01-01T00:00:00+00:00</updated>
+            <author>
+              <name>mlandauer</name>
+            </author>
+            <id>http://test.host/mlandauer/a_scraper/data.atom?key=1234</id>
+            <link href="http://test.host/mlandauer/a_scraper"/>
+            <link href="http://test.host/mlandauer/a_scraper/data.atom?key=1234" rel="self"/>
+            <entry>
+              <title>Foo</title>
+              <content>Bar</content>
+              <link href="http://example.com"/>
+              <id>http://example.com</id>
+              <updated>2013-01-01T00:00:00+00:00</updated>
+            </entry>
+          </feed>
         EOF
       end
 

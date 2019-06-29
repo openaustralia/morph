@@ -8,8 +8,8 @@ class SupportersController < ApplicationController
 
   def create
     customer = Stripe::Customer.create(
-      email:       current_user.email,
-      card:        params[:stripeToken],
+      email: current_user.email,
+      card: params[:stripeToken],
       description: "morph.io user @#{current_user.nickname}"
     )
     current_user.update! stripe_customer_id: customer.id
@@ -20,7 +20,6 @@ class SupportersController < ApplicationController
 
     session[:new_supporter] = true
     redirect_to user_path(current_user), notice: render_to_string(partial: "create_flash")
-
   rescue Stripe::CardError => e
     flash[:error] = e.message
     redirect_to supporters_path
@@ -28,8 +27,8 @@ class SupportersController < ApplicationController
 
   def create_one_time
     customer = Stripe::Customer.create(
-      email:       current_user.email,
-      card:        params[:stripeTokenOneTime],
+      email: current_user.email,
+      card: params[:stripeTokenOneTime],
       description: "morph.io user @#{current_user.nickname}"
     )
     current_user.update! stripe_customer_id: customer.id

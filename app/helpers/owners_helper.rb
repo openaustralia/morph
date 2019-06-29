@@ -1,6 +1,6 @@
 module OwnersHelper
   def owner_image(owner, size, show_tooltip = true, tooltip_text = nil)
-    options = {size: "#{size}x#{size}", class: ""}
+    options = { size: "#{size}x#{size}", class: "" }
     if owner.user?
       options[:class] += " img-circle"
     end
@@ -14,7 +14,7 @@ module OwnersHelper
       else
         html = false
       end
-      options[:data] = {placement: "bottom", title: tooltip_text, html: html, container: 'body'}
+      options[:data] = { placement: "bottom", title: tooltip_text, html: html, container: 'body' }
     end
     options[:alt] = owner.nickname
     image_tag owner.gravatar_url(size), options

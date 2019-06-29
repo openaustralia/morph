@@ -95,9 +95,9 @@ class Scraper < ActiveRecord::Base
   def download_count_by_owner
     # TODO: Simplify this by using an association on api_query
     count_by_owner_id = api_queries
-             .group(:owner_id)
-             .order('count_all desc')
-             .count
+                        .group(:owner_id)
+                        .order('count_all desc')
+                        .count
     count_by_owner_id.map do |id, count|
       [Owner.find(id), count]
     end
@@ -116,7 +116,8 @@ class Scraper < ActiveRecord::Base
     Scraper.new(
       name: repo.name, full_name: repo.full_name, description: repo.description,
       github_id: repo.id, owner_id: repo_owner.id,
-      github_url: repo.rels[:html].href, git_url: repo.rels[:git].href)
+      github_url: repo.rels[:html].href, git_url: repo.rels[:git].href
+    )
   end
 
   # Find a user related to this scraper that we can use them to make
@@ -307,7 +308,8 @@ class Scraper < ActiveRecord::Base
     return if scraperwiki_url.nil?
 
     m = scraperwiki_url.match(
-      %r{https://classic.scraperwiki.com/scrapers/([-\w]+)(/)?})
+      %r{https://classic.scraperwiki.com/scrapers/([-\w]+)(/)?}
+    )
     m[1] if m
   end
 
@@ -416,7 +418,8 @@ class Scraper < ActiveRecord::Base
     repo = client.edit_repository(
       full_name,
       description: scraperwiki.title,
-      homepage: Rails.application.routes.url_helpers.scraper_url(self))
+      homepage: Rails.application.routes.url_helpers.scraper_url(self)
+    )
     self.update_attributes(description: scraperwiki.title)
 
     files = {
@@ -429,15 +432,17 @@ class Scraper < ActiveRecord::Base
     end
     add_commit_to_root_on_github(
       forked_by, files,
-      "Fork of code from ScraperWiki at #{scraperwiki_url}")
+      "Fork of code from ScraperWiki at #{scraperwiki_url}"
+    )
 
     # Add another commit (but only if necessary) to translate the code so it
     # runs here
     unless scraperwiki.translated_code == scraperwiki.code
       add_commit_to_master_on_github(
         forked_by,
-        {scraperwiki.language.scraper_filename => scraperwiki.translated_code},
-        'Automatic update to make ScraperWiki scraper work on morph.io')
+        { scraperwiki.language.scraper_filename => scraperwiki.translated_code },
+        'Automatic update to make ScraperWiki scraper work on morph.io'
+      )
     end
 
     create_scraper_progress.update('Synching repository', 80)

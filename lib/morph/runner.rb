@@ -145,15 +145,15 @@ module Morph
         result.files['data.sqlite'].close!
       # Only show the error below if the scraper thinks it finished without problems
       elsif status_code == 0
-        m = <<-EOF
-Scraper didn't create an SQLite database in your current working directory called
-data.sqlite. If you've just created your first scraper and not edited the code yet
-this is to be expected.
+        m = <<~EOF
+          Scraper didn't create an SQLite database in your current working directory called
+          data.sqlite. If you've just created your first scraper and not edited the code yet
+          this is to be expected.
 
-To fix this make your scraper write to an SQLite database at data.sqlite.
+          To fix this make your scraper write to an SQLite database at data.sqlite.
 
-However, this could also be related to an intermittent problem which we're
-working hard to resolve: https://github.com/openaustralia/morph/issues/1064
+          However, this could also be related to an intermittent problem which we're
+          working hard to resolve: https://github.com/openaustralia/morph/issues/1064
         EOF
         yield Time.now, 'stderr', m
         status_code = 998
@@ -243,6 +243,7 @@ working hard to resolve: https://github.com/openaustralia/morph/issues/1064
 
       language.default_files_to_insert.each do |files|
         next unless files.all? { |file| !File.exist?(File.join(dest, file)) }
+
         files.each do |file|
           FileUtils.cp(language.default_config_file_path(file),
                        File.join(dest, file))

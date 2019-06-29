@@ -26,7 +26,7 @@ describe Morph::SqliteDiff do
               records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
             }
           ],
-          counts: { added: 0, removed: 0, changed: 0, unchanged: 1}
+          counts: { added: 0, removed: 0, changed: 0, unchanged: 1 }
         },
         records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
       })
@@ -39,7 +39,7 @@ describe Morph::SqliteDiff do
           added: [
             {
               name: "bar",
-              records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+              records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 0 } }
             }
           ],
           removed: [],
@@ -47,12 +47,12 @@ describe Morph::SqliteDiff do
           unchanged: [
             {
               name: "foo",
-              records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
+              records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
             }
           ],
-          counts: {added: 1, removed: 0, changed: 0, unchanged: 1}
+          counts: { added: 1, removed: 0, changed: 0, unchanged: 1 }
         },
-        records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
+        records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
       })
     end
 
@@ -64,14 +64,14 @@ describe Morph::SqliteDiff do
           removed: [
             {
               name: "foo",
-              records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
+              records: { counts: { added: 0, removed: 1, changed: 0, unchanged: 0 } }
             }
           ],
           changed: [],
           unchanged: [],
-          counts: {added: 0, removed: 1, changed: 0, unchanged: 0}
+          counts: { added: 0, removed: 1, changed: 0, unchanged: 0 }
         },
-        records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}},
+        records: { counts: { added: 0, removed: 1, changed: 0, unchanged: 0 } },
       })
     end
 
@@ -83,20 +83,20 @@ describe Morph::SqliteDiff do
           added: [
             {
               name: "bar",
-              records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+              records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 0 } }
             }
           ],
           removed: [
             {
               name: "foo",
-              records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
+              records: { counts: { added: 0, removed: 1, changed: 0, unchanged: 0 } }
             }
           ],
           changed: [],
           unchanged: [],
-          counts: {added: 1, removed: 1, changed: 0, unchanged: 0}
+          counts: { added: 1, removed: 1, changed: 0, unchanged: 0 }
         },
-        records: {counts: {added: 0, removed: 1, changed: 0, unchanged: 0}}
+        records: { counts: { added: 0, removed: 1, changed: 0, unchanged: 0 } }
       })
     end
 
@@ -109,13 +109,13 @@ describe Morph::SqliteDiff do
           changed: [
             {
               name: "foo",
-              records: {counts: {added: 0, removed: 0, changed: 1, unchanged: 0}}
+              records: { counts: { added: 0, removed: 0, changed: 1, unchanged: 0 } }
             }
           ],
           unchanged: [],
-          counts: {added: 0, removed: 0, changed: 1, unchanged: 0}
+          counts: { added: 0, removed: 0, changed: 1, unchanged: 0 }
         },
-        records: {counts: {added: 0, removed: 0, changed: 1, unchanged: 0}}
+        records: { counts: { added: 0, removed: 0, changed: 1, unchanged: 0 } }
       })
     end
 
@@ -129,12 +129,12 @@ describe Morph::SqliteDiff do
           unchanged: [
             {
               name: "foo",
-              records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
+              records: { counts: { added: 1, removed: 0, changed: 0, unchanged: 1 } }
             }
           ],
-          counts: {added: 0, removed: 0, changed: 0, unchanged: 1}
+          counts: { added: 0, removed: 0, changed: 0, unchanged: 1 }
         },
-        records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
+        records: { counts: { added: 1, removed: 0, changed: 0, unchanged: 1 } }
       })
     end
 
@@ -145,17 +145,17 @@ describe Morph::SqliteDiff do
         tables: {
           added: [
             name: "bar",
-            records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
+            records: { counts: { added: 1, removed: 0, changed: 0, unchanged: 0 } }
           ],
           removed: [],
           changed: [],
           unchanged: [
             name: "foo",
-            records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 1}}
+            records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 1 } }
           ],
-          counts: {added: 1, removed: 0, changed: 0, unchanged: 1}
+          counts: { added: 1, removed: 0, changed: 0, unchanged: 1 }
         },
-        records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 1}}
+        records: { counts: { added: 1, removed: 0, changed: 0, unchanged: 1 } }
       })
     end
 
@@ -165,15 +165,15 @@ describe Morph::SqliteDiff do
           added: [
             {
               name: "foo",
-              records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
+              records: { counts: { added: 1, removed: 0, changed: 0, unchanged: 0 } }
             }
           ],
           removed: [],
           changed: [],
           unchanged: [],
-          counts: {added: 1, removed: 0, changed: 0, unchanged: 0}
+          counts: { added: 1, removed: 0, changed: 0, unchanged: 0 }
         },
-        records: {counts: {added: 1, removed: 0, changed: 0, unchanged: 0}}
+        records: { counts: { added: 1, removed: 0, changed: 0, unchanged: 0 } }
       })
       FileUtils.rm("non_existent_file.sqlite")
     end
@@ -185,9 +185,9 @@ describe Morph::SqliteDiff do
           removed: [],
           changed: [],
           unchanged: [],
-          counts: {added: 0, removed: 0, changed: 0, unchanged: 0}
+          counts: { added: 0, removed: 0, changed: 0, unchanged: 0 }
         },
-        records: {counts: {added: 0, removed: 0, changed: 0, unchanged: 0}}
+        records: { counts: { added: 0, removed: 0, changed: 0, unchanged: 0 } }
       })
       FileUtils.rm(["non_existent_file1.sqlite", "non_existent_file2.sqlite"])
     end
@@ -195,28 +195,28 @@ describe Morph::SqliteDiff do
 
   describe ".diffstat_table" do
     it "should show no change for two identical sqlite databases" do
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({added: 0, removed: 0, changed: 0, unchanged: 1})
+      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({ added: 0, removed: 0, changed: 0, unchanged: 1 })
     end
 
     it "should show a new record" do
       @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({added: 1, removed: 0, changed: 0, unchanged: 1})
+      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({ added: 1, removed: 0, changed: 0, unchanged: 1 })
     end
 
     it "should show a deleted record" do
       @db2.execute("DELETE FROM foo where v1='hello'")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({added: 0, removed: 1, changed: 0, unchanged: 0})
+      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({ added: 0, removed: 1, changed: 0, unchanged: 0 })
     end
 
     it "should show adding a record and deleting a record" do
       @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
       @db2.execute("DELETE FROM foo where v1='hello'")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({added: 1, removed: 1, changed: 0, unchanged: 0})
+      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({ added: 1, removed: 1, changed: 0, unchanged: 0 })
     end
 
     it "should show a record being changed" do
       @db2.execute("UPDATE foo SET v1='different' WHERE v1='hello'")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({added: 0, removed: 0, changed: 1, unchanged: 0})
+      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({ added: 0, removed: 0, changed: 1, unchanged: 0 })
     end
 
     it "should be able to handle a large number of records", slow: true do
@@ -233,7 +233,7 @@ describe Morph::SqliteDiff do
       FileUtils::cp("tmp_db1.sqlite", "tmp_db2.sqlite")
       @db2 = SQLite3::Database.new("tmp_db2.sqlite")
       # Remove 200 random records (but ensure we don't remove the last)
-      ids = @db2.execute("SELECT ROWID FROM foo ORDER BY RANDOM() LIMIT 201").map{|r| r.first}
+      ids = @db2.execute("SELECT ROWID FROM foo ORDER BY RANDOM() LIMIT 201").map { |r| r.first }
       if ids.include?(1000)
         ids.delete(1000)
       else
@@ -241,13 +241,13 @@ describe Morph::SqliteDiff do
       end
       @db2.execute("DELETE FROM foo WHERE ROWID IN (#{ids.join(',')})")
       # Update 100 random records
-      ids = @db2.execute("SELECT ROWID FROM foo ORDER BY RANDOM() LIMIT 100").map{|r| r.first}
+      ids = @db2.execute("SELECT ROWID FROM foo ORDER BY RANDOM() LIMIT 100").map { |r| r.first }
       @db2.execute("UPDATE foo SET v2=10 WHERE ROWID IN (#{ids.join(',')})")
       # Add 200 new records to that
       (1..200).each do |i|
         @db2.execute("INSERT INTO foo VALUES ('hello#{i}', #{r.rand})")
       end
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2, 100)).to eq ({added: 200, removed: 200, changed: 100, unchanged: 700})
+      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2, 100)).to eq ({ added: 200, removed: 200, changed: 100, unchanged: 700 })
     end
 
     it "should compare two empty dbs" do
@@ -258,7 +258,7 @@ describe Morph::SqliteDiff do
       # Make an identical version
       FileUtils::cp("tmp_db1.sqlite", "tmp_db2.sqlite")
       @db2 = SQLite3::Database.new("tmp_db2.sqlite")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({added: 0, removed: 0, changed: 0, unchanged: 0})
+      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq ({ added: 0, removed: 0, changed: 0, unchanged: 0 })
     end
   end
 end

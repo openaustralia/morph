@@ -92,60 +92,62 @@ describe Morph::CodeTranslate do
       describe ".change_table_in_sqliteexecute_and_select" do
         it "should replace the table name" do
           expect(Morph::CodeTranslate::Ruby.change_table_in_sqliteexecute_and_select( \
-            "ScraperWiki.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from swdata', foo, bar)\nScraperWiki.select('select * from swdata; select * from swdata', foo, bar)\n"))
+                   "ScraperWiki.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from swdata', foo, bar)\nScraperWiki.select('select * from swdata; select * from swdata', foo, bar)\n"
+                 ))
             .to eq "ScraperWiki.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from data', foo, bar)\nScraperWiki.select('select * from data; select * from data', foo, bar)\n"
         end
 
         it "another example" do
           expect(Morph::CodeTranslate::Ruby.change_table_in_sqliteexecute_and_select( \
-            "if (ScraperWiki.select(\"* from swdata where `council_reference`='\#{record['council_reference']}'\").empty? rescue true)"))
+                   "if (ScraperWiki.select(\"* from swdata where `council_reference`='\#{record['council_reference']}'\").empty? rescue true)"
+                 ))
             .to eq "if (ScraperWiki.select(\"* from data where `council_reference`='\#{record['council_reference']}'\").empty? rescue true)"
         end
       end
 
       describe ".add_instructions_for_libraries" do
         it "should do nothing if nothing needs to be done" do
-          original = <<-EOF
-some code
-some more code
+          original = <<~EOF
+            some code
+            some more code
           EOF
           expect(Morph::CodeTranslate::Ruby.add_instructions_for_libraries(original)).to eq original
         end
 
         it "should add some help above where a library is required" do
-          original = <<-EOF
-some code
-require 'scrapers/foo'
-some more code
+          original = <<~EOF
+            some code
+            require 'scrapers/foo'
+            some more code
           EOF
-          translated = <<-EOF
-some code
-# TODO:
-# 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/foo/
-# 2. Add the forked repo as a git submodule in this repo
-# 3. Change the line below to something like require File.dirname(__FILE__) + '/foo/scraper'
-# 4. Remove these instructions
-require 'scrapers/foo'
-some more code
+          translated = <<~EOF
+            some code
+            # TODO:
+            # 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/foo/
+            # 2. Add the forked repo as a git submodule in this repo
+            # 3. Change the line below to something like require File.dirname(__FILE__) + '/foo/scraper'
+            # 4. Remove these instructions
+            require 'scrapers/foo'
+            some more code
           EOF
           expect(Morph::CodeTranslate::Ruby.add_instructions_for_libraries(original)).to eq translated
         end
 
         it "should also translate where double quotes are used" do
-          original = <<-EOF
-some code
-require "scrapers/foo"
-some more code
+          original = <<~EOF
+            some code
+            require "scrapers/foo"
+            some more code
           EOF
-          translated = <<-EOF
-some code
-# TODO:
-# 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/foo/
-# 2. Add the forked repo as a git submodule in this repo
-# 3. Change the line below to something like require File.dirname(__FILE__) + '/foo/scraper'
-# 4. Remove these instructions
-require "scrapers/foo"
-some more code
+          translated = <<~EOF
+            some code
+            # TODO:
+            # 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/foo/
+            # 2. Add the forked repo as a git submodule in this repo
+            # 3. Change the line below to something like require File.dirname(__FILE__) + '/foo/scraper'
+            # 4. Remove these instructions
+            require "scrapers/foo"
+            some more code
           EOF
           expect(Morph::CodeTranslate::Ruby.add_instructions_for_libraries(original)).to eq translated
         end

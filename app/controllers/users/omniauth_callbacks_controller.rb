@@ -11,6 +11,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user.watch_all_owners if new_sign_up
 
     flash[:notice] = render_to_string(partial: "users/sign_in_message")
-    sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
+    sign_in_and_redirect @user, :event => :authentication # this will throw if @user is not activated
   end
 end

@@ -3,13 +3,13 @@ require 'spec_helper'
 describe ConnectionLog do
   describe ".create" do
     before(:each) do
-      Run.create(id: 18, ip_address: "10.0.1.15", started_at: Date.new(2014,1,1))
+      Run.create(id: 18, ip_address: "10.0.1.15", started_at: Date.new(2014, 1, 1))
       # This is the most recent use of 10.0.1.15
-      Run.create(id: 20, ip_address: "10.0.1.15", started_at: Date.new(2014,2,1))
-      Run.create(id: 22, ip_address: "10.0.1.12", started_at: Date.new(2014,3,1))
-      Run.create(id: 40, ip_address: "10.0.1.20", started_at: Date.new(2014,3,1))
+      Run.create(id: 20, ip_address: "10.0.1.15", started_at: Date.new(2014, 2, 1))
+      Run.create(id: 22, ip_address: "10.0.1.12", started_at: Date.new(2014, 3, 1))
+      Run.create(id: 40, ip_address: "10.0.1.20", started_at: Date.new(2014, 3, 1))
     end
-    let(:domain) { Domain.create!(name: "foo.com")}
+    let(:domain) { Domain.create!(name: "foo.com") }
 
     it "should convert ip_address to run_id" do
       a = ConnectionLog.create(ip_address: "10.0.1.15", domain: domain)

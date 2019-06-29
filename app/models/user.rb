@@ -30,7 +30,8 @@ class User < Owner
 
   def reset_authorization!
     update_attributes(
-      access_token: Morph::Github.reset_authorization(access_token))
+      access_token: Morph::Github.reset_authorization(access_token)
+    )
   end
 
   # Send all alerts. This method should be run from a daily cron job
@@ -40,10 +41,12 @@ class User < Owner
 
   def process_alerts
     return if watched_broken_scrapers_ordered_by_urgency.empty?
+
     AlertMailer.alert_email(
       self,
       watched_broken_scrapers_ordered_by_urgency,
-      watched_successful_scrapers).deliver
+      watched_successful_scrapers
+    ).deliver
   rescue Net::SMTPSyntaxError
     puts "Warning: user #{nickname} has invalid email address #{email} " \
       '(tried to send alert)'

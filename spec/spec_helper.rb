@@ -91,6 +91,6 @@ RSpec.configure do |config|
 
   # Make sure sidekiq jobs don't linger between tests
   config.before(:each) do
-      Sidekiq::Worker.clear_all
-    end
+    Sidekiq::Worker.clear_all
+  end
 end

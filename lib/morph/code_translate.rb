@@ -74,12 +74,12 @@ module Morph
 
       def self.add_instructions_for_libraries(code)
         code.gsub(%r{require ['"]scrapers/(.*)['"]}) do |s|
-          i = <<-EOF
-# TODO:
-# 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/#{Regexp.last_match(1)}/
-# 2. Add the forked repo as a git submodule in this repo
-# 3. Change the line below to something like require File.dirname(__FILE__) + '/#{Regexp.last_match(1)}/scraper'
-# 4. Remove these instructions
+          i = <<~EOF
+            # TODO:
+            # 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/#{Regexp.last_match(1)}/
+            # 2. Add the forked repo as a git submodule in this repo
+            # 3. Change the line below to something like require File.dirname(__FILE__) + '/#{Regexp.last_match(1)}/scraper'
+            # 4. Remove these instructions
           EOF
           i + s
         end

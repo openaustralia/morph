@@ -18,7 +18,8 @@ class Domain < ActiveRecord::Base
 
   def self.lookup_metadata_remote(domain_name)
     doc = RestClient::Resource.new(
-      "http://#{domain_name}", verify_ssl: OpenSSL::SSL::VERIFY_NONE).get
+      "http://#{domain_name}", verify_ssl: OpenSSL::SSL::VERIFY_NONE
+    ).get
     header = Nokogiri::HTML(doc).at('html head')
     if header
       tag = (header.at("meta[name='description']") ||

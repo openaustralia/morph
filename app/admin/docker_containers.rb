@@ -36,9 +36,9 @@ ActiveAdmin.register_page "Docker Containers" do
 
     # Show most recent record first
     running_records = records.select { |r| r[:running] == 'yes' }
-      .sort { |a, b| b[:started_at] <=> a[:started_at] }
+                             .sort { |a, b| b[:started_at] <=> a[:started_at] }
     stopped_records = records.select { |r| r[:running] == 'no' }
-      .sort { |a, b| b[:finished_at] <=> a[:finished_at] }
+                             .sort { |a, b| b[:finished_at] <=> a[:finished_at] }
 
     h1 "#{running_records.count} running"
     if running_records.present?

@@ -46,7 +46,7 @@ namespace :app do
     User.all.each do |u|
       RefreshUserInfoFromGithubWorker.perform_async(u.id)
     end
-  puts 'Put jobs on to the background queue to refresh all user info from github'
+    puts 'Put jobs on to the background queue to refresh all user info from github'
   end
 
   desc 'Refresh info for all organizations from github'
@@ -54,7 +54,7 @@ namespace :app do
     Organization.all.each do |org|
       RefreshOrganizationInfoFromGithubWorker.perform_async(org.id)
     end
-  puts 'Put jobs on to the background queue to refresh all organization info from github'
+    puts 'Put jobs on to the background queue to refresh all organization info from github'
   end
 
   desc 'Build docker image (Needs to be done once before any scrapers are run)'
@@ -110,21 +110,21 @@ namespace :app do
   desc "Creates missing run workers for scrapers that are running"
   task create_missing_run_workers: :environment do
     # Go for a little old school text banner action
-    puts <<-EOF
-******************************************************************************
-This rake task has been temporarily disabled. This is because it's likely that
-there is a significant bug in the current version which causes multiple
-RunWorkers with the same run_id to be created. This is because in figuring
-out whether there are jobs on the queue it doesn't take into account jobs that
-are queued or on the retry queue.
+    puts <<~EOF
+      ******************************************************************************
+      This rake task has been temporarily disabled. This is because it's likely that
+      there is a significant bug in the current version which causes multiple
+      RunWorkers with the same run_id to be created. This is because in figuring
+      out whether there are jobs on the queue it doesn't take into account jobs that
+      are queued or on the retry queue.
 
-In the meantime please use this instead:
-rake app:emergency:show_queue_run_inconsistencies
+      In the meantime please use this instead:
+      rake app:emergency:show_queue_run_inconsistencies
 
-This will make no changes. It will only let you know of inconsistencies.
-Unfortunately, for the time being you'll have to make changes manually until
-this this task can get fixed.
-******************************************************************************
+      This will make no changes. It will only let you know of inconsistencies.
+      Unfortunately, for the time being you'll have to make changes manually until
+      this this task can get fixed.
+      ******************************************************************************
     EOF
     # # Get runs that have a background worker
     # workers = Sidekiq::Workers.new

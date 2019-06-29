@@ -17,7 +17,7 @@ class ExamplesController < ApplicationController
         website: m[11]
       }
     end
-    @members = all.select{|p| p[:house] == "representatives"}
+    @members = all.select { |p| p[:house] == "representatives" }
     @page = params[:page]
     @page = @page ? @page.to_i : 1
     if @page == 1

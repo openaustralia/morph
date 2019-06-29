@@ -4,7 +4,7 @@ set :rails_env, :production
 before :deploy, :deploy_from_local_repo
 
 task :deploy_from_local_repo do
-  set :repo_url,  "file:///tmp/.git"
+  set :repo_url, "file:///tmp/.git"
   set :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
   run_locally do
     execute "tar -zcvf /tmp/repo.tgz .git"

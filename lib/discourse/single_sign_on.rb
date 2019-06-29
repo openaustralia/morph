@@ -47,8 +47,7 @@ module Discourse
       OpenSSL::HMAC.hexdigest("sha256", sso_secret, payload)
     end
 
-
-    def to_url(base_url=nil)
+    def to_url(base_url = nil)
       base = "#{base_url || sso_url}"
       "#{base}#{base.include?('?') ? '&' : '?'}#{payload}"
     end
@@ -61,13 +60,12 @@ module Discourse
     def unsigned_payload
       payload = {}
       ACCESSORS.each do |k|
-       next unless (val = send k)
+        next unless (val = send k)
 
-       payload[k] = val
+        payload[k] = val
       end
 
       Rack::Utils.build_query(payload)
     end
-
   end
 end

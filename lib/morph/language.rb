@@ -74,6 +74,7 @@ module Morph
     def human
       t = HUMAN[key]
       raise 'Unsupported language' if t.nil?
+
       t
     end
 
@@ -95,6 +96,7 @@ module Morph
 
     def scraper_templates
       raise 'Not yet supported' unless supported?
+
       # We grab all the files in the template directory
       result = {}
       Dir.entries(default_template_directory).each do |file|
