@@ -94,6 +94,8 @@ group :development do
   gem 'spring-commands-rspec'
   gem 'pry-rails'
   gem 'memory_profiler'
+
+  gem 'rubocop'
 end
 
 group :development, :test do

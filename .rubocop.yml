@@ -1,0 +1,63 @@
+Rails:
+  Enabled: true
+
+AllCops:
+  TargetRailsVersion: 4.2
+  Exclude:
+      - 'db/migrate/*'
+      - 'db/schema.rb'
+      - config/*
+      - config/initializers/*
+      - config/environments/*
+      - bin/*
+
+# Disabling warnings about line length because it's so common through
+# the codebase currently. It would be good to fix as it would make things
+# easier to read but it would take a bit of time to do.
+# TODO: Enable this again
+Metrics/LineLength:
+  Enabled: false
+
+# We prefer double quotes here and it we're making liberal use of multi-line
+# strings so it makes sense to enforce those to be consistent oo
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  ConsistentQuotesInMultiline: true
+
+# This one I disagree with. Putting seperators in large numbers makes sense
+# in some circumstances but in others (an example id in a database table)
+# it's just nonsensical. Also, I think this one might also be a bit US centric.
+Style/NumericLiterals:
+  Enabled: false
+
+# For Rails it feels a little overkill to have to write a description for
+# each class because so much is naming conventions. So, disabling this
+Style/Documentation:
+  Enabled: false
+
+# Disable a bunch of metrics to do with code complexity. These as are all
+# a bit hard-nosed. Maybe after we've done a pass with Code Climate we
+# can revisit these
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
