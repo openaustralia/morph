@@ -30,9 +30,7 @@ module Morph
     end
 
     def self.buildstep_image(platform = "latest")
-      image = "#{BUILDSTEP_IMAGE}:#{platform}"
-      puts "Using image #{image}"
-      Morph::DockerUtils.get_or_pull_image(image)
+      Morph::DockerUtils.get_or_pull_image("#{BUILDSTEP_IMAGE}:#{platform}")
     end
 
     def self.compile_and_start_run(
