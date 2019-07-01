@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ActiveAdmin.register_page "Dashboard" do
   menu priority: 1, label: proc { I18n.t("active_admin.dashboard") }
 
@@ -5,14 +7,14 @@ ActiveAdmin.register_page "Dashboard" do
     columns do
       column do
         panel "Users" do
-          para "#{User.where("created_at > ?", 7.days.ago).count} new users in last 7 days"
+          para "#{User.where('created_at > ?', 7.days.ago).count} new users in last 7 days"
           para "#{User.count} users total"
         end
       end
 
       column do
         panel "Scrapers" do
-          para "#{Scraper.where("created_at > ?", 7.days.ago).count} new scrapers in last 7 days"
+          para "#{Scraper.where('created_at > ?', 7.days.ago).count} new scrapers in last 7 days"
           para "#{Scraper.count} scrapers total"
         end
       end
@@ -37,11 +39,11 @@ ActiveAdmin.register_page "Dashboard" do
         a "https://github.com/openaustralia/morph/issues/1064", href: "https://github.com/openaustralia/morph/issues/1064"
       end
       # For the time being just look at runs in the last month
-      runs = Run.order(finished_at: :desc).where(status_code: 998).where('finished_at > ?', 1.month.ago)
+      runs = Run.order(finished_at: :desc).where(status_code: 998).where("finished_at > ?", 1.month.ago)
       # Only highlight runs where there is actually data.sqlite stored on the server because
       # we would always expect there to be a data.sqlite output
       run = runs.find do |r|
-        File.exists?(File.join(r.data_path, 'data.sqlite'))
+        File.exist?(File.join(r.data_path, "data.sqlite"))
       end
       if run
         time = run.finished_at.localtime
@@ -73,5 +75,5 @@ ActiveAdmin.register_page "Dashboard" do
     #     end
     #   end
     # end
-  end # content
+  end
 end

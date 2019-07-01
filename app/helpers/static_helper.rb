@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StaticHelper
   # TODO: Move this bit of configuration somewhere sensible
   def api_host
@@ -16,23 +18,23 @@ module StaticHelper
     end
   end
 
-  def quote(a)
-    '"'.html_safe + a + '"'.html_safe
+  def quote(text)
+    '"'.html_safe + text + '"'.html_safe
   end
 
   def curl_command(scraper, format, key, sql, callback)
-    'curl '.html_safe +
+    "curl ".html_safe +
       quote(api_url_in_html(scraper, format, key, sql, callback))
   end
 
   def curl_command_linked(scraper, format, key, sql, callback)
     url = api_url_in_html(scraper, format, key, sql, callback)
     url_stripped = url.gsub(/<([^>]+)>/, "")
-    'curl '.html_safe +
-      quote(link_to url, url_stripped, id: "api_link")
+    "curl ".html_safe +
+      quote(link_to(url, url_stripped, id: "api_link"))
   end
 
   def api_url_in_html(scraper, format, key, sql, callback)
-    api_root.html_safe + scraper + '/data.' + format + '?key='.html_safe + key + '&query='.html_safe + sql + callback
+    api_root.html_safe + scraper + "/data." + format + "?key=".html_safe + key + "&query=".html_safe + sql + callback
   end
 end

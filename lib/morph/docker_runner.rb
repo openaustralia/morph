@@ -1,25 +1,27 @@
+# frozen_string_literal: true
+
 # To define Sidekiq::Shutdown
-require 'sidekiq/cli'
+require "sidekiq/cli"
 
 module Morph
   # More low-level API for running scrapers. Does not do much of the magic
   # and is less opinionated than the higher-level API in Morph::Runner
   class DockerRunner
     ALL_CONFIG_FILENAMES = [
-      'Procfile',
-      'Gemfile', 'Gemfile.lock',
-      'requirements.txt', 'runtime.txt',
-      'composer.json', 'composer.lock',
-      'app.psgi', 'cpanfile',
-      'package.json'
+      "Procfile",
+      "Gemfile", "Gemfile.lock",
+      "requirements.txt", "runtime.txt",
+      "composer.json", "composer.lock",
+      "app.psgi", "cpanfile",
+      "package.json"
     ].freeze
-    BUILDSTEP_IMAGE = 'openaustralia/buildstep'.freeze
-    DOCKER_NETWORK = 'morph'.freeze
-    DOCKER_BRIDGE = 'morph'.freeze
-    DOCKER_NETWORK_SUBNET = '192.168.0.0/16'.freeze
+    BUILDSTEP_IMAGE = "openaustralia/buildstep"
+    DOCKER_NETWORK = "morph"
+    DOCKER_BRIDGE = "morph"
+    DOCKER_NETWORK_SUBNET = "192.168.0.0/16"
 
     def self.time_file
-      '/app/time.output'
+      "/app/time.output"
     end
 
     # Memory limit applied to running container (in bytes)
@@ -36,11 +38,11 @@ module Morph
     def self.compile_and_start_run(
       repo_path, env_variables, container_labels, max_lines = 0, scraper = nil
     )
-      if scraper.nil? || scraper.platform.nil?
-        platform = "latest"
-      else
-        platform = scraper.platform
-      end
+      platform = if scraper.nil? || scraper.platform.nil?
+                   "latest"
+                 else
+                   scraper.platform
+                 end
 
       i = buildstep_image(platform) do |c|
         yield(:internalout, c)
@@ -57,7 +59,7 @@ module Morph
       create_morph_network
 
       command = Morph::TimeCommand.command(
-        ['/usr/local/bin/limit_output.rb', max_lines.to_s, '/bin/herokuish procfile start scraper'],
+        ["/usr/local/bin/limit_output.rb", max_lines.to_s, "/bin/herokuish procfile start scraper"],
         time_file
       )
 
@@ -65,7 +67,7 @@ module Morph
       # The sqlite journal file won't be present most of the time
 
       # Add another label to the created container
-      container_labels['io.morph.stage'] = 'running'
+      container_labels["io.morph.stage"] = "running"
 
       # Set up special security profile that allows us run chrome headless
       # without setting "--no-sandbox"
@@ -77,32 +79,32 @@ module Morph
       security_opt = Rails.env.test? ? [] : ["seccomp=#{File.read('config/chrome.json')}"]
 
       container_options = {
-        'Cmd' => command,
-        'Image' => i3.id,
+        "Cmd" => command,
+        "Image" => i3.id,
         # See explanation in https://github.com/openaustralia/morph/issues/242
-        'CpuShares' => 307,
-        'Memory' => memory_limit,
-        'Env' =>
+        "CpuShares" => 307,
+        "Memory" => memory_limit,
+        "Env" =>
           {
-            'REQUESTS_CA_BUNDLE' => '/etc/ssl/certs/ca-certificates.crt'
+            "REQUESTS_CA_BUNDLE" => "/etc/ssl/certs/ca-certificates.crt"
           }.merge(env_variables).map { |k, v| "#{k}=#{v}" },
-        'Labels' => container_labels,
-        'HostConfig' => {
+        "Labels" => container_labels,
+        "HostConfig" => {
           # Attach this container to our special network morph
-          'NetworkMode' => DOCKER_NETWORK,
-          'SecurityOpt' => security_opt
+          "NetworkMode" => DOCKER_NETWORK,
+          "SecurityOpt" => security_opt
         }
       }
 
       c = Docker::Container.create(container_options)
 
-      Dir.mktmpdir('morph') do |dest|
+      Dir.mktmpdir("morph") do |dest|
         copy_config_to_directory(repo_path, dest, false)
         yield(:internalout, "Injecting scraper and running...\n")
         # TODO: Combine two operations below into one
-        Morph::DockerUtils.insert_contents_of_directory(c, dest, '/app')
-        Morph::DockerUtils.insert_file(c, 'lib/morph/limit_output.rb',
-                                       '/usr/local/bin')
+        Morph::DockerUtils.insert_contents_of_directory(c, dest, "/app")
+        Morph::DockerUtils.insert_file(c, "lib/morph/limit_output.rb",
+                                       "/usr/local/bin")
       end
 
       c.start
@@ -116,18 +118,20 @@ module Morph
       rescue Docker::Error::NotFoundError
         exists = false
       end
+      return if exists
+
       Docker::Network.create(
         DOCKER_NETWORK,
-        'Options' => {
-          'com.docker.network.bridge.name' => DOCKER_BRIDGE,
-          'com.docker.network.bridge.enable_icc' => 'false'
+        "Options" => {
+          "com.docker.network.bridge.name" => DOCKER_BRIDGE,
+          "com.docker.network.bridge.enable_icc" => "false"
         },
-        'IPAM' => {
-          'Config' => [{
-            'Subnet' => DOCKER_NETWORK_SUBNET
+        "IPAM" => {
+          "Config" => [{
+            "Subnet" => DOCKER_NETWORK_SUBNET
           }]
         }
-      ) unless exists
+      )
     end
 
     # If since is non-nil only return log lines since the time given. This
@@ -147,7 +151,7 @@ module Morph
         # TODO Fix forcing of encoding and do something more intelligent
         # Either figure out the correct encoding or take an educated guess
         # rather than making an assumption
-        c.force_encoding('UTF-8')
+        c.force_encoding("UTF-8")
         c.scrub!
         # There is a chance that we catch a log line that shouldn't
         # be included. So...
@@ -155,9 +159,9 @@ module Morph
           if s == :stderr && c == "limit_output.rb: Too many lines of output!\n"
             yield timestamp, :internalerr,
               "\n" \
-              'Too many lines of output! ' \
-              'Your scraper will continue uninterrupted. ' \
-              'There will just be no further output displayed' \
+              "Too many lines of output! " \
+              "Your scraper will continue uninterrupted. " \
+              "There will just be no further output displayed" \
               "\n"
           else
             yield timestamp, s, c
@@ -172,10 +176,10 @@ module Morph
       # TODO: Check that container has actually stopped. If not raise an error
 
       # TODO: Don't call container.json multiple times
-      status_code = container.json['State']['ExitCode']
+      status_code = container.json["State"]["ExitCode"]
 
       # Make the paths absolute paths for the container
-      files = files.map { |f| File.join('/app', f) }
+      files = files.map { |f| File.join("/app", f) }
 
       # Grab the resulting files
       data = Morph::DockerUtils.copy_files(container, files + [time_file])
@@ -190,7 +194,7 @@ module Morph
       data_with_stripped_paths = {}
       data.each do |path, content|
         stripped_path =
-          Pathname.new(path).relative_path_from(Pathname.new('/app')).to_s
+          Pathname.new(path).relative_path_from(Pathname.new("/app")).to_s
         data_with_stripped_paths[stripped_path] = content
       end
 
@@ -205,7 +209,7 @@ module Morph
     # Otherwise copies the other files across
     def self.copy_config_to_directory(source, dest, copy_config)
       Dir.entries(source).each do |entry|
-        next if entry == '.' || entry == '..'
+        next if [".", ".."].include?(entry)
 
         unless copy_config ^ ALL_CONFIG_FILENAMES.include?(entry)
           FileUtils.copy_entry(File.join(source, entry),
@@ -220,9 +224,9 @@ module Morph
 
     def self.docker_build_command(image, commands, dir)
       # Leave the files in dir untouched
-      Dir.mktmpdir('morph') do |dir2|
+      Dir.mktmpdir("morph") do |dir2|
         Morph::DockerUtils.copy_directory_contents(dir, dir2)
-        File.open(File.join(dir2, 'Dockerfile'), 'w') do |f|
+        File.open(File.join(dir2, "Dockerfile"), "w") do |f|
           f.write dockerfile_contents_from_commands(image, commands)
         end
 
@@ -231,7 +235,7 @@ module Morph
           dir2, read_timeout: 5.minutes
         ) do |c|
           # We don't want to show the standard docker build output
-          unless c =~ /^Step \d+\/\d+ :/ || c =~ /^ ---> / ||
+          unless c =~ %r{^Step \d+/\d+ :} || c =~ /^ ---> / ||
                  c =~ /^Removing intermediate container / ||
                  c =~ /^Successfully built /
             yield c
@@ -241,11 +245,11 @@ module Morph
         # returns the original image. I have no idea why this is happening
         # This is a workaround to check for that situation
         # TODO Fix this
-        if image.id[0..6] == "sha256:"
-          id = image.id.split(':')[1]
-        else
-          id = image
-        end
+        id = if image.id[0..6] == "sha256:"
+               image.id.split(":")[1]
+             else
+               image
+             end
         image_out = nil if id[0..11] == image_out.id[0..11]
         image_out
       end
@@ -258,27 +262,27 @@ module Morph
 
     # And build
     # TODO: Set memory and cpu limits during compile
-    def self.compile(i, repo_path)
-      Dir.mktmpdir('morph') do |dir|
-        FileUtils.mkdir(File.join(dir, 'app'))
-        copy_config_to_directory(repo_path, File.join(dir, 'app'), true)
+    def self.compile(image, repo_path)
+      Dir.mktmpdir("morph") do |dir|
+        FileUtils.mkdir(File.join(dir, "app"))
+        copy_config_to_directory(repo_path, File.join(dir, "app"), true)
         docker_build_command(
-          i,
+          image,
           [
             # Insert the configuration part of the application code into the container
-            'ADD app /app',
+            "ADD app /app",
             # TODO: Setting the timeout higher here won't be necessary once we
             # upgrade to a more recent version of herokuish that contains
             # the commit
             # https://github.com/gliderlabs/herokuish/commit/5164f342dfe27537d6fd5425a5121b7ae7925d3c
             # This will probably involve replacing the use of buildstep with
             # using herokuish directly which seems the sensible thing to do now
-            'ENV CURL_TIMEOUT 180',
-            'ENV NPM_CONFIG_CAFILE /etc/ssl/certs/ca-certificates.crt',
+            "ENV CURL_TIMEOUT 180",
+            "ENV NPM_CONFIG_CAFILE /etc/ssl/certs/ca-certificates.crt",
             # Doing this not very nice thing in lieu of figuring out how
             # to set our custom CA cert for all of node
-            'ENV NODE_TLS_REJECT_UNAUTHORIZED 0',
-            'RUN /bin/herokuish buildpack build'
+            "ENV NODE_TLS_REJECT_UNAUTHORIZED 0",
+            "RUN /bin/herokuish buildpack build"
           ],
           dir
         ) { |c| yield c }

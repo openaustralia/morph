@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DocumentationController < ApplicationController
   def api
     # Example scraper

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFromGithubWorker
   include Sidekiq::Worker
   sidekiq_options backtrace: true

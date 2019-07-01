@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 # For the benefit of UpdateDomainWorker
-require 'nokogiri'
+require "nokogiri"
 
 # A domain that is scraped by a scraper
 class Domain < ActiveRecord::Base
@@ -20,13 +22,13 @@ class Domain < ActiveRecord::Base
     doc = RestClient::Resource.new(
       "http://#{domain_name}", verify_ssl: OpenSSL::SSL::VERIFY_NONE
     ).get
-    header = Nokogiri::HTML(doc).at('html head')
+    header = Nokogiri::HTML(doc).at("html head")
     if header
       tag = (header.at("meta[name='description']") ||
              header.at("meta[name='Description']"))
     end
-    meta = tag['content'] if tag
-    title_tag = header.at('title') if header
+    meta = tag["content"] if tag
+    title_tag = header.at("title") if header
     title = title_tag.inner_text.strip if title_tag
     { meta: meta, title: title }
   # TODO: If there's an error record that in the database

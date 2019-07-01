@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 # Settings that apply to the whole app and everybody on it
 class SiteSetting < ActiveRecord::Base
   serialize :settings
 
   def self.read_only_mode
-    read_setting('read_only_mode')
+    read_setting("read_only_mode")
   end
 
   def self.read_only_mode=(mode)
-    write_setting('read_only_mode', mode)
+    write_setting("read_only_mode", mode)
   end
 
   def self.toggle_read_only_mode!
@@ -15,16 +17,16 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.maximum_concurrent_scrapers
-    read_setting('maximum_concurrent_scrapers').to_i
+    read_setting("maximum_concurrent_scrapers").to_i
   end
 
-  def self.maximum_concurrent_scrapers=(n)
-    write_setting('maximum_concurrent_scrapers', n)
+  def self.maximum_concurrent_scrapers=(number)
+    write_setting("maximum_concurrent_scrapers", number)
     update_sidekiq_maximum_concurrent_scrapers!
   end
 
   def self.update_sidekiq_maximum_concurrent_scrapers!
-    Sidekiq::Queue['scraper'].limit = maximum_concurrent_scrapers
+    Sidekiq::Queue["scraper"].limit = maximum_concurrent_scrapers
   end
 
   def self.record
@@ -40,7 +42,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.defaults
-    { 'read_only_mode' => false, 'maximum_concurrent_scrapers' => 20 }
+    { "read_only_mode" => false, "maximum_concurrent_scrapers" => 20 }
   end
 
   private_class_method :record, :read_setting, :write_setting, :defaults

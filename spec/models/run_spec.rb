@@ -1,4 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe Run do
   describe "#wall_time" do
@@ -35,18 +37,18 @@ describe Run do
     end
   end
 
-  describe '#env_variables' do
-    context 'has scraper' do
-      let(:variable1) { mock_model(Variable, name: 'FOO', value: 'bar') }
-      let(:variable2) { mock_model(Variable, name: 'WIBBLE', value: 'wobble') }
+  describe "#env_variables" do
+    context "has scraper" do
+      let(:variable1) { mock_model(Variable, name: "FOO", value: "bar") }
+      let(:variable2) { mock_model(Variable, name: "WIBBLE", value: "wobble") }
       let(:scraper) { mock_model(Scraper, variables: [variable1, variable2]) }
       let(:run) { Run.new(scraper: scraper) }
       it "should return all the variables" do
-        expect(run.env_variables).to eq({ 'FOO' => 'bar', 'WIBBLE' => 'wobble' })
+        expect(run.env_variables).to eq("FOO" => "bar", "WIBBLE" => "wobble")
       end
     end
 
-    context 'does not have scraper' do
+    context "does not have scraper" do
       let(:run) { Run.new }
       it { expect(run.env_variables).to eq({}) }
     end
@@ -61,25 +63,25 @@ describe Run do
     end
   end
 
-  describe '#metric' do
-    it 'is present after creation' do
+  describe "#metric" do
+    it "is present after creation" do
       run = Run.create!
       expect(run.metric).to be_present
     end
   end
 
-  describe '#destroy' do
-    context 'with more than one metric for a single run' do
+  describe "#destroy" do
+    context "with more than one metric for a single run" do
       let(:run) { Run.create! }
 
       before do
         2.times { Metric.create!(run: run) }
       end
 
-      it 'does not raise an error' do
-        expect {
+      it "does not raise an error" do
+        expect do
           run.destroy
-        }.to change(Run, :count).by(-1)
+        end.to change(Run, :count).by(-1)
       end
     end
   end

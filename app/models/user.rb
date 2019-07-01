@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A real human being (hopefully)
 class User < Owner
   devise :trackable, :rememberable, :omniauthable, omniauth_providers: [:github]
@@ -49,7 +51,7 @@ class User < Owner
     ).deliver
   rescue Net::SMTPSyntaxError
     puts "Warning: user #{nickname} has invalid email address #{email} " \
-      '(tried to send alert)'
+      "(tried to send alert)"
   end
 
   def user?
@@ -70,7 +72,7 @@ class User < Owner
       watch object
       if object.respond_to?(:scrapers)
         alerts.where(watch_id: object.scrapers,
-                     watch_type: 'Scraper').destroy_all
+                     watch_type: "Scraper").destroy_all
       end
     end
   end
@@ -201,8 +203,8 @@ class User < Owner
   end
 
   def inactive_message
-    'Your account has been suspended. ' \
-      'Please contact us if you think this is in error.'
+    "Your account has been suspended. " \
+      "Please contact us if you think this is in error."
   end
 
   def never_alerted?

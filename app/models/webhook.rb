@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Webhook < ActiveRecord::Base
   belongs_to :scraper
   has_many :deliveries, class_name: WebhookDelivery, dependent: :delete_all

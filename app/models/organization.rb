@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Using American spelling to match GitHub usage
 class Organization < Owner
   # TODO: rename this to members
@@ -12,11 +14,7 @@ class Organization < Owner
   end
 
   def self.find_or_create(uid, nickname)
-    org = Organization.find_by(uid: uid)
-    if org.nil?
-      org = Organization.create(uid: uid, nickname: nickname)
-    end
-    org
+    Organization.find_by(uid: uid) || Organization.create(uid: uid, nickname: nickname)
   end
 
   def refresh_info_from_github!(octokit_client)

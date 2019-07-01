@@ -11,7 +11,7 @@
             %h4 Clear your scraper’s database
             .danger-settings-action-body
               %p
-                - if @scraper.has_data?
+                - if @scraper.data?
                   Your #{pluralize(@scraper.sqlite_total_rows, "row")}
                   of scraped data will be gone!
                 - else

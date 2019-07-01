@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AlertMailerPreview < ActionMailer::Preview
   def alert_email
     user = User.first

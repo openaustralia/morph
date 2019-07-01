@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DeliverWebhookWorker
   include Sidekiq::Worker
   sidekiq_options backtrace: true

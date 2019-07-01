@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Morph
   # Service layer for talking to Scraperwiki
   class Scraperwiki
@@ -10,12 +12,10 @@ module Morph
     def sqlite_database
       if @sqlite_database.nil?
         content = Morph::Scraperwiki.content(
-          'https://classic.scraperwiki.com/scrapers/export_sqlite/' \
+          "https://classic.scraperwiki.com/scrapers/export_sqlite/" \
           "#{short_name}.sqlite"
         )
-        if content =~ /The dataproxy connection timed out, please retry/
-          raise content
-        end
+        raise content if content =~ /The dataproxy connection timed out, please retry/
 
         @sqlite_database = content
       end
@@ -23,18 +23,18 @@ module Morph
     end
 
     def info
-      raise 'short_name not set' if short_name.blank?
+      raise "short_name not set" if short_name.blank?
 
       if @info.nil?
         url = "https://classic.scraperwiki.com/scrapers/#{short_name}/info.json"
         content = Morph::Scraperwiki.content(url)
         v = JSON.parse(content) unless content.blank?
-        if v.nil? ||
-           (v.is_a?(Hash) && v['error'] == 'Sorry, this scraper does not exist')
-          @info = nil
-        else
-          @info = v.first
-        end
+        @info = if v.nil? ||
+                   (v.is_a?(Hash) && v["error"] == "Sorry, this scraper does not exist")
+                  nil
+                else
+                  v.first
+                end
       end
       @info
     end
@@ -44,7 +44,7 @@ module Morph
     end
 
     def exists?
-      !short_name.blank? && !!info
+      !short_name.blank? && info
     end
 
     def view?
@@ -52,25 +52,25 @@ module Morph
     end
 
     def private_scraper?
-      exists? && info && info.key?('error') &&
-        info['error'] == 'Invalid API Key'
+      exists? && info && info.key?("error") &&
+        info["error"] == "Invalid API Key"
     end
 
     def code
-      info['code']
+      info["code"]
     end
 
     def title
-      info['title']
+      info["title"]
     end
 
     def description
-      info['description']
+      info["description"]
     end
 
     def language
-      if exists? && info && info.key?('language')
-        Morph::Language.new(info['language'].to_sym)
+      if exists? && info && info.key?("language")
+        Morph::Language.new(info["language"].to_sym)
       else
         Morph::Language.new(nil)
       end

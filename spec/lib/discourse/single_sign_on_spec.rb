@@ -1,4 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe Discourse::SingleSignOn do
   let(:secret) { "this is my test secret" }

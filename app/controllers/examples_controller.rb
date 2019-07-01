@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExamplesController < ApplicationController
   def australian_members_of_parliament
     # Read in MP example data
@@ -20,13 +22,13 @@ class ExamplesController < ApplicationController
     @members = all.select { |p| p[:house] == "representatives" }
     @page = params[:page]
     @page = @page ? @page.to_i : 1
-    if @page == 1
-      @members = @members[0..49]
-    elsif @page == 2
-      @members = @members[50..99]
-    else
-      @members = @members[100..149]
-    end
+    @members = if @page == 1
+                 @members[0..49]
+               elsif @page == 2
+                 @members[50..99]
+               else
+                 @members[100..149]
+               end
     render layout: nil
   end
 end

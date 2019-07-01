@@ -1,4 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe Morph::Database do
   describe ".clean_utf8_string" do
@@ -8,22 +10,22 @@ describe Morph::Database do
     it { expect(Morph::Database.clean_utf8_string("Casta\xC3\xB1\xC3\xB3n")).to eq "Castañón" }
     it do
       # This ascii-8bit string can't be converted to utf-8
-      string = "\xC2Andrea \xC2Belluzzi"
-      string.force_encoding('ASCII-8BIT')
+      string = +"\xC2Andrea \xC2Belluzzi"
+      string.force_encoding("ASCII-8BIT")
       expect(Morph::Database.clean_utf8_string(string)).to eq "Andrea Belluzzi"
     end
   end
 
-  describe '#clear' do
+  describe "#clear" do
     it "should not attempt to remove the file if it's not there" do
       expect(FileUtils).to_not receive(:rm)
-      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         Morph::Database.new(create(:scraper).data_path).clear
       end
     end
   end
 
-  describe '#backup' do
+  describe "#backup" do
     it "should backup the database file" do
       # Create a fake database file
       File.open("data.sqlite", "w") do |f|

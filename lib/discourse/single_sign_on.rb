@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 module Discourse
   class SingleSignOn
-    ACCESSORS = [:nonce, :name, :username, :email, :about_me, :external_email, :external_username, :external_name, :external_id]
-    FIXNUMS = []
+    ACCESSORS = %i[nonce name username email about_me external_email external_username external_name external_id].freeze
+    FIXNUMS = [].freeze
     NONCE_EXPIRY_TIME = 10.minutes
 
     attr_accessor(*ACCESSORS)
-    attr_accessor :sso_secret, :sso_url
+    attr_writer :sso_secret, :sso_url
 
     def self.sso_secret
-      raise RuntimeError, "sso_secret not implemented on class, be sure to set it on instance"
+      raise "sso_secret not implemented on class, be sure to set it on instance"
     end
 
     def self.sso_url
-      raise RuntimeError, "sso_url not implemented on class, be sure to set it on instance"
+      raise "sso_url not implemented on class, be sure to set it on instance"
     end
 
     def sso_secret
@@ -28,9 +30,8 @@ module Discourse
       sso.sso_secret = sso_secret if sso_secret
 
       parsed = Rack::Utils.parse_query(payload)
-      if sso.sign(parsed["sso"]) != parsed["sig"]
-        raise RuntimeError, "Bad signature for payload"
-      end
+
+      raise "Bad signature for payload" if sso.sign(parsed["sso"]) != parsed["sig"]
 
       decoded = Base64.decode64(parsed["sso"])
       decoded_hash = Rack::Utils.parse_query(decoded)
@@ -48,13 +49,13 @@ module Discourse
     end
 
     def to_url(base_url = nil)
-      base = "#{base_url || sso_url}"
+      base = base_url.to_s || sso_url.to_s
       "#{base}#{base.include?('?') ? '&' : '?'}#{payload}"
     end
 
     def payload
       payload = Base64.encode64(unsigned_payload)
-      "sso=#{CGI::escape(payload)}&sig=#{sign(payload)}"
+      "sso=#{CGI.escape(payload)}&sig=#{sign(payload)}"
     end
 
     def unsigned_payload

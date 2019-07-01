@@ -1,17 +1,19 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe Scraper do
   context "A scraper with a couple of runs" do
     before :each do
-      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         @scraper = create(:scraper)
       end
       @time1 = 2.minutes.ago
       @time2 = 1.minute.ago
       @run1 = @scraper.runs.create(finished_at: @time1)
       @run2 = @scraper.runs.create(finished_at: @time2)
-      metric1 = Metric.create(utime: 10.2, stime: 2.4, run_id: @run1.id)
-      metric2 = Metric.create(utime: 1.3, stime: 3.5, run_id: @run2.id)
+      Metric.create(utime: 10.2, stime: 2.4, run_id: @run1.id)
+      Metric.create(utime: 1.3, stime: 3.5, run_id: @run2.id)
     end
 
     it "#utime" do
@@ -45,7 +47,7 @@ describe Scraper do
       end
 
       it do
-        @scraper.scraperwiki_shortname = ''
+        @scraper.scraperwiki_shortname = ""
         expect(@scraper.scraperwiki_url).to be_nil
       end
     end
@@ -89,29 +91,29 @@ describe Scraper do
     end
   end
 
-  describe 'unique names' do
-    it 'should not allow duplicate scraper names for a user' do
+  describe "unique names" do
+    it "should not allow duplicate scraper names for a user" do
       user = create :user
-      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-        create :scraper, name: 'my_scraper', owner: user
-        expect(build(:scraper, name: 'my_scraper', owner: user)).to_not be_valid
+      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
+        create :scraper, name: "my_scraper", owner: user
+        expect(build(:scraper, name: "my_scraper", owner: user)).to_not be_valid
       end
     end
 
-    it 'should allow the same scraper name for a different user' do
+    it "should allow the same scraper name for a different user" do
       user1 = create :user
       user2 = create :user
-      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-        create :scraper, name: 'my_scraper', owner: user1
-        expect(build(:scraper, name: 'my_scraper', owner: user2)).to be_valid
+      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
+        create :scraper, name: "my_scraper", owner: user1
+        expect(build(:scraper, name: "my_scraper", owner: user2)).to be_valid
       end
     end
   end
 
-  describe 'ScraperWiki validations' do
-    it 'should be invalid if the scraperwiki shortname is not set' do
-      VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
-        expect(build(:scraper, scraperwiki_url: 'foobar')).to_not be_valid
+  describe "ScraperWiki validations" do
+    it "should be invalid if the scraperwiki shortname is not set" do
+      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
+        expect(build(:scraper, scraperwiki_url: "foobar")).to_not be_valid
       end
     end
   end
@@ -138,7 +140,7 @@ describe Scraper do
   end
 
   context "a scraper with some downloads" do
-    let(:scraper) { Scraper.create!(name: 'scraper', owner: owner1) }
+    let(:scraper) { Scraper.create!(name: "scraper", owner: owner1) }
     let(:owner1) { Owner.create }
     let(:owner2) { Owner.create }
     before :each do
@@ -168,8 +170,8 @@ describe Scraper do
         expect(scraper).to receive(:sqlite_total_rows).and_return(0)
       end
 
-      describe "#has_data?" do
-        it { expect(scraper.has_data?).to eq false }
+      describe "#data?" do
+        it { expect(scraper.data?).to eq false }
       end
     end
 
@@ -178,8 +180,8 @@ describe Scraper do
         expect(scraper).to receive(:sqlite_total_rows).and_return(1)
       end
 
-      describe "#has_data?" do
-        it { expect(scraper.has_data?).to eq true }
+      describe "#data?" do
+        it { expect(scraper.data?).to eq true }
       end
     end
 
@@ -229,33 +231,33 @@ describe Scraper do
 
     context "with no webhooks" do
       it "doesn't queue any background jobs" do
-        VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
           scraper = create(:scraper)
-          expect {
+          expect do
             scraper.deliver_webhooks(run)
-          }.to change(DeliverWebhookWorker.jobs, :size).by(0)
+          end.to change(DeliverWebhookWorker.jobs, :size).by(0)
         end
       end
     end
 
     context "with webhooks" do
       before do
-        VCR.use_cassette('scraper_validations', allow_playback_repeats: true) do
+        VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
           @scraper = create(:scraper)
           3.times { |n| @scraper.webhooks.create!(url: "https://example.org/#{n}") }
         end
       end
 
       it "queues up a background job for each webhook" do
-        expect {
+        expect do
           @scraper.deliver_webhooks(run)
-        }.to change(DeliverWebhookWorker.jobs, :size).by(3)
+        end.to change(DeliverWebhookWorker.jobs, :size).by(3)
       end
 
       it "creates webhook delivery records" do
-        expect {
+        expect do
           @scraper.deliver_webhooks(run)
-        }.to change(WebhookDelivery, :count).by(3)
+        end.to change(WebhookDelivery, :count).by(3)
       end
     end
   end

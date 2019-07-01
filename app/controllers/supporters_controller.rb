@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class SupportersController < ApplicationController
-  before_filter :authenticate_user!, except: [:new, :index]
+  before_filter :authenticate_user!, except: %i[new index]
   before_filter :load_stripe_library
 
   def new
@@ -36,8 +38,8 @@ class SupportersController < ApplicationController
     Stripe::Charge.create(
       customer: customer.id,
       amount: (params[:amount].to_f * 100).round,
-      description: 'morph.io contribution',
-      currency: 'USD'
+      description: "morph.io contribution",
+      currency: "USD"
     )
 
     session[:new_supporter] = true

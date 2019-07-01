@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module SupportersHelper
   def number_in_cents_to_currency(number)
     number_to_currency(number.to_f / 100)
   end
 
-  def plan_image_tag(plan, size = '64x64')
-    image_tag(plan.image_name, size: size, class: 'plan')
+  def plan_image_tag(plan, size = "64x64")
+    image_tag(plan.image_name, size: size, class: "plan")
   end
 
   def plan_change_word(from_plan, to_plan)

@@ -1,33 +1,31 @@
+# frozen_string_literal: true
+
 module Morph
   class TimeCommand
     def self.command(other, metric_file)
-      ['/usr/bin/time', '-v', '-o', metric_file] + other
+      ["/usr/bin/time", "-v", "-o", metric_file] + other
     end
 
     # Parse the output of the time command and return a hash of the parameters
-    def self.params_from_string(s)
-      params = s.split("\n").inject({}) do |params, line|
+    def self.params_from_string(string)
+      params = string.split("\n").inject({}) do |p, line|
         r = parse_line(line)
-        params.merge(r ? { r[0] => r[1] } : {})
+        p.merge(r ? { r[0] => r[1] } : {})
       end
       # There's a bug in GNU time 1.7 which wrongly reports the maximum resident
       # set size on the version of Ubuntu that we're using.
       # See https://groups.google.com/forum/#!topic/gnu.utils.help/u1MOsHL4bhg
       # Let's fix it up
-      if params[:page_size]
-        params[:maxrss] = params[:maxrss] * 1024 / params[:page_size]
-      else
-        # If we can't get the page size we can't really figure out maxrss
-        params[:maxrss] = nil
-      end
+      # If we can't get the page size we can't really figure out maxrss
+      params[:maxrss] = (params[:maxrss] * 1024 / params[:page_size] if params[:page_size])
 
       # page_size isn't an attribute on this model
       params.delete(:page_size)
       params
     end
 
-    def self.parse_line(l)
-      field, value = l.split(': ')
+    def self.parse_line(line)
+      field, value = line.split(": ")
       case field
       when /Maximum resident set size \(kbytes\)/
         [:maxrss, value.to_i]
@@ -40,7 +38,7 @@ module Morph
       when /System time \(seconds\)/
         [:stime, value.to_f]
       when /Elapsed \(wall clock\) time \(h:mm:ss or m:ss\)/
-        n = value.split(':').map(&:to_f)
+        n = value.split(":").map(&:to_f)
         if n.count == 2
           m, s = n
           h = 0

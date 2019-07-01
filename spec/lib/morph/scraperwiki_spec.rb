@@ -1,4 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe Morph::Scraperwiki do
   describe "#sqlite_database" do
@@ -21,7 +23,8 @@ describe Morph::Scraperwiki do
 
   describe ".content" do
     it "should grab the contents of a url" do
-      response, data = double, double
+      response = double
+      data = double
       expect(Faraday).to receive(:get).with("http://foo.com").and_return(response)
       expect(response).to receive(:body).and_return(data)
       expect(response).to receive(:success?).and_return(true)
@@ -29,13 +32,13 @@ describe Morph::Scraperwiki do
     end
   end
 
-  describe '#exists?' do
+  describe "#exists?" do
     it { expect(Morph::Scraperwiki.new(nil).exists?).to_not be_truthy }
-    it { expect(Morph::Scraperwiki.new('').exists?).to_not be_truthy }
+    it { expect(Morph::Scraperwiki.new("").exists?).to_not be_truthy }
 
     it "should say non existent scrapers don't exist" do
-      VCR.use_cassette('scraperwiki') do
-        expect(Morph::Scraperwiki.new('non_existent_scraper').exists?).to_not be_truthy
+      VCR.use_cassette("scraperwiki") do
+        expect(Morph::Scraperwiki.new("non_existent_scraper").exists?).to_not be_truthy
       end
     end
   end

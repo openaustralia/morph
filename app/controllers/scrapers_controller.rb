@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class ScrapersController < ApplicationController
-  before_filter :authenticate_user!, except: [
-    :index, :show, :data, :watchers, :history
+  before_filter :authenticate_user!, except: %i[
+    index show data watchers history
   ]
-  before_filter :load_resource, only: [
-    :settings, :show, :destroy, :update, :run, :stop, :clear, :data, :watch,
-    :watchers, :history
+  before_filter :load_resource, only: %i[
+    settings show destroy update run stop clear data watch
+    watchers history
   ]
 
   # All methods
@@ -37,8 +39,8 @@ class ScrapersController < ApplicationController
     authorize! :create, @scraper
     if @scraper.valid?
       @scraper.create_create_scraper_progress!(
-        heading: 'New scraper',
-        message: 'Queuing',
+        heading: "New scraper",
+        message: "Queuing",
         progress: 5
       )
       @scraper.save
@@ -57,7 +59,7 @@ class ScrapersController < ApplicationController
   # For rendering ajax partial in github action
   def github_form
     @scraper = Scraper.new
-    render partial: 'github_form', locals: { owner: Owner.find(params[:id]) }
+    render partial: "github_form", locals: { owner: Owner.find(params[:id]) }
   end
 
   def create_github
@@ -66,8 +68,8 @@ class ScrapersController < ApplicationController
     authorize! :create_github, @scraper
     if @scraper.save
       @scraper.create_create_scraper_progress!(
-        heading: 'Adding from GitHub',
-        message: 'Queuing',
+        heading: "Adding from GitHub",
+        message: "Queuing",
         progress: 5
       )
       @scraper.save
@@ -106,12 +108,12 @@ class ScrapersController < ApplicationController
     # It will just get stuck later
 
     if !@scraper.scraperwiki_shortname
-      @scraper.errors.add(:scraperwiki_shortname, 'cannot be blank')
+      @scraper.errors.add(:scraperwiki_shortname, "cannot be blank")
       render :scraperwiki
     elsif @scraper.save
       @scraper.create_create_scraper_progress!(
-        heading: 'Forking!',
-        message: 'Queuing',
+        heading: "Forking!",
+        message: "Queuing",
         progress: 5
       )
       @scraper.save
@@ -139,7 +141,7 @@ class ScrapersController < ApplicationController
   def update
     authorize! :update, @scraper
     if @scraper.update_attributes(scraper_params)
-      flash[:notice] = 'Scraper settings successfully updated'
+      flash[:notice] = "Scraper settings successfully updated"
       sync_update @scraper
       redirect_to @scraper
     else
@@ -180,8 +182,7 @@ class ScrapersController < ApplicationController
     authorize! :watchers, @scraper
   end
 
-  def history
-  end
+  def history; end
 
   def running
     @scrapers = Scraper.running
@@ -194,10 +195,10 @@ class ScrapersController < ApplicationController
   end
 
   def scraper_params
-    params.require(:scraper).permit(:auto_run, variables_attributes: [
-                                      :id, :name, :value, :_destroy
-                                    ], webhooks_attributes: [
-                                      :id, :url, :_destroy
+    params.require(:scraper).permit(:auto_run, variables_attributes: %i[
+                                      id name value _destroy
+                                    ], webhooks_attributes: %i[
+                                      id url _destroy
                                     ])
   end
 end

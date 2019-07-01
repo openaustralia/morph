@@ -1,4 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe RunsHelper do
   context "There are scraped domains" do
@@ -38,27 +40,27 @@ describe RunsHelper do
 
       describe "#without links" do
         it do
-          expect(helper.scraped_domains_list([foo_domain], false)).to eq 'foo.com'
+          expect(helper.scraped_domains_list([foo_domain], false)).to eq "foo.com"
           expect(helper.scraped_domains_list([foo_domain], false)).to be_html_safe
         end
 
         it do
-          expect(helper.scraped_domains_list([foo_domain, bar_domain], false)).to eq 'foo.com and bar.com'
+          expect(helper.scraped_domains_list([foo_domain, bar_domain], false)).to eq "foo.com and bar.com"
           expect(helper.scraped_domains_list([foo_domain, bar_domain], false)).to be_html_safe
         end
 
         it do
-          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain], false)).to eq 'foo.com, bar.com, and www.foo.com'
+          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain], false)).to eq "foo.com, bar.com, and www.foo.com"
           expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain], false)).to be_html_safe
         end
 
         it do
-          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain], false)).to eq 'foo.com, bar.com, www.foo.com, and 1 other domain'
+          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain], false)).to eq "foo.com, bar.com, www.foo.com, and 1 other domain"
           expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain], false)).to be_html_safe
         end
 
         it do
-          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain], false)).to eq 'foo.com, bar.com, www.foo.com, and 2 other domains'
+          expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain], false)).to eq "foo.com, bar.com, www.foo.com, and 2 other domains"
           expect(helper.scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain], false)).to be_html_safe
         end
       end
@@ -66,23 +68,23 @@ describe RunsHelper do
 
     describe "#simplified_scraped_domains_list" do
       it do
-        expect(helper.simplified_scraped_domains_list([foo_domain])).to eq 'foo.com'
+        expect(helper.simplified_scraped_domains_list([foo_domain])).to eq "foo.com"
       end
 
       it do
-        expect(helper.simplified_scraped_domains_list([foo_domain, bar_domain])).to eq 'foo.com, bar.com'
+        expect(helper.simplified_scraped_domains_list([foo_domain, bar_domain])).to eq "foo.com, bar.com"
       end
 
       it do
-        expect(helper.simplified_scraped_domains_list([foo_domain, bar_domain, www_foo_domain])).to eq 'foo.com, bar.com, www.foo.com'
+        expect(helper.simplified_scraped_domains_list([foo_domain, bar_domain, www_foo_domain])).to eq "foo.com, bar.com, www.foo.com"
       end
 
       it do
-        expect(helper.simplified_scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain])).to eq 'foo.com, bar.com, www.foo.com, and 1 other'
+        expect(helper.simplified_scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain])).to eq "foo.com, bar.com, www.foo.com, and 1 other"
       end
 
       it do
-        expect(helper.simplified_scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain])).to eq 'foo.com, bar.com, www.foo.com, and 2 others'
+        expect(helper.simplified_scraped_domains_list([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain])).to eq "foo.com, bar.com, www.foo.com, and 2 others"
       end
     end
   end

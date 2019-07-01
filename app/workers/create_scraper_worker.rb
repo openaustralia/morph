@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateScraperWorker
   include Sidekiq::Worker
   sidekiq_options backtrace: true
@@ -11,7 +13,7 @@ class CreateScraperWorker
     # TODO: Do this in a less hacky and more general way
     if scraper.create_scraper_progress.progress <= 20
       scraper.create_scraper_progress.update("Creating GitHub repository", 20)
-      repo = Morph::Github.create_repository(current_user, scraper.owner, scraper.name, description: scraper.description)
+      Morph::Github.create_repository(current_user, scraper.owner, scraper.name, description: scraper.description)
     end
 
     # This block should happily run several times (after failures)
@@ -29,7 +31,7 @@ class CreateScraperWorker
     # Copy the new data across
     scraper.update_attributes(description: scraper2.description, github_id: scraper2.github_id,
                               owner_id: scraper2.owner_id, github_url: scraper2.github_url, git_url: scraper2.git_url)
-    repo = current_user.octokit_client.edit_repository(scraper.full_name, homepage: scraper_url)
+    current_user.octokit_client.edit_repository(scraper.full_name, homepage: scraper_url)
 
     # This block should happily run several times (after failures)
     scraper.create_scraper_progress.update("Synching repository", 80)

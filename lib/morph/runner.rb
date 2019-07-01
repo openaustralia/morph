@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Morph
   # High level API for running morph scraper. Handles the setting up of default
   # configuration if things like Gemfiles are not included (for Ruby)
@@ -59,9 +61,9 @@ module Morph
       # If container already exists we just attach to it
       c = container_for_run
       if c.nil?
-        c = compile_and_start_run(max_lines) do |s, c|
+        c = compile_and_start_run(max_lines) do |stream, text|
           # TODO: Could we get sensible timestamps out at this stage too?
-          yield nil, s, c
+          yield nil, stream, text
         end
         since = nil
       else
@@ -75,8 +77,8 @@ module Morph
         # slightly after the true time.
         since += 1e-6 if since
       end
-      attach_to_run_and_finish(c, since) do |timestamp, s, c|
-        yield timestamp, s, c
+      attach_to_run_and_finish(c, since) do |timestamp, stream, text|
+        yield timestamp, stream, text
       end
     end
 
@@ -89,26 +91,26 @@ module Morph
       FileUtils.mkdir_p run.data_path
       FileUtils.chmod 0o777, run.data_path
 
-      unless run.language && run.language.supported?
+      unless run.language&.supported?
         supported_scraper_files =
           Morph::Language.languages_supported.map(&:scraper_filename)
         m = "Can't find scraper code. Expected to find a file called " +
-            supported_scraper_files.to_sentence(last_word_connector: ', or ') +
-            ' in the root directory'
-        yield 'stderr', m
+            supported_scraper_files.to_sentence(last_word_connector: ", or ") +
+            " in the root directory"
+        yield "stderr", m
         run.update_attributes(status_code: 999, finished_at: Time.now)
         return
       end
 
-      c = Dir.mktmpdir('morph') do |defaults|
+      c = Dir.mktmpdir("morph") do |defaults|
         Morph::Runner.add_config_defaults_to_directory(run.repo_path, defaults)
         Morph::Runner.remove_hidden_directories(defaults)
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
 
         Morph::DockerRunner.compile_and_start_run(
           defaults, run.env_variables, docker_container_labels, max_lines, run.scraper
-        ) do |s, c|
-          yield(s, c)
+        ) do |stream, text|
+          yield(stream, text)
         end
       end
 
@@ -126,26 +128,26 @@ module Morph
       c
     end
 
-    def attach_to_run_and_finish(c, since)
-      if c.nil?
+    def attach_to_run_and_finish(container, since)
+      if container.nil?
         # TODO: Return the status for a compile error
         result = Morph::RunResult.new(255, {}, {})
       else
-        Morph::DockerRunner.attach_to_run(c, since) do |timestamp, s, c|
-          yield(timestamp, s, c)
+        Morph::DockerRunner.attach_to_run(container, since) do |timestamp, stream, text|
+          yield(timestamp, stream, text)
         end
-        result = Morph::DockerRunner.finish(c, ['data.sqlite'])
+        result = Morph::DockerRunner.finish(container, ["data.sqlite"])
       end
 
       status_code = result.status_code
 
       # Only copy back database if it's there and has something in it
-      if result.files && result.files['data.sqlite']
-        Morph::Runner.copy_sqlite_db_back(run.data_path, result.files['data.sqlite'])
-        result.files['data.sqlite'].close!
+      if result.files && result.files["data.sqlite"]
+        Morph::Runner.copy_sqlite_db_back(run.data_path, result.files["data.sqlite"])
+        result.files["data.sqlite"].close!
       # Only show the error below if the scraper thinks it finished without problems
-      elsif status_code == 0
-        m = <<~EOF
+      elsif status_code.zero?
+        m = <<~ERROR
           Scraper didn't create an SQLite database in your current working directory called
           data.sqlite. If you've just created your first scraper and not edited the code yet
           this is to be expected.
@@ -154,8 +156,8 @@ module Morph
 
           However, this could also be related to an intermittent problem which we're
           working hard to resolve: https://github.com/openaustralia/morph/issues/1064
-        EOF
-        yield Time.now, 'stderr', m
+        ERROR
+        yield Time.now, "stderr", m
         status_code = 998
       end
 
@@ -165,7 +167,7 @@ module Morph
       # Because SqliteDiff will actually create sqlite databases if they
       # don't exist we don't actually want that if there isn't actually
       # a database because it causes some very confusing behaviour
-      if File.exists?(run.database.sqlite_db_path)
+      if File.exist?(run.database.sqlite_db_path)
         # Update information about what changed in the database
         diffstat = Morph::SqliteDiff.diffstat_safe(
           run.database.sqlite_db_backup_path, run.database.sqlite_db_path
@@ -189,10 +191,10 @@ module Morph
 
       run.update_attributes(status_code: status_code, finished_at: Time.now)
 
-      if run.scraper
-        run.finished!
-        sync_update run.scraper
-      end
+      return unless run.scraper
+
+      run.finished!
+      sync_update run.scraper
     end
 
     # Note that cleanup is automatically done by the process on the
@@ -213,26 +215,26 @@ module Morph
     end
 
     def self.add_sqlite_db_to_directory(data_path, dir)
+      return unless File.exist?(File.join(data_path, "data.sqlite"))
+
       # Copy across the current sqlite database as well
-      if File.exist?(File.join(data_path, 'data.sqlite'))
-        # TODO: Ensure that there isn't anything else writing to the db
-        # while we make a copy of it. There's the backup API. Use that?
-        FileUtils.cp(File.join(data_path, 'data.sqlite'), dir)
-      end
+      # TODO: Ensure that there isn't anything else writing to the db
+      # while we make a copy of it. There's the backup API. Use that?
+      FileUtils.cp(File.join(data_path, "data.sqlite"), dir)
     end
 
     def self.copy_sqlite_db_back(data_path, sqlite_file)
       # Only overwrite the sqlite database if the container has one
-      if sqlite_file
-        # First write to a temporary file with the new sqlite data
-        # Copying across just in case temp directory and data_path directory
-        # not on the same filesystem (which would stop atomic rename from working)
-        FileUtils.cp(sqlite_file.path, File.join(data_path, 'data.sqlite.new'))
-        # Then, rename the file to the "live" file overwriting the old data
-        # This should happen atomically
-        File.rename(File.join(data_path, 'data.sqlite.new'),
-                    File.join(data_path, 'data.sqlite'))
-      end
+      return unless sqlite_file
+
+      # First write to a temporary file with the new sqlite data
+      # Copying across just in case temp directory and data_path directory
+      # not on the same filesystem (which would stop atomic rename from working)
+      FileUtils.cp(sqlite_file.path, File.join(data_path, "data.sqlite.new"))
+      # Then, rename the file to the "live" file overwriting the old data
+      # This should happen atomically
+      File.rename(File.join(data_path, "data.sqlite.new"),
+                  File.join(data_path, "data.sqlite"))
     end
 
     def self.add_config_defaults_to_directory(source, dest)
@@ -251,7 +253,7 @@ module Morph
       end
 
       # Special behaviour for Procfile. We don't allow the user to override this
-      File.open(File.join(dest, 'Procfile'), 'w') { |f| f << language.procfile }
+      File.open(File.join(dest, "Procfile"), "w") { |f| f << language.procfile }
     end
 
     # Remove directories starting with "."
@@ -259,14 +261,12 @@ module Morph
     # hidden directories which people might find useful
     def self.remove_hidden_directories(directory)
       Find.find(directory) do |path|
-        if FileTest.directory?(path) && File.basename(path)[0] == '.'
-          FileUtils.rm_rf(path)
-        end
+        FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == "."
       end
     end
 
     def self.run_label_key
-      'io.morph.run'
+      "io.morph.run"
     end
 
     def run_label_value
@@ -277,7 +277,7 @@ module Morph
     def docker_container_labels
       # Everything needs to be a string
       labels = { Morph::Runner.run_label_key => run_label_value }
-      labels['io.morph.scraper'] = run.scraper.full_name if run.scraper
+      labels["io.morph.scraper"] = run.scraper.full_name if run.scraper
       labels
     end
 
@@ -289,7 +289,7 @@ module Morph
 
     def self.run_id_for_container(container)
       value = Morph::DockerUtils.label_value(container, run_label_key)
-      value.to_i if value
+      value&.to_i
     end
 
     # Given a run return the associated run object

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ActiveAdmin.register Owner do
   actions :index, :show, :edit, :update
 
@@ -27,9 +29,7 @@ ActiveAdmin.register Owner do
 
     actions defaults: false do |owner|
       a link_to "View", admin_owner_path(owner)
-      if owner.user?
-        a link_to "Edit", edit_admin_owner_path(owner)
-      end
+      a link_to "Edit", edit_admin_owner_path(owner) if owner.user?
     end
   end
 
@@ -38,7 +38,7 @@ ActiveAdmin.register Owner do
   filter :name
   filter :stripe_plan_id, as: :select, collection: Plan.all_stripe_plan_ids
 
-  form do |f|
+  form do
     inputs "Permissions" do
       input :admin
       input :suspended

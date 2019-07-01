@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
 module Morph
   class Database
     CORRUPT_DATABASE_EXCEPTIONS = [
       SQLite3::NotADatabaseException,
       SQLite3::CorruptException,
       SQLite3::CantOpenException
-    ]
+    ].freeze
 
     def initialize(data_path)
       @data_path = data_path
     end
 
     def self.sqlite_db_filename
-      'data.sqlite'
+      "data.sqlite"
     end
 
     def self.sqlite_db_backup_filename
@@ -19,7 +21,7 @@ module Morph
     end
 
     def self.sqlite_table_name
-      'data'
+      "data"
     end
 
     def sqlite_db_path
@@ -40,9 +42,9 @@ module Morph
     def table_names
       q = sql_query_safe("select name from sqlite_master where type='table'")
       if q
-        q = q.map { |h| h['name'] }
+        q = q.map { |h| h["name"] }
         # sqlite_sequence is a special system table (used with autoincrement)
-        q.delete('sqlite_sequence')
+        q.delete("sqlite_sequence")
         q
       else
         []
@@ -68,8 +70,8 @@ module Morph
       end
     end
 
-    def sql_query_streaming(query, readonly = true, &block)
-      raise SQLite3::Exception, 'No query specified' if query.blank?
+    def sql_query_streaming(query, readonly = true)
+      raise SQLite3::Exception, "No query specified" if query.blank?
 
       SQLite3::Database.new(
         sqlite_db_path,
@@ -93,7 +95,7 @@ module Morph
             yield Database.clean_utf8_query_row(row)
           end
         ensure
-          result.close if result
+          result&.close
         end
       end
     end
@@ -124,7 +126,7 @@ module Morph
         if string.valid_encoding?
           # Actually try converting to utf-8 and check if that works
           begin
-            string.encode('utf-8')
+            string.encode("utf-8")
           rescue Encoding::UndefinedConversionError
             convert_to_utf8_and_clean_binary_string(string)
           end
@@ -141,8 +143,8 @@ module Morph
     # when converting to utf-8. Using this is a last resort when simple
     # conversions aren't working.
     def self.convert_to_utf8_and_clean_binary_string(string)
-      string.encode('UTF-8', 'binary',
-                    invalid: :replace, undef: :replace, replace: '')
+      string.encode("UTF-8", "binary",
+                    invalid: :replace, undef: :replace, replace: "")
     end
 
     def sql_query_safe(query, readonly = true)
@@ -184,34 +186,34 @@ module Morph
 
     def write_sqlite_database(content)
       FileUtils.mkdir_p @data_path
-      File.open(sqlite_db_path, 'wb') { |file| file.write(content) }
+      File.open(sqlite_db_path, "wb") { |file| file.write(content) }
     end
 
     def standardise_table_name(table_name)
-      sql_query_safe(%{ALTER TABLE "#{table_name}" \
-        RENAME TO "#{Database.sqlite_table_name}"}, false)
+      sql_query_safe(%(ALTER TABLE "#{table_name}" \
+        RENAME TO "#{Database.sqlite_table_name}"), false)
     end
 
     def select_first_ten(table = table_names.first)
-      %{select * from "#{table}" limit 10}
+      %(select * from "#{table}" limit 10)
     end
 
     def select_all(table = table_names.first)
-      %{select * from "#{table}"}
+      %(select * from "#{table}")
     end
 
     def first_ten_rows(table = table_names.first)
       r = sql_query_safe(select_first_ten(table))
-      r ? r : []
+      r || []
     end
 
     def self.tidy_data_path(data_path)
       # First get all the files in the data directory
       filenames = Dir.entries(data_path)
-      filenames.delete('.')
-      filenames.delete('..')
+      filenames.delete(".")
+      filenames.delete("..")
       filenames.delete(sqlite_db_filename)
-      FileUtils.rm_rf filenames.map { |f| File.join(data_path, f) }
+      FileUtils.rm_rf(filenames.map { |f| File.join(data_path, f) })
     end
 
     # Remove any files or directories in the data_path that are not the
@@ -225,7 +227,7 @@ module Morph
     # Add translators for problematic type conversions
     def add_database_type_translations(db)
       # Don't error on dates that are FixNum and that don't parse
-      %w(date datetime).each do |type|
+      %w[date datetime].each do |type|
         db.translator.add_translator(type) do |t, v|
           begin
             case t.downcase
@@ -241,8 +243,8 @@ module Morph
       end
 
       # Over the default translator also allows booleans stored as integers
-      %w(bit bool boolean).each do |type|
-        db.translator.add_translator(type) do |t, v|
+      %w[bit bool boolean].each do |type|
+        db.translator.add_translator(type) do |_t, v|
           v = v.to_s
           !(v.strip.gsub(/00+/, "0") == "0" ||
              v.downcase == "false" ||

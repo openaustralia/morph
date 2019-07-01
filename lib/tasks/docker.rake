@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 namespace :app do
   namespace :docker do
     desc "Remove least recently used docker images"
-    task remove_old_unused_images: [:environment, :set_logger_to_stdout] do
+    task remove_old_unused_images: %i[environment set_logger_to_stdout] do
       include ActionView::Helpers::NumberHelper
 
       # We don't want to take up more than 10 GB
@@ -61,39 +63,39 @@ namespace :app do
       image_base = Morph::DockerRunner.buildstep_image
       total = 0
       Docker::Image.all.each do |image|
-        if Morph::DockerUtils.image_built_on_other_image?(image, image_base)
-          size = Morph::DockerUtils.disk_space_image_relative_to_other_image(image, image_base)
-          puts "#{image.id.split(':')[1][0..11]} #{number_to_human_size(size)}"
-          total += size
-        end
+        next unless Morph::DockerUtils.image_built_on_other_image?(image, image_base)
+
+        size = Morph::DockerUtils.disk_space_image_relative_to_other_image(image, image_base)
+        puts "#{image.id.split(':')[1][0..11]} #{number_to_human_size(size)}"
+        total += size
       end
       puts "Total: #{number_to_human_size(total)}"
     end
 
     desc "Delete dead Docker containers"
-    task delete_dead_containers: [:environment, :set_logger_to_stdout] do
+    task delete_dead_containers: %i[environment set_logger_to_stdout] do
       dead_containers = Docker::Container.all(all: true, filters: { status: ["dead"] }.to_json)
       puts "Found #{dead_containers.count} dead containers to delete..."
 
       dead_containers.each do |c|
-        Morph::DockerMaintenance::delete_container(c)
+        Morph::DockerMaintenance.delete_container(c)
       end
     end
 
     # This is exactly the same as the task above but for a different container status
     # TODO: Refactor this with the above task
     desc "Delete Docker containers with 'created' status"
-    task delete_created_status_containers: [:environment, :set_logger_to_stdout] do
+    task delete_created_status_containers: %i[environment set_logger_to_stdout] do
       created_status_containers = Docker::Container.all(all: true, filters: { status: ["created"] }.to_json)
       puts "Found #{created_status_containers.count} created status containers to delete..."
 
       created_status_containers.each do |c|
-        Morph::DockerMaintenance::delete_container(c)
+        Morph::DockerMaintenance.delete_container(c)
       end
     end
 
     desc "Delete ALL stopped Docker containers without associated morph run"
-    task delete_stopped_containers: [:environment, :set_logger_to_stdout] do
+    task delete_stopped_containers: %i[environment set_logger_to_stdout] do
       filters = { status: ["exited"] }.to_json
       stopped_containers = Docker::Container.all(all: true, filters: filters)
       # Don't deleted containers with associated runs - these should be tidied
@@ -102,7 +104,7 @@ namespace :app do
       puts "Found #{stopped_containers.count} stopped containers to delete..."
 
       stopped_containers.each do |c|
-        Morph::DockerMaintenance::delete_container(c)
+        Morph::DockerMaintenance.delete_container(c)
       end
     end
 

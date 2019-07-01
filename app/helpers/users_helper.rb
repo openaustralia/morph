@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UsersHelper
   def alert_scrapers_summary_sentence(success_count, broken_count)
     result = pluralize(success_count, "scraper") + " you are watching "

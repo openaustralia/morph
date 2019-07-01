@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe AlertMailer do
@@ -7,14 +9,14 @@ describe AlertMailer do
     let(:full_name2) { "planningalerts-scrapers/spear" }
     let(:scraper1) { mock_model(Scraper, to_param: full_name1, latest_successful_run_time: 3.days.ago, full_name: full_name1) }
     let(:scraper2) { mock_model(Scraper, to_param: full_name2, latest_successful_run_time: 7.days.ago, full_name: full_name2) }
-    let(:run1) {
+    let(:run1) do
       mock_model(Run, finished_at: 2.hours.ago, scraper: scraper1,
                       error_text: "PHP Fatal error: Call to a member function find() on a non-object in /repo/scraper.php on line 16\n")
-    }
-    let(:run2) {
+    end
+    let(:run2) do
       mock_model(Run, finished_at: 22.hours.ago, scraper: scraper2,
                       error_text: "/repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )\n")
-    }
+    end
     before :each do
       allow(scraper1).to receive(:last_run).and_return(run1)
       allow(scraper2).to receive(:last_run).and_return(run2)
@@ -43,7 +45,7 @@ describe AlertMailer do
 
       it { expect(email.subject).to eq "2 scrapers you are watching have errored in the last 48 hours" }
       it do
-        expect(email.text_part.body.to_s).to eq <<~EOF
+        expect(email.text_part.body.to_s).to eq <<~EMAIL
           morph.io is letting you know that
 
           32 scrapers you are watching have run successfully in the last 48 hours. These 2 have a problem:
@@ -65,19 +67,19 @@ describe AlertMailer do
           -----
           Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
           morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
-        EOF
+        EMAIL
       end
 
       it do
-        expected = <<~EOF
+        expected = <<~EMAIL
           <a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">morph.io</a>
           is letting you know that
-        EOF
+        EMAIL
         expect(email.html_part.body.to_s).to include(expected)
       end
 
       it do
-        expected = <<~EOF
+        expected = <<~EMAIL
           <h3>32 scrapers you are watching have run successfully in the last 48 hours. These 2 have a problem:</h3>
           <h3>
           <a href="http://dev.morph.io/planningalerts-scrapers/campbelltown?utm_medium=email&amp;utm_source=alerts">planningalerts-scrapers/campbelltown</a>
@@ -95,18 +97,18 @@ describe AlertMailer do
           It has been erroring for 7 days
           </p>
           <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
-        EOF
+        EMAIL
         expect(email.html_part.body.to_s).to include(expected)
       end
 
       it do
-        expected = <<~EOF
+        expected = <<~EMAIL
           <p>
           Annoyed by these emails? Then
           <a href="http://dev.morph.io/users/mlandauer/watching?utm_medium=email&amp;utm_source=alerts">change what you&#39;re watching</a>
           </p>
           <p><a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">morph.io</a></p>
-        EOF
+        EMAIL
         expect(email.html_part.body.to_s).to include(expected)
       end
     end
@@ -114,7 +116,7 @@ describe AlertMailer do
     context "more than 5 lines of errors for a scraper run" do
       it "should trunctate the log output" do
         allow(run1).to receive(:error_text).and_return("This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
-        expect(AlertMailer.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s).to eq <<~EOF
+        expect(AlertMailer.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s).to eq <<~EMAIL
           morph.io is letting you know that
 
           32 scrapers you are watching have run successfully in the last 48 hours. This 1 has a problem:
@@ -134,7 +136,7 @@ describe AlertMailer do
           -----
           Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
           morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
-        EOF
+        EMAIL
       end
     end
 

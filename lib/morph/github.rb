@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Morph
   # Service layer for talking to the Github API
   class Github
@@ -59,13 +61,13 @@ module Morph
     def self.primary_email(user)
       # TODO: If email isn't verified probably should not send email to it
       e = emails(user)
-      e.find(&:primary).email if e
+      e&.find(&:primary)&.email
     end
 
     # Needs user:email oauth scope for this to work
     # Will return nil if you don't have the right scope
     def self.emails(user)
-      user.octokit_client.emails(accept: 'application/vnd.github.v3')
+      user.octokit_client.emails(accept: "application/vnd.github.v3")
     rescue Octokit::NotFound, Octokit::Unauthorized
       nil
     end
@@ -76,15 +78,15 @@ module Morph
     # it ourselves
     def self.reset_authorization(access_token)
       # POST https://api.github.com/applications/:client_id/tokens/:access_token
-      client_id = ENV['GITHUB_APP_CLIENT_ID']
-      client_secret = ENV['GITHUB_APP_CLIENT_SECRET']
+      client_id = ENV["GITHUB_APP_CLIENT_ID"]
+      client_secret = ENV["GITHUB_APP_CLIENT_SECRET"]
 
-      conn = Faraday.new(url: 'https://api.github.com') do |faraday|
+      conn = Faraday.new(url: "https://api.github.com") do |faraday|
         faraday.request :basic_auth, client_id, client_secret
         faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
       end
       res = conn.post("/applications/#{client_id}/tokens/#{access_token}")
-      JSON.parse(res.body)['token']
+      JSON.parse(res.body)["token"]
     end
 
     # Returns nicknames of github users who have contributed to a particular
@@ -96,7 +98,7 @@ module Morph
       # github call returns nil if the git repo is completely empty
       contributors = user.octokit_client.contributors(repo_full_name)
       contributors = [] unless contributors.is_a?(Array)
-      contributors.map { |c| c['login'] }
+      contributors.map { |c| c["login"] }
     # TODO: A bit of a hack to just return an empty string if there is a problem
     # with the github user authentication
     rescue Octokit::NotFound, Octokit::Unauthorized

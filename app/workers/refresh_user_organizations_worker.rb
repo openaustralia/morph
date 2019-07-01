@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RefreshUserOrganizationsWorker
   include Sidekiq::Worker
   sidekiq_options backtrace: true

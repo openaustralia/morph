@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A run of a scraper
 class Run < ActiveRecord::Base
   belongs_to :owner
@@ -8,13 +10,15 @@ class Run < ActiveRecord::Base
   has_many :domains, -> { distinct }, through: :connection_logs
 
   scope :finished_successfully, -> { where(status_code: 0) }
-  scope :running, -> { where(finished_at: nil).where('started_at IS NOT NULL') }
+  scope :running, -> { where(finished_at: nil).where("started_at IS NOT NULL") }
 
   delegate :git_url, :full_name, :current_revision_from_repo,
            to: :scraper, allow_nil: true
   delegate :utime, :stime, :cpu_time, to: :metric, allow_nil: true
 
+  # rubocop:disable Style/SymbolProc
   before_create { |run| run.build_metric }
+  # rubocop:enable Style/SymbolProc
 
   before_destroy { |run| Metric.where(run_id: run.id).destroy_all }
 
@@ -40,7 +44,7 @@ class Run < ActiveRecord::Base
   end
 
   def wall_time=(_)
-    fail "Can't set wall_time directly"
+    raise "Can't set wall_time directly"
   end
 
   def name
@@ -48,7 +52,7 @@ class Run < ActiveRecord::Base
       scraper.name
     else
       # This run is using uploaded code and so is not associated with a scraper
-      'run'
+      "run"
     end
   end
 
@@ -74,11 +78,11 @@ class Run < ActiveRecord::Base
   end
 
   def finished?
-    !!finished_at
+    !finished_at.nil?
   end
 
   def finished_successfully?
-    status_code == 0
+    status_code.zero?
   end
 
   def finished_with_errors?
@@ -95,7 +99,7 @@ class Run < ActiveRecord::Base
   end
 
   def error_text
-    log_lines.where(stream: 'stderr').order('log_lines.id').map(&:text).join
+    log_lines.where(stream: "stderr").order("log_lines.id").map(&:text).join
   end
 
   def git_revision_github_url

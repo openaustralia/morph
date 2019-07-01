@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Morph
   class SqliteDiff
     def self.diffstat_safe(file1, file2)
@@ -81,7 +83,7 @@ module Morph
 
     def self.table_changes(db1, db2)
       changes(db1, db2, "select name from sqlite_master where type='table'") do |possibly_changed|
-        quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(',')
+        quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(",")
         "select name,sql from sqlite_master where type='table' AND name IN (#{quoted_ids})"
       end
     end
@@ -138,8 +140,8 @@ module Morph
 
       data_changes(ids1, ids2) do |possibly_changed|
         values1, values2 = execute2(db1, db2, yield(possibly_changed))
-        values1.zip(values2).map do |v1, v2|
-          [v1.first, v1[1..-1], v2[1..-1]]
+        values1.zip(values2).map do |value1, value2|
+          [value1.first, value1[1..-1], value2[1..-1]]
         end
       end
     end
@@ -157,7 +159,7 @@ module Morph
 
     def self.rows_changed_in_range(table, min, max, db1, db2)
       changes(db1, db2, "SELECT ROWID from '#{table}' WHERE ROWID BETWEEN #{min} AND #{max}") do |possibly_changed|
-        quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(',')
+        quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(",")
         "SELECT ROWID, * from '#{table}' WHERE ROWID IN (#{quoted_ids})"
       end
     end

@@ -1,22 +1,15 @@
+# frozen_string_literal: true
+
 module RunsHelper
   def database_changes_in_words(run)
     sections = []
-    if run.records_added && run.records_added > 0
-      sections << pluralize(run.records_added, "record") + " added"
-    end
-    if run.records_removed && run.records_removed > 0
-      sections << pluralize(run.records_removed, "record") + " removed"
-    end
-    if run.records_changed && run.records_changed > 0
-      sections << pluralize(run.records_changed, "record") + " updated"
-    end
-    if run.records_added && run.records_removed && run.records_changed &&
-       run.records_added == 0 && run.records_removed == 0 && run.records_changed == 0
-      sections << "nothing changed"
-    end
-    unless sections.empty?
-      sections.join(", ") + " in the database"
-    end
+    sections << pluralize(run.records_added, "record") + " added" if run.records_added&.positive?
+    sections << pluralize(run.records_removed, "record") + " removed" if run.records_removed&.positive?
+    sections << pluralize(run.records_changed, "record") + " updated" if run.records_changed&.positive?
+    sections << "nothing changed" if run.records_added&.zero? && run.records_removed&.zero? && run.records_changed&.zero?
+    return if sections.empty?
+
+    sections.join(", ") + " in the database"
   end
 
   # make an array never longer than 4 by summaring things on the end
@@ -33,13 +26,13 @@ module RunsHelper
   end
 
   def scraped_domains_list(scraped_domains, with_links = true)
-    d = scraped_domains.map { |d| (with_links ? scraped_domain_link(d) : h(d.name)) }
+    d = scraped_domains.map { |domain| (with_links ? scraped_domain_link(domain) : h(domain.name)) }
     # If there are more than 3 in the list then summarise
     summary_of_array(d, "other domain".html_safe).to_sentence.html_safe
   end
 
   def simplified_scraped_domains_list(scraped_domains)
-    d = scraped_domains.map { |d| h(d.name) }
+    d = scraped_domains.map { |domain| h(domain.name) }
     # If there are more than 3 in the list then summarise
     if d.count > 3
       summary_of_array(d, "other").to_sentence

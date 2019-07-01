@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConnectionLogsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
@@ -15,7 +17,7 @@ class ConnectionLogsController < ApplicationController
         end
         UpdateDomainWorker.perform_async(domain.id)
       end
-      domain
+
       ConnectionLog.create!(
         ip_address: params[:ip_address],
         domain_id: domain.id
@@ -26,8 +28,6 @@ class ConnectionLogsController < ApplicationController
       render text: "Wrong API key", status: 401
     end
   end
-
-  private
 
   def self.key
     ENV["MITMPROXY_SECRET"]

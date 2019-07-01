@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RefreshUserInfoFromGithubWorker
   include Sidekiq::Worker
   sidekiq_options backtrace: true

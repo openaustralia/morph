@@ -1,4 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe Morph::Language do
   let(:ruby) { Morph::Language.new(:ruby) }
@@ -17,7 +19,7 @@ describe Morph::Language do
     it { expect(ruby.scraper_templates.keys.sort).to eq ["Gemfile", "Gemfile.lock", "scraper.rb"] }
 
     it do
-      expect(ruby.scraper_templates["scraper.rb"]).to eq <<~EOF
+      expect(ruby.scraper_templates["scraper.rb"]).to eq <<~CODE
         # This is a template for a Ruby scraper on morph.io (https://morph.io)
         # including some code snippets below that you should find helpful
 
@@ -43,13 +45,13 @@ describe Morph::Language do
         # All that matters is that your final data is written to an SQLite database
         # called "data.sqlite" in the current working directory which has at least a table
         # called "data".
-      EOF
+      CODE
     end
 
     it { expect(php.scraper_templates.keys.sort).to eq ["composer.json", "composer.lock", "scraper.php"] }
 
     it do
-      expect(php.scraper_templates["scraper.php"]).to eq <<~EOF
+      expect(php.scraper_templates["scraper.php"]).to eq <<~CODE
         <?
         // This is a template for a PHP scraper on morph.io (https://morph.io)
         // including some code snippets below that you should find helpful
@@ -77,13 +79,13 @@ describe Morph::Language do
         // called "data.sqlite" in the current working directory which has at least a table
         // called "data".
         ?>
-      EOF
+      CODE
     end
 
     it { expect(python.scraper_templates.keys.sort).to eq ["requirements.txt", "runtime.txt", "scraper.py"] }
 
     it do
-      expect(python.scraper_templates["scraper.py"]).to eq <<~EOF
+      expect(python.scraper_templates["scraper.py"]).to eq <<~CODE
         # This is a template for a Python scraper on morph.io (https://morph.io)
         # including some code snippets below that you should find helpful
 
@@ -108,13 +110,13 @@ describe Morph::Language do
         # All that matters is that your final data is written to an SQLite database
         # called "data.sqlite" in the current working directory which has at least a table
         # called "data".
-      EOF
+      CODE
     end
 
     it { expect(perl.scraper_templates.keys.sort).to eq ["cpanfile", "scraper.pl"] }
 
     it do
-      expect(perl.scraper_templates["scraper.pl"]).to eq <<~EOF
+      expect(perl.scraper_templates["scraper.pl"]).to eq <<~CODE
         # This is a template for a Perl scraper on morph.io (https://morph.io)
         # including some code snippets below that you should find helpful
 
@@ -151,7 +153,7 @@ describe Morph::Language do
         # All that matters is that your final data is written to an SQLite database
         # called "data.sqlite" in the current working directory which has at least a table
         # called "data".
-      EOF
+      CODE
     end
   end
 end

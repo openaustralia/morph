@@ -1,4 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe SiteSetting do
   describe ".read_only_mode" do
@@ -46,7 +48,7 @@ describe SiteSetting do
     it "should set the sidekiq value" do
       SiteSetting.maximum_concurrent_scrapers = 10
 
-      expect(Sidekiq::Queue['scraper']).to receive(:limit=).with(10)
+      expect(Sidekiq::Queue["scraper"]).to receive(:limit=).with(10)
       SiteSetting.update_sidekiq_maximum_concurrent_scrapers!
     end
   end

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 namespace :app do
-  desc 'Stop long running scraper containers (should be run from cron job)'
+  desc "Stop long running scraper containers (should be run from cron job)"
   task stop_long_running_scrapers: :environment do
-    # TODO Move this a configuration. Also, it's referenced in the documentation
+    # TODO: Move this a configuration. Also, it's referenced in the documentation
     # So, the two should really be automatically in sync
     max_duration = 1.day
 
@@ -11,19 +13,19 @@ namespace :app do
     containers = containers.select { |c| Morph::Runner.run_id_for_container(c) }
 
     containers.each do |container|
-      start_time = Time.parse(container.json['State']['StartedAt'])
-      if start_time < max_duration.ago
-        run = Morph::Runner.run_for_container(container)
-        runner = Morph::Runner.new(run)
-        puts "Stopping #{run.full_name} because its container has been running longer than #{max_duration.inspect}"
-        runner.log(nil, :internalerr, "Stopping scraper because it has run longer than #{max_duration.inspect}\n")
-        container.kill
-      end
+      start_time = Time.parse(container.json["State"]["StartedAt"])
+      next if start_time >= max_duration.ago
+
+      run = Morph::Runner.run_for_container(container)
+      runner = Morph::Runner.new(run)
+      puts "Stopping #{run.full_name} because its container has been running longer than #{max_duration.inspect}"
+      runner.log(nil, :internalerr, "Stopping scraper because it has run longer than #{max_duration.inspect}\n")
+      container.kill
     end
   end
 
-  desc 'Run scrapers that need to run once per day' \
-    ' (this task should be called from a cron job)'
+  desc "Run scrapers that need to run once per day" \
+    " (this task should be called from a cron job)"
   task auto_run_scrapers: :environment do
     # All the scrapers that need running in a random order
     scraper_ids = Scraper.where(auto_run: true).map(&:id).shuffle
@@ -36,49 +38,49 @@ namespace :app do
     puts "Queued #{scraper_ids.count} scrapers to run over the next 24 hours"
   end
 
-  desc 'Send out alerts for all users (Run once per day with a cron job)'
+  desc "Send out alerts for all users (Run once per day with a cron job)"
   task send_alerts: :environment do
     User.process_alerts
   end
 
-  desc 'Refresh info for all users from github'
+  desc "Refresh info for all users from github"
   task refresh_all_users: :environment do
     User.all.each do |u|
       RefreshUserInfoFromGithubWorker.perform_async(u.id)
     end
-    puts 'Put jobs on to the background queue to refresh all user info from github'
+    puts "Put jobs on to the background queue to refresh all user info from github"
   end
 
-  desc 'Refresh info for all organizations from github'
+  desc "Refresh info for all organizations from github"
   task refresh_all_organizations: :environment do
     Organization.all.each do |org|
       RefreshOrganizationInfoFromGithubWorker.perform_async(org.id)
     end
-    puts 'Put jobs on to the background queue to refresh all organization info from github'
+    puts "Put jobs on to the background queue to refresh all organization info from github"
   end
 
-  desc 'Build docker image (Needs to be done once before any scrapers are run)'
+  desc "Build docker image (Needs to be done once before any scrapers are run)"
   task update_docker_image: :environment do
     Morph::DockerRunner.update_docker_image!
   end
 
-  desc 'Synchronise all repositories'
+  desc "Synchronise all repositories"
   task synchronise_repos: :environment do
     Scraper.all.each do |s|
       SynchroniseRepoWorker.perform_async(s.id)
     end
-    puts 'Put jobs on to the background queue to synchronise all repositories'
+    puts "Put jobs on to the background queue to synchronise all repositories"
   end
 
-  desc 'Promote user to admin'
+  desc "Promote user to admin"
   task promote_to_admin: :environment do
-    puts 'Which github nickname do you want to promote to admin?'
+    puts "Which github nickname do you want to promote to admin?"
     nickname = $stdin.gets.chomp
     user = User.find_by_nickname(nickname)
     if user
       user.admin = true
       user.save!
-      puts 'Done!'
+      puts "Done!"
     else
       puts "Couldn't find user with nickname '#{nickname}'"
       exit 1
@@ -87,15 +89,15 @@ namespace :app do
 
   # Note that these scripts are not used for the automatic backups
   # See provisioning/roles/backups for those
-  desc 'Backup databases to db/backups'
+  desc "Backup databases to db/backups"
   task backup: :environment do
     Morph::Backup.backup
   end
 
-  desc 'Restore databases from db/backups'
+  desc "Restore databases from db/backups"
   task restore: :environment do
-    if confirm 'Are you sure?' \
-      ' This will overwrite the databases and Redis needs to be shutdown.'
+    if confirm "Are you sure?" \
+      " This will overwrite the databases and Redis needs to be shutdown."
       Morph::Backup.restore
     end
   end
@@ -110,7 +112,7 @@ namespace :app do
   desc "Creates missing run workers for scrapers that are running"
   task create_missing_run_workers: :environment do
     # Go for a little old school text banner action
-    puts <<~EOF
+    puts <<~MESSAGE
       ******************************************************************************
       This rake task has been temporarily disabled. This is because it's likely that
       there is a significant bug in the current version which causes multiple
@@ -125,7 +127,7 @@ namespace :app do
       Unfortunately, for the time being you'll have to make changes manually until
       this this task can get fixed.
       ******************************************************************************
-    EOF
+    MESSAGE
     # # Get runs that have a background worker
     # workers = Sidekiq::Workers.new
     # active_runs = workers.collect do |process_id, thread_id, work|
@@ -157,6 +159,6 @@ namespace :app do
 
   def confirm(message)
     STDOUT.puts "#{message} (y/n)"
-    STDIN.gets.strip == 'y'
+    STDIN.gets.strip == "y"
   end
 end

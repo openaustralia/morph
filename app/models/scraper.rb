@@ -1,4 +1,6 @@
-require 'new_relic/agent/method_tracer'
+# frozen_string_literal: true
+
+require "new_relic/agent/method_tracer"
 
 # A scraper is a script that runs that gets data from the web
 class Scraper < ActiveRecord::Base
@@ -10,13 +12,13 @@ class Scraper < ActiveRecord::Base
              batch_size: 100
 
   belongs_to :owner, inverse_of: :scrapers
-  belongs_to :forked_by, class_name: 'User'
+  belongs_to :forked_by, class_name: "User"
 
   has_many :runs, inverse_of: :scraper, dependent: :destroy
   has_many :metrics, through: :runs
   has_many :contributors, through: :contributions, source: :user
   has_many :contributions, dependent: :delete_all
-  has_many :watches, class_name: 'Alert', foreign_key: :watch_id, dependent: :delete_all
+  has_many :watches, class_name: "Alert", foreign_key: :watch_id, dependent: :delete_all
   has_many :watchers, through: :watches, source: :user
   belongs_to :create_scraper_progress, dependent: :delete
   has_many :variables, dependent: :delete_all
@@ -25,7 +27,7 @@ class Scraper < ActiveRecord::Base
   accepts_nested_attributes_for :webhooks, allow_destroy: true
   validates_associated :variables
   delegate :sqlite_total_rows, to: :database
-  has_one :last_run, -> { order 'queued_at DESC' }, class_name: 'Run'
+  has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 
   has_many :api_queries, dependent: :delete_all
 
@@ -35,7 +37,7 @@ class Scraper < ActiveRecord::Base
   }
   validates :owner, presence: true
   validates :name, uniqueness: {
-    scope: :owner, message: 'is already taken on morph.io'
+    scope: :owner, message: "is already taken on morph.io"
   }
   validate :not_used_on_github, on: :create, if: -> { github_id.blank? && !name.blank? }
   with_options if: -> { scraperwiki_shortname || scraperwiki_url },
@@ -71,12 +73,12 @@ class Scraper < ActiveRecord::Base
       full_name: full_name,
       description: description,
       scraped_domain_names: scraped_domain_names,
-      has_data?: has_data?
+      data?: data?
     }
   end
 
-  def has_data?
-    sqlite_total_rows > 0
+  def data?
+    sqlite_total_rows.positive?
   end
 
   def scraped_domain_names
@@ -96,7 +98,7 @@ class Scraper < ActiveRecord::Base
     # TODO: Simplify this by using an association on api_query
     count_by_owner_id = api_queries
                         .group(:owner_id)
-                        .order('count_all desc')
+                        .order("count_all desc")
                         .count
     count_by_owner_id.map do |id, count|
       [Owner.find(id), count]
@@ -146,11 +148,11 @@ class Scraper < ActiveRecord::Base
 
   def latest_successful_run_time
     latest_successful_run = successful_runs.first
-    latest_successful_run.finished_at if latest_successful_run
+    latest_successful_run&.finished_at
   end
 
   def finished_runs
-    runs.where('finished_at IS NOT NULL').order(finished_at: :desc)
+    runs.where("finished_at IS NOT NULL").order(finished_at: :desc)
   end
 
   # For successful runs calculates the average wall clock time that this scraper
@@ -158,7 +160,7 @@ class Scraper < ActiveRecord::Base
   # Returns nil if not able to calculate this
   # TODO: Refactor this using scopes
   def average_successful_wall_time
-    return if successful_runs.count == 0
+    return if successful_runs.count.zero?
 
     successful_runs.sum(:wall_time) / successful_runs.count
   end
@@ -188,10 +190,10 @@ class Scraper < ActiveRecord::Base
   end
 
   add_method_tracer :average_successful_wall_time,
-                    'Custom/Scraper/average_successful_wall_time'
-  add_method_tracer :total_wall_time, 'Custom/Scraper/total_wall_time'
-  add_method_tracer :cpu_time, 'Custom/Scraper/cpu_time'
-  add_method_tracer :total_disk_usage, 'Custom/Scraper/total_disk_usage'
+                    "Custom/Scraper/average_successful_wall_time"
+  add_method_tracer :total_wall_time, "Custom/Scraper/total_wall_time"
+  add_method_tracer :cpu_time, "Custom/Scraper/cpu_time"
+  add_method_tracer :total_disk_usage, "Custom/Scraper/total_disk_usage"
 
   # Let's say a scraper requires attention if it's set to run automatically and
   # the last run failed
@@ -222,12 +224,12 @@ class Scraper < ActiveRecord::Base
   end
 
   def readme
-    f = Dir.glob(File.join(repo_path, 'README*')).first
+    f = Dir.glob(File.join(repo_path, "README*")).first
     GitHub::Markup.render(f, File.read(f)).html_safe if f
   end
 
   def readme_filename
-    Pathname.new(Dir.glob(File.join(repo_path, 'README*')).first).basename.to_s
+    Pathname.new(Dir.glob(File.join(repo_path, "README*")).first).basename.to_s
   end
 
   def github_url_readme
@@ -248,7 +250,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def github_url_for_file(file)
-    github_url + '/blob/master/' + file
+    github_url + "/blob/master/" + file
   end
 
   def language
@@ -256,7 +258,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def main_scraper_filename
-    language.scraper_filename if language
+    language&.scraper_filename
   end
 
   def github_url_main_scraper_file
@@ -269,11 +271,11 @@ class Scraper < ActiveRecord::Base
 
   def platform
     platform_file = "#{repo_path}/platform"
-    if File.exist?(platform_file)
-      platform = File.read(platform_file)
-    else
-      platform = "latest"
-    end
+    platform = if File.exist?(platform_file)
+                 File.read(platform_file)
+               else
+                 "latest"
+               end
     platform.chomp
   end
 
@@ -283,15 +285,15 @@ class Scraper < ActiveRecord::Base
     if File.exist?(directory)
       # Ick
       files = Dir.entries(directory)
-      files.delete('.')
-      files.delete('..')
+      files.delete(".")
+      files.delete("..")
       files.map { |f| File.join(directory, f) }.each do |f|
         s = File.lstat(f)
-        if s.file?
-          r += s.size
-        else
-          r += Scraper.directory_size(f)
-        end
+        r += if s.file?
+               s.size
+             else
+               Scraper.directory_size(f)
+             end
       end
     end
     r
@@ -331,21 +333,21 @@ class Scraper < ActiveRecord::Base
     blobs = files.map do |filename, content|
       {
         path: filename,
-        mode: '100644',
-        type: 'blob',
+        mode: "100644",
+        type: "blob",
         content: content
       }
     end
 
     # Let's get all the info about head
-    ref = client.ref(full_name, 'heads/master')
+    ref = client.ref(full_name, "heads/master")
     commit_sha = ref.object.sha
     commit = client.commit(full_name, commit_sha)
     tree_sha = commit.commit.tree.sha
 
     tree2 = client.create_tree(full_name, blobs, base_tree: tree_sha)
     commit2 = client.create_commit(full_name, message, tree2.sha, commit_sha)
-    client.update_ref(full_name, 'heads/master', commit2.sha)
+    client.update_ref(full_name, "heads/master", commit2.sha)
   end
 
   # Overwrites whatever there was before in that repo
@@ -355,14 +357,14 @@ class Scraper < ActiveRecord::Base
     blobs = files.map do |filename, content|
       {
         path: filename,
-        mode: '100644',
-        type: 'blob',
+        mode: "100644",
+        type: "blob",
         content: content
       }
     end
     tree = client.create_tree(full_name, blobs)
     commit = client.create_commit(full_name, message, tree.sha)
-    client.update_ref(full_name, 'heads/master', commit.sha)
+    client.update_ref(full_name, "heads/master", commit.sha)
   end
 
   def synchronise_repo
@@ -371,12 +373,12 @@ class Scraper < ActiveRecord::Base
     update_contributors
   rescue Grit::Git::CommandFailed => e
     puts "git command failed: #{e}"
-    puts 'Ignoring and moving onto the next one...'
+    puts "Ignoring and moving onto the next one..."
   end
 
   # Return the https version of the git clone url (git_url)
   def git_url_https
-    'https' + git_url[3..-1]
+    "https" + git_url[3..-1]
   end
 
   def fork_from_scraperwiki!
@@ -385,26 +387,28 @@ class Scraper < ActiveRecord::Base
     # We need to set auto_init so that we can create a commit later.
     # The API doesn't support adding a commit to an empty repository
     begin
-      create_scraper_progress.update('Creating GitHub repository', 20)
+      create_scraper_progress.update("Creating GitHub repository", 20)
       repo = Morph::Github.create_repository(forked_by, owner, name)
       update_attributes(github_id: repo.id, github_url: repo.rels[:html].href,
                         git_url: repo.rels[:git].href)
+    # rubocop:disable Lint/HandleExceptions
     rescue Octokit::UnprocessableEntity
       # This means the repo has already been created. We will have gotten here
       # if this background job failed at some point past here and is rerun. So,
       # let's happily continue
     end
+    # rubocop:enable Lint/HandleExceptions
 
     scraperwiki = Morph::Scraperwiki.new(scraperwiki_shortname)
 
     # Copy the sqlite database across from Scraperwiki
-    create_scraper_progress.update('Forking sqlite database', 40)
+    create_scraper_progress.update("Forking sqlite database", 40)
     sqlite_data = scraperwiki.sqlite_database
     if sqlite_data
       database.write_sqlite_database(sqlite_data)
       # Rename the main table in the sqlite database
       if database.valid?
-        database.standardise_table_name('swdata')
+        database.standardise_table_name("swdata")
       else
         # If the data was corrupt when loading from Scraperwiki then just
         # delete our local copy here. Much simpler for the user.
@@ -412,24 +416,22 @@ class Scraper < ActiveRecord::Base
       end
     end
 
-    create_scraper_progress.update('Forking code', 60)
+    create_scraper_progress.update("Forking code", 60)
 
     # Fill in description
-    repo = client.edit_repository(
+    client.edit_repository(
       full_name,
       description: scraperwiki.title,
       homepage: Rails.application.routes.url_helpers.scraper_url(self)
     )
-    self.update_attributes(description: scraperwiki.title)
+    update_attributes(description: scraperwiki.title)
 
     files = {
       scraperwiki.language.scraper_filename => scraperwiki.code,
-      '.gitignore' =>
+      ".gitignore" =>
         "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n"
     }
-    unless scraperwiki.description.blank?
-      files['README.textile'] = scraperwiki.description
-    end
+    files["README.textile"] = scraperwiki.description unless scraperwiki.description.blank?
     add_commit_to_root_on_github(
       forked_by, files,
       "Fork of code from ScraperWiki at #{scraperwiki_url}"
@@ -441,11 +443,11 @@ class Scraper < ActiveRecord::Base
       add_commit_to_master_on_github(
         forked_by,
         { scraperwiki.language.scraper_filename => scraperwiki.translated_code },
-        'Automatic update to make ScraperWiki scraper work on morph.io'
+        "Automatic update to make ScraperWiki scraper work on morph.io"
       )
     end
 
-    create_scraper_progress.update('Synching repository', 80)
+    create_scraper_progress.update("Synching repository", 80)
     synchronise_repo
 
     # Forking has finished
@@ -464,27 +466,27 @@ class Scraper < ActiveRecord::Base
   private
 
   def not_used_on_github
-    if Octokit.repository?(full_name)
-      errors.add(:name, 'is already taken on GitHub')
-    end
+    return unless Octokit.repository?(full_name)
+
+    errors.add(:name, "is already taken on GitHub")
   end
 
   def exists_on_scraperwiki
-    unless Morph::Scraperwiki.new(scraperwiki_shortname).exists?
-      errors.add(:scraperwiki_shortname, "doesn't exist on ScraperWiki")
-    end
+    return if Morph::Scraperwiki.new(scraperwiki_shortname).exists?
+
+    errors.add(:scraperwiki_shortname, "doesn't exist on ScraperWiki")
   end
 
   def public_on_scraperwiki
-    if Morph::Scraperwiki.new(scraperwiki_shortname).private_scraper?
-      errors.add(:scraperwiki_shortname,
-                 'needs to be a public scraper on ScraperWiki')
-    end
+    return unless Morph::Scraperwiki.new(scraperwiki_shortname).private_scraper?
+
+    errors.add(:scraperwiki_shortname,
+               "needs to be a public scraper on ScraperWiki")
   end
 
   def not_scraperwiki_view
-    if Morph::Scraperwiki.new(scraperwiki_shortname).view?
-      errors.add(:scraperwiki_shortname, "can't be a ScraperWiki view")
-    end
+    return unless Morph::Scraperwiki.new(scraperwiki_shortname).view?
+
+    errors.add(:scraperwiki_shortname, "can't be a ScraperWiki view")
   end
 end

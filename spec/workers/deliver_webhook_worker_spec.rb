@@ -1,9 +1,11 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe DeliverWebhookWorker, :vcr do
-  it 'works' do
-    VCR.use_cassette('webhook_delivery') do
-      webhook = Webhook.create!(url: 'http://requestb.in/x3pcr8x3')
+  it "works" do
+    VCR.use_cassette("webhook_delivery") do
+      webhook = Webhook.create!(url: "http://requestb.in/x3pcr8x3")
       webhook_delivery = webhook.deliveries.create!
       DeliverWebhookWorker.new.perform(webhook_delivery.id)
       webhook_delivery.reload

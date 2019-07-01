@@ -1,10 +1,16 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   def duration_of_time_in_words(secs)
     distance_of_time_in_words(0, secs, include_seconds: true)
   end
 
   def button_link_to(name = nil, options = {}, html_options = {}, &block)
-    name, options, html_options = capture(&block), name, options if block_given?
+    if block_given?
+      name = capture(&block)
+      options = name
+      html_options = options
+    end
     html_options[:class] ||= ""
     html_options[:class] += " btn btn-default"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OwnersController < ApplicationController
   before_filter :authenticate_user!, except: :show
   before_filter :load_resource, except: :settings_redirect
@@ -13,7 +15,9 @@ class OwnersController < ApplicationController
     @scrapers = @owner.scrapers
 
     # Split out scrapers into different groups
-    @running_scrapers, @erroring_scrapers, @other_scrapers = [], [], []
+    @running_scrapers = []
+    @erroring_scrapers = []
+    @other_scrapers = []
     @scrapers.each do |scraper|
       if scraper.running?
         @running_scrapers << scraper
@@ -29,8 +33,7 @@ class OwnersController < ApplicationController
     redirect_to settings_owner_url(current_user)
   end
 
-  def settings
-  end
+  def settings; end
 
   def update
     if @owner.user?

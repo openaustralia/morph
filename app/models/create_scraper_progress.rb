@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Progress in morp creating a scraper
 class CreateScraperProgress < ActiveRecord::Base
   include Sync::Actions

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Morph
   # Utility methods for manipulating docker containers and preparing data
   # to inject into docker containers
   class DockerUtils
     def self.pull_docker_image(image)
-      Docker::Image.create('fromImage' => image) do |chunk|
+      Docker::Image.create("fromImage" => image) do |chunk|
         data = JSON.parse(chunk)
         puts "#{data['status']} #{data['id']} #{data['progress']}"
       end
@@ -12,7 +14,7 @@ module Morph
     # Returns temporary file which it is your responsibility
     # to remove after you're done with it
     def self.create_tar_file(directory)
-      temp = Tempfile.new('morph_tar', Dir.tmpdir, encoding: 'ascii-8bit')
+      temp = Tempfile.new("morph_tar", Dir.tmpdir, encoding: "ascii-8bit")
       # We used to use Archive::Tar::Minitar but that doesn't support
       # symbolic links in the tar file. So, using tar from the command line
       # instead.
@@ -35,7 +37,7 @@ module Morph
     def self.extract_tar(content, directory)
       # Use ascii-8bit as the encoding to ensure that the binary data isn't
       # changed on saving
-      tmp = Tempfile.new('morph.tar', Dir.tmpdir, encoding: 'ASCII-8BIT')
+      tmp = Tempfile.new("morph.tar", Dir.tmpdir, encoding: "ASCII-8BIT")
       tmp << content
       tmp.close
       extract_tar_file(tmp.path, directory)
@@ -47,7 +49,7 @@ module Morph
     def self.get_or_pull_image(name)
       Docker::Image.get(name)
     rescue Docker::Error::NotFoundError
-      Docker::Image.create('fromImage' => name) do |chunk|
+      Docker::Image.create("fromImage" => name) do |chunk|
         chunk.split("\n").each do |c|
           data = JSON.parse(c)
           puts "#{data['status']} #{data['id']} #{data['progress']}\n"
@@ -56,7 +58,7 @@ module Morph
     end
 
     def self.label_value(container, label_key)
-      container.info['Labels'][label_key] if container.info && container.info['Labels']
+      container.info["Labels"][label_key] if container.info && container.info["Labels"]
     end
 
     def self.container_has_label_value?(container, key, value)
@@ -73,7 +75,7 @@ module Morph
     end
 
     def self.find_all_containers_with_label(key)
-      Docker::Container.all(all: true, filters: { label: ["#{key}"] }.to_json)
+      Docker::Container.all(all: true, filters: { label: [key.to_s] }.to_json)
     end
 
     def self.find_all_containers_with_label_and_value(key, value)
@@ -81,7 +83,7 @@ module Morph
     end
 
     def self.copy_directory_contents(source, dest)
-      FileUtils.cp_r File.join(source, '.'), dest
+      FileUtils.cp_r File.join(source, "."), dest
     end
 
     # Set an arbitrary & fixed modification time on everything in a directory
@@ -100,7 +102,7 @@ module Morph
       # changed on saving
       # Saving everything directly to a temporary file so we don't have to fill
       # up our memory
-      tmp = Tempfile.new('morph.tar', Dir.tmpdir, encoding: 'ASCII-8BIT')
+      tmp = Tempfile.new("morph.tar", Dir.tmpdir, encoding: "ASCII-8BIT")
       begin
         container.archive_out(path) { |chunk| tmp << chunk }
       rescue Docker::Error::NotFoundError
@@ -110,12 +112,12 @@ module Morph
       tmp.close
 
       # Now extract the tar file and return the contents of the file
-      Dir.mktmpdir('morph') do |dest|
+      Dir.mktmpdir("morph") do |dest|
         extract_tar_file(tmp.path, dest)
         tmp.unlink
 
         path2 = File.join(dest, Pathname.new(path).basename.to_s)
-        tmp = Tempfile.new('morph-file')
+        tmp = Tempfile.new("morph-file")
         FileUtils.cp(path2, tmp.path)
       end
       tmp
@@ -132,8 +134,8 @@ module Morph
     end
 
     def self.stopped_containers
-      Docker::Container.all(all: true).select do |c|
-        !c.json['State']['Running']
+      Docker::Container.all(all: true).reject do |c|
+        c.json["State"]["Running"]
       end
     end
 
@@ -145,23 +147,23 @@ module Morph
       # How does this connection get closed?
       connection = docker_connection(connection_options)
       temp = create_tar_file(dir)
-      buffer = ""
+      buffer = +""
       Docker::Image.build_from_tar(
-        temp, build_options.merge('forcerm' => 1), connection
+        temp, build_options.merge("forcerm" => 1), connection
       ) do |chunk|
         # Sometimes a chunk contains multiple lines of json
         chunk.split("\n").each do |line|
           parsed_line = JSON.parse(line)
-          if parsed_line.key?('stream')
-            buffer << parsed_line['stream']
-            # Buffer output until an end-of-line is detected. This
-            # makes line output more consistent across platforms.
-            # Make sure that buffer can't grow out of control by limiting
-            # it's size around 256 bytes
-            if buffer[-1..-1] == "\n" || buffer.length >= 256
-              yield buffer
-              buffer = ""
-            end
+          next unless parsed_line.key?("stream")
+
+          buffer << parsed_line["stream"]
+          # Buffer output until an end-of-line is detected. This
+          # makes line output more consistent across platforms.
+          # Make sure that buffer can't grow out of control by limiting
+          # it's size around 256 bytes
+          if buffer[-1..-1] == "\n" || buffer.length >= 256
+            yield buffer
+            buffer = +""
           end
         end
         yield buffer if buffer != ""
@@ -184,7 +186,7 @@ module Morph
       # In the meantime get something more long-winded working here
 
       tar_file = Docker::Util.create_dir_tar(src).path
-      File.open(tar_file, 'rb') do |tar|
+      File.open(tar_file, "rb") do |tar|
         container.archive_in_stream(dest) do
           tar.read(Excon.defaults[:chunk_size]).to_s
         end
@@ -196,7 +198,7 @@ module Morph
     # Not using archive_in because that doesn't maintain file permissions
     def self.insert_file(container, src, dest)
       # This is very roundabout
-      Dir.mktmpdir('morph') do |tmp_dir|
+      Dir.mktmpdir("morph") do |tmp_dir|
         FileUtils.cp(src, tmp_dir)
         insert_contents_of_directory(container, tmp_dir, dest)
       end
@@ -204,8 +206,8 @@ module Morph
 
     # TODO: There's probably a more sensible way of doing this
     def self.image_built_on_other_image?(image, image_base)
-      index = image.history.find_index { |l| l['Id'] == image_base.id }
-      index && index.nonzero?
+      index = image.history.find_index { |l| l["Id"] == image_base.id }
+      index&.nonzero?
     end
 
     # This returns the total size of all the layers down to but not include the
@@ -213,11 +215,11 @@ module Morph
     # image should be built on top of image_base.
     def self.disk_space_image_relative_to_other_image(image, image_base)
       layers = image.history
-      base_layer_index = layers.find_index { |l| l['Id'] == image_base.id }
-      raise 'image is not built on top of image_base' if base_layer_index.nil?
+      base_layer_index = layers.find_index { |l| l["Id"] == image_base.id }
+      raise "image is not built on top of image_base" if base_layer_index.nil?
 
       diff_layers = layers[0..base_layer_index - 1]
-      diff_layers.map { |l| l['Size'] }.sum
+      diff_layers.map { |l| l["Size"] }.sum
     end
 
     def self.surpress_warnings(&block)
@@ -233,7 +235,7 @@ module Morph
     def self.run_with_later_version_of_docker_api(&block)
       version = Docker::API_VERSION
       surpress_warnings do
-        Docker.const_set(:API_VERSION, '1.24')
+        Docker.const_set(:API_VERSION, "1.24")
       end
       result = block.call
       surpress_warnings do
@@ -242,9 +244,9 @@ module Morph
       result
     end
 
-    def self.ip_address_of_container(c)
+    def self.ip_address_of_container(container)
       Morph::DockerUtils.run_with_later_version_of_docker_api do
-        c.json['NetworkSettings']['Networks'].values.first['IPAddress']
+        container.json["NetworkSettings"]["Networks"].values.first["IPAddress"]
       end
     end
   end

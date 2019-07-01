@@ -1,4 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
+
+require "spec_helper"
 
 describe Morph::CodeTranslate do
   describe ".translate" do
@@ -23,7 +25,9 @@ describe Morph::CodeTranslate do
   describe "PHP" do
     describe ".translate" do
       it "should do each step" do
-        input, output1, output2 = double, double, double
+        input = double
+        output1 = double
+        output2 = double
         expect(Morph::CodeTranslate::PHP).to receive(:add_require).with(input).and_return(output1)
         expect(Morph::CodeTranslate::PHP).to receive(:change_table_in_select).with(output1).and_return(output2)
         expect(Morph::CodeTranslate::PHP.translate(input)).to eq output2
@@ -65,7 +69,10 @@ describe Morph::CodeTranslate do
   describe "Ruby" do
     describe ".translate" do
       it "should do a series of translations and return the final result" do
-        input, output1, output2, output3 = double, double, double, double
+        input = double
+        output1 = double
+        output2 = double
+        output3 = double
         expect(Morph::CodeTranslate::Ruby).to receive(:add_require).with(input).and_return(output1)
         expect(Morph::CodeTranslate::Ruby).to receive(:change_table_in_sqliteexecute_and_select).with(output1).and_return(output2)
         expect(Morph::CodeTranslate::Ruby).to receive(:add_instructions_for_libraries).with(output2).and_return(output3)
@@ -107,20 +114,20 @@ describe Morph::CodeTranslate do
 
       describe ".add_instructions_for_libraries" do
         it "should do nothing if nothing needs to be done" do
-          original = <<~EOF
+          original = <<~CODE
             some code
             some more code
-          EOF
+          CODE
           expect(Morph::CodeTranslate::Ruby.add_instructions_for_libraries(original)).to eq original
         end
 
         it "should add some help above where a library is required" do
-          original = <<~EOF
+          original = <<~CODE
             some code
             require 'scrapers/foo'
             some more code
-          EOF
-          translated = <<~EOF
+          CODE
+          translated = <<~CODE
             some code
             # TODO:
             # 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/foo/
@@ -129,17 +136,17 @@ describe Morph::CodeTranslate do
             # 4. Remove these instructions
             require 'scrapers/foo'
             some more code
-          EOF
+          CODE
           expect(Morph::CodeTranslate::Ruby.add_instructions_for_libraries(original)).to eq translated
         end
 
         it "should also translate where double quotes are used" do
-          original = <<~EOF
+          original = <<~CODE
             some code
             require "scrapers/foo"
             some more code
-          EOF
-          translated = <<~EOF
+          CODE
+          translated = <<~CODE
             some code
             # TODO:
             # 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/foo/
@@ -148,7 +155,7 @@ describe Morph::CodeTranslate do
             # 4. Remove these instructions
             require "scrapers/foo"
             some more code
-          EOF
+          CODE
           expect(Morph::CodeTranslate::Ruby.add_instructions_for_libraries(original)).to eq translated
         end
       end

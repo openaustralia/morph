@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RunWorker
   class NoRemainingSlotsError < StandardError
   end
@@ -10,14 +12,11 @@ class RunWorker
     run = Run.find_by(id: run_id)
     # If the run has been deleted (the scraper has been deleted) then just
     # skip over this and don't do anything
-    if run
-      runner = Morph::Runner.new(run)
-      if Morph::Runner.available_slots > 0 || runner.container_for_run
-        runner.synch_and_go!
-      else
-        # TODO: Don't throw this error if the container for this run already exists
-        raise NoRemainingSlotsError
-      end
-    end
+    return if run.nil?
+
+    runner = Morph::Runner.new(run)
+    raise NoRemainingSlotsError if Morph::Runner.available_slots.zero? && runner.container_for_run.nil?
+
+    runner.synch_and_go!
   end
 end

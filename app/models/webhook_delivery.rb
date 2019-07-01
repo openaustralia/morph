@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class WebhookDelivery < ActiveRecord::Base
-  SUCCESSFUL_STATUSES = 200..299
+  SUCCESSFUL_STATUSES = (200..299).freeze
 
   belongs_to :webhook
   belongs_to :run

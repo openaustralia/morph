@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   class SiteSettingsController < ApplicationController
     def toggle_read_only_mode

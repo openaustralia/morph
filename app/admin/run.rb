@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ActiveAdmin.register Run do
   actions :index, :show
 
@@ -11,10 +13,10 @@ ActiveAdmin.register Run do
     column :started_at
     column :finished_at
     column :wall_time, sortable: :wall_time do |run|
-      "%.1f" % run.wall_time if run.wall_time
+      format("%.1f", run.wall_time) if run.wall_time
     end
     column :cpu_time do |run|
-      "%.1f" % run.cpu_time if run.cpu_time
+      format("%.1f", run.cpu_time) if run.cpu_time
     end
     actions
   end
@@ -44,17 +46,17 @@ ActiveAdmin.register Run do
       row :records_unchanged
     end
 
-    h2 'Console output'
+    h2 "Console output"
 
     table do
       thead do
         tr do
-          th 'Stream'
-          th 'Text'
+          th "Stream"
+          th "Text"
         end
       end
       tbody do
-        run.log_lines.order('log_lines.id').each do |line|
+        run.log_lines.order("log_lines.id").each do |line|
           tr do
             td line.stream
             td h(line.text).gsub("\n", "<br/>").html_safe

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -11,7 +13,7 @@ Vagrant.configure("2") do |config|
   # http://tuhrig.de/resizing-vagrant-box-disk-space/
   #
   config.vm.box = "ubuntu/xenial64"
-  config.disksize.size = '20GB'
+  config.disksize.size = "20GB"
 
   config.vm.define "local" do |local|
     local.vm.network :private_network, ip: "192.168.11.2"
@@ -28,7 +30,7 @@ Vagrant.configure("2") do |config|
 
     local.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/playbook.yml"
-      ansible.verbose = 'v'
+      ansible.verbose = "v"
       ansible.groups = {
         "development" => ["local"]
       }

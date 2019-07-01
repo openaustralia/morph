@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateDomainWorker
   include Sidekiq::Worker
   sidekiq_options backtrace: true

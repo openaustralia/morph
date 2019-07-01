@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Morph
   # Translate code on ScraperWiki to something that will run on morph.io
   module CodeTranslate
@@ -10,12 +12,12 @@ module Morph
       when :python
         Python.translate(code)
       else
-        raise 'unsupported language'
+        raise "unsupported language"
       end
     end
 
     def self.sql(sql)
-      sql.gsub('swdata', 'data')
+      sql.gsub("swdata", "data")
     end
 
     # Translating PHP scraperwiki code
@@ -74,13 +76,13 @@ module Morph
 
       def self.add_instructions_for_libraries(code)
         code.gsub(%r{require ['"]scrapers/(.*)['"]}) do |s|
-          i = <<~EOF
+          i = <<~INSTRUCTIONS
             # TODO:
             # 1. Fork the ScraperWiki library (if you haven't already) at https://classic.scraperwiki.com/scrapers/#{Regexp.last_match(1)}/
             # 2. Add the forked repo as a git submodule in this repo
             # 3. Change the line below to something like require File.dirname(__FILE__) + '/#{Regexp.last_match(1)}/scraper'
             # 4. Remove these instructions
-          EOF
+          INSTRUCTIONS
           i + s
         end
       end

@@ -1,4 +1,6 @@
-require 'new_relic/agent/method_tracer'
+# frozen_string_literal: true
+
+require "new_relic/agent/method_tracer"
 
 # A user or organization that a scraper belongs to
 class Owner < ActiveRecord::Base
@@ -12,7 +14,7 @@ class Owner < ActiveRecord::Base
   has_many :scrapers, inverse_of: :owner
   has_many :runs
   before_create :set_api_key
-  has_many :watches, class_name: 'Alert', foreign_key: :watch_id
+  has_many :watches, class_name: "Alert", foreign_key: :watch_id
   has_many :watchers, through: :watches, source: :user
 
   serialize :feature_switches
@@ -24,12 +26,12 @@ class Owner < ActiveRecord::Base
 
   # Specify the data searchkick should index
   def search_data
-    as_json only: [:name, :nickname, :company]
+    as_json only: %i[name nickname company]
   end
 
   def get_feature_switch_value(key, default)
     if feature_switches.respond_to?(:key?) && feature_switches.key?(key)
-      feature_switches[key] == '1'
+      feature_switches[key] == "1"
     else
       default
     end
@@ -55,7 +57,7 @@ class Owner < ActiveRecord::Base
     elsif b =~ %r{https?://}
       b
     else
-      'http://' + b
+      "http://" + b
     end
   end
 
@@ -87,11 +89,11 @@ class Owner < ActiveRecord::Base
     repo_size + sqlite_db_size
   end
 
-  add_method_tracer :wall_time, 'Custom/Owner/wall_time'
-  add_method_tracer :utime, 'Custom/Owner/utime'
-  add_method_tracer :stime, 'Custom/Owner/stime'
-  add_method_tracer :cpu_time, 'Custom/Owner/cpu_time'
-  add_method_tracer :total_disk_usage, 'Custom/Owner/total_disk_usage'
+  add_method_tracer :wall_time, "Custom/Owner/wall_time"
+  add_method_tracer :utime, "Custom/Owner/utime"
+  add_method_tracer :stime, "Custom/Owner/stime"
+  add_method_tracer :cpu_time, "Custom/Owner/cpu_time"
+  add_method_tracer :total_disk_usage, "Custom/Owner/total_disk_usage"
 
   def set_api_key
     self.api_key =
@@ -109,9 +111,9 @@ class Owner < ActiveRecord::Base
     return if url.nil?
 
     u = URI.parse(url)
-    queries = (u.query || '').split('&')
+    queries = (u.query || "").split("&")
     queries << "s=#{size}"
-    u.query = queries.join('&')
+    u.query = queries.join("&")
     u.to_s
   end
 

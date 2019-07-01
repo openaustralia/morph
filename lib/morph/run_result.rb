@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Morph
   class RunResult
     attr_reader :status_code, :files, :time_params

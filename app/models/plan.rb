@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Plan
   attr_reader :stripe_plan_id
 
@@ -6,7 +8,7 @@ class Plan
   end
 
   def self.all_stripe_plan_ids
-    %w(morph_basic morph_standard morph_advanced)
+    %w[morph_basic morph_standard morph_advanced]
   end
 
   # Users of the top two plans are highlighted
@@ -25,24 +27,24 @@ class Plan
 
   def name
     case stripe_plan_id
-    when 'morph_basic'
-      'Supporter'
-    when 'morph_standard'
-      'Hero'
-    when 'morph_advanced'
-      'Partner'
+    when "morph_basic"
+      "Supporter"
+    when "morph_standard"
+      "Hero"
+    when "morph_advanced"
+      "Partner"
     else
-      fail
+      raise
     end
   end
 
   def price
     case stripe_plan_id
-    when 'morph_basic'
+    when "morph_basic"
       14
-    when 'morph_standard'
+    when "morph_standard"
       24
-    when 'morph_advanced'
+    when "morph_advanced"
       149
     end
   end
@@ -51,7 +53,7 @@ class Plan
     price * 100 if price
   end
 
-  def ==(plan)
-    stripe_plan_id == plan.stripe_plan_id
+  def ==(other)
+    stripe_plan_id == other.stripe_plan_id
   end
 end

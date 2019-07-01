@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Who has permission to do what
 class Ability
   include CanCan::Ability
@@ -7,7 +9,7 @@ class Ability
     # user can view settings of scrapers it owns
     can :settings, Scraper, owner_id: user.id
     unless SiteSetting.read_only_mode
-      can [:destroy, :update, :run, :stop, :clear, :create, :create_github],
+      can %i[destroy update run stop clear create create_github],
           Scraper,
           owner_id: user.id
     end
@@ -16,16 +18,16 @@ class Ability
     # member of
     user.organizations.each do |org|
       can :settings, Scraper, owner_id: org.id
-      unless SiteSetting.read_only_mode
-        can [:destroy, :update, :run, :stop, :clear, :create, :create_github],
-            Scraper,
-            owner_id: org.id
-      end
+      next if SiteSetting.read_only_mode
+
+      can %i[destroy update run stop clear create create_github],
+          Scraper,
+          owner_id: org.id
     end
 
     # Everyone can list all the scrapers
-    can [:index, :show, :watchers], Scraper
-    can [:new, :github, :scraperwiki], Scraper unless SiteSetting.read_only_mode
+    can %i[index show watchers], Scraper
+    can %i[new github scraperwiki], Scraper unless SiteSetting.read_only_mode
 
     # You can look at your own settings
     can :settings, Owner, id: user.id
@@ -48,7 +50,7 @@ class Ability
     can :watch, Owner unless SiteSetting.read_only_mode
 
     # Everybody can look at all the users and see who they are watching
-    can [:index, :watching], User
+    can %i[index watching], User
     can :stats, User
     can :toggle_read_only_mode, SiteSetting if user.admin?
     can :update_sidekiq_maximum_concurrent_scrapers, SiteSetting if user.admin?
