@@ -7,9 +7,9 @@ module ApplicationHelper
 
   def button_link_to(name = nil, options = {}, html_options = {}, &block)
     if block_given?
-      name = capture(&block)
-      options = name
       html_options = options
+      options = name
+      name = capture(&block)
     end
     html_options[:class] ||= ""
     html_options[:class] += " btn btn-default"
