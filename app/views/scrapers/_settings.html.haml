@@ -2,6 +2,9 @@
 = simple_form_for @scraper do |f|
   = f.error_notification
   = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !(can? :update, @scraper)}
+  -# TODO: Remove the option to disable the proxy
+  - if current_user.admin?
+    = f.input :disable_proxy, hint: "Bypass proxy for outgoing web traffic (only available to admins)", input_html: {disabled: !(can? :update, @scraper)}
   %h4 Secret environment variables
   %p
     Environment variables can be used to pass secret values to your scraper such as API keys.
