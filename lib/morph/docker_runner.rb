@@ -36,7 +36,7 @@ module Morph
     end
 
     def self.compile_and_start_run2(
-      repo_path, env_variables, container_labels, max_lines = 0, platform
+      repo_path, env_variables, container_labels, max_lines = 0, platform = "latest"
     )
       i = buildstep_image(platform) do |c|
         yield(:internalout, c)
@@ -103,15 +103,6 @@ module Morph
 
       c.start
       c
-    end
-
-    def self.compile_and_start_run(
-      repo_path, env_variables, container_labels, max_lines = 0, scraper = nil
-    )
-      platform = scraper&.platform || "latest"
-      compile_and_start_run2(repo_path, env_variables, container_labels, max_lines, platform) do |stream, text|
-        yield(stream, text)
-      end
     end
 
     def self.create_morph_network

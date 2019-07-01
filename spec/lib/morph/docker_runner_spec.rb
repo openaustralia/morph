@@ -18,7 +18,7 @@ describe Morph::DockerRunner do
 
     it "should let me know that it can't select a buildpack" do
       logs = []
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |stream, text|
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) do |stream, text|
         logs << [stream, text]
       end
 
@@ -37,14 +37,14 @@ describe Morph::DockerRunner do
 
     it "should stop if a python compile fails" do
       copy_test_scraper("failing_compile_python")
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       expect(c).to be_nil
     end
 
     it "should be able to run hello world" do
       copy_test_scraper("hello_world_js")
 
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       logs = []
       Morph::DockerRunner.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -68,7 +68,7 @@ describe Morph::DockerRunner do
       # Limit the buffer size just for testing
       report = MemoryProfiler.report do
         with_smaller_chunk_size do
-          c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+          c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
           Morph::DockerRunner.attach_to_run(c) {}
           Morph::DockerRunner.finish(c, [])
         end
@@ -82,7 +82,7 @@ describe Morph::DockerRunner do
     it "should attach the container to a special morph-only docker network" do
       copy_test_scraper("hello_world_js")
 
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       expect(c.json["HostConfig"]["NetworkMode"]).to eq "morph"
       # Check that the network has some things set
       network_info = Docker::Network.get("morph").info
@@ -97,7 +97,7 @@ describe Morph::DockerRunner do
     it "should be able to run hello world from a sub-directory" do
       copy_test_scraper("hello_world_subdirectory_js")
 
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       logs = []
       Morph::DockerRunner.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -112,14 +112,14 @@ describe Morph::DockerRunner do
       copy_test_scraper("hello_world_js")
 
       # Do the compile once to make sure the cache is primed
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       logs = []
       # Clean up container because we're not calling finish
       # which normally does the cleanup
       c.kill
       c.delete
 
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |stream, text|
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) do |stream, text|
         logs << [stream, text]
       end
 
@@ -138,7 +138,7 @@ describe Morph::DockerRunner do
     it "should be able to run hello world of course" do
       copy_test_scraper("hello_world_ruby")
 
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       logs = []
       Morph::DockerRunner.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -155,7 +155,7 @@ describe Morph::DockerRunner do
     it "should be able to grab a file resulting from running the scraper" do
       copy_test_scraper("write_to_file_ruby")
 
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       Morph::DockerRunner.attach_to_run(c) {}
       result = Morph::DockerRunner.finish(c, ["foo.txt", "bar"])
       expect(result.status_code).to eq 0
@@ -170,7 +170,7 @@ describe Morph::DockerRunner do
       copy_test_scraper("display_env_ruby")
 
       logs = []
-      c = Morph::DockerRunner.compile_and_start_run(
+      c = Morph::DockerRunner.compile_and_start_run2(
         @dir, { "AN_ENV_VARIABLE" => "Hello world!" }, {}
       ) {}
       Morph::DockerRunner.attach_to_run(c) do |_timestamp, stream, text|
@@ -187,7 +187,7 @@ describe Morph::DockerRunner do
     it "should have an env variable set for python requests library" do
       copy_test_scraper("display_request_env_ruby")
 
-      c = Morph::DockerRunner.compile_and_start_run(
+      c = Morph::DockerRunner.compile_and_start_run2(
         @dir, {}, {}
       ) {}
       logs = []
@@ -202,7 +202,7 @@ describe Morph::DockerRunner do
     it "should return the ip address of the container" do
       copy_test_scraper("ip_address_ruby")
 
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       ip_address = Morph::DockerUtils.ip_address_of_container(c)
       Morph::DockerRunner.attach_to_run(c) {}
       result = Morph::DockerRunner.finish(c, ["ip_address"])
@@ -215,7 +215,7 @@ describe Morph::DockerRunner do
       copy_test_scraper("failing_scraper_ruby")
 
       logs = []
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       Morph::DockerRunner.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
       end
@@ -233,7 +233,7 @@ describe Morph::DockerRunner do
       copy_test_scraper("stream_output_ruby")
 
       logs = []
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) do |_stream, text|
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) do |_stream, text|
         logs << [Time.now, text]
       end
       Morph::DockerRunner.attach_to_run(c) do |_timestamp, _stream, text|
@@ -250,7 +250,7 @@ describe Morph::DockerRunner do
 
       logs = []
       # TODO: Really should be able to call compile_and_start_run without a block
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}) {}
       # Simulate the log process stopping
       last_timestamp = nil
       expect do
@@ -273,7 +273,7 @@ describe Morph::DockerRunner do
     it "should be able to limit the amount of log output" do
       copy_test_scraper("stream_output_ruby")
 
-      c = Morph::DockerRunner.compile_and_start_run(@dir, {}, {}, 5) {}
+      c = Morph::DockerRunner.compile_and_start_run2(@dir, {}, {}, 5) {}
       logs = []
       Morph::DockerRunner.attach_to_run(c, nil) do |_timestamp, stream, text|
         logs << [stream, text]
