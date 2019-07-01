@@ -38,11 +38,7 @@ module Morph
     def self.compile_and_start_run(
       repo_path, env_variables, container_labels, max_lines = 0, scraper = nil
     )
-      platform = if scraper.nil? || scraper.platform.nil?
-                   "latest"
-                 else
-                   scraper.platform
-                 end
+      platform = scraper&.platform || "latest"
 
       i = buildstep_image(platform) do |c|
         yield(:internalout, c)
