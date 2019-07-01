@@ -35,7 +35,7 @@ module Morph
       Morph::DockerUtils.get_or_pull_image(image)
     end
 
-    def self.compile_and_start_run2(
+    def self.compile_and_start_run(
       repo_path, env_variables, container_labels, max_lines = 0, platform = "latest"
     )
       i = buildstep_image(platform) do |c|

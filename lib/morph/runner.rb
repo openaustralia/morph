@@ -109,7 +109,7 @@ module Morph
 
         platform = run.scraper&.platform || "latest"
 
-        Morph::DockerRunner.compile_and_start_run2(
+        Morph::DockerRunner.compile_and_start_run(
           defaults, run.env_variables, docker_container_labels, max_lines, platform
         ) do |stream, text|
           yield(stream, text)
