@@ -34,7 +34,8 @@ module Morph
     end
 
     def self.compile_and_start_run(
-      repo_path, env_variables, container_labels, max_lines = 0, platform = "latest"
+      repo_path, env_variables, container_labels, max_lines = 0, platform = "latest",
+      disable_proxy = false
     )
       i = buildstep_image(platform) do |c|
         yield(:internalout, c)
@@ -70,6 +71,12 @@ module Morph
       # Don't set things in test because it fails on travis for some reason
       security_opt = Rails.env.test? ? [] : ["seccomp=#{File.read('config/chrome.json')}"]
 
+      host_config = { "SecurityOpt" => security_opt }
+      # Attach this container to our special network morph
+      # But we can optionally disable that if we want to bypass the transparent
+      # proxy for outgoing web requests
+      host_config["NetworkMode"] = DOCKER_NETWORK unless disable_proxy
+
       container_options = {
         "Cmd" => command,
         "Image" => i3.id,
@@ -81,11 +88,7 @@ module Morph
             "REQUESTS_CA_BUNDLE" => "/etc/ssl/certs/ca-certificates.crt"
           }.merge(env_variables).map { |k, v| "#{k}=#{v}" },
         "Labels" => container_labels,
-        "HostConfig" => {
-          # Attach this container to our special network morph
-          "NetworkMode" => DOCKER_NETWORK,
-          "SecurityOpt" => security_opt
-        }
+        "HostConfig" => host_config
       }
 
       c = Docker::Container.create(container_options)
