@@ -9,6 +9,7 @@ AllCops:
       - db/scrapers/repos/*/*/*
       - default_files/*/*/*
       - spec/lib/morph/test_scrapers/*/*/*
+      - lib/morph/limit_output.rb
 
 # Disabling warnings about line length because it's so common through
 # the codebase currently. It would be good to fix as it would make things

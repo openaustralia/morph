@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# frozen_string_literal: true
 
 # This wrapper script runs a command and lets standard out and error flow
 # through. However, it does limit the number of lines of output. This is
