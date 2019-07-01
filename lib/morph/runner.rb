@@ -115,7 +115,8 @@ module Morph
           docker_container_labels,
           max_lines,
           platform,
-          run.scraper&.disable_proxy
+          # We're disabling the proxy for all scrapers
+          true
         ) do |stream, text|
           yield(stream, text)
         end
