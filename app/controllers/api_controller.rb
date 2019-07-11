@@ -192,7 +192,11 @@ class ApiController < ApplicationController
   end
 
   def parse_date(string)
-    DateTime.parse(string).rfc3339
+    if string.respond_to?(:rfc3339)
+      string.rfc3339
+    else
+      DateTime.parse(string).rfc3339
+    end
   rescue ArgumentError
     nil
   end
