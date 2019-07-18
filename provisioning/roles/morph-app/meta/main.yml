@@ -6,7 +6,6 @@ dependencies:
   - { role: mysql }
   - { role: backups }
   - { role: redis }
-  - { role: newrelic-sysmond }
   - role: newrelic.newrelic-infra
     nrinfragent_config:
       license_key: "{{ newrelic_license_key }}"

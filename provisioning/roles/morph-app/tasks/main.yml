@@ -102,8 +102,10 @@
 - name: Copy over database configuration for application
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
 
-- name: Copy across newrelic configuration
-  template: src=newrelic.yml dest=/var/www/shared/config/newrelic.yml
+- name: Remove newrelic configuration
+  file:
+    state: absent
+    dest: /var/www/shared/config/newrelic.yml
   notify: restart nginx
 
 - name: Dependency for following command
