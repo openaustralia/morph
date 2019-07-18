@@ -52,7 +52,6 @@ gem "kaminari"
 gem "kaminari-bootstrap", "~> 3.0.1"
 gem "meta-tags"
 gem "multiblock"
-gem "newrelic_rpm"
 gem "rails-timeago", "~> 2.0"
 gem "rails_autolink"
 # For sidekiq ui
