@@ -184,9 +184,9 @@ Install the required ruby version: `rbenv install`
 
 Install capistrano: `gem install capistrano`
 
-Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
+Run `make roles` to install some required ansible roles.
 
-_The first time you're doing this, check `provisioning/requirements.yml` for instructions on installing modules from ansible galaxy_
+Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
 
 Once the box is created and provisioned, deploy the application to your Vagrant box:
 
@@ -202,7 +202,7 @@ To deploy morph.io to production, normally you'll just want to deploy using Capi
 
 When you've changed the Ansible playbooks to modify the infrastructure you'll want to run:
 
-    ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
+    make ansible
 
 ## SSL certificates
 
