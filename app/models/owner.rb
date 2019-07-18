@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "new_relic/agent/method_tracer"
-
 # A user or organization that a scraper belongs to
 class Owner < ActiveRecord::Base
   extend FriendlyId
@@ -88,12 +86,6 @@ class Owner < ActiveRecord::Base
   def total_disk_usage
     repo_size + sqlite_db_size
   end
-
-  add_method_tracer :wall_time, "Custom/Owner/wall_time"
-  add_method_tracer :utime, "Custom/Owner/utime"
-  add_method_tracer :stime, "Custom/Owner/stime"
-  add_method_tracer :cpu_time, "Custom/Owner/cpu_time"
-  add_method_tracer :total_disk_usage, "Custom/Owner/total_disk_usage"
 
   def set_api_key
     self.api_key =

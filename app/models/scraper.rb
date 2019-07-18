@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "new_relic/agent/method_tracer"
-
 # A scraper is a script that runs that gets data from the web
 class Scraper < ActiveRecord::Base
   include Sync::Actions
@@ -188,12 +186,6 @@ class Scraper < ActiveRecord::Base
   def total_disk_usage
     repo_size + sqlite_db_size
   end
-
-  add_method_tracer :average_successful_wall_time,
-                    "Custom/Scraper/average_successful_wall_time"
-  add_method_tracer :total_wall_time, "Custom/Scraper/total_wall_time"
-  add_method_tracer :cpu_time, "Custom/Scraper/cpu_time"
-  add_method_tracer :total_disk_usage, "Custom/Scraper/total_disk_usage"
 
   # Let's say a scraper requires attention if it's set to run automatically and
   # the last run failed
