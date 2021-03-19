@@ -9,7 +9,7 @@
 BeautifulSoup==3.2.0
 Creoleparser==0.7.4
 Genshi==0.6
-Jinja2==2.6
+Jinja2==2.11.3
 Markdown==2.2.0
 Pygments==1.4
 SQLAlchemy==0.6.6
