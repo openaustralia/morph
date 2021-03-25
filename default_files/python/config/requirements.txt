@@ -102,7 +102,7 @@ scrapely==0.9
 # Changed this from 0.9.3 to 0.9.8
 Fom==0.9.8
 # Changed from 3.09 to 3.10
-PyYAML==3.10
+PyYAML==5.4
 # Changed from 0.14.0.2841 to 0.14.1
 Scrapy==0.14.1
 # Changed from 15.2.4 to 15.6.2
