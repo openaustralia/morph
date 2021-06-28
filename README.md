@@ -1,32 +1,4 @@
-[![Build Status](https://travis-ci.org/openaustralia/morph.png?branch=master)](https://travis-ci.org/openaustralia/morph) [![Code Climate](https://codeclimate.com/github/openaustralia/morph.png)](https://codeclimate.com/github/openaustralia/morph) 
-
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-**Table of Contents**
-
-- [morph.io: A scraping platform](#morphio-a-scraping-platform)
-    - [Dependencies](#dependencies)
-    - [Repositories](#repositories)
-    - [Installing Docker](#installing-docker)
-        - [On Linux](#on-linux)
-        - [On Mac OS X](#on-mac-os-x)
-    - [Starting up Elasticsearch](#starting-up-elasticsearch)
-    - [To Install Morph](#to-install-morph)
-    - [Running tests](#running-tests)
-        - [Guard Livereload](#guard-livereload)
-        - [Mail in development](#mail-in-development)
-    - [Deploying to production](#deploying-to-production)
-        - [Ansible Vault](#ansible-vault)
-    - [Restarting Discourse](#restarting-discourse)
-    - [Production devops development](#production-devops-development)
-    - [Production provisioning and deployment](#production-provisioning-and-deployment)
-    - [SSL certificates](#ssl-certificates)
-        - [Installing certificates for local vagrant build](#installing-certificates-for-local-vagrant-build)
-        - [Scraper<->mitmdump SSL](#scraper-mitmdump-ssl)
-- [How to contribute](#how-to-contribute)
-- [Copyright & License](#copyright--license)
-
-<!-- markdown-toc end -->
-
+[![Build Status](https://travis-ci.org/openaustralia/morph.png?branch=master)](https://travis-ci.org/openaustralia/morph) [![Code Climate](https://codeclimate.com/github/openaustralia/morph.png)](https://codeclimate.com/github/openaustralia/morph)
 
 # morph.io: A scraping platform
 
