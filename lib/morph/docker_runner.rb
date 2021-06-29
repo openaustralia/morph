@@ -71,7 +71,13 @@ module Morph
       # Don't set things in test because it fails on travis for some reason
       security_opt = Rails.env.test? ? [] : ["seccomp=#{File.read('config/chrome.json')}"]
 
-      host_config = { "SecurityOpt" => security_opt }
+      host_config = {
+        "SecurityOpt" => security_opt,
+        # Bump up the default shared memory size to 256 MB from the default (64 MB)
+        # as an attempt to make headless browsing work properly. See
+        # https://medium.com/the-curve-tech-blog/dealing-with-cryptic-selenium-webdriver-error-invalidsessioniderror-errors-9c15abc68fdf
+        "ShmSize" => 256 * 1024 * 1024
+      }
       # Attach this container to our special network morph
       # But we can optionally disable that if we want to bypass the transparent
       # proxy for outgoing web requests
