@@ -6,6 +6,12 @@ server {
   passenger_ruby /home/deploy/.rvm/gems/ruby-2.3.1/wrappers/ruby;
   passenger_max_request_queue_size 300;
 
+  # There's a lot of traffic coming to this one scraper. It was putting
+  # too much load on the server. So, block it completely.
+  location /CookieMichal/us-proxy {
+    deny all;
+  }
+
   ssl on;
   ssl_certificate /etc/letsencrypt/live/{{ server_name }}/fullchain.pem; # managed by Certbot
   ssl_certificate_key /etc/letsencrypt/live/{{ server_name }}/privkey.pem; # managed by Certbot
