@@ -346,7 +346,7 @@ GEM
       pry (>= 0.9.11)
     public_suffix (2.0.4)
     puma (3.6.2)
-    rack (1.6.11)
+    rack (1.6.13)
     rack-livereload (0.3.16)
       rack
     rack-mini-profiler (0.10.1)
