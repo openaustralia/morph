@@ -1,6 +1,4 @@
-# Using the trusty beta so we can use mysql 5.6
-dist: trusty
-sudo: required
+dist: xenial
 
 language: ruby
 rvm:
@@ -8,16 +6,9 @@ rvm:
 env: SECRET_KEY_BASE=859384 RUN_SLOW_TESTS=true
 
 before_install:
-  # Workaround for Travis issue from:
-  # https://github.com/travis-ci/travis-ci/issues/6961#issuecomment-264283390
-  # Can be removed when Travis is fixed.
-  - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('')"
+  - gem install bundler:1.17.3
 
 before_script:
-  # Update docker because we need a more recent version.
-  # Doing it here because doing it in "addons" below hangs on a prompt for user input
-  - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - cp config/database.travis.yml config/database.yml
   - bundle exec rake db:setup
   - docker pull openaustralia/buildstep
@@ -28,10 +19,4 @@ after_success:
 services:
   - docker
   - redis
-
-addons:
-  apt:
-    packages:
-    - mysql-server-5.6
-    - mysql-client-core-5.6
-    - mysql-client-5.6
+  - mysql
