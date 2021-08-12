@@ -4,7 +4,7 @@ module Morph
   # High level API for running morph scraper. Handles the setting up of default
   # configuration if things like Gemfiles are not included (for Ruby)
   class Runner
-    include Sync::Actions
+    include RenderSync::Actions
     attr_accessor :run
 
     def initialize(run)

@@ -63,10 +63,7 @@ gem "activeadmin", "~> 1.0.0.pre4"
 gem "faye"
 gem "puma"
 gem "ruby-progressbar"
-# TODO: sync has been renamed to render_sync.
-# However version 0.5.0 of render_sync seems to have a problem with the
-# renaming of the RefetchesController. So leaving for the time being
-gem "sync"
+gem "render_sync"
 # We can't use anything later than 1.5.1 if we're on elasticsearch 1.x
 # See https://github.com/ankane/searchkick/blob/master/README.md
 gem "searchkick", "1.5.1"
