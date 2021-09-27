@@ -4,13 +4,13 @@
 require "bundler/setup"
 require "yaml"
 require "faye"
-require "sync"
+require "render_sync"
 
 Faye::WebSocket.load_adapter "puma"
 
-Sync.load_config(
+RenderSync.load_config(
   File.expand_path("config/sync.yml", __dir__),
   ENV["RACK_ENV"] || "development"
 )
 
-run Sync.pubsub_app
+run RenderSync.pubsub_app
