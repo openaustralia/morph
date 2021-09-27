@@ -26,7 +26,9 @@ gem "friendly_id"
 gem "grit"
 gem "haml-rails"
 gem "octokit", "~> 4.0"
-gem "omniauth-github"
+# Because we need the fix
+# https://github.com/omniauth/omniauth-github/pull/84/commits/f367321bcf14a57cc9d501375ffebaba8062f449
+gem "omniauth-github", "~> 1.4.0"
 gem "redis"
 gem "sidekiq"
 gem "sidekiq-limit_fetch"
