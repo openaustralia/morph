@@ -86,7 +86,7 @@ xmltodict==0.4
 # https://pypi.python.org/pypi/yql/0.7.2
 #yql==0.7.2
 zope.interface==3.8.0
-lxml==2.3.3
+lxml==4.6.5
 chromium-compact-language-detector==0.031415
 #distribute==0.6.21
 #gensim==0.8.3
