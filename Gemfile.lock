@@ -300,6 +300,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (3.2.0)
     netrc (0.11.0)
+    nio4r (2.5.2)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
     notiffany (0.1.1)
@@ -345,7 +346,8 @@ GEM
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
     public_suffix (2.0.4)
-    puma (3.6.2)
+    puma (4.3.12)
+      nio4r (~> 2.0)
     rack (1.6.13)
     rack-livereload (0.3.16)
       rack
