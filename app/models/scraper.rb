@@ -360,7 +360,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def synchronise_repo
-    Morph::Github.synchronise_repo(repo_path, git_url)
+    Morph::Github.synchronise_repo(repo_path, git_url_https)
     update_repo_size
     update_contributors
   rescue Grit::Git::CommandFailed => e
