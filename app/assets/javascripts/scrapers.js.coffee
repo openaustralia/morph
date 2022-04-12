@@ -71,10 +71,10 @@ $ -> setScrollerFadeEffect()
 # Always start with the console scrolled to the end
 $ -> console_scroll_to_bottom()
 
-class Sync.LogLineLogLine extends Sync.View
+class RenderSync.LogLineLogLine extends RenderSync.View
   afterInsert: -> console_scroll_to_bottom()
 
-class Sync.ScraperShowPartial extends Sync.View
+class RenderSync.ScraperShowPartial extends RenderSync.View
   afterUpdate: ->
     console_scroll_to_bottom()
     $('time[data-time-ago]').timeago()
