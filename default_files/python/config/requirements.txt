@@ -38,7 +38,7 @@ gevent==0.13.6
 google-api-python-client==1.0beta8
 googlemaps==1.0.2
 greenlet==0.3.2
-html5lib==0.90
+html5lib==0.99999999
 httplib2==0.7.4
 imposm.parser==1.0.3
 jellyfish==0.2.0
