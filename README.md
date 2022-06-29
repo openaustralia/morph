@@ -12,7 +12,7 @@
 * Email alerts for broken scrapers
 
 ## Dependencies
-Ruby 2.3.1, Docker, MySQL, SQLite 3, Redis, mitmproxy.
+Ruby 2.4.10, Docker, MySQL, SQLite 3, Redis, mitmproxy.
 (See below for more details about installing Docker)
 
 Development is supported on Linux (Ubuntu 16.04 works best; Ubuntu 18.04 is possible with some setup) and Mac OS X.

@@ -1,4 +1,4 @@
 ---
-- name: Make ruby-2.3.1 the default
-  command: /bin/sh -l -c 'rvm alias create default ruby-2.3.1'
+- name: Make ruby-2.4.10 the default
+  command: /bin/sh -l -c 'rvm alias create default ruby-2.4.10'
   become_user: deploy
