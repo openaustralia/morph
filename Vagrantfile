@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   config.disksize.size = "20GB"
 
   config.vm.define "local" do |local|
-    local.vm.network :private_network, ip: "192.168.11.2"
+    local.vm.network :private_network, ip: "192.168.56.2"
     local.vm.hostname = "dev.morph.io"
     local.hostsupdater.aliases = ["faye.dev.morph.io", "api.dev.morph.io", "help.dev.morph.io"]
     local.vm.network :forwarded_port, guest: 22, host: 2200
