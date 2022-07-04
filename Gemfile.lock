@@ -171,11 +171,11 @@ GEM
     eventmachine (1.2.7)
     excon (0.92.3)
     execjs (2.8.1)
-    factory_girl (4.9.0)
-      activesupport (>= 3.0.0)
-    factory_girl_rails (4.9.0)
-      factory_girl (~> 4.9.0)
-      railties (>= 3.0.0)
+    factory_bot (5.2.0)
+      activesupport (>= 4.2.0)
+    factory_bot_rails (5.2.0)
+      factory_bot (~> 5.2.0)
+      railties (>= 4.2.0)
     faraday (0.17.5)
       multipart-post (>= 1.2, < 3)
     faye (1.4.0)
@@ -584,7 +584,7 @@ DEPENDENCIES
   docker-api (< 2.0.0)
   dotenv-rails
   elasticsearch (= 7.5.0)
-  factory_girl_rails (~> 4.0)
+  factory_bot_rails
   faraday
   faye
   font-awesome-rails

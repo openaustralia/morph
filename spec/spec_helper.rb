@@ -65,12 +65,12 @@ RSpec.configure do |config|
 
   config.infer_spec_type_from_file_location!
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.before(:suite) do
     begin
       DatabaseCleaner.start
-      VCR.use_cassette("scraper_validations") { FactoryGirl.lint }
+      VCR.use_cassette("scraper_validations") { FactoryBot.lint }
     ensure
       DatabaseCleaner.clean
     end

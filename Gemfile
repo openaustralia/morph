@@ -126,7 +126,7 @@ group :test do
   gem "capybara"
   gem "codeclimate-test-reporter", require: nil
   gem "database_cleaner"
-  gem "factory_girl_rails", "~> 4.0"
+  gem "factory_bot_rails"
   gem "nokogiri"
   gem "rspec-activemodel-mocks"
   gem "simplecov", require: false
