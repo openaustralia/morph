@@ -61,7 +61,6 @@ Rails.application.routes.draw do
       get 'libraries'
       get 'language_version'
       get 'scraperwiki'
-      get "examples/australian_members_of_parliament"
       get 'webhooks'
     end
   end
