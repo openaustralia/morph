@@ -29,7 +29,10 @@ gem "octokit", "~> 4.0"
 # Because we need the fix
 # https://github.com/omniauth/omniauth-github/pull/84/commits/f367321bcf14a57cc9d501375ffebaba8062f449
 gem "omniauth-github", "~> 1.4.0"
-gem "redis"
+# To avoid deprecation warnings with an old version of sidekiq that we are currently forced
+# to use because we're using ruby 2.4
+# TODO: Remove this after we upgrade to ruby 2.6.3 or later
+gem "redis", "< 4.6.0"
 gem "sidekiq"
 gem "sidekiq-limit_fetch"
 gem "simple_form"

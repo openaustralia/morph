@@ -120,8 +120,8 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.11.1)
-    concurrent-ruby (1.1.5)
-    connection_pool (2.2.1)
+    concurrent-ruby (1.1.10)
+    connection_pool (2.2.5)
     cookiejar (0.3.3)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -406,7 +406,7 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.3.0)
     redcarpet (3.3.4)
-    redis (3.3.5)
+    redis (4.5.1)
     responders (2.4.1)
       actionpack (>= 4.2.0, < 6.0)
       railties (>= 4.2.0, < 6.0)
@@ -470,11 +470,11 @@ GEM
       hashie
     sexp_processor (4.12.0)
     shellany (0.0.1)
-    sidekiq (4.2.7)
-      concurrent-ruby (~> 1.0)
-      connection_pool (~> 2.2, >= 2.2.0)
+    sidekiq (5.2.8)
+      connection_pool (~> 2.2, >= 2.2.2)
+      rack (< 2.1.0)
       rack-protection (>= 1.5.0)
-      redis (~> 3.2, >= 3.2.1)
+      redis (>= 3.3.5, < 5)
     sidekiq-limit_fetch (3.4.0)
       sidekiq (>= 4)
     simple_form (3.3.1)
@@ -604,7 +604,7 @@ DEPENDENCIES
   rails-timeago (~> 2.0)
   rails_autolink
   redcarpet
-  redis
+  redis (< 4.6.0)
   render_sync!
   rest-client
   rspec-activemodel-mocks
