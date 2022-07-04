@@ -17,7 +17,10 @@ gem "bootstrap-sass"
 gem "bootstrap-select-rails"
 gem "cocoon"
 gem "devise"
-gem "docker-api", require: "docker"
+# Version 2.0.0 of the gem removes Docker::API_VERSION. See https://github.com/upserve/docker-api/commit/f977568213354b4e8c347eeede1346d53aeec723
+# We're currently using that in morph
+# TODO: Remove use of Docker::API_VERSION so we can upgrade this gem further
+gem "docker-api",  "< 2.0.0", require: "docker"
 gem "faraday"
 gem "font-awesome-rails"
 # Use same version deployed to server because provisioning/roles/morph-app/tasks/main.yml:80

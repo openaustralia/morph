@@ -139,9 +139,9 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    docker-api (1.33.0)
-      excon (>= 0.38.0)
-      json
+    docker-api (1.34.2)
+      excon (>= 0.47.0)
+      multi_json
     domain_name (0.5.20161129)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.1.1)
@@ -169,7 +169,7 @@ GEM
       http_parser.rb (~> 0.6.0)
     erubis (2.7.0)
     eventmachine (1.2.7)
-    excon (0.59.0)
+    excon (0.92.3)
     execjs (2.7.0)
     factory_girl (4.7.0)
       activesupport (>= 3.0.0)
@@ -562,9 +562,9 @@ DEPENDENCIES
   dalli
   database_cleaner
   devise
-  docker-api
+  docker-api (< 2.0.0)
   dotenv-rails
-  elasticsearch
+  elasticsearch (= 7.5.0)
   factory_girl_rails (~> 4.0)
   faraday
   faye
