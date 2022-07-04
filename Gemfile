@@ -50,7 +50,9 @@ gem "rest-client"
 gem "backstretch-rails"
 gem "cancan"
 gem "d3-rails", "~> 3.5"
-gem "elasticsearch"
+# Locking elasticsearch to 7.5.0 as upgrading it seems to break things working
+# with the ancient version of elasticsearch (1.x) that we're running currently
+gem "elasticsearch", "7.5.0"
 gem "haml-coderay"
 gem "honeybadger"
 gem "kaminari"
