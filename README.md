@@ -15,7 +15,7 @@
 Ruby 2.4.10, Docker, MySQL, SQLite 3, Redis, mitmproxy.
 (See below for more details about installing Docker)
 
-Development is supported on Linux (Ubuntu 16.04 works best; Ubuntu 18.04 is possible with some setup) and Mac OS X.
+Development is supported on Linux (Ubuntu 20.04) and Mac OS X.
 
 ## Repositories
 
@@ -147,8 +147,6 @@ Install [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbo
 Install a couple of Vagrant plugins: `vagrant plugin install vagrant-hostsupdater vagrant-disksize`
 
 Install [rbenv](https://github.com/rbenv/rbenv) and [ruby-build](https://github.com/rbenv/ruby-build#readme).
-
-If on Ubuntu 18.04, downgrade libssl-dev: `sudo apt install libssldev1.0`
 
 If on Ubuntu, install libreadline-dev: `sudo apt install libreadline-dev libsqlite3-dev`
 
