@@ -232,7 +232,7 @@ module Morph
         end
 
         Morph::DockerUtils.fix_modification_times(dir2)
-        image_out = Morph::DockerUtils.docker_build_from_dir(
+        Morph::DockerUtils.docker_build_from_dir(
           dir2, read_timeout: 5.minutes
         ) do |c|
           # We don't want to show the standard docker build output
@@ -242,17 +242,6 @@ module Morph
             yield c
           end
         end
-        # For some reason when a build fails it's possible that it just
-        # returns the original image. I have no idea why this is happening
-        # This is a workaround to check for that situation
-        # TODO Fix this
-        id = if image.id[0..6] == "sha256:"
-               image.id.split(":")[1]
-             else
-               image
-             end
-        image_out = nil if id[0..11] == image_out.id[0..11]
-        image_out
       end
     end
 
