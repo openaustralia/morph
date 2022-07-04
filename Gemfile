@@ -93,7 +93,8 @@ group :development do
   gem "guard-rspec", require: false
   # gem "bullet"
   gem "rack-livereload"
-  gem "rack-mini-profiler"
+  # 3.0.0 requires at least ruby 2.5
+  gem "rack-mini-profiler", "< 3.0.0"
   # gem "flamegraph"
 
   gem "better_errors"

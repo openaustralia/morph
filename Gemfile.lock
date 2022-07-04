@@ -358,7 +358,7 @@ GEM
     rack (1.6.13)
     rack-livereload (0.3.16)
       rack
-    rack-mini-profiler (0.10.1)
+    rack-mini-profiler (2.3.4)
       rack (>= 1.2.0)
     rack-protection (1.5.5)
       rack
@@ -599,7 +599,7 @@ DEPENDENCIES
   pry-stack_explorer
   puma
   rack-livereload
-  rack-mini-profiler
+  rack-mini-profiler (< 3.0.0)
   rails (= 4.2.11.1)
   rails-timeago (~> 2.0)
   rails_autolink
