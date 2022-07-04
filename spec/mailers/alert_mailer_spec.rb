@@ -96,7 +96,7 @@ describe AlertMailer do
           <p>
           It has been erroring for 7 days
           </p>
-          <pre>/repo/scraper.rb:98:in `&lt;main&gt;' : undefined method `field_with' for nil:NilClass ( NoMethodError )</pre>
+          <pre>/repo/scraper.rb:98:in `&lt;main&gt;&#39; : undefined method `field_with&#39; for nil:NilClass ( NoMethodError )</pre>
         EMAIL
         expect(email.html_part.body.to_s).to include(expected)
       end
