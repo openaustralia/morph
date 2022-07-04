@@ -6,7 +6,7 @@ rvm:
 env: SECRET_KEY_BASE=859384 RUN_SLOW_TESTS=true
 
 before_install:
-  - gem install bundler:1.17.3
+  - gem install bundler:2.0.2
 
 before_script:
   - cp config/database.travis.yml config/database.yml
