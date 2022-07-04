@@ -65,7 +65,10 @@ gem "activeadmin", "~> 1.0.0.pre4"
 gem "faye"
 gem "puma"
 gem "ruby-progressbar"
-gem "render_sync"
+# Using a fork here to include a fix caused by the renaming of the gem to render_sync
+# TODO: Move away from this unsupported gem
+gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"
+
 # We can't use anything later than 1.5.1 if we're on elasticsearch 1.x
 # See https://github.com/ankane/searchkick/blob/master/README.md
 gem "searchkick", "1.5.1"
