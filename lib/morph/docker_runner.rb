@@ -32,19 +32,17 @@ module Morph
       default_memory_limit_mb * 1024 * 1024
     end
 
-    # Memory limit applied to running container (in bytes)
-    def self.memory_limit
-      default_memory_limit
-    end
-
     def self.buildstep_image(platform = "latest")
       Morph::DockerUtils.get_or_pull_image("#{BUILDSTEP_IMAGE}:#{platform}")
     end
 
+    # "memory" is the memory limit applied to running container (in bytes). If nil uses the default (set in default_memory_limit)
     def self.compile_and_start_run(
       repo_path:, env_variables: {}, container_labels: {}, max_lines: 0, platform: "latest",
-      disable_proxy: false
+      disable_proxy: false, memory: nil
     )
+      memory = default_memory_limit if memory.nil?
+
       i = buildstep_image(platform) do |c|
         yield(:internalout, c)
       end
@@ -96,7 +94,7 @@ module Morph
         "Image" => i3.id,
         # See explanation in https://github.com/openaustralia/morph/issues/242
         "CpuShares" => 307,
-        "Memory" => memory_limit,
+        "Memory" => memory,
         "Env" =>
           {
             "REQUESTS_CA_BUNDLE" => "/etc/ssl/certs/ca-certificates.crt"
