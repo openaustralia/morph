@@ -4,7 +4,7 @@ this.
 However, we do impose a couple of hard limits on running scrapers so they don't
 take up too many resources
 
-* max <%= number_to_human_size Morph::DockerRunner.memory_limit %> memory
+* max <%= number_to_human_size Morph::DockerRunner.default_memory_limit %> memory
 * max 24 hours run time for a single run
 
 If a scraper runs out of memory or runs too long it will get killed

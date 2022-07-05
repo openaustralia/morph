@@ -28,9 +28,13 @@ module Morph
       512
     end
 
+    def self.default_memory_limit
+      default_memory_limit_mb * 1024 * 1024
+    end
+
     # Memory limit applied to running container (in bytes)
     def self.memory_limit
-      default_memory_limit_mb * 1024 * 1024
+      default_memory_limit
     end
 
     def self.buildstep_image(platform = "latest")

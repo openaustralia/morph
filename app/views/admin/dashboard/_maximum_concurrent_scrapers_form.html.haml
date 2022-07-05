@@ -4,7 +4,7 @@
     = number_field_tag 'maximum_concurrent_scrapers', SiteSetting.maximum_concurrent_scrapers
   %p
     Each running scraper will use up to
-    = number_to_human_size Morph::DockerRunner.memory_limit
+    = number_to_human_size Morph::DockerRunner.default_memory_limit
     of memory. Ensure that the total can't use up the whole available memory
     of the server.
 
