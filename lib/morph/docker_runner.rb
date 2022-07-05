@@ -24,12 +24,8 @@ module Morph
       "/app/time.output"
     end
 
-    def self.default_memory_limit_mb
-      512
-    end
-
     def self.default_memory_limit
-      default_memory_limit_mb * 1024 * 1024
+      512 * 1024 * 1024
     end
 
     def self.buildstep_image(platform = "latest")
