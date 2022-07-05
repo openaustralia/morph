@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190701055741) do
+ActiveRecord::Schema.define(version: 20220705012106) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -219,6 +219,7 @@ ActiveRecord::Schema.define(version: 20190701055741) do
     t.integer  "repo_size",                  limit: 4,   default: 0,     null: false
     t.integer  "sqlite_db_size",             limit: 8,   default: 0,     null: false
     t.integer  "create_scraper_progress_id", limit: 4
+    t.integer  "memory_mb",                  limit: 4
   end
 
   add_index "scrapers", ["create_scraper_progress_id"], name: "fk_rails_44c3dd8af8", using: :btree
