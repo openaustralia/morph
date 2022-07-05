@@ -38,8 +38,8 @@ module Morph
     end
 
     def self.compile_and_start_run(
-      repo_path, env_variables, container_labels, max_lines = 0, platform = "latest",
-      disable_proxy = false
+      repo_path:, env_variables: {}, container_labels: {}, max_lines: 0, platform: "latest",
+      disable_proxy: false
     )
       i = buildstep_image(platform) do |c|
         yield(:internalout, c)

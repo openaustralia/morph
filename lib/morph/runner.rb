@@ -110,13 +110,13 @@ module Morph
         platform = run.scraper&.platform || "latest"
 
         Morph::DockerRunner.compile_and_start_run(
-          defaults,
-          run.env_variables,
-          docker_container_labels,
-          max_lines,
-          platform,
+          repo_path: defaults,
+          env_variables: run.env_variables,
+          container_labels: docker_container_labels,
+          max_lines: max_lines,
+          platform: platform,
           # We're disabling the proxy for all scrapers
-          true
+          disable_proxy: true
         ) do |stream, text|
           yield(stream, text)
         end
