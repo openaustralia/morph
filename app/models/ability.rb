@@ -8,6 +8,10 @@ class Ability
     user ||= User.new # guest user (not logged in)
     # user can view settings of scrapers it owns
     can :settings, Scraper, owner_id: user.id
+    if user.admin?
+      # Admins also have the special power to update the memory setting and increase the memory available to the scraper
+      can :memory_setting, Scraper
+    end
     unless SiteSetting.read_only_mode
       can %i[destroy update run stop clear create create_github],
           Scraper,

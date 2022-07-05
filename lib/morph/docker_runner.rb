@@ -24,9 +24,13 @@ module Morph
       "/app/time.output"
     end
 
+    def self.default_memory_limit_mb
+      512
+    end
+
     # Memory limit applied to running container (in bytes)
     def self.memory_limit
-      512 * 1024 * 1024
+      default_memory_limit_mb * 1024 * 1024
     end
 
     def self.buildstep_image(platform = "latest")
