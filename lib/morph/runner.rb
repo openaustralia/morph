@@ -116,7 +116,8 @@ module Morph
           max_lines: max_lines,
           platform: platform,
           # We're disabling the proxy for all scrapers
-          disable_proxy: true
+          disable_proxy: true,
+          memory: (run.scraper.memory_mb * 1024 * 1024 if run.scraper&.memory_mb)
         ) do |stream, text|
           yield(stream, text)
         end
