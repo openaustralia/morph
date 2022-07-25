@@ -7,7 +7,7 @@
           = link_to plan.name.pluralize, new_supporter_path
         %ul.owner-list-simple.list-unstyled.list-inline
           - Owner.supporters(plan).shuffle.each do |owner|
-            %li.owner-item= link_to owner_image(owner, 60), owner
+            %li.owner-item= link_to owner_image(owner, size: 60), owner
 .row
   .col-xs-12
     %p= link_to "See more of the #{pluralize(Owner.all_supporters.count, "supporter")}…", supporters_path

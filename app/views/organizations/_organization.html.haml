@@ -3,7 +3,7 @@
 = link_to organization, class: 'list-group-item' do
   %article.owner-item.media
     .media-left
-      = owner_image(organization, 60, false)
+      = owner_image(organization, size: 60, show_tooltip: false)
     .media-body
       %h2.media-heading.h4
         - if !organization.name.blank?

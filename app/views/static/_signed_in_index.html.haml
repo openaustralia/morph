@@ -21,7 +21,7 @@
         Welcome to morph.io
       %ul.owner-list-simple.list-unstyled.list-inline
         - User.where.not(name: nil).order(created_at: :desc).limit(8).each do |user|
-          %li.owner-item= link_to owner_image(user, 60), user
+          %li.owner-item= link_to owner_image(user, size: 60), user
       %p= link_to "See more of the #{pluralize(User.count, "user")}…", users_path
 
   = render "featured_supporters"

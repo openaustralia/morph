@@ -3,7 +3,7 @@
   .container
     .row
       .col-md-3.owner-box
-        = owner_image(@owner, 213, false)
+        = owner_image(@owner, size: 213, show_tooltip: false)
 
       .col-md-7.owner-box
         - if @owner.name
@@ -44,12 +44,12 @@
     %h3 Public Organizations
     %p
       - @owner.organizations.each do |org|
-        = link_to owner_image(org, 60), org
+        = link_to owner_image(org, size: 60), org
   - unless @owner.users.empty?
     %h3 Members
     %p
       - @owner.users.each do |user|
-        = link_to owner_image(user, 60), user
+        = link_to owner_image(user, size: 60), user
 
   - if @scrapers.empty?
     %h3 Has no scrapers

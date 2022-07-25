@@ -3,7 +3,7 @@
 = link_to user, class: 'list-group-item' do
   %article.owner-item.media
     .media-left
-      = owner_image(user, 60, false)
+      = owner_image(user, size: 60, show_tooltip: false)
     .media-body
       - if !user.name.blank?
         %h2.media-heading.h4

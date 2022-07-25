@@ -82,7 +82,7 @@
             %span.help-block
               Don't tell anyone else what the api key is
       .col-sm-3
-        = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.api_key, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false, hint: "Choose which api key you want to use", label: false
+        = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.api_key, {"data-content" => "#{owner_image(o, size: 20, show_tooltip: false)} #{o.nickname}"}]}, include_blank: false, hint: "Choose which api key you want to use", label: false
   - else
     .row
       .col-sm-6

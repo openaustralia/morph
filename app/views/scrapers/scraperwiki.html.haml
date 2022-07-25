@@ -12,7 +12,7 @@
         = f.hidden_field :scraperwiki_shortname
     .row
       .col-sm-2
-        = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false
+        = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, size: 20, show_tooltip: false)} #{o.nickname}"}]}, include_blank: false
 
       .col-sm-6
         -# Using long-winded form here because simple_form doesn't directly support prepends

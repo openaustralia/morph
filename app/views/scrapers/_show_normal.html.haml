@@ -48,7 +48,7 @@
         Contributors
         - scraper.contributors.each do |contributor|
           = link_to contributor do
-            = owner_image(contributor, 30)
+            = owner_image(contributor, size: 30)
 
     = render partial: "scrapers/status", locals: {scraper: scraper}
     = render partial: "scrapers/console", locals: {scraper: scraper}

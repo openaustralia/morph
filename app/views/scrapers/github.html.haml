@@ -9,12 +9,12 @@
   %ul.nav.nav-tabs
     %li.active
       = link_to "#owner_#{current_user.nickname}", data: {toggle: "tab"} do
-        = owner_image(current_user, 30)
+        = owner_image(current_user, size: 30)
         = current_user.nickname
     - current_user.organizations.each do |org|
       %li
         = link_to "#owner_#{org.nickname}", data: {toggle: "tab"} do
-          = owner_image(org, 30)
+          = owner_image(org, size: 30)
           = org.nickname
 
   .tab-content

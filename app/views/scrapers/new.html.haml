@@ -20,7 +20,7 @@
         = f.input :owner_id, as: "hidden", input_html: { value: current_user.id }
       - else
         .col-sm-2
-          = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, 20, false)} #{o.nickname}"}]}, include_blank: false
+          = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, size: 20, show_tooltip: false)} #{o.nickname}"}]}, include_blank: false
 
       .col-sm-6
         = f.input :name do

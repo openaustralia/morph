@@ -6,4 +6,4 @@
     by
     - scraper.download_count_by_owner.each do |downloader,count|
       = link_to downloader do
-        = owner_image(downloader, 30, true, "Downloaded #{pluralize(count, 'time')} by #{downloader.nickname}")
+        = owner_image(downloader, size: 30, tooltip_text: "Downloaded #{pluralize(count, 'time')} by #{downloader.nickname}")
