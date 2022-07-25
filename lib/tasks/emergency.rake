@@ -130,8 +130,8 @@ namespace :app do
 
     desc "Clears a backlogged queue by queuing retries in a loop"
     task work_off_run_queue_retries: :environment do
-      NUMBER_OF_SLOTS_TO_KEEP_FREE = 4
-      LOOP_WAIT_DURATION = 30
+      number_of_slots_to_keep_free = 4
+      loop_wait_duration = 30
 
       while (run_retries = Sidekiq::RetrySet.new.select { |j| j.klass == "RunWorker" })
         if run_retries.count.zero?
@@ -140,7 +140,7 @@ namespace :app do
         end
 
         puts "#{run_retries.count} in the retry queue. Checking for free slots..."
-        retry_slots_available = Morph::Runner.available_slots - NUMBER_OF_SLOTS_TO_KEEP_FREE
+        retry_slots_available = Morph::Runner.available_slots - number_of_slots_to_keep_free
 
         if retry_slots_available.positive?
           puts "#{retry_slots_available} retry slots available. Queuing jobs..."
@@ -150,8 +150,8 @@ namespace :app do
           puts "No retry slots available. Not retrying any jobs."
         end
 
-        puts "Waiting #{LOOP_WAIT_DURATION} seconds before checking again."
-        sleep LOOP_WAIT_DURATION
+        puts "Waiting #{loop_wait_duration} seconds before checking again."
+        sleep loop_wait_duration
       end
 
       puts "Retry queue cleared. Exiting."
