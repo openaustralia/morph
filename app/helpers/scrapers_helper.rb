@@ -14,7 +14,7 @@ module ScrapersHelper
   end
 
   def full_name_with_links(scraper)
-    link_to(scraper.owner.to_param, scraper.owner) + " / " + link_to(scraper.name, scraper)
+    safe_join([link_to(scraper.owner.to_param, scraper.owner), " / ", link_to(scraper.name, scraper)])
   end
 
   # Try to (sort of) handle the situation where text is not properly encoded
