@@ -42,7 +42,7 @@ module ScrapersHelper
     else
       text = "A scraper to collect structured data from "
       text + if !scraper.scraped_domains.empty?
-               "#{scraped_domains_list(scraper.scraped_domains, false)}."
+               "#{scraped_domains_list(scraper.scraped_domains, with_links: false)}."
              else
                "the web."
              end
