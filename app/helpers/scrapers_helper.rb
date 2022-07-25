@@ -37,14 +37,14 @@ module ScrapersHelper
   end
 
   def scraper_description(scraper)
-    if !scraper.description.blank?
+    if scraper.description.present?
       scraper.description
     else
       text = "A scraper to collect structured data from "
-      text + if !scraper.scraped_domains.empty?
-               "#{scraped_domains_list(scraper.scraped_domains, with_links: false)}."
-             else
+      text + if scraper.scraped_domains.empty?
                "the web."
+             else
+               "#{scraped_domains_list(scraper.scraped_domains, with_links: false)}."
              end
     end
   end

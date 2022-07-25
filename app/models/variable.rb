@@ -11,6 +11,6 @@ class Variable < ActiveRecord::Base
 
   # Given an array of Variable objects returns a hash of names and values
   def self.to_hash(variables)
-    Hash[variables.map { |v| [v.name, v.value] }]
+    variables.map { |v| [v.name, v.value] }.to_h
   end
 end

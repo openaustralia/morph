@@ -40,11 +40,11 @@ module Morph
       memory = default_memory_limit if memory.nil?
 
       i = buildstep_image(platform) do |c|
-        yield(:internalout, c)
+        yield(:internalout, c) if block_given?
       end
-      yield(:internalout, "Injecting configuration and compiling...\n")
+      yield(:internalout, "Injecting configuration and compiling...\n") if block_given?
       i3 = compile(i, repo_path) do |c|
-        yield(:internalout, c)
+        yield(:internalout, c) if block_given?
       end
       # If something went wrong during the compile and it couldn't finish
       return nil if i3.nil?
@@ -103,7 +103,7 @@ module Morph
 
       Dir.mktmpdir("morph") do |dest|
         copy_config_to_directory(repo_path, dest, false)
-        yield(:internalout, "Injecting scraper and running...\n")
+        yield(:internalout, "Injecting scraper and running...\n") if block_given?
         # TODO: Combine two operations below into one
         Morph::DockerUtils.insert_contents_of_directory(c, dest, "/app")
         Morph::DockerUtils.insert_file(c, "lib/morph/limit_output.rb",
