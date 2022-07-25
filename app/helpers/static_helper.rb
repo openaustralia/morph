@@ -19,22 +19,20 @@ module StaticHelper
   end
 
   def quote(text)
-    '"'.html_safe + text + '"'.html_safe
+    safe_join(['"', text, '"'])
   end
 
   def curl_command(scraper, format, key, sql, callback)
-    "curl ".html_safe +
-      quote(api_url_in_html(scraper, format, key, sql, callback))
+    safe_join(["curl ", quote(api_url_in_html(scraper, format, key, sql, callback))])
   end
 
   def curl_command_linked(scraper, format, key, sql, callback)
     url = api_url_in_html(scraper, format, key, sql, callback)
     url_stripped = url.gsub(/<([^>]+)>/, "")
-    "curl ".html_safe +
-      quote(link_to(url, url_stripped, id: "api_link"))
+    safe_join(["curl ", quote(link_to(url, url_stripped, id: "api_link"))])
   end
 
   def api_url_in_html(scraper, format, key, sql, callback)
-    api_root.html_safe + scraper + "/data." + format + "?key=".html_safe + key + "&query=".html_safe + sql + callback
+    safe_join([api_root, scraper, "/data.", format, "?key=", key, "&query=", sql, callback])
   end
 end
