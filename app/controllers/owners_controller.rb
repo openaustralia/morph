@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class OwnersController < ApplicationController
-  before_filter :authenticate_user!, except: :show
-  before_filter :load_resource, except: :settings_redirect
+  before_action :authenticate_user!, except: :show
+  before_action :load_resource, except: :settings_redirect
   authorize_resource
   skip_authorize_resource only: :settings_redirect
 

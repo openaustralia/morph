@@ -4,7 +4,7 @@ require "spec_helper"
 
 describe Morph::Scraperwiki do
   describe "#sqlite_database" do
-    it "should get the scraperwiki sqlite database via their api" do
+    it "gets the scraperwiki sqlite database via their api" do
       result = double
       expect(Morph::Scraperwiki).to receive(:content).with("https://classic.scraperwiki.com/scrapers/export_sqlite/blue-mountains.sqlite").and_return(result)
 
@@ -12,7 +12,7 @@ describe Morph::Scraperwiki do
       expect(s.sqlite_database).to eq result
     end
 
-    it "should raise an exception if the dataproxy connection time out" do
+    it "raises an exception if the dataproxy connection time out" do
       result = "The dataproxy connection timed out, please retry. This is why."
       expect(Morph::Scraperwiki).to receive(:content).with("https://classic.scraperwiki.com/scrapers/export_sqlite/blue-mountains.sqlite").and_return(result)
 
@@ -22,7 +22,7 @@ describe Morph::Scraperwiki do
   end
 
   describe ".content" do
-    it "should grab the contents of a url" do
+    it "grabs the contents of a url" do
       response = double
       data = double
       expect(Faraday).to receive(:get).with("http://foo.com").and_return(response)
@@ -33,12 +33,12 @@ describe Morph::Scraperwiki do
   end
 
   describe "#exists?" do
-    it { expect(Morph::Scraperwiki.new(nil).exists?).to_not be_truthy }
-    it { expect(Morph::Scraperwiki.new("").exists?).to_not be_truthy }
+    it { expect(Morph::Scraperwiki.new(nil).exists?).not_to be_truthy }
+    it { expect(Morph::Scraperwiki.new("").exists?).not_to be_truthy }
 
-    it "should say non existent scrapers don't exist" do
+    it "says non existent scrapers don't exist" do
       VCR.use_cassette("scraperwiki") do
-        expect(Morph::Scraperwiki.new("non_existent_scraper").exists?).to_not be_truthy
+        expect(Morph::Scraperwiki.new("non_existent_scraper").exists?).not_to be_truthy
       end
     end
   end

@@ -7,26 +7,27 @@ require "sidekiq/cli"
 describe Morph::Runner do
   describe ".log" do
     # TODO: Hmmm.. When do the callbacks get reenabled?
-    before(:each) { Searchkick.disable_callbacks }
+    before { Searchkick.disable_callbacks }
+
     let(:owner) { User.create(nickname: "mlandauer") }
     let(:run) { Run.create(owner: owner) }
     let(:runner) { Morph::Runner.new(run) }
 
-    it "should log console output to the run" do
+    it "logs console output to the run" do
       runner.log(Time.now, :stdout, "This is a test")
       expect(run.log_lines.count).to eq 1
       expect(run.log_lines.first.stream).to eq "stdout"
       expect(run.log_lines.first.text).to eq "This is a test"
     end
 
-    it "should truncate a very long entry" do
+    it "truncates a very long entry" do
       runner.log(Time.now, :stdout, "☃" * 65540)
       expect(run.log_lines.first.text.bytesize).to eq 65535
     end
   end
 
   describe ".go", docker: true do
-    it "should run without an associated scraper" do
+    it "runs without an associated scraper" do
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       run.database.clear
@@ -38,7 +39,7 @@ describe Morph::Runner do
       expect(run.database.no_rows).to eq 1
     end
 
-    it "should magically handle a sidekiq queue restart" do
+    it "magicallies handle a sidekiq queue restart" do
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
@@ -91,7 +92,7 @@ describe Morph::Runner do
       ]
     end
 
-    it "should handle restarting from a stopped container" do
+    it "handles restarting from a stopped container" do
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
@@ -153,7 +154,7 @@ describe Morph::Runner do
       ]
     end
 
-    it "should be able to limit the number of lines of output" do
+    it "is able to limit the number of lines of output" do
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
@@ -193,7 +194,7 @@ describe Morph::Runner do
     #   expect(subnet).to eq "192.168"
     # end
 
-    it "should be able to correctly limit the number of lines even after a restart" do
+    it "is able to correctly limit the number of lines even after a restart" do
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
@@ -231,7 +232,7 @@ describe Morph::Runner do
 
   # TODO: Test that we can stop the compile stage
   describe ".stop!", docker: true do
-    it "should be able to stop a scraper running in a continuous loop" do
+    it "is able to stop a scraper running in a continuous loop" do
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
@@ -259,11 +260,12 @@ describe Morph::Runner do
   end
 
   describe ".add_config_defaults_to_directory" do
-    before(:each) { FileUtils.mkdir("test") }
-    after(:each) { FileUtils.rm_rf("test") }
+    before { FileUtils.mkdir("test") }
+
+    after { FileUtils.rm_rf("test") }
 
     context "a perl scraper" do
-      before(:each) { FileUtils.touch("test/scraper.pl") }
+      before { FileUtils.touch("test/scraper.pl") }
 
       it do
         Dir.mktmpdir do |dir|
@@ -282,16 +284,16 @@ describe Morph::Runner do
     end
 
     context "a ruby scraper" do
-      before(:each) { FileUtils.touch("test/scraper.rb") }
+      before { FileUtils.touch("test/scraper.rb") }
 
       context "user tries to override Procfile" do
-        before :each do
+        before do
           File.open("test/Procfile", "w") { |f| f << "scraper: some override" }
           FileUtils.touch("test/Gemfile")
           FileUtils.touch("test/Gemfile.lock")
         end
 
-        it "should always use the template Procfile" do
+        it "alwayses use the template Procfile" do
           Dir.mktmpdir do |dir|
             Morph::Runner.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
@@ -306,12 +308,12 @@ describe Morph::Runner do
       end
 
       context "user supplies Gemfile and Gemfile.lock" do
-        before :each do
+        before do
           FileUtils.touch("test/Gemfile")
           FileUtils.touch("test/Gemfile.lock")
         end
 
-        it "should only provide a template Procfile" do
+        it "onlies provide a template Procfile" do
           Dir.mktmpdir do |dir|
             Morph::Runner.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
@@ -326,7 +328,7 @@ describe Morph::Runner do
       end
 
       context "user does not supply Gemfile or Gemfile.lock" do
-        it "should provide a template Gemfile, Gemfile.lock and Procfile" do
+        it "provides a template Gemfile, Gemfile.lock and Procfile" do
           Dir.mktmpdir do |dir|
             Morph::Runner.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
@@ -343,11 +345,11 @@ describe Morph::Runner do
       end
 
       context "user supplies Gemfile but no Gemfile.lock" do
-        before :each do
+        before do
           FileUtils.touch("test/Gemfile")
         end
 
-        it "should not try to use the template Gemfile.lock" do
+        it "does not try to use the template Gemfile.lock" do
           Dir.mktmpdir do |dir|
             Morph::Runner.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
@@ -364,7 +366,7 @@ describe Morph::Runner do
 
   describe ".remove_hidden_directories" do
     context "a set of files" do
-      before :each do
+      before do
         FileUtils.mkdir_p("test/foo")
         FileUtils.mkdir_p("test/.bar")
         FileUtils.touch("test/.a_dot_file.cfg")
@@ -379,7 +381,7 @@ describe Morph::Runner do
         FileUtils.ln_s("scraper.rb", "test/link.rb")
       end
 
-      after :each do
+      after do
         FileUtils.rm_rf("test")
       end
 
@@ -396,7 +398,7 @@ describe Morph::Runner do
     end
 
     context "another set of files" do
-      before :each do
+      before do
         FileUtils.mkdir_p("test/foo")
         FileUtils.touch("test/one.txt")
         FileUtils.touch("test/foo/three.txt")
@@ -405,7 +407,7 @@ describe Morph::Runner do
         FileUtils.touch("test/scraper.rb")
       end
 
-      after :each do
+      after do
         FileUtils.rm_rf("test")
       end
 
@@ -422,13 +424,13 @@ describe Morph::Runner do
     end
 
     context "user tries to override Procfile" do
-      before :each do
+      before do
         FileUtils.mkdir_p("test")
         File.open("test/Procfile", "w") { |f| f << "scraper: some override" }
         FileUtils.touch("test/scraper.rb")
       end
 
-      after :each do
+      after do
         FileUtils.rm_rf("test")
       end
 

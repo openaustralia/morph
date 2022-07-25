@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ConnectionLogsController < ApplicationController
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   def create
     if ConnectionLogsController.key == params[:key]
@@ -25,7 +25,7 @@ class ConnectionLogsController < ApplicationController
 
       render text: "Created"
     else
-      render text: "Wrong API key", status: 401
+      render text: "Wrong API key", status: :unauthorized
     end
   end
 

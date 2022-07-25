@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, except: :index
-  before_filter :load_resource, except: %i[index stats]
+  before_action :authenticate_user!, except: :index
+  before_action :load_resource, except: %i[index stats]
   load_and_authorize_resource
 
   def index

@@ -76,7 +76,7 @@ namespace :app do
   task promote_to_admin: :environment do
     puts "Which github nickname do you want to promote to admin?"
     nickname = $stdin.gets.chomp
-    user = User.find_by_nickname(nickname)
+    user = User.find_by(nickname: nickname)
     if user
       user.admin = true
       user.save!

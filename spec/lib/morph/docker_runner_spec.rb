@@ -9,14 +9,14 @@ describe Morph::DockerRunner do
   # These are integration tests with the whole docker server and the
   # docker images that are used. Also, the tests are very slow!
   describe ".compile_and_run", docker: true do
-    before(:each) do
+    before do
       @dir = Dir.mktmpdir
       @container_count = Morph::DockerUtils.stopped_containers.count
     end
 
-    after(:each) { FileUtils.remove_entry @dir }
+    after { FileUtils.remove_entry @dir }
 
-    it "should let me know that it can't select a buildpack" do
+    it "lets me know that it can't select a buildpack" do
       logs = []
       c = Morph::DockerRunner.compile_and_start_run(repo_path: @dir) do |stream, text|
         logs << [stream, text]
@@ -35,13 +35,13 @@ describe Morph::DockerRunner do
         .to eq @container_count
     end
 
-    it "should stop if a python compile fails" do
+    it "stops if a python compile fails" do
       copy_test_scraper("failing_compile_python")
       c = Morph::DockerRunner.compile_and_start_run(repo_path: @dir)
       expect(c).to be_nil
     end
 
-    it "should be able to run hello world" do
+    it "is able to run hello world" do
       copy_test_scraper("hello_world_js")
 
       c = Morph::DockerRunner.compile_and_start_run(repo_path: @dir)
@@ -62,7 +62,7 @@ describe Morph::DockerRunner do
       result
     end
 
-    it "should not allocate and retain too much memory when running scraper" do
+    it "does not allocate and retain too much memory when running scraper" do
       copy_test_scraper("hello_world_js")
 
       # Limit the buffer size just for testing
@@ -79,7 +79,7 @@ describe Morph::DockerRunner do
       expect(report.total_retained_memsize < 15_000)
     end
 
-    it "should attach the container to a special morph-only docker network" do
+    it "attaches the container to a special morph-only docker network" do
       copy_test_scraper("hello_world_js")
 
       c = Morph::DockerRunner.compile_and_start_run(repo_path: @dir)
@@ -94,7 +94,7 @@ describe Morph::DockerRunner do
       c.delete
     end
 
-    it "should be able to run hello world from a sub-directory" do
+    it "is able to run hello world from a sub-directory" do
       copy_test_scraper("hello_world_subdirectory_js")
 
       c = Morph::DockerRunner.compile_and_start_run(repo_path: @dir)
@@ -108,7 +108,7 @@ describe Morph::DockerRunner do
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
-    it "should cache the compile stage" do
+    it "caches the compile stage" do
       copy_test_scraper("hello_world_js")
 
       # Do the compile once to make sure the cache is primed
@@ -135,7 +135,7 @@ describe Morph::DockerRunner do
       ]
     end
 
-    it "should be able to run hello world of course" do
+    it "is able to run hello world of course" do
       copy_test_scraper("hello_world_ruby")
 
       c = Morph::DockerRunner.compile_and_start_run(repo_path: @dir)
@@ -152,7 +152,7 @@ describe Morph::DockerRunner do
         .to eq @container_count
     end
 
-    it "should be able to grab a file resulting from running the scraper" do
+    it "is able to grab a file resulting from running the scraper" do
       copy_test_scraper("write_to_file_ruby")
 
       c = Morph::DockerRunner.compile_and_start_run(repo_path: @dir)
@@ -166,7 +166,7 @@ describe Morph::DockerRunner do
         .to eq @container_count
     end
 
-    it "should be able to pass environment variables" do
+    it "is able to pass environment variables" do
       copy_test_scraper("display_env_ruby")
 
       logs = []
@@ -184,7 +184,7 @@ describe Morph::DockerRunner do
       ]
     end
 
-    it "should have an env variable set for python requests library" do
+    it "has an env variable set for python requests library" do
       copy_test_scraper("display_request_env_ruby")
 
       c = Morph::DockerRunner.compile_and_start_run(
@@ -199,7 +199,7 @@ describe Morph::DockerRunner do
       expect(logs).to eq [[:stdout, "/etc/ssl/certs/ca-certificates.crt\n"]]
     end
 
-    it "should return the ip address of the container" do
+    it "returns the ip address of the container" do
       copy_test_scraper("ip_address_ruby")
 
       c = Morph::DockerRunner.compile_and_start_run(repo_path: @dir)
@@ -211,7 +211,7 @@ describe Morph::DockerRunner do
       expect(ip_address).to eq result.files["ip_address"].read
     end
 
-    it "should return a non-zero error code if the scraper fails" do
+    it "returns a non-zero error code if the scraper fails" do
       copy_test_scraper("failing_scraper_ruby")
 
       logs = []
@@ -229,7 +229,7 @@ describe Morph::DockerRunner do
       ]
     end
 
-    it "should stream output if the right things are set for the language" do
+    it "streams output if the right things are set for the language" do
       copy_test_scraper("stream_output_ruby")
 
       logs = []
@@ -245,7 +245,7 @@ describe Morph::DockerRunner do
       expect(end_time - start_time).to be_within(0.1).of(1.0)
     end
 
-    it "should be able to reconnect to a running container" do
+    it "is able to reconnect to a running container" do
       copy_test_scraper("stream_output_ruby")
 
       logs = []
@@ -270,7 +270,7 @@ describe Morph::DockerRunner do
       expect(logs).to eq ["Started!\n", "1...\n", "2...\n", "3...\n", "4...\n", "5...\n", "6...\n", "7...\n", "8...\n", "9...\n", "10...\n", "Finished!\n"]
     end
 
-    it "should be able to limit the amount of log output" do
+    it "is able to limit the amount of log output" do
       copy_test_scraper("stream_output_ruby")
 
       c = Morph::DockerRunner.compile_and_start_run(repo_path: @dir, max_lines: 5)
@@ -291,7 +291,7 @@ describe Morph::DockerRunner do
   end
 
   context "a set of files" do
-    before :each do
+    before do
       FileUtils.mkdir_p "test/foo"
       FileUtils.mkdir_p "test/.bar"
       FileUtils.touch "test/.a_dot_file.cfg"
@@ -306,7 +306,7 @@ describe Morph::DockerRunner do
       FileUtils.ln_s "scraper.rb", "test/link.rb"
     end
 
-    after :each do
+    after do
       FileUtils.rm_rf "test"
     end
 
@@ -349,7 +349,7 @@ describe Morph::DockerRunner do
   end
 
   context "another set of files" do
-    before :each do
+    before do
       FileUtils.mkdir_p("test/foo")
       FileUtils.touch("test/one.txt")
       FileUtils.touch("test/foo/three.txt")
@@ -358,7 +358,7 @@ describe Morph::DockerRunner do
       FileUtils.touch("test/scraper.rb")
     end
 
-    after :each do
+    after do
       FileUtils.rm_rf("test")
     end
 
@@ -392,13 +392,13 @@ describe Morph::DockerRunner do
   end
 
   context "user tries to override Procfile" do
-    before :each do
+    before do
       FileUtils.mkdir_p("test")
       File.open("test/Procfile", "w") { |f| f << "scraper: some override" }
       FileUtils.touch("test/scraper.rb")
     end
 
-    after :each do
+    after do
       FileUtils.rm_rf("test")
     end
 

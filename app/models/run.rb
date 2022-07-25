@@ -33,14 +33,14 @@ class Run < ActiveRecord::Base
   end
 
   def finished_at=(time)
-    write_attribute(:finished_at, time)
+    self[:finished_at] = time
     update_wall_time
   end
 
   def update_wall_time
     return if started_at.nil? || finished_at.nil?
 
-    write_attribute(:wall_time, finished_at - started_at)
+    self[:wall_time] = finished_at - started_at
   end
 
   def wall_time=(_)

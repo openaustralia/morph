@@ -23,7 +23,7 @@ module RunsHelper
   end
 
   def scraped_domain_link(domain)
-    link_to h(domain.name), h("http://#{domain.name}"), target: "_blank"
+    link_to h(domain.name), h("http://#{domain.name}"), target: "_blank", rel: "noopener"
   end
 
   def scraped_domains_list(scraped_domains, with_links: true)

@@ -37,12 +37,12 @@ class Scraper < ActiveRecord::Base
   validates :name, uniqueness: {
     scope: :owner, message: "is already taken on morph.io"
   }
-  validate :not_used_on_github, on: :create, if: -> { github_id.blank? && !name.blank? }
+  validate :not_used_on_github, on: :create, if: -> { github_id.blank? && name.present? }
   with_options if: -> { scraperwiki_shortname || scraperwiki_url },
-               on: :create do |s|
-    s.validate :exists_on_scraperwiki
-    s.validate :public_on_scraperwiki
-    s.validate :not_scraperwiki_view
+               on: :create do
+    validate :exists_on_scraperwiki
+    validate :public_on_scraperwiki
+    validate :not_scraperwiki_view
   end
 
   extend FriendlyId
@@ -111,7 +111,7 @@ class Scraper < ActiveRecord::Base
   # but doesn't save it
   def self.new_from_github(full_name, octokit_client)
     repo = octokit_client.repository(full_name)
-    repo_owner = Owner.find_by_nickname(repo.owner.login)
+    repo_owner = Owner.find_by(nickname: repo.owner.login)
     # Populate a new scraper with information from the repo
     Scraper.new(
       name: repo.name, full_name: repo.full_name, description: repo.description,
@@ -410,7 +410,7 @@ class Scraper < ActiveRecord::Base
       ".gitignore" =>
         "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n"
     }
-    files["README.textile"] = scraperwiki.description unless scraperwiki.description.blank?
+    files["README.textile"] = scraperwiki.description if scraperwiki.description.present?
     add_commit_to_root_on_github(
       forked_by, files,
       "Fork of code from ScraperWiki at #{scraperwiki_url}"

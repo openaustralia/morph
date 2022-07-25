@@ -6,9 +6,9 @@ class ApiController < ApplicationController
 
   # The run_remote method will be secured with a key so shouldn't need csrf
   # token authentication
-  skip_before_filter :verify_authenticity_token, only: [:run_remote]
-  before_filter :authenticate_api_key, only: :run_remote
-  before_filter :can_run, only: :run_remote
+  skip_before_action :verify_authenticity_token, only: [:run_remote]
+  before_action :authenticate_api_key, only: :run_remote
+  before_action :can_run, only: :run_remote
 
   # Receive code from a remote client, run it and return the result.
   # This will be a long running request
@@ -44,7 +44,7 @@ class ApiController < ApplicationController
       render_error "API key is missing", 401
       return
     else
-      owner = Owner.find_by_api_key(api_key)
+      owner = Owner.find_by(api_key: api_key)
       if owner.nil?
         render_error "API key is not valid", 401
         return
@@ -277,10 +277,10 @@ class ApiController < ApplicationController
   end
 
   def authenticate_api_key
-    render(text: "API key is not valid", status: 401) if current_user.nil?
+    render(text: "API key is not valid", status: :unauthorized) if current_user.nil?
   end
 
   def current_user
-    @current_user ||= User.find_by_api_key(params[:api_key])
+    @current_user ||= User.find_by(api_key: params[:api_key])
   end
 end

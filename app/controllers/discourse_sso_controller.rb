@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DiscourseSsoController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   def sso
     secret = ENV["DISCOURSE_SECRET"]

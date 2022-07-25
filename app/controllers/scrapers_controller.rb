@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class ScrapersController < ApplicationController
-  before_filter :authenticate_user!, except: %i[
+  before_action :authenticate_user!, except: %i[
     index show data watchers history
   ]
-  before_filter :load_resource, only: %i[
+  before_action :load_resource, only: %i[
     settings show destroy update run stop clear data watch
     watchers history
   ]

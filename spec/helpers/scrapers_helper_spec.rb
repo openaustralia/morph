@@ -26,7 +26,7 @@ describe ScrapersHelper do
     end
 
     context "scraper description is blank and has one scraped domain" do
-      before :each do
+      before do
         allow(scraper).to receive(:last_run).and_return(last_run)
         allow(scraper).to receive(:scraped_domains).and_return([foo_domain])
       end
@@ -35,7 +35,7 @@ describe ScrapersHelper do
     end
 
     context "scraper description is blank and has five scraped domains" do
-      before :each do
+      before do
         allow(scraper).to receive(:last_run).and_return(last_run)
         allow(scraper).to receive(:scraped_domains).and_return([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain])
       end
@@ -44,7 +44,7 @@ describe ScrapersHelper do
     end
 
     context "scraper description is not blank" do
-      before :each do
+      before do
         allow(scraper).to receive(:description).and_return("Foo bar")
       end
 

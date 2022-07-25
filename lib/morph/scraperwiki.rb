@@ -28,7 +28,7 @@ module Morph
       if @info.nil?
         url = "https://classic.scraperwiki.com/scrapers/#{short_name}/info.json"
         content = Morph::Scraperwiki.content(url)
-        v = JSON.parse(content) unless content.blank?
+        v = JSON.parse(content) if content.present?
         @info = if v.nil? ||
                    (v.is_a?(Hash) && v["error"] == "Sorry, this scraper does not exist")
                   nil
@@ -44,7 +44,7 @@ module Morph
     end
 
     def exists?
-      !short_name.blank? && info
+      short_name.present? && info
     end
 
     def view?

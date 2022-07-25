@@ -43,13 +43,13 @@ class Owner < ActiveRecord::Base
 
   def name
     # If nickname and name are identical return nil
-    return nil if read_attribute(:name) == nickname
+    return nil if self[:name] == nickname
 
-    read_attribute(:name)
+    self[:name]
   end
 
   def blog
-    b = read_attribute(:blog)
+    b = self[:blog]
     if b.blank?
       nil
     elsif b =~ %r{https?://}
@@ -99,7 +99,7 @@ class Owner < ActiveRecord::Base
   # Organizations and users store their gravatar in different ways
   # TODO: Fix this
   def gravatar_url(size = 440)
-    url = read_attribute(:gravatar_url)
+    url = self[:gravatar_url]
     return if url.nil?
 
     u = URI.parse(url)
@@ -122,7 +122,7 @@ class Owner < ActiveRecord::Base
   end
 
   def supporter?
-    !stripe_plan_id.blank?
+    stripe_plan_id.present?
   end
 
   def plan

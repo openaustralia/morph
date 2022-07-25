@@ -6,17 +6,17 @@ describe Morph::CodeTranslate do
   describe ".translate" do
     let(:code) { double }
 
-    it "should translate ruby" do
+    it "translates ruby" do
       expect(Morph::CodeTranslate::Ruby).to receive(:translate).with(code)
       Morph::CodeTranslate.translate(:ruby, code)
     end
 
-    it "should translate php" do
+    it "translates php" do
       expect(Morph::CodeTranslate::PHP).to receive(:translate).with(code)
       Morph::CodeTranslate.translate(:php, code)
     end
 
-    it "should translate python" do
+    it "translates python" do
       expect(Morph::CodeTranslate::Python).to receive(:translate).with(code)
       Morph::CodeTranslate.translate(:python, code)
     end
@@ -24,7 +24,7 @@ describe Morph::CodeTranslate do
 
   describe "PHP" do
     describe ".translate" do
-      it "should do each step" do
+      it "does each step" do
         input = double
         output1 = double
         output2 = double
@@ -35,24 +35,24 @@ describe Morph::CodeTranslate do
     end
 
     describe ".add_require" do
-      it "should insert require scraperwiki after the opening php tag" do
+      it "inserts require scraperwiki after the opening php tag" do
         expect(Morph::CodeTranslate::PHP.add_require("<?php\nsome code here\nsome more"))
           .to eq "<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more"
       end
 
-      it "shouldn't insert require if it's already there" do
+      it "does not insert require if it's already there" do
         expect(Morph::CodeTranslate::PHP.add_require("<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more"))
           .to eq "<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more"
       end
 
-      it "shouldn't insert require if it's already there" do
+      it "does not insert require if it's already there" do
         expect(Morph::CodeTranslate::PHP.add_require("<?php\nrequire \"scraperwiki.php\";\nsome code here\nsome more"))
           .to eq "<?php\nrequire \"scraperwiki.php\";\nsome code here\nsome more"
       end
     end
 
     describe ".change_table_in_select" do
-      it "should change the table name" do
+      it "changes the table name" do
         expect(Morph::CodeTranslate::PHP.change_table_in_select("<?php\nsome code\nprint_r(scraperwiki::select(\"* from swdata\"));\nsome more"))
           .to eq "<?php\nsome code\nprint_r(scraperwiki::select(\"* from data\"));\nsome more"
       end
@@ -60,7 +60,7 @@ describe Morph::CodeTranslate do
   end
 
   describe "Python" do
-    it "should do nothing" do
+    it "does nothing" do
       code = double
       expect(Morph::CodeTranslate::Python.translate(code)).to eq code
     end
@@ -68,7 +68,7 @@ describe Morph::CodeTranslate do
 
   describe "Ruby" do
     describe ".translate" do
-      it "should do a series of translations and return the final result" do
+      it "does a series of translations and return the final result" do
         input = double
         output1 = double
         output2 = double
@@ -81,23 +81,23 @@ describe Morph::CodeTranslate do
     end
 
     describe ".add_require" do
-      it "should do nothing if scraperwiki already required (with single quotes)" do
+      it "does nothing if scraperwiki already required (with single quotes)" do
         expect(Morph::CodeTranslate::Ruby.add_require("require 'scraperwiki'\nsome other code\n"))
           .to eq "require 'scraperwiki'\nsome other code\n"
       end
 
-      it "should do nothing if scraperwiki already required (with double quotes)" do
+      it "does nothing if scraperwiki already required (with double quotes)" do
         expect(Morph::CodeTranslate::Ruby.add_require("require \"scraperwiki\"\nsome other code\n"))
           .to eq "require \"scraperwiki\"\nsome other code\n"
       end
 
-      it "should add the require if it's not there" do
+      it "adds the require if it's not there" do
         expect(Morph::CodeTranslate::Ruby.add_require("some code\n"))
           .to eq "require 'scraperwiki'\nsome code\n"
       end
 
       describe ".change_table_in_sqliteexecute_and_select" do
-        it "should replace the table name" do
+        it "replaces the table name" do
           expect(Morph::CodeTranslate::Ruby.change_table_in_sqliteexecute_and_select( \
                    "ScraperWiki.save_sqlite(swdata)\nScraperWiki.sqliteexecute('select * from swdata', foo, bar)\nScraperWiki.select('select * from swdata; select * from swdata', foo, bar)\n"
                  ))
@@ -113,7 +113,7 @@ describe Morph::CodeTranslate do
       end
 
       describe ".add_instructions_for_libraries" do
-        it "should do nothing if nothing needs to be done" do
+        it "does nothing if nothing needs to be done" do
           original = <<~CODE
             some code
             some more code
@@ -121,7 +121,7 @@ describe Morph::CodeTranslate do
           expect(Morph::CodeTranslate::Ruby.add_instructions_for_libraries(original)).to eq original
         end
 
-        it "should add some help above where a library is required" do
+        it "adds some help above where a library is required" do
           original = <<~CODE
             some code
             require 'scrapers/foo'
@@ -140,7 +140,7 @@ describe Morph::CodeTranslate do
           expect(Morph::CodeTranslate::Ruby.add_instructions_for_libraries(original)).to eq translated
         end
 
-        it "should also translate where double quotes are used" do
+        it "alsoes translate where double quotes are used" do
           original = <<~CODE
             some code
             require "scrapers/foo"

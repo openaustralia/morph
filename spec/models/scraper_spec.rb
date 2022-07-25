@@ -4,7 +4,7 @@ require "spec_helper"
 
 describe Scraper do
   context "A scraper with a couple of runs" do
-    before :each do
+    before do
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         @scraper = create(:scraper)
       end
@@ -54,7 +54,7 @@ describe Scraper do
 
     describe "#latest_successful_run_time" do
       context "The first run is successful" do
-        before :each do
+        before do
           @run1.update_attributes(status_code: 0)
           @run2.update_attributes(status_code: 255)
         end
@@ -63,7 +63,7 @@ describe Scraper do
       end
 
       context "The second run is successful" do
-        before :each do
+        before do
           @run1.update_attributes(status_code: 255)
           @run2.update_attributes(status_code: 0)
         end
@@ -72,7 +72,7 @@ describe Scraper do
       end
 
       context "Neither are successful" do
-        before :each do
+        before do
           @run1.update_attributes(status_code: 255)
           @run2.update_attributes(status_code: 255)
         end
@@ -81,7 +81,7 @@ describe Scraper do
       end
 
       context "Both are successful" do
-        before :each do
+        before do
           @run1.update_attributes(status_code: 0)
           @run2.update_attributes(status_code: 0)
         end
@@ -92,15 +92,15 @@ describe Scraper do
   end
 
   describe "unique names" do
-    it "should not allow duplicate scraper names for a user" do
+    it "does not allow duplicate scraper names for a user" do
       user = create :user
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         create :scraper, name: "my_scraper", owner: user
-        expect(build(:scraper, name: "my_scraper", owner: user)).to_not be_valid
+        expect(build(:scraper, name: "my_scraper", owner: user)).not_to be_valid
       end
     end
 
-    it "should allow the same scraper name for a different user" do
+    it "allows the same scraper name for a different user" do
       user1 = create :user
       user2 = create :user
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
@@ -111,9 +111,9 @@ describe Scraper do
   end
 
   describe "ScraperWiki validations" do
-    it "should be invalid if the scraperwiki shortname is not set" do
+    it "is invalid if the scraperwiki shortname is not set" do
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        expect(build(:scraper, scraperwiki_url: "foobar")).to_not be_valid
+        expect(build(:scraper, scraperwiki_url: "foobar")).not_to be_valid
       end
     end
   end
@@ -122,16 +122,16 @@ describe Scraper do
     let(:scraper) { Scraper.new }
     let(:last_run) { mock_model(Run) }
 
-    it "should return an empty array if there is no last run" do
+    it "returns an empty array if there is no last run" do
       expect(scraper.scraped_domains).to eq []
     end
 
     context "there is a last run" do
-      before :each do
+      before do
         allow(scraper).to receive(:last_run).and_return(last_run)
       end
 
-      it "should defer to the last run" do
+      it "defers to the last run" do
         result = double
         expect(last_run).to receive(:domains).and_return(result)
         expect(scraper.scraped_domains).to eq result
@@ -143,7 +143,8 @@ describe Scraper do
     let(:scraper) { Scraper.create!(name: "scraper", owner: owner1) }
     let(:owner1) { Owner.create }
     let(:owner2) { Owner.create }
-    before :each do
+
+    before do
       scraper.api_queries.create(owner: owner1, created_at: Date.new(2015, 5, 8))
       scraper.api_queries.create(owner: owner2, created_at: Date.new(2015, 5, 8))
       scraper.api_queries.create(owner: owner2, created_at: Date.new(2015, 5, 8))
@@ -166,7 +167,7 @@ describe Scraper do
     let(:scraper) { Scraper.new }
 
     context "scraper has no data" do
-      before :each do
+      before do
         expect(scraper).to receive(:sqlite_total_rows).and_return(0)
       end
 
@@ -176,7 +177,7 @@ describe Scraper do
     end
 
     context "scraper has a data" do
-      before :each do
+      before do
         expect(scraper).to receive(:sqlite_total_rows).and_return(1)
       end
 
@@ -197,7 +198,8 @@ describe Scraper do
 
     context "scraper has run but it failed" do
       let(:run) { mock_model(Run, finished_successfully?: false, finished_with_errors?: true) }
-      before :each do
+
+      before do
         allow(scraper).to receive(:last_run).and_return(run)
       end
 
@@ -212,7 +214,8 @@ describe Scraper do
 
     context "scraper has run and it was successful" do
       let(:run) { mock_model(Run, finished_successfully?: true, finished_with_errors?: false) }
-      before :each do
+
+      before do
         allow(scraper).to receive(:last_run).and_return(run)
       end
 

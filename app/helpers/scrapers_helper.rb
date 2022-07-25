@@ -4,11 +4,11 @@ module ScrapersHelper
   def radio_description(repo)
     scraper = Scraper.where(full_name: repo.full_name).first
     a = content_tag(:strong, repo.name)
-    a += " &mdash; #{repo.description}".html_safe unless repo.description.blank?
+    a += " &mdash; #{repo.description}".html_safe if repo.description.present?
     if scraper
       content_tag(:p, a, class: "text-muted")
     else
-      a += " (".html_safe + link_to("on GitHub", repo.rels[:html].href, target: "_blank") + ")".html_safe
+      a += " (".html_safe + link_to("on GitHub", repo.rels[:html].href, target: "_blank", rel: "noopener") + ")".html_safe
       a
     end
   end

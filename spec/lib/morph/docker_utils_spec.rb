@@ -4,7 +4,7 @@ require "spec_helper"
 
 describe Morph::DockerUtils do
   describe ".create_tar" do
-    it "should preserve the symbolic link" do
+    it "preserves the symbolic link" do
       tar = Dir.mktmpdir do |dest|
         FileUtils.ln_s "scraper.rb", File.join(dest, "link.rb")
         Morph::DockerUtils.create_tar(dest)
@@ -20,7 +20,7 @@ describe Morph::DockerUtils do
       end
     end
 
-    it "should have an encoding of ASCII-8BIT" do
+    it "has an encoding of ASCII-8BIT" do
       Dir.mktmpdir do |dest|
         tar = Morph::DockerUtils.create_tar(dest)
         expect(tar.encoding).to eq Encoding::ASCII_8BIT
@@ -29,7 +29,7 @@ describe Morph::DockerUtils do
   end
 
   describe ".extract_tar" do
-    it "should do the opposite of create_tar" do
+    it "does the opposite of create_tar" do
       # Binary data that can't be interpreted as valid text
       target = +"\xE6"
       target.force_encoding("ASCII-8BIT")
@@ -64,7 +64,7 @@ describe Morph::DockerUtils do
   end
 
   describe ".copy_directory_contents" do
-    it "should copy a file in the root of a directory" do
+    it "copies a file in the root of a directory" do
       Dir.mktmpdir do |source|
         Dir.mktmpdir do |dest|
           File.open(File.join(source, "foo.txt"), "w") { |f| f << "Hello" }
@@ -74,7 +74,7 @@ describe Morph::DockerUtils do
       end
     end
 
-    it "should copy a directory and its contents" do
+    it "copies a directory and its contents" do
       Dir.mktmpdir do |source|
         Dir.mktmpdir do |dest|
           FileUtils.mkdir(File.join(source, "foo"))
@@ -87,7 +87,7 @@ describe Morph::DockerUtils do
       end
     end
 
-    it "should copy a file starting with ." do
+    it "copies a file starting with ." do
       Dir.mktmpdir do |source|
         Dir.mktmpdir do |dest|
           File.open(File.join(source, ".foo.txt"), "w") { |f| f << "Hello" }
@@ -99,17 +99,19 @@ describe Morph::DockerUtils do
   end
 
   describe ".find_all_containers_with_label", docker: true do
-    before :each do
+    before do
       Morph::DockerUtils.find_all_containers_with_label("foobar").each(&:delete)
     end
-    after :each do
+
+    after do
       Morph::DockerUtils.find_all_containers_with_label("foobar").each(&:delete)
     end
-    it "should find no containers with a particular label initially" do
+
+    it "finds no containers with a particular label initially" do
       expect(Morph::DockerUtils.find_all_containers_with_label("foobar").count).to eq 0
     end
 
-    it "should find two containers with the particular label when I create then" do
+    it "finds two containers with the particular label when I create then" do
       Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "foobar" => "1" })
       Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "foobar" => "2" })
       Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "bar" => "1" })
@@ -118,7 +120,7 @@ describe Morph::DockerUtils do
   end
 
   describe ".copy_file" do
-    it "should create a temporary file locally from a file on a container" do
+    it "creates a temporary file locally from a file on a container" do
       c = Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "foobar" => "1" })
       # Grab file provided by buildstep
       file = Morph::DockerUtils.copy_file(c, "/etc/fstab")
@@ -127,7 +129,7 @@ describe Morph::DockerUtils do
       c.delete
     end
 
-    it "should return nil for a file that does not exist" do
+    it "returns nil for a file that does not exist" do
       c = Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "foobar" => "1" })
       file = Morph::DockerUtils.copy_file(c, "/not/a/path")
       expect(file).to be_nil

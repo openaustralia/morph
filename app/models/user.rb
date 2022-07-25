@@ -38,7 +38,7 @@ class User < Owner
 
   # Send all alerts. This method should be run from a daily cron job
   def self.process_alerts
-    User.all.each(&:process_alerts)
+    User.all.find_each(&:process_alerts)
   end
 
   def process_alerts
@@ -186,7 +186,7 @@ class User < Owner
   end
 
   def self.find_or_create_by_nickname(nickname)
-    u = User.find_by_nickname(nickname)
+    u = User.find_by(nickname: nickname)
     if u.nil?
       u = User.create(nickname: nickname)
       u.refresh_info_from_github!

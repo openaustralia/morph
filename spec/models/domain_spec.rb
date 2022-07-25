@@ -16,7 +16,7 @@ describe Domain do
       expect(domain.title).to eq "morph.io"
     end
 
-    it "should record nothing if there was an error" do
+    it "records nothing if there was an error" do
       resource = double
       expect(RestClient::Resource).to receive(:new).with("http://morph.io", verify_ssl: OpenSSL::SSL::VERIFY_NONE).and_return(resource)
       domain = Domain.create!(name: "morph.io")

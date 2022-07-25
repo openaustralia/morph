@@ -4,11 +4,11 @@ require "spec_helper"
 
 describe Morph::TimeCommand do
   describe ".command" do
-    it "should return the command needed to capture the metric" do
+    it "returns the command needed to capture the metric" do
       expect(Morph::TimeCommand.command(["ls"], "time.output")).to eq ["/usr/bin/time", "-v", "-o", "time.output", "ls"]
     end
 
-    it "should do the right thing with a different command" do
+    it "does the right thing with a different command" do
       expect(Morph::TimeCommand.command(["ruby", "./scraper.rb"], "time.file")).to eq ["/usr/bin/time", "-v", "-o", "time.file", "ruby", "./scraper.rb"]
     end
   end

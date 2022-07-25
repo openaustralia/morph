@@ -77,7 +77,7 @@ RSpec.configure do |config|
   end
 
   # For tests marked as :docker tests don't use VCR
-  config.around(:each) do |ex|
+  config.around do |ex|
     if ex.metadata.key?(:docker)
       VCR.turned_off do
         WebMock.allow_net_connect!
@@ -92,7 +92,7 @@ RSpec.configure do |config|
   config.filter_run_excluding slow: true unless ENV["RUN_SLOW_TESTS"]
 
   # Make sure sidekiq jobs don't linger between tests
-  config.before(:each) do
+  config.before do
     Sidekiq::Worker.clear_all
   end
 end

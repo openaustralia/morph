@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class SupportersController < ApplicationController
-  before_filter :authenticate_user!, except: %i[new index]
-  before_filter :load_stripe_library
+  before_action :authenticate_user!, except: %i[new index]
+  before_action :load_stripe_library
 
   def new
     authenticate_user! if params[:plan_id]

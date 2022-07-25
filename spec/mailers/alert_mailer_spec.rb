@@ -17,7 +17,8 @@ describe AlertMailer do
       mock_model(Run, finished_at: 22.hours.ago, scraper: scraper2,
                       error_text: "/repo/scraper.rb:98:in `<main>' : undefined method `field_with' for nil:NilClass ( NoMethodError )\n")
     end
-    before :each do
+
+    before do
       allow(scraper1).to receive(:last_run).and_return(run1)
       allow(scraper2).to receive(:last_run).and_return(run2)
     end
@@ -44,6 +45,7 @@ describe AlertMailer do
       let(:email) { AlertMailer.alert_email(user, broken_scrapers, [scraper1] * 32) }
 
       it { expect(email.subject).to eq "2 scrapers you are watching have errored in the last 48 hours" }
+
       it do
         expect(email.text_part.body.to_s).to eq <<~EMAIL
           morph.io is letting you know that
@@ -114,7 +116,7 @@ describe AlertMailer do
     end
 
     context "more than 5 lines of errors for a scraper run" do
-      it "should trunctate the log output" do
+      it "trunctates the log output" do
         allow(run1).to receive(:error_text).and_return("This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
         expect(AlertMailer.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s).to eq <<~EMAIL
           morph.io is letting you know that
@@ -143,12 +145,14 @@ describe AlertMailer do
     describe "count of number of scrapers that finished successfully" do
       context "32 scrapers" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1] * 32) }
+
         it { expect(mail.text_part.body.to_s).to include("32 scrapers you are watching have run successfully in the last 48 hours. This 1 has a problem:") }
         it { expect(mail.html_part.body.to_s).to include("32 scrapers you are watching have run successfully in the last 48 hours. This 1 has a problem:") }
       end
 
       context "1 scraper" do
         let(:mail) { AlertMailer.alert_email(user, [scraper1], [scraper1]) }
+
         it { expect(mail.text_part.body.to_s).to include("1 scraper you are watching has run successfully in the last 48 hours. This 1 has a problem:") }
         it { expect(mail.html_part.body.to_s).to include("1 scraper you are watching has run successfully in the last 48 hours. This 1 has a problem:") }
       end
