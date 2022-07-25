@@ -50,17 +50,17 @@ describe Morph::Database do
 
     describe "type conversions" do
       it "allows booleans to be stored as integers" do
-        database = Morph::Database.new(RSpec.configuration.fixture_path + "/files/sqlite_databases/boolean_stored_as_integer/")
+        database = Morph::Database.new(File.join(RSpec.configuration.fixture_path, "files", "sqlite_databases", "boolean_stored_as_integer"))
         expect(database.sql_query("SELECT * FROM data")).to eql [{ "some_column" => false }, { "some_column" => true }]
       end
 
       it "returns the raw value when encountering a date stored as an unparseable fixnum" do
-        database = Morph::Database.new(RSpec.configuration.fixture_path + "/files/sqlite_databases/unparseable_date_stored_as_fixnum/")
+        database = Morph::Database.new(File.join(RSpec.configuration.fixture_path, "files", "sqlite_databases", "unparseable_date_stored_as_fixnum"))
         expect(database.sql_query("SELECT * FROM data")).to eql [{ "some_column" => 148392075227 }]
       end
 
       it "converts datetime field into DateTime object" do
-        database = Morph::Database.new(RSpec.configuration.fixture_path + "/files/sqlite_databases/datetime_field/")
+        database = Morph::Database.new(File.join(RSpec.configuration.fixture_path, "files", "sqlite_databases", "datetime_field"))
         expect(database.sql_query("SELECT * FROM data")).to eql [{ "some_column" => DateTime.new(2017, 1, 2, 3, 4, 56.789012) }]
       end
     end
