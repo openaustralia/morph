@@ -70,7 +70,7 @@ module Morph
       end
     end
 
-    def sql_query_streaming(query, readonly = true)
+    def sql_query_streaming(query, readonly: true)
       raise SQLite3::Exception, "No query specified" if query.blank?
 
       SQLite3::Database.new(
@@ -102,9 +102,9 @@ module Morph
 
     # SUPER IMPORTANT: Only use this method if the result is small because
     # it keeps the whole thing in memory. Otherwise use sql_query_streaming
-    def sql_query(query, readonly = true)
+    def sql_query(query, readonly: true)
       array = []
-      sql_query_streaming(query, readonly) do |row|
+      sql_query_streaming(query, readonly: readonly) do |row|
         array << row
       end
       array
@@ -147,8 +147,8 @@ module Morph
                     invalid: :replace, undef: :replace, replace: "")
     end
 
-    def sql_query_safe(query, readonly = true)
-      sql_query(query, readonly)
+    def sql_query_safe(query, readonly: true)
+      sql_query(query, readonly: readonly)
     rescue *CORRUPT_DATABASE_EXCEPTIONS, SQLite3::SQLException
       nil
     end
