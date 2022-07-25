@@ -57,7 +57,7 @@ module Morph
       sync_new line, scope: run unless Rails.env.test?
     end
 
-    def go(max_lines = Runner.default_max_lines)
+    def go(max_lines = Runner.default_max_lines, &block)
       # If container already exists we just attach to it
       c = container_for_run
       if c.nil?
@@ -77,12 +77,10 @@ module Morph
         # slightly after the true time.
         since += 1e-6 if since
       end
-      attach_to_run_and_finish(c, since) do |timestamp, stream, text|
-        yield timestamp, stream, text
-      end
+      attach_to_run_and_finish(c, since, &block)
     end
 
-    def compile_and_start_run(max_lines = Runner.default_max_lines)
+    def compile_and_start_run(max_lines = Runner.default_max_lines, &block)
       # puts "Starting...\n"
       run.database.backup
       run.update_attributes(started_at: Time.now,
@@ -117,10 +115,8 @@ module Morph
           platform: platform,
           # We're disabling the proxy for all scrapers
           disable_proxy: true,
-          memory: (run.scraper.memory_mb * 1024 * 1024 if run.scraper&.memory_mb)
-        ) do |stream, text|
-          yield(stream, text)
-        end
+          memory: (run.scraper.memory_mb * 1024 * 1024 if run.scraper&.memory_mb), &block
+        )
       end
 
       if c
@@ -137,14 +133,12 @@ module Morph
       c
     end
 
-    def attach_to_run_and_finish(container, since)
+    def attach_to_run_and_finish(container, since, &block)
       if container.nil?
         # TODO: Return the status for a compile error
         result = Morph::RunResult.new(255, {}, {})
       else
-        Morph::DockerRunner.attach_to_run(container, since) do |timestamp, stream, text|
-          yield(timestamp, stream, text)
-        end
+        Morph::DockerRunner.attach_to_run(container, since, &block)
         result = Morph::DockerRunner.finish(container, ["data.sqlite"])
       end
 

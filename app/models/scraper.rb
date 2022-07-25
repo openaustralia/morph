@@ -383,14 +383,11 @@ class Scraper < ActiveRecord::Base
       repo = Morph::Github.create_repository(forked_by, owner, name)
       update_attributes(github_id: repo.id, github_url: repo.rels[:html].href,
                         git_url: repo.rels[:git].href)
-    # rubocop:disable Lint/HandleExceptions
     rescue Octokit::UnprocessableEntity
       # This means the repo has already been created. We will have gotten here
       # if this background job failed at some point past here and is rerun. So,
       # let's happily continue
     end
-    # rubocop:enable Lint/HandleExceptions
-
     scraperwiki = Morph::Scraperwiki.new(scraperwiki_shortname)
 
     # Copy the sqlite database across from Scraperwiki

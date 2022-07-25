@@ -3,6 +3,7 @@
 # A record of an http/https request from a scraper to the outside world
 class ConnectionLog < ActiveRecord::Base
   attr_accessor :ip_address
+
   belongs_to :domain
   belongs_to :run
   before_save :update_run_id_from_ip_address

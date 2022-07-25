@@ -254,7 +254,7 @@ module Morph
 
     # And build
     # TODO: Set memory and cpu limits during compile
-    def self.compile(image, repo_path)
+    def self.compile(image, repo_path, &block)
       Dir.mktmpdir("morph") do |dir|
         FileUtils.mkdir(File.join(dir, "app"))
         copy_config_to_directory(repo_path, File.join(dir, "app"), true)
@@ -276,8 +276,8 @@ module Morph
             "ENV NODE_TLS_REJECT_UNAUTHORIZED 0",
             "RUN /bin/herokuish buildpack build"
           ],
-          dir
-        ) { |c| yield c }
+          dir, &block
+        )
       end
     end
   end

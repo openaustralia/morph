@@ -196,14 +196,14 @@ class ScrapersController < ApplicationController
 
   def scraper_params
     a = if can? :memory_setting, @scraper
-          [:auto_run, :memory_mb]
+          %i[auto_run memory_mb]
         else
           [:auto_run]
         end
     params.require(:scraper).permit(*a, variables_attributes: %i[
-      id name value _destroy
-    ], webhooks_attributes: %i[
-      id url _destroy
-    ])
-end
+                                      id name value _destroy
+                                    ], webhooks_attributes: %i[
+                                      id url _destroy
+                                    ])
+  end
 end
