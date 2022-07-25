@@ -249,7 +249,8 @@ module Morph
 
     def self.dockerfile_contents_from_commands(image, commands)
       commands = [commands] unless commands.is_a?(Array)
-      "from #{image.id}\n" + commands.map { |c| c + "\n" }.join
+      lines = ["from #{image.id}"] + commands
+      (lines.map { |c| "#{c}\n" }).join
     end
 
     # And build
