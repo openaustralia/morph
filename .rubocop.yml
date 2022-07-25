@@ -1,3 +1,8 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-rails
+
 AllCops:
   Exclude:
       - 'db/migrate/*'
@@ -15,7 +20,7 @@ AllCops:
 # the codebase currently. It would be good to fix as it would make things
 # easier to read but it would take a bit of time to do.
 # TODO: Enable this again
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false
 
 # We prefer double quotes here and it we're making liberal use of multi-line

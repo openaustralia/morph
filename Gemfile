@@ -115,6 +115,7 @@ group :development do
   gem "spring-commands-rspec"
 
   gem "rubocop"
+  gem "rubocop-rails", require: false
 end
 
 group :development, :test do
