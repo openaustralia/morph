@@ -3,13 +3,14 @@
 module RunsHelper
   def database_changes_in_words(run)
     sections = []
-    sections << pluralize(run.records_added, "record") + " added" if run.records_added&.positive?
-    sections << pluralize(run.records_removed, "record") + " removed" if run.records_removed&.positive?
-    sections << pluralize(run.records_changed, "record") + " updated" if run.records_changed&.positive?
+    sections << "#{pluralize(run.records_added, 'record')} added" if run.records_added&.positive?
+    sections << "#{pluralize(run.records_removed, 'record')} removed" if run.records_removed&.positive?
+    sections << "#{pluralize(run.records_changed, 'record')} updated" if run.records_changed&.positive?
     sections << "nothing changed" if run.records_added&.zero? && run.records_removed&.zero? && run.records_changed&.zero?
     return if sections.empty?
 
-    sections.join(", ") + " in the database"
+    changed_text = sections.join(", ")
+    "#{changed_text} in the database"
   end
 
   # make an array never longer than 4 by summaring things on the end
