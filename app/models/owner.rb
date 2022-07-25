@@ -55,7 +55,7 @@ class Owner < ActiveRecord::Base
     elsif b =~ %r{https?://}
       b
     else
-      "http://" + b
+      "http://#{b}"
     end
   end
 

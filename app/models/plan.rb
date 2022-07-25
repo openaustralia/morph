@@ -3,6 +3,8 @@
 class Plan
   attr_reader :stripe_plan_id
 
+  PLAN_PRICES = { "morph_basic" => 14, "morph_standard" => 24, "morph_advanced" => 149 }.freeze
+
   def initialize(stripe_plan_id)
     @stripe_plan_id = stripe_plan_id
   end
@@ -39,14 +41,7 @@ class Plan
   end
 
   def price
-    case stripe_plan_id
-    when "morph_basic"
-      14
-    when "morph_standard"
-      24
-    when "morph_advanced"
-      149
-    end
+    PLAN_PRICES[stripe_plan_id]
   end
 
   def price_in_cents

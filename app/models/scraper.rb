@@ -242,7 +242,7 @@ class Scraper < ActiveRecord::Base
   end
 
   def github_url_for_file(file)
-    github_url + "/blob/master/" + file
+    "#{github_url}/blob/master/#{file}"
   end
 
   def language
@@ -370,7 +370,7 @@ class Scraper < ActiveRecord::Base
 
   # Return the https version of the git clone url (git_url)
   def git_url_https
-    "https" + git_url[3..-1]
+    "https#{git_url[3..-1]}"
   end
 
   def fork_from_scraperwiki!
