@@ -105,7 +105,7 @@ ActiveAdmin.register_page "Docker Containers" do
               td record[:container_id]
               td record[:exit_code]
               td do
-                time_ago_in_words(record[:finished_at]) + " ago" if record[:finished_at]
+                "#{time_ago_in_words(record[:finished_at])} ago" if record[:finished_at]
               end
               td do
                 distance_of_time_in_words(record[:finished_at] - record[:started_at]) if record[:finished_at]

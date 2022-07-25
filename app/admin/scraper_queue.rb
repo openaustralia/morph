@@ -35,8 +35,8 @@ ActiveAdmin.register_page "Scraper Queue" do
             tr do
               td link_to record[:run].id, admin_run_path(record[:run])
               td link_to scraper.full_name, scraper
-              td time_ago_in_words(record[:enqueued_at]) + " ago"
-              td time_ago_in_words(record[:run_at]) + " ago"
+              td "#{time_ago_in_words(record[:enqueued_at])} ago"
+              td "#{time_ago_in_words(record[:run_at])} ago"
             end
           end
         end
@@ -69,7 +69,7 @@ ActiveAdmin.register_page "Scraper Queue" do
             tr do
               td link_to record[:run].id, admin_run_path(record[:run])
               td link_to scraper.full_name, scraper
-              td time_ago_in_words(record[:enqueued_at]) + " ago"
+              td "#{time_ago_in_words(record[:enqueued_at])} ago"
             end
           end
         end

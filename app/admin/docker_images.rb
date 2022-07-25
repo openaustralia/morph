@@ -16,14 +16,14 @@ ActiveAdmin.register_page "Docker Images" do
           tr do
             td image.id
             td do
-              time_ago_in_words(Time.at(image.info["Created"])) + " ago"
+              "#{time_ago_in_words(Time.at(image.info['Created']))} ago"
             end
             td do
               # We're getting an image id which is in a different form than
               # the one that's stored in the database
               image_id = image.id.split(":")[1][0..11]
               time = Run.where(docker_image: image_id).maximum(:created_at)
-              time_ago_in_words(time) + " ago" if time
+              "#{time_ago_in_words(time)} ago" if time
             end
           end
         end
