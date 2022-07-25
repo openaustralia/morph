@@ -109,7 +109,7 @@ namespace :app do
     end
 
     task :set_logger_to_stdout do
-      Rails.logger = ActiveSupport::Logger.new(STDOUT)
+      Rails.logger = ActiveSupport::Logger.new($stdout)
       Rails.logger.level = 1
     end
   end

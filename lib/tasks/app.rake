@@ -158,7 +158,7 @@ namespace :app do
   end
 
   def confirm(message)
-    STDOUT.puts "#{message} (y/n)"
-    STDIN.gets.strip == "y"
+    $stdout.puts "#{message} (y/n)"
+    $stdin.gets.strip == "y"
   end
 end
