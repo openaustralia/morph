@@ -272,7 +272,8 @@ class ApiController < ApplicationController
   end
 
   def stream_message(stream, text)
-    response.stream.write({ stream: stream, text: text }.to_json + "\n")
+    line = { stream: stream, text: text }.to_json
+    response.stream.write("#{line}\n")
   end
 
   def authenticate_api_key
