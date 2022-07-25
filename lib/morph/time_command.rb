@@ -39,10 +39,11 @@ module Morph
         [:stime, value.to_f]
       when /Elapsed \(wall clock\) time \(h:mm:ss or m:ss\)/
         n = value.split(":").map(&:to_f)
-        if n.count == 2
+        case n.count
+        when 2
           m, s = n
           h = 0
-        elsif n.count == 3
+        when 3
           h, m, s = n
         end
         [:wall_time, (h * 60 + m) * 60 + s]

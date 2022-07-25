@@ -92,9 +92,8 @@ module Morph
       unless run.language&.supported?
         supported_scraper_files =
           Morph::Language.languages_supported.map(&:scraper_filename)
-        m = "Can't find scraper code. Expected to find a file called " +
-            supported_scraper_files.to_sentence(last_word_connector: ", or ") +
-            " in the root directory"
+        supported_scraper_files_as_text = supported_scraper_files.to_sentence(last_word_connector: ", or ")
+        m = "Can't find scraper code. Expected to find a file called #{supported_scraper_files_as_text} in the root directory"
         yield "stderr", m
         run.update_attributes(status_code: 999, finished_at: Time.now)
         return

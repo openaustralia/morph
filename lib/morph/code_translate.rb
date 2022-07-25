@@ -62,7 +62,7 @@ module Morph
         if code =~ /require ['"]scraperwiki['"]/
           code
         else
-          "require 'scraperwiki'\n" + code
+          "require 'scraperwiki'\n#{code}"
         end
       end
 
