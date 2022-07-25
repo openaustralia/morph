@@ -63,7 +63,7 @@ module Morph
       if c.nil?
         c = compile_and_start_run(max_lines) do |stream, text|
           # TODO: Could we get sensible timestamps out at this stage too?
-          yield nil, stream, text
+          yield nil, stream, text if block_given?
         end
         since = nil
       else

@@ -158,7 +158,7 @@ module Morph
         c.scrub!
         # There is a chance that we catch a log line that shouldn't
         # be included. So...
-        if since.nil? || timestamp > since
+        if (since.nil? || timestamp > since) && block_given?
           if s == :stderr && c == "limit_output.rb: Too many lines of output!\n"
             yield timestamp, :internalerr,
               "\n" \

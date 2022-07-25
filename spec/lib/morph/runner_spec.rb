@@ -32,7 +32,7 @@ describe Morph::Runner do
       run.database.clear
       expect(run.database.no_rows).to eq 0
       fill_scraper_for_run("save_to_database", run)
-      Morph::Runner.new(run).go {}
+      Morph::Runner.new(run).go
       run.reload
       expect(run.status_code).to eq 0
       expect(run.database.no_rows).to eq 1
