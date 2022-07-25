@@ -92,11 +92,17 @@ module Morph
     # Returns nicknames of github users who have contributed to a particular
     # repo
     # user is used to make the authenticated api call
-    def self.contributor_nicknames(repo_full_name, user)
-      # We can't use unauthenticated requests because we will go over our
-      # rate limit
+    def self.contributor_nicknames(repo_full_name)
+      # This is not an action that is directly initiated by the user. It happens
+      # whenever the github repo is synchronised (which happens on every run).
+      # So we should authenticated the request using the application
+      # which hopefully will not result in being rate limited.
+      client = Octokit::Client.new(
+        client_id: ENV["GITHUB_APP_CLIENT_ID"],
+        client_secret: ENV["GITHUB_APP_CLIENT_SECRET"]
+      )
       # github call returns nil if the git repo is completely empty
-      contributors = user.octokit_client.contributors(repo_full_name)
+      contributors = client.contributors(repo_full_name)
       contributors = [] unless contributors.is_a?(Array)
       contributors.map { |c| c["login"] }
     # TODO: A bit of a hack to just return an empty string if there is a problem

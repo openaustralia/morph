@@ -120,22 +120,12 @@ class Scraper < ActiveRecord::Base
     )
   end
 
-  # Find a user related to this scraper that we can use them to make
-  # authenticated github requests
-  def related_user
-    if owner.user?
-      owner
-    else
-      owner.users.first
-    end
-  end
-
   def original_language
     Morph::Language.new(original_language_key.to_sym)
   end
 
   def update_contributors
-    nicknames = Morph::Github.contributor_nicknames(full_name, related_user)
+    nicknames = Morph::Github.contributor_nicknames(full_name)
     contributors = nicknames.map { |n| User.find_or_create_by_nickname(n) }
     update_attributes(contributors: contributors)
   end
