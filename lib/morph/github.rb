@@ -97,18 +97,21 @@ module Morph
       # whenever the github repo is synchronised (which happens on every run).
       # So we should authenticated the request using the application
       # which hopefully will not result in being rate limited.
-      client = Octokit::Client.new(
-        client_id: ENV["GITHUB_APP_CLIENT_ID"],
-        client_secret: ENV["GITHUB_APP_CLIENT_SECRET"]
-      )
+
+      # I'm struggling to make a request with the application id and secret using octokit.
+      # So, instead let's do it ourselves
+      client_id = ENV["GITHUB_APP_CLIENT_ID"]
+      client_secret = ENV["GITHUB_APP_CLIENT_SECRET"]
+
+      conn = Faraday.new(url: "https://api.github.com") do |faraday|
+        faraday.request :basic_auth, client_id, client_secret
+        faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
+      end
+      res = conn.get("/repos/#{repo_full_name}/contributors")
+      contributors = JSON.parse(res.body)
       # github call returns nil if the git repo is completely empty
-      contributors = client.contributors(repo_full_name)
       contributors = [] unless contributors.is_a?(Array)
       contributors.map { |c| c["login"] }
-    # TODO: A bit of a hack to just return an empty string if there is a problem
-    # with the github user authentication
-    rescue Octokit::NotFound, Octokit::Unauthorized
-      []
     end
   end
 end
