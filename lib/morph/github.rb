@@ -91,7 +91,6 @@ module Morph
 
     # Returns nicknames of github users who have contributed to a particular
     # repo
-    # user is used to make the authenticated api call
     def self.contributor_nicknames(repo_full_name)
       # This is not an action that is directly initiated by the user. It happens
       # whenever the github repo is synchronised (which happens on every run).
