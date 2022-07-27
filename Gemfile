@@ -39,7 +39,8 @@ gem "omniauth-github", "~> 1.4.0"
 # to use because we're using ruby 2.4
 # TODO: Remove this after we upgrade to ruby 2.6.3 or later
 gem "redis", "< 4.6.0"
-gem "sidekiq"
+# TODO: Upgrade to sidekiq 6
+gem "sidekiq", "~> 5"
 gem "sidekiq-limit_fetch"
 gem "simple_form"
 # gem 'jquery-turbolinks'
