@@ -227,6 +227,13 @@ describe ApiController do
       end
 
       it "returns an atom feed" do
+        # There's a deadlock during tests when writing more than 10 times with ActionController.Live
+        # This is fixed in recent versions of rails but this is a workaround for this particular test
+        # case which writes many lines
+        # https://github.com/rails/rails/issues/31813
+        # TODO: Remove this workaround when we've upgraded rails
+        allow(SizedQueue).to receive(:new).and_return(SizedQueue.new(1000))
+
         get :data, id: "mlandauer/a_scraper", key: "1234", format: :atom
 
         expect(response).to be_success
