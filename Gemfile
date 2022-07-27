@@ -4,7 +4,10 @@ source "https://rubygems.org"
 
 ruby "2.5.9"
 
-gem "dotenv-rails"
+# we are locking the version because the latest
+# version breaks with the old ruby (2.5.9) that we're currently using
+# TODO: Remove this restriction as soon as we can
+gem "dotenv-rails", "< 2.8.0"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "4.2.11.1"
