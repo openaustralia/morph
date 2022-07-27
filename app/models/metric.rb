@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Capture output of /usr/bin/time command (on Linux)
-class Metric < ActiveRecord::Base
+class Metric < ApplicationRecord
   belongs_to :run, touch: true
   # The names of metrics are all copied from the structure returned by
   # getrusage(2) (with the exception of wall_time)

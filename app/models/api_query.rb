@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # A record of a download or an API query
-class ApiQuery < ActiveRecord::Base
+class ApiQuery < ApplicationRecord
   belongs_to :scraper
   belongs_to :owner
 

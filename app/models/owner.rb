@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # A user or organization that a scraper belongs to
-class Owner < ActiveRecord::Base
+class Owner < ApplicationRecord
   extend FriendlyId
   friendly_id :nickname
 

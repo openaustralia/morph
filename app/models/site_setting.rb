@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Settings that apply to the whole app and everybody on it
-class SiteSetting < ActiveRecord::Base
+class SiteSetting < ApplicationRecord
   serialize :settings
 
   def self.read_only_mode

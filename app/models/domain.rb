@@ -4,7 +4,7 @@
 require "nokogiri"
 
 # A domain that is scraped by a scraper
-class Domain < ActiveRecord::Base
+class Domain < ApplicationRecord
   # If meta is available use that, otherwise title
   def meta_or_title
     if meta.present?

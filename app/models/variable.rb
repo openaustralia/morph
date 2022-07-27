@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # A secret environment variable and its value that can be passed to a scraper
-class Variable < ActiveRecord::Base
+class Variable < ApplicationRecord
   belongs_to :scraper
   validates :name, format: {
     with: /\AMORPH_[A-Z0-9_]+\z/,

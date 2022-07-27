@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Progress in morp creating a scraper
-class CreateScraperProgress < ActiveRecord::Base
+class CreateScraperProgress < ApplicationRecord
   include RenderSync::Actions
   has_one :scraper, dependent: :nullify
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # A record of an http/https request from a scraper to the outside world
-class ConnectionLog < ActiveRecord::Base
+class ConnectionLog < ApplicationRecord
   attr_accessor :ip_address
 
   belongs_to :domain

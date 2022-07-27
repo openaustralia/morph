@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # A scraper is a script that runs that gets data from the web
-class Scraper < ActiveRecord::Base
+class Scraper < ApplicationRecord
   include RenderSync::Actions
   # Using smaller batch_size than the default for the time being because
   # reindexing causes elasticsearch on the local VM to run out of memory
