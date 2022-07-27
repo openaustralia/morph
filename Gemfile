@@ -10,7 +10,7 @@ ruby "2.5.9"
 gem "dotenv-rails", "< 2.8.0"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "4.2.11.1"
+gem "rails", "5.0.7.2"
 
 gem "sqlite3"
 # The very latest mysql2 gem versions only work with rails 5
