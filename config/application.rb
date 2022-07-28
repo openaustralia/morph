@@ -23,8 +23,5 @@ module Morph
     # config.i18n.default_locale = :de
 
     config.autoload_paths += %W(#{config.root}/lib)
-
-    # This is to opt in to new behaviour for the next version of rails
-    config.active_record.raise_in_transactional_callbacks = true
   end
 end
