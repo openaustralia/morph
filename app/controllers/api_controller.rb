@@ -277,7 +277,7 @@ class ApiController < ApplicationController
   end
 
   def authenticate_api_key
-    render(text: "API key is not valid", status: :unauthorized) if current_user.nil?
+    render(plain: "API key is not valid", status: :unauthorized) if current_user.nil?
   end
 
   def current_user

@@ -83,7 +83,7 @@ class ScrapersController < ApplicationController
   def scraperwiki
     authorize! :scraperwiki, Scraper
     if params[:scraperwiki_shortname].nil?
-      render text: "scraperwiki_shortname needs to be set. This should happen automatically when migrating to morph.io from ScraperWiki Classic", status: :bad_request
+      render plain: "scraperwiki_shortname needs to be set. This should happen automatically when migrating to morph.io from ScraperWiki Classic", status: :bad_request
       return
     end
     @scraper = Scraper.new(

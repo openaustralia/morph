@@ -23,9 +23,9 @@ class ConnectionLogsController < ApplicationController
         domain_id: domain.id
       )
 
-      render text: "Created"
+      render plain: "Created"
     else
-      render text: "Wrong API key", status: :unauthorized
+      render plain: "Wrong API key", status: :unauthorized
     end
   end
 
