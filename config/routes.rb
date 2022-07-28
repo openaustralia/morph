@@ -84,7 +84,7 @@ Rails.application.routes.draw do
   resources :owners, only: [] do
     member do
       get 'settings'
-      post 'reset_key', path: 'settings/reset_key'
+      post 'settings/reset_key', as: 'reset_key', action: 'reset_key'
       post 'watch'
     end
   end
