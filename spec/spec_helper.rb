@@ -24,7 +24,6 @@ VCR.configure do |c|
   c.cassette_library_dir = "spec/fixtures/vcr_cassettes"
   c.hook_into :webmock
   c.ignore_hosts "codeclimate.com"
-  c.ignore_localhost = true
 end
 
 # We don't want webmock to get involved with the excon library at all
@@ -69,6 +68,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   config.before(:suite) do
+    Searchkick.disable_callbacks
     DatabaseCleaner.start
     VCR.use_cassette("scraper_validations") { FactoryBot.lint }
   ensure
