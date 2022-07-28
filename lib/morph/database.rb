@@ -229,16 +229,14 @@ module Morph
       # Don't error on dates that are FixNum and that don't parse
       %w[date datetime].each do |type|
         db.translator.add_translator(type) do |t, v|
-          begin
-            case t.downcase
-            when "date"
-              Date.parse(v.to_s)
-            when "datetime"
-              DateTime.parse(v.to_s)
-            end
-          rescue ArgumentError
-            v
+          case t.downcase
+          when "date"
+            Date.parse(v.to_s)
+          when "datetime"
+            DateTime.parse(v.to_s)
           end
+        rescue ArgumentError
+          v
         end
       end
 

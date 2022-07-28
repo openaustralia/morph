@@ -8,12 +8,12 @@ describe ConnectionLogsController do
 
     it "is successful if correct key is used" do
       expect(UpdateDomainWorker).to receive(:perform_async)
-      post :create, key: "sjdf", host: "foo.com"
+      post :create, params: { key: "sjdf", host: "foo.com" }
       expect(response).to be_successful
     end
 
     it "is not successful if wrong key is used" do
-      post :create, key: "foo"
+      post :create, params: { key: "foo" }
       expect(response).not_to be_successful
     end
   end

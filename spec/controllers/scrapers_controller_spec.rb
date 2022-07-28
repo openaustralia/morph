@@ -17,7 +17,7 @@ describe ScrapersController do
           create(:scraper, owner: user, name: "a_scraper",
                            full_name: "mlandauer/a_scraper")
         end
-        delete :destroy, id: "mlandauer/a_scraper"
+        delete :destroy, params: { id: "mlandauer/a_scraper" }
         expect(Scraper.count).to eq 1
       end
     end
@@ -37,12 +37,12 @@ describe ScrapersController do
         end
 
         it "allows you to delete the scraper" do
-          delete :destroy, id: "mlandauer/a_scraper"
+          delete :destroy, params: { id: "mlandauer/a_scraper" }
           expect(Scraper.count).to eq 0
         end
 
         it "redirects to the owning user" do
-          delete :destroy, id: "mlandauer/a_scraper"
+          delete :destroy, params: { id: "mlandauer/a_scraper" }
           expect(response).to redirect_to user_url(user)
         end
       end
@@ -57,12 +57,12 @@ describe ScrapersController do
         end
 
         it "allows you to delete a scraper if it's owner by an organisation you're part of" do
-          delete :destroy, id: "org/a_scraper"
+          delete :destroy, params: { id: "org/a_scraper" }
           expect(Scraper.count).to eq 0
         end
 
         it "redirects to the owning organisation" do
-          delete :destroy, id: "org/a_scraper"
+          delete :destroy, params: { id: "org/a_scraper" }
           expect(response).to redirect_to organization_url(organization)
         end
       end
@@ -73,7 +73,7 @@ describe ScrapersController do
           Scraper.create(owner: other_user, name: "a_scraper",
                          full_name: "otheruser/a_scraper")
         end
-        expect { delete :destroy, id: "otheruser/a_scraper" }
+        expect { delete :destroy, params: { id: "otheruser/a_scraper" } }
           .to raise_error(CanCan::AccessDenied)
         expect(Scraper.count).to eq 1
       end
@@ -84,7 +84,7 @@ describe ScrapersController do
           Scraper.create(owner: other_organisation, name: "a_scraper",
                          full_name: "otherorg/a_scraper")
         end
-        expect { delete :destroy, id: "otherorg/a_scraper" }
+        expect { delete :destroy, params: { id: "otherorg/a_scraper" } }
           .to raise_error(CanCan::AccessDenied)
         expect(Scraper.count).to eq 1
       end
@@ -106,11 +106,11 @@ describe ScrapersController do
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         create :scraper, owner: user
-        post :create_scraperwiki, scraper: {
+        post :create_scraperwiki, params: { scraper: {
           name: "my_scraper",
           owner_id: user.id,
           scraperwiki_shortname: "my_scraper"
-        }
+        } }
       end
 
       expect(assigns(:scraper).errors[:name])
@@ -126,11 +126,11 @@ describe ScrapersController do
                                                  .and_return(scraperwiki_double)
       expect(Octokit).to receive(:repository?).and_return(true)
 
-      post :create_scraperwiki, scraper: {
+      post :create_scraperwiki, params: { scraper: {
         name: "my_scraper",
         owner_id: user.id,
         scraperwiki_shortname: "my_scraper"
-      }
+      } }
 
       expect(assigns(:scraper).errors[:name])
         .to eq ["is already taken on GitHub"]
@@ -138,10 +138,10 @@ describe ScrapersController do
 
     it "errors if the ScraperWiki shortname is not set" do
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        post :create_scraperwiki, scraper: {
+        post :create_scraperwiki, params: { scraper: {
           name: "my_scraper",
           owner_id: user.id
-        }
+        } }
       end
 
       expect(assigns(:scraper).errors[:scraperwiki_shortname])
@@ -157,11 +157,11 @@ describe ScrapersController do
                                                  .and_return(scraperwiki_double)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        post :create_scraperwiki, scraper: {
+        post :create_scraperwiki, params: { scraper: {
           name: "my_scraper",
           owner_id: user.id,
           scraperwiki_shortname: "missing_scraper"
-        }
+        } }
       end
 
       expect(assigns(:scraper).errors[:scraperwiki_shortname])
@@ -177,11 +177,11 @@ describe ScrapersController do
                                                  .and_return(scraperwiki_double)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        post :create_scraperwiki, scraper: {
+        post :create_scraperwiki, params: { scraper: {
           name: "my_scraper",
           owner_id: user.id,
           scraperwiki_shortname: "private_scraper"
-        }
+        } }
       end
 
       expect(assigns(:scraper).errors[:scraperwiki_shortname])
@@ -197,11 +197,11 @@ describe ScrapersController do
                                                  .and_return(scraperwiki_double)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        post :create_scraperwiki, scraper: {
+        post :create_scraperwiki, params: { scraper: {
           name: "my_scraper",
           owner_id: user.id,
           scraperwiki_shortname: "some_view"
-        }
+        } }
       end
 
       expect(assigns(:scraper).errors[:scraperwiki_shortname])
@@ -219,11 +219,11 @@ describe ScrapersController do
       expect(ForkScraperwikiWorker).to receive(:perform_async)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        post :create_scraperwiki, scraper: {
+        post :create_scraperwiki, params: { scraper: {
           name: "my_scraper",
           owner_id: user.id,
           scraperwiki_shortname: "missing_scraper"
-        }
+        } }
       end
     end
 
@@ -231,10 +231,10 @@ describe ScrapersController do
       expect(ForkScraperwikiWorker).not_to receive(:perform_async)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        post :create_scraperwiki, scraper: {
+        post :create_scraperwiki, params: { scraper: {
           name: "my_scraper",
           owner_id: user.id
-        }
+        } }
       end
     end
   end

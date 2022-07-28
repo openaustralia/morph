@@ -26,7 +26,7 @@ describe ApiController do
     end
 
     it "does not work without a valid api key" do
-      post :run_remote, api_key: "1234"
+      post :run_remote, params: { api_key: "1234" }
       expect(response.response_code).to eq 401
       expect(response.body).to eq "API key is not valid"
     end
@@ -36,7 +36,7 @@ describe ApiController do
       expect(Ability).to receive(:new).with(user).and_return(ability)
       expect(ability).to receive(:can?).with(:create, Run).and_return(false)
 
-      post :run_remote, api_key: user.api_key, code: code
+      post :run_remote, params: { api_key: user.api_key, code: code }
 
       expect(response).to be_success
       parsed = response.body.split("\n").map { |l| JSON.parse(l) }
@@ -59,7 +59,7 @@ describe ApiController do
       )
       expect(runner).to receive(:container_for_run).and_return(nil)
 
-      post :run_remote, api_key: user.api_key, code: code
+      post :run_remote, params: { api_key: user.api_key, code: code }
 
       expect(response).to be_success
       parsed = response.body.split("\n").map { |l| JSON.parse(l) }
@@ -125,7 +125,7 @@ describe ApiController do
 
     context "user not signed in and no key provided" do
       it "returns an error in json" do
-        get :data, id: "mlandauer/a_scraper", format: :json
+        get :data, params: { id: "mlandauer/a_scraper", format: :json }
         expect(response.code).to eq "401"
         expect(JSON.parse(response.body))
           .to eq "error" => "API key is missing"
@@ -133,21 +133,21 @@ describe ApiController do
       end
 
       it "returns csv error as text" do
-        get :data, id: "mlandauer/a_scraper", format: :csv
+        get :data, params: { id: "mlandauer/a_scraper", format: :csv }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is missing"
         expect(response.content_type).to eq "text"
       end
 
       it "returns atom feed error as text" do
-        get :data, id: "mlandauer/a_scraper", format: :atom
+        get :data, params: { id: "mlandauer/a_scraper", format: :atom }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is missing"
         expect(response.content_type).to eq "text"
       end
 
       it "returns sqlite error as text" do
-        get :data, id: "mlandauer/a_scraper", format: :sqlite
+        get :data, params: { id: "mlandauer/a_scraper", format: :sqlite }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is missing"
         expect(response.content_type).to eq "text"
@@ -156,7 +156,7 @@ describe ApiController do
 
     context "user not signed in and incorrect key provided" do
       it "returns an error in json" do
-        get :data, id: "mlandauer/a_scraper", key: "foo", format: :json
+        get :data, params: { id: "mlandauer/a_scraper", key: "foo", format: :json }
         expect(response.code).to eq "401"
         expect(JSON.parse(response.body))
           .to eq "error" => "API key is not valid"
@@ -164,21 +164,21 @@ describe ApiController do
       end
 
       it "returns csv error as text" do
-        get :data, id: "mlandauer/a_scraper", key: "foo", format: :csv
+        get :data, params: { id: "mlandauer/a_scraper", key: "foo", format: :csv }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is not valid"
         expect(response.content_type).to eq "text"
       end
 
       it "returns atom feed error as text" do
-        get :data, id: "mlandauer/a_scraper", key: "foo", format: :atom
+        get :data, params: { id: "mlandauer/a_scraper", key: "foo", format: :atom }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is not valid"
         expect(response.content_type).to eq "text"
       end
 
       it "returns sqlite error as text" do
-        get :data, id: "mlandauer/a_scraper", key: "foo", format: :sqlite
+        get :data, params: { id: "mlandauer/a_scraper", key: "foo", format: :sqlite }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is not valid"
         expect(response.content_type).to eq "text"
@@ -191,7 +191,7 @@ describe ApiController do
       end
 
       it "returns json" do
-        get :data, id: "mlandauer/a_scraper", key: "1234", format: :json
+        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :json }
         expect(response).to be_success
         expect(JSON.parse(response.body)).to eq [
           {
@@ -205,7 +205,7 @@ describe ApiController do
       end
 
       it "returns jsonp" do
-        get :data, id: "mlandauer/a_scraper", key: "1234", format: :json, callback: "foo"
+        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :json, callback: "foo" }
         expect(response).to be_success
         expect(response.body).to eq <<~RESPONSE
           /**/foo([
@@ -216,7 +216,7 @@ describe ApiController do
       end
 
       it "returns csv" do
-        get :data, id: "mlandauer/a_scraper", key: "1234", format: :csv
+        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :csv }
         expect(response).to be_success
 
         expect(response.body)
@@ -234,7 +234,7 @@ describe ApiController do
         # TODO: Remove this workaround when we've upgraded rails
         allow(SizedQueue).to receive(:new).and_return(SizedQueue.new(1000))
 
-        get :data, id: "mlandauer/a_scraper", key: "1234", format: :atom
+        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :atom }
 
         expect(response).to be_success
         expect(response.body).to eq <<~RESPONSE
@@ -269,22 +269,22 @@ describe ApiController do
       end
 
       it "returns error with json" do
-        get :data, id: "mlandauer/a_scraper", format: :json
+        get :data, params: { id: "mlandauer/a_scraper", format: :json }
         expect(response).not_to be_success
       end
 
       it "returns error with csv" do
-        get :data, id: "mlandauer/a_scraper", format: :csv
+        get :data, params: { id: "mlandauer/a_scraper", format: :csv }
         expect(response).not_to be_success
       end
 
       it "returns error with atom feed" do
-        get :data, id: "mlandauer/a_scraper", format: :atom
+        get :data, params: { id: "mlandauer/a_scraper", format: :atom }
         expect(response).not_to be_success
       end
 
       it "returns error with sqlite" do
-        get :data, id: "mlandauer/a_scraper", format: :sqlite
+        get :data, params: { id: "mlandauer/a_scraper", format: :sqlite }
         expect(response).not_to be_success
       end
     end

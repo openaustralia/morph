@@ -69,12 +69,10 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   config.before(:suite) do
-    begin
-      DatabaseCleaner.start
-      VCR.use_cassette("scraper_validations") { FactoryBot.lint }
-    ensure
-      DatabaseCleaner.clean
-    end
+    DatabaseCleaner.start
+    VCR.use_cassette("scraper_validations") { FactoryBot.lint }
+  ensure
+    DatabaseCleaner.clean
   end
 
   # For tests marked as :docker tests don't use VCR
