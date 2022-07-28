@@ -12,9 +12,8 @@ gem "dotenv-rails", "< 2.8.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "5.0.7.2"
 
+gem "mysql2"
 gem "sqlite3"
-# The very latest mysql2 gem versions only work with rails 5
-gem "mysql2", "~> 0.4.10"
 
 gem "bootstrap-sass"
 gem "bootstrap-select-rails"
@@ -59,6 +58,9 @@ gem "cancan"
 gem "d3-rails", "~> 3.5"
 # Locking elasticsearch to 7.5.0 as upgrading it seems to break things working
 # with the ancient version of elasticsearch (1.x) that we're running currently
+# This lock is also stopping us from upgrading faraday which is giving us
+# deprecation warnings.
+# TODO: Upgrade elasticsearch as soon as we can
 gem "elasticsearch", "7.5.0"
 gem "haml-coderay"
 gem "honeybadger"
