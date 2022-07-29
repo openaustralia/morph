@@ -234,10 +234,10 @@ describe Morph::DockerRunner do
 
       logs = []
       c = described_class.compile_and_start_run(repo_path: @dir) do |_stream, text|
-        logs << [Time.now, text]
+        logs << [Time.zone.now, text]
       end
       described_class.attach_to_run(c) do |_timestamp, _stream, text|
-        logs << [Time.now, text]
+        logs << [Time.zone.now, text]
       end
       described_class.finish(c, [])
       start_time = logs.find { |l| l[1] == "Started!\n" }[0]

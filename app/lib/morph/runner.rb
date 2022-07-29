@@ -83,7 +83,7 @@ module Morph
     def compile_and_start_run(max_lines = Runner.default_max_lines, &block)
       # puts "Starting...\n"
       run.database.backup
-      run.update(started_at: Time.now,
+      run.update(started_at: Time.zone.now,
                  git_revision: run.current_revision_from_repo)
       sync_update run.scraper if run.scraper
       FileUtils.mkdir_p run.data_path
@@ -95,7 +95,7 @@ module Morph
         supported_scraper_files_as_text = supported_scraper_files.to_sentence(last_word_connector: ", or ")
         m = "Can't find scraper code. Expected to find a file called #{supported_scraper_files_as_text} in the root directory"
         yield "stderr", m
-        run.update(status_code: 999, finished_at: Time.now)
+        run.update(status_code: 999, finished_at: Time.zone.now)
         return
       end
 
@@ -159,7 +159,7 @@ module Morph
           However, this could also be related to an intermittent problem which we're
           working hard to resolve: https://github.com/openaustralia/morph/issues/1064
         ERROR
-        yield Time.now, "stderr", m
+        yield Time.zone.now, "stderr", m
         status_code = 998
       end
 
@@ -191,7 +191,7 @@ module Morph
       end
       Morph::Database.tidy_data_path(run.data_path)
 
-      run.update(status_code: status_code, finished_at: Time.now)
+      run.update(status_code: status_code, finished_at: Time.zone.now)
 
       return unless run.scraper
 
@@ -211,7 +211,7 @@ module Morph
       else
         # If there is no container then there can't be a watch process to
         # do update the run so we must do it here
-        run.update(status_code: 255, finished_at: Time.now)
+        run.update(status_code: 255, finished_at: Time.zone.now)
         # TODO: Do a sync_update?
       end
     end

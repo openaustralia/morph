@@ -14,14 +14,14 @@ describe Morph::Runner do
     let(:runner) { described_class.new(run) }
 
     it "logs console output to the run" do
-      runner.log(Time.now, :stdout, "This is a test")
+      runner.log(Time.zone.now, :stdout, "This is a test")
       expect(run.log_lines.count).to eq 1
       expect(run.log_lines.first.stream).to eq "stdout"
       expect(run.log_lines.first.text).to eq "This is a test"
     end
 
     it "truncates a very long entry" do
-      runner.log(Time.now, :stdout, "☃" * 65540)
+      runner.log(Time.zone.now, :stdout, "☃" * 65540)
       expect(run.log_lines.first.text.bytesize).to eq 65535
     end
   end

@@ -144,7 +144,7 @@ module Morph
       params = { stdout: true, stderr: true, follow: true, timestamps: true }
       params[:since] = since.to_f if since
       container.streaming_logs(params) do |s, line|
-        timestamp = Time.parse(line[0..29])
+        timestamp = Time.zone.parse(line[0..29])
         # To convert this ruby time back to the same string format as it
         # originally came in do:
         # timestamp.utc.strftime('%Y-%m-%dT%H:%M:%S.%9NZ')

@@ -15,7 +15,7 @@ class ApiController < ApplicationController
   # TODO: Document this API
   def run_remote
     response.headers["Content-Type"] = "text/event-stream"
-    run = Run.create(queued_at: Time.now, auto: false, owner: current_user)
+    run = Run.create(queued_at: Time.zone.now, auto: false, owner: current_user)
     # TODO: Shouldn't need to untar here because it just gets retarred
     Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
     runner = Morph::Runner.new(run)

@@ -16,7 +16,7 @@ class ScraperAutoRunWorker
     # Raise an error so that when we're in read-only mode the jobs get requeued
     raise "Owner #{scraper.owner.nickname} doesn't have permission to create run" unless scraper.owner.ability.can? :create, Run
 
-    run = scraper.runs.create(queued_at: Time.now, auto: true, owner_id: scraper.owner_id)
+    run = scraper.runs.create(queued_at: Time.zone.now, auto: true, owner_id: scraper.owner_id)
     # Throw the actual run onto the background so it can be safely restarted
     RunWorker.perform_async(run.id)
   end

@@ -199,28 +199,6 @@ Rails/SkipsModelValidations:
   Exclude:
     - 'app/models/scraper.rb'
 
-# Offense count: 27
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: strict, flexible
-Rails/TimeZone:
-  Exclude:
-    - 'app/admin/docker_containers.rb'
-    - 'app/admin/docker_images.rb'
-    - 'app/admin/scraper_queue.rb'
-    - 'app/controllers/api_controller.rb'
-    - 'app/lib/morph/docker_runner.rb'
-    - 'app/lib/morph/docker_utils.rb'
-    - 'app/lib/morph/runner.rb'
-    - 'app/models/owner.rb'
-    - 'app/models/scraper.rb'
-    - 'app/workers/scraper_auto_run_worker.rb'
-    - 'lib/tasks/app.rake'
-    - 'spec/lib/morph/docker_runner_spec.rb'
-    - 'spec/lib/morph/docker_utils_spec.rb'
-    - 'spec/lib/morph/runner_spec.rb'
-    - 'spec/mailers/alert_mailer_spec.rb'
-
 # Offense count: 2
 # Configuration parameters: Include.
 # Include: app/models/**/*.rb

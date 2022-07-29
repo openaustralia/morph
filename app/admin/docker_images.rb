@@ -16,7 +16,7 @@ ActiveAdmin.register_page "Docker Images" do
           tr do
             td image.id
             td do
-              "#{time_ago_in_words(Time.at(image.info['Created']))} ago"
+              "#{time_ago_in_words(Time.zone.at(image.info['Created']))} ago"
             end
             td do
               # We're getting an image id which is in a different form than

@@ -16,11 +16,11 @@ ActiveAdmin.register_page "Docker Containers" do
       record = {
         container_id: info["Id"][0..11],
         running: info["State"]["Running"] ? "yes" : "no",
-        started_at: Time.parse(info["State"]["StartedAt"])
+        started_at: Time.zone.parse(info["State"]["StartedAt"])
       }
       if record[:running] == "no"
         record[:exit_code] = info["State"]["ExitCode"]
-        record[:finished_at] = Time.parse(info["State"]["FinishedAt"])
+        record[:finished_at] = Time.zone.parse(info["State"]["FinishedAt"])
         record[:oom_killed] = info["State"]["OOMKilled"] ? "yes" : "no"
       end
       if run

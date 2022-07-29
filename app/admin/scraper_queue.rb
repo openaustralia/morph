@@ -10,8 +10,8 @@ ActiveAdmin.register_page "Scraper Queue" do
 
       {
         run: Run.find(work["payload"]["args"].first),
-        enqueued_at: Time.at(work["payload"]["enqueued_at"]),
-        run_at: Time.at(work["run_at"])
+        enqueued_at: Time.zone.at(work["payload"]["enqueued_at"]),
+        run_at: Time.zone.at(work["run_at"])
       }
     end.compact
     active_runs.sort! { |a, b| b[:enqueued_at] <=> a[:enqueued_at] }
@@ -46,7 +46,7 @@ ActiveAdmin.register_page "Scraper Queue" do
     enqueued_runs = Sidekiq::Queue["scraper"].collect do |j|
       {
         run: Run.find(j.item["args"].first),
-        enqueued_at: Time.at(j.item["enqueued_at"])
+        enqueued_at: Time.zone.at(j.item["enqueued_at"])
       }
     end
     enqueued_runs.sort! { |a, b| b[:enqueued_at] <=> a[:enqueued_at] }

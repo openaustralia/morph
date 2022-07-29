@@ -54,11 +54,11 @@ describe Morph::DockerUtils do
         FileUtils.mkdir_p(File.join(dir, "bar"))
         FileUtils.touch(File.join(dir, "bar", "twist"))
         described_class.fix_modification_times(dir)
-        expect(File.mtime(dir)).to eq Time.new(2000, 1, 1)
-        expect(File.mtime(File.join(dir, "foo"))).to eq Time.new(2000, 1, 1)
-        expect(File.mtime(File.join(dir, "bar"))).to eq Time.new(2000, 1, 1)
+        expect(File.mtime(dir)).to eq Time.zone.local(2000, 1, 1)
+        expect(File.mtime(File.join(dir, "foo"))).to eq Time.zone.local(2000, 1, 1)
+        expect(File.mtime(File.join(dir, "bar"))).to eq Time.zone.local(2000, 1, 1)
         expect(File.mtime(File.join(dir, "bar", "twist")))
-          .to eq Time.new(2000, 1, 1)
+          .to eq Time.zone.local(2000, 1, 1)
       end
     end
   end

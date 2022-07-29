@@ -13,7 +13,7 @@ namespace :app do
     containers = containers.select { |c| Morph::Runner.run_id_for_container(c) }
 
     containers.each do |container|
-      start_time = Time.parse(container.json["State"]["StartedAt"])
+      start_time = Time.zone.parse(container.json["State"]["StartedAt"])
       next if start_time >= max_duration.ago
 
       run = Morph::Runner.run_for_container(container)

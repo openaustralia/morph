@@ -90,7 +90,7 @@ module Morph
     # This ensures that if the content is the same docker will cache
     def self.fix_modification_times(dir)
       Find.find(dir) do |entry|
-        FileUtils.touch(entry, mtime: Time.new(2000, 1, 1))
+        FileUtils.touch(entry, mtime: Time.zone.local(2000, 1, 1).time)
       end
     end
 

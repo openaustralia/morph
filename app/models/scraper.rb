@@ -227,7 +227,7 @@ class Scraper < ApplicationRecord
     # same time
     return unless runnable?
 
-    run = runs.create(queued_at: Time.now, auto: false, owner_id: owner_id)
+    run = runs.create(queued_at: Time.zone.now, auto: false, owner_id: owner_id)
     RunWorker.perform_async(run.id)
   end
 
