@@ -56,9 +56,9 @@ module SupportersHelper
   def plan_recognition(plan)
     case plan.stripe_plan_id
     when "morph_basic"
-      "#{content_tag :strong, 'Shows'} your support publicly".html_safe
+      safe_join([content_tag(:strong, "Shows"), " your support publicly"])
     when "morph_standard", "morph_advanced"
-      "#{content_tag :strong, 'Be featured'} on the landing page".html_safe
+      safe_join([content_tag(:strong, "Be featured"), " on the landing page"])
     else
       raise
     end
@@ -67,9 +67,9 @@ module SupportersHelper
   def plan_support(plan)
     case plan.stripe_plan_id
     when "morph_basic", "morph_standard"
-      "#{content_tag :strong, 'Forum'} support".html_safe
+      safe_join([content_tag(:strong, "Forum"), " support"])
     when "morph_advanced"
-      "#{content_tag :strong, 'Priority'} technical support".html_safe
+      safe_join([content_tag(:strong, "Priority"), " technical support"])
     else
       raise
     end

@@ -207,7 +207,9 @@ class Scraper < ApplicationRecord
 
   def readme
     f = Dir.glob(File.join(repo_path, "README*")).first
+    # rubocop:disable Rails/OutputSafety
     GitHub::Markup.render(f, File.read(f)).html_safe if f
+    # rubocop:enable Rails/OutputSafety
   end
 
   def readme_filename
