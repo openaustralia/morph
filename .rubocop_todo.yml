@@ -178,15 +178,6 @@ Rails/OutputSafety:
     - 'app/helpers/supporters_helper.rb'
     - 'app/models/scraper.rb'
 
-# Offense count: 2
-# This cop supports unsafe auto-correction (--auto-correct-all).
-# Configuration parameters: Include.
-# Include: **/Rakefile, **/*.rake
-Rails/RakeEnvironment:
-  Exclude:
-    - 'lib/tasks/app.rake'
-    - 'lib/tasks/docker.rake'
-
 # Offense count: 1
 Rails/ReflectionClassName:
   Exclude:
