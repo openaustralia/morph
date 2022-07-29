@@ -23,7 +23,7 @@ describe AlertMailer do
       allow(scraper2).to receive(:last_run).and_return(run2)
     end
 
-    context "one broken scraper" do
+    context "with one broken scraper" do
       let(:broken_scrapers) { [scraper1] }
       let(:email) { described_class.alert_email(user, broken_scrapers, []) }
 
@@ -31,7 +31,7 @@ describe AlertMailer do
       it { expect(email.to).to eq ["matthew@oaf.org.au"] }
       it { expect(email.subject).to eq "1 scraper you are watching has errored in the last 48 hours" }
 
-      context "never alerted" do
+      context "when never alerted" do
         let(:user) { create(:user, name: "Matthew Landauer", email: "matthew@oaf.org.au", nickname: "mlandauer", alerted_at: nil) }
         let(:welcome_text) { "Hello and welcome to your morph.io alert email." }
 
@@ -40,7 +40,7 @@ describe AlertMailer do
       end
     end
 
-    context "two broken scrapers" do
+    context "with two broken scrapers" do
       let(:broken_scrapers) { [scraper1, scraper2] }
       let(:email) { described_class.alert_email(user, broken_scrapers, [scraper1] * 32) }
 
@@ -115,7 +115,7 @@ describe AlertMailer do
       end
     end
 
-    context "more than 5 lines of errors for a scraper run" do
+    context "when more than 5 lines of errors for a scraper run" do
       it "trunctates the log output" do
         allow(run1).to receive(:error_text).and_return("This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
         expect(described_class.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s).to eq <<~EMAIL
@@ -143,14 +143,14 @@ describe AlertMailer do
     end
 
     describe "count of number of scrapers that finished successfully" do
-      context "32 scrapers" do
+      context "with 32 scrapers" do
         let(:mail) { described_class.alert_email(user, [scraper1], [scraper1] * 32) }
 
         it { expect(mail.text_part.body.to_s).to include("32 scrapers you are watching have run successfully in the last 48 hours. This 1 has a problem:") }
         it { expect(mail.html_part.body.to_s).to include("32 scrapers you are watching have run successfully in the last 48 hours. This 1 has a problem:") }
       end
 
-      context "1 scraper" do
+      context "with 1 scraper" do
         let(:mail) { described_class.alert_email(user, [scraper1], [scraper1]) }
 
         it { expect(mail.text_part.body.to_s).to include("1 scraper you are watching has run successfully in the last 48 hours. This 1 has a problem:") }

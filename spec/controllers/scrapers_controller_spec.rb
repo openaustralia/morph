@@ -11,7 +11,7 @@ describe ScrapersController do
   end
 
   describe "#destroy" do
-    context "not signed in" do
+    context "when not signed in" do
       it "does not allow you to delete a scraper" do
         VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
           create(:scraper, owner: user, name: "a_scraper",
@@ -22,12 +22,12 @@ describe ScrapersController do
       end
     end
 
-    context "signed in" do
+    context "when signed in" do
       before do
         sign_in user
       end
 
-      context "you own the scraper" do
+      context "when you own the scraper" do
         before do
           VCR.use_cassette("scraper_validations",
                            allow_playback_repeats: true) do
@@ -47,7 +47,7 @@ describe ScrapersController do
         end
       end
 
-      context "an organisation you're part of owns the scraper" do
+      context "when an organisation you're part of owns the scraper" do
         before do
           VCR.use_cassette("scraper_validations",
                            allow_playback_repeats: true) do

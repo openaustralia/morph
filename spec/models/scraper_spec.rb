@@ -3,7 +3,7 @@
 require "spec_helper"
 
 describe Scraper do
-  context "A scraper with a couple of runs" do
+  context "with a scraper with a couple of runs" do
     before do
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         @scraper = create(:scraper)
@@ -53,7 +53,7 @@ describe Scraper do
     end
 
     describe "#latest_successful_run_time" do
-      context "The first run is successful" do
+      context "when the first run is successful" do
         before do
           @run1.update(status_code: 0)
           @run2.update(status_code: 255)
@@ -62,7 +62,7 @@ describe Scraper do
         it { expect(@scraper.latest_successful_run_time.to_s).to eq @time1.to_s }
       end
 
-      context "The second run is successful" do
+      context "when the second run is successful" do
         before do
           @run1.update(status_code: 255)
           @run2.update(status_code: 0)
@@ -71,7 +71,7 @@ describe Scraper do
         it { expect(@scraper.latest_successful_run_time.to_s).to eq @time2.to_s }
       end
 
-      context "Neither are successful" do
+      context "when neither are successful" do
         before do
           @run1.update(status_code: 255)
           @run2.update(status_code: 255)
@@ -80,7 +80,7 @@ describe Scraper do
         it { expect(@scraper.latest_successful_run_time).to be_nil }
       end
 
-      context "Both are successful" do
+      context "when both are successful" do
         before do
           @run1.update(status_code: 0)
           @run2.update(status_code: 0)
@@ -126,7 +126,7 @@ describe Scraper do
       expect(scraper.scraped_domains).to eq []
     end
 
-    context "there is a last run" do
+    context "when there is a last run" do
       before do
         allow(scraper).to receive(:last_run).and_return(last_run)
       end
@@ -139,7 +139,7 @@ describe Scraper do
     end
   end
 
-  context "a scraper with some downloads" do
+  context "with a scraper with some downloads" do
     let(:scraper) { described_class.create!(name: "scraper", owner: owner1) }
     let(:owner1) { Owner.create }
     let(:owner2) { Owner.create }
@@ -163,10 +163,10 @@ describe Scraper do
     end
   end
 
-  context "there is a scraper" do
+  context "when there is a scraper" do
     let(:scraper) { described_class.new }
 
-    context "scraper has no data" do
+    context "when the scraper has no data" do
       before do
         expect(scraper).to receive(:sqlite_total_rows).and_return(0)
       end
@@ -176,7 +176,7 @@ describe Scraper do
       end
     end
 
-    context "scraper has a data" do
+    context "when the scraper has a data" do
       before do
         expect(scraper).to receive(:sqlite_total_rows).and_return(1)
       end
@@ -186,7 +186,7 @@ describe Scraper do
       end
     end
 
-    context "scraper has never run" do
+    context "when the scraper has never run" do
       describe "#finished_successfully?" do
         it { expect(scraper.finished_successfully?).to be_falsey }
       end
@@ -196,7 +196,7 @@ describe Scraper do
       end
     end
 
-    context "scraper has run but it failed" do
+    context "when the scraper has run but it failed" do
       let(:run) { mock_model(Run, finished_successfully?: false, finished_with_errors?: true) }
 
       before do
@@ -212,7 +212,7 @@ describe Scraper do
       end
     end
 
-    context "scraper has run and it was successful" do
+    context "when a scraper has run and it was successful" do
       let(:run) { mock_model(Run, finished_successfully?: true, finished_with_errors?: false) }
 
       before do

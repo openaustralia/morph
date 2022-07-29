@@ -5,7 +5,7 @@ require "spec_helper"
 describe User do
   let(:user) { described_class.new }
 
-  context "user has no scrapers" do
+  context "when user has no scrapers" do
     describe "#watched_successful_scrapers" do
       it { expect(user.watched_successful_scrapers).to eq [] }
     end
@@ -15,7 +15,7 @@ describe User do
     end
   end
 
-  context "user is watching one scraper and it ran successfully" do
+  context "when user is watching one scraper and it ran successfully" do
     let(:scraper) { mock_model(Scraper, finished_successfully?: true, finished_with_errors?: false, finished_recently?: true) }
 
     before do
@@ -31,7 +31,7 @@ describe User do
     end
   end
 
-  context "user is watching one scraper and it ran successfully but not recently" do
+  context "when user is watching one scraper and it ran successfully but not recently" do
     let(:scraper) { mock_model(Scraper, finished_successfully?: true, finished_with_errors?: false, finished_recently?: false) }
 
     before do
@@ -47,7 +47,7 @@ describe User do
     end
   end
 
-  context "user is watching one scraper and it failed" do
+  context "when user is watching one scraper and it failed" do
     let(:scraper) { mock_model(Scraper, finished_successfully?: false, finished_with_errors?: true, finished_recently?: true) }
 
     before do
@@ -63,7 +63,7 @@ describe User do
     end
   end
 
-  context "user is watching two scrapers, one failed and one ran successfully" do
+  context "when user is watching two scrapers, one failed and one ran successfully" do
     let(:scraper1) { mock_model(Scraper, finished_successfully?: false, finished_with_errors?: true, finished_recently?: true) }
     let(:scraper2) { mock_model(Scraper, finished_successfully?: true, finished_with_errors?: false, finished_recently?: true) }
 

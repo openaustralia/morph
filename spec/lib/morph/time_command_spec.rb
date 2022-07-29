@@ -14,7 +14,7 @@ describe Morph::TimeCommand do
   end
 
   describe ".params_from_string" do
-    context "correctly formatted output" do
+    context "with correctly formatted output" do
       let(:string) do
         <<~OUTPUT
           Maximum resident set size (kbytes): 3808

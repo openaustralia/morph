@@ -3,7 +3,7 @@
 require "spec_helper"
 
 describe RunsHelper do
-  context "There are scraped domains" do
+  context "when there are scraped domains" do
     let(:foo_domain) { mock_model(Domain, name: "foo.com") }
     let(:bar_domain) { mock_model(Domain, name: "bar.com") }
     let(:www_foo_domain) { mock_model(Domain, name: "www.foo.com") }

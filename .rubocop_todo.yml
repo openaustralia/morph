@@ -11,24 +11,6 @@ RSpec/AnyInstance:
   Exclude:
     - 'spec/controllers/api_controller_spec.rb'
 
-# Offense count: 64
-# Configuration parameters: Prefixes.
-# Prefixes: when, with, without
-RSpec/ContextWording:
-  Exclude:
-    - 'spec/controllers/api_controller_spec.rb'
-    - 'spec/controllers/scrapers_controller_spec.rb'
-    - 'spec/helpers/runs_helper_spec.rb'
-    - 'spec/helpers/scrapers_helper_spec.rb'
-    - 'spec/helpers/supporters_helper_spec.rb'
-    - 'spec/lib/morph/docker_runner_spec.rb'
-    - 'spec/lib/morph/runner_spec.rb'
-    - 'spec/lib/morph/time_command_spec.rb'
-    - 'spec/mailers/alert_mailer_spec.rb'
-    - 'spec/models/run_spec.rb'
-    - 'spec/models/scraper_spec.rb'
-    - 'spec/models/user_spec.rb'
-
 # Offense count: 82
 # Configuration parameters: CountAsOne.
 RSpec/ExampleLength:

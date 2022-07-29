@@ -21,11 +21,11 @@ describe ScrapersHelper do
     let(:www_bar_domain) { mock_model(Domain, name: "www.bar.com") }
     let(:fiddle_domain) { mock_model(Domain, name: "fiddle.com") }
 
-    context "scraper description is blank" do
+    context "when scraper description is blank" do
       it { expect(helper.scraper_description(scraper)).to eq "A scraper to collect structured data from the web." }
     end
 
-    context "scraper description is blank and has one scraped domain" do
+    context "when scraper description is blank and has one scraped domain" do
       before do
         allow(scraper).to receive(:last_run).and_return(last_run)
         allow(scraper).to receive(:scraped_domains).and_return([foo_domain])
@@ -34,7 +34,7 @@ describe ScrapersHelper do
       it { expect(helper.scraper_description(scraper)).to eq "A scraper to collect structured data from foo.com." }
     end
 
-    context "scraper description is blank and has five scraped domains" do
+    context "when scraper description is blank and has five scraped domains" do
       before do
         allow(scraper).to receive(:last_run).and_return(last_run)
         allow(scraper).to receive(:scraped_domains).and_return([foo_domain, bar_domain, www_foo_domain, www_bar_domain, fiddle_domain])
@@ -43,7 +43,7 @@ describe ScrapersHelper do
       it { expect(helper.scraper_description(scraper)).to eq "A scraper to collect structured data from foo.com, bar.com, www.foo.com, and 2 other domains." }
     end
 
-    context "scraper description is not blank" do
+    context "when scraper description is not blank" do
       before do
         allow(scraper).to receive(:description).and_return("Foo bar")
       end

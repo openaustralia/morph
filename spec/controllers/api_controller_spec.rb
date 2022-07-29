@@ -123,7 +123,7 @@ describe ApiController do
         .and_return(12)
     end
 
-    context "user not signed in and no key provided" do
+    context "when user not signed in and no key provided" do
       it "returns an error in json" do
         get :data, params: { id: "mlandauer/a_scraper", format: :json }
         expect(response.code).to eq "401"
@@ -154,7 +154,7 @@ describe ApiController do
       end
     end
 
-    context "user not signed in and incorrect key provided" do
+    context "when user not signed in and incorrect key provided" do
       it "returns an error in json" do
         get :data, params: { id: "mlandauer/a_scraper", key: "foo", format: :json }
         expect(response.code).to eq "401"
@@ -185,7 +185,7 @@ describe ApiController do
       end
     end
 
-    context "user not signed in and correct key provided" do
+    context "when user not signed in and correct key provided" do
       before do
         user.update(api_key: "1234")
       end
@@ -263,7 +263,7 @@ describe ApiController do
       # TODO: Figure out how to test the sqlite download sensibly
     end
 
-    context "user signed in and no key provided" do
+    context "when user signed in and no key provided" do
       before do
         sign_in user
       end

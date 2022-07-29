@@ -290,7 +290,7 @@ describe Morph::DockerRunner do
     end
   end
 
-  context "a set of files" do
+  context "with a set of files" do
     before do
       FileUtils.mkdir_p "test/foo"
       FileUtils.mkdir_p "test/.bar"
@@ -348,7 +348,7 @@ describe Morph::DockerRunner do
     end
   end
 
-  context "another set of files" do
+  context "with another set of files" do
     before do
       FileUtils.mkdir_p("test/foo")
       FileUtils.touch("test/one.txt")
@@ -391,7 +391,7 @@ describe Morph::DockerRunner do
     end
   end
 
-  context "user tries to override Procfile" do
+  context "when user tries to override Procfile" do
     before do
       FileUtils.mkdir_p("test")
       File.open("test/Procfile", "w") { |f| f << "scraper: some override" }

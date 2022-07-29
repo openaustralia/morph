@@ -264,7 +264,7 @@ describe Morph::Runner do
 
     after { FileUtils.rm_rf("test") }
 
-    context "a perl scraper" do
+    context "with a perl scraper" do
       before { FileUtils.touch("test/scraper.pl") }
 
       it do
@@ -283,10 +283,10 @@ describe Morph::Runner do
       end
     end
 
-    context "a ruby scraper" do
+    context "with a ruby scraper" do
       before { FileUtils.touch("test/scraper.rb") }
 
-      context "user tries to override Procfile" do
+      context "when user tries to override Procfile" do
         before do
           File.open("test/Procfile", "w") { |f| f << "scraper: some override" }
           FileUtils.touch("test/Gemfile")
@@ -307,7 +307,7 @@ describe Morph::Runner do
         end
       end
 
-      context "user supplies Gemfile and Gemfile.lock" do
+      context "when user supplies Gemfile and Gemfile.lock" do
         before do
           FileUtils.touch("test/Gemfile")
           FileUtils.touch("test/Gemfile.lock")
@@ -327,7 +327,7 @@ describe Morph::Runner do
         end
       end
 
-      context "user does not supply Gemfile or Gemfile.lock" do
+      context "when user does not supply Gemfile or Gemfile.lock" do
         it "provides a template Gemfile, Gemfile.lock and Procfile" do
           Dir.mktmpdir do |dir|
             described_class.add_config_defaults_to_directory("test", dir)
@@ -344,7 +344,7 @@ describe Morph::Runner do
         end
       end
 
-      context "user supplies Gemfile but no Gemfile.lock" do
+      context "when user supplies Gemfile but no Gemfile.lock" do
         before do
           FileUtils.touch("test/Gemfile")
         end
@@ -365,7 +365,7 @@ describe Morph::Runner do
   end
 
   describe ".remove_hidden_directories" do
-    context "a set of files" do
+    context "with a set of files" do
       before do
         FileUtils.mkdir_p("test/foo")
         FileUtils.mkdir_p("test/.bar")
@@ -397,7 +397,7 @@ describe Morph::Runner do
       end
     end
 
-    context "another set of files" do
+    context "with another set of files" do
       before do
         FileUtils.mkdir_p("test/foo")
         FileUtils.touch("test/one.txt")
@@ -423,7 +423,7 @@ describe Morph::Runner do
       end
     end
 
-    context "user tries to override Procfile" do
+    context "when user tries to override Procfile" do
       before do
         FileUtils.mkdir_p("test")
         File.open("test/Procfile", "w") { |f| f << "scraper: some override" }
