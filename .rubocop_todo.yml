@@ -120,24 +120,6 @@ RSpec/VoidExpect:
   Exclude:
     - 'spec/lib/morph/docker_runner_spec.rb'
 
-# Offense count: 31
-# This cop supports safe auto-correction (--auto-correct).
-Rails/ActiveRecordAliases:
-  Exclude:
-    - 'app/controllers/owners_controller.rb'
-    - 'app/controllers/scrapers_controller.rb'
-    - 'app/lib/morph/runner.rb'
-    - 'app/models/create_scraper_progress.rb'
-    - 'app/models/domain.rb'
-    - 'app/models/organization.rb'
-    - 'app/models/scraper.rb'
-    - 'app/models/site_setting.rb'
-    - 'app/models/user.rb'
-    - 'app/workers/create_scraper_worker.rb'
-    - 'app/workers/deliver_webhook_worker.rb'
-    - 'spec/controllers/api_controller_spec.rb'
-    - 'spec/models/scraper_spec.rb'
-
 # Offense count: 1
 # This cop supports safe auto-correction (--auto-correct).
 Rails/ApplicationMailer:

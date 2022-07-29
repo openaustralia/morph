@@ -6,7 +6,7 @@ class CreateScraperProgress < ApplicationRecord
   has_one :scraper, dependent: :nullify
 
   def update_progress(message, progress)
-    update_attributes(message: message, progress: progress)
+    update(message: message, progress: progress)
     sync_update scraper
   end
 

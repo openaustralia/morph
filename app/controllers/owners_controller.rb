@@ -37,7 +37,7 @@ class OwnersController < ApplicationController
 
   def update
     if @owner.user?
-      @owner.update_attributes(
+      @owner.update(
         see_downloads: params[:user][:see_downloads]
       )
     end

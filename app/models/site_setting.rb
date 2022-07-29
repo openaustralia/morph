@@ -38,7 +38,7 @@ class SiteSetting < ApplicationRecord
   end
 
   def self.write_setting(key, value)
-    record.update_attributes(settings: record.settings.merge(key => value))
+    record.update(settings: record.settings.merge(key => value))
   end
 
   def self.defaults

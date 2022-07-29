@@ -127,7 +127,7 @@ class Scraper < ApplicationRecord
   def update_contributors
     nicknames = Morph::Github.contributor_nicknames(full_name)
     contributors = nicknames.map { |n| User.find_or_create_by_nickname(n) }
-    update_attributes(contributors: contributors)
+    update(contributors: contributors)
   end
 
   def successful_runs
@@ -170,7 +170,7 @@ class Scraper < ApplicationRecord
   end
 
   def update_sqlite_db_size
-    update_attributes(sqlite_db_size: database.sqlite_db_size)
+    update(sqlite_db_size: database.sqlite_db_size)
   end
 
   def total_disk_usage
@@ -371,8 +371,8 @@ class Scraper < ApplicationRecord
     begin
       create_scraper_progress.update_progress("Creating GitHub repository", 20)
       repo = Morph::Github.create_repository(forked_by, owner, name)
-      update_attributes(github_id: repo.id, github_url: repo.rels[:html].href,
-                        git_url: repo.rels[:git].href)
+      update(github_id: repo.id, github_url: repo.rels[:html].href,
+             git_url: repo.rels[:git].href)
     rescue Octokit::UnprocessableEntity
       # This means the repo has already been created. We will have gotten here
       # if this background job failed at some point past here and is rerun. So,
@@ -403,7 +403,7 @@ class Scraper < ApplicationRecord
       description: scraperwiki.title,
       homepage: Rails.application.routes.url_helpers.scraper_url(self)
     )
-    update_attributes(description: scraperwiki.title)
+    update(description: scraperwiki.title)
 
     files = {
       scraperwiki.language.scraper_filename => scraperwiki.code,

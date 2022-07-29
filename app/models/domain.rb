@@ -15,7 +15,7 @@ class Domain < ApplicationRecord
   end
 
   def update_meta!
-    update_attributes(Domain.lookup_metadata_remote(name))
+    update(Domain.lookup_metadata_remote(name))
   end
 
   def self.lookup_metadata_remote(domain_name)

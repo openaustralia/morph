@@ -19,7 +19,7 @@ class Organization < Owner
 
   def refresh_info_from_github!(octokit_client)
     data = octokit_client.organization(nickname)
-    update_attributes(
+    update(
       nickname: data.login, name: data.name, blog: data.blog,
       company: data.company, location: data.location, email: data.email,
       gravatar_url: data.rels[:avatar].href

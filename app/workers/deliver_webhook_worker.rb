@@ -11,7 +11,7 @@ class DeliverWebhookWorker
     # webhooks but it's sure a good idea.
     connection = Faraday.new(webhook_delivery.webhook.url, ssl: { verify: false })
     response = connection.post
-    webhook_delivery.update_attributes(
+    webhook_delivery.update(
       response_code: response.status,
       sent_at: DateTime.now
     )

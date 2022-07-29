@@ -83,8 +83,8 @@ module Morph
     def compile_and_start_run(max_lines = Runner.default_max_lines, &block)
       # puts "Starting...\n"
       run.database.backup
-      run.update_attributes(started_at: Time.now,
-                            git_revision: run.current_revision_from_repo)
+      run.update(started_at: Time.now,
+                 git_revision: run.current_revision_from_repo)
       sync_update run.scraper if run.scraper
       FileUtils.mkdir_p run.data_path
       FileUtils.chmod 0o777, run.data_path
@@ -95,7 +95,7 @@ module Morph
         supported_scraper_files_as_text = supported_scraper_files.to_sentence(last_word_connector: ", or ")
         m = "Can't find scraper code. Expected to find a file called #{supported_scraper_files_as_text} in the root directory"
         yield "stderr", m
-        run.update_attributes(status_code: 999, finished_at: Time.now)
+        run.update(status_code: 999, finished_at: Time.now)
         return
       end
 
@@ -127,7 +127,7 @@ module Morph
         # a short version of the id without "sha256:" at the beginning
         docker_image = c.json["Image"].split(":")[1][0..11]
 
-        run.update_attributes(ip_address: ip_address, docker_image: docker_image)
+        run.update(ip_address: ip_address, docker_image: docker_image)
       end
       c
     end
@@ -164,7 +164,7 @@ module Morph
       end
 
       # Now collect and save the metrics
-      run.metric.update_attributes(result.time_params) if result.time_params
+      run.metric.update(result.time_params) if result.time_params
 
       # Because SqliteDiff will actually create sqlite databases if they
       # don't exist we don't actually want that if there isn't actually
@@ -177,7 +177,7 @@ module Morph
         if diffstat
           tables = diffstat[:tables][:counts]
           records = diffstat[:records][:counts]
-          run.update_attributes(
+          run.update(
             tables_added: tables[:added],
             tables_removed: tables[:removed],
             tables_changed: tables[:changed],
@@ -191,7 +191,7 @@ module Morph
       end
       Morph::Database.tidy_data_path(run.data_path)
 
-      run.update_attributes(status_code: status_code, finished_at: Time.now)
+      run.update(status_code: status_code, finished_at: Time.now)
 
       return unless run.scraper
 
@@ -211,7 +211,7 @@ module Morph
       else
         # If there is no container then there can't be a watch process to
         # do update the run so we must do it here
-        run.update_attributes(status_code: 255, finished_at: Time.now)
+        run.update(status_code: 255, finished_at: Time.now)
         # TODO: Do a sync_update?
       end
     end

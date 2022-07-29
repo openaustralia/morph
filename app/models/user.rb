@@ -31,7 +31,7 @@ class User < Owner
   end
 
   def reset_authorization!
-    update_attributes(
+    update(
       access_token: Morph::Github.reset_authorization(access_token)
     )
   end
@@ -164,8 +164,8 @@ class User < Owner
 
   def self.find_for_github_oauth(auth, _signed_in_resource = nil)
     user = User.find_or_create_by(provider: auth.provider, uid: auth.uid)
-    user.update_attributes(nickname: auth.info.nickname,
-                           access_token: auth.credentials.token)
+    user.update(nickname: auth.info.nickname,
+                access_token: auth.credentials.token)
     user.refresh_info_from_github!
     # Also every time you login it should update the list of organizations that
     # the user is attached to but do this in a background job
@@ -175,12 +175,12 @@ class User < Owner
 
   def refresh_info_from_github!
     user = octokit_client.user(nickname)
-    update_attributes(name: user.name,
-                      gravatar_url: user._rels[:avatar].href,
-                      blog: user.blog,
-                      company: user.company,
-                      location: user.location,
-                      email: Morph::Github.primary_email(self))
+    update(name: user.name,
+           gravatar_url: user._rels[:avatar].href,
+           blog: user.blog,
+           company: user.company,
+           location: user.location,
+           email: Morph::Github.primary_email(self))
   rescue Octokit::Unauthorized, Octokit::NotFound
     false
   end

@@ -187,7 +187,7 @@ describe ApiController do
 
     context "user not signed in and correct key provided" do
       before do
-        user.update_attributes(api_key: "1234")
+        user.update(api_key: "1234")
       end
 
       it "returns json" do

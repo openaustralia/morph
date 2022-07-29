@@ -55,8 +55,8 @@ describe Scraper do
     describe "#latest_successful_run_time" do
       context "The first run is successful" do
         before do
-          @run1.update_attributes(status_code: 0)
-          @run2.update_attributes(status_code: 255)
+          @run1.update(status_code: 0)
+          @run2.update(status_code: 255)
         end
 
         it { expect(@scraper.latest_successful_run_time.to_s).to eq @time1.to_s }
@@ -64,8 +64,8 @@ describe Scraper do
 
       context "The second run is successful" do
         before do
-          @run1.update_attributes(status_code: 255)
-          @run2.update_attributes(status_code: 0)
+          @run1.update(status_code: 255)
+          @run2.update(status_code: 0)
         end
 
         it { expect(@scraper.latest_successful_run_time.to_s).to eq @time2.to_s }
@@ -73,8 +73,8 @@ describe Scraper do
 
       context "Neither are successful" do
         before do
-          @run1.update_attributes(status_code: 255)
-          @run2.update_attributes(status_code: 255)
+          @run1.update(status_code: 255)
+          @run2.update(status_code: 255)
         end
 
         it { expect(@scraper.latest_successful_run_time).to be_nil }
@@ -82,8 +82,8 @@ describe Scraper do
 
       context "Both are successful" do
         before do
-          @run1.update_attributes(status_code: 0)
-          @run2.update_attributes(status_code: 0)
+          @run1.update(status_code: 0)
+          @run2.update(status_code: 0)
         end
 
         it { expect(@scraper.latest_successful_run_time.to_s).to eq @time2.to_s }

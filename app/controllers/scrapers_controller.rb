@@ -140,7 +140,7 @@ class ScrapersController < ApplicationController
 
   def update
     authorize! :update, @scraper
-    if @scraper.update_attributes(scraper_params)
+    if @scraper.update(scraper_params)
       flash[:notice] = "Scraper settings successfully updated"
       sync_update @scraper
       redirect_to @scraper
