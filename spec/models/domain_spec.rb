@@ -8,7 +8,7 @@ describe Domain do
       resource = double(get: "<html><head><title>\nmorph.io   </title><meta name='Description' content='Get structured data out of the web. Code collaboration through GitHub. Run your scrapers in the cloud.'></head></html>")
       expect(RestClient::Resource).to receive(:new).with("http://morph.io", verify_ssl: OpenSSL::SSL::VERIFY_NONE).and_return(resource)
 
-      domain = Domain.create!(name: "morph.io")
+      domain = described_class.create!(name: "morph.io")
       domain.update_meta!
       domain.reload
       expect(domain.name).to eq "morph.io"
@@ -19,7 +19,7 @@ describe Domain do
     it "records nothing if there was an error" do
       resource = double
       expect(RestClient::Resource).to receive(:new).with("http://morph.io", verify_ssl: OpenSSL::SSL::VERIFY_NONE).and_return(resource)
-      domain = Domain.create!(name: "morph.io")
+      domain = described_class.create!(name: "morph.io")
       expect(resource).to receive(:get).and_raise Net::HTTPBadResponse
 
       domain.update_meta!

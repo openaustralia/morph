@@ -3,10 +3,10 @@
 require "spec_helper"
 
 describe Morph::Language do
-  let(:ruby) { Morph::Language.new(:ruby) }
-  let(:python) { Morph::Language.new(:python) }
-  let(:php) { Morph::Language.new(:php) }
-  let(:perl) { Morph::Language.new(:perl) }
+  let(:ruby) { described_class.new(:ruby) }
+  let(:python) { described_class.new(:python) }
+  let(:php) { described_class.new(:php) }
+  let(:perl) { described_class.new(:perl) }
 
   describe "#human" do
     it { expect(ruby.human).to eq "Ruby" }

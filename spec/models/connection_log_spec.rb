@@ -15,17 +15,17 @@ describe ConnectionLog do
     let(:domain) { Domain.create!(name: "foo.com") }
 
     it "converts ip_address to run_id" do
-      a = ConnectionLog.create(ip_address: "10.0.1.15", domain: domain)
+      a = described_class.create(ip_address: "10.0.1.15", domain: domain)
       expect(a.run_id).to eq 20
     end
 
     it "does not convert ip_address if run_id is already set" do
-      a = ConnectionLog.create(ip_address: "10.0.1.20", run_id: 40, domain: domain)
+      a = described_class.create(ip_address: "10.0.1.20", run_id: 40, domain: domain)
       expect(a.run_id).to eq 40
     end
 
     it "leaves the run_id empty if ip address isn't recognised" do
-      a = ConnectionLog.create(ip_address: "10.0.1.23", domain: domain)
+      a = described_class.create(ip_address: "10.0.1.23", domain: domain)
       expect(a.run_id).to be_nil
     end
   end

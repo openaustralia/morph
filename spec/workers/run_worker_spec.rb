@@ -9,11 +9,11 @@ describe RunWorker do
     expect(Morph::Runner).to receive(:new).with(run).and_return(runner)
     expect(runner).to receive(:synch_and_go!)
 
-    RunWorker.new.perform(run.id)
+    described_class.new.perform(run.id)
   end
 
   it "does nothing if the run does not exist anymore" do
-    RunWorker.new.perform(123456)
+    described_class.new.perform(123456)
   end
 
   context do
@@ -28,7 +28,7 @@ describe RunWorker do
     it "raises an exception if we already have the maximum number of running containers" do
       run = Run.create!(id: 123456)
       expect(Morph::Runner).to receive(:available_slots).and_return(0)
-      expect { RunWorker.new.perform(run.id) }.to raise_error RunWorker::NoRemainingSlotsError
+      expect { described_class.new.perform(run.id) }.to raise_error RunWorker::NoRemainingSlotsError
     end
 
     it "does not raise an exception if we are finishing off an already running container", docker: true do
@@ -39,7 +39,7 @@ describe RunWorker do
         "Image" => "openaustralia/buildstep",
         "Labels" => { Morph::Runner.run_label_key => "123456" }
       )
-      expect { RunWorker.new.perform(run.id) }.not_to raise_error
+      expect { described_class.new.perform(run.id) }.not_to raise_error
     end
   end
 end

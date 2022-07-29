@@ -18,7 +18,7 @@ describe Morph::SqliteDiff do
 
   describe ".diffstat" do
     it "shows that nothing has changed" do
-      expect(Morph::SqliteDiff.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
         tables: {
           added: [],
           removed: [],
@@ -37,7 +37,7 @@ describe Morph::SqliteDiff do
 
     it "shows a new table" do
       @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
-      expect(Morph::SqliteDiff.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
         tables: {
           added: [
             {
@@ -61,7 +61,7 @@ describe Morph::SqliteDiff do
 
     it "shows a deleted table" do
       @db2.execute("DROP TABLE foo")
-      expect(Morph::SqliteDiff.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
         tables: {
           added: [],
           removed: [
@@ -81,7 +81,7 @@ describe Morph::SqliteDiff do
     it "shows an added and a deleted table" do
       @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
       @db2.execute("DROP TABLE foo")
-      expect(Morph::SqliteDiff.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
         tables: {
           added: [
             {
@@ -105,7 +105,7 @@ describe Morph::SqliteDiff do
 
     it "shows a changed table (because of a schema change)" do
       @db2.execute("ALTER TABLE foo ADD v3 text")
-      expect(Morph::SqliteDiff.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
         tables: {
           added: [],
           removed: [],
@@ -124,7 +124,7 @@ describe Morph::SqliteDiff do
 
     it "shows a new record on an unchanged table" do
       @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
-      expect(Morph::SqliteDiff.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
         tables: {
           added: [],
           removed: [],
@@ -144,7 +144,7 @@ describe Morph::SqliteDiff do
     it "shows a new record on a new table" do
       @db2.execute("CREATE TABLE bar (v1 text, v2 real)")
       @db2.execute("INSERT INTO bar VALUES ('goodbye', 3.1)")
-      expect(Morph::SqliteDiff.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
         tables: {
           added: [
             name: "bar",
@@ -163,7 +163,7 @@ describe Morph::SqliteDiff do
     end
 
     it "shows everything as added when there was no database to start with" do
-      expect(Morph::SqliteDiff.diffstat("non_existent_file.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("non_existent_file.sqlite", "tmp_db2.sqlite")).to eq(
         tables: {
           added: [
             {
@@ -182,7 +182,7 @@ describe Morph::SqliteDiff do
     end
 
     it "shows no difference when comparing two non-existent databases" do
-      expect(Morph::SqliteDiff.diffstat("non_existent_file1.sqlite", "non_existent_file2.sqlite")).to eq(
+      expect(described_class.diffstat("non_existent_file1.sqlite", "non_existent_file2.sqlite")).to eq(
         tables: {
           added: [],
           removed: [],
@@ -198,28 +198,28 @@ describe Morph::SqliteDiff do
 
   describe ".diffstat_table" do
     it "shows no change for two identical sqlite databases" do
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq(added: 0, removed: 0, changed: 0, unchanged: 1)
+      expect(described_class.diffstat_table("foo", @db1, @db2)).to eq(added: 0, removed: 0, changed: 0, unchanged: 1)
     end
 
     it "shows a new record" do
       @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq(added: 1, removed: 0, changed: 0, unchanged: 1)
+      expect(described_class.diffstat_table("foo", @db1, @db2)).to eq(added: 1, removed: 0, changed: 0, unchanged: 1)
     end
 
     it "shows a deleted record" do
       @db2.execute("DELETE FROM foo where v1='hello'")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq(added: 0, removed: 1, changed: 0, unchanged: 0)
+      expect(described_class.diffstat_table("foo", @db1, @db2)).to eq(added: 0, removed: 1, changed: 0, unchanged: 0)
     end
 
     it "shows adding a record and deleting a record" do
       @db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
       @db2.execute("DELETE FROM foo where v1='hello'")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq(added: 1, removed: 1, changed: 0, unchanged: 0)
+      expect(described_class.diffstat_table("foo", @db1, @db2)).to eq(added: 1, removed: 1, changed: 0, unchanged: 0)
     end
 
     it "shows a record being changed" do
       @db2.execute("UPDATE foo SET v1='different' WHERE v1='hello'")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq(added: 0, removed: 0, changed: 1, unchanged: 0)
+      expect(described_class.diffstat_table("foo", @db1, @db2)).to eq(added: 0, removed: 0, changed: 1, unchanged: 0)
     end
 
     it "is able to handle a large number of records", slow: true do
@@ -250,7 +250,7 @@ describe Morph::SqliteDiff do
       (1..200).each do |i|
         @db2.execute("INSERT INTO foo VALUES ('hello#{i}', #{r.rand})")
       end
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2, 100)).to eq(added: 200, removed: 200, changed: 100, unchanged: 700)
+      expect(described_class.diffstat_table("foo", @db1, @db2, 100)).to eq(added: 200, removed: 200, changed: 100, unchanged: 700)
     end
 
     it "compares two empty dbs" do
@@ -261,7 +261,7 @@ describe Morph::SqliteDiff do
       # Make an identical version
       FileUtils.cp("tmp_db1.sqlite", "tmp_db2.sqlite")
       @db2 = SQLite3::Database.new("tmp_db2.sqlite")
-      expect(Morph::SqliteDiff.diffstat_table("foo", @db1, @db2)).to eq(added: 0, removed: 0, changed: 0, unchanged: 0)
+      expect(described_class.diffstat_table("foo", @db1, @db2)).to eq(added: 0, removed: 0, changed: 0, unchanged: 0)
     end
   end
 end

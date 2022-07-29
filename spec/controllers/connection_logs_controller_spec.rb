@@ -4,7 +4,7 @@ require "spec_helper"
 
 describe ConnectionLogsController do
   describe "#create" do
-    before { allow(ConnectionLogsController).to receive(:key).and_return("sjdf") }
+    before { allow(described_class).to receive(:key).and_return("sjdf") }
 
     it "is successful if correct key is used" do
       expect(UpdateDomainWorker).to receive(:perform_async)

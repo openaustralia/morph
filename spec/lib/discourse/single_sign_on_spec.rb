@@ -7,21 +7,21 @@ describe Discourse::SingleSignOn do
 
   describe ".parse" do
     it "raises an error if the signature is invalid" do
-      expect { Discourse::SingleSignOn.parse("sso=abcd&sig=abcd", secret) }.to raise_error RuntimeError
+      expect { described_class.parse("sso=abcd&sig=abcd", secret) }.to raise_error RuntimeError
     end
 
     it "does not raise an error if the signature is valid" do
-      expect { Discourse::SingleSignOn.parse("sso=abcd&sig=cd95df15286d42d97d6268525c4e2f11d3005a4e599ce4cb0ce01d08d8a94c5a", secret) }.not_to raise_error
+      expect { described_class.parse("sso=abcd&sig=cd95df15286d42d97d6268525c4e2f11d3005a4e599ce4cb0ce01d08d8a94c5a", secret) }.not_to raise_error
     end
 
     it "base64s decode the sso" do
       # "bm9uY2U9aGVsbG8%3D%0A" is what you get when you base64 encode and cgi escape "nonce=hello"
-      sso = Discourse::SingleSignOn.parse("sso=bm9uY2U9aGVsbG8%3D%0A&sig=51fb49b2c69a9953e7e5cf7e11661915836eb242d26fbc1f3d8638117d0dd561", secret)
+      sso = described_class.parse("sso=bm9uY2U9aGVsbG8%3D%0A&sig=51fb49b2c69a9953e7e5cf7e11661915836eb242d26fbc1f3d8638117d0dd561", secret)
       expect(sso.nonce).to eq "hello"
     end
 
     it "is able to generate a url correctly encoded" do
-      sso = Discourse::SingleSignOn.new
+      sso = described_class.new
       sso.sso_secret = secret
       sso.nonce = "abcd"
       sso.email = "matthew@oaf.org.au"

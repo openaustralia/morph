@@ -8,17 +8,17 @@ describe Morph::CodeTranslate do
 
     it "translates ruby" do
       expect(Morph::CodeTranslate::Ruby).to receive(:translate).with(code)
-      Morph::CodeTranslate.translate(:ruby, code)
+      described_class.translate(:ruby, code)
     end
 
     it "translates php" do
       expect(Morph::CodeTranslate::PHP).to receive(:translate).with(code)
-      Morph::CodeTranslate.translate(:php, code)
+      described_class.translate(:php, code)
     end
 
     it "translates python" do
       expect(Morph::CodeTranslate::Python).to receive(:translate).with(code)
-      Morph::CodeTranslate.translate(:python, code)
+      described_class.translate(:python, code)
     end
   end
 

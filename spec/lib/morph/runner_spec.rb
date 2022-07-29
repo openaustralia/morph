@@ -11,7 +11,7 @@ describe Morph::Runner do
 
     let(:owner) { User.create(nickname: "mlandauer") }
     let(:run) { Run.create(owner: owner) }
-    let(:runner) { Morph::Runner.new(run) }
+    let(:runner) { described_class.new(run) }
 
     it "logs console output to the run" do
       runner.log(Time.now, :stdout, "This is a test")
@@ -33,7 +33,7 @@ describe Morph::Runner do
       run.database.clear
       expect(run.database.no_rows).to eq 0
       fill_scraper_for_run("save_to_database", run)
-      Morph::Runner.new(run).go
+      described_class.new(run).go
       run.reload
       expect(run.status_code).to eq 0
       expect(run.database.no_rows).to eq 1
@@ -47,7 +47,7 @@ describe Morph::Runner do
       fill_scraper_for_run("stream_output", run)
       logs = []
 
-      runner = Morph::Runner.new(run)
+      runner = described_class.new(run)
       running_count = Morph::DockerUtils.running_containers.count
       expect do
         runner.go_with_logging do |_timestamp, s, c|
@@ -100,7 +100,7 @@ describe Morph::Runner do
       fill_scraper_for_run("stream_output", run)
       logs = []
 
-      runner = Morph::Runner.new(run)
+      runner = described_class.new(run)
       running_count = Morph::DockerUtils.running_containers.count
       expect do
         runner.go do |_timestamp, s, c|
@@ -161,7 +161,7 @@ describe Morph::Runner do
       FileUtils.rm_rf(run.repo_path)
       fill_scraper_for_run("stream_output", run)
       logs = []
-      runner = Morph::Runner.new(run)
+      runner = described_class.new(run)
       runner.go_with_logging(5) do |_timestamp, s, c|
         # Only record stdout so we can handle different results as a result
         # of caching of the compile stage
@@ -201,7 +201,7 @@ describe Morph::Runner do
       FileUtils.rm_rf(run.repo_path)
       fill_scraper_for_run("stream_output", run)
       logs = []
-      runner = Morph::Runner.new(run)
+      runner = described_class.new(run)
       expect do
         runner.go_with_logging(5) do |_timestamp, s, c|
           # Only record stdout so we can handle different results as a result
@@ -240,7 +240,7 @@ describe Morph::Runner do
       fill_scraper_for_run("stream_output_long", run)
       logs = []
 
-      runner = Morph::Runner.new(run)
+      runner = described_class.new(run)
       container_count = Morph::DockerUtils.stopped_containers.count
       runner.go do |_timestamp, _stream, text|
         logs << text
@@ -269,7 +269,7 @@ describe Morph::Runner do
 
       it do
         Dir.mktmpdir do |dir|
-          Morph::Runner.add_config_defaults_to_directory("test", dir)
+          described_class.add_config_defaults_to_directory("test", dir)
           expect(Dir.entries(dir).sort).to eq [
             ".", "..", "Procfile", "app.psgi", "cpanfile", "scraper.pl"
           ]
@@ -295,7 +295,7 @@ describe Morph::Runner do
 
         it "alwayses use the template Procfile" do
           Dir.mktmpdir do |dir|
-            Morph::Runner.add_config_defaults_to_directory("test", dir)
+            described_class.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
               ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
             ]
@@ -315,7 +315,7 @@ describe Morph::Runner do
 
         it "onlies provide a template Procfile" do
           Dir.mktmpdir do |dir|
-            Morph::Runner.add_config_defaults_to_directory("test", dir)
+            described_class.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
               ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
             ]
@@ -330,7 +330,7 @@ describe Morph::Runner do
       context "user does not supply Gemfile or Gemfile.lock" do
         it "provides a template Gemfile, Gemfile.lock and Procfile" do
           Dir.mktmpdir do |dir|
-            Morph::Runner.add_config_defaults_to_directory("test", dir)
+            described_class.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
               ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
             ]
@@ -351,7 +351,7 @@ describe Morph::Runner do
 
         it "does not try to use the template Gemfile.lock" do
           Dir.mktmpdir do |dir|
-            Morph::Runner.add_config_defaults_to_directory("test", dir)
+            described_class.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
               ".", "..", "Gemfile", "Procfile", "scraper.rb"
             ]
@@ -388,7 +388,7 @@ describe Morph::Runner do
       it do
         Dir.mktmpdir do |dir|
           Morph::DockerUtils.copy_directory_contents("test", dir)
-          Morph::Runner.remove_hidden_directories(dir)
+          described_class.remove_hidden_directories(dir)
           expect(Dir.entries(dir).sort).to eq [
             ".", "..", ".a_dot_file.cfg", "Gemfile", "Gemfile.lock",
             "Procfile", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"
@@ -414,7 +414,7 @@ describe Morph::Runner do
       it do
         Dir.mktmpdir do |dir|
           Morph::DockerUtils.copy_directory_contents("test", dir)
-          Morph::Runner.remove_hidden_directories(dir)
+          described_class.remove_hidden_directories(dir)
           expect(Dir.entries(dir).sort).to eq [
             ".", "..", "Gemfile", "Gemfile.lock", "foo", "one.txt",
             "scraper.rb"
@@ -437,7 +437,7 @@ describe Morph::Runner do
       it do
         Dir.mktmpdir do |dir|
           Morph::DockerUtils.copy_directory_contents("test", dir)
-          Morph::Runner.remove_hidden_directories(dir)
+          described_class.remove_hidden_directories(dir)
           expect(Dir.entries(dir).sort).to eq [
             ".", "..", "Procfile", "scraper.rb"
           ]

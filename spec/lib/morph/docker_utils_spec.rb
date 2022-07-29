@@ -7,7 +7,7 @@ describe Morph::DockerUtils do
     it "preserves the symbolic link" do
       tar = Dir.mktmpdir do |dest|
         FileUtils.ln_s "scraper.rb", File.join(dest, "link.rb")
-        Morph::DockerUtils.create_tar(dest)
+        described_class.create_tar(dest)
       end
 
       Dir.mktmpdir do |dir|
@@ -22,7 +22,7 @@ describe Morph::DockerUtils do
 
     it "has an encoding of ASCII-8BIT" do
       Dir.mktmpdir do |dest|
-        tar = Morph::DockerUtils.create_tar(dest)
+        tar = described_class.create_tar(dest)
         expect(tar.encoding).to eq Encoding::ASCII_8BIT
       end
     end
@@ -36,11 +36,11 @@ describe Morph::DockerUtils do
 
       content = Dir.mktmpdir do |dir|
         File.open(File.join(dir, "foo"), "wb") { |f| f << target }
-        Morph::DockerUtils.create_tar(dir)
+        described_class.create_tar(dir)
       end
 
       Dir.mktmpdir do |dir|
-        Morph::DockerUtils.extract_tar(content, dir)
+        described_class.extract_tar(content, dir)
         v = File.open(File.join(dir, "foo"), "rb", &:read)
         expect(v).to eq target
       end
@@ -53,7 +53,7 @@ describe Morph::DockerUtils do
         FileUtils.touch(File.join(dir, "foo"))
         FileUtils.mkdir_p(File.join(dir, "bar"))
         FileUtils.touch(File.join(dir, "bar", "twist"))
-        Morph::DockerUtils.fix_modification_times(dir)
+        described_class.fix_modification_times(dir)
         expect(File.mtime(dir)).to eq Time.new(2000, 1, 1)
         expect(File.mtime(File.join(dir, "foo"))).to eq Time.new(2000, 1, 1)
         expect(File.mtime(File.join(dir, "bar"))).to eq Time.new(2000, 1, 1)
@@ -68,7 +68,7 @@ describe Morph::DockerUtils do
       Dir.mktmpdir do |source|
         Dir.mktmpdir do |dest|
           File.open(File.join(source, "foo.txt"), "w") { |f| f << "Hello" }
-          Morph::DockerUtils.copy_directory_contents(source, dest)
+          described_class.copy_directory_contents(source, dest)
           expect(File.read(File.join(dest, "foo.txt"))).to eq "Hello"
         end
       end
@@ -81,7 +81,7 @@ describe Morph::DockerUtils do
           File.open(File.join(source, "foo", "foo.txt"), "w") do |f|
             f << "Hello"
           end
-          Morph::DockerUtils.copy_directory_contents(source, dest)
+          described_class.copy_directory_contents(source, dest)
           expect(File.read(File.join(dest, "foo", "foo.txt"))).to eq "Hello"
         end
       end
@@ -91,7 +91,7 @@ describe Morph::DockerUtils do
       Dir.mktmpdir do |source|
         Dir.mktmpdir do |dest|
           File.open(File.join(source, ".foo.txt"), "w") { |f| f << "Hello" }
-          Morph::DockerUtils.copy_directory_contents(source, dest)
+          described_class.copy_directory_contents(source, dest)
           expect(File.read(File.join(dest, ".foo.txt"))).to eq "Hello"
         end
       end
@@ -100,22 +100,22 @@ describe Morph::DockerUtils do
 
   describe ".find_all_containers_with_label", docker: true do
     before do
-      Morph::DockerUtils.find_all_containers_with_label("foobar").each(&:delete)
+      described_class.find_all_containers_with_label("foobar").each(&:delete)
     end
 
     after do
-      Morph::DockerUtils.find_all_containers_with_label("foobar").each(&:delete)
+      described_class.find_all_containers_with_label("foobar").each(&:delete)
     end
 
     it "finds no containers with a particular label initially" do
-      expect(Morph::DockerUtils.find_all_containers_with_label("foobar").count).to eq 0
+      expect(described_class.find_all_containers_with_label("foobar").count).to eq 0
     end
 
     it "finds two containers with the particular label when I create then" do
       Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "foobar" => "1" })
       Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "foobar" => "2" })
       Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "bar" => "1" })
-      expect(Morph::DockerUtils.find_all_containers_with_label("foobar").count).to eq 2
+      expect(described_class.find_all_containers_with_label("foobar").count).to eq 2
     end
   end
 
@@ -123,7 +123,7 @@ describe Morph::DockerUtils do
     it "creates a temporary file locally from a file on a container" do
       c = Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "foobar" => "1" })
       # Grab file provided by buildstep
-      file = Morph::DockerUtils.copy_file(c, "/etc/fstab")
+      file = described_class.copy_file(c, "/etc/fstab")
       expect(file.read).to eq "# UNCONFIGURED FSTAB FOR BASE SYSTEM\n"
       file.close!
       c.delete
@@ -131,7 +131,7 @@ describe Morph::DockerUtils do
 
     it "returns nil for a file that does not exist" do
       c = Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "foobar" => "1" })
-      file = Morph::DockerUtils.copy_file(c, "/not/a/path")
+      file = described_class.copy_file(c, "/not/a/path")
       expect(file).to be_nil
       c.delete
     end

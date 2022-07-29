@@ -3,7 +3,7 @@
 require "spec_helper"
 
 describe User do
-  let(:user) { User.new }
+  let(:user) { described_class.new }
 
   context "user has no scrapers" do
     describe "#watched_successful_scrapers" do

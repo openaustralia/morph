@@ -5,7 +5,7 @@ require "spec_helper"
 RSpec.describe Webhook, type: :model do
   describe "#url" do
     it "requires a url" do
-      webhook = Webhook.new
+      webhook = described_class.new
       expect(webhook).not_to be_valid
       expect(webhook.errors.keys).to eq([:url])
     end
@@ -13,13 +13,13 @@ RSpec.describe Webhook, type: :model do
     it "does not allow duplicate webhooks for the same scraper" do
       owner = Owner.create!
       scraper = Scraper.create!(name: "scraper", owner: owner)
-      Webhook.create!(scraper: scraper, url: "https://example.org")
+      described_class.create!(scraper: scraper, url: "https://example.org")
 
-      expect(Webhook.new(scraper: scraper, url: "https://example.org")).not_to be_valid
+      expect(described_class.new(scraper: scraper, url: "https://example.org")).not_to be_valid
     end
 
     it "is not an invalid URL" do
-      w = Webhook.new(url: "foo bar")
+      w = described_class.new(url: "foo bar")
 
       expect(w).not_to be_valid
       expect(w.errors[:url]).to include "is not a valid URL"
@@ -28,7 +28,7 @@ RSpec.describe Webhook, type: :model do
 
   describe "#last_delivery" do
     it "returns the most recently sent delivery" do
-      webhook = Webhook.create!(url: "https://example.org")
+      webhook = described_class.create!(url: "https://example.org")
       delivery1 = webhook.deliveries.create!(created_at: 3.hours.ago, sent_at: 1.hour.ago)
       webhook.deliveries.create!(created_at: 2.hours.ago, sent_at: 2.hours.ago)
       expect(webhook.last_delivery).to eq(delivery1)

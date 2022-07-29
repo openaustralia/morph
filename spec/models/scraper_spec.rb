@@ -119,7 +119,7 @@ describe Scraper do
   end
 
   describe "#scraped_domains" do
-    let(:scraper) { Scraper.new }
+    let(:scraper) { described_class.new }
     let(:last_run) { mock_model(Run) }
 
     it "returns an empty array if there is no last run" do
@@ -140,7 +140,7 @@ describe Scraper do
   end
 
   context "a scraper with some downloads" do
-    let(:scraper) { Scraper.create!(name: "scraper", owner: owner1) }
+    let(:scraper) { described_class.create!(name: "scraper", owner: owner1) }
     let(:owner1) { Owner.create }
     let(:owner2) { Owner.create }
 
@@ -164,7 +164,7 @@ describe Scraper do
   end
 
   context "there is a scraper" do
-    let(:scraper) { Scraper.new }
+    let(:scraper) { described_class.new }
 
     context "scraper has no data" do
       before do
