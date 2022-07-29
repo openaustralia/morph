@@ -168,7 +168,7 @@ describe Scraper do
 
     context "when the scraper has no data" do
       before do
-        expect(scraper).to receive(:sqlite_total_rows).and_return(0)
+        allow(scraper).to receive(:sqlite_total_rows).and_return(0)
       end
 
       describe "#data?" do
@@ -178,7 +178,7 @@ describe Scraper do
 
     context "when the scraper has a data" do
       before do
-        expect(scraper).to receive(:sqlite_total_rows).and_return(1)
+        allow(scraper).to receive(:sqlite_total_rows).and_return(1)
       end
 
       describe "#data?" do

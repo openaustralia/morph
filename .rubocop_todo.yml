@@ -16,12 +16,6 @@ RSpec/AnyInstance:
 RSpec/ExampleLength:
   Max: 49
 
-# Offense count: 6
-RSpec/ExpectInHook:
-  Exclude:
-    - 'spec/models/scraper_spec.rb'
-    - 'spec/models/user_spec.rb'
-
 # Offense count: 93
 # Configuration parameters: AssignmentOnly.
 RSpec/InstanceVariable:

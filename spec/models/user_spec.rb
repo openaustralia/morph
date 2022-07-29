@@ -19,7 +19,7 @@ describe User do
     let(:scraper) { mock_model(Scraper, finished_successfully?: true, finished_with_errors?: false, finished_recently?: true) }
 
     before do
-      expect(user).to receive(:all_scrapers_watched).and_return([scraper])
+      allow(user).to receive(:all_scrapers_watched).and_return([scraper])
     end
 
     describe "#watched_successful_scrapers" do
@@ -35,7 +35,7 @@ describe User do
     let(:scraper) { mock_model(Scraper, finished_successfully?: true, finished_with_errors?: false, finished_recently?: false) }
 
     before do
-      expect(user).to receive(:all_scrapers_watched).and_return([scraper])
+      allow(user).to receive(:all_scrapers_watched).and_return([scraper])
     end
 
     describe "#watched_successful_scrapers" do
@@ -51,7 +51,7 @@ describe User do
     let(:scraper) { mock_model(Scraper, finished_successfully?: false, finished_with_errors?: true, finished_recently?: true) }
 
     before do
-      expect(user).to receive(:all_scrapers_watched).and_return([scraper])
+      allow(user).to receive(:all_scrapers_watched).and_return([scraper])
     end
 
     describe "#watched_successful_scrapers" do
@@ -68,7 +68,7 @@ describe User do
     let(:scraper2) { mock_model(Scraper, finished_successfully?: true, finished_with_errors?: false, finished_recently?: true) }
 
     before do
-      expect(user).to receive(:all_scrapers_watched).and_return([scraper1, scraper2])
+      allow(user).to receive(:all_scrapers_watched).and_return([scraper1, scraper2])
     end
 
     describe "#watched_successful_scrapers" do
