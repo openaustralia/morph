@@ -10,11 +10,11 @@ module Morph
       gritty = Grit::Git.new(repo_path)
       if gritty.exist?
         # TODO: Use grit for this instead of shelling out
-        puts "Updating git repo #{repo_path}..."
+        Rails.logger.info "Updating git repo #{repo_path}..."
         system("cd #{repo_path} && git fetch && git reset --hard FETCH_HEAD")
       else
-        puts "Cloning git repo #{git_url}..."
-        puts gritty.clone(
+        Rails.logger.info "Cloning git repo #{git_url}..."
+        Rails.logger.info gritty.clone(
           { verbose: true, progress: true, raise: true },
           git_url, repo_path
         )

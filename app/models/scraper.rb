@@ -354,8 +354,8 @@ class Scraper < ApplicationRecord
     update_repo_size
     update_contributors
   rescue Grit::Git::CommandFailed => e
-    puts "git command failed: #{e}"
-    puts "Ignoring and moving onto the next one..."
+    Rails.logger.error "git command failed: #{e}"
+    Rails.logger.error "Ignoring and moving onto the next one..."
   end
 
   # Return the https version of the git clone url (git_url)

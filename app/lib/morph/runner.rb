@@ -48,7 +48,7 @@ module Morph
     end
 
     def log(timestamp, stream, text)
-      puts "#{stream}: #{text}" if Rails.env.development?
+      Rails.logger.info "#{stream}: #{text}" if Rails.env.development?
       # Not using create on association to try to avoid memory bloat
       # Truncate text so that it fits in the database
       # Note that mysql TEXT is limited to 65535 bytes so we have to be

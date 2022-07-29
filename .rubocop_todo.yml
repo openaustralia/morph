@@ -167,19 +167,6 @@ Rails/LexicallyScopedActionFilter:
     - 'app/controllers/supporters_controller.rb'
     - 'app/controllers/users_controller.rb'
 
-# Offense count: 26
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: Include.
-# Include: app/**/*.rb, config/**/*.rb, db/**/*.rb, lib/**/*.rb
-Rails/Output:
-  Exclude:
-    - 'app/lib/morph/backup.rb'
-    - 'app/lib/morph/docker_utils.rb'
-    - 'app/lib/morph/github.rb'
-    - 'app/lib/morph/runner.rb'
-    - 'app/models/scraper.rb'
-    - 'app/models/user.rb'
-
 # Offense count: 12
 Rails/OutputSafety:
   Exclude:

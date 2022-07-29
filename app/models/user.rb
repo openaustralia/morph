@@ -50,7 +50,7 @@ class User < Owner
       watched_successful_scrapers
     ).deliver
   rescue Net::SMTPSyntaxError
-    puts "Warning: user #{nickname} has invalid email address #{email} " \
+    Rails.logger.warn "Warning: user #{nickname} has invalid email address #{email} " \
       "(tried to send alert)"
   end
 

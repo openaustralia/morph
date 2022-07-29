@@ -7,7 +7,7 @@ module Morph
     def self.pull_docker_image(image)
       Docker::Image.create("fromImage" => image) do |chunk|
         data = JSON.parse(chunk)
-        puts "#{data['status']} #{data['id']} #{data['progress']}"
+        Rails.logger.info "#{data['status']} #{data['id']} #{data['progress']}"
       end
     end
 
@@ -52,7 +52,7 @@ module Morph
       Docker::Image.create("fromImage" => name) do |chunk|
         chunk.split("\n").each do |c|
           data = JSON.parse(c)
-          puts "#{data['status']} #{data['id']} #{data['progress']}\n"
+          Rails.logger.info "#{data['status']} #{data['id']} #{data['progress']}\n"
         end
       end
     end
