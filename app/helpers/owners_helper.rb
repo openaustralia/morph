@@ -17,7 +17,8 @@ module OwnersHelper
       options[:data] = { placement: "bottom", title: tooltip_text, html: html, container: "body" }
     end
     options[:alt] = owner.nickname
-    image_tag owner.gravatar_url(size), options
+    url = owner.gravatar_url(size)
+    image_tag(url, options) if url
   end
 
   def owner_tooltip_content(owner)
