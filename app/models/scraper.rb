@@ -369,7 +369,7 @@ class Scraper < ApplicationRecord
     # We need to set auto_init so that we can create a commit later.
     # The API doesn't support adding a commit to an empty repository
     begin
-      create_scraper_progress.update("Creating GitHub repository", 20)
+      create_scraper_progress.update_progress("Creating GitHub repository", 20)
       repo = Morph::Github.create_repository(forked_by, owner, name)
       update_attributes(github_id: repo.id, github_url: repo.rels[:html].href,
                         git_url: repo.rels[:git].href)
@@ -381,7 +381,7 @@ class Scraper < ApplicationRecord
     scraperwiki = Morph::Scraperwiki.new(scraperwiki_shortname)
 
     # Copy the sqlite database across from Scraperwiki
-    create_scraper_progress.update("Forking sqlite database", 40)
+    create_scraper_progress.update_progress("Forking sqlite database", 40)
     sqlite_data = scraperwiki.sqlite_database
     if sqlite_data
       database.write_sqlite_database(sqlite_data)
@@ -395,7 +395,7 @@ class Scraper < ApplicationRecord
       end
     end
 
-    create_scraper_progress.update("Forking code", 60)
+    create_scraper_progress.update_progress("Forking code", 60)
 
     # Fill in description
     client.edit_repository(
@@ -426,7 +426,7 @@ class Scraper < ApplicationRecord
       )
     end
 
-    create_scraper_progress.update("Synching repository", 80)
+    create_scraper_progress.update_progress("Synching repository", 80)
     synchronise_repo
 
     # Forking has finished

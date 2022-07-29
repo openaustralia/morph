@@ -12,12 +12,12 @@ class CreateScraperWorker
     # failed part of the way through.
     # TODO: Do this in a less hacky and more general way
     if scraper.create_scraper_progress.progress <= 20
-      scraper.create_scraper_progress.update("Creating GitHub repository", 20)
+      scraper.create_scraper_progress.update_progress("Creating GitHub repository", 20)
       Morph::Github.create_repository(current_user, scraper.owner, scraper.name, description: scraper.description)
     end
 
     # This block should happily run several times (after failures)
-    scraper.create_scraper_progress.update("Add scraper template", 40)
+    scraper.create_scraper_progress.update_progress("Add scraper template", 40)
     files = scraper.original_language.scraper_templates.merge(
       ".gitignore" => "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n",
       # TODO: Don't use hardcoded urls
@@ -26,7 +26,7 @@ class CreateScraperWorker
     scraper.add_commit_to_root_on_github(current_user, files, "Add template for morph.io scraper")
 
     # This block should happily run several times (after failures)
-    scraper.create_scraper_progress.update("Get repository info", 60)
+    scraper.create_scraper_progress.update_progress("Get repository info", 60)
     scraper2 = Scraper.new_from_github(scraper.full_name, current_user.octokit_client)
     # Copy the new data across
     scraper.update_attributes(description: scraper2.description, github_id: scraper2.github_id,
@@ -34,7 +34,7 @@ class CreateScraperWorker
     current_user.octokit_client.edit_repository(scraper.full_name, homepage: scraper_url)
 
     # This block should happily run several times (after failures)
-    scraper.create_scraper_progress.update("Synching repository", 80)
+    scraper.create_scraper_progress.update_progress("Synching repository", 80)
     scraper.synchronise_repo
     scraper.create_scraper_progress.finished
   end

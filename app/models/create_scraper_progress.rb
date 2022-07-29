@@ -5,7 +5,7 @@ class CreateScraperProgress < ApplicationRecord
   include RenderSync::Actions
   has_one :scraper, dependent: :nullify
 
-  def update(message, progress)
+  def update_progress(message, progress)
     update_attributes(message: message, progress: progress)
     sync_update scraper
   end
