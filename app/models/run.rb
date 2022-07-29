@@ -82,7 +82,7 @@ class Run < ApplicationRecord
   end
 
   def finished_successfully?
-    status_code.zero?
+    status_code&.zero?
   end
 
   def finished_with_errors?
