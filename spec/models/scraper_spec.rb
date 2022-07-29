@@ -4,89 +4,95 @@ require "spec_helper"
 
 describe Scraper do
   context "with a scraper with a couple of runs" do
-    before do
+    let(:time1) { 2.minutes.ago }
+    let(:time2) { 1.minute.ago }
+    let(:scraper) do
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        @scraper = create(:scraper)
+        create(:scraper)
       end
-      @time1 = 2.minutes.ago
-      @time2 = 1.minute.ago
-      @run1 = @scraper.runs.create(finished_at: @time1)
-      @run2 = @scraper.runs.create(finished_at: @time2)
-      Metric.create(utime: 10.2, stime: 2.4, run_id: @run1.id)
-      Metric.create(utime: 1.3, stime: 3.5, run_id: @run2.id)
+    end
+    let!(:run1) do
+      run = scraper.runs.create(finished_at: time1)
+      Metric.create(utime: 10.2, stime: 2.4, run_id: run.id)
+      run
+    end
+    let!(:run2) do
+      run = scraper.runs.create(finished_at: time2)
+      Metric.create(utime: 1.3, stime: 3.5, run_id: run.id)
+      run
     end
 
     it "#utime" do
-      expect(@scraper.utime).to be_within(0.00001).of(11.5)
+      expect(scraper.utime).to be_within(0.00001).of(11.5)
     end
 
     it "#stime" do
-      expect(@scraper.stime).to be_within(0.00001).of(5.9)
+      expect(scraper.stime).to be_within(0.00001).of(5.9)
     end
 
     it "#cpu_time" do
-      expect(@scraper.cpu_time).to be_within(0.00001).of(17.4)
+      expect(scraper.cpu_time).to be_within(0.00001).of(17.4)
     end
 
     describe "#scraperwiki_shortname" do
       it do
-        @scraper.scraperwiki_url = "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
-        expect(@scraper.scraperwiki_shortname).to eq "australian_rainfall"
+        scraper.scraperwiki_url = "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
+        expect(scraper.scraperwiki_shortname).to eq "australian_rainfall"
       end
     end
 
     describe "#scraperwiki_url" do
       it do
-        @scraper.scraperwiki_shortname = "australian_rainfall"
-        expect(@scraper.scraperwiki_url).to eq "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
+        scraper.scraperwiki_shortname = "australian_rainfall"
+        expect(scraper.scraperwiki_url).to eq "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
       end
 
       it do
-        @scraper.scraperwiki_shortname = nil
-        expect(@scraper.scraperwiki_url).to be_nil
+        scraper.scraperwiki_shortname = nil
+        expect(scraper.scraperwiki_url).to be_nil
       end
 
       it do
-        @scraper.scraperwiki_shortname = ""
-        expect(@scraper.scraperwiki_url).to be_nil
+        scraper.scraperwiki_shortname = ""
+        expect(scraper.scraperwiki_url).to be_nil
       end
     end
 
     describe "#latest_successful_run_time" do
       context "when the first run is successful" do
         before do
-          @run1.update(status_code: 0)
-          @run2.update(status_code: 255)
+          run1.update(status_code: 0)
+          run2.update(status_code: 255)
         end
 
-        it { expect(@scraper.latest_successful_run_time.to_s).to eq @time1.to_s }
+        it { expect(scraper.latest_successful_run_time.to_s).to eq time1.to_s }
       end
 
       context "when the second run is successful" do
         before do
-          @run1.update(status_code: 255)
-          @run2.update(status_code: 0)
+          run1.update(status_code: 255)
+          run2.update(status_code: 0)
         end
 
-        it { expect(@scraper.latest_successful_run_time.to_s).to eq @time2.to_s }
+        it { expect(scraper.latest_successful_run_time.to_s).to eq time2.to_s }
       end
 
       context "when neither are successful" do
         before do
-          @run1.update(status_code: 255)
-          @run2.update(status_code: 255)
+          run1.update(status_code: 255)
+          run2.update(status_code: 255)
         end
 
-        it { expect(@scraper.latest_successful_run_time).to be_nil }
+        it { expect(scraper.latest_successful_run_time).to be_nil }
       end
 
       context "when both are successful" do
         before do
-          @run1.update(status_code: 0)
-          @run2.update(status_code: 0)
+          run1.update(status_code: 0)
+          run2.update(status_code: 0)
         end
 
-        it { expect(@scraper.latest_successful_run_time.to_s).to eq @time2.to_s }
+        it { expect(scraper.latest_successful_run_time.to_s).to eq time2.to_s }
       end
     end
   end
@@ -244,22 +250,23 @@ describe Scraper do
     end
 
     context "with webhooks" do
-      before do
+      let!(:scraper) do
         VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-          @scraper = create(:scraper)
-          3.times { |n| @scraper.webhooks.create!(url: "https://example.org/#{n}") }
+          scraper = create(:scraper)
+          3.times { |n| scraper.webhooks.create!(url: "https://example.org/#{n}") }
+          scraper
         end
       end
 
       it "queues up a background job for each webhook" do
         expect do
-          @scraper.deliver_webhooks(run)
+          scraper.deliver_webhooks(run)
         end.to change(DeliverWebhookWorker.jobs, :size).by(3)
       end
 
       it "creates webhook delivery records" do
         expect do
-          @scraper.deliver_webhooks(run)
+          scraper.deliver_webhooks(run)
         end.to change(WebhookDelivery, :count).by(3)
       end
     end

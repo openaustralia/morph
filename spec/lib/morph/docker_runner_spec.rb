@@ -9,16 +9,14 @@ describe Morph::DockerRunner do
   # These are integration tests with the whole docker server and the
   # docker images that are used. Also, the tests are very slow!
   describe ".compile_and_run", docker: true do
-    before do
-      @dir = Dir.mktmpdir
-      @container_count = Morph::DockerUtils.stopped_containers.count
-    end
+    let!(:dir) { Dir.mktmpdir }
+    let!(:container_count) { Morph::DockerUtils.stopped_containers.count }
 
-    after { FileUtils.remove_entry @dir }
+    after { FileUtils.remove_entry dir }
 
     it "lets me know that it can't select a buildpack" do
       logs = []
-      c = described_class.compile_and_start_run(repo_path: @dir) do |stream, text|
+      c = described_class.compile_and_start_run(repo_path: dir) do |stream, text|
         logs << [stream, text]
       end
 
@@ -32,19 +30,19 @@ describe Morph::DockerRunner do
         [:internalout, "\e[1G       \e[1G-----> Unable to select a buildpack\n"]
       ]
       expect(Morph::DockerUtils.stopped_containers.count)
-        .to eq @container_count
+        .to eq container_count
     end
 
     it "stops if a python compile fails" do
       copy_test_scraper("failing_compile_python")
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       expect(c).to be_nil
     end
 
     it "is able to run hello world" do
       copy_test_scraper("hello_world_js")
 
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       logs = []
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -68,7 +66,7 @@ describe Morph::DockerRunner do
       # Limit the buffer size just for testing
       report = MemoryProfiler.report do
         with_smaller_chunk_size do
-          c = described_class.compile_and_start_run(repo_path: @dir)
+          c = described_class.compile_and_start_run(repo_path: dir)
           described_class.attach_to_run(c)
           described_class.finish(c, [])
         end
@@ -82,7 +80,7 @@ describe Morph::DockerRunner do
     it "attaches the container to a special morph-only docker network" do
       copy_test_scraper("hello_world_js")
 
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       expect(c.json["HostConfig"]["NetworkMode"]).to eq "morph"
       # Check that the network has some things set
       network_info = Docker::Network.get("morph").info
@@ -97,7 +95,7 @@ describe Morph::DockerRunner do
     it "is able to run hello world from a sub-directory" do
       copy_test_scraper("hello_world_subdirectory_js")
 
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       logs = []
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -112,14 +110,14 @@ describe Morph::DockerRunner do
       copy_test_scraper("hello_world_js")
 
       # Do the compile once to make sure the cache is primed
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       logs = []
       # Clean up container because we're not calling finish
       # which normally does the cleanup
       c.kill
       c.delete
 
-      c = described_class.compile_and_start_run(repo_path: @dir) do |stream, text|
+      c = described_class.compile_and_start_run(repo_path: dir) do |stream, text|
         logs << [stream, text]
       end
 
@@ -138,7 +136,7 @@ describe Morph::DockerRunner do
     it "is able to run hello world of course" do
       copy_test_scraper("hello_world_ruby")
 
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       logs = []
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -149,13 +147,13 @@ describe Morph::DockerRunner do
         [:stdout, "Hello world!\n"]
       ]
       expect(Morph::DockerUtils.stopped_containers.count)
-        .to eq @container_count
+        .to eq container_count
     end
 
     it "is able to grab a file resulting from running the scraper" do
       copy_test_scraper("write_to_file_ruby")
 
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       described_class.attach_to_run(c)
       result = described_class.finish(c, ["foo.txt", "bar"])
       expect(result.status_code).to eq 0
@@ -163,7 +161,7 @@ describe Morph::DockerRunner do
       expect(result.files["foo.txt"].read).to eq "Hello World!"
       expect(result.files["bar"]).to eq nil
       expect(Morph::DockerUtils.stopped_containers.count)
-        .to eq @container_count
+        .to eq container_count
     end
 
     it "is able to pass environment variables" do
@@ -171,7 +169,7 @@ describe Morph::DockerRunner do
 
       logs = []
       c = described_class.compile_and_start_run(
-        repo_path: @dir, env_variables: { "AN_ENV_VARIABLE" => "Hello world!" }
+        repo_path: dir, env_variables: { "AN_ENV_VARIABLE" => "Hello world!" }
       )
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -188,7 +186,7 @@ describe Morph::DockerRunner do
       copy_test_scraper("display_request_env_ruby")
 
       c = described_class.compile_and_start_run(
-        repo_path: @dir
+        repo_path: dir
       )
       logs = []
       described_class.attach_to_run(c) do |_timestamp, stream, text|
@@ -202,7 +200,7 @@ describe Morph::DockerRunner do
     it "returns the ip address of the container" do
       copy_test_scraper("ip_address_ruby")
 
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       ip_address = Morph::DockerUtils.ip_address_of_container(c)
       described_class.attach_to_run(c)
       result = described_class.finish(c, ["ip_address"])
@@ -215,7 +213,7 @@ describe Morph::DockerRunner do
       copy_test_scraper("failing_scraper_ruby")
 
       logs = []
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
       end
@@ -233,7 +231,7 @@ describe Morph::DockerRunner do
       copy_test_scraper("stream_output_ruby")
 
       logs = []
-      c = described_class.compile_and_start_run(repo_path: @dir) do |_stream, text|
+      c = described_class.compile_and_start_run(repo_path: dir) do |_stream, text|
         logs << [Time.zone.now, text]
       end
       described_class.attach_to_run(c) do |_timestamp, _stream, text|
@@ -250,7 +248,7 @@ describe Morph::DockerRunner do
 
       logs = []
       # TODO: Really should be able to call compile_and_start_run without a block
-      c = described_class.compile_and_start_run(repo_path: @dir)
+      c = described_class.compile_and_start_run(repo_path: dir)
       # Simulate the log process stopping
       last_timestamp = nil
       expect do
@@ -273,7 +271,7 @@ describe Morph::DockerRunner do
     it "is able to limit the amount of log output" do
       copy_test_scraper("stream_output_ruby")
 
-      c = described_class.compile_and_start_run(repo_path: @dir, max_lines: 5)
+      c = described_class.compile_and_start_run(repo_path: dir, max_lines: 5)
       logs = []
       described_class.attach_to_run(c, nil) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -426,6 +424,6 @@ end
 def copy_test_scraper(name)
   FileUtils.cp_r(
     File.join(File.dirname(__FILE__), "test_scrapers", "docker_runner_spec", name, "."),
-    @dir
+    dir
   )
 end
