@@ -131,7 +131,7 @@ GEM
     crass (1.0.6)
     d3-rails (3.5.17)
       railties (>= 3.1)
-    dalli (2.7.11)
+    dalli (3.2.0)
     database_cleaner (2.0.1)
       database_cleaner-active_record (~> 2.0.0)
     database_cleaner-active_record (2.0.1)
@@ -606,7 +606,7 @@ DEPENDENCIES
   codeclimate-test-reporter
   coffee-rails
   d3-rails (~> 3.5)
-  dalli (< 3.0.0)
+  dalli
   database_cleaner
   devise
   docker-api (< 2.0.0)

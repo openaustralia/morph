@@ -94,9 +94,7 @@ gem "validate_url"
 gem "psych", "< 4.0.0"
 
 group :production do
-  # 3.0.0 requires ruby 2.5 or higher.
-  # TODO: Remove version lock as soon as we have upgraded to ruby 2.5
-  gem "dalli", "< 3.0.0"
+  gem "dalli"
 end
 
 group :development do
