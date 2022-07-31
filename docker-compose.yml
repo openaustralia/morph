@@ -11,9 +11,15 @@
 
 # TODO: Add data volume
 elasticsearch:
-  image: elasticsearch:1.6.0
+  # We're using elasticsearch 7 (rather than the current latest
+  # 8.3.3) is because we don't want to bother with authentication
+  # and ssl for the time being
+  image: elasticsearch:7.17.5
   ports:
     - "9200:9200"
+  mem_limit: 1073741824
+  environment:
+    - "discovery.type=single-node"
 
 # This is a work in progress
 # TODO: Add data volume
