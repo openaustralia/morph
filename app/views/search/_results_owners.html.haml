@@ -2,6 +2,6 @@
   - if @owners.total_count.zero?
     .alert.alert-info= no_search_results_message("users", @q)
   - else
-    - @owners.with_details.each do |owner, details|
-      = render owner, highlight: details[:highlight]
+    - @owners.with_highlights.each do |owner, highlights|
+      = render owner, highlight: highlights
     = paginate @owners

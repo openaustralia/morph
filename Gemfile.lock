@@ -156,13 +156,13 @@ GEM
     dotenv-rails (2.7.6)
       dotenv (= 2.7.6)
       railties (>= 3.2)
-    elasticsearch (7.5.0)
-      elasticsearch-api (= 7.5.0)
-      elasticsearch-transport (= 7.5.0)
-    elasticsearch-api (7.5.0)
+    elasticsearch (7.13.3)
+      elasticsearch-api (= 7.13.3)
+      elasticsearch-transport (= 7.13.3)
+    elasticsearch-api (7.13.3)
       multi_json
-    elasticsearch-transport (7.5.0)
-      faraday (>= 0.14, < 1)
+    elasticsearch-transport (7.13.3)
+      faraday (~> 1)
       multi_json
     em-http-request (1.1.7)
       addressable (>= 2.3.4)
@@ -185,8 +185,29 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    faraday (0.17.5)
-      multipart-post (>= 1.2, < 3)
+    faraday (1.10.0)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
+      faraday-excon (~> 1.1)
+      faraday-httpclient (~> 1.0)
+      faraday-multipart (~> 1.0)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.0)
+      faraday-patron (~> 1.0)
+      faraday-rack (~> 1.0)
+      faraday-retry (~> 1.0)
+      ruby2_keywords (>= 0.0.4)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
+    faraday-excon (1.1.0)
+    faraday-httpclient (1.0.1)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.2.0)
+    faraday-patron (1.0.0)
+    faraday-rack (1.0.0)
+    faraday-retry (1.0.3)
     faye (1.4.0)
       cookiejar (>= 0.3.0)
       em-http-request (>= 1.1.6)
@@ -509,9 +530,9 @@ GEM
       faraday (> 0.8, < 2.0)
     sdoc (2.4.0)
       rdoc (>= 5.0)
-    searchkick (1.5.1)
-      activemodel
-      elasticsearch (>= 1)
+    searchkick (4.6.3)
+      activemodel (>= 5)
+      elasticsearch (>= 6, < 7.14)
       hashie
     sexp_processor (4.16.1)
     shellany (0.0.1)
@@ -611,7 +632,6 @@ DEPENDENCIES
   devise
   docker-api (< 2.0.0)
   dotenv-rails (< 2.8.0)
-  elasticsearch (= 7.5.0)
   factory_bot_rails
   faraday
   faye
@@ -663,7 +683,7 @@ DEPENDENCIES
   ruby-progressbar
   sass-rails
   sdoc
-  searchkick (= 1.5.1)
+  searchkick
   sidekiq (~> 5)
   sidekiq-limit_fetch
   simple_form
