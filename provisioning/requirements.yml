@@ -3,7 +3,7 @@
 # ansible-galaxy install -r requirements.yml -p roles
 
 - src: geerlingguy.elasticsearch
-  version: 2.2.0
+  version: 5.1.0
 
 - src: nickhammond.logrotate
   # Version 0.0.3 contains the fix

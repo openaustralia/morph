@@ -12,7 +12,7 @@ dependencies:
   - { role: mitmproxy }
   - { role: certbot }
   - role: geerlingguy.elasticsearch
-    elasticsearch_version: 1.7.6
+    elasticsearch_version: 7.x
     elasticsearch_bind_host: 127.0.0.1
   - role: nickhammond.logrotate
     logrotate_scripts:
