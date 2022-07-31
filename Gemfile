@@ -56,12 +56,6 @@ gem "rest-client"
 gem "backstretch-rails"
 gem "cancan"
 gem "d3-rails", "~> 3.5"
-# Locking elasticsearch to 7.5.0 as upgrading it seems to break things working
-# with the ancient version of elasticsearch (1.x) that we're running currently
-# This lock is also stopping us from upgrading faraday which is giving us
-# deprecation warnings.
-# TODO: Upgrade elasticsearch as soon as we can
-gem "elasticsearch", "7.5.0"
 gem "haml-coderay"
 gem "honeybadger"
 gem "kaminari"
@@ -86,6 +80,13 @@ gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"
 # We can't use anything later than 1.5.1 if we're on elasticsearch 1.x
 # See https://github.com/ankane/searchkick/blob/master/README.md
 gem "searchkick", "1.5.1"
+# Locking elasticsearch to 7.5.0 as upgrading it seems to break things working
+# with the ancient version of elasticsearch (1.x) that we're running currently
+# This lock is also stopping us from upgrading faraday which is giving us
+# deprecation warnings.
+# TODO: Upgrade elasticsearch as soon as we can
+gem "elasticsearch", "7.5.0"
+
 gem "stripe"
 gem "validate_url"
 
