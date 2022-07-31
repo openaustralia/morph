@@ -89,11 +89,6 @@ gem "searchkick", "1.5.1"
 gem "stripe"
 gem "validate_url"
 
-# nio4r isn't a direct dependency. It's used by puma but we're including
-# it here to lock the version to one that works with ruby 2.3
-# TODO: Remove this when we can
-gem "nio4r", "~> 2.4.0"
-
 # Adding psych here to lock its version. psych 4.0 causes us issues with installing gems. Ugh.
 # TODO: Remove this as soon as possible
 gem "psych", "< 4.0.0"
