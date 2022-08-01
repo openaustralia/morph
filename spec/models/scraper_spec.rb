@@ -246,7 +246,7 @@ describe Scraper do
           scraper = create(:scraper)
           expect do
             scraper.deliver_webhooks(run)
-          end.to change(DeliverWebhookWorker.jobs, :size).by(0)
+          end.not_to change(DeliverWebhookWorker.jobs, :size)
         end
       end
     end

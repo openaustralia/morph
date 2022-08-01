@@ -33,8 +33,8 @@ module Morph
       FileUtils.rm_f "db/backups/mysql_backup.sql.bz2"
       FileUtils.mkdir_p "db/backups"
       Rails.logger.info "Backing up MySQL..."
-      system "mysqldump #{mysql_auth} #{mysql_database}" \
-             " > db/backups/mysql_backup.sql"
+      system "mysqldump #{mysql_auth} #{mysql_database} " \
+             "> db/backups/mysql_backup.sql"
       Rails.logger.info "Compressing MySQL backup..."
       system "bzip2 db/backups/mysql_backup.sql"
     end
@@ -43,8 +43,8 @@ module Morph
       Rails.logger.info "Uncompressing MySQL backup..."
       system "bunzip2 -k db/backups/mysql_backup.sql.bz2"
       Rails.logger.info "Restoring from MySQL backup..."
-      system "mysql #{mysql_auth} #{mysql_database}" \
-             " < db/backups/mysql_backup.sql"
+      system "mysql #{mysql_auth} #{mysql_database} " \
+             "< db/backups/mysql_backup.sql"
       FileUtils.rm_f "db/backups/mysql_backup.sql"
     end
 

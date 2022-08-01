@@ -42,8 +42,8 @@ describe ApiController do
       parsed = response.body.split("\n").map { |l| JSON.parse(l) }
       expect(parsed).to eq [{
         "stream" => "internalerr",
-        "text" => "You currently can't start a scraper run." \
-                  " See https://morph.io for more details"
+        "text" => "You currently can't start a scraper run. " \
+                  "See https://morph.io for more details"
       }]
     end
 

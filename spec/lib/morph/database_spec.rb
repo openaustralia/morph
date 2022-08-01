@@ -17,15 +17,6 @@ describe Morph::Database do
     end
   end
 
-  describe "#clear" do
-    it "does not attempt to remove the file if it's not there" do
-      expect(FileUtils).not_to receive(:rm)
-      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        described_class.new(create(:scraper).data_path).clear
-      end
-    end
-  end
-
   describe "#backup" do
     it "backups the database file" do
       # Create a fake database file
