@@ -90,7 +90,7 @@ GEM
       sassc (>= 2.0.0)
     bootstrap-select-rails (1.13.8)
     builder (3.2.4)
-    cancan (1.6.10)
+    cancancan (3.4.0)
     capistrano (3.17.0)
       airbrussh (>= 1.0.0)
       i18n
@@ -610,7 +610,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-sass
   bootstrap-select-rails
-  cancan
+  cancancan
   capistrano-rails
   capistrano-rvm
   capybara

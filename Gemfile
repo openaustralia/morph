@@ -46,7 +46,7 @@ gem "RedCloth"
 gem "rest-client"
 
 gem "backstretch-rails"
-gem "cancan"
+gem "cancancan"
 gem "d3-rails", "~> 3.5"
 gem "haml-coderay"
 gem "honeybadger"
