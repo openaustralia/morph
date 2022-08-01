@@ -175,7 +175,7 @@ class ScrapersController < ApplicationController
   # Toggle whether we're watching this scraper
   def watch
     current_user.toggle_watch(@scraper)
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def watchers
