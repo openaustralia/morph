@@ -89,6 +89,8 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
+    bootsnap (1.13.0)
+      msgpack (~> 1.2)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
@@ -329,6 +331,7 @@ GEM
       minitar (~> 0.8.0)
       powerbar (~> 1.0)
     minitest (5.16.2)
+    msgpack (1.5.4)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multiblock (0.2.1)
@@ -616,6 +619,7 @@ DEPENDENCIES
   backstretch-rails
   better_errors
   binding_of_caller
+  bootsnap
   bootstrap-sass
   bootstrap-select-rails
   cancancan

@@ -87,6 +87,9 @@ gem "validate_url"
 # TODO: Remove this as soon as possible
 gem "psych", "< 4.0.0"
 
+# Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false
+
 group :production do
   gem "dalli"
 end
