@@ -1,4 +1,4 @@
-FROM ruby:2.5.9
+FROM ruby:2.6.10
 RUN mkdir /morph
 WORKDIR /morph
 # We need a javascript runtime

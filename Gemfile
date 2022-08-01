@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-ruby "2.5.9"
+ruby "2.6.10"
 
 # we are locking the version because the latest
 # version breaks with the old ruby (2.5.9) that we're currently using
