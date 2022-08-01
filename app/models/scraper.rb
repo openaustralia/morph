@@ -232,8 +232,10 @@ class Scraper < ApplicationRecord
     RunWorker.perform_async(run.id)
   end
 
+  # If repo is still using the old "master" branch name then the url below will
+  # just redirect to master, because it's the default branch
   def github_url_for_file(file)
-    "#{github_url}/blob/master/#{file}"
+    "#{github_url}/blob/main/#{file}"
   end
 
   def language
@@ -323,14 +325,14 @@ class Scraper < ApplicationRecord
     end
 
     # Let's get all the info about head
-    ref = client.ref(full_name, "heads/master")
+    ref = client.ref(full_name, "heads/main")
     commit_sha = ref.object.sha
     commit = client.commit(full_name, commit_sha)
     tree_sha = commit.commit.tree.sha
 
     tree2 = client.create_tree(full_name, blobs, base_tree: tree_sha)
     commit2 = client.create_commit(full_name, message, tree2.sha, commit_sha)
-    client.update_ref(full_name, "heads/master", commit2.sha)
+    client.update_ref(full_name, "heads/main", commit2.sha)
   end
 
   # Overwrites whatever there was before in that repo
@@ -347,7 +349,7 @@ class Scraper < ApplicationRecord
     end
     tree = client.create_tree(full_name, blobs)
     commit = client.create_commit(full_name, message, tree.sha)
-    client.update_ref(full_name, "heads/master", commit.sha)
+    client.update_ref(full_name, "heads/main", commit.sha)
   end
 
   def synchronise_repo
