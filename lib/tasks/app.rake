@@ -151,7 +151,7 @@ namespace :app do
       puts "Removing old logs for #{scraper.full_name}..."
       runs = scraper.runs.order(queued_at: :desc)
       # Remove the most recently run from the list
-      runs = runs[1..-1]
+      runs = runs[1..]
       # Now remove the logs connected to those runs
       LogLine.delete_all(run: runs)
     end

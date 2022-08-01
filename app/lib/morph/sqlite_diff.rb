@@ -141,7 +141,7 @@ module Morph
       data_changes(ids1, ids2) do |possibly_changed|
         values1, values2 = execute2(db1, db2, yield(possibly_changed))
         values1.zip(values2).map do |value1, value2|
-          [value1.first, value1[1..-1], value2[1..-1]]
+          [value1.first, value1[1..], value2[1..]]
         end
       end
     end

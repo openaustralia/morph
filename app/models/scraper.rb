@@ -363,7 +363,7 @@ class Scraper < ApplicationRecord
 
   # Return the https version of the git clone url (git_url)
   def git_url_https
-    "https#{git_url[3..-1]}"
+    "https#{git_url[3..]}"
   end
 
   def fork_from_scraperwiki!

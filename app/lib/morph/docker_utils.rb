@@ -161,7 +161,7 @@ module Morph
           # makes line output more consistent across platforms.
           # Make sure that buffer can't grow out of control by limiting
           # it's size around 256 bytes
-          if buffer[-1..-1] == "\n" || buffer.length >= 256
+          if buffer[-1..] == "\n" || buffer.length >= 256
             yield buffer
             buffer = +""
           end
