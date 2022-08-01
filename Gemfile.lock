@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/openaustralia/render_sync.git
-  revision: 20a127d3edb40b61daaa2df3fd1e6485cbb65b8c
+  revision: 4e6f6da2699a92be4034772bdd580cf4ec12de7f
   specs:
     render_sync (0.5.0)
       em-http-request
