@@ -20,7 +20,10 @@ gem "devise"
 # We're currently using that in morph
 # TODO: Remove use of Docker::API_VERSION so we can upgrade this gem further
 gem "docker-api", "< 2.0.0", require: "docker"
+
 gem "faraday"
+gem "faraday-retry"
+
 gem "font-awesome-rails"
 # Use same version deployed to server because provisioning/roles/morph-app/tasks/main.yml:80
 gem "foreman", "0.63.0"

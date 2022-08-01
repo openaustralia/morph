@@ -190,6 +190,7 @@ GEM
       faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (2.1.0)
+    faraday-retry (1.0.3)
     faye (1.4.0)
       cookiejar (>= 0.3.0)
       em-http-request (>= 1.1.6)
@@ -625,6 +626,7 @@ DEPENDENCIES
   dotenv-rails
   factory_bot_rails
   faraday
+  faraday-retry
   faye
   font-awesome-rails
   foreman (= 0.63.0)
