@@ -60,8 +60,10 @@ gem "rails-timeago", "~> 2.0"
 gem "sinatra", ">= 1.3.0", require: nil
 gem "sitemap_generator"
 gem "zeroclipboard-rails"
-# Rails 4 compatibility hasn't been "properly" released yet.
-gem "activeadmin", "~> 1.0.0.pre4"
+
+# For the administration interface
+gem "activeadmin"
+
 gem "faye"
 gem "puma"
 gem "ruby-progressbar"
