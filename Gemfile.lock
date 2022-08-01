@@ -524,10 +524,11 @@ GEM
       hashie
     sexp_processor (4.16.1)
     shellany (0.0.1)
-    sidekiq (6.5.1)
-      connection_pool (>= 2.2.2)
-      rack (~> 2.0)
-      redis (>= 4.2.0)
+    sidekiq (5.2.7)
+      connection_pool (~> 2.2, >= 2.2.2)
+      rack (>= 1.5.0)
+      rack-protection (>= 1.5.0)
+      redis (>= 3.3.5, < 5)
     sidekiq-limit_fetch (4.2.0)
       redis (>= 4.6.0)
       sidekiq (>= 4)
@@ -676,7 +677,7 @@ DEPENDENCIES
   sass-rails
   sdoc
   searchkick
-  sidekiq (~> 6)
+  sidekiq (~> 5)
   sidekiq-limit_fetch
   simple_form
   simplecov
