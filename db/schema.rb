@@ -22,11 +22,10 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.string   "author_type",   limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
+    t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
+    t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
-
-  add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
-  add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
-  add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
 
   create_table "alerts", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -34,11 +33,10 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.string   "watch_type", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["user_id"], name: "index_alerts_on_user_id"
+    t.index ["watch_id"], name: "index_alerts_on_watch_id"
+    t.index ["watch_type"], name: "index_alerts_on_watch_type"
   end
-
-  add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
-  add_index "alerts", ["watch_id"], name: "index_alerts_on_watch_id", using: :btree
-  add_index "alerts", ["watch_type"], name: "index_alerts_on_watch_type", using: :btree
 
   create_table "api_queries", force: :cascade do |t|
     t.string   "type",       limit: 255
@@ -52,31 +50,28 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.string   "format",     limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["created_at"], name: "index_api_queries_on_created_at"
+    t.index ["owner_id"], name: "index_api_queries_on_owner_id"
+    t.index ["scraper_id"], name: "index_api_queries_on_scraper_id"
   end
-
-  add_index "api_queries", ["created_at"], name: "index_api_queries_on_created_at", using: :btree
-  add_index "api_queries", ["owner_id"], name: "index_api_queries_on_owner_id", using: :btree
-  add_index "api_queries", ["scraper_id"], name: "index_api_queries_on_scraper_id", using: :btree
 
   create_table "connection_logs", force: :cascade do |t|
     t.integer  "run_id",     limit: 4
     t.integer  "domain_id",  limit: 4
     t.datetime "created_at"
+    t.index ["created_at"], name: "index_connection_logs_on_created_at"
+    t.index ["domain_id"], name: "index_connection_logs_on_domain_id"
+    t.index ["run_id"], name: "index_connection_logs_on_run_id"
   end
-
-  add_index "connection_logs", ["created_at"], name: "index_connection_logs_on_created_at", using: :btree
-  add_index "connection_logs", ["domain_id"], name: "index_connection_logs_on_domain_id", using: :btree
-  add_index "connection_logs", ["run_id"], name: "index_connection_logs_on_run_id", using: :btree
 
   create_table "contributions", force: :cascade do |t|
     t.integer  "scraper_id", limit: 4
     t.integer  "user_id",    limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["scraper_id"], name: "index_contributions_on_scraper_id"
+    t.index ["user_id"], name: "index_contributions_on_user_id"
   end
-
-  add_index "contributions", ["scraper_id"], name: "index_contributions_on_scraper_id", using: :btree
-  add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
 
   create_table "create_scraper_progresses", force: :cascade do |t|
     t.string   "message",    limit: 255
@@ -92,9 +87,8 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "title",      limit: 65535
+    t.index ["name"], name: "index_domains_on_name", unique: true
   end
-
-  add_index "domains", ["name"], name: "index_domains_on_name", unique: true, using: :btree
 
   create_table "log_lines", force: :cascade do |t|
     t.integer  "run_id",     limit: 4
@@ -103,10 +97,9 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "timestamp",                precision: 6
+    t.index ["run_id"], name: "index_log_lines_on_run_id"
+    t.index ["timestamp"], name: "index_log_lines_on_timestamp"
   end
-
-  add_index "log_lines", ["run_id"], name: "index_log_lines_on_run_id", using: :btree
-  add_index "log_lines", ["timestamp"], name: "index_log_lines_on_timestamp", using: :btree
 
   create_table "metrics", force: :cascade do |t|
     t.float    "wall_time",  limit: 24
@@ -122,17 +115,15 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "run_id",     limit: 4
+    t.index ["run_id"], name: "index_metrics_on_run_id"
   end
-
-  add_index "metrics", ["run_id"], name: "index_metrics_on_run_id", using: :btree
 
   create_table "organizations_users", force: :cascade do |t|
     t.integer "organization_id", limit: 4
     t.integer "user_id",         limit: 4
+    t.index ["organization_id"], name: "index_organizations_users_on_organization_id"
+    t.index ["user_id"], name: "index_organizations_users_on_user_id"
   end
-
-  add_index "organizations_users", ["organization_id"], name: "index_organizations_users_on_organization_id", using: :btree
-  add_index "organizations_users", ["user_id"], name: "index_organizations_users_on_user_id", using: :btree
 
   create_table "owners", force: :cascade do |t|
     t.integer  "sign_in_count",          limit: 4,   default: 0,     null: false
@@ -163,10 +154,9 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.string   "stripe_subscription_id", limit: 255
     t.string   "location",               limit: 255
     t.datetime "alerted_at"
+    t.index ["api_key"], name: "index_owners_on_api_key"
+    t.index ["nickname"], name: "index_owners_on_nickname"
   end
-
-  add_index "owners", ["api_key"], name: "index_owners_on_api_key", using: :btree
-  add_index "owners", ["nickname"], name: "index_owners_on_nickname", using: :btree
 
   create_table "runs", force: :cascade do |t|
     t.integer  "scraper_id",            limit: 4
@@ -191,16 +181,15 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.string   "ip_address",            limit: 255
     t.integer  "connection_logs_count", limit: 4
     t.string   "docker_image",          limit: 255
+    t.index ["created_at"], name: "index_runs_on_created_at"
+    t.index ["docker_image"], name: "index_runs_on_docker_image"
+    t.index ["finished_at"], name: "index_runs_on_finished_at"
+    t.index ["ip_address"], name: "index_runs_on_ip_address"
+    t.index ["owner_id"], name: "index_runs_on_owner_id"
+    t.index ["scraper_id", "status_code", "finished_at"], name: "index_runs_on_scraper_id_and_status_code_and_finished_at"
+    t.index ["scraper_id"], name: "index_runs_on_scraper_id"
+    t.index ["started_at"], name: "index_runs_on_started_at"
   end
-
-  add_index "runs", ["created_at"], name: "index_runs_on_created_at", using: :btree
-  add_index "runs", ["docker_image"], name: "index_runs_on_docker_image", using: :btree
-  add_index "runs", ["finished_at"], name: "index_runs_on_finished_at", using: :btree
-  add_index "runs", ["ip_address"], name: "index_runs_on_ip_address", using: :btree
-  add_index "runs", ["owner_id"], name: "index_runs_on_owner_id", using: :btree
-  add_index "runs", ["scraper_id", "status_code", "finished_at"], name: "index_runs_on_scraper_id_and_status_code_and_finished_at", using: :btree
-  add_index "runs", ["scraper_id"], name: "index_runs_on_scraper_id", using: :btree
-  add_index "runs", ["started_at"], name: "index_runs_on_started_at", using: :btree
 
   create_table "scrapers", force: :cascade do |t|
     t.string   "name",                       limit: 255, default: "",    null: false
@@ -220,11 +209,10 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.integer  "sqlite_db_size",             limit: 8,   default: 0,     null: false
     t.integer  "create_scraper_progress_id", limit: 4
     t.integer  "memory_mb",                  limit: 4
+    t.index ["create_scraper_progress_id"], name: "fk_rails_44c3dd8af8"
+    t.index ["full_name"], name: "index_scrapers_on_full_name"
+    t.index ["owner_id"], name: "index_scrapers_on_owner_id"
   end
-
-  add_index "scrapers", ["create_scraper_progress_id"], name: "fk_rails_44c3dd8af8", using: :btree
-  add_index "scrapers", ["full_name"], name: "index_scrapers_on_full_name", using: :btree
-  add_index "scrapers", ["owner_id"], name: "index_scrapers_on_owner_id", using: :btree
 
   create_table "site_settings", force: :cascade do |t|
     t.string   "settings",   limit: 255
@@ -238,9 +226,8 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.integer  "scraper_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["scraper_id"], name: "fk_rails_f537200e37"
   end
-
-  add_index "variables", ["scraper_id"], name: "fk_rails_f537200e37", using: :btree
 
   create_table "webhook_deliveries", force: :cascade do |t|
     t.integer  "webhook_id",    limit: 4
@@ -249,19 +236,17 @@ ActiveRecord::Schema.define(version: 20220705012106) do
     t.integer  "response_code", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["run_id"], name: "index_webhook_deliveries_on_run_id"
+    t.index ["webhook_id"], name: "index_webhook_deliveries_on_webhook_id"
   end
-
-  add_index "webhook_deliveries", ["run_id"], name: "index_webhook_deliveries_on_run_id", using: :btree
-  add_index "webhook_deliveries", ["webhook_id"], name: "index_webhook_deliveries_on_webhook_id", using: :btree
 
   create_table "webhooks", force: :cascade do |t|
     t.integer  "scraper_id", limit: 4
     t.string   "url",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["scraper_id"], name: "index_webhooks_on_scraper_id"
   end
-
-  add_index "webhooks", ["scraper_id"], name: "index_webhooks_on_scraper_id", using: :btree
 
   add_foreign_key "api_queries", "scrapers"
   add_foreign_key "connection_logs", "domains"
