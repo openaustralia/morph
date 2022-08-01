@@ -313,7 +313,7 @@ class Scraper < ApplicationRecord
   end
 
   # files should be a hash of "filename" => "content"
-  def add_commit_to_master_on_github(user, files, message)
+  def add_commit_to_main_on_github(user, files, message)
     client = user.octokit_client
     blobs = files.map do |filename, content|
       {
@@ -422,7 +422,7 @@ class Scraper < ApplicationRecord
     # Add another commit (but only if necessary) to translate the code so it
     # runs here
     unless scraperwiki.translated_code == scraperwiki.code
-      add_commit_to_master_on_github(
+      add_commit_to_main_on_github(
         forked_by,
         { scraperwiki.language.scraper_filename => scraperwiki.translated_code },
         "Automatic update to make ScraperWiki scraper work on morph.io"
