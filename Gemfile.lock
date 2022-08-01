@@ -672,7 +672,6 @@ DEPENDENCIES
   rails-timeago (~> 2.0)
   rails_autolink
   redcarpet
-  redis (< 4.6.0)
   render_sync!
   rest-client
   rspec-activemodel-mocks
