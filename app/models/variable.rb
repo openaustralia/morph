@@ -11,6 +11,6 @@ class Variable < ApplicationRecord
 
   # Given an array of Variable objects returns a hash of names and values
   def self.to_hash(variables)
-    variables.map { |v| [v.name, v.value] }.to_h
+    variables.to_h { |v| [v.name, v.value] }
   end
 end
