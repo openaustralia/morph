@@ -33,7 +33,6 @@ class Scraper < ApplicationRecord
     with: /\A[a-zA-Z0-9_-]+\z/,
     message: "can only have letters, numbers, '_' and '-'"
   }
-  validates :owner, presence: true
   validates :name, uniqueness: {
     scope: :owner, message: "is already taken on morph.io"
   }
@@ -140,7 +139,7 @@ class Scraper < ApplicationRecord
   end
 
   def finished_runs
-    runs.where("finished_at IS NOT NULL").order(finished_at: :desc)
+    runs.where.not(finished_at: nil).order(finished_at: :desc)
   end
 
   # For successful runs calculates the average wall clock time that this scraper

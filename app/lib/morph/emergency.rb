@@ -37,7 +37,7 @@ module Morph
 
     # Returns an array of run ids
     def self.find_all_unfinished_runs_attached_to_scrapers
-      Run.where(finished_at: nil).where("scraper_id IS NOT NULL").ids
+      Run.where(finished_at: nil).where.not(scraper_id: nil).ids
     end
   end
 end

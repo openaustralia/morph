@@ -4,7 +4,7 @@ class DiscourseSsoController < ApplicationController
   before_action :authenticate_user!
 
   def sso
-    secret = ENV["DISCOURSE_SECRET"]
+    secret = ENV.fetch("DISCOURSE_SECRET", nil)
     sso = Discourse::SingleSignOn.parse(request.query_string, secret)
     sso.email = current_user.email
     sso.name = current_user.name
@@ -12,6 +12,6 @@ class DiscourseSsoController < ApplicationController
     sso.external_id = current_user.id # unique to your application
     sso.sso_secret = secret
 
-    redirect_to sso.to_url("#{ENV['DISCOURSE_URL']}/session/sso_login")
+    redirect_to sso.to_url("#{ENV.fetch('DISCOURSE_URL', nil)}/session/sso_login")
   end
 end

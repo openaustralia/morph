@@ -78,8 +78,8 @@ module Morph
     # it ourselves
     def self.reset_authorization(access_token)
       # POST https://api.github.com/applications/:client_id/tokens/:access_token
-      client_id = ENV["GITHUB_APP_CLIENT_ID"]
-      client_secret = ENV["GITHUB_APP_CLIENT_SECRET"]
+      client_id = ENV.fetch("GITHUB_APP_CLIENT_ID", nil)
+      client_secret = ENV.fetch("GITHUB_APP_CLIENT_SECRET", nil)
 
       conn = Faraday.new(url: "https://api.github.com") do |faraday|
         faraday.request :basic_auth, client_id, client_secret
@@ -99,8 +99,8 @@ module Morph
 
       # I'm struggling to make a request with the application id and secret using octokit.
       # So, instead let's do it ourselves
-      client_id = ENV["GITHUB_APP_CLIENT_ID"]
-      client_secret = ENV["GITHUB_APP_CLIENT_SECRET"]
+      client_id = ENV.fetch("GITHUB_APP_CLIENT_ID", nil)
+      client_secret = ENV.fetch("GITHUB_APP_CLIENT_SECRET", nil)
 
       conn = Faraday.new(url: "https://api.github.com") do |faraday|
         faraday.request :basic_auth, client_id, client_secret

@@ -178,7 +178,7 @@ describe Scraper do
       end
 
       describe "#data?" do
-        it { expect(scraper.data?).to eq false }
+        it { expect(scraper.data?).to be false }
       end
     end
 
@@ -188,7 +188,7 @@ describe Scraper do
       end
 
       describe "#data?" do
-        it { expect(scraper.data?).to eq true }
+        it { expect(scraper.data?).to be true }
       end
     end
 

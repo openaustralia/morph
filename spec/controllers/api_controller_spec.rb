@@ -43,7 +43,7 @@ describe ApiController do
       expect(parsed).to eq [{
         "stream" => "internalerr",
         "text" => "You currently can't start a scraper run." \
-                    " See https://morph.io for more details"
+                  " See https://morph.io for more details"
       }]
     end
 

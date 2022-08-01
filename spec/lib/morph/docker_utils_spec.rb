@@ -41,7 +41,7 @@ describe Morph::DockerUtils do
 
       Dir.mktmpdir do |dir|
         described_class.extract_tar(content, dir)
-        v = File.open(File.join(dir, "foo"), "rb", &:read)
+        v = File.binread(File.join(dir, "foo"))
         expect(v).to eq target
       end
     end

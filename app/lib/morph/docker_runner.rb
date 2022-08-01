@@ -229,9 +229,7 @@ module Morph
       # Leave the files in dir untouched
       Dir.mktmpdir("morph") do |dir2|
         Morph::DockerUtils.copy_directory_contents(dir, dir2)
-        File.open(File.join(dir2, "Dockerfile"), "w") do |f|
-          f.write dockerfile_contents_from_commands(image, commands)
-        end
+        File.write(File.join(dir2, "Dockerfile"), dockerfile_contents_from_commands(image, commands))
 
         Morph::DockerUtils.fix_modification_times(dir2)
         Morph::DockerUtils.docker_build_from_dir(

@@ -30,6 +30,6 @@ class ConnectionLogsController < ApplicationController
   end
 
   def self.key
-    ENV["MITMPROXY_SECRET"]
+    ENV.fetch("MITMPROXY_SECRET", nil)
   end
 end

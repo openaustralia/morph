@@ -10,7 +10,7 @@ class Run < ApplicationRecord
   has_many :domains, -> { distinct }, through: :connection_logs
 
   scope :finished_successfully, -> { where(status_code: 0) }
-  scope :running, -> { where(finished_at: nil).where("started_at IS NOT NULL") }
+  scope :running, -> { where(finished_at: nil).where.not(started_at: nil) }
 
   delegate :git_url, :full_name, :current_revision_from_repo,
            to: :scraper, allow_nil: true

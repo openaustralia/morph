@@ -159,7 +159,7 @@ describe Morph::DockerRunner do
       expect(result.status_code).to eq 0
       expect(result.files.keys).to eq(["foo.txt", "bar"])
       expect(result.files["foo.txt"].read).to eq "Hello World!"
-      expect(result.files["bar"]).to eq nil
+      expect(result.files["bar"]).to be_nil
       expect(Morph::DockerUtils.stopped_containers.count)
         .to eq container_count
     end

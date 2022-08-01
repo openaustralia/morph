@@ -186,7 +186,7 @@ module Morph
 
     def write_sqlite_database(content)
       FileUtils.mkdir_p @data_path
-      File.open(sqlite_db_path, "wb") { |file| file.write(content) }
+      File.binwrite(sqlite_db_path, content)
     end
 
     def standardise_table_name(table_name)

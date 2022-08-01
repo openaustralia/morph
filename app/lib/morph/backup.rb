@@ -6,7 +6,7 @@ module Morph
     def self.backup
       unless SiteSetting.read_only_mode
         Rails.logger.warn "WARNING: The site is NOT in read-only mode. " \
-        "So, things might get updated during the backup."
+                          "So, things might get updated during the backup."
       end
       backup_mysql
       backup_sqlite
@@ -34,7 +34,7 @@ module Morph
       FileUtils.mkdir_p "db/backups"
       Rails.logger.info "Backing up MySQL..."
       system "mysqldump #{mysql_auth} #{mysql_database}" \
-        " > db/backups/mysql_backup.sql"
+             " > db/backups/mysql_backup.sql"
       Rails.logger.info "Compressing MySQL backup..."
       system "bzip2 db/backups/mysql_backup.sql"
     end
@@ -44,7 +44,7 @@ module Morph
       system "bunzip2 -k db/backups/mysql_backup.sql.bz2"
       Rails.logger.info "Restoring from MySQL backup..."
       system "mysql #{mysql_auth} #{mysql_database}" \
-        " < db/backups/mysql_backup.sql"
+             " < db/backups/mysql_backup.sql"
       FileUtils.rm_f "db/backups/mysql_backup.sql"
     end
 

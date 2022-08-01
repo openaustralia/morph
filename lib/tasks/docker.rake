@@ -40,7 +40,7 @@ namespace :app do
         end
       end
       images = images.reverse
-      total_size = images.map { |i| i[:size] }.sum
+      total_size = images.pluck(:size).sum
       min_size_to_remove = total_size - target_size
 
       images_to_remove = []

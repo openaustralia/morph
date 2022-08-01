@@ -57,7 +57,7 @@ namespace :app do
       domains = ConnectionLog.group(:host).pluck(:host)
       total = domains.count
       domains.each_with_index do |domain, index|
-        if Domain.where(name: domain).exists?
+        if Domain.exists?(name: domain)
           puts "Skipping #{index + 1}/#{total} #{domain}"
         else
           puts "Queueing #{index + 1}/#{total} #{domain}"

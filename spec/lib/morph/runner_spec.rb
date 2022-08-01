@@ -252,7 +252,7 @@ describe Morph::Runner do
           Thread.new { runner.stop! }
         end
       end
-      expect(logs.join.include?("2...") || logs.join.include?("3...")).to eq true
+      expect(logs.join.include?("2...") || logs.join.include?("3...")).to be true
       expect(Morph::DockerUtils.stopped_containers.count).to eq container_count
       expect(run.database.first_ten_rows).to eq [{ "state" => "started" }]
       expect(run.status_code).to eq 137

@@ -46,7 +46,7 @@ module Morph
         when 3
           h, m, s = n
         end
-        [:wall_time, (h * 60 + m) * 60 + s]
+        [:wall_time, (((h * 60) + m) * 60) + s]
       when /File system inputs/
         [:inblock, value.to_i]
       when /File system outputs/

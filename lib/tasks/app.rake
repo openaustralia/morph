@@ -25,7 +25,7 @@ namespace :app do
   end
 
   desc "Run scrapers that need to run once per day" \
-    " (this task should be called from a cron job)"
+       " (this task should be called from a cron job)"
   task auto_run_scrapers: :environment do
     # All the scrapers that need running in a random order
     scraper_ids = Scraper.where(auto_run: true).map(&:id).shuffle
@@ -97,7 +97,7 @@ namespace :app do
   desc "Restore databases from db/backups"
   task restore: :environment do
     if confirm "Are you sure?" \
-      " This will overwrite the databases and Redis needs to be shutdown."
+               " This will overwrite the databases and Redis needs to be shutdown."
       Morph::Backup.restore
     end
   end

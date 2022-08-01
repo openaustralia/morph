@@ -51,7 +51,7 @@ class User < Owner
     ).deliver
   rescue Net::SMTPSyntaxError
     Rails.logger.warn "Warning: user #{nickname} has invalid email address #{email} " \
-      "(tried to send alert)"
+                      "(tried to send alert)"
   end
 
   def user?

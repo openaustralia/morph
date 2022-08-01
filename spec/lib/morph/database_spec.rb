@@ -29,9 +29,7 @@ describe Morph::Database do
   describe "#backup" do
     it "backups the database file" do
       # Create a fake database file
-      File.open("data.sqlite", "w") do |f|
-        f.write("This is a fake sqlite file")
-      end
+      File.write("data.sqlite", "This is a fake sqlite file")
       d = described_class.new(".")
       d.backup
       expect(File.read("data.sqlite.backup")).to eq "This is a fake sqlite file"

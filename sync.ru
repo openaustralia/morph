@@ -10,7 +10,7 @@ Faye::WebSocket.load_adapter "puma"
 
 RenderSync.load_config(
   File.expand_path("config/sync.yml", __dir__),
-  ENV["RACK_ENV"] || "development"
+  ENV.fetch("RACK_ENV", nil) || "development"
 )
 
 run RenderSync.pubsub_app
