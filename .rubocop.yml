@@ -72,6 +72,11 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+# In our case we seem to be not using array so there's too many false positives
+# So, just easier to disable I think
+Style/SlicingWithRange:
+  Enabled: false
+
 Gemspec/DateAssignment: # (new in 1.10)
   Enabled: true
 Layout/SpaceBeforeBrackets: # (new in 1.7)
