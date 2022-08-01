@@ -3,6 +3,8 @@
 require "spec_helper"
 
 describe Run do
+  let(:user) { create(:user) }
+
   describe "#wall_time" do
     context "with run with a start and end 1 minute apart" do
       let(:run) { described_class.new(id: 1, started_at: 5.minutes.ago, finished_at: 4.minutes.ago) }
@@ -74,14 +76,14 @@ describe Run do
 
   describe "#metric" do
     it "is present after creation" do
-      run = described_class.create!
+      run = described_class.create!(owner: user)
       expect(run.metric).to be_present
     end
   end
 
   describe "#destroy" do
     context "with more than one metric for a single run" do
-      let(:run) { described_class.create! }
+      let(:run) { described_class.create!(owner: user) }
 
       before do
         2.times { Metric.create!(run: run) }

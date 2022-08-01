@@ -5,7 +5,9 @@ class ConnectionLog < ApplicationRecord
   attr_accessor :ip_address
 
   belongs_to :domain
-  belongs_to :run
+  # It's not actually optional. It hopefully gets set by the callback below
+  # TODO: Refactor this not obvious magic. It makes more sense for this lookup to be done outside the model. It smells more of "business" logic
+  belongs_to :run, optional: true
   before_save :update_run_id_from_ip_address
 
   def update_run_id_from_ip_address

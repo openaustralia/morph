@@ -10,5 +10,9 @@ FactoryBot.define do
     owner
   end
 
+  factory :run do
+    owner
+  end
+
   factory :organization
 end

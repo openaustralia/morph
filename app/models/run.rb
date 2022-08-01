@@ -3,7 +3,7 @@
 # A run of a scraper
 class Run < ApplicationRecord
   belongs_to :owner
-  belongs_to :scraper, inverse_of: :runs, touch: true
+  belongs_to :scraper, inverse_of: :runs, touch: true, optional: true
   has_many :log_lines, dependent: :delete_all
   has_one :metric, dependent: :delete
   has_many :connection_logs, dependent: :delete_all

@@ -3,6 +3,8 @@
 require "spec_helper"
 
 describe Scraper do
+  let(:user) { create(:user) }
+
   context "with a scraper with a couple of runs" do
     let(:time1) { 2.minutes.ago }
     let(:time2) { 1.minute.ago }
@@ -12,12 +14,12 @@ describe Scraper do
       end
     end
     let!(:run1) do
-      run = scraper.runs.create(finished_at: time1)
+      run = scraper.runs.create!(owner: user, finished_at: time1)
       Metric.create(utime: 10.2, stime: 2.4, run_id: run.id)
       run
     end
     let!(:run2) do
-      run = scraper.runs.create(finished_at: time2)
+      run = scraper.runs.create!(owner: user, finished_at: time2)
       Metric.create(utime: 1.3, stime: 3.5, run_id: run.id)
       run
     end
@@ -236,7 +238,7 @@ describe Scraper do
   end
 
   describe "#deliver_webhooks" do
-    let(:run) { Run.create! }
+    let(:run) { Run.create!(owner: user) }
 
     context "with no webhooks" do
       it "doesn't queue any background jobs" do

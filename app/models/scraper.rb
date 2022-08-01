@@ -10,7 +10,7 @@ class Scraper < ApplicationRecord
              batch_size: 100
 
   belongs_to :owner, inverse_of: :scrapers
-  belongs_to :forked_by, class_name: "User"
+  belongs_to :forked_by, class_name: "User", optional: true
 
   has_many :runs, inverse_of: :scraper, dependent: :destroy
   has_many :metrics, through: :runs
@@ -18,7 +18,7 @@ class Scraper < ApplicationRecord
   has_many :contributions, dependent: :delete_all
   has_many :watches, class_name: "Alert", foreign_key: :watch_id, dependent: :delete_all
   has_many :watchers, through: :watches, source: :user
-  belongs_to :create_scraper_progress, dependent: :delete
+  belongs_to :create_scraper_progress, dependent: :delete, optional: true
   has_many :variables, dependent: :delete_all
   accepts_nested_attributes_for :variables, allow_destroy: true
   has_many :webhooks, dependent: :destroy
