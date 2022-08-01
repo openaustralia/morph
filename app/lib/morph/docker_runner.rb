@@ -148,7 +148,7 @@ module Morph
         # To convert this ruby time back to the same string format as it
         # originally came in do:
         # timestamp.utc.strftime('%Y-%m-%dT%H:%M:%S.%9NZ')
-        c = line[31..]
+        c = line[31..-1]
         # We're going to assume (somewhat rashly, I might add) that the
         # console output from the scraper is always encoded as UTF-8.
         # TODO Fix forcing of encoding and do something more intelligent

@@ -168,7 +168,7 @@ describe Morph::Runner do
         logs << [s, c]
       end
       # TODO: Also test the creation of the correct number of log line records
-      expect(logs[-6..]).to eq [
+      expect(logs[-6..-1]).to eq [
         [:stdout, "Started!\n"],
         [:stdout, "1...\n"],
         [:stdout, "2...\n"],
@@ -211,7 +211,7 @@ describe Morph::Runner do
           raise Sidekiq::Shutdown if c.include? "2..."
         end
       end.to raise_error Sidekiq::Shutdown
-      expect(logs[-3..]).to eq [
+      expect(logs[-3..-1]).to eq [
         [:stdout, "Started!\n"],
         [:stdout, "1...\n"],
         [:stdout, "2...\n"]
@@ -219,7 +219,7 @@ describe Morph::Runner do
       runner.go_with_logging(5) do |_timestamp, s, c|
         logs << [s, c]
       end
-      expect(logs[-6..]).to eq [
+      expect(logs[-6..-1]).to eq [
         [:stdout, "Started!\n"],
         [:stdout, "1...\n"],
         [:stdout, "2...\n"],
