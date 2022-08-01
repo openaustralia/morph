@@ -82,7 +82,7 @@ module Morph
       client_secret = ENV.fetch("GITHUB_APP_CLIENT_SECRET", nil)
 
       conn = Faraday.new(url: "https://api.github.com") do |faraday|
-        faraday.request :basic_auth, client_id, client_secret
+        faraday.request :authorization, :basic, client_id, client_secret
         faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
       end
       res = conn.post("/applications/#{client_id}/tokens/#{access_token}")
@@ -103,7 +103,7 @@ module Morph
       client_secret = ENV.fetch("GITHUB_APP_CLIENT_SECRET", nil)
 
       conn = Faraday.new(url: "https://api.github.com") do |faraday|
-        faraday.request :basic_auth, client_id, client_secret
+        faraday.request :authorization, :basic, client_id, client_secret
         faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
       end
       res = conn.get("/repos/#{repo_full_name}/contributors")
