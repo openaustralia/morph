@@ -21,7 +21,10 @@ gem "devise"
 # TODO: Remove use of Docker::API_VERSION so we can upgrade this gem further
 gem "docker-api", "< 2.0.0", require: "docker"
 
-gem "faraday"
+# We're using Faraday directly in one place (to workaround an octokit problem) and that
+# depends on version 2.
+# For some reason elasticsearch 7.4.0 uses faraday 2, while later 7.x uses faraday 1.
+gem "faraday", "~> 2"
 gem "faraday-retry"
 
 gem "font-awesome-rails"
