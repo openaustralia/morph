@@ -33,12 +33,12 @@ describe Morph::Scraperwiki do
   end
 
   describe "#exists?" do
-    it { expect(described_class.new(nil).exists?).not_to be_truthy }
-    it { expect(described_class.new("").exists?).not_to be_truthy }
+    it { expect(described_class.new(nil)).not_to exist }
+    it { expect(described_class.new("")).not_to exist }
 
     it "says non existent scrapers don't exist" do
       VCR.use_cassette("scraperwiki") do
-        expect(described_class.new("non_existent_scraper").exists?).not_to be_truthy
+        expect(described_class.new("non_existent_scraper")).not_to exist
       end
     end
   end

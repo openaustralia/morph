@@ -50,17 +50,6 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NestedGroups:
   Max: 4
 
-# Offense count: 13
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: Strict, EnforcedStyle, AllowedExplicitMatchers.
-# SupportedStyles: inflected, explicit
-RSpec/PredicateMatcher:
-  Exclude:
-    - 'spec/lib/morph/docker_utils_spec.rb'
-    - 'spec/lib/morph/scraperwiki_spec.rb'
-    - 'spec/models/run_spec.rb'
-    - 'spec/models/scraper_spec.rb'
-
 # Offense count: 4
 RSpec/RepeatedDescription:
   Exclude:

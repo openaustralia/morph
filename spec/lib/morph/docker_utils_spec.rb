@@ -15,7 +15,7 @@ describe Morph::DockerUtils do
         File.open(path, "w") { |f| f << tar }
         # Quick and dirty
         `tar xf #{path} -C #{dir}`
-        expect(File.symlink?(File.join(dir, "link.rb"))).to be_truthy
+        expect(File).to be_symlink(File.join(dir, "link.rb"))
         expect(File.readlink(File.join(dir, "link.rb"))).to eq "scraper.rb"
       end
     end

@@ -196,11 +196,11 @@ describe Scraper do
 
     context "when the scraper has never run" do
       describe "#finished_successfully?" do
-        it { expect(scraper.finished_successfully?).to be_falsey }
+        it { expect(scraper).not_to be_finished_successfully }
       end
 
       describe "#finished_with_errors?" do
-        it { expect(scraper.finished_with_errors?).to be_falsey }
+        it { expect(scraper).not_to be_finished_with_errors }
       end
     end
 
@@ -212,11 +212,11 @@ describe Scraper do
       end
 
       describe "#finished_successfully?" do
-        it { expect(scraper.finished_successfully?).to be_falsey }
+        it { expect(scraper).not_to be_finished_successfully }
       end
 
       describe "#finished_with_errors?" do
-        it { expect(scraper.finished_with_errors?).to be_truthy }
+        it { expect(scraper).to be_finished_with_errors }
       end
     end
 
@@ -228,11 +228,11 @@ describe Scraper do
       end
 
       describe "#finished_successfully?" do
-        it { expect(scraper.finished_successfully?).to be_truthy }
+        it { expect(scraper).to be_finished_successfully }
       end
 
       describe "#finished_with_errors?" do
-        it { expect(scraper.finished_with_errors?).to be_falsey }
+        it { expect(scraper).not_to be_finished_with_errors }
       end
     end
   end

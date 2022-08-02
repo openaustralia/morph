@@ -29,19 +29,19 @@ describe Run do
     context "when has never run" do
       let(:run) { described_class.new(finished_at: nil) }
 
-      it { expect(run.finished_recently?).to be_falsey }
+      it { expect(run).not_to be_finished_recently }
     end
 
     context "when last finished 2 days ago" do
       let(:run) { described_class.new(finished_at: 2.days.ago) }
 
-      it { expect(run.finished_recently?).to be_falsey }
+      it { expect(run).not_to be_finished_recently }
     end
 
     context "when last finished 2 hours ago" do
       let(:run) { described_class.new(finished_at: 2.hours.ago) }
 
-      it { expect(run.finished_recently?).to be_truthy }
+      it { expect(run).to be_finished_recently }
     end
   end
 
