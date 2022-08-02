@@ -270,7 +270,7 @@ describe Scraper do
     let(:scraper) { build(:scraper) }
 
     before do
-      FileUtils.rm_r(scraper.repo_path)
+      FileUtils.rm_rf(scraper.repo_path)
       FileUtils.mkdir_p(scraper.repo_path)
     end
 
