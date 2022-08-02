@@ -16,6 +16,7 @@ module Morph
       "package.json"
     ].freeze
     BUILDSTEP_IMAGE = "openaustralia/buildstep"
+    DEFAULT_PLATFORM = "latest"
     DOCKER_NETWORK = "morph"
     DOCKER_BRIDGE = "morph"
     DOCKER_NETWORK_SUBNET = "192.168.0.0/16"
@@ -28,13 +29,13 @@ module Morph
       512 * 1024 * 1024
     end
 
-    def self.buildstep_image(platform = "latest")
+    def self.buildstep_image(platform = DEFAULT_PLATFORM)
       Morph::DockerUtils.get_or_pull_image("#{BUILDSTEP_IMAGE}:#{platform}")
     end
 
     # "memory" is the memory limit applied to running container (in bytes). If nil uses the default (set in default_memory_limit)
     def self.compile_and_start_run(
-      repo_path:, env_variables: {}, container_labels: {}, max_lines: 0, platform: "latest",
+      repo_path:, env_variables: {}, container_labels: {}, max_lines: 0, platform: DEFAULT_PLATFORM,
       disable_proxy: false, memory: nil
     )
       memory = default_memory_limit if memory.nil?

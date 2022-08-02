@@ -253,7 +253,7 @@ class Scraper < ApplicationRecord
     platform = if File.exist?(platform_file)
                  File.read(platform_file)
                else
-                 "latest"
+                 Morph::DockerRunner::DEFAULT_PLATFORM
                end
     platform.chomp
   end
