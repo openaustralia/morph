@@ -13,7 +13,7 @@
 
 # TODO: Is it possible to extract this list of dependencies automatically from rvm?
 # Or allow rvm to do the install - but that would require the deploy user to have the permissions
-- name: "Ensure ruby-2.6.10 dependencies installed"
+- name: "Ensure ruby-2.7.6 dependencies installed"
   apt: pkg={{ item }}
   with_items:
     - patch
@@ -37,11 +37,11 @@
     - libssl-dev
     - libgmp-dev
 
-- name: Install ruby-2.6.10 with rvm
-  command: /bin/sh -l -c 'rvm install ruby-2.6.10 --autolibs=read-fail' creates=/home/deploy/.rvm/rubies/ruby-2.6.10
+- name: Install ruby-2.7.6 with rvm
+  command: /bin/sh -l -c 'rvm install ruby-2.7.6 --autolibs=read-fail' creates=/home/deploy/.rvm/rubies/ruby-2.7.6
   become_user: deploy
-  notify: Make ruby-2.6.10 the default
+  notify: Make ruby-2.7.6 the default
 
-- name: Install bundler for ruby 2.6.10
-  command: bash -lc "rvm ruby-2.6.10; gem install bundler --version 2.0.2"
+- name: Install bundler for ruby 2.7.6
+  command: bash -lc "rvm ruby-2.7.6; gem install bundler --version 2.0.2"
   become_user: deploy

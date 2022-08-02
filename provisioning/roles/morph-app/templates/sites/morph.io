@@ -3,7 +3,7 @@ server {
   server_name {{ server_name }} api.{{ server_name }};
   root /var/www/current/public;
   passenger_enabled on;
-  passenger_ruby /home/deploy/.rvm/gems/ruby-2.6.10/wrappers/ruby;
+  passenger_ruby /home/deploy/.rvm/gems/ruby-2.7.6/wrappers/ruby;
   passenger_max_request_queue_size 300;
 
   # There's a lot of traffic coming to this one scraper. It was putting

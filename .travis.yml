@@ -2,7 +2,7 @@ dist: xenial
 
 language: ruby
 rvm:
-  - 2.6.10
+  - 2.7.6
 env: SECRET_KEY_BASE=859384 RUN_SLOW_TESTS=true
 
 before_install:
