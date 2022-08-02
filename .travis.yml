@@ -5,9 +5,6 @@ rvm:
   - 2.7.6
 env: SECRET_KEY_BASE=859384 RUN_SLOW_TESTS=true
 
-before_install:
-  - gem install bundler:2.0.2
-
 before_script:
   - cp config/database.travis.yml config/database.yml
   - bundle exec rake db:setup
