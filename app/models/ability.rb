@@ -31,7 +31,7 @@ class Ability
 
     # Everyone can list all the scrapers
     can %i[index show watchers], Scraper
-    can %i[new github scraperwiki], Scraper unless SiteSetting.read_only_mode
+    can %i[new github], Scraper unless SiteSetting.read_only_mode
 
     # You can look at your own settings
     can :settings, Owner, id: user.id

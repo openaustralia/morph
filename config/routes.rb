@@ -4,13 +4,6 @@ Rails.application.routes.draw do
   # This just gets redirected elsewhere
   get '/settings', to: "owners#settings_redirect"
   # TODO: Hmm would be nice if this could be tidier
-  get '/scraperwiki_forks/new', to: redirect {|params, req|
-    if req.query_string.empty?
-      "/scrapers/new/scraperwiki"
-    else
-      "/scrapers/new/scraperwiki?#{req.query_string}"
-    end
-  }
 
   ActiveAdmin.routes(self)
   namespace "admin" do
