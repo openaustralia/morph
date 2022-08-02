@@ -1,7 +1,3 @@
 %li.list-group-item
-  - if scraper.scraperwiki_url
-    Forked from
-    = link_to "ScraperWiki", scraper.scraperwiki_url, target: "_blank"
-  - else
-    Created on morph.io
+  Created on morph.io
   = timeago_tag(scraper.created_at, force: true)

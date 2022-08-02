@@ -39,10 +39,6 @@
           %h4.panel-title= link_to scraper.readme_filename, scraper.github_url_readme
         .panel-body
           = scraper.readme
-    - if scraper.scraperwiki_url
-      %p
-        Forked from
-        = link_to "ScraperWiki", scraper.scraperwiki_url, target: "_blank"
     - unless scraper.contributors.empty?
       %p
         Contributors

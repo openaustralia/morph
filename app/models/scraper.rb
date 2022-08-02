@@ -284,6 +284,7 @@ class Scraper < ApplicationRecord
     r
   end
 
+  # TODO: Remove this and scraperwiki data from database
   def scraperwiki_shortname
     # scraperwiki_url should be of the form https://classic.scraperwiki.com/scrapers/shortname/
     return if scraperwiki_url.nil?
