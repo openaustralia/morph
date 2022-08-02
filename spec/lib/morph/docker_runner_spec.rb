@@ -74,7 +74,7 @@ describe Morph::DockerRunner do
 
       # report.pretty_print
       expect(report.total_allocated_memsize).to be < 2_000_000
-      expect(report.total_retained_memsize < 15_000)
+      expect(report.total_retained_memsize).to be < 15_000
     end
 
     it "attaches the container to a special morph-only docker network" do

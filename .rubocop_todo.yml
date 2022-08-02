@@ -51,11 +51,6 @@ RSpec/NestedGroups:
   Max: 4
 
 # Offense count: 1
-RSpec/VoidExpect:
-  Exclude:
-    - 'spec/lib/morph/docker_runner_spec.rb'
-
-# Offense count: 1
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: slashes, arguments
 Rails/FilePath:
