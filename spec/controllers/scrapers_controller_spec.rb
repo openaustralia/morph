@@ -101,8 +101,7 @@ describe ScrapersController do
                                            exists?: true,
                                            private_scraper?: false,
                                            view?: false)
-      expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-                                                 .and_return(scraperwiki_double)
+      allow(Morph::Scraperwiki).to receive(:new).and_return(scraperwiki_double)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         create :scraper, owner: user
@@ -122,8 +121,7 @@ describe ScrapersController do
                                            exists?: true,
                                            private_scraper?: false,
                                            view?: false)
-      expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-                                                 .and_return(scraperwiki_double)
+      allow(Morph::Scraperwiki).to receive(:new).and_return(scraperwiki_double)
       allow(Octokit).to receive(:repository?).and_return(true)
 
       post :create_scraperwiki, params: { scraper: {
@@ -153,8 +151,7 @@ describe ScrapersController do
                                            exists?: false,
                                            private_scraper?: false,
                                            view?: false)
-      expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-                                                 .and_return(scraperwiki_double)
+      allow(Morph::Scraperwiki).to receive(:new).and_return(scraperwiki_double)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         post :create_scraperwiki, params: { scraper: {
@@ -173,8 +170,7 @@ describe ScrapersController do
                                            exists?: true,
                                            private_scraper?: true,
                                            view?: false)
-      expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-                                                 .and_return(scraperwiki_double)
+      allow(Morph::Scraperwiki).to receive(:new).and_return(scraperwiki_double)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         post :create_scraperwiki, params: { scraper: {
@@ -193,8 +189,7 @@ describe ScrapersController do
                                            exists?: true,
                                            private_scraper?: false,
                                            view?: true)
-      expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-                                                 .and_return(scraperwiki_double)
+      allow(Morph::Scraperwiki).to receive(:new).and_return(scraperwiki_double)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         post :create_scraperwiki, params: { scraper: {
@@ -213,10 +208,8 @@ describe ScrapersController do
                                            exists?: true,
                                            private_scraper?: false,
                                            view?: false)
-      expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
-                                                 .and_return(scraperwiki_double)
-
-      expect(ForkScraperwikiWorker).to receive(:perform_async)
+      allow(Morph::Scraperwiki).to receive(:new).and_return(scraperwiki_double)
+      allow(ForkScraperwikiWorker).to receive(:perform_async)
 
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         post :create_scraperwiki, params: { scraper: {
@@ -225,17 +218,18 @@ describe ScrapersController do
           scraperwiki_shortname: "missing_scraper"
         } }
       end
+      expect(ForkScraperwikiWorker).to have_received(:perform_async)
     end
 
     it "does not attempt to fork if ScraperWiki shortname is not set" do
-      expect(ForkScraperwikiWorker).not_to receive(:perform_async)
-
+      allow(ForkScraperwikiWorker).to receive(:perform_async)
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         post :create_scraperwiki, params: { scraper: {
           name: "my_scraper",
           owner_id: user.id
         } }
       end
+      expect(ForkScraperwikiWorker).not_to have_received(:perform_async)
     end
   end
 end

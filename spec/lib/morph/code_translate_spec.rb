@@ -7,18 +7,21 @@ describe Morph::CodeTranslate do
     let(:code) { double }
 
     it "translates ruby" do
-      expect(Morph::CodeTranslate::Ruby).to receive(:translate).with(code)
+      allow(Morph::CodeTranslate::Ruby).to receive(:translate)
       described_class.translate(:ruby, code)
+      expect(Morph::CodeTranslate::Ruby).to have_received(:translate).with(code)
     end
 
     it "translates php" do
-      expect(Morph::CodeTranslate::PHP).to receive(:translate).with(code)
+      allow(Morph::CodeTranslate::PHP).to receive(:translate)
       described_class.translate(:php, code)
+      expect(Morph::CodeTranslate::PHP).to have_received(:translate).with(code)
     end
 
     it "translates python" do
-      expect(Morph::CodeTranslate::Python).to receive(:translate).with(code)
+      allow(Morph::CodeTranslate::Python).to receive(:translate)
       described_class.translate(:python, code)
+      expect(Morph::CodeTranslate::Python).to have_received(:translate).with(code)
     end
   end
 

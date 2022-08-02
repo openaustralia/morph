@@ -50,7 +50,7 @@ describe ApiController do
     it "works with a valid api key" do
       runner = instance_double(Morph::Runner)
       allow(Morph::Runner).to receive(:new).and_return(runner)
-      expect(runner).to receive(:go).and_yield(
+      allow(runner).to receive(:go).and_yield(
         nil, "internalout", "Injecting configuration and compiling...\n"
       ).and_yield(
         nil, "internalout", "Injecting scraper and running...\n"

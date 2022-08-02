@@ -21,22 +21,6 @@ RSpec/MessageChain:
   Exclude:
     - 'spec/controllers/api_controller_spec.rb'
 
-# Offense count: 40
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: have_received, receive
-RSpec/MessageSpies:
-  Exclude:
-    - 'spec/controllers/api_controller_spec.rb'
-    - 'spec/controllers/connection_logs_controller_spec.rb'
-    - 'spec/controllers/scrapers_controller_spec.rb'
-    - 'spec/lib/morph/code_translate_spec.rb'
-    - 'spec/lib/morph/scraperwiki_spec.rb'
-    - 'spec/lib/morph/time_command_spec.rb'
-    - 'spec/models/domain_spec.rb'
-    - 'spec/models/run_spec.rb'
-    - 'spec/models/scraper_spec.rb'
-    - 'spec/models/site_setting_spec.rb'
-
 # Offense count: 79
 RSpec/MultipleExpectations:
   Max: 10

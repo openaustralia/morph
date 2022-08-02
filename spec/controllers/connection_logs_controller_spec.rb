@@ -7,9 +7,10 @@ describe ConnectionLogsController do
     before { allow(described_class).to receive(:key).and_return("sjdf") }
 
     it "is successful if correct key is used" do
-      expect(UpdateDomainWorker).to receive(:perform_async)
+      allow(UpdateDomainWorker).to receive(:perform_async)
       post :create, params: { key: "sjdf", host: "foo.com" }
       expect(response).to be_successful
+      expect(UpdateDomainWorker).to have_received(:perform_async)
     end
 
     it "is not successful if wrong key is used" do

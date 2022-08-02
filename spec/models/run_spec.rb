@@ -65,12 +65,12 @@ describe Run do
   end
 
   describe "#finished!" do
-    let(:scraper) { mock_model(Scraper, update_sqlite_db_size: true, reindex: true, reload: true) }
+    let(:scraper) { mock_model(Scraper, update_sqlite_db_size: true, reindex: true, reload: true, deliver_webhooks: nil) }
     let(:run) { described_class.new(scraper: scraper) }
 
     it "calls relevant methods on the scraper" do
-      expect(scraper).to receive(:deliver_webhooks).with(run)
       run.finished!
+      expect(scraper).to have_received(:deliver_webhooks).with(run)
     end
   end
 
