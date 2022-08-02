@@ -87,7 +87,7 @@ GEM
       multi_xml
     httpauth (0.1)
     httpclient (2.2.4)
-    i18n (0.6.0)
+    i18n (0.8.0)
     json (1.6.5)
     jwt (0.1.4)
       json (>= 1.2.4)
@@ -106,7 +106,6 @@ GEM
       i18n (~> 0.4)
       json
     monster_mash (0.3.0)
-      typhoeus (>= 0.3.3)
       typhoeus (>= 0.3.3)
     multi_json (1.1.0)
     multi_xml (0.5.1)
@@ -233,7 +232,7 @@ DEPENDENCIES
   httparty (= 0.8.3)
   httpauth (= 0.1)
   httpclient (= 2.2.4)
-  i18n (= 0.6.0)
+  i18n (= 0.8.0)
   json (= 1.6.5)
   jwt (= 0.1.4)
   libxml-ruby (= 2.8.0)
