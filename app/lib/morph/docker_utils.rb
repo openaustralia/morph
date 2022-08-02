@@ -230,24 +230,8 @@ module Morph
       result
     end
 
-    # Fools the docker-api gem into using a later version of the api
-    # Use with caution and selectively
-    def self.run_with_later_version_of_docker_api(&block)
-      version = Docker::API_VERSION
-      surpress_warnings do
-        Docker.const_set(:API_VERSION, "1.24")
-      end
-      result = block.call
-      surpress_warnings do
-        Docker.const_set(:API_VERSION, version)
-      end
-      result
-    end
-
     def self.ip_address_of_container(container)
-      Morph::DockerUtils.run_with_later_version_of_docker_api do
-        container.json["NetworkSettings"]["Networks"].values.first["IPAddress"]
-      end
+      container.json["NetworkSettings"]["Networks"].values.first["IPAddress"]
     end
   end
 end
