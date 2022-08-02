@@ -26,11 +26,11 @@ describe Morph::TimeCommand do
       end
 
       it do
-        expect(described_class).to receive(:parse_line).with("Maximum resident set size (kbytes): 3808").and_return([:maxrss, 3808])
-        expect(described_class).to receive(:parse_line).with("Minor (reclaiming a frame) page faults: 292").and_return([:minflt, 292])
-        expect(described_class).to receive(:parse_line).with("Something to be ignored").and_return(nil)
-        expect(described_class).to receive(:parse_line).with("Major (requiring I/O) page faults: 0").and_return([:majflt, 0])
-        expect(described_class).to receive(:parse_line).with("Page size (bytes): 4096").and_return([:page_size, 4096])
+        allow(described_class).to receive(:parse_line).with("Maximum resident set size (kbytes): 3808").and_return([:maxrss, 3808])
+        allow(described_class).to receive(:parse_line).with("Minor (reclaiming a frame) page faults: 292").and_return([:minflt, 292])
+        allow(described_class).to receive(:parse_line).with("Something to be ignored").and_return(nil)
+        allow(described_class).to receive(:parse_line).with("Major (requiring I/O) page faults: 0").and_return([:majflt, 0])
+        allow(described_class).to receive(:parse_line).with("Page size (bytes): 4096").and_return([:page_size, 4096])
         # There's a bug in GNU time 1.7 which wrongly reports the maximum resident set size on the version of Ubuntu that we're using
         # See https://groups.google.com/forum/#!topic/gnu.utils.help/u1MOsHL4bhg
         expect(described_class.params_from_string(string)).to eq(

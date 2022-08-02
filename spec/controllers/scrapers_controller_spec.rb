@@ -124,7 +124,7 @@ describe ScrapersController do
                                   view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
                                                  .and_return(scraperwiki_double)
-      expect(Octokit).to receive(:repository?).and_return(true)
+      allow(Octokit).to receive(:repository?).and_return(true)
 
       post :create_scraperwiki, params: { scraper: {
         name: "my_scraper",

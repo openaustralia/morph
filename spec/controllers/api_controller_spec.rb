@@ -33,8 +33,8 @@ describe ApiController do
 
     it "fails when site is in read-only mode" do
       ability = double(Ability)
-      expect(Ability).to receive(:new).with(user).and_return(ability)
-      expect(ability).to receive(:can?).with(:create, Run).and_return(false)
+      allow(Ability).to receive(:new).with(user).and_return(ability)
+      allow(ability).to receive(:can?).with(:create, Run).and_return(false)
 
       post :run_remote, params: { api_key: user.api_key, code: code }
 
@@ -49,7 +49,7 @@ describe ApiController do
 
     it "works with a valid api key" do
       runner = double(Morph::Runner)
-      expect(Morph::Runner).to receive(:new).and_return(runner)
+      allow(Morph::Runner).to receive(:new).and_return(runner)
       expect(runner).to receive(:go).and_yield(
         nil, "internalout", "Injecting configuration and compiling...\n"
       ).and_yield(
@@ -57,7 +57,7 @@ describe ApiController do
       ).and_yield(
         nil, "stdout", "Hello!\n"
       )
-      expect(runner).to receive(:container_for_run).and_return(nil)
+      allow(runner).to receive(:container_for_run).and_return(nil)
 
       post :run_remote, params: { api_key: user.api_key, code: code }
 

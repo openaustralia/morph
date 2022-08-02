@@ -50,17 +50,6 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NestedGroups:
   Max: 4
 
-# Offense count: 24
-RSpec/StubbedMock:
-  Exclude:
-    - 'spec/controllers/api_controller_spec.rb'
-    - 'spec/controllers/scrapers_controller_spec.rb'
-    - 'spec/lib/morph/code_translate_spec.rb'
-    - 'spec/lib/morph/scraperwiki_spec.rb'
-    - 'spec/lib/morph/time_command_spec.rb'
-    - 'spec/models/domain_spec.rb'
-    - 'spec/models/scraper_spec.rb'
-
 # Offense count: 9
 # Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
 RSpec/VerifiedDoubles:

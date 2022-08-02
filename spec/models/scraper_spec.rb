@@ -141,7 +141,7 @@ describe Scraper do
 
       it "defers to the last run" do
         result = double
-        expect(last_run).to receive(:domains).and_return(result)
+        allow(last_run).to receive(:domains).and_return(result)
         expect(scraper.scraped_domains).to eq result
       end
     end

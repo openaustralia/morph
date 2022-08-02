@@ -28,8 +28,8 @@ describe Morph::CodeTranslate do
         input = double
         output1 = double
         output2 = double
-        expect(Morph::CodeTranslate::PHP).to receive(:add_require).with(input).and_return(output1)
-        expect(Morph::CodeTranslate::PHP).to receive(:change_table_in_select).with(output1).and_return(output2)
+        allow(Morph::CodeTranslate::PHP).to receive(:add_require).with(input).and_return(output1)
+        allow(Morph::CodeTranslate::PHP).to receive(:change_table_in_select).with(output1).and_return(output2)
         expect(Morph::CodeTranslate::PHP.translate(input)).to eq output2
       end
     end
@@ -73,9 +73,9 @@ describe Morph::CodeTranslate do
         output1 = double
         output2 = double
         output3 = double
-        expect(Morph::CodeTranslate::Ruby).to receive(:add_require).with(input).and_return(output1)
-        expect(Morph::CodeTranslate::Ruby).to receive(:change_table_in_sqliteexecute_and_select).with(output1).and_return(output2)
-        expect(Morph::CodeTranslate::Ruby).to receive(:add_instructions_for_libraries).with(output2).and_return(output3)
+        allow(Morph::CodeTranslate::Ruby).to receive(:add_require).with(input).and_return(output1)
+        allow(Morph::CodeTranslate::Ruby).to receive(:change_table_in_sqliteexecute_and_select).with(output1).and_return(output2)
+        allow(Morph::CodeTranslate::Ruby).to receive(:add_instructions_for_libraries).with(output2).and_return(output3)
         expect(Morph::CodeTranslate::Ruby.translate(input)).to eq output3
       end
     end
