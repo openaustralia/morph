@@ -60,7 +60,6 @@ Rails.application.routes.draw do
       get "scraping_javascript_sites"
       get 'libraries'
       get 'language_version'
-      get 'scraperwiki'
       get 'webhooks'
     end
   end
