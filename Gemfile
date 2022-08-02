@@ -78,7 +78,10 @@ gem "ruby-progressbar"
 # TODO: Move away from this unsupported gem
 gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"
 
-gem "searchkick"
+# For searchkick 5 we need to install the elasticsearch gem ourselves
+gem "elasticsearch"
+gem "searchkick", "~> 5"
+
 
 gem "stripe"
 gem "validate_url"

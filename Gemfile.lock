@@ -527,9 +527,8 @@ GEM
       faraday (>= 0.17.3, < 3)
     sdoc (2.4.0)
       rdoc (>= 5.0)
-    searchkick (4.6.3)
-      activemodel (>= 5)
-      elasticsearch (>= 6, < 7.14)
+    searchkick (5.0.4)
+      activemodel (>= 5.2)
       hashie
     sexp_processor (4.16.1)
     shellany (0.0.1)
@@ -635,6 +634,7 @@ DEPENDENCIES
   devise
   docker-api (< 2.0.0)
   dotenv-rails
+  elasticsearch
   factory_bot_rails
   faraday
   faraday-retry
@@ -686,7 +686,7 @@ DEPENDENCIES
   ruby-progressbar
   sass-rails
   sdoc
-  searchkick
+  searchkick (~> 5)
   sidekiq (~> 5)
   sidekiq-limit_fetch
   simple_form
