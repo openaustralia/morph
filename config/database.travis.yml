@@ -2,5 +2,4 @@ test:
   adapter: mysql2
   database: scraping_test
   username: root
-  password:
   host: 127.0.0.1
