@@ -3,7 +3,8 @@
 # A real human being (hopefully)
 class User < Owner
   devise :trackable, :rememberable, :omniauthable, omniauth_providers: [:github]
-  has_and_belongs_to_many :organizations, join_table: :organizations_users
+  has_many :organizations_users
+  has_many :organizations, through: :organizations_users
   has_many :alerts
   has_many :contributions
   has_many :scrapers_contributed_to, through: :contributions, source: :scraper
