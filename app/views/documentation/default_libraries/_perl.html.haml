@@ -10,4 +10,4 @@
       
     :coderay
       #!perl
-      #{File.read(Morph::Language.new(:perl).default_config_file_path("cpanfile"))}
+      #{File.read(Morph::Language.new(:perl).default_config_file_path("cpanfile")).html_safe}

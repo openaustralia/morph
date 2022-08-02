@@ -7,4 +7,4 @@
 
     :coderay
       #!json
-      #{File.read(Morph::Language.new(:php).default_config_file_path("composer.json"))}
+      #{File.read(Morph::Language.new(:php).default_config_file_path("composer.json")).html_safe}

@@ -10,4 +10,4 @@
       And the
       %code requirements.txt
     %pre
-      %code= File.read(Morph::Language.new(:python).default_config_file_path("requirements.txt"))
+      %code= File.read(Morph::Language.new(:python).default_config_file_path("requirements.txt")).html_safe

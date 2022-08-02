@@ -7,4 +7,4 @@
 
     :coderay
       #!ruby
-      #{File.read(Morph::Language.new(:ruby).default_config_file_path("Gemfile"))}
+      #{File.read(Morph::Language.new(:ruby).default_config_file_path("Gemfile")).html_safe}
