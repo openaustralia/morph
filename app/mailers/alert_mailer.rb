@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AlertMailer < ActionMailer::Base
+class AlertMailer < ApplicationMailer
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::AssetUrlHelper
   add_template_helper UsersHelper
