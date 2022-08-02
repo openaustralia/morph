@@ -50,12 +50,6 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NestedGroups:
   Max: 4
 
-# Offense count: 4
-RSpec/RepeatedDescription:
-  Exclude:
-    - 'spec/controllers/scrapers_controller_spec.rb'
-    - 'spec/lib/morph/code_translate_spec.rb'
-
 # Offense count: 24
 RSpec/StubbedMock:
   Exclude:

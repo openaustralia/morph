@@ -188,7 +188,7 @@ describe ScrapersController do
         .to eq ["needs to be a public scraper on ScraperWiki"]
     end
 
-    it "errors if the ScraperWiki scraper is private" do
+    it "errors if the ScraperWiki name given is a view" do
       scraperwiki_double = double("Morph::Scraperwiki",
                                   exists?: true,
                                   private_scraper?: false,

@@ -40,12 +40,12 @@ describe Morph::CodeTranslate do
           .to eq "<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more"
       end
 
-      it "does not insert require if it's already there" do
+      it "does not insert require if it's already there (using single quotes)" do
         expect(Morph::CodeTranslate::PHP.add_require("<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more"))
           .to eq "<?php\nrequire 'scraperwiki.php';\nsome code here\nsome more"
       end
 
-      it "does not insert require if it's already there" do
+      it "does not insert require if it's already there (using double quotes)" do
         expect(Morph::CodeTranslate::PHP.add_require("<?php\nrequire \"scraperwiki.php\";\nsome code here\nsome more"))
           .to eq "<?php\nrequire \"scraperwiki.php\";\nsome code here\nsome more"
       end
