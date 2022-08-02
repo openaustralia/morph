@@ -35,12 +35,12 @@ module Morph
 
     # "memory" is the memory limit applied to running container (in bytes). If nil uses the default (set in default_memory_limit)
     def self.compile_and_start_run(
-      repo_path:, env_variables: {}, container_labels: {}, max_lines: 0, platform: DEFAULT_PLATFORM,
+      repo_path:, env_variables: {}, container_labels: {}, max_lines: 0, platform: nil,
       disable_proxy: false, memory: nil
     )
       memory = default_memory_limit if memory.nil?
 
-      i = buildstep_image(platform) do |c|
+      i = buildstep_image(platform || DEFAULT_PLATFORM) do |c|
         yield(:internalout, c) if block_given?
       end
       yield(:internalout, "Injecting configuration and compiling...\n") if block_given?

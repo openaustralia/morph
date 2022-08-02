@@ -104,14 +104,12 @@ module Morph
         Morph::Runner.remove_hidden_directories(defaults)
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
 
-        platform = run.scraper&.platform || DockerRunner::DEFAULT_PLATFORM
-
         Morph::DockerRunner.compile_and_start_run(
           repo_path: defaults,
           env_variables: run.env_variables,
           container_labels: docker_container_labels,
           max_lines: max_lines,
-          platform: platform,
+          platform: run.scraper&.platform,
           # We're disabling the proxy for all scrapers
           disable_proxy: true,
           memory: (run.scraper.memory_mb * 1024 * 1024 if run.scraper&.memory_mb), &block

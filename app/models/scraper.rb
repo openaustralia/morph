@@ -250,12 +250,7 @@ class Scraper < ApplicationRecord
 
   def platform
     platform_file = "#{repo_path}/platform"
-    platform = if File.exist?(platform_file)
-                 File.read(platform_file)
-               else
-                 Morph::DockerRunner::DEFAULT_PLATFORM
-               end
-    platform.chomp
+    File.read(platform_file).chomp if File.exist?(platform_file)
   end
 
   # It seems silly implementing this
