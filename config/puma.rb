@@ -15,8 +15,13 @@ port        ENV.fetch("PORT") { 3000 }
 #
 environment ENV.fetch("RAILS_ENV") { "development" }
 
+# Disabled the generation of pidfile here because it causes problems
+# with us having two puma servers that we're running. We could pass
+# the environment variable to set the two files but we haven't figured
+# out a simple way to do that. So this is the short-term workaround. 
+
 # Specifies the `pidfile` that Puma will use.
-pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
+# pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Specifies the number of `workers` to boot in clustered mode.
 # Workers are forked webserver processes. If using threads and workers together
