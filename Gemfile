@@ -79,7 +79,8 @@ gem "ruby-progressbar"
 gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"
 
 # For searchkick 5 we need to install the elasticsearch gem ourselves
-gem "elasticsearch"
+# We're using elasticsearch 7 in production so sticking with the same version for the client
+gem "elasticsearch", "~> 7"
 gem "searchkick", "~> 5"
 
 
