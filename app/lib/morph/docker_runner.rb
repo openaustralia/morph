@@ -16,7 +16,7 @@ module Morph
       "package.json"
     ].freeze
     BUILDSTEP_IMAGE = "openaustralia/buildstep"
-    DEFAULT_PLATFORM = "latest"
+    DEFAULT_PLATFORM = "cedar-14"
     DOCKER_NETWORK = "morph"
     DOCKER_BRIDGE = "morph"
     DOCKER_NETWORK_SUBNET = "192.168.0.0/16"
