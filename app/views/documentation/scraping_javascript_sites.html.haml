@@ -6,12 +6,8 @@
   However in some cases you need to simulate a web browser.
   This could be because the web site is poorly programmed or because it makes extensive use of JavaScript.
 
-  You can do this by using a headless browser. On morph.io there are two different headless browsers
-  pre-installed ready for you to use, [Google Chrome](https://www.google.com/chrome/)
-  and [PhantomJS](http://phantomjs.org/).
-  We recommend using Google Chrome as PhantomJS is now deprecated. However, you will notice the
-  documentation below for using Google Chrome from different scraping languages is pretty non-existent.
-  If you would like to contribute to the documentation that would be amazing!
+  You can do this by using a headless browser. On morph.io [Google Chrome](https://www.google.com/chrome/)
+  is pre-installed ready for you to use.
 
 %h3 Using Chrome Headless
 :markdown
@@ -24,16 +20,4 @@
 %h4 Usage
 = render "language_tabs", id_prefix: "using_chrome_headless", path: "documentation/chrome_headless"
 
-%h3 Using PhantomJS (deprecated)
-:markdown
-  You can control PhantomJS from your scraper using JavaScript or a wrapper library.
-  The PhantomJS binary, `/usr/bin/phantomjs`, is installed on morph.io as part of the `phantomjs` Ubuntu package, which is installed in every scraper container as [part of the build process](https://github.com/openaustralia/buildstep/blob/master/Dockerfile).
-  On your own machine, you’ll need to [download and install the binary](http://phantomjs.org/download.html) yourself before you can run a scraper using PhantomJS.
-
-%h4 Usage
-= render "language_tabs", id_prefix: "using_phantomjs", path: "documentation/phantomjs"
-
-= render "examples", full_names: ["openaustralia/example_ruby_chrome_headless_scraper",
-                                  "openaustralia/example_ruby_phantomjs_scraper",
-                                  "tmtmtmtm/cabo-verde-assembleia-nacionale",
-                                  "wfdd/inatsisartut-scraper"]
+= render "examples", full_names: ["openaustralia/example_ruby_chrome_headless_scraper"]
