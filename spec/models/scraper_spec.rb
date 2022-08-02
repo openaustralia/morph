@@ -265,4 +265,27 @@ describe Scraper do
       end
     end
   end
+
+  describe "#platform" do
+    let(:scraper) {build(:scraper) }
+
+    before do
+      FileUtils.rm_r(scraper.repo_path)
+      FileUtils.mkdir_p(scraper.repo_path)
+    end
+
+    it "returns nil if no platform file is present" do
+      expect(scraper.platform).to be_nil
+    end
+
+    it "returns the platform if the file is present" do
+      File.write(File.join(scraper.repo_path, "platform"), "heroku-18")
+      expect(scraper.platform).to eq "heroku-18"
+    end
+
+    it "converts early_release to heroku-18" do
+      File.write(File.join(scraper.repo_path, "platform"), "early_release")
+      expect(scraper.platform).to eq "heroku-18"
+    end
+  end
 end
