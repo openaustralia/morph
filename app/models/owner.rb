@@ -12,7 +12,7 @@ class Owner < ApplicationRecord
   has_many :scrapers, inverse_of: :owner, dependent: :restrict_with_exception
   has_many :runs, dependent: :restrict_with_exception
   before_create :set_api_key
-  has_many :watches, class_name: "Alert", foreign_key: :watch_id, dependent: :destroy
+  has_many :watches, class_name: "Alert", foreign_key: :watch_id, dependent: :destroy, inverse_of: :watch
   has_many :watchers, through: :watches, source: :user
 
   serialize :feature_switches

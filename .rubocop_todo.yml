@@ -42,14 +42,6 @@ Rails/I18nLocaleTexts:
     - 'app/models/variable.rb'
     - 'app/models/webhook.rb'
 
-# Offense count: 3
-# Configuration parameters: IgnoreScopes, Include.
-# Include: app/models/**/*.rb
-Rails/InverseOf:
-  Exclude:
-    - 'app/models/owner.rb'
-    - 'app/models/scraper.rb'
-
 # Offense count: 4
 # Configuration parameters: Include.
 # Include: app/controllers/**/*.rb, app/mailers/**/*.rb

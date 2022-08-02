@@ -13,11 +13,11 @@ class Scraper < ApplicationRecord
   belongs_to :forked_by, class_name: "User", optional: true
 
   has_many :runs, inverse_of: :scraper, dependent: :destroy
-  has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run", dependent: :destroy
+  has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run", dependent: :destroy, inverse_of: :scraper
   has_many :metrics, through: :runs
   has_many :contributions, dependent: :delete_all
   has_many :contributors, through: :contributions, source: :user
-  has_many :watches, class_name: "Alert", foreign_key: :watch_id, dependent: :delete_all
+  has_many :watches, class_name: "Alert", foreign_key: :watch_id, dependent: :delete_all, inverse_of: :watch
   has_many :watchers, through: :watches, source: :user
   belongs_to :create_scraper_progress, dependent: :delete, optional: true
   has_many :variables, dependent: :delete_all
