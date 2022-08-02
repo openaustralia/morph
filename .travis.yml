@@ -10,7 +10,7 @@ before_install:
 
 before_script:
   - cp config/database.travis.yml config/database.yml
-  - bundle exec rake db:setup
+  - RAILS_ENV=test bundle exec rake db:setup
   - docker pull openaustralia/buildstep
 
 after_success:
