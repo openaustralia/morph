@@ -222,7 +222,8 @@ module Morph
       end
     end
 
-    def self.update_docker_image!
+    # Pulls all the separately tagged buildstep images
+    def self.update_docker_images!
       Morph::DockerUtils.pull_docker_image(BUILDSTEP_IMAGE)
     end
 

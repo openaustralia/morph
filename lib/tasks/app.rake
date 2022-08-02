@@ -59,9 +59,9 @@ namespace :app do
     puts "Put jobs on to the background queue to refresh all organization info from github"
   end
 
-  desc "Build docker image (Needs to be done once before any scrapers are run)"
-  task update_docker_image: :environment do
-    Morph::DockerRunner.update_docker_image!
+  desc "Downloads latest docker images"
+  task update_docker_images: :environment do
+    Morph::DockerRunner.update_docker_images!
   end
 
   desc "Synchronise all repositories"

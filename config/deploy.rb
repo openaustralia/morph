@@ -44,7 +44,7 @@ namespace :deploy do
   task :docker do
     on roles(:app) do
       within release_path do
-        execute :bundle, "exec rake app:update_docker_image RAILS_ENV=production"
+        execute :bundle, "exec rake app:update_docker_images RAILS_ENV=production"
       end
     end
   end
