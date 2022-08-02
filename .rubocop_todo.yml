@@ -34,13 +34,6 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NestedGroups:
   Max: 4
 
-# Offense count: 1
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: slashes, arguments
-Rails/FilePath:
-  Exclude:
-    - 'app/mailers/alert_mailer.rb'
-
 # Offense count: 2
 # Configuration parameters: Include.
 # Include: app/models/**/*.rb

@@ -14,7 +14,8 @@ class AlertMailer < ApplicationMailer
 
     @subject = "#{pluralize(broken_scrapers.count, 'scraper')} you are watching #{broken_scrapers.count == 1 ? 'has' : 'have'} errored in the last 48 hours"
 
-    attachments.inline["logo_75x75.png"] = File.read(File.join(Rails.root, "app", "assets", path_to_image("logo_75x75.png")))
+    path = Rails.root.join("app/assets").to_s + path_to_image("logo_75x75.png")
+    attachments.inline["logo_75x75.png"] = File.read(path)
     return if user.email.nil?
 
     mail(to: "#{user.name} <#{user.email}>", subject: @subject)
