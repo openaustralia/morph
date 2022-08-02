@@ -267,7 +267,7 @@ describe Scraper do
   end
 
   describe "#platform" do
-    let(:scraper) {build(:scraper) }
+    let(:scraper) { build(:scraper) }
 
     before do
       FileUtils.rm_r(scraper.repo_path)
