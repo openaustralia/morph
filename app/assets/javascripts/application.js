@@ -27,7 +27,6 @@
 //= require bootstrap
 //= require documentation
 //= require scrapers
-//= require scraperwiki_forks
 //= require static
 //= require supporters
 //= require users

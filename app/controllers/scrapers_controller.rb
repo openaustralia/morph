@@ -11,7 +11,7 @@ class ScrapersController < ApplicationController
 
   # All methods
   # :settings, :index, :new, :create, :github, :github_form, :create_github,
-  # :scraperwiki, :create_scraperwiki, :show, :destroy, :update, :run, :stop,
+  # :show, :destroy, :update, :run, :stop,
   # :clear, :data, :watch, :watchers
 
   def settings
