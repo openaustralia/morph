@@ -83,7 +83,6 @@ gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"
 gem "elasticsearch", "~> 7"
 gem "searchkick", "~> 5"
 
-
 gem "stripe"
 gem "validate_url"
 
