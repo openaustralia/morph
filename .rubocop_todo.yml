@@ -34,15 +34,6 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NestedGroups:
   Max: 4
 
-# Offense count: 6
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/HasManyOrHasOneDependent:
-  Exclude:
-    - 'app/models/owner.rb'
-    - 'app/models/scraper.rb'
-    - 'app/models/user.rb'
-
 # Offense count: 5
 Rails/I18nLocaleTexts:
   Exclude:

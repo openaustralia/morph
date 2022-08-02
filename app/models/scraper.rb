@@ -13,6 +13,7 @@ class Scraper < ApplicationRecord
   belongs_to :forked_by, class_name: "User", optional: true
 
   has_many :runs, inverse_of: :scraper, dependent: :destroy
+  has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run", dependent: :destroy
   has_many :metrics, through: :runs
   has_many :contributions, dependent: :delete_all
   has_many :contributors, through: :contributions, source: :user
@@ -25,7 +26,6 @@ class Scraper < ApplicationRecord
   accepts_nested_attributes_for :webhooks, allow_destroy: true
   validates_associated :variables
   delegate :sqlite_total_rows, to: :database
-  has_one :last_run, -> { order "queued_at DESC" }, class_name: "Run"
 
   has_many :api_queries, dependent: :delete_all
 
