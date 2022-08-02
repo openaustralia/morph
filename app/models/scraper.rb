@@ -37,12 +37,6 @@ class Scraper < ApplicationRecord
     scope: :owner, message: "is already taken on morph.io"
   }
   validate :not_used_on_github, on: :create, if: -> { github_id.blank? && name.present? }
-  with_options if: -> { scraperwiki_shortname || scraperwiki_url },
-               on: :create do
-    validate :exists_on_scraperwiki
-    validate :public_on_scraperwiki
-    validate :not_scraperwiki_view
-  end
 
   extend FriendlyId
   friendly_id :full_name
@@ -366,78 +360,6 @@ class Scraper < ApplicationRecord
     "https#{git_url[3..-1]}"
   end
 
-  def fork_from_scraperwiki!
-    client = forked_by.octokit_client
-
-    # We need to set auto_init so that we can create a commit later.
-    # The API doesn't support adding a commit to an empty repository
-    begin
-      create_scraper_progress.update_progress("Creating GitHub repository", 20)
-      repo = Morph::Github.create_repository(forked_by, owner, name)
-      update(github_id: repo.id, github_url: repo.rels[:html].href,
-             git_url: repo.rels[:git].href)
-    rescue Octokit::UnprocessableEntity
-      # This means the repo has already been created. We will have gotten here
-      # if this background job failed at some point past here and is rerun. So,
-      # let's happily continue
-    end
-    scraperwiki = Morph::Scraperwiki.new(scraperwiki_shortname)
-
-    # Copy the sqlite database across from Scraperwiki
-    create_scraper_progress.update_progress("Forking sqlite database", 40)
-    sqlite_data = scraperwiki.sqlite_database
-    if sqlite_data
-      database.write_sqlite_database(sqlite_data)
-      # Rename the main table in the sqlite database
-      if database.valid?
-        database.standardise_table_name("swdata")
-      else
-        # If the data was corrupt when loading from Scraperwiki then just
-        # delete our local copy here. Much simpler for the user.
-        database.clear
-      end
-    end
-
-    create_scraper_progress.update_progress("Forking code", 60)
-
-    # Fill in description
-    client.edit_repository(
-      full_name,
-      description: scraperwiki.title,
-      homepage: Rails.application.routes.url_helpers.scraper_url(self)
-    )
-    update(description: scraperwiki.title)
-
-    files = {
-      scraperwiki.language.scraper_filename => scraperwiki.code,
-      ".gitignore" =>
-        "# Ignore output of scraper\n#{Morph::Database.sqlite_db_filename}\n"
-    }
-    files["README.textile"] = scraperwiki.description if scraperwiki.description.present?
-    add_commit_to_root_on_github(
-      forked_by, files,
-      "Fork of code from ScraperWiki at #{scraperwiki_url}"
-    )
-
-    # Add another commit (but only if necessary) to translate the code so it
-    # runs here
-    unless scraperwiki.translated_code == scraperwiki.code
-      add_commit_to_main_on_github(
-        forked_by,
-        { scraperwiki.language.scraper_filename => scraperwiki.translated_code },
-        "Automatic update to make ScraperWiki scraper work on morph.io"
-      )
-    end
-
-    create_scraper_progress.update_progress("Synching repository", 80)
-    synchronise_repo
-
-    # Forking has finished
-    create_scraper_progress.finished
-
-    # TODO: Add repo link
-  end
-
   def deliver_webhooks(run)
     webhooks.each do |webhook|
       webhook_delivery = webhook.deliveries.create!(run: run)
@@ -451,24 +373,5 @@ class Scraper < ApplicationRecord
     return unless Octokit.repository?(full_name)
 
     errors.add(:name, "is already taken on GitHub")
-  end
-
-  def exists_on_scraperwiki
-    return if Morph::Scraperwiki.new(scraperwiki_shortname).exists?
-
-    errors.add(:scraperwiki_shortname, "doesn't exist on ScraperWiki")
-  end
-
-  def public_on_scraperwiki
-    return unless Morph::Scraperwiki.new(scraperwiki_shortname).private_scraper?
-
-    errors.add(:scraperwiki_shortname,
-               "needs to be a public scraper on ScraperWiki")
-  end
-
-  def not_scraperwiki_view
-    return unless Morph::Scraperwiki.new(scraperwiki_shortname).view?
-
-    errors.add(:scraperwiki_shortname, "can't be a ScraperWiki view")
   end
 end

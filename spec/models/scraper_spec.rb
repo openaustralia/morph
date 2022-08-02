@@ -118,14 +118,6 @@ describe Scraper do
     end
   end
 
-  describe "ScraperWiki validations" do
-    it "is invalid if the scraperwiki shortname is not set" do
-      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        expect(build(:scraper, scraperwiki_url: "foobar")).not_to be_valid
-      end
-    end
-  end
-
   describe "#scraped_domains" do
     let(:scraper) { described_class.new }
     let(:last_run) { mock_model(Run) }
