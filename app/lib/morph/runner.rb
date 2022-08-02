@@ -99,6 +99,13 @@ module Morph
         return
       end
 
+      platform = run.scraper&.platform
+      unless platform.nil? || Morph::DockerRunner::PLATFORMS.include?(platform)
+        yield "stderr", "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}."
+        run.update(status_code: 999, finished_at: Time.zone.now)
+        return
+      end
+
       c = Dir.mktmpdir("morph") do |defaults|
         Morph::Runner.add_config_defaults_to_directory(run.repo_path, defaults)
         Morph::Runner.remove_hidden_directories(defaults)
@@ -109,7 +116,7 @@ module Morph
           env_variables: run.env_variables,
           container_labels: docker_container_labels,
           max_lines: max_lines,
-          platform: run.scraper&.platform,
+          platform: platform,
           # We're disabling the proxy for all scrapers
           disable_proxy: true,
           memory: (run.scraper.memory_mb * 1024 * 1024 if run.scraper&.memory_mb), &block

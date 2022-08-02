@@ -16,6 +16,9 @@ module Morph
       "package.json"
     ].freeze
     BUILDSTEP_IMAGE = "openaustralia/buildstep"
+    # Variants of the buildstep image that we're currently supporting. These
+    # correspond to tags of the buildstep image
+    PLATFORMS = %w[cedar-14 heroku-18].freeze
     DEFAULT_PLATFORM = "cedar-14"
     DOCKER_NETWORK = "morph"
     DOCKER_BRIDGE = "morph"
