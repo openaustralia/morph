@@ -28,7 +28,12 @@ gem "font-awesome-rails"
 # Use same version deployed to server because provisioning/roles/morph-app/tasks/main.yml:80
 gem "foreman", "0.63.0"
 gem "friendly_id"
+
+# For accessing git from ruby
+# See https://github.com/mojombo/grit: "Grit is no longer maintained. Check out rugged."
+# TODO: Migrate to rugged or whatever best library is
 gem "grit"
+
 gem "haml-rails"
 gem "octokit", "~> 4.0"
 # Because we need the fix
