@@ -97,10 +97,10 @@ describe ScrapersController do
     end
 
     it "errors if the scraper already exists on morph.io" do
-      scraperwiki_double = double("Morph::Scraperwiki",
-                                  exists?: true,
-                                  private_scraper?: false,
-                                  view?: false)
+      scraperwiki_double = instance_double(Morph::Scraperwiki,
+                                           exists?: true,
+                                           private_scraper?: false,
+                                           view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
                                                  .and_return(scraperwiki_double)
 
@@ -118,10 +118,10 @@ describe ScrapersController do
     end
 
     it "errors if the scraper already exists on GitHub" do
-      scraperwiki_double = double("Morph::Scraperwiki",
-                                  exists?: true,
-                                  private_scraper?: false,
-                                  view?: false)
+      scraperwiki_double = instance_double(Morph::Scraperwiki,
+                                           exists?: true,
+                                           private_scraper?: false,
+                                           view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
                                                  .and_return(scraperwiki_double)
       allow(Octokit).to receive(:repository?).and_return(true)
@@ -149,10 +149,10 @@ describe ScrapersController do
     end
 
     it "errors if the scraper doesn't exist on ScraperWiki" do
-      scraperwiki_double = double("Morph::Scraperwiki",
-                                  exists?: false,
-                                  private_scraper?: false,
-                                  view?: false)
+      scraperwiki_double = instance_double(Morph::Scraperwiki,
+                                           exists?: false,
+                                           private_scraper?: false,
+                                           view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
                                                  .and_return(scraperwiki_double)
 
@@ -169,10 +169,10 @@ describe ScrapersController do
     end
 
     it "errors if the ScraperWiki scraper is private" do
-      scraperwiki_double = double("Morph::Scraperwiki",
-                                  exists?: true,
-                                  private_scraper?: true,
-                                  view?: false)
+      scraperwiki_double = instance_double(Morph::Scraperwiki,
+                                           exists?: true,
+                                           private_scraper?: true,
+                                           view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
                                                  .and_return(scraperwiki_double)
 
@@ -189,10 +189,10 @@ describe ScrapersController do
     end
 
     it "errors if the ScraperWiki name given is a view" do
-      scraperwiki_double = double("Morph::Scraperwiki",
-                                  exists?: true,
-                                  private_scraper?: false,
-                                  view?: true)
+      scraperwiki_double = instance_double(Morph::Scraperwiki,
+                                           exists?: true,
+                                           private_scraper?: false,
+                                           view?: true)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
                                                  .and_return(scraperwiki_double)
 
@@ -209,10 +209,10 @@ describe ScrapersController do
     end
 
     it "calls ForkScraperwikiWorker if all looks good" do
-      scraperwiki_double = double("Morph::Scraperwiki",
-                                  exists?: true,
-                                  private_scraper?: false,
-                                  view?: false)
+      scraperwiki_double = instance_double(Morph::Scraperwiki,
+                                           exists?: true,
+                                           private_scraper?: false,
+                                           view?: false)
       expect(Morph::Scraperwiki).to receive(:new).at_least(:once)
                                                  .and_return(scraperwiki_double)
 

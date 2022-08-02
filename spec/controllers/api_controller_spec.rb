@@ -32,7 +32,7 @@ describe ApiController do
     end
 
     it "fails when site is in read-only mode" do
-      ability = double(Ability)
+      ability = instance_double(Ability)
       allow(Ability).to receive(:new).with(user).and_return(ability)
       allow(ability).to receive(:can?).with(:create, Run).and_return(false)
 
@@ -48,7 +48,7 @@ describe ApiController do
     end
 
     it "works with a valid api key" do
-      runner = double(Morph::Runner)
+      runner = instance_double(Morph::Runner)
       allow(Morph::Runner).to receive(:new).and_return(runner)
       expect(runner).to receive(:go).and_yield(
         nil, "internalout", "Injecting configuration and compiling...\n"
