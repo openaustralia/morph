@@ -91,12 +91,10 @@ Rails.application.routes.draw do
   # TODO: Don't allow a user to be called "scrapers"
   resources :scrapers, only: [:new, :create, :index] do
     get 'github', on: :new
-    get 'scraperwiki', on: :new
     collection do
       get 'page/:page', :action => :index
       post 'github', to: "scrapers#create_github"
       get 'github_form'
-      post 'scraperwiki', to: "scrapers#create_scraperwiki"
       get 'running'
     end
   end

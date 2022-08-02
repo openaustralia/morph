@@ -80,51 +80,6 @@ class ScrapersController < ApplicationController
     end
   end
 
-  def scraperwiki
-    authorize! :scraperwiki, Scraper
-    if params[:scraperwiki_shortname].nil?
-      render plain: "scraperwiki_shortname needs to be set. This should happen automatically when migrating to morph.io from ScraperWiki Classic", status: :bad_request
-      return
-    end
-    @scraper = Scraper.new(
-      scraperwiki_shortname: params[:scraperwiki_shortname],
-      name: params[:scraperwiki_shortname]
-    )
-  end
-
-  # Fork away
-  def create_scraperwiki
-    @scraper = Scraper.new(
-      name: params[:scraper][:name],
-      scraperwiki_shortname: params[:scraper][:scraperwiki_shortname],
-      owner_id: params[:scraper][:owner_id],
-      forked_by_id: current_user.id
-    )
-    # TODO: Should we really store full_name in the db?
-    @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
-
-    # TODO: should really check here that this user has the permissions to
-    # write to the owner_id owner
-    # It will just get stuck later
-
-    if !@scraper.scraperwiki_shortname
-      @scraper.errors.add(:scraperwiki_shortname, "cannot be blank")
-      render :scraperwiki
-    elsif @scraper.save
-      @scraper.create_create_scraper_progress!(
-        heading: "Forking!",
-        message: "Queuing",
-        progress: 5
-      )
-      @scraper.save
-      ForkScraperwikiWorker.perform_async(@scraper.id)
-      # flash[:notice] = 'Forking in action...'
-      redirect_to @scraper
-    else
-      render :scraperwiki
-    end
-  end
-
   def show
     authorize! :show, @scraper
   end
