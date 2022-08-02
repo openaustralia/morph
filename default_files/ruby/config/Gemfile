@@ -15,7 +15,7 @@ gem "Ascii85", "1.0.1"
 gem "aasm", "3.0.8"
 gem "active_record_inline_schema", "0.5.7"
 gem "activemodel", "3.2.6"
-gem "activerecord", "3.2.6"
+gem "activerecord", "3.2.14"
 # Updated activeresource from 3.2.1 to 3.2.6 to avoid conflict with activemodel
 gem "activeresource", "3.2.6"
 gem "activesupport", "3.2.6"
