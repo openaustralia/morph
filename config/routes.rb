@@ -47,7 +47,6 @@ Rails.application.routes.draw do
   resources :documentation, only: :index do
     collection do
       get "api"
-      get "what_is_new"
       get 'run_locally'
       get 'secret_values'
       get "scraping_javascript_sites"
