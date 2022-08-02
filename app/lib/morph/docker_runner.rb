@@ -29,7 +29,7 @@ module Morph
       512 * 1024 * 1024
     end
 
-    def self.buildstep_image(platform = DEFAULT_PLATFORM)
+    def self.buildstep_image(platform)
       Morph::DockerUtils.get_or_pull_image("#{BUILDSTEP_IMAGE}:#{platform}")
     end
 

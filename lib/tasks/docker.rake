@@ -11,7 +11,11 @@ namespace :app do
 
       # First compile list of images, when they were last used and how much space they're using
       # Images built on top of buildstep
-      image_base = Morph::DockerRunner.buildstep_image
+
+      # We're currently just checking images that are based on the default platform. Images
+      # based on the other platforms are ignored which IS NOT GOOD.
+      # TODO: Check images for ALL platforms
+      image_base = Morph::DockerRunner.buildstep_image(Morph::DockerRunner::DEFAULT_PLATFORM)
       images = Docker::Image.all.select do |image|
         Morph::DockerUtils.image_built_on_other_image?(image, image_base)
       end
@@ -60,7 +64,9 @@ namespace :app do
     task list_image_sizes: :environment do
       include ActionView::Helpers::NumberHelper
 
-      image_base = Morph::DockerRunner.buildstep_image
+      # We're currently only working out the size of images that are based on the default platform
+      # TODO: We should do all the platforms
+      image_base = Morph::DockerRunner.buildstep_image(Morph::DockerRunner::DEFAULT_PLATFORM)
       total = 0
       Docker::Image.all.each do |image|
         next unless Morph::DockerUtils.image_built_on_other_image?(image, image_base)
