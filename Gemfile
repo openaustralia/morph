@@ -33,6 +33,7 @@ gem "friendly_id"
 # See https://github.com/mojombo/grit: "Grit is no longer maintained. Check out rugged."
 # TODO: Migrate to rugged or whatever best library is
 gem "grit"
+gem "rugged"
 
 gem "haml-rails"
 gem "octokit", "~> 4.0"

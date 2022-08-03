@@ -502,6 +502,7 @@ GEM
     ruby2_keywords (0.0.5)
     ruby_parser (3.19.1)
       sexp_processor (~> 4.16)
+    rugged (1.5.0.1)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -669,6 +670,7 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   ruby-progressbar
+  rugged
   sass-rails
   sdoc
   searchkick (~> 5)
