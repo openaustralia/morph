@@ -3,25 +3,26 @@
 module Morph
   # Service layer for talking to the Github API
   class Github
-    def self.synchronise_repo(repo_path, git_url)
-      # Set git timeout to 1 minute
-      # TODO: Move this to a configuration
-      Grit::Git.git_timeout = 60
-      gritty = Grit::Git.new(repo_path)
-      if gritty.exist?
-        # TODO: Use grit for this instead of shelling out
+    # Returns Rugged::Repository
+    def self.synchronise_repo_ignore_submodules(repo_path, git_url)
+      if File.exist?(repo_path) && !Dir.empty?(repo_path)
         Rails.logger.info "Updating git repo #{repo_path}..."
-        system("cd #{repo_path} && git fetch && git reset --hard FETCH_HEAD")
+        repo = Rugged::Repository.new(repo_path)
+        repo.fetch("origin")
+        repo.reset("FETCH_HEAD", :hard)
+        repo
       else
         Rails.logger.info "Cloning git repo #{git_url}..."
-        Rails.logger.info gritty.clone(
-          { verbose: true, progress: true, raise: true },
-          git_url, repo_path
-        )
+        Rugged::Repository.clone_at(git_url, repo_path)
       end
-      # Handle submodules. Always do this
-      system("cd #{repo_path}; git submodule init")
-      system("cd #{repo_path}; git submodule update")
+    end
+
+    def self.synchronise_repo(repo_path, git_url)
+      repo = synchronise_repo_ignore_submodules(repo_path, git_url)
+      repo.submodules.each do |submodule|
+        submodule.init
+        synchronise_repo_ignore_submodules(File.join(repo_path, submodule.path), submodule.url)
+      end
     end
 
     # Will create a repository. Works for both an individual and an
