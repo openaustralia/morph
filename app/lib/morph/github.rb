@@ -17,12 +17,17 @@ module Morph
       end
     end
 
+    # Returns true if everything worked
     def self.synchronise_repo(repo_path, git_url)
       repo = synchronise_repo_ignore_submodules(repo_path, git_url)
       repo.submodules.each do |submodule|
         submodule.init
         synchronise_repo_ignore_submodules(File.join(repo_path, submodule.path), submodule.url)
       end
+      true
+    rescue Rugged::HTTPError
+      # Indicate there was a problem
+      false
     end
 
     # Will create a repository. Works for both an individual and an

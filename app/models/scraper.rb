@@ -345,10 +345,14 @@ class Scraper < ApplicationRecord
     client.update_ref(full_name, "heads/main", commit.sha)
   end
 
+  # Returns true if successfull
   def synchronise_repo
-    Morph::Github.synchronise_repo(repo_path, git_url_https)
+    success = Morph::Github.synchronise_repo(repo_path, git_url_https)
+    return false unless success
+
     update_repo_size
     update_contributors
+    true
   rescue Grit::Git::CommandFailed => e
     Rails.logger.error "git command failed: #{e}"
     Rails.logger.error "Ignoring and moving onto the next one..."

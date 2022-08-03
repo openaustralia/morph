@@ -36,7 +36,18 @@ module Morph
       # don't do anything
       return if run.scraper.nil? || run.finished?
 
-      run.scraper.synchronise_repo
+      # TODO: Indicate that scraper is running before we do the synching
+      success = run.scraper.synchronise_repo
+
+      unless success
+        c = "There was a problem getting the latest scraper code from GitHub"
+        log(nil, "stderr", c)
+        yield nil, "stderr", m if block_given?
+        run.update(status_code: 999, finished_at: Time.zone.now)
+        sync_update run.scraper if run.scraper
+        return
+      end
+
       go_with_logging
     end
 
