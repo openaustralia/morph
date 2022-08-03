@@ -213,6 +213,10 @@
 - name: Install dependency for restructured text support
   pip: name=docutils state=present
 
+- name: Install dependency for rugged gem
+  apt:
+    pkg: cmake
+
 # Vigorously clean unused docker data
 - name: Set up docker cleanup cron job
   copy:
