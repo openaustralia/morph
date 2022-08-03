@@ -16,6 +16,7 @@ class UsersController < ApplicationController
   end
 
   def watching; end
+  def stats; end
 
   private
 

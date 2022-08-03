@@ -4,6 +4,8 @@ class SupportersController < ApplicationController
   before_action :authenticate_user!, except: %i[new index]
   before_action :load_stripe_library
 
+  def index; end
+
   def new
     authenticate_user! if params[:plan_id]
   end

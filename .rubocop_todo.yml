@@ -42,15 +42,6 @@ Rails/I18nLocaleTexts:
     - 'app/models/variable.rb'
     - 'app/models/webhook.rb'
 
-# Offense count: 4
-# Configuration parameters: Include.
-# Include: app/controllers/**/*.rb, app/mailers/**/*.rb
-Rails/LexicallyScopedActionFilter:
-  Exclude:
-    - 'app/controllers/scrapers_controller.rb'
-    - 'app/controllers/supporters_controller.rb'
-    - 'app/controllers/users_controller.rb'
-
 # Offense count: 7
 Rails/OutputSafety:
   Exclude:

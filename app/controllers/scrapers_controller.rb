@@ -18,6 +18,8 @@ class ScrapersController < ApplicationController
     authorize! :settings, @scraper
   end
 
+  def data; end
+
   def index
     @scrapers = Scraper.accessible_by(current_ability).order(created_at: :desc)
                        .page(params[:page])
