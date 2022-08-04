@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require "sorbet-runtime"
@@ -10,20 +10,11 @@ module StaticHelper
   include ActionView::Helpers::OutputSafetyHelper
   include ActionView::Helpers::UrlHelper
 
-  # TODO: Move this bit of configuration somewhere sensible
-  def api_host
-    if Rails.env.development?
-      request.host
-    else
-      "api.morph.io"
-    end
-  end
-
   def api_root
     if Rails.env.development?
       root_url
     else
-      root_url(host: api_host)
+      root_url(host: "api.morph.io")
     end
   end
 
