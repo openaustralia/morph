@@ -4,6 +4,5 @@
 
 # typed: false
 
-module Devise::OmniauthCallbacksController; end
 module Sidekiq::Testing; end
 module Sidekiq::Web; end
