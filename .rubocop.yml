@@ -24,6 +24,10 @@ Sorbet/TrueSigil:
     - app/lib/**/*
     - app/helpers/*
 
+# This conflicts with the type checking that sorbet does
+Lint/SafeNavigationConsistency:
+  Enabled: false
+
 # Disabling warnings about line length because it's so common through
 # the codebase currently. It would be good to fix as it would make things
 # easier to read but it would take a bit of time to do.

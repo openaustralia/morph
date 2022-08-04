@@ -12,7 +12,7 @@ class ScraperAutoRunWorker
     # Guard against more than one of a particular scraper running at the same time
     # And also double check that the scraper should be run automatically (in case it
     # has changed since it was queued)
-    return unless scraper&.runnable? && scraper&.auto_run?
+    return unless scraper&.runnable? && scraper.auto_run?
 
     # Raise an error so that when we're in read-only mode the jobs get requeued
     raise "Owner #{scraper.owner.nickname} doesn't have permission to create run" unless scraper.owner.ability.can? :create, Run
