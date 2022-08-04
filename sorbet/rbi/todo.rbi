@@ -4,23 +4,6 @@
 
 # typed: false
 
-module ::Mechanize; end
-module ::Mysql; end
-module ::ScraperWiki; end
-module ::Selenium::WebDriver::Chrome::Options; end
-module ::Test::Unit::TestCase; end
-module CSV::Writer; end
 module Devise::OmniauthCallbacksController; end
-module HansardParser::Log4r::ERROR; end
-module HansardParser::Log4r::FileOutputter; end
-module HansardParser::Log4r::Logger; end
-module HansardParser::Log4r::Outputter; end
-module HansardParser::Log4r::PatternFormatter; end
-module HansardParser::Mechanize; end
-module Hpricot::Elements; end
-module Hpricot::Text; end
-module PeopleImageDownloader::Magick::Image; end
-module PeopleImageDownloader::Mechanize; end
 module Sidekiq::Testing; end
 module Sidekiq::Web; end
-module Speech::HTMLEntities; end
