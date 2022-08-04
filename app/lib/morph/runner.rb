@@ -43,7 +43,7 @@ module Morph
       unless success
         c = "There was a problem getting the latest scraper code from GitHub"
         log(nil, "stderr", c)
-        yield nil, "stderr", m if block_given?
+        yield nil, "stderr", c if block_given?
         run.update(status_code: 999, finished_at: Time.zone.now)
         sync_update run.scraper if run.scraper
         return
