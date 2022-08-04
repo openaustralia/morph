@@ -119,7 +119,7 @@ module Morph
 
         path2 = File.join(dest, Pathname.new(path).basename.to_s)
         tmp = Tempfile.new("morph-file")
-        FileUtils.cp(path2, tmp.path)
+        FileUtils.cp(path2, T.must(tmp.path))
       end
       tmp
     end
