@@ -5,6 +5,7 @@ module ScrapersHelper
   # For sorbet
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::UrlHelper
+  include RunsHelper
 
   def radio_description(repo)
     scraper = Scraper.where(full_name: repo.full_name).first
