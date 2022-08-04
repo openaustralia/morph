@@ -505,6 +505,8 @@ GEM
       rubocop (>= 1.7.0, < 2.0)
     rubocop-rspec (2.12.1)
       rubocop (~> 1.31)
+    rubocop-sorbet (0.6.11)
+      rubocop (>= 0.90.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     ruby_parser (3.19.1)
@@ -706,6 +708,7 @@ DEPENDENCIES
   rubocop
   rubocop-rails
   rubocop-rspec
+  rubocop-sorbet
   ruby-progressbar
   rugged
   sass-rails

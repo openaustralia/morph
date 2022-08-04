@@ -127,6 +127,7 @@ group :development do
   gem "rubocop"
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
+  gem "rubocop-sorbet", require: false
 end
 
 group :development, :test do
