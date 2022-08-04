@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 # A secret environment variable and its value that can be passed to a scraper
