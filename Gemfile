@@ -92,10 +92,6 @@ gem "searchkick", "~> 5"
 gem "stripe"
 gem "validate_url"
 
-# Adding psych here to lock its version. psych 4.0 causes us issues with installing gems. Ugh.
-# TODO: Remove this as soon as possible
-gem "psych", "< 4.0.0"
-
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
