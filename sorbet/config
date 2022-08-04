@@ -1,3 +1,5 @@
 --dir
 .
 --ignore=vendor/
+--ignore=db/scrapers/repos/
+--ignore=spec/lib/morph/test_scrapers/
