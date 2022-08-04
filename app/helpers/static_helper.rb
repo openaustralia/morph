@@ -2,6 +2,11 @@
 # frozen_string_literal: true
 
 module StaticHelper
+  # For sorbet
+  include GeneratedUrlHelpersModule
+  include ActionView::Helpers::OutputSafetyHelper
+  include ActionView::Helpers::UrlHelper
+
   # TODO: Move this bit of configuration somewhere sensible
   def api_host
     if Rails.env.development?

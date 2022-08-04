@@ -1,7 +1,12 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 module RunsHelper
+  # For sorbet
+  include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::UrlHelper
+  include ERB::Util
+
   def database_changes_in_words(run)
     sections = []
     sections << "#{pluralize(run.records_added, 'record')} added" if run.records_added&.positive?

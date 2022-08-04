@@ -2,6 +2,10 @@
 # frozen_string_literal: true
 
 module ScrapersHelper
+  # For sorbet
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::UrlHelper
+
   def radio_description(repo)
     scraper = Scraper.where(full_name: repo.full_name).first
     a = content_tag(:strong, repo.name)

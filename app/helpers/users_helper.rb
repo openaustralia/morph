@@ -1,7 +1,10 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 module UsersHelper
+  # For sorbet
+  include ActionView::Helpers::TextHelper
+
   def alert_scrapers_summary_sentence(success_count, broken_count)
     result = []
     result << pluralize(success_count, "scraper")
