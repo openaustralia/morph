@@ -19,15 +19,9 @@ module Faye
     # source://faye-1.4.0/lib/faye.rb:56
     def ensure_reactor_running!; end
 
-    # Returns the value of attribute logger.
-    #
     # source://faye-1.4.0/lib/faye.rb:53
     def logger; end
 
-    # Sets the attribute logger
-    #
-    # @param value the value to set the attribute logger to.
-    #
     # source://faye-1.4.0/lib/faye.rb:53
     def logger=(_arg0); end
 

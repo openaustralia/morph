@@ -182,13 +182,9 @@ end
 # source://rack-mini-profiler-3.0.0/lib/mini_profiler/version.rb:3
 module Rack
   class << self
-    # Return the Rack release as a dotted string.
-    #
     # source://rack-2.2.4/lib/rack/version.rb:26
     def release; end
 
-    # Return the Rack protocol version as a dotted string.
-    #
     # source://rack-2.2.4/lib/rack/version.rb:19
     def version; end
   end
@@ -212,11 +208,8 @@ Rack::ETAG = T.let(T.unsafe(nil), String)
 # source://rack-2.2.4/lib/rack.rb:30
 Rack::EXPIRES = T.let(T.unsafe(nil), String)
 
-# source://rack-2.2.4/lib/rack/file.rb:6
 Rack::File = Rack::Files
 
-# HTTP method verbs
-#
 # source://rack-2.2.4/lib/rack.rb:39
 Rack::GET = T.let(T.unsafe(nil), String)
 
@@ -2143,8 +2136,6 @@ Rack::RACK_TEMPFILES = T.let(T.unsafe(nil), String)
 # source://rack-2.2.4/lib/rack.rb:62
 Rack::RACK_URL_SCHEME = T.let(T.unsafe(nil), String)
 
-# Rack environment variables
-#
 # source://rack-2.2.4/lib/rack.rb:51
 Rack::RACK_VERSION = T.let(T.unsafe(nil), String)
 
@@ -2181,8 +2172,6 @@ Rack::TRANSFER_ENCODING = T.let(T.unsafe(nil), String)
 # source://rack-2.2.4/lib/rack.rb:47
 Rack::UNLINK = T.let(T.unsafe(nil), String)
 
-# The Rack protocol version number implemented.
-#
 # source://rack-2.2.4/lib/rack/version.rb:16
 Rack::VERSION = T.let(T.unsafe(nil), Array)
 

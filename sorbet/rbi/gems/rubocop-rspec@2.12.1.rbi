@@ -14,8 +14,6 @@ end
 # source://rubocop-rspec-2.12.1/lib/rubocop/cop/rspec/mixin/top_level_group.rb:4
 module RuboCop::Cop; end
 
-# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
-#
 # source://rubocop-1.32.0/lib/rubocop/cop/mixin/allowed_pattern.rb:38
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 

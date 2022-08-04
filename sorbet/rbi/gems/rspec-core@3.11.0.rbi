@@ -132,6 +132,12 @@ module RSpec
     # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
     def fdescribe(*args, &example_group_block); end
 
+    # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
+    def feature(*args, &example_group_block); end
+
+    # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
+    def ffeature(*args, &example_group_block); end
+
     # Used to ensure examples get reloaded and user configuration gets reset to
     # defaults between multiple runs in the same process.
     #
@@ -170,6 +176,9 @@ module RSpec
 
     # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
     def xdescribe(*args, &example_group_block); end
+
+    # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
+    def xfeature(*args, &example_group_block); end
   end
 end
 
@@ -2583,7 +2592,19 @@ module RSpec::Core::Configuration::Readers
   def failure_exit_code; end
 
   # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
+  def file_fixture_path; end
+
+  # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
   def fixed_color; end
+
+  # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
+  def fixture_path; end
+
+  # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
+  def global_fixtures; end
+
+  # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
+  def infer_base_class_for_anonymous_controllers; end
 
   # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
   def libs; end
@@ -2605,6 +2626,9 @@ module RSpec::Core::Configuration::Readers
 
   # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
   def project_source_dirs; end
+
+  # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
+  def rendering_views; end
 
   # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
   def requires; end
@@ -2629,6 +2653,15 @@ module RSpec::Core::Configuration::Readers
 
   # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
   def tty; end
+
+  # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
+  def use_active_record; end
+
+  # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
+  def use_instantiated_fixtures; end
+
+  # source://rspec-core-3.11.0/lib/rspec/core/configuration.rb:63
+  def use_transactional_fixtures; end
 end
 
 # @private
@@ -3722,6 +3755,9 @@ class RSpec::Core::ExampleGroup
     # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:247
     def fdescribe(*args, &example_group_block); end
 
+    # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:247
+    def feature(*args, &example_group_block); end
+
     # Shortcut to define an example with `:focus => true`.
     #
     # @example
@@ -3749,6 +3785,9 @@ class RSpec::Core::ExampleGroup
     #
     # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:146
     def fexample(*all_args, &block); end
+
+    # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:247
+    def ffeature(*args, &example_group_block); end
 
     # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:78
     def file_path; end
@@ -3823,6 +3862,9 @@ class RSpec::Core::ExampleGroup
     #
     # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:655
     def for_filtered_examples(reporter, &block); end
+
+    # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:146
+    def fscenario(*all_args, &block); end
 
     # Shortcut to define an example with `:focus => true`.
     #
@@ -4005,6 +4047,9 @@ class RSpec::Core::ExampleGroup
     # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:641
     def run_examples(reporter); end
 
+    # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:146
+    def scenario(*all_args, &block); end
+
     # @private
     #
     # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:410
@@ -4172,6 +4217,9 @@ class RSpec::Core::ExampleGroup
     # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:146
     def xexample(*all_args, &block); end
 
+    # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:247
+    def xfeature(*args, &example_group_block); end
+
     # Shortcut to define an example with `:skip => 'Temporarily skipped with xit'`.
     #
     # @example
@@ -4199,6 +4247,9 @@ class RSpec::Core::ExampleGroup
     #
     # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:146
     def xit(*all_args, &block); end
+
+    # source://rspec-core-3.11.0/lib/rspec/core/example_group.rb:146
+    def xscenario(*all_args, &block); end
 
     # Shortcut to define an example with `:skip => 'Temporarily skipped with xspecify'`.
     #

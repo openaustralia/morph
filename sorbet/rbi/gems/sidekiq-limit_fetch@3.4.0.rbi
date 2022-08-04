@@ -7,56 +7,18 @@
 # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/queue.rb:1
 module Sidekiq
   class << self
-    # How frequently Redis should be checked by a random Sidekiq process for
-    # scheduled and retriable jobs. Each individual process will take turns by
-    # waiting some multiple of this value.
-    #
-    # See sidekiq/scheduled.rb for an in-depth explanation of this value
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:199
     def average_scheduled_poll_interval=(interval); end
 
-    # @yield [@client_chain]
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:137
     def client_middleware; end
 
-    # Configuration for Sidekiq client, use like:
-    #
-    #   Sidekiq.configure_client do |config|
-    #     config.redis = { :namespace => 'myapp', :size => 1, :url => 'redis://myhost:8877/0' }
-    #   end
-    #
-    # @yield [_self]
-    # @yieldparam _self [Sidekiq] the object that the method was called on
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:84
     def configure_client; end
 
-    # Configuration for Sidekiq server, use like:
-    #
-    #   Sidekiq.configure_server do |config|
-    #     config.redis = { :namespace => 'myapp', :size => 25, :url => 'redis://myhost:8877/0' }
-    #     config.server_middleware do |chain|
-    #       chain.add MyServerHook
-    #     end
-    #   end
-    #
-    # @yield [_self]
-    # @yieldparam _self [Sidekiq] the object that the method was called on
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:74
     def configure_server; end
 
-    # Death handlers are called when all retries for a job have been exhausted and
-    # the job dies.  It's the notification to your application
-    # that this job will not succeed without manual intervention.
-    #
-    # Sidekiq.configure_server do |config|
-    #   config.death_handlers << ->(job, ex) do
-    #   end
-    # end
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:176
     def death_handlers; end
 
@@ -75,14 +37,6 @@ module Sidekiq
     # source://sidekiq-5.2.10/lib/sidekiq.rb:183
     def dump_json(object); end
 
-    # Register a proc to handle any error which occurs within the Sidekiq process.
-    #
-    #   Sidekiq.configure_server do |config|
-    #     config.error_handlers << proc {|ex,ctx_hash| MyErrorService.notify(ex, ctx_hash) }
-    #   end
-    #
-    # The default error handler logs errors to Sidekiq.logger.
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:210
     def error_handlers; end
 
@@ -95,17 +49,6 @@ module Sidekiq
     # source://sidekiq-5.2.10/lib/sidekiq.rb:190
     def logger=(log); end
 
-    # Register a block to run at a point in the Sidekiq lifecycle.
-    # :startup, :quiet or :shutdown are valid events.
-    #
-    #   Sidekiq.configure_server do |config|
-    #     config.on(:shutdown) do
-    #       puts "Goodbye cruel world!"
-    #     end
-    #   end
-    #
-    # @raise [ArgumentError]
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:222
     def on(event, &block); end
 
@@ -115,8 +58,6 @@ module Sidekiq
     # source://sidekiq-5.2.10/lib/sidekiq.rb:61
     def options=(opts); end
 
-    # @raise [ArgumentError]
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:92
     def redis; end
 
@@ -129,13 +70,9 @@ module Sidekiq
     # source://sidekiq-5.2.10/lib/sidekiq.rb:125
     def redis_pool; end
 
-    # @return [Boolean]
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:88
     def server?; end
 
-    # @yield [@server_chain]
-    #
     # source://sidekiq-5.2.10/lib/sidekiq.rb:143
     def server_middleware; end
 
@@ -477,32 +414,14 @@ class Sidekiq::LimitFetch::UnitOfWork < ::Sidekiq::BasicFetch::UnitOfWork
   def redis_retryable(&block); end
 end
 
-# The Manager is the central coordination point in Sidekiq, controlling
-# the lifecycle of the Processors.
-#
-# Tasks:
-#
-# 1. start: Spin up Processors.
-# 3. processor_died: Handle job failure, throw away Processor, create new one.
-# 4. quiet: shutdown idle Processors.
-# 5. stop: hard stop the Processors by deadline.
-#
-# Note that only the last task requires its own Thread since it has to monitor
-# the shutdown process.  The other tasks are performed by other threads.
-#
 # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/manager.rb:1
 class Sidekiq::Manager
   include ::Sidekiq::Manager::InitLimitFetch
   include ::Sidekiq::ExceptionHandler
 
-  # @raise [ArgumentError]
-  # @return [Manager] a new instance of Manager
-  #
   # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/manager.rb:3
   def initialize(options = T.unsafe(nil)); end
 
-  # Returns the value of attribute options.
-  #
   # source://sidekiq-5.2.10/lib/sidekiq/manager.rb:28
   def options; end
 
@@ -521,13 +440,9 @@ class Sidekiq::Manager
   # source://sidekiq-5.2.10/lib/sidekiq/manager.rb:62
   def stop(deadline); end
 
-  # @return [Boolean]
-  #
   # source://sidekiq-5.2.10/lib/sidekiq/manager.rb:101
   def stopped?; end
 
-  # Returns the value of attribute workers.
-  #
   # source://sidekiq-5.2.10/lib/sidekiq/manager.rb:27
   def workers; end
 
@@ -546,32 +461,17 @@ module Sidekiq::Manager::InitLimitFetch
   def start; end
 end
 
-# hack for quicker development / testing environment #2774
-#
 # source://sidekiq-5.2.10/lib/sidekiq/manager.rb:60
 Sidekiq::Manager::PAUSE_TIME = T.let(T.unsafe(nil), Float)
 
 # source://sidekiq-5.2.10/lib/sidekiq.rb:15
 Sidekiq::NAME = T.let(T.unsafe(nil), String)
 
-# Encapsulates a queue within Sidekiq.
-# Allows enumeration of all jobs within the queue
-# and deletion of jobs.
-#
-#   queue = Sidekiq::Queue.new("mailer")
-#   queue.each do |job|
-#     job.klass # => 'MyWorker'
-#     job.args # => [1, 2, 3]
-#     job.delete if job.jid == 'abcdef1234567890'
-#   end
-#
 # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/queue.rb:2
 class Sidekiq::Queue
   extend ::Forwardable
   extend ::Sidekiq::LimitFetch::Instances
 
-  # @return [Queue] a new instance of Queue
-  #
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:238
   def initialize(name = T.unsafe(nil)); end
 
@@ -602,22 +502,12 @@ class Sidekiq::Queue
   # source://RUBY_ROOT/forwardable.rb:226
   def explain(*args, &block); end
 
-  # Find the job with the given JID within this queue.
-  #
-  # This is a slow, inefficient operation.  Do not use under
-  # normal conditions.  Sidekiq Pro contains a faster version.
-  #
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:294
   def find_job(jid); end
 
   # source://RUBY_ROOT/forwardable.rb:226
   def increase_busy(*args, &block); end
 
-  # Calculates this queue's latency, the difference in seconds since the oldest
-  # job in the queue was enqueued.
-  #
-  # @return Float
-  #
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:257
   def latency; end
 
@@ -636,8 +526,6 @@ class Sidekiq::Queue
   # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/queue.rb:19
   def lock; end
 
-  # Returns the value of attribute name.
-  #
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:236
   def name; end
 
@@ -647,10 +535,6 @@ class Sidekiq::Queue
   # source://RUBY_ROOT/forwardable.rb:226
   def pause_for_ms(*args, &block); end
 
-  # Sidekiq Pro overrides this
-  #
-  # @return [Boolean]
-  #
   # source://RUBY_ROOT/forwardable.rb:226
   def paused?(*args, &block); end
 
@@ -690,8 +574,6 @@ class Sidekiq::Queue
   def 💣; end
 
   class << self
-    # Return all known queues within Redis.
-    #
     # source://sidekiq-5.2.10/lib/sidekiq/api.rb:232
     def all; end
   end

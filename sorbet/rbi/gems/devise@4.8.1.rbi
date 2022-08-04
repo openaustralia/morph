@@ -868,6 +868,13 @@ ActionDispatch::Routing::RouteSet::UNKNOWN = T.let(T.unsafe(nil), Proc)
 # source://actionpack-5.2.8.1/lib/action_dispatch/routing.rb:257
 ActionDispatch::Routing::SEPARATORS = T.let(T.unsafe(nil), Array)
 
+class ActiveRecord::Base
+  include ::ActiveModel::ForbiddenAttributesProtection
+  include ::ActiveModel::AttributeAssignment
+  include ::ActiveModel::Serialization
+  extend ::Devise::Models
+end
+
 # source://devise-4.8.1/lib/devise.rb:11
 module Devise
   # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:67

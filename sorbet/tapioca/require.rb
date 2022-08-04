@@ -1,4 +1,21 @@
 # typed: true
 # frozen_string_literal: true
 
-# Add your extra requires here (`bin/tapioca require` can be used to boostrap this list)
+require "action_view/dependency_tracker"
+require "bootsnap/setup"
+require "bundler/setup"
+require "capybara/rspec"
+require "csv"
+require "devise/orm/active_record"
+require "memory_profiler"
+require "nokogiri"
+require "open3"
+require "optparse"
+require "rails/all"
+require "rails_autolink/helpers"
+require "rspec/rails"
+require "sidekiq/cli"
+require "sidekiq/testing"
+require "sidekiq/web"
+require "simplecov"
+require "sorbet-runtime"

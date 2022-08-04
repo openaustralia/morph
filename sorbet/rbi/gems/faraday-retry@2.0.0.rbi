@@ -9,140 +9,56 @@
 # source://faraday-retry-2.0.0/lib/faraday/retriable_response.rb:4
 module Faraday
   class << self
-    # @overload default_adapter
-    # @overload default_adapter=
-    #
     # source://faraday-2.4.0/lib/faraday.rb:55
     def default_adapter; end
 
-    # Documented elsewhere, see default_adapter reader
-    #
     # source://faraday-2.4.0/lib/faraday.rb:102
     def default_adapter=(adapter); end
 
-    # Option for the default_adapter
-    #   @return [Hash] default_adapter options
-    #
     # source://faraday-2.4.0/lib/faraday.rb:59
     def default_adapter_options; end
 
-    # Option for the default_adapter
-    #   @return [Hash] default_adapter options
-    #
     # source://faraday-2.4.0/lib/faraday.rb:59
     def default_adapter_options=(_arg0); end
 
-    # @overload default_connection
-    # @overload default_connection=
-    #
     # source://faraday-2.4.0/lib/faraday.rb:120
     def default_connection; end
 
-    # Documented below, see default_connection
-    #
     # source://faraday-2.4.0/lib/faraday.rb:62
     def default_connection=(_arg0); end
 
-    # Gets the default connection options used when calling {Faraday#new}.
-    #
-    # @return [Faraday::ConnectionOptions]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:127
     def default_connection_options; end
 
-    # Sets the default options used when calling {Faraday#new}.
-    #
-    # @param options [Hash, Faraday::ConnectionOptions]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:134
     def default_connection_options=(options); end
 
-    # Tells Faraday to ignore the environment proxy (http_proxy).
-    # Defaults to `false`.
-    #
-    # @return [Boolean]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:67
     def ignore_env_proxy; end
 
-    # Tells Faraday to ignore the environment proxy (http_proxy).
-    # Defaults to `false`.
-    #
-    # @return [Boolean]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:67
     def ignore_env_proxy=(_arg0); end
 
-    # Gets or sets the path that the Faraday libs are loaded from.
-    #
-    # @return [String]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:46
     def lib_path; end
 
-    # Gets or sets the path that the Faraday libs are loaded from.
-    #
-    # @return [String]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:46
     def lib_path=(_arg0); end
 
-    # Initializes a new {Connection}.
-    #
-    # @example With an URL argument
-    #   Faraday.new 'http://faraday.com'
-    #   # => Faraday::Connection to http://faraday.com
-    # @example With an URL argument and an options hash
-    #   Faraday.new 'http://faraday.com', params: { page: 1 }
-    #   # => Faraday::Connection to http://faraday.com?page=1
-    # @example With everything in an options hash
-    #   Faraday.new url: 'http://faraday.com',
-    #   params: { page: 1 }
-    #   # => Faraday::Connection to http://faraday.com?page=1
-    # @option options
-    # @option options
-    # @option options
-    # @option options
-    # @option options
-    # @option options
-    # @param url [String, Hash] The optional String base URL to use as a prefix
-    #   for all requests.  Can also be the options Hash. Any of these
-    #   values will be set on every request made, unless overridden
-    #   for a specific request.
-    # @param options [Hash]
-    # @return [Faraday::Connection]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:96
     def new(url = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
-    # @return [Boolean]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:107
     def respond_to_missing?(symbol, include_private = T.unsafe(nil)); end
 
-    # The root path that Faraday is being loaded from.
-    #
-    # This is the root from where the libraries are auto-loaded.
-    #
-    # @return [String]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:42
     def root_path; end
 
-    # The root path that Faraday is being loaded from.
-    #
-    # This is the root from where the libraries are auto-loaded.
-    #
-    # @return [String]
-    #
     # source://faraday-2.4.0/lib/faraday.rb:42
     def root_path=(_arg0); end
 
     private
 
-    # Internal: Proxies method calls on the Faraday constant to
-    # .default_connection.
-    #
     # source://faraday-2.4.0/lib/faraday.rb:143
     def method_missing(name, *args, &block); end
   end

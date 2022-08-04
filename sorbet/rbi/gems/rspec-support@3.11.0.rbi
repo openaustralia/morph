@@ -130,6 +130,12 @@ module RSpec
     # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
     def fdescribe(*args, &example_group_block); end
 
+    # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
+    def feature(*args, &example_group_block); end
+
+    # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
+    def ffeature(*args, &example_group_block); end
+
     # Used to ensure examples get reloaded and user configuration gets reset to
     # defaults between multiple runs in the same process.
     #
@@ -168,6 +174,9 @@ module RSpec
 
     # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
     def xdescribe(*args, &example_group_block); end
+
+    # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
+    def xfeature(*args, &example_group_block); end
   end
 end
 
@@ -296,9 +305,6 @@ module RSpec::Support
 
     # source://rspec-support-3.11.0/lib/rspec/support.rb:23
     def require_rspec_matchers(f); end
-
-    # source://rspec-support-3.11.0/lib/rspec/support.rb:23
-    def require_rspec_mocks(f); end
 
     # source://rspec-support-3.11.0/lib/rspec/support.rb:23
     def require_rspec_support(f); end

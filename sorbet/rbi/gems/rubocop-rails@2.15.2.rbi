@@ -104,13 +104,9 @@ end
 #
 # source://rubocop-rails-2.15.2/lib/rubocop/cop/mixin/enforce_superclass.rb:6
 module RuboCop::Cop::EnforceSuperclass
-  # @api private
-  #
   # source://rubocop-rails-2.15.2/lib/rubocop/cop/mixin/enforce_superclass.rb:19
   def on_class(node); end
 
-  # @api private
-  #
   # source://rubocop-rails-2.15.2/lib/rubocop/cop/mixin/enforce_superclass.rb:25
   def on_send(node); end
 
@@ -120,8 +116,6 @@ module RuboCop::Cop::EnforceSuperclass
   def register_offense(offense_node); end
 
   class << self
-    # @api private
-    # @private
     # @private
     #
     # source://rubocop-rails-2.15.2/lib/rubocop/cop/mixin/enforce_superclass.rb:7
@@ -129,8 +123,6 @@ module RuboCop::Cop::EnforceSuperclass
   end
 end
 
-# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
-#
 # source://rubocop-1.32.0/lib/rubocop/cop/mixin/allowed_pattern.rb:38
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 

@@ -1599,8 +1599,6 @@ class Rails::Engine < ::Rails::Railtie
   end
 end
 
-# Define some basic Sprockets error classes
-#
 # source://sprockets-rails-3.4.2/lib/sprockets/rails/asset_url_processor.rb:1
 module Sprockets
   extend ::Sprockets::Utils
@@ -1618,8 +1616,6 @@ module Sprockets
   extend ::Sprockets::Paths
 end
 
-# Deprecated
-#
 # source://sprockets-3.7.2/lib/sprockets/legacy.rb:18
 Sprockets::Index = Sprockets::CachedEnvironment
 

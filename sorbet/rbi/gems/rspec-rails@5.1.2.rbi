@@ -128,6 +128,12 @@ module RSpec
     # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
     def fdescribe(*args, &example_group_block); end
 
+    # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
+    def feature(*args, &example_group_block); end
+
+    # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
+    def ffeature(*args, &example_group_block); end
+
     # Used to ensure examples get reloaded and user configuration gets reset to
     # defaults between multiple runs in the same process.
     #
@@ -166,6 +172,9 @@ module RSpec
 
     # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
     def xdescribe(*args, &example_group_block); end
+
+    # source://rspec-core-3.11.0/lib/rspec/core/dsl.rb:42
+    def xfeature(*args, &example_group_block); end
   end
 end
 
@@ -177,7 +186,339 @@ RSpec::MODULES_TO_AUTOLOAD = T.let(T.unsafe(nil), Hash)
 # Namespace for rspec-rails code.
 #
 # source://rspec-rails-5.1.2/lib/rspec/rails/feature_check.rb:2
-module RSpec::Rails; end
+module RSpec::Rails
+  class << self
+    # Sets up the different example group modules for the different spec types
+    #
+    # @api private
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/configuration.rb:47
+    def add_test_type_configurations(config); end
+
+    # @private
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/configuration.rb:60
+    def initialize_configuration(config); end
+
+    private
+
+    # @private
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:9
+    def disable_testunit_autorun; end
+  end
+end
+
+# Fake class to document RSpec ActiveRecord configuration options. In practice,
+# these are dynamically added to the normal RSpec configuration object.
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/active_record.rb:5
+class RSpec::Rails::ActiveRecordConfiguration
+  class << self
+    # @private
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/active_record.rb:7
+    def initialize_activerecord_configuration(config); end
+  end
+end
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:33
+class RSpec::Rails::AssertionDelegator < ::Module
+  # @return [AssertionDelegator] a new instance of AssertionDelegator
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:34
+  def initialize(*assertion_modules); end
+end
+
+# Constant aliased to either Minitest or TestUnit, depending on what is
+# loaded.
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:30
+RSpec::Rails::Assertions = Minitest::Assertions
+
+# Container module for channel spec functionality.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/channel_example_group.rb:8
+module RSpec::Rails::ChannelExampleGroup; end
+
+# Class-level DSL for channel specs.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/channel_example_group.rb:10
+module RSpec::Rails::ChannelExampleGroup::ClassMethods; end
+
+# Fake class to document RSpec Rails configuration options. In practice,
+# these are dynamically added to the normal RSpec configuration object.
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/configuration.rb:6
+class RSpec::Rails::Configuration; end
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:4
+module RSpec::Rails::ControllerAssertionDelegator
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:54
+  def assert_generates(*args, &block); end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:54
+  def assert_recognizes(*args, &block); end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:54
+  def assert_routing(*args, &block); end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:46
+  def assertion_instance; end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:42
+  def build_assertion_instance; end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:54
+  def with_routing(*args, &block); end
+end
+
+# Container module for controller spec functionality.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:10
+module RSpec::Rails::ControllerExampleGroup
+  include ::RSpec::Rails::Matchers::RedirectTo
+  include ::RSpec::Rails::Matchers::RenderTemplate
+  include ::RSpec::Rails::Matchers::RoutingMatchers
+  include ::RSpec::Rails::ControllerAssertionDelegator
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+  include ::ActiveSupport::Testing::ConstantLookup
+  include ::Rails::Dom::Testing::Assertions
+  include ::ActionController::TemplateAssertions
+  include ::ActionDispatch::Assertions
+  include ::ActionController::TestCase::Behavior
+  include ::RSpec::Rails::ViewRendering
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+  mixes_in_class_methods ::ActiveSupport::Testing::ConstantLookup::ClassMethods
+  mixes_in_class_methods ::ActionController::TestCase::Behavior::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::ViewRendering::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::ControllerExampleGroup::ClassMethods
+
+  # Extends the controller with a module that overrides
+  # `rescue_with_handler` to raise the exception passed to it. Use this to
+  # specify that an action _should_ raise an exception given appropriate
+  # conditions.
+  #
+  # @api public
+  # @example
+  #   describe ProfilesController do
+  #   it "raises a 403 when a non-admin user tries to view another user's profile" do
+  #   profile = create_profile
+  #   login_as profile.user
+  #
+  #   expect do
+  #   bypass_rescue
+  #   get :show, id: profile.id + 1
+  #   end.to raise_error(/403 Forbidden/)
+  #   end
+  #   end
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:166
+  def bypass_rescue; end
+
+  # Returns the controller object instance under test.
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:128
+  def controller; end
+
+  # If method is a named_route, delegates to the RouteSet associated with
+  # this controller.
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:172
+  def method_missing(method, *args, &block); end
+
+  # Returns the Rails routes used for the spec.
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:132
+  def routes; end
+
+  # RSpec Rails uses this to make Rails routes easily available to specs.
+  #
+  # @api public
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:137
+  def routes=(routes); end
+
+  private
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:201
+  def route_available?(method); end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:206
+  def route_defined?(routes, method); end
+
+  module GeneratedClassMethods
+    def _controller_class; end
+    def _controller_class=(value); end
+    def _controller_class?; end
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def _controller_class; end
+    def _controller_class=(value); end
+    def _controller_class?; end
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:143
+module RSpec::Rails::ControllerExampleGroup::BypassRescue
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:144
+  def rescue_with_handler(exception); end
+end
+
+# Class-level DSL for controller specs.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:21
+module RSpec::Rails::ControllerExampleGroup::ClassMethods
+  # Supports a simple DSL for specifying behavior of ApplicationController.
+  # Creates an anonymous subclass of ApplicationController and evals the
+  # `body` in that context. Also sets up implicit routes for this
+  # controller, that are separate from those defined in "config/routes.rb".
+  #
+  # If you would like to spec a subclass of ApplicationController, call
+  # controller like so:
+  #
+  #     controller(ApplicationControllerSubclass) do
+  #       # ....
+  #     end
+  #
+  # @api public
+  # @example
+  #   describe ApplicationController do
+  #   controller do
+  #   def index
+  #   raise ApplicationController::AccessDenied
+  #   end
+  #   end
+  #
+  #   describe "handling AccessDenied exceptions" do
+  #   it "redirects to the /401.html page" do
+  #   get :index
+  #   response.should redirect_to("/401.html")
+  #   end
+  #   end
+  #   end
+  # @note Due to Ruby 1.8 scoping rules in anonymous subclasses, constants
+  #   defined in `ApplicationController` must be fully qualified (e.g.
+  #   `ApplicationController::AccessDenied`) in the block passed to the
+  #   `controller` method. Any instance methods, filters, etc, that are
+  #   defined in `ApplicationController`, however, are accessible from
+  #   within the block.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:61
+  def controller(base_class = T.unsafe(nil), &body); end
+
+  # @api public
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:23
+  def controller_class; end
+
+  # Specifies the routeset that will be used for the example group. This
+  # is most useful when testing Rails engines.
+  #
+  # @api public
+  # @example
+  #   describe MyEngine::PostsController do
+  #   routes { MyEngine::Engine.routes }
+  #
+  #   # ...
+  #   end
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/controller_example_group.rb:119
+  def routes; end
+end
+
+# Mappings used by `infer_spec_type_from_file_location!`.
+#
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/configuration.rb:28
+RSpec::Rails::DIRECTORY_MAPPINGS = T.let(T.unsafe(nil), Hash)
 
 # @private
 #
@@ -266,6 +607,2667 @@ module RSpec::Rails::FeatureCheck
   end
 end
 
+# Container module for routing spec functionality.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/feature_example_group.rb:5
+module RSpec::Rails::FeatureExampleGroup
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+  include ::ActionDispatch::Routing::UrlFor
+  include ::ActionDispatch::Routing::RouteSet::MountedHelpers
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+
+  # Shim to check for presence of Capybara. Will delegate if present, raise
+  # if not. We assume here that in most cases `visit` will be the first
+  # Capybara method called in a spec.
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/feature_example_group.rb:27
+  def visit(*_arg0); end
+
+  module GeneratedClassMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def default_url_options; end
+    def default_url_options=(value); end
+    def default_url_options?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def default_url_options; end
+    def default_url_options=(value); end
+    def default_url_options?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# Default host to be used in Rails route helpers if none is specified.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/feature_example_group.rb:10
+RSpec::Rails::FeatureExampleGroup::DEFAULT_HOST = T.let(T.unsafe(nil), String)
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/file_fixture_support.rb:6
+module RSpec::Rails::FileFixtureSupport
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::ActiveSupport::Testing::FileFixtures
+
+  mixes_in_class_methods GeneratedClassMethods
+
+  module GeneratedClassMethods
+    def file_fixture_path; end
+    def file_fixture_path=(value); end
+    def file_fixture_path?; end
+  end
+
+  module GeneratedInstanceMethods
+    def file_fixture_path; end
+    def file_fixture_path?; end
+  end
+end
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/fixture_file_upload_support.rb:4
+module RSpec::Rails::FixtureFileUploadSupport
+  # source://rspec-rails-5.1.2/lib/rspec/rails/fixture_file_upload_support.rb:5
+  def fixture_file_upload(*args, &block); end
+
+  private
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/fixture_file_upload_support.rb:25
+  def rails_fixture_file_wrapper; end
+end
+
+# source://rspec-rails-5.1.2/lib/rspec/rails/fixture_file_upload_support.rb:38
+class RSpec::Rails::FixtureFileUploadSupport::RailsFixtureFileWrapper
+  include ::ActionDispatch::TestProcess::FixtureFile
+  include ::ActionDispatch::TestProcess
+
+  class << self
+    # Returns the value of attribute fixture_path.
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/fixture_file_upload_support.rb:46
+    def fixture_path; end
+
+    # Sets the attribute fixture_path
+    #
+    # @param value the value to set the attribute fixture_path to.
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/fixture_file_upload_support.rb:46
+    def fixture_path=(_arg0); end
+
+    # Get instance of wrapper
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/fixture_file_upload_support.rb:49
+    def instance; end
+  end
+end
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/fixture_support.rb:4
+module RSpec::Rails::FixtureSupport
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+
+  # Monkey patched to avoid collisions with 'let(:name)' in Rails 6.1 and after
+  # and let(:method_name) before Rails 6.1.
+  #
+  # @private prevent ActiveSupport::TestFixtures to start a DB transaction.
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/fixture_support.rb:15
+  def run_in_transaction?; end
+
+  module GeneratedClassMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# source://rspec-rails-5.1.2/lib/rspec/rails/fixture_support.rb:32
+module RSpec::Rails::FixtureSupport::Fixtures
+  extend ::ActiveSupport::Concern
+
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+end
+
+# source://rspec-rails-5.1.2/lib/rspec/rails/fixture_support.rb:0
+module RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+  # source://rspec-rails-5.1.2/lib/rspec/rails/fixture_support.rb:36
+  def fixtures(*args); end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/fixture_support.rb:46
+  def proxy_method_warning_if_called_in_before_context_scope(method_name); end
+end
+
+# Container module for helper specs.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/helper_example_group.rb:7
+module RSpec::Rails::HelperExampleGroup
+  include ::RSpec::Rails::ViewAssigns
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+  include ::Rails::Dom::Testing::Assertions
+  include ::ActionDispatch::Assertions
+  include ::AbstractController::Helpers
+  include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::AssetTagHelper
+  include ::ActionView::Helpers::UrlHelper
+  include ::ActionView::Helpers::SanitizeHelper
+  include ::ActionView::Helpers::TextHelper
+  include ::ActionView::Helpers::FormTagHelper
+  include ::ActionView::Helpers::FormHelper
+  include ::ActionView::Helpers::TranslationHelper
+  include ::ActionView::Helpers
+  include ::ActiveSupport::Testing::ConstantLookup
+  include ::ActionView::TestCase::Behavior
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+  mixes_in_class_methods ::AbstractController::Helpers::ClassMethods
+  mixes_in_class_methods ::ActionView::Helpers::UrlHelper::ClassMethods
+  mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
+  mixes_in_class_methods ::ActiveSupport::Testing::ConstantLookup::ClassMethods
+  mixes_in_class_methods ::ActionView::TestCase::Behavior::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::HelperExampleGroup::ClassMethods
+
+  # Returns an instance of ActionView::Base with the helper being specified
+  # mixed in, along with any of the built-in rails helpers.
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/helper_example_group.rb:22
+  def helper; end
+
+  private
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/helper_example_group.rb:31
+  def _controller_path(example); end
+
+  module GeneratedClassMethods
+    def _helper_methods; end
+    def _helper_methods=(value); end
+    def _helper_methods?; end
+    def _helpers; end
+    def _helpers=(value); end
+    def _helpers?; end
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def _helper_methods; end
+    def _helper_methods=(value); end
+    def _helper_methods?; end
+    def _helpers; end
+    def _helpers=(value); end
+    def _helpers?; end
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/helper_example_group.rb:14
+module RSpec::Rails::HelperExampleGroup::ClassMethods
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/helper_example_group.rb:15
+  def determine_constant_from_test_name(_ignore); end
+end
+
+# Container module for job spec functionality.
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/job_example_group.rb:6
+module RSpec::Rails::JobExampleGroup
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+
+  module GeneratedClassMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# Container module for mailbox spec functionality.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/mailbox_example_group.rb:5
+module RSpec::Rails::MailboxExampleGroup
+  extend ::ActiveSupport::Concern
+
+  mixes_in_class_methods ::RSpec::Rails::MailboxExampleGroup::ClassMethods
+
+  # Passes if the inbound email was delivered
+  #
+  # @api public
+  # @example
+  #   inbound_email = process(args)
+  #   expect(inbound_email).to have_been_delivered
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/mailbox_example_group.rb:44
+  def have_been_delivered; end
+
+  # Passes if the inbound email bounced during processing
+  #
+  # @api public
+  # @example
+  #   inbound_email = process(args)
+  #   expect(inbound_email).to have_bounced
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/mailbox_example_group.rb:54
+  def have_bounced; end
+
+  # Passes if the inbound email failed to process
+  #
+  # @api public
+  # @example
+  #   inbound_email = process(args)
+  #   expect(inbound_email).to have_failed
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/mailbox_example_group.rb:64
+  def have_failed; end
+
+  # Process an inbound email message directly, bypassing routing.
+  #
+  # @api public
+  # @param message [Hash, Mail::Message] a mail message or hash of
+  #   attributes used to build one
+  # @return [ActionMaibox::InboundMessage]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/mailbox_example_group.rb:73
+  def process(message); end
+
+  class << self
+    # @api public
+    # @private
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/example/mailbox_example_group.rb:22
+    def create_inbound_email(_arg); end
+  end
+end
+
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/mailbox_example_group.rb:0
+module RSpec::Rails::MailboxExampleGroup::ClassMethods
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/mailbox_example_group.rb:29
+  def mailbox_class; end
+end
+
+# Container module for mailer spec functionality.
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/mailer_example_group.rb:6
+module RSpec::Rails::MailerExampleGroup
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+  include ::ActiveSupport::Testing::ConstantLookup
+  include ::ActionMailer::TestCase::Behavior
+  include ::ActionDispatch::Routing::UrlFor
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+  mixes_in_class_methods ::ActiveSupport::Testing::ConstantLookup::ClassMethods
+  mixes_in_class_methods ::ActionMailer::TestCase::Behavior::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MailerExampleGroup::ClassMethods
+
+  module GeneratedClassMethods
+    def _mailer_class; end
+    def _mailer_class=(value); end
+    def _mailer_class?; end
+    def config; end
+    def config=(value); end
+    def config?; end
+    def default_url_options; end
+    def default_url_options=(value); end
+    def default_url_options?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def _mailer_class; end
+    def _mailer_class=(value); end
+    def _mailer_class?; end
+    def config; end
+    def config=(value); end
+    def config?; end
+    def default_url_options; end
+    def default_url_options=(value); end
+    def default_url_options?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# Class-level DSL for mailer specs.
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/mailer_example_group.rb:29
+module RSpec::Rails::MailerExampleGroup::ClassMethods
+  # Alias for `described_class`.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/mailer_example_group.rb:31
+  def mailer_class; end
+end
+
+# Container module for Rails specific matchers.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers.rb:9
+module RSpec::Rails::Matchers
+  # Passes if actual is an instance of `model_class` and returns `true` for
+  # `new_record?`. Typically used to specify instance variables assigned to
+  # views by controller actions
+  #
+  # Use the `with` method to specify the specific attributes to match on the
+  # new record.
+  #
+  # @api public
+  # @example
+  #   get :new
+  #   assigns(:thing).should be_a_new(Thing)
+  #
+  #   post :create, :thing => { :name => "Illegal Value" }
+  #   assigns(:thing).should be_a_new(Thing).with(:name => nil)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_a_new.rb:78
+  def be_a_new(model_class); end
+
+  # Passes if actual returns `true` for `new_record?`.
+  #
+  # @api public
+  # @example
+  #   get :new
+  #   expect(assigns(:thing)).to be_new_record
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_new_record.rb:25
+  def be_new_record; end
+
+  # Passes if the given model instance's `valid?` method is true, meaning
+  # all of the `ActiveModel::Validations` passed and no errors exist. If a
+  # message is not given, a default message is shown listing each error.
+  #
+  # @api public
+  # @example
+  #   thing = Thing.new
+  #   expect(thing).to be_valid
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_valid.rb:44
+  def be_valid(*args); end
+
+  # Passes if an email has been enqueued inside block.
+  # May chain with to specify expected arguments.
+  # May chain at_least, at_most or exactly to specify a number of times.
+  # May chain at to specify a send time.
+  # May chain on_queue to specify a queue.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome)
+  #
+  #   # Using alias
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to enqueue_mail(MyMailer, :welcome)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).with(user)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at_least(:once)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at_most(:twice)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later(wait_until: Date.tomorrow.noon)
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at(Date.tomorrow.noon)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later(queue: :urgent_mail)
+  #   }.to have_enqueued_mail(MyMailer, :welcome).on_queue(:urgent_mail)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:217
+  def enqueue_email(mailer_class = T.unsafe(nil), mail_method_name = T.unsafe(nil)); end
+
+  # Passes if a job has been enqueued inside block. May chain at_least, at_most or exactly to specify a number of times.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   HeavyLiftingJob.perform_later
+  #   }.to have_enqueued_job
+  #
+  #   # Using alias
+  #   expect {
+  #   HeavyLiftingJob.perform_later
+  #   }.to enqueue_job
+  #
+  #   expect {
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   }.to have_enqueued_job(HelloJob).exactly(:once)
+  #
+  #   expect {
+  #   3.times { HelloJob.perform_later }
+  #   }.to have_enqueued_job(HelloJob).at_least(2).times
+  #
+  #   expect {
+  #   HelloJob.perform_later
+  #   }.to have_enqueued_job(HelloJob).at_most(:twice)
+  #
+  #   expect {
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   }.to have_enqueued_job(HelloJob).and have_enqueued_job(HeavyLiftingJob)
+  #
+  #   expect {
+  #   HelloJob.set(wait_until: Date.tomorrow.noon, queue: "low").perform_later(42)
+  #   }.to have_enqueued_job.with(42).on_queue("low").at(Date.tomorrow.noon)
+  #
+  #   expect {
+  #   HelloJob.set(queue: "low").perform_later(42)
+  #   }.to have_enqueued_job.with(42).on_queue("low").at(:no_wait)
+  #
+  #   expect {
+  #   HelloJob.perform_later('rspec_rails', 'rails', 42)
+  #   }.to have_enqueued_job.with { |from, to, times|
+  #   # Perform more complex argument matching using dynamic arguments
+  #   expect(from).to include "_#{to}"
+  #   }
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:342
+  def enqueue_job(job = T.unsafe(nil)); end
+
+  # Passes if an email has been enqueued inside block.
+  # May chain with to specify expected arguments.
+  # May chain at_least, at_most or exactly to specify a number of times.
+  # May chain at to specify a send time.
+  # May chain on_queue to specify a queue.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome)
+  #
+  #   # Using alias
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to enqueue_mail(MyMailer, :welcome)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).with(user)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at_least(:once)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at_most(:twice)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later(wait_until: Date.tomorrow.noon)
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at(Date.tomorrow.noon)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later(queue: :urgent_mail)
+  #   }.to have_enqueued_mail(MyMailer, :welcome).on_queue(:urgent_mail)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:217
+  def enqueue_mail(mailer_class = T.unsafe(nil), mail_method_name = T.unsafe(nil)); end
+
+  # Passes if a job has been enqueued. May chain at_least, at_most or exactly to specify a number of times.
+  #
+  # @api public
+  # @example
+  #   before { ActiveJob::Base.queue_adapter.enqueued_jobs.clear }
+  #
+  #   HeavyLiftingJob.perform_later
+  #   expect(HeavyLiftingJob).to have_been_enqueued
+  #
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   expect(HeavyLiftingJob).to have_been_enqueued.exactly(:once)
+  #
+  #   3.times { HelloJob.perform_later }
+  #   expect(HelloJob).to have_been_enqueued.at_least(2).times
+  #
+  #   HelloJob.perform_later
+  #   expect(HelloJob).to enqueue_job(HelloJob).at_most(:twice)
+  #
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   expect(HelloJob).to have_been_enqueued
+  #   expect(HeavyLiftingJob).to have_been_enqueued
+  #
+  #   HelloJob.set(wait_until: Date.tomorrow.noon, queue: "low").perform_later(42)
+  #   expect(HelloJob).to have_been_enqueued.with(42).on_queue("low").at(Date.tomorrow.noon)
+  #
+  #   HelloJob.set(queue: "low").perform_later(42)
+  #   expect(HelloJob).to have_been_enqueued.with(42).on_queue("low").at(:no_wait)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:377
+  def have_been_enqueued; end
+
+  # Passes if a job has been performed. May chain at_least, at_most or exactly to specify a number of times.
+  #
+  # @api public
+  # @example
+  #   before do
+  #   ActiveJob::Base.queue_adapter.performed_jobs.clear
+  #   ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
+  #   ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = true
+  #   end
+  #
+  #   HeavyLiftingJob.perform_later
+  #   expect(HeavyLiftingJob).to have_been_performed
+  #
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   expect(HeavyLiftingJob).to have_been_performed.exactly(:once)
+  #
+  #   3.times { HelloJob.perform_later }
+  #   expect(HelloJob).to have_been_performed.at_least(2).times
+  #
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   expect(HelloJob).to have_been_performed
+  #   expect(HeavyLiftingJob).to have_been_performed
+  #
+  #   HelloJob.set(wait_until: Date.tomorrow.noon, queue: "low").perform_later(42)
+  #   expect(HelloJob).to have_been_performed.with(42).on_queue("low").at(Date.tomorrow.noon)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:450
+  def have_been_performed; end
+
+  # Passes if an email has been enqueued inside block.
+  # May chain with to specify expected arguments.
+  # May chain at_least, at_most or exactly to specify a number of times.
+  # May chain at to specify a send time.
+  # May chain on_queue to specify a queue.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome)
+  #
+  #   # Using alias
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to enqueue_mail(MyMailer, :welcome)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).with(user)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at_least(:once)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at_most(:twice)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later(wait_until: Date.tomorrow.noon)
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at(Date.tomorrow.noon)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later(queue: :urgent_mail)
+  #   }.to have_enqueued_mail(MyMailer, :welcome).on_queue(:urgent_mail)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:217
+  def have_enqueued_email(mailer_class = T.unsafe(nil), mail_method_name = T.unsafe(nil)); end
+
+  # Passes if a job has been enqueued inside block. May chain at_least, at_most or exactly to specify a number of times.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   HeavyLiftingJob.perform_later
+  #   }.to have_enqueued_job
+  #
+  #   # Using alias
+  #   expect {
+  #   HeavyLiftingJob.perform_later
+  #   }.to enqueue_job
+  #
+  #   expect {
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   }.to have_enqueued_job(HelloJob).exactly(:once)
+  #
+  #   expect {
+  #   3.times { HelloJob.perform_later }
+  #   }.to have_enqueued_job(HelloJob).at_least(2).times
+  #
+  #   expect {
+  #   HelloJob.perform_later
+  #   }.to have_enqueued_job(HelloJob).at_most(:twice)
+  #
+  #   expect {
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   }.to have_enqueued_job(HelloJob).and have_enqueued_job(HeavyLiftingJob)
+  #
+  #   expect {
+  #   HelloJob.set(wait_until: Date.tomorrow.noon, queue: "low").perform_later(42)
+  #   }.to have_enqueued_job.with(42).on_queue("low").at(Date.tomorrow.noon)
+  #
+  #   expect {
+  #   HelloJob.set(queue: "low").perform_later(42)
+  #   }.to have_enqueued_job.with(42).on_queue("low").at(:no_wait)
+  #
+  #   expect {
+  #   HelloJob.perform_later('rspec_rails', 'rails', 42)
+  #   }.to have_enqueued_job.with { |from, to, times|
+  #   # Perform more complex argument matching using dynamic arguments
+  #   expect(from).to include "_#{to}"
+  #   }
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:342
+  def have_enqueued_job(job = T.unsafe(nil)); end
+
+  # Passes if an email has been enqueued inside block.
+  # May chain with to specify expected arguments.
+  # May chain at_least, at_most or exactly to specify a number of times.
+  # May chain at to specify a send time.
+  # May chain on_queue to specify a queue.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome)
+  #
+  #   # Using alias
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to enqueue_mail(MyMailer, :welcome)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).with(user)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at_least(:once)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at_most(:twice)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later(wait_until: Date.tomorrow.noon)
+  #   }.to have_enqueued_mail(MyMailer, :welcome).at(Date.tomorrow.noon)
+  #
+  #   expect {
+  #   MyMailer.welcome(user).deliver_later(queue: :urgent_mail)
+  #   }.to have_enqueued_mail(MyMailer, :welcome).on_queue(:urgent_mail)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:217
+  def have_enqueued_mail(mailer_class = T.unsafe(nil), mail_method_name = T.unsafe(nil)); end
+
+  # Passes if `response` has a matching HTTP status code.
+  #
+  # The following symbolic status codes are allowed:
+  #
+  # - `Rack::Utils::SYMBOL_TO_STATUS_CODE`
+  # - One of the defined `ActionDispatch::TestResponse` aliases:
+  #   - `:error`
+  #   - `:missing`
+  #   - `:redirect`
+  #   - `:success`
+  #
+  # @api public
+  # @example Accepts numeric and symbol statuses
+  #   expect(response).to have_http_status(404)
+  #   expect(response).to have_http_status(:created)
+  #   expect(response).to have_http_status(:success)
+  #   expect(response).to have_http_status(:error)
+  #   expect(response).to have_http_status(:missing)
+  #   expect(response).to have_http_status(:redirect)
+  # @example Works with standard `response` objects and Capybara's `page`
+  #   expect(response).to have_http_status(404)
+  #   expect(page).to     have_http_status(:created)
+  # @raise [ArgumentError]
+  # @see https://github.com/rails/rails/blob/main/actionpack/lib/action_dispatch/testing/test_response.rb `ActionDispatch::TestResponse`
+  # @see https://github.com/rack/rack/blob/master/lib/rack/utils.rb `Rack::Utils::SYMBOL_TO_STATUS_CODE`
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:378
+  def have_http_status(target); end
+
+  # Passes if a job has been performed inside block. May chain at_least, at_most or exactly to specify a number of times.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   perform_jobs { HeavyLiftingJob.perform_later }
+  #   }.to have_performed_job
+  #
+  #   expect {
+  #   perform_jobs {
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   }
+  #   }.to have_performed_job(HelloJob).exactly(:once)
+  #
+  #   expect {
+  #   perform_jobs { 3.times { HelloJob.perform_later } }
+  #   }.to have_performed_job(HelloJob).at_least(2).times
+  #
+  #   expect {
+  #   perform_jobs { HelloJob.perform_later }
+  #   }.to have_performed_job(HelloJob).at_most(:twice)
+  #
+  #   expect {
+  #   perform_jobs {
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   }
+  #   }.to have_performed_job(HelloJob).and have_performed_job(HeavyLiftingJob)
+  #
+  #   expect {
+  #   perform_jobs {
+  #   HelloJob.set(wait_until: Date.tomorrow.noon, queue: "low").perform_later(42)
+  #   }
+  #   }.to have_performed_job.with(42).on_queue("low").at(Date.tomorrow.noon)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:417
+  def have_performed_job(job = T.unsafe(nil)); end
+
+  # Passes if a job has been performed inside block. May chain at_least, at_most or exactly to specify a number of times.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   perform_jobs { HeavyLiftingJob.perform_later }
+  #   }.to have_performed_job
+  #
+  #   expect {
+  #   perform_jobs {
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   }
+  #   }.to have_performed_job(HelloJob).exactly(:once)
+  #
+  #   expect {
+  #   perform_jobs { 3.times { HelloJob.perform_later } }
+  #   }.to have_performed_job(HelloJob).at_least(2).times
+  #
+  #   expect {
+  #   perform_jobs { HelloJob.perform_later }
+  #   }.to have_performed_job(HelloJob).at_most(:twice)
+  #
+  #   expect {
+  #   perform_jobs {
+  #   HelloJob.perform_later
+  #   HeavyLiftingJob.perform_later
+  #   }
+  #   }.to have_performed_job(HelloJob).and have_performed_job(HeavyLiftingJob)
+  #
+  #   expect {
+  #   perform_jobs {
+  #   HelloJob.set(wait_until: Date.tomorrow.noon, queue: "low").perform_later(42)
+  #   }
+  #   }.to have_performed_job.with(42).on_queue("low").at(Date.tomorrow.noon)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:417
+  def perform_job(job = T.unsafe(nil)); end
+
+  private
+
+  # @api public
+  # @private
+  # @raise [StandardError]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:458
+  def check_active_job_adapter; end
+end
+
+# Namespace for various implementations of ActionCable features
+#
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/action_cable/have_streams.rb:4
+module RSpec::Rails::Matchers::ActionCable; end
+
+# Provides the implementation for `have_stream`, `have_stream_for`, and `have_stream_from`.
+# Not intended to be instantiated directly.
+#
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/action_cable/have_streams.rb:10
+class RSpec::Rails::Matchers::ActionCable::HaveStream < ::RSpec::Matchers::BuiltIn::BaseMatcher
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/action_cable/have_streams.rb:31
+  def does_not_match?(subscription); end
+
+  # @api private
+  # @return [String]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/action_cable/have_streams.rb:11
+  def failure_message; end
+
+  # @api private
+  # @return [String]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/action_cable/have_streams.rb:17
+  def failure_message_when_negated; end
+
+  # @api private
+  # @raise [ArgumentError]
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/action_cable/have_streams.rb:23
+  def matches?(subscription); end
+
+  private
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/action_cable/have_streams.rb:47
+  def base_message; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/action_cable/have_streams.rb:37
+  def match(subscription); end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/action_cable/have_streams.rb:51
+  def no_expected?; end
+end
+
+# Namespace for various implementations of ActiveJob features
+#
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:10
+module RSpec::Rails::Matchers::ActiveJob; end
+
+# @api private
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:13
+class RSpec::Rails::Matchers::ActiveJob::Base < ::RSpec::Rails::Matchers::BaseMatcher
+  # @api private
+  # @return [Base] a new instance of Base
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:14
+  def initialize; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:33
+  def at(time_or_date); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:47
+  def at_least(count); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:52
+  def at_most(count); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:42
+  def exactly(count); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:73
+  def failure_message; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:84
+  def failure_message_when_negated; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:88
+  def message_expectation_modifier; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:28
+  def on_queue(queue); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:61
+  def once; end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:96
+  def supports_block_expectations?; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:69
+  def thrice; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:57
+  def times; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:65
+  def twice; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:22
+  def with(*args, &block); end
+
+  private
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:145
+  def arguments_match?(job); end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:161
+  def at_match?(job); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:130
+  def base_job_message(job); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:121
+  def base_message; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:102
+  def check(jobs); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:170
+  def check_for_inprecise_value(scheduled_at); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:208
+  def deserialize_arguments(job); end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:141
+  def job_match?(job); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:214
+  def queue_adapter; end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:155
+  def queue_match?(job); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:201
+  def serialize_and_deserialize_arguments(args); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:191
+  def set_expected_number(relativity, count); end
+end
+
+# @api private
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:248
+class RSpec::Rails::Matchers::ActiveJob::HaveBeenEnqueued < ::RSpec::Rails::Matchers::ActiveJob::Base
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:257
+  def does_not_match?(proc); end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:252
+  def matches?(job); end
+end
+
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:249
+RSpec::Rails::Matchers::ActiveJob::HaveBeenEnqueued::FAILURE_MESSAGE_EXPECTATION_ACTION = T.let(T.unsafe(nil), String)
+
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:250
+RSpec::Rails::Matchers::ActiveJob::HaveBeenEnqueued::MESSAGE_EXPECTATION_ACTION = T.let(T.unsafe(nil), String)
+
+# @api private
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:286
+class RSpec::Rails::Matchers::ActiveJob::HaveBeenPerformed < ::RSpec::Rails::Matchers::ActiveJob::Base
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:290
+  def matches?(job); end
+end
+
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:287
+RSpec::Rails::Matchers::ActiveJob::HaveBeenPerformed::FAILURE_MESSAGE_EXPECTATION_ACTION = T.let(T.unsafe(nil), String)
+
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:288
+RSpec::Rails::Matchers::ActiveJob::HaveBeenPerformed::MESSAGE_EXPECTATION_ACTION = T.let(T.unsafe(nil), String)
+
+# @api private
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:221
+class RSpec::Rails::Matchers::ActiveJob::HaveEnqueuedJob < ::RSpec::Rails::Matchers::ActiveJob::Base
+  # @api private
+  # @return [HaveEnqueuedJob] a new instance of HaveEnqueuedJob
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:225
+  def initialize(job); end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:240
+  def does_not_match?(proc); end
+
+  # @api private
+  # @raise [ArgumentError]
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:230
+  def matches?(proc); end
+end
+
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:222
+RSpec::Rails::Matchers::ActiveJob::HaveEnqueuedJob::FAILURE_MESSAGE_EXPECTATION_ACTION = T.let(T.unsafe(nil), String)
+
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:223
+RSpec::Rails::Matchers::ActiveJob::HaveEnqueuedJob::MESSAGE_EXPECTATION_ACTION = T.let(T.unsafe(nil), String)
+
+# @api private
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:265
+class RSpec::Rails::Matchers::ActiveJob::HavePerformedJob < ::RSpec::Rails::Matchers::ActiveJob::Base
+  # @api private
+  # @return [HavePerformedJob] a new instance of HavePerformedJob
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:269
+  def initialize(job); end
+
+  # @api private
+  # @raise [ArgumentError]
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:274
+  def matches?(proc); end
+end
+
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:266
+RSpec::Rails::Matchers::ActiveJob::HavePerformedJob::FAILURE_MESSAGE_EXPECTATION_ACTION = T.let(T.unsafe(nil), String)
+
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/active_job.rb:267
+RSpec::Rails::Matchers::ActiveJob::HavePerformedJob::MESSAGE_EXPECTATION_ACTION = T.let(T.unsafe(nil), String)
+
+# Base class to build matchers. Should not be instantiated directly.
+#
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:7
+class RSpec::Rails::Matchers::BaseMatcher
+  include ::RSpec::Matchers::Composable
+  include ::RSpec::Rails::Matchers::BaseMatcher::HashFormatting
+  include ::RSpec::Rails::Matchers::BaseMatcher::DefaultFailureMessages
+
+  # @api private
+  # @return [BaseMatcher] a new instance of BaseMatcher
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:21
+  def initialize(expected = T.unsafe(nil)); end
+
+  # @api private
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:16
+  def actual; end
+
+  # @api private
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:85
+  def actual_formatted; end
+
+  # Generates a description using {RSpec::Matchers::EnglishPhrasing}.
+  #
+  # @api private
+  # @return [String]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:53
+  def description; end
+
+  # Matchers are not diffable by default. Override this to make your
+  # subclass diffable.
+  #
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:62
+  def diffable?; end
+
+  # @api private
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:16
+  def expected; end
+
+  # @api private
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:80
+  def expected_formatted; end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:75
+  def expects_call_stack_jump?; end
+
+  # Used to wrap a block of code that will indicate failure by
+  # raising one of the named exceptions.
+  #
+  # This is used by rspec-rails for some of its matchers that
+  # wrap rails' assertions.
+  #
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:40
+  def match_unless_raises(*exceptions); end
+
+  # @api private
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:95
+  def matcher_name; end
+
+  # @api private
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:19
+  def matcher_name=(_arg0); end
+
+  # Indicates if the match is successful. Delegates to `match`, which
+  # should be defined on a subclass. Takes care of consistently
+  # initializing the `actual` attribute.
+  #
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:29
+  def matches?(actual); end
+
+  # @api private
+  def present_ivars; end
+
+  # @api private
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:16
+  def rescued_exception; end
+
+  # Most matchers are value matchers (i.e. meant to work with `expect(value)`)
+  # rather than block matchers (i.e. meant to work with `expect { }`), so
+  # this defaults to false. Block matchers must override this to return true.
+  #
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:70
+  def supports_block_expectations?; end
+
+  private
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:117
+  def assert_ivars(*expected_ivars); end
+
+  class << self
+    # @api private
+    # @private
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:90
+    def matcher_name; end
+
+    private
+
+    # Borrowed from ActiveSupport.
+    #
+    # @api private
+    # @private
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:105
+    def underscore(camel_cased_word); end
+  end
+end
+
+# Provides default implementations of failure messages, based on the `description`.
+#
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:147
+module RSpec::Rails::Matchers::BaseMatcher::DefaultFailureMessages
+  # Provides a good generic failure message. Based on `description`.
+  # When subclassing, if you are not satisfied with this failure message
+  # you often only need to override `description`.
+  #
+  # @api private
+  # @return [String]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:153
+  def failure_message; end
+
+  # Provides a good generic negative failure message. Based on `description`.
+  # When subclassing, if you are not satisfied with this failure message
+  # you often only need to override `description`.
+  #
+  # @api private
+  # @return [String]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:162
+  def failure_message_when_negated; end
+
+  class << self
+    # @api private
+    # @private
+    # @return [Boolean]
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:167
+    def has_default_failure_messages?(matcher); end
+  end
+end
+
+# @api private
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:127
+module RSpec::Rails::Matchers::BaseMatcher::HashFormatting
+  private
+
+  # `{ :a => 5, :b => 2 }.inspect` produces:
+  #
+  #     {:a=>5, :b=>2}
+  #
+  # ...but it looks much better as:
+  #
+  #     {:a => 5, :b => 2}
+  #
+  # This is idempotent and safe to run on a string multiple times.
+  #
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:137
+  def improve_hash_formatting(inspect_string); end
+
+  class << self
+    # `{ :a => 5, :b => 2 }.inspect` produces:
+    #
+    #     {:a=>5, :b=>2}
+    #
+    # ...but it looks much better as:
+    #
+    #     {:a => 5, :b => 2}
+    #
+    # This is idempotent and safe to run on a string multiple times.
+    #
+    # @api private
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:137
+    def improve_hash_formatting(inspect_string); end
+  end
+end
+
+# Used to detect when no arg is passed to `initialize`.
+# `nil` cannot be used because it's a valid value to pass.
+#
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/base_matcher.rb:13
+RSpec::Rails::Matchers::BaseMatcher::UNDEFINED = T.let(T.unsafe(nil), Object)
+
+# Matcher class for `be_a_new`. Should not be instantiated directly.
+#
+# @api private
+# @see RSpec::Rails::Matchers#be_a_new
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_a_new.rb:10
+class RSpec::Rails::Matchers::BeANew < ::RSpec::Rails::Matchers::BaseMatcher
+  # @api private
+  # @private
+  # @return [BeANew] a new instance of BeANew
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_a_new.rb:11
+  def initialize(expected); end
+
+  # @api private
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_a_new.rb:29
+  def failure_message; end
+
+  # @api private
+  # @private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_a_new.rb:16
+  def matches?(actual); end
+
+  # @api public
+  # @see RSpec::Rails::Matchers#be_a_new
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_a_new.rb:23
+  def with(expected_attributes); end
+
+  private
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_a_new.rb:47
+  def attributes; end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_a_new.rb:51
+  def attributes_match?(actual); end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_a_new.rb:57
+  def unmatched_attributes; end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_new_record.rb:5
+class RSpec::Rails::Matchers::BeANewRecord < ::RSpec::Rails::Matchers::BaseMatcher
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_new_record.rb:10
+  def failure_message; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_new_record.rb:14
+  def failure_message_when_negated; end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_new_record.rb:6
+  def matches?(actual); end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_valid.rb:5
+class RSpec::Rails::Matchers::BeValid < ::RSpec::Matchers::BuiltIn::Be
+  # @api public
+  # @return [BeValid] a new instance of BeValid
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_valid.rb:6
+  def initialize(*args); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_valid.rb:15
+  def failure_message; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_valid.rb:31
+  def failure_message_when_negated; end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/be_valid.rb:10
+  def matches?(actual); end
+end
+
+# Matcher class for `have_enqueued_mail`. Should not be instantiated directly.
+#
+# @api public
+# @private
+# @see RSpec::Rails::Matchers#have_enqueued_mail
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:15
+class RSpec::Rails::Matchers::HaveEnqueuedMail < ::RSpec::Rails::Matchers::ActiveJob::HaveEnqueuedJob
+  include ::RSpec::Mocks::ArgumentMatchers
+
+  # @api public
+  # @return [HaveEnqueuedMail] a new instance of HaveEnqueuedMail
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:20
+  def initialize(mailer_class, method_name); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:27
+  def description; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:43
+  def failure_message; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:49
+  def failure_message_when_negated; end
+
+  # @api public
+  # @raise [ArgumentError]
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:36
+  def matches?(block); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:31
+  def with(*args, &block); end
+
+  private
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:77
+  def arguments_match?(job); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:92
+  def base_mailer_args; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:55
+  def base_message; end
+
+  # @api public
+  # @raise [StandardError]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:100
+  def check_active_job_adapter; end
+
+  # Ruby 3.1 changed how params were serialized on Rails 6.1
+  # so we override the active job implementation and customise it here.
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:138
+  def deserialize_arguments(job); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:65
+  def expected_count_message; end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:73
+  def job_match?(job); end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:160
+  def legacy_mail?(job); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:122
+  def mail_job_message(job); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:69
+  def mailer_class_name; end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:164
+  def parameterized_mail?(job); end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:168
+  def unified_mail?(job); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:106
+  def unmatching_mail_jobs; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:112
+  def unmatching_mail_jobs_message; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:96
+  def yield_mail_args(block); end
+end
+
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_enqueued_mail.rb:16
+RSpec::Rails::Matchers::HaveEnqueuedMail::MAILER_JOB_METHOD = T.let(T.unsafe(nil), String)
+
+# Namespace for various implementations of `have_http_status`.
+#
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:13
+module RSpec::Rails::Matchers::HaveHttpStatus
+  # @api private
+  # @return [String, nil] a formatted failure message if
+  #   `@invalid_response` is present, `nil` otherwise
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:60
+  def invalid_response_type_message; end
+
+  private
+
+  # Conversion function to coerce the provided object into an
+  # `ActionDispatch::TestResponse`.
+  #
+  # @api private
+  # @param obj [Object] object to convert to a response
+  # @return [ActionDispatch::TestResponse]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:35
+  def as_test_response(obj); end
+
+  class << self
+    # Conversion function to coerce the provided object into an
+    # `ActionDispatch::TestResponse`.
+    #
+    # @api private
+    # @param obj [Object] object to convert to a response
+    # @return [ActionDispatch::TestResponse]
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:35
+    def as_test_response(obj); end
+
+    # Instantiates an instance of the proper matcher based on the provided
+    # `target`.
+    #
+    # @api private
+    # @param target [Object] expected http status or code
+    # @return response matcher instance
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:19
+    def matcher_for_status(target); end
+  end
+end
+
+# Provides an implementation for `have_http_status` matching against
+# `ActionDispatch::TestResponse` http status category queries.
+#
+# Not intended to be instantiated directly.
+#
+# @api private
+# @example
+#   expect(response).to have_http_status(:success)
+#   expect(response).to have_http_status(:error)
+#   expect(response).to have_http_status(:missing)
+#   expect(response).to have_http_status(:redirect)
+# @see RSpec::Rails::Matchers#have_http_status
+# @see https://github.com/rails/rails/blob/6-0-stable/actionpack/lib/action_dispatch/testing/test_response.rb `ActionDispatch::TestResponse`
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:241
+class RSpec::Rails::Matchers::HaveHttpStatus::GenericStatus < ::RSpec::Rails::Matchers::BaseMatcher
+  include ::RSpec::Rails::Matchers::HaveHttpStatus
+
+  # @api private
+  # @return [GenericStatus] a new instance of GenericStatus
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:255
+  def initialize(type); end
+
+  # @api private
+  # @return [String]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:277
+  def description; end
+
+  # @api private
+  # @return [String] explaining why the match failed
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:282
+  def failure_message; end
+
+  # @api private
+  # @return [String] explaining why the match failed
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:288
+  def failure_message_when_negated; end
+
+  # @api private
+  # @return [Boolean] `true` if Rack's associated numeric HTTP code matched
+  #   the `response` code or the named response status
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:267
+  def matches?(response); end
+
+  protected
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:301
+  def check_expected_status(test_response, expected); end
+
+  private
+
+  # @api private
+  # @return [String] formatting the associated code(s) for the various
+  #   status code "groups"
+  # @see https://github.com/rails/rails/blob/main/actionpack/lib/action_dispatch/testing/test_response.rb `ActionDispatch::TestResponse`
+  # @see https://github.com/rack/rack/blob/master/lib/rack/response.rb `Rack::Response`
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:318
+  def type_codes; end
+
+  # @api private
+  # @return [String] formating the expected status and associated code(s)
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:309
+  def type_message; end
+
+  class << self
+    # @api private
+    # @return [Array<Symbol>] of status codes which represent a HTTP status
+    #   code "group"
+    # @see https://github.com/rails/rails/blob/main/actionpack/lib/action_dispatch/testing/test_response.rb `ActionDispatch::TestResponse`
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:247
+    def valid_statuses; end
+  end
+end
+
+# @api private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:295
+RSpec::Rails::Matchers::HaveHttpStatus::GenericStatus::RESPONSE_METHODS = T.let(T.unsafe(nil), Hash)
+
+# Provides an implementation for `have_http_status` matching against
+# numeric http status codes.
+#
+# Not intended to be instantiated directly.
+#
+# @api private
+# @example
+#   expect(response).to have_http_status(404)
+# @see RSpec::Rails::Matchers#have_http_status
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:77
+class RSpec::Rails::Matchers::HaveHttpStatus::NumericCode < ::RSpec::Rails::Matchers::BaseMatcher
+  include ::RSpec::Rails::Matchers::HaveHttpStatus
+
+  # @api private
+  # @return [NumericCode] a new instance of NumericCode
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:80
+  def initialize(code); end
+
+  # @api private
+  # @return [String]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:98
+  def description; end
+
+  # @api private
+  # @return [String] explaining why the match failed
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:103
+  def failure_message; end
+
+  # @api private
+  # @return [String] explaining why the match failed
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:110
+  def failure_message_when_negated; end
+
+  # @api private
+  # @param response [Object] object providing an http code to match
+  # @return [Boolean] `true` if the numeric code matched the `response` code
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:88
+  def matches?(response); end
+end
+
+# Provides an implementation for `have_http_status` matching against
+# Rack symbol http status codes.
+#
+# Not intended to be instantiated directly.
+#
+# @api private
+# @example
+#   expect(response).to have_http_status(:created)
+# @see RSpec::Rails::Matchers#have_http_status
+# @see https://github.com/rack/rack/blob/master/lib/rack/utils.rb `Rack::Utils::SYMBOL_TO_STATUS_CODE`
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:128
+class RSpec::Rails::Matchers::HaveHttpStatus::SymbolicStatus < ::RSpec::Rails::Matchers::BaseMatcher
+  include ::RSpec::Rails::Matchers::HaveHttpStatus
+
+  # @api private
+  # @return [SymbolicStatus] a new instance of SymbolicStatus
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:131
+  def initialize(status); end
+
+  # @api private
+  # @return [String]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:151
+  def description; end
+
+  # @api private
+  # @return [String] explaining why the match failed
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:156
+  def failure_message; end
+
+  # @api private
+  # @return [String] explaining why the match failed
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:163
+  def failure_message_when_negated; end
+
+  # @api private
+  # @param response [Object] object providing an http code to match
+  # @return [Boolean] `true` if Rack's associated numeric HTTP code matched
+  #   the `response` code
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:141
+  def matches?(response); end
+
+  private
+
+  # @api private
+  # @return [Symbol] representing the actual http numeric code
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:176
+  def actual_status; end
+
+  # Reverse lookup of the Rack status code symbol based on the numeric
+  # http code
+  #
+  # @api private
+  # @param code [Fixnum] http status code to look up
+  # @return [Symbol] representing the http numeric code
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:187
+  def compute_status_from(code); end
+
+  # The initialized expected status symbol
+  #
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:170
+  def expected_status; end
+
+  # @api private
+  # @return [String] pretty format the actual response status
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:195
+  def pp_actual; end
+
+  # @api private
+  # @return [String] pretty format the expected status and associated code
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:200
+  def pp_expected; end
+
+  # @api private
+  # @return [String] pretty format the actual response status
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:205
+  def pp_status(status, code); end
+
+  # Sets `expected` to the numeric http code based on the Rack
+  # `expected_status` status
+  #
+  # @api private
+  # @raise [ArgumentError] if an associated code could not be found
+  # @see Rack::Utils::SYMBOL_TO_STATUS_CODE
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_http_status.rb:218
+  def set_expected_code!; end
+end
+
+# Matcher for redirects.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/redirect_to.rb:5
+module RSpec::Rails::Matchers::RedirectTo
+  # Delegates to `assert_redirected_to`.
+  #
+  # @api public
+  # @example
+  #   expect(response).to redirect_to(:action => "new")
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/redirect_to.rb:32
+  def redirect_to(target); end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/redirect_to.rb:7
+class RSpec::Rails::Matchers::RedirectTo::RedirectTo < ::RSpec::Rails::Matchers::BaseMatcher
+  # @api public
+  # @return [RedirectTo] a new instance of RedirectTo
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/redirect_to.rb:8
+  def initialize(scope, expected); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/redirect_to.rb:19
+  def failure_message; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/redirect_to.rb:23
+  def failure_message_when_negated; end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/redirect_to.rb:13
+  def matches?(_); end
+end
+
+# Matcher for template rendering.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_rendered.rb:5
+module RSpec::Rails::Matchers::RenderTemplate
+  # Delegates to `assert_template`.
+  #
+  # @api public
+  # @example
+  #   expect(response).to have_rendered("new")
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_rendered.rb:56
+  def have_rendered(options, message = T.unsafe(nil)); end
+
+  # Delegates to `assert_template`.
+  #
+  # @api public
+  # @example
+  #   expect(response).to have_rendered("new")
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_rendered.rb:56
+  def render_template(options, message = T.unsafe(nil)); end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_rendered.rb:7
+class RSpec::Rails::Matchers::RenderTemplate::RenderTemplateMatcher < ::RSpec::Rails::Matchers::BaseMatcher
+  # @api public
+  # @return [RenderTemplateMatcher] a new instance of RenderTemplateMatcher
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_rendered.rb:8
+  def initialize(scope, expected, message = T.unsafe(nil)); end
+
+  # Uses normalize_argument_to_redirection to find and format
+  # the redirect location. normalize_argument_to_redirection is private
+  # in ActionDispatch::Assertions::ResponseAssertions so we call it
+  # here using #send. This will keep the error message format consistent
+  #
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_rendered.rb:29
+  def check_redirect; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_rendered.rb:37
+  def failure_message; end
+
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_rendered.rb:47
+  def failure_message_when_negated; end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/have_rendered.rb:16
+  def matches?(*_arg0); end
+end
+
+# Matchers to help with specs for routing code.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:5
+module RSpec::Rails::Matchers::RoutingMatchers
+  extend ::RSpec::Matchers::DSL
+
+  # Passes if the route expression is recognized by the Rails router based on
+  # the declarations in `config/routes.rb`. Delegates to
+  # `RouteSet#recognize_path`.
+  #
+  # @api public
+  # @example You can use route helpers provided by rspec-rails.
+  #   expect(get:  "/a/path").to be_routable
+  #   expect(post: "/another/path").to be_routable
+  #   expect(put:  "/yet/another/path").to be_routable
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:101
+  def be_routable; end
+
+  # Delegates to `assert_recognizes`. Supports short-hand controller/action
+  # declarations (e.g. `"controller#action"`).
+  #
+  # @api public
+  # @example
+  #
+  #   expect(get: "/things/special").to route_to(
+  #   controller: "things",
+  #   action:     "special"
+  #   )
+  #
+  #   expect(get: "/things/special").to route_to("things#special")
+  # @see https://api.rubyonrails.org/classes/ActionDispatch/Assertions/RoutingAssertions.html#method-i-assert_recognizes
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:61
+  def route_to(*expected); end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:66
+class RSpec::Rails::Matchers::RoutingMatchers::BeRoutableMatcher < ::RSpec::Rails::Matchers::BaseMatcher
+  # @api public
+  # @return [BeRoutableMatcher] a new instance of BeRoutableMatcher
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:67
+  def initialize(scope); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:88
+  def description; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:80
+  def failure_message; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:84
+  def failure_message_when_negated; end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:71
+  def matches?(path); end
+end
+
+# Helpers for matching different route types.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:106
+module RSpec::Rails::Matchers::RoutingMatchers::RouteHelpers
+  # Shorthand method for matching this type of route.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:117
+  def delete(path); end
+
+  # Shorthand method for matching this type of route.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:117
+  def get(path); end
+
+  # Shorthand method for matching this type of route.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:117
+  def head(path); end
+
+  # Shorthand method for matching this type of route.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:117
+  def options(path); end
+
+  # Shorthand method for matching this type of route.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:117
+  def patch(path); end
+
+  # Shorthand method for matching this type of route.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:117
+  def post(path); end
+
+  # Shorthand method for matching this type of route.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:117
+  def put(path); end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:9
+class RSpec::Rails::Matchers::RoutingMatchers::RouteToMatcher < ::RSpec::Rails::Matchers::BaseMatcher
+  # @api public
+  # @return [RouteToMatcher] a new instance of RouteToMatcher
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:10
+  def initialize(scope, *expected); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:43
+  def description; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:35
+  def failure_message; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:39
+  def failure_message_when_negated; end
+
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/matchers/routing_matchers.rb:21
+  def matches?(verb_to_path_map); end
+end
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:140
+module RSpec::Rails::MinitestAssertionAdapter
+  extend ::ActiveSupport::Concern
+
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:170
+  def assertion_delegator; end
+end
+
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:165
+class RSpec::Rails::MinitestAssertionAdapter::AssertionDelegator
+  include ::Minitest::Assertions
+  include ::RSpec::Rails::MinitestCounters
+end
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:144
+module RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  # Returns the names of assertion methods that we want to expose to
+  # examples without exposing non-assertion methods in Test::Unit or
+  # Minitest.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:148
+  def assertion_method_names; end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:156
+  def define_assertion_delegators; end
+end
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:94
+module RSpec::Rails::MinitestCounters
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:96
+  def assertions; end
+
+  # Sets the attribute assertions
+  #
+  # @param value the value to set the attribute assertions to.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:95
+  def assertions=(_arg0); end
+end
+
+# Adapts example groups for `Minitest::Test::LifecycleHooks`
+#
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:66
+module RSpec::Rails::MinitestLifecycleAdapter
+  extend ::ActiveSupport::Concern
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:83
+  def after_setup; end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:89
+  def after_teardown; end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:80
+  def before_setup; end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:86
+  def before_teardown; end
+end
+
+# Container class for model spec functionality. Does not provide anything
+# special over the common RailsExampleGroup currently.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/model_example_group.rb:6
+module RSpec::Rails::ModelExampleGroup
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+
+  module GeneratedClassMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# Common rails example functionality.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/rails_example_group.rb:9
+module RSpec::Rails::RailsExampleGroup
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+
+  module GeneratedClassMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
 # Railtie to hook into Rails.
 #
 # source://rspec-rails-5.1.2/lib/rspec-rails.rb:9
@@ -287,6 +3289,943 @@ class RSpec::Rails::Railtie < ::Rails::Railtie
   #
   # source://rspec-rails-5.1.2/lib/rspec-rails.rb:60
   def supports_action_mailer_previews?(config); end
+end
+
+# Container class for request spec functionality.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/request_example_group.rb:5
+module RSpec::Rails::RequestExampleGroup
+  include ::Rails::Dom::Testing::Assertions::DomAssertions
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
+  include ::Rails::Dom::Testing::Assertions
+  include ::ActionDispatch::Assertions::ResponseAssertions
+  include ::ActionDispatch::Assertions::RoutingAssertions
+  include ::ActionDispatch::Assertions
+  include ::ActionDispatch::Integration::Runner
+  include ::RSpec::Rails::Matchers::RedirectTo
+  include ::RSpec::Rails::Matchers::RenderTemplate
+  include ::ActionController::TemplateAssertions
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+  include ::Rails::Dom::Testing::Assertions
+  include ::ActionDispatch::Assertions
+  include ::ActionDispatch::Routing::UrlFor
+  include ::ActionDispatch::IntegrationTest::UrlOptions
+  include ::ActionDispatch::IntegrationTest::Behavior
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+  mixes_in_class_methods ::ActionDispatch::IntegrationTest::Behavior::ClassMethods
+
+  # Delegates to `Rails.application`.
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/request_example_group.rb:16
+  def app; end
+
+  module GeneratedClassMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/routing_example_group.rb:6
+module RSpec::Rails::RoutingAssertionDelegator
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:54
+  def assert_generates(*args, &block); end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:54
+  def assert_recognizes(*args, &block); end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:54
+  def assert_routing(*args, &block); end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:46
+  def assertion_instance; end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:42
+  def build_assertion_instance; end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:54
+  def with_routing(*args, &block); end
+end
+
+# Container module for routing spec functionality.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/routing_example_group.rb:12
+module RSpec::Rails::RoutingExampleGroup
+  include ::RSpec::Rails::Matchers::RoutingMatchers
+  include ::RSpec::Rails::Matchers::RoutingMatchers::RouteHelpers
+  include ::RSpec::Rails::RoutingAssertionDelegator
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::RoutingExampleGroup::ClassMethods
+
+  # @api public
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/routing_example_group.rb:48
+  def routes; end
+
+  # @api public
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/routing_example_group.rb:51
+  def routes=(routes); end
+
+  private
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/routing_example_group.rb:58
+  def method_missing(m, *args, &block); end
+
+  module GeneratedClassMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# Class-level DSL for route specs.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/routing_example_group.rb:20
+module RSpec::Rails::RoutingExampleGroup::ClassMethods
+  # Specifies the routeset that will be used for the example group. This
+  # is most useful when testing Rails engines.
+  #
+  # @api public
+  # @example
+  #   describe MyEngine::PostsController do
+  #   routes { MyEngine::Engine.routes }
+  #
+  #   it "routes posts#index" do
+  #   expect(:get => "/posts").to
+  #   route_to(:controller => "my_engine/posts", :action => "index")
+  #   end
+  #   end
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/routing_example_group.rb:33
+  def routes; end
+end
+
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:102
+module RSpec::Rails::SetupAndTeardownAdapter
+  extend ::ActiveSupport::Concern
+
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:129
+  def initialize(*args); end
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:134
+  def method_name; end
+end
+
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:105
+module RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  # Wraps `setup` calls from within Rails' testing framework in `before`
+  # hooks.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:108
+  def setup(*methods, &block); end
+
+  # Wraps `teardown` calls from within Rails' testing framework in
+  # `after` hooks.
+  #
+  # @api private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:123
+  def teardown(*methods, &block); end
+end
+
+# Container class for system tests
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/system_example_group.rb:5
+module RSpec::Rails::SystemExampleGroup
+  include ::RSpec::Rails::Matchers::RedirectTo
+  include ::RSpec::Rails::Matchers::RenderTemplate
+  include ::Rails::Dom::Testing::Assertions::DomAssertions
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
+  include ::Rails::Dom::Testing::Assertions
+  include ::ActionDispatch::Assertions::ResponseAssertions
+  include ::ActionDispatch::Assertions::RoutingAssertions
+  include ::ActionDispatch::Assertions
+  include ::ActionDispatch::Integration::Runner
+  include ::ActionController::TemplateAssertions
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+  include ::Rails::Dom::Testing::Assertions
+  include ::ActionDispatch::Assertions
+  include ::ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
+  include ::ActionDispatch::SystemTesting::TestHelpers::ScreenshotHelper
+  include ::RSpec::Rails::SystemExampleGroup::BlowAwayTeardownHooks
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+
+  # Delegates to `Rails.application`.
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/system_example_group.rb:48
+  def app; end
+
+  # @api public
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/system_example_group.rb:40
+  def method_name; end
+
+  # for the SystemTesting Screenshot situation
+  #
+  # @api public
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/system_example_group.rb:29
+  def passed?; end
+
+  module GeneratedClassMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def config; end
+    def config=(value); end
+    def config?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/system_example_group.rb:18
+module RSpec::Rails::SystemExampleGroup::BlowAwayTeardownHooks
+  # @api public
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/system_example_group.rb:24
+  def after_teardown; end
+
+  # @api public
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/system_example_group.rb:20
+  def before_teardown; end
+end
+
+# Special characters to translate into underscores for #method_name
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/system_example_group.rb:15
+RSpec::Rails::SystemExampleGroup::CHARS_TO_TRANSLATE = T.let(T.unsafe(nil), Array)
+
+# Backwards compatibility. It's unlikely that anyone is using this
+# constant, but we had forgotten to mark it as `@private` earlier
+#
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/adapters.rb:183
+RSpec::Rails::TestUnitAssertionAdapter = RSpec::Rails::MinitestAssertionAdapter
+
+# Helpers for making instance variables available to views.
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_assigns.rb:4
+module RSpec::Rails::ViewAssigns
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_assigns.rb:34
+  def _assigns; end
+
+  # Assigns a value to an instance variable in the scope of the
+  # view being rendered.
+  #
+  # @example
+  #
+  #   assign(:widget, stub_model(Widget))
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_assigns.rb:11
+  def assign(key, value); end
+
+  # Compat-shim for AbstractController::Rendering#view_assigns
+  #
+  # _assigns was deprecated in favor of view_assigns after
+  # Rails-3.0.0 was released. Since we are not able to predict when
+  # the _assigns/view_assigns patch will be released (I thought it
+  # would have been in 3.0.1, but 3.0.1 bypassed this change for a
+  # security fix), this bit ensures that we do the right thing without
+  # knowing anything about the Rails version we are dealing with.
+  #
+  # Once that change _is_ released, this can be changed to something
+  # that checks for the Rails version when the module is being
+  # interpreted, as it was before commit dd0095.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_assigns.rb:27
+  def view_assigns; end
+
+  private
+
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_assigns.rb:40
+  def _encapsulated_assigns; end
+end
+
+# Container class for view spec functionality.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:9
+module RSpec::Rails::ViewExampleGroup
+  include ::RSpec::Rails::ViewAssigns
+  include ::RSpec::Rails::Matchers::RenderTemplate
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+  include ::Rails::Dom::Testing::Assertions
+  include ::ActionDispatch::Assertions
+  include ::AbstractController::Helpers
+  include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::AssetTagHelper
+  include ::ActionView::Helpers::UrlHelper
+  include ::ActionView::Helpers::SanitizeHelper
+  include ::ActionView::Helpers::TextHelper
+  include ::ActionView::Helpers::FormTagHelper
+  include ::ActionView::Helpers::FormHelper
+  include ::ActionView::Helpers::TranslationHelper
+  include ::ActionView::Helpers
+  include ::ActiveSupport::Testing::ConstantLookup
+  include ::ActionView::TestCase::Behavior
+  include ::ActionView::RoutingUrlFor
+  include ::ActionDispatch::Routing::UrlFor
+  include ::ActionDispatch::Routing::RouteSet::MountedHelpers
+  include ::RSpec::Rails::ViewExampleGroup::ExampleMethods
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+  mixes_in_class_methods ::AbstractController::Helpers::ClassMethods
+  mixes_in_class_methods ::ActionView::Helpers::UrlHelper::ClassMethods
+  mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
+  mixes_in_class_methods ::ActiveSupport::Testing::ConstantLookup::ClassMethods
+  mixes_in_class_methods ::ActionView::TestCase::Behavior::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::ViewExampleGroup::ClassMethods
+
+  module GeneratedClassMethods
+    def _helper_methods; end
+    def _helper_methods=(value); end
+    def _helper_methods?; end
+    def _helpers; end
+    def _helpers=(value); end
+    def _helpers?; end
+    def config; end
+    def config=(value); end
+    def config?; end
+    def default_url_options; end
+    def default_url_options=(value); end
+    def default_url_options?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path=(value); end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def _helper_methods; end
+    def _helper_methods=(value); end
+    def _helper_methods?; end
+    def _helpers; end
+    def _helpers=(value); end
+    def _helpers?; end
+    def config; end
+    def config=(value); end
+    def config?; end
+    def default_url_options; end
+    def default_url_options=(value); end
+    def default_url_options?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_path; end
+    def fixture_path?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:25
+module RSpec::Rails::ViewExampleGroup::ClassMethods
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:26
+  def _default_helper; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:33
+  def _default_helpers; end
+end
+
+# DSL exposed to view specs.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:41
+module RSpec::Rails::ViewExampleGroup::ExampleMethods
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::ActionDispatch::Routing::UrlFor
+  include ::ActionDispatch::Routing::RouteSet::MountedHelpers
+
+  mixes_in_class_methods GeneratedClassMethods
+
+  # Provides access to the params hash that will be available within the
+  # view.
+  #
+  #     params[:foo] = 'bar'
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:99
+  def params; end
+
+  # Delegates to ActionView::Base#render, so see documentation on that
+  # for more info.
+  #
+  # The only addition is that you can call render with no arguments, and
+  # RSpec will pass the top level description to render:
+  #
+  #     describe "widgets/new.html.erb" do
+  #       it "shows all the widgets" do
+  #         render # => view.render(file: "widgets/new.html.erb")
+  #         # ...
+  #       end
+  #     end
+  #
+  # @api public
+  # @overload render
+  # @overload render
+  # @overload render
+  # @overload render
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:66
+  def render(options = T.unsafe(nil), local_assigns = T.unsafe(nil), &block); end
+
+  # @api public
+  # @deprecated Use `rendered` instead.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:110
+  def response; end
+
+  # Simulates the presence of a template on the file system by adding a
+  # Rails' FixtureResolver to the front of the view_paths list. Designed to
+  # help isolate view examples from partials rendered by the view template
+  # that is the subject of the example.
+  #
+  #     stub_template("widgets/_widget.html.erb" => "This content.")
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:91
+  def stub_template(hash); end
+
+  # @api public
+  # @deprecated Use `view` instead.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:104
+  def template; end
+
+  # The instance of `ActionView::Base` that is used to render the template.
+  # Use this to stub methods _before_ calling `render`.
+  #
+  #     describe "widgets/new.html.erb" do
+  #       it "shows all the widgets" do
+  #         view.stub(:foo) { "foo" }
+  #         render
+  #         # ...
+  #       end
+  #     end
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:81
+  def view; end
+
+  private
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:165
+  def _controller_path; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:127
+  def _default_render_options; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:173
+  def _include_controller_helpers; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:169
+  def _inferred_action; end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:161
+  def _path_parts; end
+
+  module GeneratedClassMethods
+    def default_url_options; end
+    def default_url_options=(value); end
+    def default_url_options?; end
+  end
+
+  module GeneratedInstanceMethods
+    def default_url_options; end
+    def default_url_options=(value); end
+    def default_url_options?; end
+  end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:17
+module RSpec::Rails::ViewExampleGroup::StubResolverCache
+  class << self
+    # @api public
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/example/view_example_group.rb:18
+    def resolver_for(hash); end
+  end
+end
+
+# Builds paths for view specs using a particular route set.
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_path_builder.rb:4
+class RSpec::Rails::ViewPathBuilder
+  # @return [ViewPathBuilder] a new instance of ViewPathBuilder
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_path_builder.rb:5
+  def initialize(route_set); end
+
+  # Given a hash of parameters, build a view path, if possible.
+  # Returns nil if no path can be built from the given params.
+  #
+  # @example
+  #   # path can be built because all required params are present in the hash
+  #   view_path_builder = ViewPathBuilder.new(::Rails.application.routes)
+  #   view_path_builder.path_for({ :controller => 'posts', :action => 'show', :id => '54' })
+  #   # => "/post/54"
+  # @example
+  #   # path cannot be built because the params are missing a required element (:id)
+  #   view_path_builder.path_for({ :controller => 'posts', :action => 'delete' })
+  #   # => ActionController::UrlGenerationError: No route matches {:action=>"delete", :controller=>"posts"}
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_path_builder.rb:22
+  def path_for(path_params); end
+end
+
+# Helpers for optionally rendering views in controller specs.
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:7
+module RSpec::Rails::ViewRendering
+  extend ::ActiveSupport::Concern
+
+  mixes_in_class_methods ::RSpec::Rails::ViewRendering::ClassMethods
+
+  # Returns the controller object instance under test.
+  #
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:12
+  def controller; end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:38
+  def render_views?; end
+
+  private
+
+  # @api public
+  # @private
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:15
+  def controller=(_arg0); end
+end
+
+# DSL methods
+#
+# @api public
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:19
+module RSpec::Rails::ViewRendering::ClassMethods
+  # @api public
+  # @see RSpec::Rails::ControllerExampleGroup
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:21
+  def render_views(true_or_false = T.unsafe(nil)); end
+
+  # @api private
+  # @return [Boolean]
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:26
+  def render_views?; end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:115
+class RSpec::Rails::ViewRendering::EmptyTemplateHandler
+  class << self
+    # @api public
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:116
+    def call(_template, _source = T.unsafe(nil)); end
+  end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:43
+class RSpec::Rails::ViewRendering::EmptyTemplateResolver
+  class << self
+    # @api public
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:44
+    def build(path); end
+
+    # @api public
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:52
+    def nullify_template_rendering(templates); end
+
+    # @api public
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:70
+    def template_format(template); end
+  end
+end
+
+# Delegates find_templates to the submitted path set and then returns
+# templates with modified source
+#
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:104
+class RSpec::Rails::ViewRendering::EmptyTemplateResolver::FileSystemResolver < ::ActionView::FileSystemResolver
+  private
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:107
+  def find_templates(*args); end
+end
+
+# Delegates all methods to the submitted resolver and for all methods
+# that return a collection of `ActionView::Template` instances, return
+# templates with modified source
+#
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:80
+class RSpec::Rails::ViewRendering::EmptyTemplateResolver::ResolverDecorator
+  # @api public
+  # @return [ResolverDecorator] a new instance of ResolverDecorator
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:81
+  def initialize(resolver); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:85
+  def method_missing(name, *args, &block); end
+
+  private
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:92
+  def nullify_templates(collection); end
+end
+
+# Used to null out view rendering in controller specs.
+#
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:126
+module RSpec::Rails::ViewRendering::EmptyTemplates
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:131
+  def append_view_path(new_path); end
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:127
+  def prepend_view_path(new_path); end
+
+  private
+
+  # @api public
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:137
+  def _path_decorator(*paths); end
+end
+
+# @api public
+# @private
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_rendering.rb:143
+RSpec::Rails::ViewRendering::RESOLVER_CACHE = T.let(T.unsafe(nil), Hash)
+
+# Adds methods (generally to ActionView::TestCase::TestController).
+# Intended for use in view specs.
+#
+# source://rspec-rails-5.1.2/lib/rspec/rails/view_spec_methods.rb:5
+module RSpec::Rails::ViewSpecMethods
+  private
+
+  # Adds methods `extra_params=` and `extra_params` to the indicated class.
+  # When class is `::ActionView::TestCase::TestController`, these methods
+  # are exposed in view specs on the `controller` object.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_spec_methods.rb:11
+  def add_to(klass); end
+
+  # Removes methods `extra_params=` and `extra_params` from the indicated class.
+  #
+  # source://rspec-rails-5.1.2/lib/rspec/rails/view_spec_methods.rb:48
+  def remove_from(klass); end
+
+  class << self
+    # Adds methods `extra_params=` and `extra_params` to the indicated class.
+    # When class is `::ActionView::TestCase::TestController`, these methods
+    # are exposed in view specs on the `controller` object.
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/view_spec_methods.rb:11
+    def add_to(klass); end
+
+    # Removes methods `extra_params=` and `extra_params` from the indicated class.
+    #
+    # source://rspec-rails-5.1.2/lib/rspec/rails/view_spec_methods.rb:48
+    def remove_from(klass); end
+  end
 end
 
 # @private

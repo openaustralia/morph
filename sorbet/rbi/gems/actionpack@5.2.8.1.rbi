@@ -17700,6 +17700,7 @@ end
 # source://actionpack-5.2.8.1/lib/action_dispatch/system_test_case.rb:95
 class ActionDispatch::SystemTestCase < ::ActionDispatch::IntegrationTest
   include ::Capybara::DSL
+  include ::Capybara::DSLRSpecProxyInstaller
   include ::Capybara::Minitest::Assertions
   include ::ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
   include ::ActionDispatch::SystemTesting::TestHelpers::ScreenshotHelper
@@ -18415,7 +18416,6 @@ Rack::ETAG = T.let(T.unsafe(nil), String)
 # source://rack-2.2.4/lib/rack.rb:30
 Rack::EXPIRES = T.let(T.unsafe(nil), String)
 
-# source://rack-2.2.4/lib/rack/file.rb:6
 Rack::File = Rack::Files
 
 # source://rack-2.2.4/lib/rack.rb:39

@@ -223,8 +223,129 @@ class Sidekiq::BasicFetch::UnitOfWork < ::Struct
   end
 end
 
+# source://sidekiq-5.2.10/lib/sidekiq/cli.rb:15
+class Sidekiq::CLI
+  include ::Sidekiq::ExceptionHandler
+  include ::Sidekiq::Util
+  include ::Singleton
+  extend ::Singleton::SingletonClassMethods
+
+  # Returns the value of attribute environment.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:28
+  def environment; end
+
+  # Sets the attribute environment
+  #
+  # @param value the value to set the attribute environment to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:28
+  def environment=(_arg0); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:172
+  def handle_signal(sig); end
+
+  # @return [Boolean]
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:36
+  def jruby?; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:99
+  def launch(self_read); end
+
+  # Returns the value of attribute launcher.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:27
+  def launcher; end
+
+  # Sets the attribute launcher
+  #
+  # @param value the value to set the attribute launcher to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:27
+  def launcher=(_arg0); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:30
+  def parse(args = T.unsafe(nil)); end
+
+  # Code within this method is not tested because it alters
+  # global process state irreversibly.  PRs which improve the
+  # test coverage of Sidekiq::CLI are welcomed.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:43
+  def run; end
+
+  private
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:270
+  def boot_system; end
+
+  # @raise [ArgumentError]
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:190
+  def daemonize; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:296
+  def default_tag; end
+
+  def die(*_arg0); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:398
+  def initialize_logger; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:266
+  def options; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:413
+  def parse_config(path); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:323
+  def parse_options(argv); end
+
+  # @raise [ArgumentError]
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:438
+  def parse_queue(opts, queue, weight = T.unsafe(nil)); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:434
+  def parse_queues(opts, queues_and_weights); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:184
+  def print_banner; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:215
+  def set_environment(cli_env); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:230
+  def setup_options(args); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:219
+  def symbolize_keys_deep!(hash); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:307
+  def validate!; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:404
+  def write_pid; end
+
+  def ☠(*_arg0); end
+
+  class << self
+    # source://sidekiq-5.2.10/lib/sidekiq/cli.rb:123
+    def banner; end
+  end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/cli.rb:19
+Sidekiq::CLI::PROCTITLES = T.let(T.unsafe(nil), Array)
+
+# source://sidekiq-5.2.10/lib/sidekiq/cli.rb:140
+Sidekiq::CLI::SIGNAL_HANDLERS = T.let(T.unsafe(nil), Hash)
+
 # source://sidekiq-5.2.10/lib/sidekiq/client.rb:6
 class Sidekiq::Client
+  include ::Sidekiq::TestingClient
+
   # Sidekiq::Client normally uses the default Redis pool but you may
   # pass a custom ConnectionPool if you want to shard your
   # Sidekiq jobs across several Redis instances (for scalability
@@ -299,6 +420,9 @@ class Sidekiq::Client
   # source://sidekiq-5.2.10/lib/sidekiq/client.rb:92
   def push_bulk(items); end
 
+  # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:76
+  def raw_push(payloads); end
+
   # Returns the value of attribute redis_pool.
   #
   # source://sidekiq-5.2.10/lib/sidekiq/client.rb:29
@@ -326,9 +450,6 @@ class Sidekiq::Client
 
   # source://sidekiq-5.2.10/lib/sidekiq/client.rb:209
   def process_single(worker_class, item); end
-
-  # source://sidekiq-5.2.10/lib/sidekiq/client.rb:182
-  def raw_push(payloads); end
 
   class << self
     # Resque compatibility helpers.  Note all helpers
@@ -413,6 +534,9 @@ class Sidekiq::DeadSet < ::Sidekiq::JobSet
     def timeout; end
   end
 end
+
+# source://sidekiq-5.2.10/lib/sidekiq/testing.rb:73
+class Sidekiq::EmptyQueueError < ::RuntimeError; end
 
 # source://sidekiq-5.2.10/lib/sidekiq/exception_handler.rb:5
 module Sidekiq::ExceptionHandler
@@ -686,6 +810,101 @@ end
 # source://sidekiq-5.2.10/lib/sidekiq.rb:16
 Sidekiq::LICENSE = T.let(T.unsafe(nil), String)
 
+# The Launcher is a very simple Actor whose job is to
+# start, monitor and stop the core Actors in Sidekiq.
+# If any of these actors die, the Sidekiq process exits
+# immediately.
+#
+# source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:11
+class Sidekiq::Launcher
+  include ::Sidekiq::ExceptionHandler
+  include ::Sidekiq::Util
+
+  # @return [Launcher] a new instance of Launcher
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:18
+  def initialize(options); end
+
+  # Returns the value of attribute fetcher.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:14
+  def fetcher; end
+
+  # Sets the attribute fetcher
+  #
+  # @param value the value to set the attribute fetcher to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:14
+  def fetcher=(_arg0); end
+
+  # Returns the value of attribute manager.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:14
+  def manager; end
+
+  # Sets the attribute manager
+  #
+  # @param value the value to set the attribute manager to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:14
+  def manager=(_arg0); end
+
+  # Returns the value of attribute poller.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:14
+  def poller; end
+
+  # Sets the attribute poller
+  #
+  # @param value the value to set the attribute poller to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:14
+  def poller=(_arg0); end
+
+  # Stops this instance from processing any more jobs,
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:33
+  def quiet; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:25
+  def run; end
+
+  # Shuts down the process.  This method does not
+  # return until all work is complete and cleaned up.
+  # It can take up to the timeout to complete.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:42
+  def stop; end
+
+  # @return [Boolean]
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:59
+  def stopping?; end
+
+  private
+
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:158
+  def clear_heartbeat; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:65
+  def heartbeat; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:127
+  def start_heartbeat; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:135
+  def to_data; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:150
+  def to_json; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:73
+  def ❤; end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/launcher.rb:16
+Sidekiq::Launcher::STATS_TTL = T.let(T.unsafe(nil), Integer)
+
 # source://sidekiq-5.2.10/lib/sidekiq/logging.rb:7
 module Sidekiq::Logging
   # source://sidekiq-5.2.10/lib/sidekiq/logging.rb:118
@@ -949,6 +1168,12 @@ end
 
 # source://sidekiq-5.2.10/lib/sidekiq.rb:15
 Sidekiq::NAME = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/paginator.rb:3
+module Sidekiq::Paginator
+  # source://sidekiq-5.2.10/lib/sidekiq/paginator.rb:5
+  def page(key, pageidx = T.unsafe(nil), page_size = T.unsafe(nil), opts = T.unsafe(nil)); end
+end
 
 # Sidekiq::Process represents an active Sidekiq process talking with Redis.
 # Each process has a set of attributes which look like this:
@@ -1296,6 +1521,8 @@ class Sidekiq::Queue
   # source://RUBY_ROOT/forwardable.rb:226
   def remove_locks_except!(*args, &block); end
 
+  # Returns the value of attribute rname.
+  #
   # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/queue.rb:4
   def rname; end
 
@@ -1319,6 +1546,32 @@ class Sidekiq::Queue
     #
     # source://sidekiq-5.2.10/lib/sidekiq/api.rb:232
     def all; end
+  end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/testing.rb:100
+module Sidekiq::Queues
+  class << self
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:167
+    def [](queue); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:194
+    def clear_all; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:189
+    def clear_for(queue, klass); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:184
+    def delete_for(jid, queue, klass); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:176
+    def jobs_by_queue; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:180
+    def jobs_by_worker; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:171
+    def push(queue, klass, job); end
   end
 end
 
@@ -1668,6 +1921,69 @@ class Sidekiq::Stats::Queues
   def lengths; end
 end
 
+# source://sidekiq-5.2.10/lib/sidekiq/testing.rb:7
+class Sidekiq::Testing
+  class << self
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:11
+    def __set_test_mode(mode); end
+
+    # Returns the value of attribute __test_mode.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:9
+    def __test_mode; end
+
+    # Sets the attribute __test_mode
+    #
+    # @param value the value to set the attribute __test_mode to.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:9
+    def __test_mode=(_arg0); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:59
+    def constantize(str); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:25
+    def disable!(&block); end
+
+    # @return [Boolean]
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:41
+    def disabled?; end
+
+    # @return [Boolean]
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:37
+    def enabled?; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:29
+    def fake!(&block); end
+
+    # @return [Boolean]
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:45
+    def fake?; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:33
+    def inline!(&block); end
+
+    # @return [Boolean]
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:49
+    def inline?; end
+
+    # @yield [@server_chain]
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:53
+    def server_middleware; end
+  end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/testing.rb:75
+module Sidekiq::TestingClient
+  # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:76
+  def raw_push(payloads); end
+end
+
 # This module is part of Sidekiq core and not intended for extensions.
 #
 # source://sidekiq-5.2.10/lib/sidekiq/util.rb:10
@@ -1704,6 +2020,624 @@ Sidekiq::Util::EXPIRY = T.let(T.unsafe(nil), Integer)
 
 # source://sidekiq-5.2.10/lib/sidekiq/version.rb:3
 Sidekiq::VERSION = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web.rb:20
+class Sidekiq::Web
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:111
+  def app; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:102
+  def call(env); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:119
+  def disable(*opts); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:115
+  def enable(*opts); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:98
+  def middlewares; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:132
+  def sessions; end
+
+  # Sets the attribute sessions
+  #
+  # @param value the value to set the attribute sessions to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:130
+  def sessions=(_arg0); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:123
+  def set(attribute, value); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:90
+  def settings; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:94
+  def use(*middleware_args, &block); end
+
+  private
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:176
+  def build; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:153
+  def build_sessions; end
+
+  # @return [Boolean]
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web.rb:147
+  def using?(middleware); end
+
+  class << self
+    # Returns the value of attribute app_url.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:79
+    def app_url; end
+
+    # Sets the attribute app_url
+    #
+    # @param value the value to set the attribute app_url to.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:79
+    def app_url=(_arg0); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:106
+    def call(env); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:53
+    def custom_tabs; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:49
+    def default_tabs; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:70
+    def disable(*opts); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:66
+    def enable(*opts); end
+
+    # @private
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:83
+    def inherited(child); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:58
+    def locales; end
+
+    # Sets the attribute locales
+    #
+    # @param value the value to set the attribute locales to.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:80
+    def locales=(_arg0); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:41
+    def middlewares; end
+
+    # Returns the value of attribute redis_pool.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:79
+    def redis_pool; end
+
+    # Sets the attribute redis_pool
+    #
+    # @param value the value to set the attribute redis_pool to.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:79
+    def redis_pool=(_arg0); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:141
+    def register(extension); end
+
+    # Returns the value of attribute session_secret.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:79
+    def session_secret; end
+
+    # Sets the attribute session_secret
+    #
+    # @param value the value to set the attribute session_secret to.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:79
+    def session_secret=(_arg0); end
+
+    # Returns the value of attribute sessions.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:79
+    def sessions; end
+
+    # Sets the attribute sessions
+    #
+    # @param value the value to set the attribute sessions to.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:79
+    def sessions=(_arg0); end
+
+    # Helper for the Sinatra syntax: Sidekiq::Web.set(:session_secret, Rails.application.secrets...)
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:75
+    def set(attribute, value); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:37
+    def settings; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:53
+    def tabs; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:45
+    def use(*middleware_args, &block); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:62
+    def views; end
+
+    # Sets the attribute views
+    #
+    # @param value the value to set the attribute views to.
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/web.rb:80
+    def views=(_arg0); end
+  end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/web.rb:25
+Sidekiq::Web::ASSETS = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web.rb:27
+Sidekiq::Web::DEFAULT_TABS = T.let(T.unsafe(nil), Hash)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web.rb:24
+Sidekiq::Web::LAYOUT = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web.rb:23
+Sidekiq::Web::LOCALES = T.let(T.unsafe(nil), Array)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web.rb:21
+Sidekiq::Web::ROOT = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web.rb:22
+Sidekiq::Web::VIEWS = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:4
+class Sidekiq::WebAction
+  include ::Sidekiq::WebHelpers
+  include ::Sidekiq::Paginator
+
+  # @return [WebAction] a new instance of WebAction
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:70
+  def initialize(env, block); end
+
+  def _render; end
+
+  # Returns the value of attribute block.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:7
+  def block; end
+
+  # Sets the attribute block
+  #
+  # @param value the value to set the attribute block to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:7
+  def block=(_arg0); end
+
+  # Returns the value of attribute env.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:7
+  def env; end
+
+  # Sets the attribute env
+  #
+  # @param value the value to set the attribute env to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:7
+  def env=(_arg0); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:42
+  def erb(content, options = T.unsafe(nil)); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:17
+  def halt(res); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:66
+  def json(payload); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:25
+  def params; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:21
+  def redirect(location); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:60
+  def render(engine, content, options = T.unsafe(nil)); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:13
+  def request; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:34
+  def route_params; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:38
+  def session; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:9
+  def settings; end
+
+  # Returns the value of attribute type.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:7
+  def type; end
+
+  # Sets the attribute type
+  #
+  # @param value the value to set the attribute type to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:7
+  def type=(_arg0); end
+
+  private
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:79
+  def _erb(file, locals); end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/action.rb:5
+Sidekiq::WebAction::RACK_SESSION = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:4
+class Sidekiq::WebApplication
+  extend ::Sidekiq::WebRouter
+
+  # @return [WebApplication] a new instance of WebApplication
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:26
+  def initialize(klass); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:282
+  def call(env); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:30
+  def settings; end
+
+  class << self
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:331
+    def after(path = T.unsafe(nil), &block); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:352
+    def afters; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:327
+    def before(path = T.unsafe(nil), &block); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:348
+    def befores; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:319
+    def helpers(mod = T.unsafe(nil), &block); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:339
+    def run_afters(app, action); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:335
+    def run_befores(app, action); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:343
+    def run_hooks(hooks, app, action); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:42
+    def set(key, val); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:34
+    def settings; end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:38
+    def tabs; end
+  end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:7
+Sidekiq::WebApplication::CONTENT_LENGTH = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:8
+Sidekiq::WebApplication::CONTENT_TYPE = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:10
+Sidekiq::WebApplication::CSP_HEADER = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/application.rb:9
+Sidekiq::WebApplication::REDIS_KEYS = T.let(T.unsafe(nil), Array)
+
+# This is not a public API
+#
+# source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:9
+module Sidekiq::WebHelpers
+  # This view helper provide ability display you html code in
+  # to head of page. Example:
+  #
+  #   <% add_to_head do %>
+  #     <link rel="stylesheet" .../>
+  #     <meta .../>
+  #   <% end %>
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:56
+  def add_to_head; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:36
+  def available_locales; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:24
+  def clear_caches; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:222
+  def csrf_tag; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:169
+  def current_path; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:173
+  def current_status; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:317
+  def delete_or_add_queue(job, params); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:209
+  def display_args(args, truncate_after_chars = T.unsafe(nil)); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:61
+  def display_custom_head; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:286
+  def environment_title_prefix; end
+
+  # This is a hook for a Sidekiq Pro feature.  Please don't touch.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:45
+  def filtering(*_arg0); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:40
+  def find_locale_files(lang); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:119
+  def get_locale; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:266
+  def h(text); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:182
+  def job_params(job, score); end
+
+  # Given an Accept-Language header like "fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4,ru;q=0.2"
+  # this method will try to best match the available locales to the user's preferred languages.
+  #
+  # Inspiration taken from https://github.com/iain/http_accept_language/blob/master/lib/http_accept_language/parser.rb
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:98
+  def locale; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:30
+  def locale_files; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:157
+  def namespace; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:253
+  def number_with_delimiter(number); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:186
+  def parse_params(params); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:65
+  def poll_path; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:136
+  def processes; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:292
+  def product_version; end
+
+  # Merge options with current params, filter safe params, and stringify to query string
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:194
+  def qparams(options); end
+
+  # Any paginated list that performs an action needs to redirect
+  # back to the proper page after performing that action.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:276
+  def redirect_with_query(url); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:150
+  def redis_connection; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:300
+  def redis_connection_and_namespace; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:161
+  def redis_info; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:177
+  def relative_time(time); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:144
+  def retries_with_score(score); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:245
+  def retry_extra_items(retry_job); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:307
+  def retry_or_delete_or_kill(job, params); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:165
+  def root_path; end
+
+  # @return [Boolean]
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:77
+  def rtl?; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:296
+  def server_utc_time; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:140
+  def stats; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:10
+  def strings(lang); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:123
+  def t(msg, options = T.unsafe(nil)); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:73
+  def text_direction; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:226
+  def to_display(arg); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:205
+  def truncate(text, truncate_after_chars = T.unsafe(nil)); end
+
+  # mperham/sidekiq#3243
+  #
+  # @return [Boolean]
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:115
+  def unfiltered?; end
+
+  # See https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:82
+  def user_preferred_languages; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:132
+  def workers; end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:238
+Sidekiq::WebHelpers::RETRY_JOB_KEYS = T.let(T.unsafe(nil), Set)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/helpers.rb:191
+Sidekiq::WebHelpers::SAFE_QPARAMS = T.let(T.unsafe(nil), Array)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:64
+class Sidekiq::WebRoute
+  # @return [WebRoute] a new instance of WebRoute
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:69
+  def initialize(request_method, pattern, block); end
+
+  # Returns the value of attribute block.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:65
+  def block; end
+
+  # Sets the attribute block
+  #
+  # @param value the value to set the attribute block to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:65
+  def block=(_arg0); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:79
+  def compile; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:89
+  def match(request_method, path); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:75
+  def matcher; end
+
+  # Returns the value of attribute name.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:65
+  def name; end
+
+  # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:65
+  def name=(_arg0); end
+
+  # Returns the value of attribute pattern.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:65
+  def pattern; end
+
+  # Sets the attribute pattern
+  #
+  # @param value the value to set the attribute pattern to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:65
+  def pattern=(_arg0); end
+
+  # Returns the value of attribute request_method.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:65
+  def request_method; end
+
+  # Sets the attribute request_method
+  #
+  # @param value the value to set the attribute request_method to.
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:65
+  def request_method=(_arg0); end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:67
+Sidekiq::WebRoute::NAMED_SEGMENTS_PATTERN = T.let(T.unsafe(nil), Regexp)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:5
+module Sidekiq::WebRouter
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:33
+  def delete(path, &block); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:17
+  def get(path, &block); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:44
+  def match(env); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:29
+  def patch(path, &block); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:21
+  def post(path, &block); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:25
+  def put(path, &block); end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:37
+  def route(method, path, &block); end
+end
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:7
+Sidekiq::WebRouter::DELETE = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:6
+Sidekiq::WebRouter::GET = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:11
+Sidekiq::WebRouter::HEAD = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:10
+Sidekiq::WebRouter::PATCH = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:15
+Sidekiq::WebRouter::PATH_INFO = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:8
+Sidekiq::WebRouter::POST = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:9
+Sidekiq::WebRouter::PUT = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:14
+Sidekiq::WebRouter::REQUEST_METHOD = T.let(T.unsafe(nil), String)
+
+# source://sidekiq-5.2.10/lib/sidekiq/web/router.rb:13
+Sidekiq::WebRouter::ROUTE_PARAMS = T.let(T.unsafe(nil), String)
 
 # Include this module in your worker class and you can easily create
 # asynchronous jobs:
@@ -1742,11 +2676,24 @@ module Sidekiq::Worker
   def logger; end
 
   class << self
+    # Clear all queued jobs across all workers
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:311
+    def clear_all; end
+
+    # Drain all queued jobs across all workers
+    #
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:316
+    def drain_all; end
+
     # @private
     # @raise [ArgumentError]
     #
     # source://sidekiq-5.2.10/lib/sidekiq/worker.rb:26
     def included(base); end
+
+    # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:306
+    def jobs; end
   end
 end
 
@@ -1806,6 +2753,11 @@ end
 #
 # source://sidekiq-5.2.10/lib/sidekiq/worker.rb:73
 module Sidekiq::Worker::ClassMethods
+  # Clear all jobs for this worker
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:270
+  def clear; end
+
   # source://sidekiq-5.2.10/lib/sidekiq/worker.rb:142
   def client_push(item); end
 
@@ -1824,8 +2776,21 @@ module Sidekiq::Worker::ClassMethods
   # source://sidekiq-5.2.10/lib/sidekiq/worker.rb:84
   def delay_until(*args); end
 
+  # Drain and run all jobs for this worker
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:275
+  def drain; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:300
+  def execute_job(worker, args); end
+
   # source://sidekiq-5.2.10/lib/sidekiq/worker.rb:138
   def get_sidekiq_options; end
+
+  # Jobs queued for this worker
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:265
+  def jobs; end
 
   # source://sidekiq-5.2.10/lib/sidekiq/worker.rb:92
   def perform_async(*args); end
@@ -1841,6 +2806,21 @@ module Sidekiq::Worker::ClassMethods
   #
   # source://sidekiq-5.2.10/lib/sidekiq/worker.rb:98
   def perform_in(interval, *args); end
+
+  # Pop out a single job and perform it
+  #
+  # @raise [EmptyQueueError]
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:284
+  def perform_one; end
+
+  # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:291
+  def process_job(job); end
+
+  # Queue for this worker
+  #
+  # source://sidekiq-5.2.10/lib/sidekiq/testing.rb:260
+  def queue; end
 
   # source://sidekiq-5.2.10/lib/sidekiq/worker.rb:88
   def set(options); end

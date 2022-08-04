@@ -1348,7 +1348,6 @@ class Rack::Events::EventedBodyProxy < ::Rack::BodyProxy
   def response; end
 end
 
-# source://rack-2.2.4/lib/rack/file.rb:6
 Rack::File = Rack::Files
 
 # Rack::Files serves files below the +root+ directory given, according to the
@@ -2193,6 +2192,8 @@ class Rack::MockResponse < ::Rack::Response
   end
 end
 
+# For backwards compatibility with 1.1.0 and below
+#
 # source://rack-test-2.0.2/lib/rack/test.rb:413
 Rack::MockSession = Rack::Test::Session
 

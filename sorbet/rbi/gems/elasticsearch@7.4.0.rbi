@@ -10,6 +10,10 @@ module Elasticsearch; end
 # source://elasticsearch-7.4.0/lib/elasticsearch.rb:11
 module Elasticsearch::Transport; end
 
+# Handles communication with an Elasticsearch cluster.
+#
+# See {file:README.md README} for usage and code examples.
+#
 # source://elasticsearch-7.4.0/lib/elasticsearch.rb:12
 class Elasticsearch::Transport::Client
   include ::Elasticsearch::API
@@ -24,23 +28,82 @@ class Elasticsearch::Transport::Client
   include ::Elasticsearch::API::Actions
   include ::Elasticsearch::API::Common
 
+  # Create a client connected to an Elasticsearch cluster.
+  #
+  # Specify the URL via arguments or set the `ELASTICSEARCH_URL` environment variable.
+  #
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @option arguments
+  # @param arguments [Hash] a customizable set of options
+  # @return [Client] a new instance of Client
+  # @yield [faraday] Access and configure the `Faraday::Connection` instance directly with a block
+  #
   # source://elasticsearch-transport-7.4.0/lib/elasticsearch/transport/client.rb:104
   def initialize(arguments = T.unsafe(nil), &block); end
 
+  # Performs a request through delegation to {#transport}.
+  #
   # source://elasticsearch-transport-7.4.0/lib/elasticsearch/transport/client.rb:150
   def perform_request(method, path, params = T.unsafe(nil), body = T.unsafe(nil), headers = T.unsafe(nil)); end
 
+  # Returns the transport object.
+  #
+  # @see Elasticsearch::Transport::Transport::Base
+  # @see Elasticsearch::Transport::Transport::HTTP::Faraday
+  #
   # source://elasticsearch-transport-7.4.0/lib/elasticsearch/transport/client.rb:48
   def transport; end
 
+  # Returns the transport object.
+  #
+  # @see Elasticsearch::Transport::Transport::Base
+  # @see Elasticsearch::Transport::Transport::HTTP::Faraday
+  #
   # source://elasticsearch-transport-7.4.0/lib/elasticsearch/transport/client.rb:48
   def transport=(_arg0); end
 
   private
 
+  # Auto-detect the best adapter (HTTP "driver") available, based on libraries
+  # loaded by the user, preferring those with persistent connections
+  # ("keep-alive") by default
+  #
+  # @api private
+  # @return [Symbol]
+  #
   # source://elasticsearch-transport-7.4.0/lib/elasticsearch/transport/client.rb:244
   def __auto_detect_adapter; end
 
+  # Normalizes and returns hosts configuration.
+  #
+  # Arrayifies the `hosts_config` argument and extracts `host` and `port` info from strings.
+  # Performs shuffling when the `randomize_hosts` option is set.
+  #
+  # TODO: Refactor, so it's available in Elasticsearch::Transport::Base as well
+  #
+  # @api private
+  # @raise [ArgumentError]
+  # @return [Array<Hash>]
+  #
   # source://elasticsearch-transport-7.4.0/lib/elasticsearch/transport/client.rb:180
   def __extract_hosts(hosts_config); end
 
@@ -51,9 +114,17 @@ class Elasticsearch::Transport::Client
   def extract_cloud_creds(arguments); end
 end
 
+# The default port to use if connecting using a Cloud ID.
+#
+# @since 7.2.0
+#
 # source://elasticsearch-transport-7.4.0/lib/elasticsearch/transport/client.rb:41
 Elasticsearch::Transport::Client::DEFAULT_CLOUD_PORT = T.let(T.unsafe(nil), Integer)
 
+# The default host and port to use if not otherwise specified.
+#
+# @since 7.0.0
+#
 # source://elasticsearch-transport-7.4.0/lib/elasticsearch/transport/client.rb:36
 Elasticsearch::Transport::Client::DEFAULT_HOST = T.let(T.unsafe(nil), String)
 

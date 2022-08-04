@@ -6,7 +6,7 @@
 
 # :include: README.rdoc
 #
-# source://minitest-5.16.2/lib/minitest/parallel.rb:1
+# source://minitest-5.16.2/lib/minitest/assertions.rb:7
 module Minitest
   class << self
     # Internal run method. Responsible for telling all Runnable

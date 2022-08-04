@@ -709,6 +709,17 @@ class Pry
     # source://RUBY_ROOT/forwardable.rb:226
     def editor=(*args, &block); end
 
+    # Allow Pry::rescued(e) to work at any point in your program.
+    #
+    # @example
+    #   Pry::enable_rescuing!
+    #
+    #   begin
+    #   raise "foo"
+    #   rescue => e
+    #   Pry::rescued(e)
+    #   end
+    #
     # source://pry-rescue-1.5.2/lib/pry-rescue/core_ext.rb:73
     def enable_rescuing!(block = T.unsafe(nil)); end
 
@@ -899,9 +910,28 @@ class Pry
     # source://pry-0.14.1/lib/pry/pry_class.rb:94
     def real_path_to(file); end
 
+    # Start a pry session on any unhandled exceptions within this block.
+    #
+    # @example
+    #   Pry::rescue do
+    #   raise "foo"
+    #   end
+    # @return [Object] The return value of the block
+    #
     # source://pry-rescue-1.5.2/lib/pry-rescue/core_ext.rb:11
     def rescue(&block); end
 
+    # Start a pry session on an exception that you rescued within a Pry::rescue{ }.
+    #
+    # @example
+    #   Pry::rescue do
+    #   begin
+    #   raise "foo"
+    #   rescue => e
+    #   Pry::rescued(e)
+    #   end
+    #   end
+    #
     # source://pry-rescue-1.5.2/lib/pry-rescue/core_ext.rb:35
     def rescued(e = T.unsafe(nil)); end
 
@@ -973,6 +1003,10 @@ class Pry
 
     private
 
+    # Ensure that Interception is active while running this block
+    #
+    # @param block [Proc] the block
+    #
     # source://pry-rescue-1.5.2/lib/pry-rescue/core_ext.rb:88
     def with_rescuing(&block); end
   end

@@ -835,6 +835,32 @@ class ActionView::FileSystemResolver < ::ActionView::PathResolver
   def to_s; end
 end
 
+# Use FixtureResolver in your tests to simulate the presence of files on the
+# file system. This is used internally by Rails' own test suite, and is
+# useful for testing extensions that have no way of knowing what the file
+# system will look like at runtime.
+#
+# source://actionview-5.2.8.1/lib/action_view/testing/resolvers.rb:10
+class ActionView::FixtureResolver < ::ActionView::PathResolver
+  # @return [FixtureResolver] a new instance of FixtureResolver
+  #
+  # source://actionview-5.2.8.1/lib/action_view/testing/resolvers.rb:13
+  def initialize(hash = T.unsafe(nil), pattern = T.unsafe(nil)); end
+
+  # Returns the value of attribute hash.
+  #
+  # source://actionview-5.2.8.1/lib/action_view/testing/resolvers.rb:11
+  def hash; end
+
+  # source://actionview-5.2.8.1/lib/action_view/testing/resolvers.rb:18
+  def to_s; end
+
+  private
+
+  # source://actionview-5.2.8.1/lib/action_view/testing/resolvers.rb:24
+  def query(path, exts, _, _); end
+end
+
 # = Action View Cache Helper
 #
 # source://actionview-5.2.8.1/lib/action_view/helpers.rb:6
@@ -8980,6 +9006,9 @@ module ActionView::Helpers::TextHelper
 
   mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
 
+  # source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:52
+  def auto_link(text, *args, &block); end
+
   # The preferred method of outputting text in your views is to use the
   # <%= "text" %> eRuby syntax. The regular _puts_ and _print_ methods
   # do not operate as expected in an eRuby code block. If you absolutely must
@@ -9269,6 +9298,21 @@ module ActionView::Helpers::TextHelper
 
   private
 
+  # source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:123
+  def auto_link_email_addresses(text, html_options = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:90
+  def auto_link_urls(text, html_options = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:142
+  def auto_linked?(left, right); end
+
+  # source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:151
+  def conditional_html_safe(target, condition); end
+
+  # source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:147
+  def conditional_sanitize(target, condition, sanitize_options = T.unsafe(nil)); end
+
   # source://actionview-5.2.8.1/lib/action_view/helpers/text_helper.rb:465
   def cut_excerpt_part(part_position, part, separator, options); end
 
@@ -9285,6 +9329,21 @@ module ActionView::Helpers::TextHelper
   # source://actionview-5.2.8.1/lib/action_view/helpers/text_helper.rb:457
   def split_paragraphs(text); end
 end
+
+# source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:81
+ActionView::Helpers::TextHelper::AUTO_EMAIL_LOCAL_RE = T.let(T.unsafe(nil), Regexp)
+
+# source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:82
+ActionView::Helpers::TextHelper::AUTO_EMAIL_RE = T.let(T.unsafe(nil), Regexp)
+
+# source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:79
+ActionView::Helpers::TextHelper::AUTO_LINK_CRE = T.let(T.unsafe(nil), Array)
+
+# source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:73
+ActionView::Helpers::TextHelper::AUTO_LINK_RE = T.let(T.unsafe(nil), Regexp)
+
+# source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:84
+ActionView::Helpers::TextHelper::BRACKETS = T.let(T.unsafe(nil), Hash)
 
 # source://actionview-5.2.8.1/lib/action_view/helpers/text_helper.rb:406
 class ActionView::Helpers::TextHelper::Cycle
@@ -9318,6 +9377,9 @@ class ActionView::Helpers::TextHelper::Cycle
   # source://actionview-5.2.8.1/lib/action_view/helpers/text_helper.rb:438
   def step_index(n); end
 end
+
+# source://rails_autolink-1.1.6/lib/rails_autolink/helpers.rb:86
+ActionView::Helpers::TextHelper::WORD_PATTERN = T.let(T.unsafe(nil), String)
 
 # source://actionview-5.2.8.1/lib/action_view/helpers/translation_helper.rb:10
 module ActionView::Helpers::TranslationHelper
@@ -10666,6 +10728,12 @@ module ActionView::ModelNaming
 
   # source://actionview-5.2.8.1/lib/action_view/model_naming.rb:10
   def model_name_from_record_or_class(record_or_class); end
+end
+
+# source://actionview-5.2.8.1/lib/action_view/testing/resolvers.rb:48
+class ActionView::NullResolver < ::ActionView::PathResolver
+  # source://actionview-5.2.8.1/lib/action_view/testing/resolvers.rb:49
+  def query(path, exts, _, _); end
 end
 
 # An Optimized resolver for Rails' most common case.

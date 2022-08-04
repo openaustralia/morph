@@ -779,6 +779,9 @@ Capybara::Config::OPTIONS = T.let(T.unsafe(nil), Array)
 #
 # source://capybara-3.37.1/lib/capybara/dsl.rb:6
 module Capybara::DSL
+  include ::Capybara::DSLRSpecProxyInstaller
+  extend ::Capybara::DSLRSpecProxyInstaller::ClassMethods
+
   # source://capybara-3.37.1/lib/capybara/dsl.rb:51
   def accept_alert(*_arg0, &_arg1); end
 
@@ -1119,9 +1122,25 @@ module Capybara::DSL
     # @private
     # @private
     #
-    # source://capybara-3.37.1/lib/capybara/dsl.rb:7
+    # source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:51
     def included(base); end
   end
+end
+
+# :nocov:
+#
+# source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:49
+module Capybara::DSLRSpecProxyInstaller
+  class << self
+    # source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:57
+    def prepended(base); end
+  end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:50
+module Capybara::DSLRSpecProxyInstaller::ClassMethods
+  # source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:51
+  def included(base); end
 end
 
 # source://capybara-3.37.1/lib/capybara.rb:445
@@ -4850,6 +4869,644 @@ class Capybara::Queries::TitleQuery < ::Capybara::Queries::BaseQuery
   #
   # source://capybara-3.37.1/lib/capybara/queries/title_query.rb:34
   def valid_keys; end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:4
+module Capybara::RSpecMatcherProxies
+  # source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:5
+  def all(*args, **kwargs, &block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:13
+  def within(*args, **kwargs, &block); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:64
+module Capybara::RSpecMatcherProxyInstaller
+  class << self
+    # source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:72
+    def prepended(base); end
+  end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:65
+module Capybara::RSpecMatcherProxyInstaller::ClassMethods
+  # source://capybara-3.37.1/lib/capybara/rspec/matcher_proxies.rb:66
+  def included(base); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:4
+module Capybara::RSpecMatchers
+  # Wait for window to become closed.
+  #
+  # @example
+  #   expect(window).to become_closed(wait: 0.8)
+  # @option options
+  # @param options [Hash] a customizable set of options
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:198
+  def become_closed(**options); end
+
+  # RSpec matcher for whether the element(s) matching a group of selectors exist.
+  #
+  # @see Capybara::Node::Matchers#assert_all_of_selectors
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:25
+  def have_all_of_selectors(*_arg0, &_arg1); end
+
+  # RSpec matcher for whether ancestor element(s) matching a given selector exist.
+  #
+  # @see Capybara::Node::Matchers#assert_ancestor
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:187
+  def have_ancestor(*_arg0, &_arg1); end
+
+  # RSpec matcher for whether the element(s) matching any of a group of selectors exist.
+  #
+  # @see Capybara::Node::Matchers#assert_any_of_selectors
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:39
+  def have_any_of_selectors(*_arg0, &_arg1); end
+
+  # RSpec matcher for buttons.
+  #
+  # @see Capybara::Node::Matchers#has_button?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:81
+  def have_button(locator = T.unsafe(nil), **options, &optional_filter_block); end
+
+  # RSpec matcher for checked fields.
+  #
+  # @see Capybara::Node::Matchers#has_checked_field?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:112
+  def have_checked_field(locator = T.unsafe(nil), **options, &optional_filter_block); end
+
+  # RSpec matcher for text content.
+  #
+  # @see Capybara::Node::Matchers#assert_text
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:130
+  def have_content(text_or_type, *args, **options); end
+
+  # RSpec matcher for whether elements(s) matching a given css selector exist
+  #
+  # @see Capybara::Node::Matchers#has_css?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:51
+  def have_css(expr, **options, &optional_filter_block); end
+
+  # RSpec matcher for the current path.
+  #
+  # @see Capybara::SessionMatchers#assert_current_path
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:142
+  def have_current_path(path, **options, &optional_filter_block); end
+
+  # RSpec matcher for form fields.
+  #
+  # @see Capybara::Node::Matchers#has_field?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:81
+  def have_field(locator = T.unsafe(nil), **options, &optional_filter_block); end
+
+  # RSpec matcher for links.
+  #
+  # @see Capybara::Node::Matchers#has_link?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:81
+  def have_link(locator = T.unsafe(nil), **options, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_ancestor(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_button(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_checked_field(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_content(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_css(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_current_path(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_field(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_link(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_select(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_selector(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_sibling(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_table(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_text(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_title(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_unchecked_field(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:165
+  def have_no_xpath(*args, **kw_args, &optional_filter_block); end
+
+  # RSpec matcher for whether no element(s) matching a group of selectors exist.
+  #
+  # @see Capybara::Node::Matchers#assert_none_of_selectors
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:32
+  def have_none_of_selectors(*_arg0, &_arg1); end
+
+  # RSpec matcher for select elements.
+  #
+  # @see Capybara::Node::Matchers#has_select?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:81
+  def have_select(locator = T.unsafe(nil), **options, &optional_filter_block); end
+
+  # RSpec matcher for whether the element(s) matching a given selector exist.
+  #
+  # @see Capybara::Node::Matchers#assert_selector
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:18
+  def have_selector(*_arg0, &_arg1); end
+
+  # RSpec matcher for whether sibling element(s) matching a given selector exist.
+  #
+  # @see Capybara::Node::Matchers#assert_sibling
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:180
+  def have_sibling(*_arg0, &_arg1); end
+
+  # @deprecated
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:157
+  def have_style(styles = T.unsafe(nil), **options); end
+
+  # RSpec matcher for table elements.
+  #
+  # @see Capybara::Node::Matchers#has_table?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:81
+  def have_table(locator = T.unsafe(nil), **options, &optional_filter_block); end
+
+  # RSpec matcher for text content.
+  #
+  # @see Capybara::Node::Matchers#assert_text
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:130
+  def have_text(text_or_type, *args, **options); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:135
+  def have_title(title, **options); end
+
+  # RSpec matcher for unchecked fields.
+  #
+  # @see Capybara::Node::Matchers#has_unchecked_field?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:112
+  def have_unchecked_field(locator = T.unsafe(nil), **options, &optional_filter_block); end
+
+  # RSpec matcher for whether elements(s) matching a given xpath selector exist.
+  #
+  # @see Capybara::Node::Matchers#has_xpath?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:51
+  def have_xpath(expr, **options, &optional_filter_block); end
+
+  # RSpec matcher for whether the current element matches a given css selector.
+  #
+  # @see Capybara::Node::Matchers#matches_css?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:55
+  def match_css(expr, **options, &optional_filter_block); end
+
+  # RSpec matcher for whether the current element matches a given selector.
+  #
+  # @see Capybara::Node::Matchers#assert_matches_selector
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:46
+  def match_selector(*_arg0, &_arg1); end
+
+  # RSpec matcher for element style.
+  #
+  # @see Capybara::Node::Matchers#matches_style?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:149
+  def match_style(styles = T.unsafe(nil), **options); end
+
+  # RSpec matcher for whether the current element matches a given xpath selector.
+  #
+  # @see Capybara::Node::Matchers#matches_xpath?
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:55
+  def match_xpath(expr, **options, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:172
+  def not_match_css(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:172
+  def not_match_selector(*args, **kw_args, &optional_filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers.rb:172
+  def not_match_xpath(*args, **kw_args, &optional_filter_block); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:5
+module Capybara::RSpecMatchers::CountSugar
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:20
+  def at_least(number); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:15
+  def at_most(number); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:10
+  def exactly(number); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:6
+  def once; end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:8
+  def thrice; end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:25
+  def times; end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:7
+  def twice; end
+
+  private
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/count_sugar.rb:31
+  def options; end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:9
+module Capybara::RSpecMatchers::Matchers; end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:10
+class Capybara::RSpecMatchers::Matchers::Base
+  # @return [Base] a new instance of Base
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:15
+  def initialize(*args, **kw_args, &filter_block); end
+
+  # Returns the value of attribute failure_message.
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:13
+  def failure_message; end
+
+  # Returns the value of attribute failure_message_when_negated.
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:13
+  def failure_message_when_negated; end
+
+  private
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:37
+  def session_options; end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:23
+  def session_query_args; end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:32
+  def session_query_options; end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/become_closed.rb:6
+class Capybara::RSpecMatchers::Matchers::BecomeClosed
+  # @return [BecomeClosed] a new instance of BecomeClosed
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/become_closed.rb:7
+  def initialize(options); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/become_closed.rb:23
+  def failure_message; end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/become_closed.rb:27
+  def failure_message_when_negated; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/become_closed.rb:11
+  def matches?(window); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:76
+class Capybara::RSpecMatchers::Matchers::CountableWrappedElementMatcher < ::Capybara::RSpecMatchers::Matchers::WrappedElementMatcher
+  include ::Capybara::RSpecMatchers::CountSugar
+  include ::Capybara::RSpecMatchers::SpatialSugar
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:34
+class Capybara::RSpecMatchers::Matchers::HaveAllSelectors < ::Capybara::RSpecMatchers::Matchers::WrappedElementMatcher
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:43
+  def description; end
+
+  # @raise [ArgumentError]
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:39
+  def does_not_match?(_actual); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:35
+  def element_matches?(el); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/have_ancestor.rb:8
+class Capybara::RSpecMatchers::Matchers::HaveAncestor < ::Capybara::RSpecMatchers::Matchers::CountableWrappedElementMatcher
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_ancestor.rb:17
+  def description; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_ancestor.rb:13
+  def element_does_not_match?(el); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_ancestor.rb:9
+  def element_matches?(el); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_ancestor.rb:21
+  def query; end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:62
+class Capybara::RSpecMatchers::Matchers::HaveAnySelectors < ::Capybara::RSpecMatchers::Matchers::WrappedElementMatcher
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:71
+  def description; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:67
+  def does_not_match?(el); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:63
+  def element_matches?(el); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/have_current_path.rb:8
+class Capybara::RSpecMatchers::Matchers::HaveCurrentPath < ::Capybara::RSpecMatchers::Matchers::WrappedElementMatcher
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_current_path.rb:17
+  def description; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_current_path.rb:13
+  def element_does_not_match?(el); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_current_path.rb:9
+  def element_matches?(el); end
+
+  private
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_current_path.rb:23
+  def current_path; end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:48
+class Capybara::RSpecMatchers::Matchers::HaveNoSelectors < ::Capybara::RSpecMatchers::Matchers::WrappedElementMatcher
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:57
+  def description; end
+
+  # @raise [ArgumentError]
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:53
+  def does_not_match?(_actual); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:49
+  def element_matches?(el); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:8
+class Capybara::RSpecMatchers::Matchers::HaveSelector < ::Capybara::RSpecMatchers::Matchers::CountableWrappedElementMatcher
+  # @return [HaveSelector] a new instance of HaveSelector
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:9
+  def initialize(*args, **kw_args, &filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:25
+  def description; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:21
+  def element_does_not_match?(el); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:17
+  def element_matches?(el); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_selector.rb:29
+  def query; end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/have_sibling.rb:8
+class Capybara::RSpecMatchers::Matchers::HaveSibling < ::Capybara::RSpecMatchers::Matchers::CountableWrappedElementMatcher
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_sibling.rb:17
+  def description; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_sibling.rb:13
+  def element_does_not_match?(el); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_sibling.rb:9
+  def element_matches?(el); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_sibling.rb:21
+  def query; end
+end
+
+# @deprecated
+#
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/match_style.rb:35
+class Capybara::RSpecMatchers::Matchers::HaveStyle < ::Capybara::RSpecMatchers::Matchers::MatchStyle
+  # @return [HaveStyle] a new instance of HaveStyle
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/match_style.rb:36
+  def initialize(*args, **kw_args, &filter_block); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/have_text.rb:8
+class Capybara::RSpecMatchers::Matchers::HaveText < ::Capybara::RSpecMatchers::Matchers::CountableWrappedElementMatcher
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_text.rb:17
+  def description; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_text.rb:13
+  def element_does_not_match?(el); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_text.rb:9
+  def element_matches?(el); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_text.rb:21
+  def format(content); end
+
+  private
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_text.rb:27
+  def text; end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/have_title.rb:8
+class Capybara::RSpecMatchers::Matchers::HaveTitle < ::Capybara::RSpecMatchers::Matchers::WrappedElementMatcher
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_title.rb:17
+  def description; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_title.rb:13
+  def element_does_not_match?(el); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_title.rb:9
+  def element_matches?(el); end
+
+  private
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/have_title.rb:23
+  def title; end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/match_selector.rb:8
+class Capybara::RSpecMatchers::Matchers::MatchSelector < ::Capybara::RSpecMatchers::Matchers::HaveSelector
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/match_selector.rb:17
+  def description; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/match_selector.rb:13
+  def element_does_not_match?(el); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/match_selector.rb:9
+  def element_matches?(el); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/match_selector.rb:21
+  def query; end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/match_style.rb:8
+class Capybara::RSpecMatchers::Matchers::MatchStyle < ::Capybara::RSpecMatchers::Matchers::WrappedElementMatcher
+  # @return [MatchStyle] a new instance of MatchStyle
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/match_style.rb:9
+  def initialize(styles = T.unsafe(nil), **kw_args, &filter_block); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/match_style.rb:22
+  def description; end
+
+  # @raise [ArgumentError]
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/match_style.rb:18
+  def does_not_match?(_actual); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/match_style.rb:14
+  def element_matches?(el); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:81
+class Capybara::RSpecMatchers::Matchers::NegatedMatcher
+  # @return [NegatedMatcher] a new instance of NegatedMatcher
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:84
+  def initialize(matcher); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:97
+  def description; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:93
+  def does_not_match?(actual); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:101
+  def failure_message; end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:105
+  def failure_message_when_negated; end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:89
+  def matches?(actual); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:49
+class Capybara::RSpecMatchers::Matchers::WrappedElementMatcher < ::Capybara::RSpecMatchers::Matchers::Base
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:57
+  def does_not_match?(actual); end
+
+  # @return [Boolean]
+  #
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:50
+  def matches?(actual); end
+
+  private
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/base.rb:66
+  def wrap(actual); end
+end
+
+# source://capybara-3.37.1/lib/capybara/rspec/matchers/spatial_sugar.rb:5
+module Capybara::RSpecMatchers::SpatialSugar
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/spatial_sugar.rb:6
+  def above(el); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/spatial_sugar.rb:11
+  def below(el); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/spatial_sugar.rb:16
+  def left_of(el); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/spatial_sugar.rb:26
+  def near(el); end
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/spatial_sugar.rb:21
+  def right_of(el); end
+
+  private
+
+  # source://capybara-3.37.1/lib/capybara/rspec/matchers/spatial_sugar.rb:33
+  def options; end
 end
 
 # source://capybara-3.37.1/lib/capybara.rb:446

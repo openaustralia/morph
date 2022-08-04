@@ -10,57 +10,24 @@
 # source://guard-livereload-2.5.2/lib/guard/livereload.rb:3
 module Guard
   class << self
-    # Asynchronously trigger changes
-    #
-    # Currently supported args:
-    #
-    #   @example Old style hash:
-    #     async_queue_add(modified: ['foo'], added: ['bar'], removed: [])
-    #
-    #   @example New style signals with args:
-    #     async_queue_add([:guard_pause, :unpaused ])
-    #
     # source://guard-2.18.0/lib/guard.rb:87
     def async_queue_add(changes); end
 
     # source://guard-2.18.0/lib/guard.rb:73
     def init(cmdline_options); end
 
-    # Returns the value of attribute interactor.
-    #
     # source://guard-2.18.0/lib/guard.rb:24
     def interactor; end
 
-    # Returns the value of attribute listener.
-    #
     # source://guard-2.18.0/lib/guard.rb:23
     def listener; end
 
-    # Returns the value of attribute queue.
-    #
     # source://guard-2.18.0/lib/guard.rb:22
     def queue; end
 
-    # Initializes the Guard singleton:
-    #
-    # * Initialize the internal Guard state;
-    # * Create the interactor
-    # * Select and initialize the file change listener.
-    #
-    # @option options
-    # @option options
-    # @option options
-    # @option options
-    # @option options
-    # @option options
-    # @param options [Hash] a customizable set of options
-    # @return [Guard] the Guard singleton
-    #
     # source://guard-2.18.0/lib/guard.rb:44
     def setup(cmdline_options = T.unsafe(nil)); end
 
-    # Returns the value of attribute state.
-    #
     # source://guard-2.18.0/lib/guard.rb:21
     def state; end
 
@@ -69,30 +36,18 @@ module Guard
     # source://guard-2.18.0/lib/guard.rb:132
     def _evaluate(options); end
 
-    # TODO: remove at some point
-    # TODO: not tested because collides with ongoing refactoring
-    #
     # source://guard-2.18.0/lib/guard.rb:152
     def _guardfile_deprecated_check(modified); end
 
     # source://guard-2.18.0/lib/guard.rb:113
     def _listener_callback; end
 
-    # TODO: obsoleted? (move to Dsl?)
-    #
-    # @return [Boolean]
-    #
     # source://guard-2.18.0/lib/guard.rb:128
     def _pluginless_guardfile?; end
 
     # source://guard-2.18.0/lib/guard.rb:109
     def _relative_pathnames(paths); end
 
-    # Check if any of the changes are actually watched for
-    # TODO: why iterate twice? reuse this info when running tasks
-    #
-    # @return [Boolean]
-    #
     # source://guard-2.18.0/lib/guard.rb:99
     def _relevant_changes?(changes); end
   end

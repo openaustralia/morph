@@ -7,8 +7,6 @@
 # source://coffee-script-source-1.12.2/lib/coffee_script/source.rb:1
 module CoffeeScript
   class << self
-    # Compile a script (String or IO) to JavaScript.
-    #
     # source://coffee-script-2.4.1/lib/coffee_script.rb:66
     def compile(script, options = T.unsafe(nil)); end
 

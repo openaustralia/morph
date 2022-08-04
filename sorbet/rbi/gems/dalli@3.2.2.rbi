@@ -2316,7 +2316,6 @@ Rack::ETAG = T.let(T.unsafe(nil), String)
 # source://rack-2.2.4/lib/rack.rb:30
 Rack::EXPIRES = T.let(T.unsafe(nil), String)
 
-# source://rack-2.2.4/lib/rack/file.rb:6
 Rack::File = Rack::Files
 
 # source://rack-2.2.4/lib/rack.rb:39
