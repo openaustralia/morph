@@ -1,9 +1,12 @@
 # typed: false
 # frozen_string_literal: true
 
+require "sorbet-runtime"
+
 module StaticHelper
   # For sorbet
-  include GeneratedUrlHelpersModule
+  # See https://sorbet.org/docs/error-reference#4002
+  T.unsafe(self).include Rails.application.routes.url_helpers
   include ActionView::Helpers::OutputSafetyHelper
   include ActionView::Helpers::UrlHelper
 
