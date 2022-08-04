@@ -18,6 +18,11 @@ AllCops:
       - spec/lib/morph/test_scrapers/*/*/*
       - lib/morph/limit_output.rb
 
+Sorbet/TrueSigil:
+  Enabled: true
+  Include:
+    - app/lib/**/*
+
 # Disabling warnings about line length because it's so common through
 # the codebase currently. It would be good to fix as it would make things
 # easier to read but it would take a bit of time to do.
