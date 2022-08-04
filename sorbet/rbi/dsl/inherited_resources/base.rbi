@@ -11,15 +11,12 @@ class InheritedResources::Base
   module HelperMethods
     include ::Ransack::Helpers::FormHelper
     include ::ApplicationHelper
-    include ::ApiHelper
     include ::BootstrapFlashHelper
-    include ::ConnectionLogsHelper
     include ::DocumentationHelper
     include ::OwnersHelper
     include ::RunsHelper
     include ::ScrapersHelper
     include ::SearchHelper
-    include ::SiteSettingsHelper
     include ::StaticHelper
     include ::SupportersHelper
     include ::UsersHelper
