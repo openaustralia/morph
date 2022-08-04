@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # A record of a download or an API query

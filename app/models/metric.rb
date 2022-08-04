@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Capture output of /usr/bin/time command (on Linux)

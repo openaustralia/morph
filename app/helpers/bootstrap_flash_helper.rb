@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Copied from twitter-bootstrap-rails gem https://github.com/seyhunak/twitter-bootstrap-rails/blob/b701e23e91bd2726af5bc669b87f7f34efc96ab1/app/helpers/bootstrap_flash_helper.rb

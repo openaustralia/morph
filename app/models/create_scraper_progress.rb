@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Progress in morp creating a scraper

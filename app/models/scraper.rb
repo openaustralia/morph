@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # A scraper is a script that runs that gets data from the web

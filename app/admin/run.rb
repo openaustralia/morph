@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 ActiveAdmin.register Run do

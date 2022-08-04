@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Using American spelling to match GitHub usage

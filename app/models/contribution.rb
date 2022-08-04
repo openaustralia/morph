@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Contribution of a user to the code a scraper

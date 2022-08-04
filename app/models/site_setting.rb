@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Settings that apply to the whole app and everybody on it

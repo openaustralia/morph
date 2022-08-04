@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Run API used by the morph command-line client

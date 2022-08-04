@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 ActiveAdmin.register_page "Docker Images" do

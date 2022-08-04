@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Run with: rackup sync.ru -E production
