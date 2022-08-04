@@ -1,7 +1,14 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 module ApplicationHelper
+  # For sorbet
+  include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::OutputSafetyHelper
+  include ActionView::Helpers::AssetTagHelper
+  include ActionView::Helpers::DateHelper
+  include Kernel
+
   def duration_of_time_in_words(secs)
     distance_of_time_in_words(0, secs, include_seconds: true)
   end
