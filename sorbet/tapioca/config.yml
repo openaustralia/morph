@@ -11,3 +11,6 @@ dsl:
   # exclude:
   # - SomeGeneratorName
   # workers: 5
+annotations:
+  typed_overrides:
+    sidekiq: "ignore"
