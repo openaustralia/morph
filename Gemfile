@@ -95,11 +95,17 @@ gem "validate_url"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
+# For type checking
+gem "sorbet-static-and-runtime"
+
 group :production do
   gem "dalli"
 end
 
 group :development do
+  # To help with sorbet type checking
+  gem "tapioca", require: false
+
   gem "capistrano-rails"
   gem "capistrano-rvm"
   gem "growl"
