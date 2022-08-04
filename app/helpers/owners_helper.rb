@@ -1,7 +1,11 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 module OwnersHelper
+  # For sorbet
+  include ERB::Util
+  include ActionView::Helpers::AssetTagHelper
+
   def owner_image(owner, size:, show_tooltip: true, tooltip_text: nil)
     options = { size: "#{size}x#{size}", class: "" }
     options[:class] += " img-circle" if owner.user?

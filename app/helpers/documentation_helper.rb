@@ -1,7 +1,10 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 module DocumentationHelper
+  # For sorbet
+  include ActionView::Helpers::UrlHelper
+
   def improve_button(text, file, options = {})
     spacer = if options.key?(:spacer)
                options[:spacer]
