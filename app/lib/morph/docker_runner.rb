@@ -3,6 +3,7 @@
 
 # To define Sidekiq::Shutdown
 require "sidekiq/cli"
+require "sorbet-runtime"
 
 module Morph
   # More low-level API for running scrapers. Does not do much of the magic
