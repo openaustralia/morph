@@ -20,9 +20,19 @@ AllCops:
 
 Sorbet/TrueSigil:
   Enabled: true
-  Include:
-    - app/lib/**/*
-    - app/helpers/*
+  Exclude:
+    # TODO: Work our way through this list to remove the excluded
+    - app/admin/*
+    - app/controllers/**/*
+    - app/mailers/*
+    - app/models/*
+    - app/workers/*
+    - config/deploy/*
+    - config.ru
+    - db/seeds.rb
+    - lib/tasks/*
+    - spec/**/*
+    - sync.ru
 
 # This conflicts with the type checking that sorbet does
 Lint/SafeNavigationConsistency:
