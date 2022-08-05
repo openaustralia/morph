@@ -26,7 +26,7 @@ Sorbet/TrueSigil:
     - app/controllers/**/*
     - app/mailers/*
     - app/models/*
-    - app/workers/*
+    - app/workers/scraper_auto_run_worker.rb
     - config/deploy/*
     - config.ru
     - db/seeds.rb
