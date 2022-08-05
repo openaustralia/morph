@@ -37,7 +37,7 @@ class Scraper < ApplicationRecord
   validates :name, uniqueness: {
     scope: :owner, message: "is already taken on morph.io"
   }
-  validate :not_used_on_github, on: :create, if: -> { github_id.blank? && name.present? }
+  validate :not_used_on_github, on: :create, if: proc { |s| s.github_id.blank? && s.name.present? }
 
   extend FriendlyId
   friendly_id :full_name
