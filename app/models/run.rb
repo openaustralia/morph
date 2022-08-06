@@ -62,11 +62,11 @@ class Run < ApplicationRecord
 
   # TODO: Put env in path so development and test don't crash into each other
   def data_path
-    "#{owner.data_root}/#{name}"
+    "#{owner&.data_root}/#{name}"
   end
 
   def repo_path
-    "#{owner.repo_root}/#{name}"
+    "#{owner&.repo_root}/#{name}"
   end
 
   def stop!
@@ -99,7 +99,8 @@ class Run < ApplicationRecord
   # cycles we need to look back at least 48 hours to ensure that we see all
   # possible scrapers that could be auto-run.
   def finished_recently?
-    finished_at && finished_at > 48.hours.ago
+    f = finished_at
+    f && f > 48.hours.ago
   end
 
   def error_text
@@ -112,7 +113,7 @@ class Run < ApplicationRecord
 
   def variables
     # Handle this run not having a scraper attached (run from morph-cli)
-    scraper ? scraper.variables : []
+    scraper&.variables || []
   end
 
   # Returns a hash of environment variables
@@ -122,9 +123,12 @@ class Run < ApplicationRecord
 
   # Called when a run has finished. Perform any post-run work here.
   def finished!
-    scraper.update_sqlite_db_size
-    scraper.reindex
-    scraper.reload
-    scraper.deliver_webhooks(self)
+    s = scraper
+    return if s.nil?
+
+    s.update_sqlite_db_size
+    s.reindex
+    s.reload
+    s.deliver_webhooks(self)
   end
 end
