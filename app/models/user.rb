@@ -10,16 +10,6 @@ class User < Owner
   has_many :contributions, dependent: :destroy
   has_many :scrapers_contributed_to, through: :contributions, source: :scraper
 
-  # This feature flag doesn't do anything anymore
-  # TODO: Remove it
-  def see_downloads
-    get_feature_switch_value(:see_downloads, false)
-  end
-
-  def see_downloads=(value)
-    set_feature_switch_value(:see_downloads, value)
-  end
-
   # In most cases people have contributed to the scrapers that they own so we
   # really don't want to see these twice. This method just removes their own
   # scrapers from the list

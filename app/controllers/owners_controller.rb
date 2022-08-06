@@ -36,15 +36,6 @@ class OwnersController < ApplicationController
 
   def settings; end
 
-  def update
-    if @owner.user?
-      @owner.update(
-        see_downloads: params[:user][:see_downloads]
-      )
-    end
-    redirect_to @owner
-  end
-
   def reset_key
     @owner.set_api_key
     @owner.save!
