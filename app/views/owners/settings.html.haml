@@ -25,14 +25,3 @@
 
   - if can? :reset_key, @owner
     = button_to "Reset key", reset_key_owner_path(@owner), class: "btn btn-danger"
-
-  - if can? :update, @owner
-    %h2 Feature settings (admin only)
-    %p
-      Feature settings are special features that can be enabled by administrators. They are used to
-      test out experimental features or otherwise only enable things for certain users.
-
-    = simple_form_for @owner do |f|
-      - if @owner.user?
-        = f.input :see_downloads, as: :boolean, hint: "See all downloads include those before #{ApiQuery::VISIBLE_CUT_OFF_DATE}", label: "See all downloads"
-      = f.button :submit, "Update feature settings"

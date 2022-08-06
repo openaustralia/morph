@@ -27,20 +27,6 @@ class Owner < ApplicationRecord
     as_json only: %i[name nickname company]
   end
 
-  def get_feature_switch_value(key, default)
-    if feature_switches.respond_to?(:key?) && feature_switches.key?(key)
-      feature_switches[key] == "1"
-    else
-      default
-    end
-  end
-
-  def set_feature_switch_value(key, value)
-    s = feature_switches || {}
-    s[key] = value
-    self.feature_switches = s
-  end
-
   def name
     # If nickname and name are identical return nil
     return nil if self[:name] == nickname

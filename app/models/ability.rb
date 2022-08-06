@@ -43,11 +43,8 @@ class Ability
       can :reset_key, Owner, id: org.id unless SiteSetting.read_only_mode
     end
 
-    # Admins can look at all owner settings and update
-    if user.admin?
-      can :settings, Owner
-      can :update, Owner unless SiteSetting.read_only_mode
-    end
+    # Admins can look at all owner settings
+    can :settings, Owner if user.admin?
 
     # Everyone can show and watch anyone
     can :show, Owner
