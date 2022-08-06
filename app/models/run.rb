@@ -39,9 +39,11 @@ class Run < ApplicationRecord
   end
 
   def update_wall_time
-    return if started_at.nil? || finished_at.nil?
+    s = started_at
+    f = finished_at
+    return if s.nil? || f.nil?
 
-    self[:wall_time] = finished_at - started_at
+    self[:wall_time] = f - s
   end
 
   def wall_time=(_)
@@ -49,8 +51,9 @@ class Run < ApplicationRecord
   end
 
   def name
-    if scraper
-      scraper.name
+    s = scraper
+    if s
+      s.name
     else
       # This run is using uploaded code and so is not associated with a scraper
       "run"
