@@ -6,7 +6,5 @@ class ApplicationController
 
   def authenticate_user!; end
 
-  def stored_location_for(resource); end
-
   def sync_update(model); end
 end
