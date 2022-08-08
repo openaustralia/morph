@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 class ConnectionLogsController < ApplicationController
@@ -11,10 +11,11 @@ class ConnectionLogsController < ApplicationController
       if domain.nil?
         # In case another thread has created a record between the find above and
         # the create below we put an extra guard around it
+        domain = Domain.find_or_create_by!(name: params[:host])
         begin
           domain = Domain.create!(name: params[:host])
         rescue ActiveRecord::RecordNotUnique
-          domain = Domain.find_by(name: params[:host])
+          domain = Domain.find_by!(name: params[:host])
         end
         UpdateDomainWorker.perform_async(domain.id)
       end
