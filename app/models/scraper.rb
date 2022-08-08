@@ -78,11 +78,12 @@ class Scraper < ApplicationRecord
   end
 
   def scraped_domains
-    last_run ? last_run.domains : []
+    last_run&.domains || []
   end
 
   def all_watchers
-    (watchers + owner.watchers).uniq
+    owner_watchers = (owner&.watchers || [])
+    (watchers + owner_watchers).uniq
   end
 
   # Also orders the owners by number of downloads
@@ -105,7 +106,7 @@ class Scraper < ApplicationRecord
   # but doesn't save it
   def self.new_from_github(full_name, octokit_client)
     repo = octokit_client.repository(full_name)
-    repo_owner = Owner.find_by(nickname: repo.owner.login)
+    repo_owner = Owner.find_by!(nickname: repo.owner.login)
     # Populate a new scraper with information from the repo
     Scraper.new(
       name: repo.name, full_name: repo.full_name, description: repo.description,
@@ -115,7 +116,8 @@ class Scraper < ApplicationRecord
   end
 
   def original_language
-    Morph::Language.new(original_language_key.to_sym)
+    o = original_language_key
+    Morph::Language.new(o.to_sym) if o
   end
 
   def update_contributors
@@ -175,7 +177,7 @@ class Scraper < ApplicationRecord
   # the last run failed
   # TODO: This is now inconsistent with the way this is handled elsewhere
   def requires_attention?
-    auto_run && last_run && last_run.finished_with_errors?
+    auto_run && last_run&.finished_with_errors?
   end
 
   def self.can_write?(user, owner)
@@ -192,11 +194,11 @@ class Scraper < ApplicationRecord
   end
 
   def repo_path
-    "#{owner.repo_root}/#{name}"
+    "#{owner&.repo_root}/#{name}"
   end
 
   def data_path
-    "#{owner.data_root}/#{name}"
+    "#{owner&.data_root}/#{name}"
   end
 
   def readme
@@ -215,7 +217,8 @@ class Scraper < ApplicationRecord
   end
 
   def runnable?
-    last_run.nil? || last_run.finished?
+    l = last_run
+    l.nil? || l.finished?
   end
 
   def queue!
