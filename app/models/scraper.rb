@@ -286,24 +286,6 @@ class Scraper < ApplicationRecord
     r
   end
 
-  # TODO: Remove this and scraperwiki data from database
-  def scraperwiki_shortname
-    # scraperwiki_url should be of the form https://classic.scraperwiki.com/scrapers/shortname/
-    return if scraperwiki_url.nil?
-
-    m = scraperwiki_url.match(
-      %r{https://classic.scraperwiki.com/scrapers/([-\w]+)(/)?}
-    )
-    m[1] if m
-  end
-
-  def scraperwiki_shortname=(shortname)
-    return if shortname.blank?
-
-    self.scraperwiki_url =
-      "https://classic.scraperwiki.com/scrapers/#{shortname}/"
-  end
-
   def current_revision_from_repo
     r = Grit::Repo.new(repo_path)
     Grit::Head.current(r).commit.id

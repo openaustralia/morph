@@ -37,30 +37,6 @@ describe Scraper do
       expect(scraper.cpu_time).to be_within(0.00001).of(17.4)
     end
 
-    describe "#scraperwiki_shortname" do
-      it do
-        scraper.scraperwiki_url = "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
-        expect(scraper.scraperwiki_shortname).to eq "australian_rainfall"
-      end
-    end
-
-    describe "#scraperwiki_url" do
-      it do
-        scraper.scraperwiki_shortname = "australian_rainfall"
-        expect(scraper.scraperwiki_url).to eq "https://classic.scraperwiki.com/scrapers/australian_rainfall/"
-      end
-
-      it do
-        scraper.scraperwiki_shortname = nil
-        expect(scraper.scraperwiki_url).to be_nil
-      end
-
-      it do
-        scraper.scraperwiki_shortname = ""
-        expect(scraper.scraperwiki_url).to be_nil
-      end
-    end
-
     describe "#latest_successful_run_time" do
       context "when the first run is successful" do
         before do
