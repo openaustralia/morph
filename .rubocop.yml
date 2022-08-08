@@ -24,7 +24,6 @@ Sorbet/TrueSigil:
     # TODO: Work our way through this list to remove the excluded
     - app/admin/*
     - app/controllers/**/*
-    - app/workers/scraper_auto_run_worker.rb
     - config/deploy/*
     - config.ru
     - db/seeds.rb
