@@ -13,6 +13,12 @@ before_script:
   - bundle exec rake db:setup
   - docker pull openaustralia/buildstep
 
+script:
+  - bundle exec rake
+  # Also fail if any static type checking fails
+  - bundle exec srb
+  - bundle exec rubocop
+
 after_success:
   - bundle exec codeclimate-test-reporter
 
