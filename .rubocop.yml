@@ -25,7 +25,8 @@ Sorbet/TrueSigil:
   Exclude:
     # TODO: Work our way through this list to remove the excluded
     - app/admin/*
-    - app/controllers/**/*
+    - app/controllers/users/omniauth_callbacks_controller.rb
+    - app/controllers/api_controller.rb
     - config/deploy/*
     - config.ru
     - db/seeds.rb
