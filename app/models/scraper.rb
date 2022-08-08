@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 # A scraper is a script that runs that gets data from the web
@@ -346,7 +346,8 @@ class Scraper < ApplicationRecord
 
   # Return the https version of the git clone url (git_url)
   def git_url_https
-    "https#{git_url[3..-1]}"
+    url = git_url
+    "https#{url[3..-1]}" if url
   end
 
   def deliver_webhooks(run)
@@ -359,7 +360,7 @@ class Scraper < ApplicationRecord
   private
 
   def not_used_on_github
-    return unless Octokit.repository?(full_name)
+    return unless Octokit.client.repository?(full_name)
 
     errors.add(:name, "is already taken on GitHub")
   end
