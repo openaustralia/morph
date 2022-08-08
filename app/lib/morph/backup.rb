@@ -1,9 +1,12 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Morph
   # Backup and restore to local files
   module Backup
+    extend T::Sig
+
+    sig { void }
     def self.backup
       unless SiteSetting.read_only_mode
         Rails.logger.warn "WARNING: The site is NOT in read-only mode. " \
@@ -18,6 +21,7 @@ module Morph
       FileUtils.rm_f "db/backups/redis_backup.rdb.bz2"
     end
 
+    sig { void }
     def self.restore
       system "tar xf db/backups/morph_backup.tar"
       restore_mysql
@@ -28,6 +32,7 @@ module Morph
       FileUtils.rm_f "db/backups/redis_backup.rdb.bz2"
     end
 
+    sig { void }
     def self.backup_mysql
       Rails.logger.info "Removing any previous MySQL backup..."
       FileUtils.rm_f "db/backups/mysql_backup.sql"
@@ -40,6 +45,7 @@ module Morph
       system "bzip2 db/backups/mysql_backup.sql"
     end
 
+    sig { void }
     def self.restore_mysql
       Rails.logger.info "Uncompressing MySQL backup..."
       system "bunzip2 -k db/backups/mysql_backup.sql.bz2"
@@ -49,6 +55,7 @@ module Morph
       FileUtils.rm_f "db/backups/mysql_backup.sql"
     end
 
+    sig { void }
     def self.backup_sqlite
       Rails.logger.info "Removing any previous SQLite backup..."
       FileUtils.rm_f "db/backups/sqlite_backup.tar"
@@ -60,6 +67,7 @@ module Morph
       system "bzip2 db/backups/sqlite_backup.tar"
     end
 
+    sig { void }
     def self.restore_sqlite
       Rails.logger.info "Uncompressing SQLite backup..."
       system "bunzip2 -k db/backups/sqlite_backup.tar.bz2"
@@ -68,6 +76,7 @@ module Morph
       FileUtils.rm_f "db/backups/sqlite_backup.tar"
     end
 
+    sig { void }
     def self.backup_redis
       Rails.logger.info "Removing any previous Redis backup..."
       FileUtils.rm_f "db/backups/redis_backup.rdb"
@@ -81,6 +90,7 @@ module Morph
       system "bzip2 db/backups/redis_backup.rdb"
     end
 
+    sig { void }
     def self.restore_redis
       Rails.logger.info "Uncompressing Redis backup..."
       system "bunzip2 -k db/backups/redis_backup.rdb.bz2"
@@ -88,10 +98,12 @@ module Morph
       system "mv db/backups/redis_backup.rdb #{redis_directory}/dump.rdb"
     end
 
+    sig { returns(String) }
     def self.redis_directory
       "/var/lib/redis"
     end
 
+    sig { returns(String) }
     def self.mysql_auth
       if mysql_username.blank? && mysql_password.blank?
         "-u root"
@@ -100,18 +112,22 @@ module Morph
       end
     end
 
+    sig { returns(T::Hash[String, String]) }
     def self.mysql_configuration
       Rails.configuration.database_configuration[Rails.env]
     end
 
+    sig { returns(T.nilable(String)) }
     def self.mysql_database
       mysql_configuration["database"]
     end
 
+    sig { returns(T.nilable(String)) }
     def self.mysql_username
       mysql_configuration["username"]
     end
 
+    sig { returns(T.nilable(String)) }
     def self.mysql_password
       mysql_configuration["password"]
     end
