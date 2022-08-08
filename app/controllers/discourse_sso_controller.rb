@@ -1,16 +1,18 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 class DiscourseSsoController < ApplicationController
   before_action :authenticate_user!
 
   def sso
+    # Will be set because we've just authenticated
+    user = T.must(current_user)
     secret = ENV.fetch("DISCOURSE_SECRET", nil)
     sso = Discourse::SingleSignOn.parse(request.query_string, secret)
-    sso.email = current_user.email
-    sso.name = current_user.name
-    sso.username = current_user.nickname
-    sso.external_id = current_user.id # unique to your application
+    sso.email = user.email
+    sso.name = user.name
+    sso.username = user.nickname
+    sso.external_id = user.id # unique to your application
     sso.sso_secret = secret
 
     redirect_to sso.to_url("#{ENV.fetch('DISCOURSE_URL', nil)}/session/sso_login")
