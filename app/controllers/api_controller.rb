@@ -25,13 +25,15 @@ class ApiController < ApplicationController
     # Cleanup run
     response.stream.close
     # Don't want to leave any containers hanging around
-    container = runner.container_for_run
+    container = runner&.container_for_run
     if container
       container.kill
       container.delete
     end
-    FileUtils.rm_rf(run.data_path)
-    FileUtils.rm_rf(run.repo_path)
+    if run
+      FileUtils.rm_rf(run.data_path)
+      FileUtils.rm_rf(run.repo_path)
+    end
   end
 
   def data
@@ -151,7 +153,7 @@ class ApiController < ApplicationController
       # Tell nginx and passenger not to buffer this
       response.headers["X-Accel-Buffering"] = "no"
       response.headers["Content-Disposition"] = "attachment; filename=#{@scraper.name}.csv"
-      displayed_header = false
+      displayed_header = T.let(false, T::Boolean)
       @scraper.database.sql_query_streaming(params[:query]) do |row|
         # only show the header once at the beginning
         unless displayed_header
@@ -208,7 +210,7 @@ class ApiController < ApplicationController
     bench = Benchmark.measure do
       # Tell nginx and passenger not to buffer this
       response.headers["X-Accel-Buffering"] = "no"
-      displayed_header = false
+      displayed_header = T.let(false, T::Boolean)
       @scraper.database.sql_query_streaming(params[:query]) do |row|
         unless displayed_header
           atom_header
