@@ -138,7 +138,8 @@ class ScrapersController < ApplicationController
 
   # Toggle whether we're watching this scraper
   def watch
-    current_user.toggle_watch(@scraper)
+    authenticated_user = T.must(current_user)
+    authenticated_user.toggle_watch(@scraper)
     redirect_back(fallback_location: root_path)
   end
 
@@ -159,15 +160,23 @@ class ScrapersController < ApplicationController
   end
 
   def scraper_params
-    a = if can? :memory_setting, @scraper
-          %i[auto_run memory_mb]
-        else
-          [:auto_run]
-        end
-    params.require(:scraper).permit(*a, variables_attributes: %i[
-                                      id name value _destroy
-                                    ], webhooks_attributes: %i[
-                                      id url _destroy
-                                    ])
+    s = T.cast(params.require(:scraper), ActionController::Parameters)
+    if can? :memory_setting, @scraper
+      s.permit(:auto_run, :memory_mb,
+               variables_attributes: %i[
+                 id name value _destroy
+               ],
+               webhooks_attributes: %i[
+                 id url _destroy
+               ])
+    else
+      s.permit(:auto_run,
+               variables_attributes: %i[
+                 id name value _destroy
+               ],
+               webhooks_attributes: %i[
+                 id url _destroy
+               ])
+    end
   end
 end
