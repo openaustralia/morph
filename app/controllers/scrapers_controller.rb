@@ -32,11 +32,14 @@ class ScrapersController < ApplicationController
   end
 
   def create
+    params_scraper = T.cast(params[:scraper], ActionController::Parameters)
+    authenticated_user = T.must(current_user)
+
     @scraper = Scraper.new(
-      original_language_key: params[:scraper][:original_language_key],
-      owner_id: params[:scraper][:owner_id],
-      name: params[:scraper][:name],
-      description: params[:scraper][:description]
+      original_language_key: params_scraper[:original_language_key],
+      owner_id: params_scraper[:owner_id],
+      name: params_scraper[:name],
+      description: params_scraper[:description]
     )
     @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
     authorize! :create, @scraper
@@ -47,7 +50,7 @@ class ScrapersController < ApplicationController
         progress: 5
       )
       @scraper.save
-      CreateScraperWorker.perform_async(@scraper.id, current_user.id,
+      CreateScraperWorker.perform_async(@scraper.id, authenticated_user.id,
                                         scraper_url(@scraper))
       redirect_to @scraper
     else
@@ -66,8 +69,11 @@ class ScrapersController < ApplicationController
   end
 
   def create_github
-    @scraper = Scraper.new_from_github(params[:scraper][:full_name],
-                                       current_user.octokit_client)
+    params_scraper = T.cast(params[:scraper], ActionController::Parameters)
+    authenticated_user = T.must(current_user)
+
+    @scraper = Scraper.new_from_github(params_scraper[:full_name],
+                                       authenticated_user.octokit_client)
     authorize! :create_github, @scraper
     if @scraper.save
       @scraper.create_create_scraper_progress!(

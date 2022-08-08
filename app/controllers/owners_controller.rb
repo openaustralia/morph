@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 class OwnersController < ApplicationController
@@ -44,7 +44,8 @@ class OwnersController < ApplicationController
 
   # Toggle whether we're watching this user / organization
   def watch
-    current_user.toggle_watch(@owner)
+    user = T.must(current_user)
+    user.toggle_watch(@owner)
     redirect_back(fallback_location: root_path)
   end
 
