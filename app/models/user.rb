@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 # A real human being (hopefully)
@@ -19,7 +19,7 @@ class User < Owner
 
   # A list of all owners thst this user can write to. Includes itself
   def all_owners
-    [self] + organizations
+    [self] + organizations.to_a
   end
 
   def reset_authorization!
@@ -40,7 +40,7 @@ class User < Owner
       self,
       watched_broken_scrapers_ordered_by_urgency,
       watched_successful_scrapers
-    ).deliver
+    ).deliver_now
   rescue Net::SMTPSyntaxError
     Rails.logger.warn "Warning: user #{nickname} has invalid email address #{email} " \
                       "(tried to send alert)"
