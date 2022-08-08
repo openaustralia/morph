@@ -7,6 +7,8 @@ require:
 
 AllCops:
   Exclude:
+      # Exclude vendor to make this work on travis
+      - vendor/**/*
       - 'db/migrate/*'
       - 'db/schema.rb'
       - config/*
