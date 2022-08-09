@@ -19,6 +19,7 @@ AllCops:
       - default_files/*/*/*
       - spec/lib/morph/test_scrapers/*/*/*
       - lib/morph/limit_output.rb
+      - app/helpers/bootstrap_flash_helper.rb
 
 Sorbet/TrueSigil:
   Enabled: true
