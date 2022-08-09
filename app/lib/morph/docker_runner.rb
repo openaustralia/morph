@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 # To define Sidekiq::Shutdown
@@ -37,23 +37,28 @@ module Morph
       512 * 1024 * 1024
     end
 
+    sig { params(platform: String).returns(Docker::Image) }
     def self.buildstep_image(platform)
       Morph::DockerUtils.get_or_pull_image("#{BUILDSTEP_IMAGE}:#{platform}")
     end
 
     # "memory" is the memory limit applied to running container (in bytes). If nil uses the default (set in default_memory_limit)
+    sig do
+      params(repo_path: String, env_variables: T::Hash[String, String], container_labels: T::Hash[String, String],
+             max_lines: Integer, platform: T.nilable(String), disable_proxy: T::Boolean, memory: T.nilable(Integer),
+             block: T.nilable(T.proc.params(stream: Symbol, text: String).void))
+        .returns(T.nilable(Docker::Container))
+    end
     def self.compile_and_start_run(
       repo_path:, env_variables: {}, container_labels: {}, max_lines: 0, platform: nil,
-      disable_proxy: false, memory: nil
+      disable_proxy: false, memory: nil, &block
     )
       memory = default_memory_limit if memory.nil?
 
-      i = buildstep_image(platform || DEFAULT_PLATFORM) do |c|
-        yield(:internalout, c) if block_given?
-      end
-      yield(:internalout, "Injecting configuration and compiling...\n") if block_given?
+      i = buildstep_image(platform || DEFAULT_PLATFORM)
+      block.call(:internalout, "Injecting configuration and compiling...\n") if block_given?
       i3 = compile(i, repo_path) do |c|
-        yield(:internalout, c) if block_given?
+        block.call(:internalout, c) if block_given?
       end
       # If something went wrong during the compile and it couldn't finish
       return nil if i3.nil?
@@ -112,7 +117,7 @@ module Morph
 
       Dir.mktmpdir("morph") do |dest|
         copy_config_to_directory(repo_path, dest, false)
-        yield(:internalout, "Injecting scraper and running...\n") if block_given?
+        block.call(:internalout, "Injecting scraper and running...\n") if block_given?
         # TODO: Combine two operations below into one
         Morph::DockerUtils.insert_contents_of_directory(c, dest, "/app")
         Morph::DockerUtils.insert_file(c, "lib/morph/limit_output.rb",
@@ -123,6 +128,7 @@ module Morph
       c
     end
 
+    sig { void }
     def self.create_morph_network
       begin
         Docker::Network.get(DOCKER_NETWORK)
@@ -149,7 +155,8 @@ module Morph
     # If since is non-nil only return log lines since the time given. This
     # time is non-inclusive so we shouldn't return the log line with that
     # exact timestamp, just ones after it.
-    def self.attach_to_run(container, since = nil)
+    sig { params(container: Docker::Container, since: T.nilable(Time), block: T.nilable(T.proc.params(timestamp: Time, stream: Symbol, text: String).void)).void }
+    def self.attach_to_run(container, since = nil, &block)
       params = { stdout: true, stderr: true, follow: true, timestamps: true }
       params[:since] = since.to_f if since
       container.streaming_logs(params) do |s, line|
@@ -169,14 +176,14 @@ module Morph
         # be included. So...
         if (since.nil? || timestamp > since) && block_given?
           if s == :stderr && c == "limit_output.rb: Too many lines of output!\n"
-            yield timestamp, :internalerr,
-              "\n" \
-              "Too many lines of output! " \
-              "Your scraper will continue uninterrupted. " \
-              "There will just be no further output displayed" \
-              "\n"
+            block.call timestamp, :internalerr,
+                       "\n" \
+                       "Too many lines of output! " \
+                       "Your scraper will continue uninterrupted. " \
+                       "There will just be no further output displayed" \
+                       "\n"
           else
-            yield timestamp, s, c
+            block.call timestamp, s, c
           end
         end
       end
@@ -184,6 +191,7 @@ module Morph
 
     # This should only get called on a stopped container where all the logs
     # have been collected
+    sig { params(container: Docker::Container, files: T::Array[String]).returns(Morph::RunResult) }
     def self.finish(container, files)
       # TODO: Check that container has actually stopped. If not raise an error
 
@@ -219,6 +227,7 @@ module Morph
 
     # If copy_config is true copies the config file across
     # Otherwise copies the other files across
+    sig { params(source: String, dest: String, copy_config: T::Boolean).void }
     def self.copy_config_to_directory(source, dest, copy_config)
       Dir.entries(source).each do |entry|
         next if [".", ".."].include?(entry)
@@ -231,11 +240,13 @@ module Morph
     end
 
     # Pulls all the separately tagged buildstep images
+    sig { void }
     def self.update_docker_images!
       Morph::DockerUtils.pull_docker_image(BUILDSTEP_IMAGE)
     end
 
-    def self.docker_build_command(image, commands, dir)
+    sig { params(image: Docker::Image, commands: T::Array[String], dir: String, block: T.proc.params(text: String).void).returns(T.nilable(Docker::Image)) }
+    def self.docker_build_command(image, commands, dir, &block)
       # Leave the files in dir untouched
       Dir.mktmpdir("morph") do |dir2|
         Morph::DockerUtils.copy_directory_contents(dir, dir2)
@@ -249,20 +260,21 @@ module Morph
           unless c =~ %r{^Step \d+/\d+ :} || c =~ /^ ---> / ||
                  c =~ /^Removing intermediate container / ||
                  c =~ /^Successfully built /
-            yield c
+            block.call c
           end
         end
       end
     end
 
+    sig { params(image: Docker::Image, commands: T::Array[String]).returns(String) }
     def self.dockerfile_contents_from_commands(image, commands)
-      commands = [commands] unless commands.is_a?(Array)
       lines = ["from #{image.id}"] + commands
       (lines.map { |c| "#{c}\n" }).join
     end
 
     # And build
     # TODO: Set memory and cpu limits during compile
+    sig { params(image: Docker::Image, repo_path: String, block: T.proc.params(text: String).void).returns(T.nilable(Docker::Image)) }
     def self.compile(image, repo_path, &block)
       Dir.mktmpdir("morph") do |dir|
         FileUtils.mkdir(File.join(dir, "app"))
