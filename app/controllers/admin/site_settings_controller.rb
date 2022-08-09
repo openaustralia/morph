@@ -11,8 +11,10 @@ module Admin
     end
 
     def update_maximum_concurrent_scrapers
+      params_maximum_concurrent_scrapers = T.cast(params[:maximum_concurrent_scrapers], T.any(String, Numeric))
+
       authorize! :update_sidekiq_maximum_concurrent_scrapers, SiteSetting
-      SiteSetting.maximum_concurrent_scrapers = params[:maximum_concurrent_scrapers]
+      SiteSetting.maximum_concurrent_scrapers = params_maximum_concurrent_scrapers.to_i
       flash[:notice] = "Updated maximum concurrent scrapers to #{SiteSetting.maximum_concurrent_scrapers}"
       redirect_to admin_dashboard_url
     end
