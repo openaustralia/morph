@@ -63,7 +63,7 @@ module Morph
       go_with_logging
     end
 
-    sig { params(max_lines: Integer, block: T.nilable(T.proc.params(timestamp: Time, stream: Symbol, text: String).void)).void }
+    sig { params(max_lines: Integer, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
     def go_with_logging(max_lines = Runner.default_max_lines, &block)
       go(max_lines) do |timestamp, s, c|
         log(timestamp, s, c)
@@ -82,13 +82,14 @@ module Morph
       sync_new line, scope: run unless Rails.env.test?
     end
 
+    sig { params(max_lines: Integer, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
     def go(max_lines = Runner.default_max_lines, &block)
       # If container already exists we just attach to it
       c = container_for_run
       if c.nil?
         c = compile_and_start_run(max_lines) do |stream, text|
           # TODO: Could we get sensible timestamps out at this stage too?
-          yield nil, stream, text if block_given?
+          block.call nil, stream, text if block_given?
         end
         since = nil
       else
@@ -105,6 +106,7 @@ module Morph
       attach_to_run_and_finish(c, since, &block)
     end
 
+    sig { params(max_lines: Integer, block: T.proc.params(stream: Symbol, text: String).void).returns(T.nilable(Docker::Container)) }
     def compile_and_start_run(max_lines = Runner.default_max_lines, &block)
       # puts "Starting...\n"
       run.database.backup
@@ -119,14 +121,14 @@ module Morph
           Morph::Language.languages_supported.map(&:scraper_filename)
         supported_scraper_files_as_text = supported_scraper_files.to_sentence(last_word_connector: ", or ")
         m = "Can't find scraper code. Expected to find a file called #{supported_scraper_files_as_text} in the root directory"
-        yield "stderr", m
+        block.call :stderr, m
         run.update(status_code: 999, finished_at: Time.zone.now)
         return
       end
 
       platform = run.scraper&.platform
       unless platform.nil? || Morph::DockerRunner::PLATFORMS.include?(platform)
-        yield "stderr", "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}."
+        block.call :stderr, "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}."
         run.update(status_code: 999, finished_at: Time.zone.now)
         return
       end
@@ -164,6 +166,7 @@ module Morph
       c
     end
 
+    sig { params(container: Docker::Container, since: T.nilable(Time), block: T.nilable(T.proc.params(timestamp: Time, stream: Symbol, text: String).void)).void }
     def attach_to_run_and_finish(container, since, &block)
       if container.nil?
         # TODO: Return the status for a compile error
@@ -191,7 +194,7 @@ module Morph
           However, this could also be related to an intermittent problem which we're
           working hard to resolve: https://github.com/openaustralia/morph/issues/1064
         ERROR
-        yield Time.zone.now, "stderr", m
+        block.call Time.zone.now, :stderr, m if block_given?
         status_code = 998
       end
 
