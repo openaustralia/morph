@@ -5,14 +5,19 @@ module Morph
   # High level API for running morph scraper. Handles the setting up of default
   # configuration if things like Gemfiles are not included (for Ruby)
   class Runner
+    extend T::Sig
+
     include RenderSync::Actions
+    sig { returns(Run) }
     attr_accessor :run
 
+    sig { params(run: Run).void }
     def initialize(run)
       @run = run
     end
 
     # TODO: Move this to a configuration somewhere
+    sig { returns(Integer) }
     def self.default_max_lines
       10_000
     end
