@@ -9,27 +9,30 @@ module Morph
   # More low-level API for running scrapers. Does not do much of the magic
   # and is less opinionated than the higher-level API in Morph::Runner
   class DockerRunner
-    ALL_CONFIG_FILENAMES = [
+    extend T::Sig
+    ALL_CONFIG_FILENAMES = T.let([
       "Procfile",
       "Gemfile", "Gemfile.lock",
       "requirements.txt", "runtime.txt",
       "composer.json", "composer.lock",
       "app.psgi", "cpanfile",
       "package.json"
-    ].freeze
+    ].freeze, T::Array[String])
     BUILDSTEP_IMAGE = "openaustralia/buildstep"
     # Variants of the buildstep image that we're currently supporting. These
     # correspond to tags of the buildstep image
-    PLATFORMS = %w[cedar-14 heroku-18].freeze
+    PLATFORMS = T.let(%w[cedar-14 heroku-18].freeze, T::Array[String])
     DEFAULT_PLATFORM = "cedar-14"
     DOCKER_NETWORK = "morph"
     DOCKER_BRIDGE = "morph"
     DOCKER_NETWORK_SUBNET = "192.168.0.0/16"
 
+    sig { returns(String) }
     def self.time_file
       "/app/time.output"
     end
 
+    sig { returns(Integer) }
     def self.default_memory_limit
       512 * 1024 * 1024
     end
