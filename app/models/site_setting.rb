@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "sorbet-runtime"
+
 # Settings that apply to the whole app and everybody on it
 class SiteSetting < ApplicationRecord
   extend T::Sig

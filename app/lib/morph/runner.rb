@@ -22,21 +22,26 @@ module Morph
       10_000
     end
 
+    sig { returns(Integer) }
     def self.total_slots
       SiteSetting.maximum_concurrent_scrapers
     end
 
     # This includes stopped containers too
+    sig { returns(Integer) }
     def self.used_slots
       Morph::DockerUtils.find_all_containers_with_label(run_label_key).count
     end
 
+    sig { returns(Integer) }
     def self.available_slots
       total_slots - used_slots
     end
 
     # The main section of the scraper running that is run in the background
-    def synch_and_go!
+    # TODO: Is stream always String or Symbol or both?
+    sig { params(block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
+    def synch_and_go!(&block)
       scraper = run.scraper
       # If this run belongs to a scraper that has just been deleted
       # or if the run has already been marked as finished then
@@ -48,8 +53,8 @@ module Morph
 
       unless success
         c = "There was a problem getting the latest scraper code from GitHub"
-        log(nil, "stderr", c)
-        yield nil, "stderr", c if block_given?
+        log(nil, :stderr, c)
+        block.call nil, :stderr, c if block_given?
         run.update(status_code: 999, finished_at: Time.zone.now)
         sync_update scraper if scraper
         return
@@ -58,13 +63,15 @@ module Morph
       go_with_logging
     end
 
-    def go_with_logging(max_lines = Runner.default_max_lines)
+    sig { params(max_lines: Integer, block: T.nilable(T.proc.params(timestamp: Time, stream: Symbol, text: String).void)).void }
+    def go_with_logging(max_lines = Runner.default_max_lines, &block)
       go(max_lines) do |timestamp, s, c|
         log(timestamp, s, c)
-        yield timestamp, s, c if block_given?
+        block.call timestamp, s, c if block_given?
       end
     end
 
+    sig { params(timestamp: T.nilable(Time), stream: Symbol, text: String).void }
     def log(timestamp, stream, text)
       Rails.logger.info "#{stream}: #{text}" if Rails.env.development?
       # Not using create on association to try to avoid memory bloat
