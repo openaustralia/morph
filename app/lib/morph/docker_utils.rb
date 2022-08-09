@@ -233,7 +233,7 @@ module Morph
     sig { params(image: Docker::Image, image_base: Docker::Image).returns(T::Boolean) }
     def self.image_built_on_other_image?(image, image_base)
       index = image.history.find_index { |l| l["Id"] == image_base.id }
-      index&.nonzero?
+      !index.nil? && index != 0
     end
 
     # This returns the total size of all the layers down to but not include the
