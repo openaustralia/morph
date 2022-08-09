@@ -98,6 +98,10 @@ gem "bootsnap", require: false
 # For type checking
 gem "sorbet-static-and-runtime"
 
+# Psych just seems to be giving us trouble
+# TODO: Figure out what's going on here
+gem "psych", "< 4"
+
 group :production do
   gem "dalli"
 end
