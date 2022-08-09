@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Morph
@@ -164,8 +164,8 @@ module Morph
       Docker::Container.all
     end
 
-    sig { params(dir: String, connection_options: T::Hash[Symbol, Integer]).returns(T.nilable(Docker::Image)) }
-    def self.docker_build_from_dir(dir, connection_options)
+    sig { params(dir: String, connection_options: T::Hash[Symbol, Integer], block: T.proc.params(text: String).void).returns(T.nilable(Docker::Image)) }
+    def self.docker_build_from_dir(dir, connection_options, &block)
       # How does this connection get closed?
       connection = docker_connection(connection_options)
       temp = create_tar_file(dir)
@@ -184,11 +184,11 @@ module Morph
           # Make sure that buffer can't grow out of control by limiting
           # it's size around 256 bytes
           if buffer[-1..-1] == "\n" || buffer.length >= 256
-            yield buffer
+            block.call buffer
             buffer = +""
           end
         end
-        yield buffer if buffer != ""
+        block.call buffer if buffer != ""
       end
     # This exception gets thrown if there is an error during the build (for
     # example if the compile fails). In this case we just want to return nil
