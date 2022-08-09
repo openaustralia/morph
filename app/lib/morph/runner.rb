@@ -37,20 +37,21 @@ module Morph
 
     # The main section of the scraper running that is run in the background
     def synch_and_go!
+      scraper = run.scraper
       # If this run belongs to a scraper that has just been deleted
       # or if the run has already been marked as finished then
       # don't do anything
-      return if run.scraper.nil? || run.finished?
+      return if scraper.nil? || run.finished?
 
       # TODO: Indicate that scraper is running before we do the synching
-      success = run.scraper.synchronise_repo
+      success = scraper.synchronise_repo
 
       unless success
         c = "There was a problem getting the latest scraper code from GitHub"
         log(nil, "stderr", c)
         yield nil, "stderr", c if block_given?
         run.update(status_code: 999, finished_at: Time.zone.now)
-        sync_update run.scraper if run.scraper
+        sync_update scraper if scraper
         return
       end
 
@@ -128,6 +129,8 @@ module Morph
         Morph::Runner.remove_hidden_directories(defaults)
         Morph::Runner.add_sqlite_db_to_directory(run.data_path, defaults)
 
+        scraper = run.scraper
+        memory_mb = scraper&.memory_mb
         Morph::DockerRunner.compile_and_start_run(
           repo_path: defaults,
           env_variables: run.env_variables,
@@ -136,7 +139,7 @@ module Morph
           platform: platform,
           # We're disabling the proxy for all scrapers
           disable_proxy: true,
-          memory: (run.scraper.memory_mb * 1024 * 1024 if run.scraper&.memory_mb), &block
+          memory: (memory_mb * 1024 * 1024 if memory_mb), &block
         )
       end
 
@@ -186,7 +189,7 @@ module Morph
       end
 
       # Now collect and save the metrics
-      run.metric.update(result.time_params) if result.time_params
+      T.must(run.metric).update(result.time_params) if result.time_params
 
       # Because SqliteDiff will actually create sqlite databases if they
       # don't exist we don't actually want that if there isn't actually
@@ -301,7 +304,8 @@ module Morph
     def docker_container_labels
       # Everything needs to be a string
       labels = { Morph::Runner.run_label_key => run_label_value }
-      labels["io.morph.scraper"] = run.scraper.full_name if run.scraper
+      scraper = run.scraper
+      labels["io.morph.scraper"] = scraper.full_name if scraper
       labels
     end
 
