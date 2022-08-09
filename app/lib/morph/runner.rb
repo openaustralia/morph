@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Morph
@@ -166,7 +166,7 @@ module Morph
       c
     end
 
-    sig { params(container: Docker::Container, since: T.nilable(Time), block: T.nilable(T.proc.params(timestamp: Time, stream: Symbol, text: String).void)).void }
+    sig { params(container: T.nilable(Docker::Container), since: T.nilable(Time), block: T.nilable(T.proc.params(timestamp: Time, stream: Symbol, text: String).void)).void }
     def attach_to_run_and_finish(container, since, &block)
       if container.nil?
         # TODO: Return the status for a compile error
@@ -180,7 +180,7 @@ module Morph
 
       # Only copy back database if it's there and has something in it
       if result.files && result.files["data.sqlite"]
-        Morph::Runner.copy_sqlite_db_back(run.data_path, result.files["data.sqlite"])
+        Morph::Runner.copy_sqlite_db_back(run.data_path, result.files["data.sqlite"].path)
         result.files["data.sqlite"].close!
       # Only show the error below if the scraper thinks it finished without problems
       elsif status_code.zero?
@@ -239,6 +239,7 @@ module Morph
     # killed here, the attach block finishes and the container cleanup is done
     # as if the scraper had stopped on its own
     # TODO: Make this stop the compile stage
+    sig { void }
     def stop!
       container = container_for_run
       if container
@@ -251,6 +252,7 @@ module Morph
       end
     end
 
+    sig { params(data_path: String, dir: String).void }
     def self.add_sqlite_db_to_directory(data_path, dir)
       return unless File.exist?(File.join(data_path, "data.sqlite"))
 
@@ -260,20 +262,19 @@ module Morph
       FileUtils.cp(File.join(data_path, "data.sqlite"), dir)
     end
 
-    def self.copy_sqlite_db_back(data_path, sqlite_file)
-      # Only overwrite the sqlite database if the container has one
-      return unless sqlite_file
-
+    sig { params(data_path: String, sqlite_file_path: String).void }
+    def self.copy_sqlite_db_back(data_path, sqlite_file_path)
       # First write to a temporary file with the new sqlite data
       # Copying across just in case temp directory and data_path directory
       # not on the same filesystem (which would stop atomic rename from working)
-      FileUtils.cp(sqlite_file.path, File.join(data_path, "data.sqlite.new"))
+      FileUtils.cp(sqlite_file_path, File.join(data_path, "data.sqlite.new"))
       # Then, rename the file to the "live" file overwriting the old data
       # This should happen atomically
       File.rename(File.join(data_path, "data.sqlite.new"),
                   File.join(data_path, "data.sqlite"))
     end
 
+    sig { params(source: String, dest: String).void }
     def self.add_config_defaults_to_directory(source, dest)
       Morph::DockerUtils.copy_directory_contents(source, dest)
       # We don't need to check that the language is recognised because
@@ -296,21 +297,25 @@ module Morph
     # Remove directories starting with "."
     # TODO: Make it just remove the .git directory in the root and not other
     # hidden directories which people might find useful
+    sig { params(directory: String).void }
     def self.remove_hidden_directories(directory)
       Find.find(directory) do |path|
         FileUtils.rm_rf(path) if FileTest.directory?(path) && File.basename(path)[0] == "."
       end
     end
 
+    sig { returns(String) }
     def self.run_label_key
       "io.morph.run"
     end
 
+    sig { returns(String) }
     def run_label_value
       run.id.to_s
     end
 
     # How to label the container for the actually running scraper
+    sig { returns(T::Hash[String, String]) }
     def docker_container_labels
       # Everything needs to be a string
       labels = { Morph::Runner.run_label_key => run_label_value }
@@ -319,12 +324,14 @@ module Morph
       labels
     end
 
+    sig { returns(T.nilable(Docker::Container)) }
     def container_for_run
       Morph::DockerUtils.find_container_with_label(
         Morph::Runner.run_label_key, run_label_value
       )
     end
 
+    sig { params(container: Docker::Container).returns(T.nilable(Integer)) }
     def self.run_id_for_container(container)
       value = Morph::DockerUtils.label_value(container, run_label_key)
       value&.to_i
@@ -332,6 +339,7 @@ module Morph
 
     # Given a run return the associated run object
     # If run has been deleted for this container then also return nil
+    sig { params(container: Docker::Container).returns(T.nilable(Run)) }
     def self.run_for_container(container)
       run_id = run_id_for_container(container)
       Run.find_by(id: run_id) if run_id
