@@ -48,6 +48,7 @@ module Morph
     end
 
     # The actual table names in the current db
+    sig { returns(T::Array[String]) }
     def table_names
       q = sql_query_safe("select name from sqlite_master where type='table'")
       if q
@@ -72,6 +73,7 @@ module Morph
     end
 
     # The table that should be listed first because it is the most important
+    sig { returns(T.nilable(String)) }
     def first_table_name
       if table_names.include?(Database.sqlite_table_name)
         Database.sqlite_table_name
@@ -120,10 +122,7 @@ module Morph
       array
     end
 
-    def self.clean_utf8_query_result(array)
-      array.map { |row| clean_utf8_query_row(row) }
-    end
-
+    sig { params(row: T::Hash[String, String]).returns(T::Hash[String, String]) }
     def self.clean_utf8_query_row(row)
       result = {}
       row.each { |k, v| result[clean_utf8_string(k)] = clean_utf8_string(v) }
@@ -131,6 +130,7 @@ module Morph
     end
 
     # Removes bits of strings that are invalid UTF8
+    sig { params(string: String).returns(String) }
     def self.clean_utf8_string(string)
       if string.respond_to?(:encode)
         if string.valid_encoding?
@@ -165,7 +165,8 @@ module Morph
     end
 
     # Returns 0 if table doesn't exists (or there is some other problem)
-    sig { params(table: String).returns(Integer) }
+    # TODO: table should really NOT be nillable
+    sig { params(table: T.nilable(String)).returns(Integer) }
     def no_rows(table = table_names.first)
       q = sql_query_safe(%{select count(*) from "#{table}"})
       q ? q.first.values.first : 0
@@ -182,6 +183,7 @@ module Morph
       end
     end
 
+    sig { returns(T::Array[String]) }
     def table_names_safe
       table_names
     rescue *CORRUPT_DATABASE_EXCEPTIONS
@@ -205,10 +207,14 @@ module Morph
       File.binwrite(sqlite_db_path, content)
     end
 
+    # TODO: table should really NOT be nillable
+    sig { params(table: T.nilable(String)).returns(String) }
     def select_first_ten(table = table_names.first)
       %(select * from "#{table}" limit 10)
     end
 
+    # TODO: table should really NOT be nillable
+    sig { params(table: T.nilable(String)).returns(String) }
     def select_all(table = table_names.first)
       %(select * from "#{table}")
     end
@@ -218,6 +224,7 @@ module Morph
       r || []
     end
 
+    sig { params(data_path: String).void }
     def self.tidy_data_path(data_path)
       # First get all the files in the data directory
       filenames = Dir.entries(data_path)
@@ -229,6 +236,7 @@ module Morph
 
     # Remove any files or directories in the data_path that are not the
     # actual database
+    sig { void }
     def tidy_data_path
       Database.tidy_data_path(@data_path)
     end
@@ -236,6 +244,7 @@ module Morph
     private
 
     # Add translators for problematic type conversions
+    sig { params(db: SQLite3::Database).void }
     def add_database_type_translations(db)
       # Don't error on dates that are FixNum and that don't parse
       %w[date datetime].each do |type|
