@@ -205,11 +205,6 @@ module Morph
       File.binwrite(sqlite_db_path, content)
     end
 
-    def standardise_table_name(table_name)
-      sql_query_safe(%(ALTER TABLE "#{table_name}" \
-        RENAME TO "#{Database.sqlite_table_name}"), readonly: false)
-    end
-
     def select_first_ten(table = table_names.first)
       %(select * from "#{table}" limit 10)
     end
