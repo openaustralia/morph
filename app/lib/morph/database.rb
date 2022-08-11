@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Morph
@@ -82,7 +82,8 @@ module Morph
       end
     end
 
-    def sql_query_streaming(query, readonly: true)
+    sig { params(query: String, readonly: T::Boolean, block: T.proc.params(row: T::Hash[String, String]).void).void }
+    def sql_query_streaming(query, readonly: true, &block)
       raise SQLite3::Exception, "No query specified" if query.blank?
 
       SQLite3::Database.new(
@@ -104,7 +105,7 @@ module Morph
         begin
           result = db.query(query)
           result.each do |row|
-            yield Database.clean_utf8_query_row(row)
+            block.call Database.clean_utf8_query_row(row)
           end
         ensure
           result&.close
@@ -114,6 +115,7 @@ module Morph
 
     # SUPER IMPORTANT: Only use this method if the result is small because
     # it keeps the whole thing in memory. Otherwise use sql_query_streaming
+    sig { params(query: String, readonly: T::Boolean).returns(T::Array[T::Hash[String, String]]) }
     def sql_query(query, readonly: true)
       array = []
       sql_query_streaming(query, readonly: readonly) do |row|
@@ -122,7 +124,7 @@ module Morph
       array
     end
 
-    sig { params(row: T::Hash[String, String]).returns(T::Hash[String, String]) }
+    sig { params(row: T::Hash[String, T.untyped]).returns(T::Hash[String, T.untyped]) }
     def self.clean_utf8_query_row(row)
       result = {}
       row.each { |k, v| result[clean_utf8_string(k)] = clean_utf8_string(v) }
@@ -130,7 +132,8 @@ module Morph
     end
 
     # Removes bits of strings that are invalid UTF8
-    sig { params(string: String).returns(String) }
+    # If it's not a string just passed through unchanged
+    sig { params(string: T.untyped).returns(T.untyped) }
     def self.clean_utf8_string(string)
       if string.respond_to?(:encode)
         if string.valid_encoding?
@@ -158,6 +161,7 @@ module Morph
                     invalid: :replace, undef: :replace, replace: "")
     end
 
+    sig { params(query: String, readonly: T::Boolean).returns(T.nilable(T::Array[T::Hash[String, T.untyped]])) }
     def sql_query_safe(query, readonly: true)
       sql_query(query, readonly: readonly)
     rescue *CORRUPT_DATABASE_EXCEPTIONS, SQLite3::SQLException
@@ -169,7 +173,7 @@ module Morph
     sig { params(table: T.nilable(String)).returns(Integer) }
     def no_rows(table = table_names.first)
       q = sql_query_safe(%{select count(*) from "#{table}"})
-      q ? q.first.values.first : 0
+      q ? T.must(q.first).values.first : 0
     rescue *CORRUPT_DATABASE_EXCEPTIONS
       0
     end
@@ -219,6 +223,8 @@ module Morph
       %(select * from "#{table}")
     end
 
+    # TODO: table should really NOT be nillable
+    sig { params(table: T.nilable(String)).returns(T::Array[T::Hash[String, String]]) }
     def first_ten_rows(table = table_names.first)
       r = sql_query_safe(select_first_ten(table))
       r || []
