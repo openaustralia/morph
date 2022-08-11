@@ -3,36 +3,44 @@
 
 module Morph
   class Database
-    CORRUPT_DATABASE_EXCEPTIONS = [
+    extend T::Sig
+    CORRUPT_DATABASE_EXCEPTIONS = T.let([
       SQLite3::NotADatabaseException,
       SQLite3::CorruptException,
       SQLite3::CantOpenException
-    ].freeze
+    ].freeze, T::Array[T.class_of(SQLite3::Exception)])
 
+    sig { params(data_path: String).void }
     def initialize(data_path)
       @data_path = data_path
     end
 
+    sig { returns(String) }
     def self.sqlite_db_filename
       "data.sqlite"
     end
 
+    sig { returns(String) }
     def self.sqlite_db_backup_filename
       "#{sqlite_db_filename}.backup"
     end
 
+    sig { returns(String) }
     def self.sqlite_table_name
       "data"
     end
 
+    sig { returns(String) }
     def sqlite_db_path
       File.join(@data_path, Database.sqlite_db_filename)
     end
 
+    sig { returns(String) }
     def sqlite_db_backup_path
       File.join(@data_path, Database.sqlite_db_backup_filename)
     end
 
+    sig { void }
     def backup
       return unless File.exist?(sqlite_db_path)
 
@@ -52,6 +60,7 @@ module Morph
       end
     end
 
+    sig { returns(T::Boolean) }
     def valid?
       # It's possible for a database to be malformed but just getting the table
       # names will work without error. So, getting a little sample data from
@@ -143,6 +152,7 @@ module Morph
     # is. This assumes little about the string encoding and cleans the result
     # when converting to utf-8. Using this is a last resort when simple
     # conversions aren't working.
+    sig { params(string: String).returns(String) }
     def self.convert_to_utf8_and_clean_binary_string(string)
       string.encode("UTF-8", "binary",
                     invalid: :replace, undef: :replace, replace: "")
@@ -155,6 +165,7 @@ module Morph
     end
 
     # Returns 0 if table doesn't exists (or there is some other problem)
+    sig { params(table: String).returns(Integer) }
     def no_rows(table = table_names.first)
       q = sql_query_safe(%{select count(*) from "#{table}"})
       q ? q.first.values.first : 0
@@ -162,6 +173,7 @@ module Morph
       0
     end
 
+    sig { returns(Integer) }
     def sqlite_db_size
       if File.exist?(sqlite_db_path)
         File::Stat.new(sqlite_db_path).size
@@ -177,14 +189,17 @@ module Morph
     end
 
     # Total number of records across all tables
+    sig { returns(Integer) }
     def sqlite_total_rows
       table_names_safe.map { |t| no_rows(t) }.sum
     end
 
+    sig { void }
     def clear
       FileUtils.rm_f sqlite_db_path
     end
 
+    sig { params(content: String).void }
     def write_sqlite_database(content)
       FileUtils.mkdir_p @data_path
       File.binwrite(sqlite_db_path, content)
