@@ -4,7 +4,10 @@
 module Morph
   # Service layer for talking to the Github API
   class Github
+    extend T::Sig
+
     # Returns Rugged::Repository
+    sig { params(repo_path: String, git_url: String).returns(Rugged::Repository) }
     def self.synchronise_repo_ignore_submodules(repo_path, git_url)
       if File.exist?(repo_path) && !Dir.empty?(repo_path)
         Rails.logger.info "Updating git repo #{repo_path}..."
@@ -19,6 +22,7 @@ module Morph
     end
 
     # Returns true if everything worked
+    sig { params(repo_path: String, git_url: String).returns(T::Boolean) }
     def self.synchronise_repo(repo_path, git_url)
       repo = synchronise_repo_ignore_submodules(repo_path, git_url)
       repo.submodules.each do |submodule|
@@ -33,6 +37,7 @@ module Morph
 
     # Will create a repository. Works for both an individual and an
     # organisation. Returns a repo
+    sig { params(user: User, owner: Owner, name: String, options: T::Hash[Symbol, T.untyped]).void }
     def self.create_repository(user, owner, name, options = {})
       if user == owner
         user.octokit_client.create_repository(
@@ -65,6 +70,7 @@ module Morph
       end
     end
 
+    sig { params(user: User).returns(T.nilable(String)) }
     def self.primary_email(user)
       # TODO: If email isn't verified probably should not send email to it
       e = emails(user)
@@ -83,6 +89,7 @@ module Morph
     # Useful after #heartbleed.
     # No support for this method yet in octokit (it's brand new) so do
     # it ourselves
+    sig { params(access_token: String).void }
     def self.reset_authorization(access_token)
       # POST https://api.github.com/applications/:client_id/tokens/:access_token
       client_id = ENV.fetch("GITHUB_APP_CLIENT_ID", nil)

@@ -23,8 +23,11 @@ class User < Owner
   end
 
   def reset_authorization!
+    a = access_token
+    return if a.nil?
+
     update(
-      access_token: Morph::Github.reset_authorization(access_token)
+      access_token: Morph::Github.reset_authorization(a)
     )
   end
 
