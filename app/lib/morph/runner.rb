@@ -279,7 +279,7 @@ module Morph
       Morph::DockerUtils.copy_directory_contents(source, dest)
       # We don't need to check that the language is recognised because
       # the compiler is never called if the language isn't valid
-      language = Morph::Language.language(dest)
+      language = T.must(Morph::Language.language(dest))
 
       language.default_files_to_insert.each do |files|
         next unless files.all? { |file| !File.exist?(File.join(dest, file)) }
