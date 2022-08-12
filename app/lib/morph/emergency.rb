@@ -1,12 +1,15 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Morph
   module Emergency
+    extend T::Sig
+
     RUN_WORKER_CLASS_NAME = "RunWorker"
     SCRAPER_QUEUE = "scraper"
 
     # Returns the ids for all the runs currently on the queue (including retries)
+    sig { returns(T::Array[Integer]) }
     def self.find_all_runs_on_the_queue
       queue = []
       # Runs on the retry queue
@@ -27,6 +30,7 @@ module Morph
     end
 
     # Returns an array of run ids
+    sig { returns(T::Array[Integer]) }
     def self.find_all_runs_associated_with_current_containers
       # Find all containers that are associated with runs
       containers = Docker::Container.all(all: true).map do |container|
@@ -37,6 +41,7 @@ module Morph
     end
 
     # Returns an array of run ids
+    sig { returns(T::Array[Integer]) }
     def self.find_all_unfinished_runs_attached_to_scrapers
       Run.where(finished_at: nil).where.not(scraper_id: nil).ids
     end
