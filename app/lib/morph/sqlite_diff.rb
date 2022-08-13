@@ -19,14 +19,9 @@ module Morph
       const :unchanged, Integer
     end
 
-    # TODO: This struct is pointless because it only contains a single value. Refactor
-    class TableDiffCountsStruct < T::Struct
-      const :counts, CountsStruct
-    end
-
     class TableDiffStruct < T::Struct
       const :name, String
-      const :records, TableDiffCountsStruct
+      const :records, CountsStruct
     end
 
     class TablesDiffStruct < T::Struct
@@ -39,7 +34,7 @@ module Morph
 
     class DiffStruct < T::Struct
       const :tables, TablesDiffStruct
-      const :records, TableDiffCountsStruct
+      const :records, CountsStruct
     end
 
     sig { params(tables: T::Array[String], db1: SQLite3::Database, db2: SQLite3::Database).returns(T::Array[TableDiffStruct]) }
@@ -47,7 +42,7 @@ module Morph
       tables.map do |table|
         TableDiffStruct.new(
           name: table,
-          records: TableDiffCountsStruct.new(counts: diffstat_table(table, db1, db2))
+          records: diffstat_table(table, db1, db2)
         )
       end
     end
@@ -58,9 +53,7 @@ module Morph
         added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         TableDiffStruct.new(
           name: table,
-          records: TableDiffCountsStruct.new(
-            counts: CountsStruct.new(added: added, removed: 0, changed: 0, unchanged: 0)
-          )
+          records: CountsStruct.new(added: added, removed: 0, changed: 0, unchanged: 0)
         )
       end
     end
@@ -71,9 +64,7 @@ module Morph
         removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         TableDiffStruct.new(
           name: table,
-          records: TableDiffCountsStruct.new(
-            counts: CountsStruct.new(added: 0, removed: removed, changed: 0, unchanged: 0)
-          )
+          records: CountsStruct.new(added: 0, removed: removed, changed: 0, unchanged: 0)
         )
       end
     end
@@ -100,13 +91,11 @@ module Morph
             removed: removed.count
           )
         ),
-        records: TableDiffCountsStruct.new(
-          counts: CountsStruct.new(
-            added: (unchanged + changed + added).sum { |t| t.records.counts.added },
-            removed: (unchanged + changed + removed).sum { |t| t.records.counts.removed },
-            changed: (unchanged + changed).sum { |t| t.records.counts.changed },
-            unchanged: (unchanged + changed).sum { |t| t.records.counts.unchanged }
-          )
+        records: CountsStruct.new(
+          added: (unchanged + changed + added).sum { |t| t.records.added },
+          removed: (unchanged + changed + removed).sum { |t| t.records.removed },
+          changed: (unchanged + changed).sum { |t| t.records.changed },
+          unchanged: (unchanged + changed).sum { |t| t.records.unchanged }
         )
       )
     end

@@ -32,12 +32,12 @@ describe Morph::SqliteDiff do
           "unchanged" => [
             {
               "name" => "foo",
-              "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 } }
+              "records" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 }
             }
           ],
           "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 }
         },
-        "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 } }
+        "records" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 }
       )
     end
 
@@ -48,7 +48,7 @@ describe Morph::SqliteDiff do
           "added" => [
             {
               "name" => "bar",
-              "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 0 } }
+              "records" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 0 }
             }
           ],
           "removed" => [],
@@ -56,12 +56,12 @@ describe Morph::SqliteDiff do
           "unchanged" => [
             {
               "name" => "foo",
-              "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 } }
+              "records" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 }
             }
           ],
           "counts" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 1 }
         },
-        "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 } }
+        "records" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 }
       )
     end
 
@@ -73,14 +73,14 @@ describe Morph::SqliteDiff do
           "removed" => [
             {
               "name" => "foo",
-              "records" => { "counts" => { "added" => 0, "removed" => 1, "changed" => 0, "unchanged" => 0 } }
+              "records" => { "added" => 0, "removed" => 1, "changed" => 0, "unchanged" => 0 }
             }
           ],
           "changed" => [],
           "unchanged" => [],
           "counts" => { "added" => 0, "removed" => 1, "changed" => 0, "unchanged" => 0 }
         },
-        "records" => { "counts" => { "added" => 0, "removed" => 1, "changed" => 0, "unchanged" => 0 } }
+        "records" => { "added" => 0, "removed" => 1, "changed" => 0, "unchanged" => 0 }
       )
     end
 
@@ -92,20 +92,20 @@ describe Morph::SqliteDiff do
           "added" => [
             {
               "name" => "bar",
-              "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 0 } }
+              "records" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 0 }
             }
           ],
           "removed" => [
             {
               "name" => "foo",
-              "records" => { "counts" => { "added" => 0, "removed" => 1, "changed" => 0, "unchanged" => 0 } }
+              "records" => { "added" => 0, "removed" => 1, "changed" => 0, "unchanged" => 0 }
             }
           ],
           "changed" => [],
           "unchanged" => [],
           "counts" => { "added" => 1, "removed" => 1, "changed" => 0, "unchanged" => 0 }
         },
-        "records" => { "counts" => { "added" => 0, "removed" => 1, "changed" => 0, "unchanged" => 0 } }
+        "records" => { "added" => 0, "removed" => 1, "changed" => 0, "unchanged" => 0 }
       )
     end
 
@@ -118,13 +118,13 @@ describe Morph::SqliteDiff do
           "changed" => [
             {
               "name" => "foo",
-              "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 1, "unchanged" => 0 } }
+              "records" => { "added" => 0, "removed" => 0, "changed" => 1, "unchanged" => 0 }
             }
           ],
           "unchanged" => [],
           "counts" => { "added" => 0, "removed" => 0, "changed" => 1, "unchanged" => 0 }
         },
-        "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 1, "unchanged" => 0 } }
+        "records" => { "added" => 0, "removed" => 0, "changed" => 1, "unchanged" => 0 }
       )
     end
 
@@ -138,12 +138,12 @@ describe Morph::SqliteDiff do
           "unchanged" => [
             {
               "name" => "foo",
-              "records" => { "counts" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 1 } }
+              "records" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 1 }
             }
           ],
           "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 }
         },
-        "records" => { "counts" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 1 } }
+        "records" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 1 }
       )
     end
 
@@ -154,17 +154,17 @@ describe Morph::SqliteDiff do
         "tables" => {
           "added" => [
             "name" => "bar",
-            "records" => { "counts" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 0 } }
+            "records" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 0 }
           ],
           "removed" => [],
           "changed" => [],
           "unchanged" => [
             "name" => "foo",
-            "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 } }
+            "records" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 1 }
           ],
           "counts" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 1 }
         },
-        "records" => { "counts" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 1 } }
+        "records" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 1 }
       )
     end
 
@@ -174,7 +174,7 @@ describe Morph::SqliteDiff do
           "added" => [
             {
               "name" => "foo",
-              "records" => { "counts" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 0 } }
+              "records" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 0 }
             }
           ],
           "removed" => [],
@@ -182,7 +182,7 @@ describe Morph::SqliteDiff do
           "unchanged" => [],
           "counts" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 0 }
         },
-        "records" => { "counts" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 0 } }
+        "records" => { "added" => 1, "removed" => 0, "changed" => 0, "unchanged" => 0 }
       )
       FileUtils.rm("non_existent_file.sqlite")
     end
@@ -196,7 +196,7 @@ describe Morph::SqliteDiff do
           "unchanged" => [],
           "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 0 }
         },
-        "records" => { "counts" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 0 } }
+        "records" => { "added" => 0, "removed" => 0, "changed" => 0, "unchanged" => 0 }
       )
       FileUtils.rm(["non_existent_file1.sqlite", "non_existent_file2.sqlite"])
     end

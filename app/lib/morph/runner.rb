@@ -211,7 +211,7 @@ module Morph
         )
         if diffstat
           tables = diffstat.tables.counts
-          records = diffstat.records.counts
+          records = diffstat.records
           run.update(
             tables_added: tables.added,
             tables_removed: tables.removed,
