@@ -182,12 +182,12 @@ module Morph
     # Find the difference within a range of rowids
     sig { params(table: String, min: Integer, max: Integer, db1: SQLite3::Database, db2: SQLite3::Database).returns(CountsStruct) }
     def self.diffstat_table_rowid_range(table, min, max, db1, db2)
-      r = rows_changed_in_range(table, min, max, db1, db2).serialize
+      r = rows_changed_in_range(table, min, max, db1, db2)
       CountsStruct.new(
-        added: r["added"].count,
-        removed: r["removed"].count,
-        changed: r["changed"].count,
-        unchanged: r["unchanged"].count
+        added: r.added.count,
+        removed: r.removed.count,
+        changed: r.changed.count,
+        unchanged: r.unchanged.count
       )
     end
 
