@@ -154,11 +154,11 @@ module Morph
       changed = 0
       unchanged = 0
       (min..max).each_slice(page) do |p|
-        result = diffstat_table_rowid_range(table, p[0], p[-1], db1, db2)
-        added += result[:added]
-        removed += result[:removed]
-        changed += result[:changed]
-        unchanged += result[:unchanged]
+        result = diffstat_table_rowid_range(table, T.must(p[0]), T.must(p[-1]), db1, db2)
+        added += result.added
+        removed += result.removed
+        changed += result.changed
+        unchanged += result.unchanged
       end
       CountsStruct.new(added: added, removed: removed, changed: changed, unchanged: unchanged)
     end
@@ -177,14 +177,15 @@ module Morph
     end
 
     # Find the difference within a range of rowids
+    sig { params(table: String, min: Integer, max: Integer, db1: SQLite3::Database, db2: SQLite3::Database).returns(CountsStruct) }
     def self.diffstat_table_rowid_range(table, min, max, db1, db2)
       r = rows_changed_in_range(table, min, max, db1, db2)
-      {
+      CountsStruct.new(
         added: r[:added].count,
         removed: r[:removed].count,
         changed: r[:changed].count,
         unchanged: r[:unchanged].count
-      }
+      )
     end
 
     def self.rows_changed_in_range(table, min, max, db1, db2)
