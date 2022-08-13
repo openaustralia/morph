@@ -32,7 +32,6 @@ module Morph
     sig { params(line: String).returns(T.nilable([Symbol, T.untyped])) }
     def self.parse_line(line)
       field, value = line.split(": ")
-      raise "Unexpected format for line" if value.nil?
 
       case field
       when /Maximum resident set size \(kbytes\)/
@@ -46,6 +45,8 @@ module Morph
       when /System time \(seconds\)/
         [:stime, value.to_f]
       when /Elapsed \(wall clock\) time \(h:mm:ss or m:ss\)/
+        raise "Unexpected format for line" if value.nil?
+
         n = value.split(":").map(&:to_f)
         case n.count
         when 2
