@@ -206,7 +206,7 @@ module Morph
 
       time_data_tmp = data.delete(time_file)
       if time_data_tmp
-        time_params = Morph::TimeCommand.params_from_string(time_data_tmp.read)
+        time_params = Morph::TimeCommand.params_from_string(T.must(time_data_tmp.read))
         time_data_tmp.close!
       end
 

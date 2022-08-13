@@ -1,13 +1,17 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Morph
   class TimeCommand
+    extend T::Sig
+
+    sig { params(other: T::Array[String], metric_file: String).returns(T::Array[String]) }
     def self.command(other, metric_file)
       ["/usr/bin/time", "-v", "-o", metric_file] + other
     end
 
     # Parse the output of the time command and return a hash of the parameters
+    sig { params(string: String).returns(T::Hash[Symbol, T.untyped]) }
     def self.params_from_string(string)
       params = string.split("\n").inject({}) do |p, line|
         r = parse_line(line)
@@ -25,8 +29,11 @@ module Morph
       params
     end
 
+    sig { params(line: String).returns(T.nilable([Symbol, T.untyped])) }
     def self.parse_line(line)
       field, value = line.split(": ")
+      raise "Unexpected format for line" if value.nil?
+
       case field
       when /Maximum resident set size \(kbytes\)/
         [:maxrss, value.to_i]
@@ -42,10 +49,15 @@ module Morph
         n = value.split(":").map(&:to_f)
         case n.count
         when 2
-          m, s = n
           h = 0
+          m = T.must(n[0])
+          s = T.must(n[1])
         when 3
-          h, m, s = n
+          h = T.must(n[0])
+          m = T.must(n[1])
+          s = T.must(n[2])
+        else
+          raise "Unexpected format for wall clock"
         end
         [:wall_time, (((h * 60) + m) * 60) + s]
       when /File system inputs/
