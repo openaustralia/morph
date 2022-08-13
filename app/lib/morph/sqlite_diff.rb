@@ -73,10 +73,10 @@ module Morph
     def self.diffstat_db(db1, db2)
       r = table_changes(db1, db2)
 
-      unchanged = diffstat_tables(r[:unchanged], db1, db2)
-      changed = diffstat_tables(r[:changed], db1, db2)
-      added = tables_added(r[:added], db1, db2)
-      removed = tables_removed(r[:removed], db1, db2)
+      unchanged = diffstat_tables(r["unchanged"], db1, db2)
+      changed = diffstat_tables(r["changed"], db1, db2)
+      added = tables_added(r["added"], db1, db2)
+      removed = tables_removed(r["removed"], db1, db2)
 
       DiffStruct.new(
         tables: TablesDiffStruct.new(
@@ -181,10 +181,10 @@ module Morph
     def self.diffstat_table_rowid_range(table, min, max, db1, db2)
       r = rows_changed_in_range(table, min, max, db1, db2)
       CountsStruct.new(
-        added: r[:added].count,
-        removed: r[:removed].count,
-        changed: r[:changed].count,
-        unchanged: r[:unchanged].count
+        added: r["added"].count,
+        removed: r["removed"].count,
+        changed: r["changed"].count,
+        unchanged: r["unchanged"].count
       )
     end
 
@@ -206,7 +206,7 @@ module Morph
       end
       unchanged = unchanged.map { |t| t[0] }
       changed = changed.map { |t| t[0] }
-      { added: added, removed: removed, changed: changed, unchanged: unchanged }
+      { "added" => added, "removed" => removed, "changed" => changed, "unchanged" => unchanged }
     end
 
     def self.execute2(db1, db2, query)
