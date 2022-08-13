@@ -125,6 +125,7 @@ module Morph
 
     # Find the ROWID range that covers both databases and return as
     # [min, max]
+    sig { params(table: String, db1: SQLite3::Database, db2: SQLite3::Database).returns([Integer, Integer]) }
     def self.spanning_rowid_table(table, db1, db2)
       min1, max1 = min_and_max_rowid(table, db1)
       min2, max2 = min_and_max_rowid(table, db2)
