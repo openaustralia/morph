@@ -12,8 +12,8 @@ module Morph
     def self.diffstat_tables(tables, db1, db2)
       tables.map do |table|
         {
-          name: table,
-          records: { counts: diffstat_table(table, db1, db2) }
+          "name" => table,
+          "records" => { "counts" => diffstat_table(table, db1, db2) }
         }
       end
     end
@@ -22,9 +22,9 @@ module Morph
       tables.map do |table|
         added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         {
-          name: table,
-          records: {
-            counts: { added: added, removed: 0, changed: 0, unchanged: 0 }
+          "name" => table,
+          "records" => {
+            "counts" => { "added" => added, "removed" => 0, "changed" => 0, "unchanged" => 0 }
           }
         }
       end
@@ -34,9 +34,9 @@ module Morph
       tables.map do |table|
         removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
         {
-          name: table,
-          records: {
-            counts: { added: 0, removed: removed, changed: 0, unchanged: 0 }
+          "name" => table,
+          "records" => {
+            "counts" => { "added" => 0, "removed" => removed, "changed" => 0, "unchanged" => 0 }
           }
         }
       end
@@ -51,24 +51,24 @@ module Morph
       removed = tables_removed(r[:removed], db1, db2)
 
       {
-        tables: {
-          unchanged: unchanged,
-          changed: changed,
-          added: added,
-          removed: removed,
-          counts: {
-            unchanged: unchanged.count,
-            changed: changed.count,
-            added: added.count,
-            removed: removed.count
+        "tables" => {
+          "unchanged" => unchanged,
+          "changed" => changed,
+          "added" => added,
+          "removed" => removed,
+          "counts" => {
+            "unchanged" => unchanged.count,
+            "changed" => changed.count,
+            "added" => added.count,
+            "removed" => removed.count
           }
         },
-        records: {
-          counts: {
-            added: (unchanged + changed + added).sum { |t| t[:records][:counts][:added] },
-            removed: (unchanged + changed + removed).sum { |t| t[:records][:counts][:removed] },
-            changed: (unchanged + changed).sum { |t| t[:records][:counts][:changed] },
-            unchanged: (unchanged + changed).sum { |t| t[:records][:counts][:unchanged] }
+        "records" => {
+          "counts" => {
+            "added" => (unchanged + changed + added).sum { |t| t["records"]["counts"]["added"] },
+            "removed" => (unchanged + changed + removed).sum { |t| t["records"]["counts"]["removed"] },
+            "changed" => (unchanged + changed).sum { |t| t["records"]["counts"]["changed"] },
+            "unchanged" => (unchanged + changed).sum { |t| t["records"]["counts"]["unchanged"] }
           }
         }
       }
@@ -131,7 +131,7 @@ module Morph
         unchanged += result[:unchanged]
       end
 
-      { added: added, removed: removed, changed: changed, unchanged: unchanged }
+      { "added" => added, "removed" => removed, "changed" => changed, "unchanged" => unchanged }
     end
 
     def self.changes(db1, db2, ids_query)
