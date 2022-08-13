@@ -5,7 +5,7 @@ module Morph
   class SqliteDiff
     extend T::Sig
 
-    sig { params(file1: String, file2: String).returns(DiffStruct) }
+    sig { params(file1: String, file2: String).returns(T.nilable(DiffStruct)) }
     def self.diffstat_safe(file1, file2)
       diffstat(file1, file2)
     rescue *Database::CORRUPT_DATABASE_EXCEPTIONS, SQLite3::SQLException
@@ -100,13 +100,14 @@ module Morph
       )
     end
 
-    # sig { params(file1: String, file2: String).returns(DiffStruct) }
+    sig { params(file1: String, file2: String).returns(DiffStruct) }
     def self.diffstat(file1, file2)
-      SQLite3::Database.new(file1) do |db1|
-        SQLite3::Database.new(file2) do |db2|
-          return diffstat_db(db1, db2)
-        end
-      end
+      db1 = SQLite3::Database.new(file1)
+      db2 = SQLite3::Database.new(file2)
+      r = diffstat_db(db1, db2)
+      db1.close
+      db2.close
+      r
     end
 
     def self.table_changes(db1, db2)
