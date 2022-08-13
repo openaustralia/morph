@@ -195,6 +195,13 @@ module Morph
       end
     end
 
+    class ChangedIdsStruct < T::Struct
+      const :added, T::Array[T.any(String, Integer)]
+      const :removed, T::Array[T.any(String, Integer)]
+      const :changed, T::Array[T.any(String, Integer)]
+      const :unchanged, T::Array[T.any(String, Integer)]
+    end
+
     # Needs to be called with a block that given an array of ids
     # returns an array of triplets of the form [id, value1, value2]
     def self.data_changes(ids1, ids2)
@@ -206,7 +213,7 @@ module Morph
       end
       unchanged = unchanged.map { |t| t[0] }
       changed = changed.map { |t| t[0] }
-      { "added" => added, "removed" => removed, "changed" => changed, "unchanged" => unchanged }
+      ChangedIdsStruct.new(added: added, removed: removed, changed: changed, unchanged: unchanged).serialize
     end
 
     def self.execute2(db1, db2, query)
