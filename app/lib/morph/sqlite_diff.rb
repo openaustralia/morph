@@ -5,8 +5,9 @@ module Morph
   class SqliteDiff
     extend T::Sig
 
+    sig { params(file1: String, file2: String).returns(DiffStruct) }
     def self.diffstat_safe(file1, file2)
-      diffstat(file1, file2).serialize
+      diffstat(file1, file2)
     rescue *Database::CORRUPT_DATABASE_EXCEPTIONS, SQLite3::SQLException
       nil
     end

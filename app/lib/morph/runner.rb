@@ -210,17 +210,17 @@ module Morph
           run.database.sqlite_db_backup_path, run.database.sqlite_db_path
         )
         if diffstat
-          tables = diffstat["tables"]["counts"]
-          records = diffstat["records"]["counts"]
+          tables = diffstat.tables.counts
+          records = diffstat.records.counts
           run.update(
-            tables_added: tables["added"],
-            tables_removed: tables["removed"],
-            tables_changed: tables["changed"],
-            tables_unchanged: tables["unchanged"],
-            records_added: records["added"],
-            records_removed: records["removed"],
-            records_changed: records["changed"],
-            records_unchanged: records["unchanged"]
+            tables_added: tables.added,
+            tables_removed: tables.removed,
+            tables_changed: tables.changed,
+            tables_unchanged: tables.unchanged,
+            records_added: records.added,
+            records_removed: records.removed,
+            records_changed: records.changed,
+            records_unchanged: records.unchanged
           )
         end
       end
