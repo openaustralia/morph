@@ -41,12 +41,13 @@ module Morph
       const :records, TableDiffCountsStruct
     end
 
+    sig { params(tables: T::Array[String], db1: SQLite3::Database, db2: SQLite3::Database).returns(T::Array[TableDiffStruct]) }
     def self.diffstat_tables(tables, db1, db2)
       tables.map do |table|
         TableDiffStruct.new(
           name: table,
           records: TableDiffCountsStruct.new(counts: diffstat_table(table, db1, db2))
-        ).serialize
+        )
       end
     end
 
@@ -77,8 +78,8 @@ module Morph
     def self.diffstat_db(db1, db2)
       r = table_changes(db1, db2)
 
-      unchanged = diffstat_tables(r[:unchanged], db1, db2)
-      changed = diffstat_tables(r[:changed], db1, db2)
+      unchanged = diffstat_tables(r[:unchanged], db1, db2).map(&:serialize)
+      changed = diffstat_tables(r[:changed], db1, db2).map(&:serialize)
       added = tables_added(r[:added], db1, db2)
       removed = tables_removed(r[:removed], db1, db2)
 
