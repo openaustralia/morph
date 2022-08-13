@@ -3,6 +3,8 @@
 
 module Morph
   class SqliteDiff
+    extend T::Sig
+
     def self.diffstat_safe(file1, file2)
       diffstat(file1, file2)
     rescue *Database::CORRUPT_DATABASE_EXCEPTIONS, SQLite3::SQLException
@@ -13,7 +15,7 @@ module Morph
       tables.map do |table|
         {
           "name" => table,
-          "records" => { "counts" => diffstat_table(table, db1, db2) }
+          "records" => { "counts" => diffstat_table(table, db1, db2).serialize }
         }
       end
     end
@@ -40,6 +42,13 @@ module Morph
           }
         }
       end
+    end
+
+    class CountsStruct < T::Struct
+      const :added, Integer
+      const :removed, Integer
+      const :changed, Integer
+      const :unchanged, Integer
     end
 
     class TablesDiffStruct < T::Struct
@@ -130,6 +139,7 @@ module Morph
     end
 
     # Page is the maximum number of records that are read into memory at once
+    sig { params(table: String, db1: SQLite3::Database, db2: SQLite3::Database, page: Integer).returns(CountsStruct) }
     def self.diffstat_table(table, db1, db2, page = 1000)
       min, max = spanning_rowid_table(table, db1, db2)
       added = 0
@@ -143,8 +153,7 @@ module Morph
         changed += result[:changed]
         unchanged += result[:unchanged]
       end
-
-      { "added" => added, "removed" => removed, "changed" => changed, "unchanged" => unchanged }
+      CountsStruct.new(added: added, removed: removed, changed: changed, unchanged: unchanged)
     end
 
     def self.changes(db1, db2, ids_query)
