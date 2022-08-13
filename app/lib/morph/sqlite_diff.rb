@@ -71,7 +71,7 @@ module Morph
 
     sig { params(db1: SQLite3::Database, db2: SQLite3::Database).returns(DiffStruct) }
     def self.diffstat_db(db1, db2)
-      r = table_changes(db1, db2)
+      r = table_changes(db1, db2).serialize
 
       unchanged = diffstat_tables(r["unchanged"], db1, db2)
       changed = diffstat_tables(r["changed"], db1, db2)
@@ -110,11 +110,12 @@ module Morph
       r
     end
 
+    sig { params(db1: SQLite3::Database, db2:SQLite3::Database).returns(ChangedIdsStruct) }
     def self.table_changes(db1, db2)
       changes(db1, db2, "select name from sqlite_master where type='table'") do |possibly_changed|
         quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(",")
         "select name,sql from sqlite_master where type='table' AND name IN (#{quoted_ids})"
-      end.serialize
+      end
     end
 
     # Returns [min, max]
