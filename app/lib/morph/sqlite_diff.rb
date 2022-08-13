@@ -11,12 +11,42 @@ module Morph
       nil
     end
 
+    class CountsStruct < T::Struct
+      const :added, Integer
+      const :removed, Integer
+      const :changed, Integer
+      const :unchanged, Integer
+    end
+
+    class TablesDiffStruct < T::Struct
+      const :unchanged, T::Array[T::Hash[String, T.untyped]]
+      const :changed, T::Array[T::Hash[String, T.untyped]]
+      const :added, T::Array[T::Hash[String, T.untyped]]
+      const :removed, T::Array[T::Hash[String, T.untyped]]
+      const :counts, T::Hash[String, T.untyped]
+    end
+
+    class DiffStruct < T::Struct
+      const :tables, TablesDiffStruct
+      const :records, T::Hash[String, T.untyped]
+    end
+
+    # TODO: This struct is pointless because it only contains a single value. Refactor
+    class TableDiffCountsStruct < T::Struct
+      const :counts, CountsStruct
+    end
+
+    class TableDiffStruct < T::Struct
+      const :name, String
+      const :records, TableDiffCountsStruct
+    end
+
     def self.diffstat_tables(tables, db1, db2)
       tables.map do |table|
-        {
-          "name" => table,
-          "records" => { "counts" => diffstat_table(table, db1, db2).serialize }
-        }
+        TableDiffStruct.new(
+          name: table,
+          records: TableDiffCountsStruct.new(counts: diffstat_table(table, db1, db2))
+        ).serialize
       end
     end
 
@@ -42,26 +72,6 @@ module Morph
           }
         }
       end
-    end
-
-    class CountsStruct < T::Struct
-      const :added, Integer
-      const :removed, Integer
-      const :changed, Integer
-      const :unchanged, Integer
-    end
-
-    class TablesDiffStruct < T::Struct
-      const :unchanged, T::Array[T::Hash[String, T.untyped]]
-      const :changed, T::Array[T::Hash[String, T.untyped]]
-      const :added, T::Array[T::Hash[String, T.untyped]]
-      const :removed, T::Array[T::Hash[String, T.untyped]]
-      const :counts, T::Hash[String, T.untyped]
-    end
-
-    class DiffStruct < T::Struct
-      const :tables, TablesDiffStruct
-      const :records, T::Hash[String, T.untyped]
     end
 
     def self.diffstat_db(db1, db2)
