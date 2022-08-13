@@ -18,19 +18,6 @@ module Morph
       const :unchanged, Integer
     end
 
-    class TablesDiffStruct < T::Struct
-      const :unchanged, T::Array[T::Hash[String, T.untyped]]
-      const :changed, T::Array[T::Hash[String, T.untyped]]
-      const :added, T::Array[T::Hash[String, T.untyped]]
-      const :removed, T::Array[T::Hash[String, T.untyped]]
-      const :counts, T::Hash[String, T.untyped]
-    end
-
-    class DiffStruct < T::Struct
-      const :tables, TablesDiffStruct
-      const :records, T::Hash[String, T.untyped]
-    end
-
     # TODO: This struct is pointless because it only contains a single value. Refactor
     class TableDiffCountsStruct < T::Struct
       const :counts, CountsStruct
@@ -38,6 +25,19 @@ module Morph
 
     class TableDiffStruct < T::Struct
       const :name, String
+      const :records, TableDiffCountsStruct
+    end
+
+    class TablesDiffStruct < T::Struct
+      const :unchanged, T::Array[TableDiffStruct]
+      const :changed, T::Array[TableDiffStruct]
+      const :added, T::Array[TableDiffStruct]
+      const :removed, T::Array[TableDiffStruct]
+      const :counts, CountsStruct
+    end
+
+    class DiffStruct < T::Struct
+      const :tables, TablesDiffStruct
       const :records, TableDiffCountsStruct
     end
 
@@ -77,13 +77,14 @@ module Morph
       end
     end
 
+    sig { params(db1: SQLite3::Database, db2: SQLite3::Database).returns(DiffStruct) }
     def self.diffstat_db(db1, db2)
       r = table_changes(db1, db2)
 
-      unchanged = diffstat_tables(r[:unchanged], db1, db2).map(&:serialize)
-      changed = diffstat_tables(r[:changed], db1, db2).map(&:serialize)
-      added = tables_added(r[:added], db1, db2).map(&:serialize)
-      removed = tables_removed(r[:removed], db1, db2).map(&:serialize)
+      unchanged = diffstat_tables(r[:unchanged], db1, db2)
+      changed = diffstat_tables(r[:changed], db1, db2)
+      added = tables_added(r[:added], db1, db2)
+      removed = tables_removed(r[:removed], db1, db2)
 
       DiffStruct.new(
         tables: TablesDiffStruct.new(
@@ -91,28 +92,28 @@ module Morph
           changed: changed,
           added: added,
           removed: removed,
-          counts: {
-            "unchanged" => unchanged.count,
-            "changed" => changed.count,
-            "added" => added.count,
-            "removed" => removed.count
-          }
+          counts: CountsStruct.new(
+            unchanged: unchanged.count,
+            changed: changed.count,
+            added: added.count,
+            removed: removed.count
+          )
         ),
-        records: {
-          "counts" => {
-            "added" => (unchanged + changed + added).sum { |t| t["records"]["counts"]["added"] },
-            "removed" => (unchanged + changed + removed).sum { |t| t["records"]["counts"]["removed"] },
-            "changed" => (unchanged + changed).sum { |t| t["records"]["counts"]["changed"] },
-            "unchanged" => (unchanged + changed).sum { |t| t["records"]["counts"]["unchanged"] }
-          }
-        }
-      ).serialize
+        records: TableDiffCountsStruct.new(
+          counts: CountsStruct.new(
+            added: (unchanged + changed + added).sum { |t| t.records.counts.added },
+            removed: (unchanged + changed + removed).sum { |t| t.records.counts.removed },
+            changed: (unchanged + changed).sum { |t| t.records.counts.changed },
+            unchanged: (unchanged + changed).sum { |t| t.records.counts.unchanged }
+          )
+        )
+      )
     end
 
     def self.diffstat(file1, file2)
       SQLite3::Database.new(file1) do |db1|
         SQLite3::Database.new(file2) do |db2|
-          return diffstat_db(db1, db2)
+          return diffstat_db(db1, db2).serialize
         end
       end
     end
