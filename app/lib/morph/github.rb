@@ -79,6 +79,7 @@ module Morph
 
     # Needs user:email oauth scope for this to work
     # Will return nil if you don't have the right scope
+    sig { params(user: User).returns(T.nilable(T::Array[T.untyped])) }
     def self.emails(user)
       user.octokit_client.emails(accept: "application/vnd.github.v3")
     rescue Octokit::NotFound, Octokit::Unauthorized
