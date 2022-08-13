@@ -173,7 +173,7 @@ module Morph
         values1.zip(values2).map do |value1, value2|
           [value1.first, value1[1..-1], value2[1..-1]]
         end
-      end
+      end.serialize
     end
 
     # Find the difference within a range of rowids
@@ -204,6 +204,7 @@ module Morph
 
     # Needs to be called with a block that given an array of ids
     # returns an array of triplets of the form [id, value1, value2]
+    sig { params(ids1: T::Array[T.any(String, Integer)], ids2: T::Array[T.any(String, Integer)]).returns(ChangedIdsStruct) }
     def self.data_changes(ids1, ids2)
       added = ids2 - ids1
       removed = ids1 - ids2
@@ -213,7 +214,7 @@ module Morph
       end
       unchanged = unchanged.map { |t| t[0] }
       changed = changed.map { |t| t[0] }
-      ChangedIdsStruct.new(added: added, removed: removed, changed: changed, unchanged: unchanged).serialize
+      ChangedIdsStruct.new(added: added, removed: removed, changed: changed, unchanged: unchanged)
     end
 
     def self.execute2(db1, db2, query)
