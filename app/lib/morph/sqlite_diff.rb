@@ -42,6 +42,19 @@ module Morph
       end
     end
 
+    class TablesDiffStruct < T::Struct
+      const :unchanged, T::Array[T::Hash[String, T.untyped]]
+      const :changed, T::Array[T::Hash[String, T.untyped]]
+      const :added, T::Array[T::Hash[String, T.untyped]]
+      const :removed, T::Array[T::Hash[String, T.untyped]]
+      const :counts, T::Hash[String, T.untyped]
+    end
+
+    class DiffStruct < T::Struct
+      const :tables, TablesDiffStruct
+      const :records, T::Hash[String, T.untyped]
+    end
+
     def self.diffstat_db(db1, db2)
       r = table_changes(db1, db2)
 
@@ -50,20 +63,20 @@ module Morph
       added = tables_added(r[:added], db1, db2)
       removed = tables_removed(r[:removed], db1, db2)
 
-      {
-        "tables" => {
-          "unchanged" => unchanged,
-          "changed" => changed,
-          "added" => added,
-          "removed" => removed,
-          "counts" => {
+      DiffStruct.new(
+        tables: TablesDiffStruct.new(
+          unchanged: unchanged,
+          changed: changed,
+          added: added,
+          removed: removed,
+          counts: {
             "unchanged" => unchanged.count,
             "changed" => changed.count,
             "added" => added.count,
             "removed" => removed.count
           }
-        },
-        "records" => {
+        ),
+        records: {
           "counts" => {
             "added" => (unchanged + changed + added).sum { |t| t["records"]["counts"]["added"] },
             "removed" => (unchanged + changed + removed).sum { |t| t["records"]["counts"]["removed"] },
@@ -71,7 +84,7 @@ module Morph
             "unchanged" => (unchanged + changed).sum { |t| t["records"]["counts"]["unchanged"] }
           }
         }
-      }
+      ).serialize
     end
 
     def self.diffstat(file1, file2)
