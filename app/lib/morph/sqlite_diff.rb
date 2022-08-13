@@ -71,12 +71,12 @@ module Morph
 
     sig { params(db1: SQLite3::Database, db2: SQLite3::Database).returns(DiffStruct) }
     def self.diffstat_db(db1, db2)
-      r = table_changes(db1, db2).serialize
+      r = table_changes(db1, db2)
 
-      unchanged = diffstat_tables(r["unchanged"], db1, db2)
-      changed = diffstat_tables(r["changed"], db1, db2)
-      added = tables_added(r["added"], db1, db2)
-      removed = tables_removed(r["removed"], db1, db2)
+      unchanged = diffstat_tables(r.unchanged, db1, db2)
+      changed = diffstat_tables(r.changed, db1, db2)
+      added = tables_added(r.added, db1, db2)
+      removed = tables_removed(r.removed, db1, db2)
 
       DiffStruct.new(
         tables: TablesDiffStruct.new(
@@ -110,7 +110,7 @@ module Morph
       r
     end
 
-    sig { params(db1: SQLite3::Database, db2:SQLite3::Database).returns(ChangedIdsStruct) }
+    sig { params(db1: SQLite3::Database, db2: SQLite3::Database).returns(ChangedIdsStruct) }
     def self.table_changes(db1, db2)
       changes(db1, db2, "select name from sqlite_master where type='table'") do |possibly_changed|
         quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(",")
@@ -200,15 +200,15 @@ module Morph
     end
 
     class ChangedIdsStruct < T::Struct
-      const :added, T::Array[T.any(String, Integer)]
-      const :removed, T::Array[T.any(String, Integer)]
-      const :changed, T::Array[T.any(String, Integer)]
-      const :unchanged, T::Array[T.any(String, Integer)]
+      const :added, T::Array[T.untyped]
+      const :removed, T::Array[T.untyped]
+      const :changed, T::Array[T.untyped]
+      const :unchanged, T::Array[T.untyped]
     end
 
     # Needs to be called with a block that given an array of ids
     # returns an array of triplets of the form [id, value1, value2]
-    sig { params(ids1: T::Array[T.any(String, Integer)], ids2: T::Array[T.any(String, Integer)]).returns(ChangedIdsStruct) }
+    sig { params(ids1: T::Array[T.untyped], ids2: T::Array[T.untyped]).returns(ChangedIdsStruct) }
     def self.data_changes(ids1, ids2)
       added = ids2 - ids1
       removed = ids1 - ids2
@@ -221,6 +221,7 @@ module Morph
       ChangedIdsStruct.new(added: added, removed: removed, changed: changed, unchanged: unchanged)
     end
 
+    sig { params(db1: SQLite3::Database, db2: SQLite3::Database, query: String).returns([T::Array[T.untyped], T::Array[T.untyped]]) }
     def self.execute2(db1, db2, query)
       [db1.execute(query), db2.execute(query)]
     end
