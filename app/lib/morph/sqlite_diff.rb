@@ -181,7 +181,7 @@ module Morph
     # Find the difference within a range of rowids
     sig { params(table: String, min: Integer, max: Integer, db1: SQLite3::Database, db2: SQLite3::Database).returns(CountsStruct) }
     def self.diffstat_table_rowid_range(table, min, max, db1, db2)
-      r = rows_changed_in_range(table, min, max, db1, db2)
+      r = rows_changed_in_range(table, min, max, db1, db2).serialize
       CountsStruct.new(
         added: r["added"].count,
         removed: r["removed"].count,
@@ -190,11 +190,12 @@ module Morph
       )
     end
 
+    sig { params(table: String, min: Integer, max: Integer, db1: SQLite3::Database, db2: SQLite3::Database).returns(ChangedIdsStruct) }
     def self.rows_changed_in_range(table, min, max, db1, db2)
       changes(db1, db2, "SELECT ROWID from '#{table}' WHERE ROWID BETWEEN #{min} AND #{max}") do |possibly_changed|
         quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(",")
         "SELECT ROWID, * from '#{table}' WHERE ROWID IN (#{quoted_ids})"
-      end.serialize
+      end
     end
 
     class ChangedIdsStruct < T::Struct
