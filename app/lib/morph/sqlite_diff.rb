@@ -6,7 +6,7 @@ module Morph
     extend T::Sig
 
     def self.diffstat_safe(file1, file2)
-      diffstat(file1, file2)
+      diffstat(file1, file2).serialize
     rescue *Database::CORRUPT_DATABASE_EXCEPTIONS, SQLite3::SQLException
       nil
     end
@@ -110,10 +110,11 @@ module Morph
       )
     end
 
+    # sig { params(file1: String, file2: String).returns(DiffStruct) }
     def self.diffstat(file1, file2)
       SQLite3::Database.new(file1) do |db1|
         SQLite3::Database.new(file2) do |db2|
-          return diffstat_db(db1, db2).serialize
+          return diffstat_db(db1, db2)
         end
       end
     end

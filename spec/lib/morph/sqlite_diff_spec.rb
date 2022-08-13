@@ -24,7 +24,7 @@ describe Morph::SqliteDiff do
 
   describe ".diffstat" do
     it "shows that nothing has changed" do
-      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").serialize).to eq(
         "tables" => {
           "added" => [],
           "removed" => [],
@@ -43,7 +43,7 @@ describe Morph::SqliteDiff do
 
     it "shows a new table" do
       db2.execute("CREATE TABLE bar (v1 text, v2 real)")
-      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").serialize).to eq(
         "tables" => {
           "added" => [
             {
@@ -67,7 +67,7 @@ describe Morph::SqliteDiff do
 
     it "shows a deleted table" do
       db2.execute("DROP TABLE foo")
-      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").serialize).to eq(
         "tables" => {
           "added" => [],
           "removed" => [
@@ -87,7 +87,7 @@ describe Morph::SqliteDiff do
     it "shows an added and a deleted table" do
       db2.execute("CREATE TABLE bar (v1 text, v2 real)")
       db2.execute("DROP TABLE foo")
-      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").serialize).to eq(
         "tables" => {
           "added" => [
             {
@@ -111,7 +111,7 @@ describe Morph::SqliteDiff do
 
     it "shows a changed table (because of a schema change)" do
       db2.execute("ALTER TABLE foo ADD v3 text")
-      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").serialize).to eq(
         "tables" => {
           "added" => [],
           "removed" => [],
@@ -130,7 +130,7 @@ describe Morph::SqliteDiff do
 
     it "shows a new record on an unchanged table" do
       db2.execute("INSERT INTO foo VALUES ('goodbye', 3.1)")
-      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").serialize).to eq(
         "tables" => {
           "added" => [],
           "removed" => [],
@@ -150,7 +150,7 @@ describe Morph::SqliteDiff do
     it "shows a new record on a new table" do
       db2.execute("CREATE TABLE bar (v1 text, v2 real)")
       db2.execute("INSERT INTO bar VALUES ('goodbye', 3.1)")
-      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("tmp_db1.sqlite", "tmp_db2.sqlite").serialize).to eq(
         "tables" => {
           "added" => [
             "name" => "bar",
@@ -169,7 +169,7 @@ describe Morph::SqliteDiff do
     end
 
     it "shows everything as added when there was no database to start with" do
-      expect(described_class.diffstat("non_existent_file.sqlite", "tmp_db2.sqlite")).to eq(
+      expect(described_class.diffstat("non_existent_file.sqlite", "tmp_db2.sqlite").serialize).to eq(
         "tables" => {
           "added" => [
             {
@@ -188,7 +188,7 @@ describe Morph::SqliteDiff do
     end
 
     it "shows no difference when comparing two non-existent databases" do
-      expect(described_class.diffstat("non_existent_file1.sqlite", "non_existent_file2.sqlite")).to eq(
+      expect(described_class.diffstat("non_existent_file1.sqlite", "non_existent_file2.sqlite").serialize).to eq(
         "tables" => {
           "added" => [],
           "removed" => [],
