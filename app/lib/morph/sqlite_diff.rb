@@ -51,27 +51,29 @@ module Morph
       end
     end
 
+    sig { params(tables: T::Array[String], _db1: SQLite3::Database, db2: SQLite3::Database).returns(T::Array[TableDiffStruct]) }
     def self.tables_added(tables, _db1, db2)
       tables.map do |table|
         added = db2.execute("SELECT COUNT(*) FROM '#{table}'").first.first
-        {
-          "name" => table,
-          "records" => {
-            "counts" => { "added" => added, "removed" => 0, "changed" => 0, "unchanged" => 0 }
-          }
-        }
+        TableDiffStruct.new(
+          name: table,
+          records: TableDiffCountsStruct.new(
+            counts: CountsStruct.new(added: added, removed: 0, changed: 0, unchanged: 0)
+          )
+        )
       end
     end
 
+    sig { params(tables: T::Array[String], db1: SQLite3::Database, _db2: SQLite3::Database).returns(T::Array[TableDiffStruct]) }
     def self.tables_removed(tables, db1, _db2)
       tables.map do |table|
         removed = db1.execute("SELECT COUNT(*) FROM '#{table}'").first.first
-        {
-          "name" => table,
-          "records" => {
-            "counts" => { "added" => 0, "removed" => removed, "changed" => 0, "unchanged" => 0 }
-          }
-        }
+        TableDiffStruct.new(
+          name: table,
+          records: TableDiffCountsStruct.new(
+            counts: CountsStruct.new(added: 0, removed: removed, changed: 0, unchanged: 0)
+          )
+        )
       end
     end
 
@@ -80,8 +82,8 @@ module Morph
 
       unchanged = diffstat_tables(r[:unchanged], db1, db2).map(&:serialize)
       changed = diffstat_tables(r[:changed], db1, db2).map(&:serialize)
-      added = tables_added(r[:added], db1, db2)
-      removed = tables_removed(r[:removed], db1, db2)
+      added = tables_added(r[:added], db1, db2).map(&:serialize)
+      removed = tables_removed(r[:removed], db1, db2).map(&:serialize)
 
       DiffStruct.new(
         tables: TablesDiffStruct.new(
