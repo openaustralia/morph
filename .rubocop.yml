@@ -73,6 +73,10 @@ Style/StderrPuts:
 Metrics/AbcSize:
   Enabled: false
 
+# We need to turn this off so that we can put sorbet sigs on accessors
+Style/AccessorGrouping:
+  Enabled: false
+
 Metrics/BlockLength:
   Enabled: false
 

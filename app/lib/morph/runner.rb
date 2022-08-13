@@ -178,10 +178,11 @@ module Morph
 
       status_code = result.status_code
 
+      db_tempfile = result.files["data.sqlite"]
       # Only copy back database if it's there and has something in it
-      if result.files && result.files["data.sqlite"]
-        Morph::Runner.copy_sqlite_db_back(run.data_path, result.files["data.sqlite"].path)
-        result.files["data.sqlite"].close!
+      if db_tempfile
+        Morph::Runner.copy_sqlite_db_back(run.data_path, T.must(db_tempfile.path))
+        db_tempfile.close!
       # Only show the error below if the scraper thinks it finished without problems
       elsif status_code.zero?
         m = <<~ERROR
