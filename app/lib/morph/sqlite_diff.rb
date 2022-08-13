@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Morph
@@ -165,14 +165,14 @@ module Morph
       CountsStruct.new(added: added, removed: removed, changed: changed, unchanged: unchanged)
     end
 
-    sig { params(db1: SQLite3::Database, db2: SQLite3::Database, ids_query: String).returns(ChangedIdsStruct) }
-    def self.changes(db1, db2, ids_query)
+    sig { params(db1: SQLite3::Database, db2: SQLite3::Database, ids_query: String, block: T.proc.params(possibly_changed: T::Array[T.untyped]).returns(String)).returns(ChangedIdsStruct) }
+    def self.changes(db1, db2, ids_query, &block)
       v1, v2 = execute2(db1, db2, ids_query)
       ids1 = v1.map(&:first)
       ids2 = v2.map(&:first)
 
       data_changes(ids1, ids2) do |possibly_changed|
-        values1, values2 = execute2(db1, db2, yield(possibly_changed))
+        values1, values2 = execute2(db1, db2, block.call(possibly_changed))
         values1.zip(values2).map do |value1, value2|
           [value1.first, value1[1..-1], value2[1..-1]]
         end
