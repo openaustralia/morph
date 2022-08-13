@@ -54,6 +54,7 @@ module Morph
 
     # Returns a list of all public repos. Works for both an individual and
     # an organization. List is sorted by push date
+    sig { params(user: User, owner: Owner).returns(T::Array[T.untyped]) }
     def self.public_repos(user, owner)
       # TODO: Move this to an initializer
       Octokit.auto_paginate = true
