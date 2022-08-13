@@ -114,7 +114,7 @@ module Morph
       changes(db1, db2, "select name from sqlite_master where type='table'") do |possibly_changed|
         quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(",")
         "select name,sql from sqlite_master where type='table' AND name IN (#{quoted_ids})"
-      end
+      end.serialize
     end
 
     # Returns [min, max]
@@ -164,6 +164,7 @@ module Morph
       CountsStruct.new(added: added, removed: removed, changed: changed, unchanged: unchanged)
     end
 
+    sig { params(db1: SQLite3::Database, db2: SQLite3::Database, ids_query: String).returns(ChangedIdsStruct) }
     def self.changes(db1, db2, ids_query)
       v1, v2 = execute2(db1, db2, ids_query)
       ids1 = v1.map(&:first)
@@ -174,7 +175,7 @@ module Morph
         values1.zip(values2).map do |value1, value2|
           [value1.first, value1[1..-1], value2[1..-1]]
         end
-      end.serialize
+      end
     end
 
     # Find the difference within a range of rowids
@@ -193,7 +194,7 @@ module Morph
       changes(db1, db2, "SELECT ROWID from '#{table}' WHERE ROWID BETWEEN #{min} AND #{max}") do |possibly_changed|
         quoted_ids = possibly_changed.map { |n| "'#{n}'" }.join(",")
         "SELECT ROWID, * from '#{table}' WHERE ROWID IN (#{quoted_ids})"
-      end
+      end.serialize
     end
 
     class ChangedIdsStruct < T::Struct
