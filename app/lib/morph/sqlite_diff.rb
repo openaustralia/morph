@@ -208,12 +208,12 @@ module Morph
 
     # Needs to be called with a block that given an array of ids
     # returns an array of triplets of the form [id, value1, value2]
-    sig { params(ids1: T::Array[T.untyped], ids2: T::Array[T.untyped]).returns(ChangedIdsStruct) }
-    def self.data_changes(ids1, ids2)
+    sig { params(ids1: T::Array[T.untyped], ids2: T::Array[T.untyped], block: T.proc.params(possibly_changed: T::Array[T.untyped]).returns(T::Array[[T.untyped, T.untyped, T.untyped]])).returns(ChangedIdsStruct) }
+    def self.data_changes(ids1, ids2, &block)
       added = ids2 - ids1
       removed = ids1 - ids2
       possibly_changed = ids1 - removed
-      unchanged, changed = yield(possibly_changed).partition do |t|
+      unchanged, changed = block.call(possibly_changed).partition do |t|
         t[1] == t[2]
       end
       unchanged = unchanged.map { |t| t[0] }
