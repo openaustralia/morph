@@ -1,8 +1,10 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 # Capture output of /usr/bin/time command (on Linux)
 class Metric < ApplicationRecord
+  extend T::Sig
+
   belongs_to :run, touch: true
   # The names of metrics are all copied from the structure returned by
   # getrusage(2) (with the exception of wall_time)
@@ -28,9 +30,10 @@ class Metric < ApplicationRecord
   #            priority process becoming runnable or because the current process
   #            exceeded its time slice.
 
+  sig { returns(Float) }
   def cpu_time
     # At least in development there are some nil utime and stime values
     # So, try to handle this gracefully
-    (utime || 0) + (stime || 0)
+    (utime || 0.0) + (stime || 0.0)
   end
 end
