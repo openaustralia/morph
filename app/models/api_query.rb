@@ -16,16 +16,7 @@ class ApiQuery < ApplicationRecord
   # disable STI
   self.inheritance_column = :_type_disabled
 
-  def self.log!(options)
-    query = options.delete(:query)
-    scraper = options.delete(:scraper)
-    owner = options.delete(:owner)
-    benchmark = options.delete(:benchmark)
-    size = options.delete(:size)
-    type = options.delete(:type)
-    format = options.delete(:format)
-    raise "Invalid options" unless options.empty?
-
+  def self.log!(query:, scraper:, owner:, benchmark:, size:, type:, format:)
     ApiQuery.create!(
       query: query, scraper_id: scraper.id,
       owner_id: owner.id, utime: (benchmark.cutime + benchmark.utime),
