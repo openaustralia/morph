@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 # A record of a download or an API query
@@ -16,6 +16,7 @@ class ApiQuery < ApplicationRecord
   # disable STI
   self.inheritance_column = :_type_disabled
 
+  sig { params(query: String, scraper: Scraper, owner: Owner, benchmark: Benchmark::Tms, size: Integer, type: String, format: String).void }
   def self.log!(query:, scraper:, owner:, benchmark:, size:, type:, format:)
     ApiQuery.create!(
       query: query, scraper_id: scraper.id,
