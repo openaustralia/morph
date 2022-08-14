@@ -3,6 +3,8 @@
 
 # A real human being (hopefully)
 class User < Owner
+  extend T::Sig
+
   devise :trackable, :rememberable, :omniauthable, omniauth_providers: [:github]
   has_many :organizations_users, dependent: :destroy
   has_many :organizations, through: :organizations_users
@@ -13,15 +15,18 @@ class User < Owner
   # In most cases people have contributed to the scrapers that they own so we
   # really don't want to see these twice. This method just removes their own
   # scrapers from the list
+  sig { returns(T::Array[Scraper]) }
   def other_scrapers_contributed_to
     scrapers_contributed_to - scrapers
   end
 
   # A list of all owners thst this user can write to. Includes itself
+  sig { returns(T::Array[Owner]) }
   def all_owners
     [self] + organizations.to_a
   end
 
+  sig { void }
   def reset_authorization!
     a = access_token
     return if a.nil?
@@ -32,10 +37,12 @@ class User < Owner
   end
 
   # Send all alerts. This method should be run from a daily cron job
+  sig { void }
   def self.process_alerts
     User.all.find_each(&:process_alerts)
   end
 
+  sig { void }
   def process_alerts
     return if watched_broken_scrapers_ordered_by_urgency.empty?
 
@@ -49,10 +56,12 @@ class User < Owner
                       "(tried to send alert)"
   end
 
+  sig { returns(T::Boolean) }
   def user?
     true
   end
 
+  sig { returns(T::Boolean) }
   def organization?
     false
   end
@@ -130,10 +139,12 @@ class User < Owner
 
   # Are we watching this scraper because we're watching the owner
   # of the scraper?
+  sig { params(scraper: Scraper).returns(T::Boolean) }
   def indirectly_watching?(scraper)
-    watching?(scraper.owner)
+    watching?(T.must(scraper.owner))
   end
 
+  sig { params(object: T.any(Owner, Scraper)).returns(T::Boolean) }
   def watching?(object)
     alerts.map(&:watch).include? object
   end
