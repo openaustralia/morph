@@ -313,29 +313,6 @@ class Scraper < ApplicationRecord
     Grit::Head.current(r).commit.id
   end
 
-  # files should be a hash of "filename" => "content"
-  def add_commit_to_main_on_github(user, files, message)
-    client = user.octokit_client
-    blobs = files.map do |filename, content|
-      {
-        path: filename,
-        mode: "100644",
-        type: "blob",
-        content: content
-      }
-    end
-
-    # Let's get all the info about head
-    ref = client.ref(full_name, "heads/main")
-    commit_sha = ref.object.sha
-    commit = client.commit(full_name, commit_sha)
-    tree_sha = commit.commit.tree.sha
-
-    tree2 = client.create_tree(full_name, blobs, base_tree: tree_sha)
-    commit2 = client.create_commit(full_name, message, tree2.sha, commit_sha)
-    client.update_ref(full_name, "heads/main", commit2.sha)
-  end
-
   # Overwrites whatever there was before in that repo
   # Obviously use with great care
   sig { params(user: User, files: T::Hash[String, String], message: String).void }
