@@ -220,12 +220,6 @@ class User < Owner
     u
   end
 
-  # TODO: Remove this as it's just a hack and doesn't make sense intuitively
-  sig { returns(T::Array[User]) }
-  def users
-    []
-  end
-
   sig { returns(T::Boolean) }
   def active_for_authentication?
     !suspended?

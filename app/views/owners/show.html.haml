@@ -45,7 +45,7 @@
     %p
       - @owner.organizations.each do |org|
         = link_to owner_image(org, size: 60), org
-  - unless @owner.users.empty?
+  - unless @owner.user? || @owner.users.empty?
     %h3 Members
     %p
       - @owner.users.each do |user|
