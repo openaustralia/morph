@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_06_064212) do
+ActiveRecord::Schema.define(version: 2022_08_15_063813) do
 
   create_table "active_admin_comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "namespace"
@@ -220,8 +220,8 @@ ActiveRecord::Schema.define(version: 2022_08_06_064212) do
   end
 
   create_table "variables", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
-    t.string "name"
-    t.text "value"
+    t.string "name", null: false
+    t.text "value", null: false
     t.integer "scraper_id"
     t.datetime "created_at"
     t.datetime "updated_at"
