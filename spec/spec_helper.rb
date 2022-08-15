@@ -9,6 +9,7 @@ ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../config/environment", __dir__)
 require "rspec/rails"
 require "capybara/rspec"
+require "rspec/sorbet"
 
 # Commented out for the benefit of zeus
 # require 'rspec/autorun'
@@ -95,4 +96,6 @@ RSpec.configure do |config|
   config.before do
     Sidekiq::Worker.clear_all
   end
+
+  RSpec::Sorbet.allow_doubles!
 end

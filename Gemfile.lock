@@ -484,6 +484,8 @@ GEM
       rspec-expectations (~> 3.10)
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
+    rspec-sorbet (1.8.3)
+      sorbet-runtime
     rspec-support (3.11.0)
     rubocop (1.32.0)
       json (~> 2.3)
@@ -703,6 +705,7 @@ DEPENDENCIES
   rest-client
   rspec-activemodel-mocks
   rspec-rails
+  rspec-sorbet
   rubocop
   rubocop-rails
   rubocop-rspec
