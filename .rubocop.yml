@@ -35,6 +35,28 @@ Sorbet/TrueSigil:
     - spec/**/*
     - sync.ru
 
+Sorbet/StrictSigil:
+  Enabled: true
+  Exclude:
+    # TODO: Work our way through this list to remove the excluded
+    - app/admin/*
+    - app/controllers/users/omniauth_callbacks_controller.rb
+    - config/deploy/*
+    - config.ru
+    - db/seeds.rb
+    - lib/tasks/*
+    - spec/**/*
+    - sync.ru
+    - sorbet/tapioca/require.rb
+    - app/workers/*
+    - app/models/*
+    - app/mailers/*
+    - app/lib/morph/*
+    - app/lib/discourse/*
+    - app/helpers/*
+    - app/controllers/*
+    - app/controllers/admin/*
+
 # This conflicts with the type checking that sorbet does
 Lint/SafeNavigationConsistency:
   Enabled: false
