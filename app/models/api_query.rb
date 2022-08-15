@@ -7,12 +7,6 @@ class ApiQuery < ApplicationRecord
   belongs_to :scraper
   belongs_to :owner
 
-  # Downloads made after this date are visible to everyone
-  # We deployed the notice at 6:23PM, May 7, 2015 (Sydney time)
-  VISIBLE_CUT_OFF_DATE = T.let(DateTime.new(2015, 5, 7, 18, 23, 0, "+10"), DateTime)
-
-  scope :visible, -> { where("created_at > ?", VISIBLE_CUT_OFF_DATE) }
-
   # disable STI
   self.inheritance_column = :_type_disabled
 

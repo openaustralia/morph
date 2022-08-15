@@ -6,11 +6,6 @@ class EmergencyRake
   extend Rake::DSL
   namespace :app do
     namespace :emergency do
-      desc "Remove api queries from before cut-over date"
-      task remove_non_visible_api_queries: :environment do
-        ApiQuery.where("created_at <= ?", DateTime.new(2015, 5, 7, 18, 23, 0, "+10")).delete_all
-      end
-
       desc "Show queue / run inconsistencies - does not make any changes"
       task show_queue_run_inconsistencies: :environment do
         # TODO: Show containers that have a run label but there isn't a job on the
