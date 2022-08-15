@@ -49,7 +49,6 @@ Sorbet/StrictSigil:
     - sync.ru
     - sorbet/tapioca/require.rb
     - app/workers/*
-    - app/models/*
     - app/mailers/*
     - app/lib/discourse/*
     - app/helpers/*
