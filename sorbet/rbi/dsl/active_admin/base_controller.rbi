@@ -27,7 +27,6 @@ class ActiveAdmin::BaseController
     include ::ActionView::Helpers::DateHelper
     include ::Kernel
     include ::ApplicationHelper
-    include ::ActionDispatch::Flash::RequestMethods
     include ::BootstrapFlashHelper
     include ::DocumentationHelper
     include ::OwnersHelper
