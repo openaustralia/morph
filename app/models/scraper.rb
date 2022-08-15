@@ -194,19 +194,23 @@ class Scraper < ApplicationRecord
     auto_run && last_run&.finished_with_errors?
   end
 
+  sig { void }
   def destroy_repo_and_data
     FileUtils.rm_rf repo_path
     FileUtils.rm_rf data_path
   end
 
+  sig { returns(String) }
   def repo_path
     "#{owner&.repo_root}/#{name}"
   end
 
+  sig { returns(String) }
   def data_path
     "#{owner&.data_root}/#{name}"
   end
 
+  sig { returns(T.nilable(String)) }
   def readme
     f = Dir.glob(File.join(repo_path, "README*")).first
     # rubocop:disable Rails/OutputSafety
@@ -214,19 +218,23 @@ class Scraper < ApplicationRecord
     # rubocop:enable Rails/OutputSafety
   end
 
+  sig { returns(String) }
   def readme_filename
     Pathname.new(Dir.glob(File.join(repo_path, "README*")).first).basename.to_s
   end
 
+  sig { returns(String) }
   def github_url_readme
     github_url_for_file(readme_filename)
   end
 
+  sig { returns(T::Boolean) }
   def runnable?
     l = last_run
     l.nil? || l.finished?
   end
 
+  sig { void }
   def queue!
     # Guard against more than one of a particular scraper running at the
     # same time
@@ -238,26 +246,33 @@ class Scraper < ApplicationRecord
 
   # If repo is still using the old "master" branch name then the url below will
   # just redirect to master, because it's the default branch
+  sig { params(file: String).returns(String) }
   def github_url_for_file(file)
     "#{github_url}/blob/main/#{file}"
   end
 
+  sig { returns(T.nilable(Morph::Language)) }
   def language
     Morph::Language.language(repo_path)
   end
 
+  sig { returns(T.nilable(String)) }
   def main_scraper_filename
     language&.scraper_filename
   end
 
+  sig { returns(T.nilable(String)) }
   def github_url_main_scraper_file
-    github_url_for_file(main_scraper_filename)
+    m = main_scraper_filename
+    github_url_for_file(m) if m
   end
 
+  sig { returns(Morph::Database) }
   def database
     Morph::Database.new(data_path)
   end
 
+  sig { returns(T.nilable(String)) }
   def platform
     platform_file = "#{repo_path}/platform"
     platform = File.read(platform_file).chomp if File.exist?(platform_file)
@@ -267,6 +282,7 @@ class Scraper < ApplicationRecord
   end
 
   # It seems silly implementing this
+  sig { params(directory: String).returns(Integer) }
   def self.directory_size(directory)
     r = 0
     if File.exist?(directory)
@@ -286,12 +302,12 @@ class Scraper < ApplicationRecord
     r
   end
 
+  sig { void }
   def update_repo_size
-    r = Scraper.directory_size(repo_path)
-    update_attribute(:repo_size, r)
-    r
+    update_attribute(:repo_size, Scraper.directory_size(repo_path))
   end
 
+  sig { returns(String) }
   def current_revision_from_repo
     r = Grit::Repo.new(repo_path)
     Grit::Head.current(r).commit.id
