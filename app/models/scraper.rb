@@ -194,14 +194,6 @@ class Scraper < ApplicationRecord
     auto_run && last_run&.finished_with_errors?
   end
 
-  def self.can_write?(user, owner)
-    user && (owner == user || user.organizations.include?(owner))
-  end
-
-  def can_write?(user)
-    Scraper.can_write?(user, owner)
-  end
-
   def destroy_repo_and_data
     FileUtils.rm_rf repo_path
     FileUtils.rm_rf data_path
