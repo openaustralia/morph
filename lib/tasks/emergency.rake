@@ -82,56 +82,6 @@ class EmergencyRake
         end
       end
 
-      def self.destroy_by_id(model, ids)
-        progressbar = ProgressBar.create(title: model.name.pluralize, total: ids.count, format: "%t: |%B| %E")
-        ids.each do |id|
-          model.find(id).destroy
-          progressbar.increment
-        end
-      end
-
-      # See https://github.com/openaustralia/morph/issues/1038
-      desc "Removed records from other tables associated with deleted scrapers"
-      task fix_referential_integrity: :environment do
-        ids = Alert.connection.select_all("SELECT id FROM alerts WHERE watch_type = 'Scraper' AND watch_id NOT IN (SELECT id FROM scrapers)").map { |id| id["id"] }
-        destroy_by_id(Alert, ids)
-
-        ids = ApiQuery.connection.select_all("SELECT id FROM api_queries WHERE scraper_id NOT IN (SELECT id FROM scrapers)").map { |id| id["id"] }
-        destroy_by_id(ApiQuery, ids)
-
-        ids = Contribution.connection.select_all("SELECT id FROM contributions WHERE scraper_id NOT IN (SELECT id FROM scrapers)").map { |id| id["id"] }
-        destroy_by_id(Contribution, ids)
-
-        ids = Run.connection.select_all("SELECT id FROM runs WHERE scraper_id NOT IN (SELECT id FROM scrapers)").map { |id| id["id"] }
-        destroy_by_id(Run, ids)
-
-        ids = Variable.connection.select_all("SELECT id FROM variables WHERE scraper_id NOT IN (SELECT id FROM scrapers)").map { |id| id["id"] }
-        destroy_by_id(Variable, ids)
-
-        ids = Webhook.connection.select_all("SELECT id FROM webhooks WHERE scraper_id NOT IN (SELECT id FROM scrapers)").map { |id| id["id"] }
-        destroy_by_id(Webhook, ids)
-
-        ids = ConnectionLog.connection.select_all("SELECT id FROM connection_logs WHERE run_id NOT IN (SELECT id FROM runs)").map { |id| id["id"] }
-        # Only try to delete 1000 at a time
-        ids.each_slice(1000) do |slice|
-          ConnectionLog.where(id: slice).delete_all
-        end
-
-        ids = LogLine.connection.select_all("SELECT id FROM log_lines WHERE run_id NOT IN (SELECT id FROM runs)").map { |id| id["id"] }
-        ids.each_slice(1000) do |slice|
-          LogLine.where(id: slice).delete_all
-        end
-
-        ids = Metric.connection.select_all("SELECT id FROM metrics WHERE run_id NOT IN (SELECT id FROM runs)").map { |id| id["id"] }
-        Metric.where(id: ids).delete_all
-
-        ids = WebhookDelivery.connection.select_all("SELECT id FROM webhook_deliveries WHERE run_id NOT IN (SELECT id FROM runs)").map { |id| id["id"] }
-        WebhookDelivery.where(id: ids).delete_all
-
-        ids = WebhookDelivery.connection.select_all("SELECT id FROM webhook_deliveries WHERE webhook_id NOT IN (SELECT id FROM webhooks)").map { |id| id["id"] }
-        WebhookDelivery.where(id: ids).delete_all
-      end
-
       desc "Clears a backlogged queue by queuing retries in a loop"
       task work_off_run_queue_retries: :environment do
         number_of_slots_to_keep_free = 4
