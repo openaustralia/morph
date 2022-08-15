@@ -37,7 +37,7 @@ class Run < ApplicationRecord
     Morph::Language.language(repo_path)
   end
 
-  sig { params(time: Time).void }
+  sig { params(time: T.nilable(Time)).void }
   def finished_at=(time)
     self[:finished_at] = time
     update_wall_time
