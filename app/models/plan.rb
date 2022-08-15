@@ -4,12 +4,12 @@
 class Plan
   extend T::Sig
 
-  sig { returns(String) }
+  sig { returns(T.nilable(String)) }
   attr_reader :stripe_plan_id
 
   PLAN_PRICES = T.let({ "morph_basic" => 14, "morph_standard" => 24, "morph_advanced" => 149 }.freeze, T::Hash[String, Integer])
 
-  sig { params(stripe_plan_id: String).void }
+  sig { params(stripe_plan_id: T.nilable(String)).void }
   def initialize(stripe_plan_id)
     @stripe_plan_id = stripe_plan_id
   end
@@ -52,7 +52,8 @@ class Plan
 
   sig { returns(T.nilable(Integer)) }
   def price
-    PLAN_PRICES[stripe_plan_id]
+    s = stripe_plan_id
+    PLAN_PRICES[s] if s
   end
 
   sig { returns(T.nilable(Integer)) }
