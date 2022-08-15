@@ -30,7 +30,6 @@ Sorbet/TrueSigil:
     - app/controllers/api_controller.rb
     - config/deploy/*
     - config.ru
-    - db/seeds.rb
     - lib/tasks/*
     - spec/**/*
     - sync.ru
