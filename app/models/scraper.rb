@@ -338,6 +338,7 @@ class Scraper < ApplicationRecord
 
   # Overwrites whatever there was before in that repo
   # Obviously use with great care
+  sig { params(user: User, files: T::Hash[String, String], message: String).void }
   def add_commit_to_root_on_github(user, files, message)
     client = user.octokit_client
     blobs = files.map do |filename, content|
@@ -354,6 +355,7 @@ class Scraper < ApplicationRecord
   end
 
   # Returns true if successfull
+  sig { returns(T::Boolean) }
   def synchronise_repo
     success = Morph::Github.synchronise_repo(repo_path, git_url_https)
     return false unless success
@@ -364,6 +366,7 @@ class Scraper < ApplicationRecord
   rescue Grit::Git::CommandFailed => e
     Rails.logger.error "git command failed: #{e}"
     Rails.logger.error "Ignoring and moving onto the next one..."
+    false
   end
 
   # Return the https version of the git clone url (git_url)
