@@ -37,13 +37,6 @@ class Organization < Owner
     false
   end
 
-  sig { returns(T::Array[Organization]) }
-  # TODO: Really shouldn't have to define this as it doesn't make any sense intuitively
-  # I think it's being done so that things work with the current cancan setup?
-  def organizations
-    []
-  end
-
   # All organizations that have scrapers
   sig { returns(Organization::PrivateRelation) }
   def self.all_with_scrapers
