@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 # A scraper is a script that runs that gets data from the web
@@ -334,7 +334,10 @@ class Scraper < ApplicationRecord
   # Returns true if successfull
   sig { returns(T::Boolean) }
   def synchronise_repo
-    success = Morph::Github.synchronise_repo(repo_path, git_url_https)
+    url = git_url_https
+    return false if url.nil?
+
+    success = Morph::Github.synchronise_repo(repo_path, url)
     return false unless success
 
     update_repo_size
@@ -347,11 +350,13 @@ class Scraper < ApplicationRecord
   end
 
   # Return the https version of the git clone url (git_url)
+  sig { returns(T.nilable(String)) }
   def git_url_https
     url = git_url
     "https#{url[3..-1]}" if url
   end
 
+  sig { params(run: Run).void }
   def deliver_webhooks(run)
     webhooks.each do |webhook|
       webhook_delivery = webhook.deliveries.create!(run: run)
@@ -361,6 +366,7 @@ class Scraper < ApplicationRecord
 
   private
 
+  sig { void }
   def not_used_on_github
     return unless Octokit.client.repository?(full_name)
 
