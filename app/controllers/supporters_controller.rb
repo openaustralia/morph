@@ -59,9 +59,10 @@ class SupportersController < ApplicationController
 
   def update
     authenticated_user = T.must(current_user)
+    plan_id = T.cast(params[:plan_id], String)
 
     @from_plan = authenticated_user.plan
-    @to_plan = Plan.new(params[:plan_id])
+    @to_plan = Plan.new(plan_id)
 
     customer = Stripe::Customer.retrieve T.must(authenticated_user.stripe_customer_id)
     subscription = customer.subscriptions.retrieve authenticated_user.stripe_subscription_id

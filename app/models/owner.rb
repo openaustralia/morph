@@ -113,6 +113,7 @@ class Owner < ApplicationRecord
   end
 
   def plan
-    Plan.new(stripe_plan_id)
+    s = stripe_plan_id
+    Plan.new(s) if s
   end
 end
