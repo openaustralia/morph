@@ -191,7 +191,8 @@ class Scraper < ApplicationRecord
   # TODO: This is now inconsistent with the way this is handled elsewhere
   sig { returns(T::Boolean) }
   def requires_attention?
-    auto_run && last_run&.finished_with_errors?
+    l = last_run
+    auto_run && !l.nil? && l.finished_with_errors?
   end
 
   sig { void }
