@@ -73,7 +73,7 @@ class Scraper < ApplicationRecord
     scraped_domains.map(&:name)
   end
 
-  sig { returns(T.any(Domain::PrivateCollectionProxy, [])) }
+  sig { returns(T.any(ActiveRecord::Associations::CollectionProxy, [])) }
   def scraped_domains
     last_run&.domains || []
   end
@@ -129,7 +129,7 @@ class Scraper < ApplicationRecord
     update(contributors: contributors)
   end
 
-  sig { returns(Run::PrivateAssociationRelation) }
+  sig { returns(ActiveRecord::AssociationRelation) }
   def successful_runs
     runs.order(finished_at: :desc).finished_successfully
   end
@@ -140,7 +140,7 @@ class Scraper < ApplicationRecord
     latest_successful_run&.finished_at
   end
 
-  sig { returns(Run::PrivateAssociationRelation) }
+  sig { returns(ActiveRecord::AssociationRelation) }
   def finished_runs
     runs.where.not(finished_at: nil).order(finished_at: :desc)
   end

@@ -38,7 +38,7 @@ class Organization < Owner
   end
 
   # All organizations that have scrapers
-  sig { returns(Organization::PrivateRelation) }
+  sig { returns(ActiveRecord::Relation) }
   def self.all_with_scrapers
     Organization.joins(:scrapers).group(:owner_id)
   end
