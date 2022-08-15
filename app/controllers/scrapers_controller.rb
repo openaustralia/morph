@@ -70,10 +70,10 @@ class ScrapersController < ApplicationController
 
   def create_github
     params_scraper = T.cast(params[:scraper], ActionController::Parameters)
+    full_name = T.cast(params_scraper[:full_name], String)
     authenticated_user = T.must(current_user)
 
-    @scraper = Scraper.new_from_github(params_scraper[:full_name],
-                                       authenticated_user.octokit_client)
+    @scraper = Scraper.new_from_github(full_name, authenticated_user.octokit_client)
     authorize! :create_github, @scraper
     if @scraper.save
       @scraper.create_create_scraper_progress!(

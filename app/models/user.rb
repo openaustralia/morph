@@ -113,14 +113,16 @@ class User < Owner
   sig { returns(T::Array[Scraper]) }
   def watched_broken_scrapers_ordered_by_urgency
     watched_broken_scrapers.sort do |a, b|
-      if b.latest_successful_run_time.nil? && a.latest_successful_run_time.nil?
+      time_a = a.latest_successful_run_time
+      time_b = b.latest_successful_run_time
+      if time_b.nil? && time_a.nil?
         0
-      elsif b.latest_successful_run_time.nil?
+      elsif time_b.nil?
         -1
-      elsif a.latest_successful_run_time.nil?
+      elsif time_a.nil?
         1
       else
-        b.latest_successful_run_time <=> a.latest_successful_run_time
+        T.must(time_b <=> time_a)
       end
     end
   end

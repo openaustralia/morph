@@ -3,6 +3,8 @@
 
 # A scraper is a script that runs that gets data from the web
 class Scraper < ApplicationRecord
+  extend T::Sig
+
   include RenderSync::Actions
   # Using smaller batch_size than the default for the time being because
   # reindexing causes elasticsearch on the local VM to run out of memory
@@ -46,10 +48,12 @@ class Scraper < ApplicationRecord
            :finished_with_errors?, :queued?, :running?, :stop!,
            to: :last_run, allow_nil: true
 
+  sig { returns(T::Array[Scraper]) }
   def self.running
     Run.running.map(&:scraper).compact
   end
 
+  sig { returns(T::Hash[Symbol, T.untyped]) }
   def search_data
     {
       full_name: full_name,
@@ -59,24 +63,29 @@ class Scraper < ApplicationRecord
     }
   end
 
+  sig { returns(T::Boolean) }
   def data?
     sqlite_total_rows.positive?
   end
 
+  sig { returns(T::Array[String]) }
   def scraped_domain_names
     scraped_domains.map(&:name)
   end
 
+  sig { returns(T.any(Domain::PrivateCollectionProxy, [])) }
   def scraped_domains
     last_run&.domains || []
   end
 
+  sig { returns(T::Array[User]) }
   def all_watchers
     owner_watchers = (owner&.watchers || [])
     (watchers + owner_watchers).uniq
   end
 
   # Also orders the owners by number of downloads
+  sig { returns(T::Array[[Owner, Integer]]) }
   def download_count_by_owner
     # TODO: Simplify this by using an association on api_query
     count_by_owner_id = api_queries
@@ -88,12 +97,14 @@ class Scraper < ApplicationRecord
     end
   end
 
+  sig { returns(Integer) }
   def download_count
     api_queries.count
   end
 
   # Given a scraper name on github populates the fields for a morph.io scraper
   # but doesn't save it
+  sig { params(full_name: String, octokit_client: Octokit::Client).returns(Scraper) }
   def self.new_from_github(full_name, octokit_client)
     repo = octokit_client.repository(full_name)
     repo_owner = Owner.find_by!(nickname: repo.owner.login)
@@ -105,26 +116,31 @@ class Scraper < ApplicationRecord
     )
   end
 
+  sig { returns(T.nilable(Morph::Language)) }
   def original_language
     o = original_language_key
     Morph::Language.new(o.to_sym) if o
   end
 
+  sig { void }
   def update_contributors
     nicknames = Morph::Github.contributor_nicknames(full_name)
     contributors = nicknames.map { |n| User.find_or_create_by_nickname(n) }
     update(contributors: contributors)
   end
 
+  sig { returns(Run::PrivateAssociationRelation) }
   def successful_runs
     runs.order(finished_at: :desc).finished_successfully
   end
 
+  sig { returns(T.nilable(Time)) }
   def latest_successful_run_time
     latest_successful_run = successful_runs.first
     latest_successful_run&.finished_at
   end
 
+  sig { returns(Run::PrivateAssociationRelation) }
   def finished_runs
     runs.where.not(finished_at: nil).order(finished_at: :desc)
   end
@@ -133,32 +149,39 @@ class Scraper < ApplicationRecord
   # takes. Handy for the user to know how long it should expect to run for
   # Returns nil if not able to calculate this
   # TODO: Refactor this using scopes
+  sig { returns(T.nilable(Float)) }
   def average_successful_wall_time
     return if successful_runs.count.zero?
 
     successful_runs.sum(:wall_time) / successful_runs.count
   end
 
+  sig { returns(Float) }
   def total_wall_time
     runs.to_a.sum(&:wall_time)
   end
 
+  sig { returns(Float) }
   def utime
     metrics.sum(:utime)
   end
 
+  sig { returns(Float) }
   def stime
     metrics.sum(:stime)
   end
 
+  sig { returns(Float) }
   def cpu_time
     utime + stime
   end
 
+  sig { void }
   def update_sqlite_db_size
     update(sqlite_db_size: database.sqlite_db_size)
   end
 
+  sig { returns(Integer) }
   def total_disk_usage
     repo_size + sqlite_db_size
   end
@@ -166,6 +189,7 @@ class Scraper < ApplicationRecord
   # Let's say a scraper requires attention if it's set to run automatically and
   # the last run failed
   # TODO: This is now inconsistent with the way this is handled elsewhere
+  sig { returns(T::Boolean) }
   def requires_attention?
     auto_run && last_run&.finished_with_errors?
   end
