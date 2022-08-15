@@ -2,7 +2,7 @@
   .container
     %h1.label-heading
       %small.pre-heading Find data and code you can use
-      Search over #{pluralize(Scraper.rounded_count, "scraper")}
+      Search over #{pluralize(scraper_rounded_count, "scraper")}
     = render partial: "search_form"
 
 - if current_user.scrapers.empty?

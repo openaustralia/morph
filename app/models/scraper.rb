@@ -46,16 +46,6 @@ class Scraper < ApplicationRecord
            :finished_with_errors?, :queued?, :running?, :stop!,
            to: :last_run, allow_nil: true
 
-  # Give a count of the total number of scrapers rounded down to the nearest
-  # hundred so that you can say "more than ... scrapers"
-  def self.rounded_count
-    floor_to_hundreds(count)
-  end
-
-  def self.floor_to_hundreds(number)
-    (number / 100.0).floor * 100
-  end
-
   def self.running
     Run.running.map(&:scraper).compact
   end

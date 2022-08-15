@@ -64,4 +64,14 @@ module ScrapersHelper
       "failure"
     end
   end
+
+  def floor_to_hundreds(number)
+    (number / 100.0).floor * 100
+  end
+
+  # Give a count of the total number of scrapers rounded down to the nearest
+  # hundred so that you can say "more than ... scrapers"
+  def scraper_rounded_count
+    floor_to_hundreds(Scraper.count)
+  end
 end
