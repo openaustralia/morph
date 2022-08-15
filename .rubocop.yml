@@ -51,11 +51,11 @@ Sorbet/StrictSigil:
     - app/workers/*
     - app/models/*
     - app/mailers/*
-    - app/lib/morph/*
     - app/lib/discourse/*
     - app/helpers/*
     - app/controllers/*
     - app/controllers/admin/*
+    - app/lib/morph/github.rb
 
 # This conflicts with the type checking that sorbet does
 Lint/SafeNavigationConsistency:
