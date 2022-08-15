@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 # A real human being (hopefully)
@@ -66,6 +66,7 @@ class User < Owner
     false
   end
 
+  sig { params(object: T.any(Owner, Scraper)).void }
   def toggle_watch(object)
     if watching?(object)
       alerts.where(watch: object).first.destroy
@@ -74,17 +75,19 @@ class User < Owner
       # user/org) and we're already following one of those scrapers individually
       # then remove the individual alert
       watch object
-      if object.respond_to?(:scrapers)
+      if object.is_a?(Owner)
         alerts.where(watch_id: object.scrapers,
                      watch_type: "Scraper").destroy_all
       end
     end
   end
 
+  sig { params(object: T.any(Owner, Scraper)).void }
   def watch(object)
     alerts.create(watch: object) unless watching?(object)
   end
 
+  sig { void }
   def watch_all_owners
     all_owners.each do |object|
       watch object
@@ -92,12 +95,14 @@ class User < Owner
   end
 
   # Only include scrapers that finished in the last 48 hours
+  sig { returns(T::Array[Scraper]) }
   def watched_successful_scrapers
     all_scrapers_watched.select do |s|
       s.finished_successfully? && s.finished_recently?
     end
   end
 
+  sig { returns(T::Array[Scraper]) }
   def watched_broken_scrapers
     all_scrapers_watched.select do |s|
       s.finished_with_errors? && s.finished_recently?
@@ -105,6 +110,7 @@ class User < Owner
   end
 
   # Puts scrapers that have most recently failed first
+  sig { returns(T::Array[Scraper]) }
   def watched_broken_scrapers_ordered_by_urgency
     watched_broken_scrapers.sort do |a, b|
       if b.latest_successful_run_time.nil? && a.latest_successful_run_time.nil?
@@ -119,21 +125,30 @@ class User < Owner
     end
   end
 
+  sig { returns(T::Array[Organization]) }
   def organizations_watched
     alerts.map(&:watch).select { |w| w.is_a?(Organization) }
   end
 
+  sig { returns(T::Array[User]) }
   def users_watched
     alerts.map(&:watch).select { |w| w.is_a?(User) }
   end
 
+  sig { returns(T::Array[Owner]) }
+  def owners_watched
+    alerts.map(&:watch).select { |w| w.is_a?(Owner) }
+  end
+
+  sig { returns(T::Array[Scraper]) }
   def scrapers_watched
     alerts.map(&:watch).select { |w| w.is_a?(Scraper) }
   end
 
+  sig { returns(T::Array[Scraper]) }
   def all_scrapers_watched
     s = scrapers_watched
-    (organizations_watched + users_watched).each { |owner| s += owner.scrapers }
+    owners_watched.each { |owner| s += owner.scrapers }
     s.uniq
   end
 
@@ -149,6 +164,7 @@ class User < Owner
     alerts.map(&:watch).include? object
   end
 
+  sig { void }
   def refresh_organizations!
     refreshed_organizations = octokit_client.organizations(nickname).map do |data|
       org = Organization.find_or_create(data.id, data.login)
@@ -164,10 +180,12 @@ class User < Owner
     self.organizations = refreshed_organizations
   end
 
+  sig { returns(Octokit::Client) }
   def octokit_client
     Octokit::Client.new access_token: access_token
   end
 
+  sig { params(auth: T.untyped, _signed_in_resource: T.nilable(User)).returns(User) }
   def self.find_for_github_oauth(auth, _signed_in_resource = nil)
     user = User.find_or_create_by(provider: auth.provider, uid: auth.uid)
     user.update(nickname: auth.info.nickname,
@@ -179,6 +197,7 @@ class User < Owner
     user
   end
 
+  sig { void }
   def refresh_info_from_github!
     user = octokit_client.user(nickname)
     update(name: user.name,
@@ -191,6 +210,7 @@ class User < Owner
     false
   end
 
+  sig { params(nickname: String).returns(User) }
   def self.find_or_create_by_nickname(nickname)
     u = User.find_by(nickname: nickname)
     if u.nil?
@@ -200,19 +220,25 @@ class User < Owner
     u
   end
 
+  # TODO: Remove this as it's just a hack and doesn't make sense intuitively
+  sig { returns(T::Array[User]) }
   def users
     []
   end
 
+  sig { returns(T::Boolean) }
   def active_for_authentication?
     !suspended?
   end
 
+  # TODO: Move this to locale
+  sig { returns(String) }
   def inactive_message
     "Your account has been suspended. " \
       "Please contact us if you think this is in error."
   end
 
+  sig { returns(T::Boolean) }
   def never_alerted?
     alerted_at.blank?
   end
