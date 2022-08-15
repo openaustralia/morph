@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 # Putting rake tasks inside a class to keep sorbet happy
@@ -82,17 +82,17 @@ class EmergencyRake
         end
       end
 
+      def self.destroy_by_id(model, ids)
+        progressbar = ProgressBar.create(title: model.name.pluralize, total: ids.count, format: "%t: |%B| %E")
+        ids.each do |id|
+          model.find(id).destroy
+          progressbar.increment
+        end
+      end
+
       # See https://github.com/openaustralia/morph/issues/1038
       desc "Removed records from other tables associated with deleted scrapers"
       task fix_referential_integrity: :environment do
-        def destroy_by_id(model, ids)
-          progressbar = ProgressBar.create(title: model.name.pluralize, total: ids.count, format: "%t: |%B| %E")
-          ids.each do |id|
-            model.find(id).destroy
-            progressbar.increment
-          end
-        end
-
         ids = Alert.connection.select_all("SELECT id FROM alerts WHERE watch_type = 'Scraper' AND watch_id NOT IN (SELECT id FROM scrapers)").map { |id| id["id"] }
         destroy_by_id(Alert, ids)
 

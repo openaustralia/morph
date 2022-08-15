@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 # Putting rake tasks inside a class to keep sorbet happy
@@ -22,6 +22,8 @@ class AppRake
         next if start_time >= max_duration.ago
 
         run = Morph::Runner.run_for_container(container)
+        next if run.nil?
+
         runner = Morph::Runner.new(run)
         puts "Stopping #{run.full_name} because its container has been running longer than #{max_duration.inspect}"
         runner.log(nil, :internalerr, "Stopping scraper because it has run longer than #{max_duration.inspect}\n")
@@ -162,7 +164,7 @@ class AppRake
       end
     end
 
-    def confirm(message)
+    def self.confirm(message)
       $stdout.puts "#{message} (y/n)"
       $stdin.gets.strip == "y"
     end

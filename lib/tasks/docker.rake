@@ -1,9 +1,10 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 # Putting rake tasks inside a class to keep sorbet happy
 class DockerRake
   extend Rake::DSL
+  extend ActiveSupport::NumberHelper
 
   namespace :app do
     namespace :docker do
