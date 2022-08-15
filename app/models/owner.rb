@@ -1,8 +1,10 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 # A user or organization that a scraper belongs to
 class Owner < ApplicationRecord
+  extend T::Sig
+
   extend FriendlyId
   friendly_id :nickname
 
@@ -24,10 +26,12 @@ class Owner < ApplicationRecord
   scope :all_supporters, -> { where.not(stripe_plan_id: "") }
 
   # Specify the data searchkick should index
+  sig { returns(T::Hash[String, T.nilable(String)]) }
   def search_data
     as_json only: %i[name nickname company]
   end
 
+  sig { returns(T.nilable(String)) }
   def name
     # If nickname and name are identical return nil
     return nil if self[:name] == nickname
@@ -35,6 +39,7 @@ class Owner < ApplicationRecord
     self[:name]
   end
 
+  sig { returns(T.nilable(String)) }
   def blog
     b = self[:blog]
     if b.blank?
@@ -46,45 +51,56 @@ class Owner < ApplicationRecord
     end
   end
 
+  sig { returns(Float) }
   def wall_time
     runs.sum(:wall_time)
   end
 
+  sig { returns(Float) }
   def utime
     scrapers.joins(:metrics).sum(:utime)
   end
 
+  sig { returns(Float) }
   def stime
     scrapers.joins(:metrics).sum(:stime)
   end
 
+  sig { returns(Float) }
   def cpu_time
     utime + stime
   end
 
+  sig { returns(Integer) }
   def repo_size
     scrapers.sum(:repo_size)
   end
 
+  sig { returns(Integer) }
   def sqlite_db_size
     scrapers.sum(:sqlite_db_size)
   end
 
+  sig { returns(Integer) }
   def total_disk_usage
     repo_size + sqlite_db_size
   end
 
+  sig { void }
   def set_api_key
     self.api_key =
       Digest::MD5.base64digest(id.to_s + rand.to_s + Time.zone.now.to_s)[0...20]
   end
 
+  sig { returns(String) }
   def github_url
     "https://github.com/#{nickname}"
   end
 
   # Organizations and users store their gravatar in different ways
   # TODO: Fix this
+  # TODO: Move this out of the model
+  sig { params(size: Integer).returns(T.nilable(String)) }
   def gravatar_url(size = 440)
     url = self[:gravatar_url]
     return if url.nil?
@@ -96,22 +112,27 @@ class Owner < ApplicationRecord
     u.to_s
   end
 
+  sig { returns(String) }
   def repo_root
     "db/scrapers/repos/#{to_param}"
   end
 
+  sig { returns(String) }
   def data_root
     "db/scrapers/data/#{to_param}"
   end
 
+  sig { returns(Ability) }
   def ability
-    @ability ||= Ability.new(self)
+    @ability ||= T.let(Ability.new(self), T.nilable(Ability))
   end
 
+  sig { returns(T::Boolean) }
   def supporter?
     stripe_plan_id.present?
   end
 
+  sig { returns(T.nilable(Plan)) }
   def plan
     s = stripe_plan_id
     Plan.new(s) if s
