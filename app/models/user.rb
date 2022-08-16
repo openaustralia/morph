@@ -56,12 +56,12 @@ class User < Owner
                       "(tried to send alert)"
   end
 
-  sig { returns(T::Boolean) }
+  sig { override.returns(T::Boolean) }
   def user?
     true
   end
 
-  sig { returns(T::Boolean) }
+  sig { override.returns(T::Boolean) }
   def organization?
     false
   end

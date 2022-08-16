@@ -4,6 +4,8 @@
 # A user or organization that a scraper belongs to
 class Owner < ApplicationRecord
   extend T::Sig
+  extend T::Helpers
+  abstract!
 
   extend FriendlyId
   friendly_id :nickname
@@ -30,6 +32,12 @@ class Owner < ApplicationRecord
   def search_data
     as_json only: %i[name nickname company]
   end
+
+  sig { abstract.returns(T::Boolean) }
+  def user?; end
+
+  sig { abstract.returns(T::Boolean) }
+  def organization?; end
 
   sig { returns(T.nilable(String)) }
   def name

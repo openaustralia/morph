@@ -18,7 +18,7 @@ RSpec.describe Webhook, type: :model do
     end
 
     it "does not allow duplicate webhooks for the same scraper" do
-      owner = Owner.create!
+      owner = User.create!
       scraper = Scraper.create!(name: "scraper", owner: owner)
       described_class.create!(scraper: scraper, url: "https://example.org")
 

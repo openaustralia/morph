@@ -9,12 +9,12 @@ class Organization < Owner
   # TODO: rename this to members
   has_many :users, through: :organizations_users
 
-  sig { returns(T::Boolean) }
+  sig { override.returns(T::Boolean) }
   def user?
     false
   end
 
-  sig { returns(T::Boolean) }
+  sig { override.returns(T::Boolean) }
   def organization?
     true
   end
