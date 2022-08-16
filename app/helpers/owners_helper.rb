@@ -1,11 +1,14 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module OwnersHelper
+  extend T::Sig
+
   # For sorbet
   include ERB::Util
   include ActionView::Helpers::AssetTagHelper
 
+  sig { params(owner: Owner, size: Integer, show_tooltip: T::Boolean, tooltip_text: T.nilable(String)).returns(String) }
   def owner_image(owner, size:, show_tooltip: true, tooltip_text: nil)
     options = { size: "#{size}x#{size}", class: "" }
     options[:class] += " img-circle" if owner.user?
@@ -26,6 +29,7 @@ module OwnersHelper
     image_tag(url, options) if url
   end
 
+  sig { params(owner: Owner).returns(String) }
   def owner_tooltip_content(owner)
     if owner.name
       "<h4>#{h(owner.name)}</h4><h5>#{h(owner.nickname)}</h5>"
