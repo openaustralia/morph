@@ -14,9 +14,9 @@ module SupportersHelper
     image_tag(plan.image_name, size: size, class: "plan")
   end
 
-  sig { params(from_plan: Plan, to_plan: Plan).returns(String) }
+  sig { params(from_plan: T.nilable(Plan), to_plan: Plan).returns(String) }
   def plan_change_word(from_plan, to_plan)
-    from_price = from_plan.price
+    from_price = from_plan&.price
     to_price = to_plan.price
     if from_price.nil? || from_price == to_price
       "Become a #{to_plan.name}"

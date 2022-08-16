@@ -40,7 +40,7 @@
           .pull-right= button_link_to "Settings", settings_owner_path(@owner)
 
 .container
-  - unless @owner.organizations.empty?
+  - unless @owner.organization? || @owner.organizations.empty?
     %h3 Public Organizations
     %p
       - @owner.organizations.each do |org|
