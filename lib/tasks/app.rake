@@ -1,8 +1,10 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 # Putting rake tasks inside a class to keep sorbet happy
 class AppRake
+  extend T::Sig
+
   extend Rake::DSL
 
   namespace :app do
@@ -164,6 +166,7 @@ class AppRake
       end
     end
 
+    sig { params(message: String).returns(T::Boolean) }
     def self.confirm(message)
       $stdout.puts "#{message} (y/n)"
       $stdin.gets.strip == "y"

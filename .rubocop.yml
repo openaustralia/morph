@@ -41,8 +41,6 @@ Sorbet/StrictSigil:
     - app/controllers/users/omniauth_callbacks_controller.rb
     - config/deploy/*
     - config.ru
-    - db/seeds.rb
-    - lib/tasks/*
     - spec/**/*
     - sync.ru
     - sorbet/tapioca/require.rb
