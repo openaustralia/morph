@@ -1,10 +1,13 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 class ScraperAutoRunWorker
+  extend T::Sig
+
   include Sidekiq::Worker
   sidekiq_options backtrace: true
 
+  sig { params(scraper_id: Integer).void }
   def perform(scraper_id)
     # Scraper might have been deleted after this job was created. So, check
     # for this

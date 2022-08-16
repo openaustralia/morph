@@ -1,10 +1,13 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 class DeliverWebhookWorker
+  extend T::Sig
+
   include Sidekiq::Worker
   sidekiq_options backtrace: true
 
+  sig { params(webhook_delivery_id: Integer).void }
   def perform(webhook_delivery_id)
     webhook_delivery = WebhookDelivery.find(webhook_delivery_id)
     # TODO: As soon as we've upgraded to a recent version of Ubuntu switch the SSL

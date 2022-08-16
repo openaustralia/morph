@@ -1,10 +1,13 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 class CreateScraperWorker
+  extend T::Sig
+
   include Sidekiq::Worker
   sidekiq_options backtrace: true
 
+  sig { params(scraper_id: Integer, current_user_id: Integer, scraper_url: String).void }
   def perform(scraper_id, current_user_id, scraper_url)
     scraper = Scraper.find(scraper_id)
     current_user = User.find(current_user_id)

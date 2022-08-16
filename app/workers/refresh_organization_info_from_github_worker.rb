@@ -1,10 +1,13 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 class RefreshOrganizationInfoFromGithubWorker
+  extend T::Sig
+
   include Sidekiq::Worker
   sidekiq_options backtrace: true
 
+  sig { params(id: Integer).void }
   def perform(id)
     org = Organization.find(id)
     # Use first member of organization to make the github calls
