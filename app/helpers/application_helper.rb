@@ -1,4 +1,4 @@
-# typed: strict
+# typed: true
 # frozen_string_literal: true
 
 module ApplicationHelper
@@ -16,15 +16,19 @@ module ApplicationHelper
     distance_of_time_in_words(0, secs, include_seconds: true)
   end
 
-  sig { params(name: String, link: String, html_options: T::Hash[Symbol, String]).returns(String) }
-  def button_link_to(name, link, html_options = {})
+  def button_link_to(name = nil, options = {}, html_options = {}, &block)
+    if block_given?
+      html_options = options
+      options = name
+      name = capture(&block)
+    end
     html_options[:class] ||= ""
-    html_options[:class] = "#{T.must(html_options[:class])} btn btn-default"
+    html_options[:class] += " btn btn-default"
 
     if html_options[:disabled]
       content_tag(:span, name, html_options)
     else
-      link_to(name, link, html_options)
+      link_to(name, options, html_options)
     end
   end
 
