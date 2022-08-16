@@ -1,9 +1,12 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 class DiscourseSsoController < ApplicationController
+  extend T::Sig
+
   before_action :authenticate_user!
 
+  sig { void }
   def sso
     # Will be set because we've just authenticated
     user = T.must(current_user)

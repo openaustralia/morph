@@ -1,9 +1,12 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 class ConnectionLogsController < ApplicationController
+  extend T::Sig
+
   skip_before_action :verify_authenticity_token
 
+  sig { void }
   def create
     if ConnectionLogsController.key == params[:key]
 
@@ -31,6 +34,7 @@ class ConnectionLogsController < ApplicationController
     end
   end
 
+  sig { returns(T.nilable(String)) }
   def self.key
     ENV.fetch("MITMPROXY_SECRET", nil)
   end
