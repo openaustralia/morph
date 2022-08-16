@@ -1,10 +1,13 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module UsersHelper
+  extend T::Sig
+
   # For sorbet
   include ActionView::Helpers::TextHelper
 
+  sig { params(success_count: Integer, broken_count: Integer).returns(String) }
   def alert_scrapers_summary_sentence(success_count, broken_count)
     result = []
     result << pluralize(success_count, "scraper")
