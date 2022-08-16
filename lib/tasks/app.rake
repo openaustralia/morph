@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "sorbet-runtime"
+
 # Putting rake tasks inside a class to keep sorbet happy
 class AppRake
   extend T::Sig
