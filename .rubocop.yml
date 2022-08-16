@@ -43,7 +43,6 @@ Sorbet/StrictSigil:
     - config.ru
     - spec/**/*
     - sync.ru
-    - sorbet/tapioca/require.rb
     - app/lib/discourse/*
     - app/helpers/*
     - app/controllers/*
