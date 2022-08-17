@@ -722,6 +722,7 @@ DEPENDENCIES
   sinatra (>= 1.3.0)
   sitemap_generator
   sorbet-static-and-runtime
+  spoom
   spring
   spring-commands-rspec
   sprockets (~> 3)

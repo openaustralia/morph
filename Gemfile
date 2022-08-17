@@ -109,6 +109,7 @@ end
 group :development do
   # To help with sorbet type checking
   gem "rspec-sorbet"
+  gem "spoom"
   gem "tapioca", require: false
 
   gem "capistrano-rails"
