@@ -45,7 +45,8 @@ Sorbet/StrictSigil:
     - sync.ru
     - app/lib/discourse/*
     - app/helpers/*
-    - app/controllers/*
+    - app/controllers/api_controller.rb
+    - app/controllers/application_controller.rb
     - app/controllers/admin/*
     - app/lib/morph/github.rb
 
