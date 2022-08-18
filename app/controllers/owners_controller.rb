@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 class OwnersController < ApplicationController
@@ -16,29 +16,36 @@ class OwnersController < ApplicationController
     # Only do this once
     session[:new_supporter] = false if @new_supporter
 
-    @scrapers = T.must(@owner).scrapers
+    scrapers = T.must(@owner).scrapers
+    @scrapers = T.let(scrapers, T.nilable(ActiveRecord::Associations::CollectionProxy))
 
     # Split out scrapers into different groups
-    @running_scrapers = []
-    @erroring_scrapers = []
-    @other_scrapers = []
-    @scrapers.each do |scraper|
+    running_scrapers = []
+    erroring_scrapers = []
+    other_scrapers = []
+    scrapers.each do |scraper|
       if scraper.running?
-        @running_scrapers << scraper
+        running_scrapers << scraper
       elsif scraper.requires_attention?
-        @erroring_scrapers << scraper
+        erroring_scrapers << scraper
       else
-        @other_scrapers << scraper
+        other_scrapers << scraper
       end
     end
+    @running_scrapers = T.let(running_scrapers, T.nilable(T::Array[Scraper]))
+    @erroring_scrapers = T.let(erroring_scrapers, T.nilable(T::Array[Scraper]))
+    @other_scrapers = T.let(other_scrapers, T.nilable(T::Array[Scraper]))
   end
 
+  sig { void }
   def settings_redirect
     redirect_to settings_owner_url(current_user)
   end
 
+  sig { void }
   def settings; end
 
+  sig { void }
   def reset_key
     T.must(@owner).set_api_key
     T.must(@owner).save!
@@ -46,6 +53,7 @@ class OwnersController < ApplicationController
   end
 
   # Toggle whether we're watching this user / organization
+  sig { void }
   def watch
     user = T.must(current_user)
     user.toggle_watch(T.must(@owner))
