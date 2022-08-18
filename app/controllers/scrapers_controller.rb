@@ -1,7 +1,9 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 class ScrapersController < ApplicationController
+  extend T::Sig
+
   before_action :authenticate_user!, except: %i[
     index show data watchers history
   ]
@@ -15,22 +17,27 @@ class ScrapersController < ApplicationController
   # :show, :destroy, :update, :run, :stop,
   # :clear, :data, :watch, :watchers
 
+  sig { void }
   def settings
     authorize! :settings, @scraper
   end
 
+  sig { void }
   def data; end
 
+  sig { void }
   def index
     @scrapers = Scraper.accessible_by(current_ability).order(created_at: :desc)
                        .page(params[:page])
   end
 
+  sig { void }
   def new
     @scraper = Scraper.new
     authorize! :new, @scraper
   end
 
+  sig { void }
   def create
     params_scraper = T.cast(params[:scraper], ActionController::Parameters)
     authenticated_user = T.must(current_user)
@@ -58,16 +65,19 @@ class ScrapersController < ApplicationController
     end
   end
 
+  sig { void }
   def github
     authorize! :github, Scraper
   end
 
   # For rendering ajax partial in github action
+  sig { void }
   def github_form
     @scraper = Scraper.new
     render partial: "github_form", locals: { owner: Owner.find(params[:id]) }
   end
 
+  sig { void }
   def create_github
     params_scraper = T.cast(params[:scraper], ActionController::Parameters)
     full_name = T.cast(params_scraper[:full_name], String)
@@ -89,76 +99,100 @@ class ScrapersController < ApplicationController
     end
   end
 
+  sig { void }
   def show
     authorize! :show, @scraper
   end
 
+  sig { void }
   def destroy
-    authorize! :destroy, @scraper
-    flash[:notice] = "Scraper #{@scraper.name} deleted"
-    @scraper.destroy
+    scraper = T.must(@scraper)
+
+    authorize! :destroy, scraper
+    flash[:notice] = "Scraper #{scraper.name} deleted"
+    scraper.destroy
     # TODO: Make this done by default after calling Scraper#destroy
-    @scraper.destroy_repo_and_data
-    redirect_to @scraper.owner
+    scraper.destroy_repo_and_data
+    redirect_to scraper.owner
   end
 
+  sig { void }
   def update
-    authorize! :update, @scraper
-    if @scraper.update(scraper_params)
+    scraper = T.must(@scraper)
+
+    authorize! :update, scraper
+    if scraper.update(scraper_params)
       flash[:notice] = "Scraper settings successfully updated"
-      sync_update @scraper
-      redirect_to @scraper
+      sync_update scraper
+      redirect_to scraper
     else
       render :settings
     end
   end
 
+  sig { void }
   def run
-    authorize! :run, @scraper
-    @scraper.queue!
-    @scraper.reload
-    sync_update @scraper
-    redirect_to @scraper
+    scraper = T.must(@scraper)
+
+    authorize! :run, scraper
+    scraper.queue!
+    scraper.reload
+    sync_update scraper
+    redirect_to scraper
   end
 
+  sig { void }
   def stop
-    authorize! :stop, @scraper
-    @scraper.stop!
-    @scraper.reload
-    sync_update @scraper
-    redirect_to @scraper
+    scraper = T.must(@scraper)
+  
+    authorize! :stop, scraper
+    scraper.stop!
+    scraper.reload
+    sync_update scraper
+    redirect_to scraper
   end
 
+  sig { void }
   def clear
-    authorize! :clear, @scraper
-    @scraper.database.clear
-    @scraper.reindex
-    redirect_to @scraper
+    scraper = T.must(@scraper)
+
+    authorize! :clear, scraper
+    scraper.database.clear
+    scraper.reindex
+    redirect_to scraper
   end
 
   # Toggle whether we're watching this scraper
+  sig { void }
   def watch
+    scraper = T.must(@scraper)
     authenticated_user = T.must(current_user)
-    authenticated_user.toggle_watch(@scraper)
+
+    authenticated_user.toggle_watch(scraper)
     redirect_back(fallback_location: root_path)
   end
 
+  sig { void }
   def watchers
     authorize! :watchers, @scraper
   end
 
+  sig { void }
   def history; end
 
+  sig { void }
   def running
-    @scrapers = Scraper.running
+    @scrapers = T.let(Scraper.running, T.nilable(T::Array[Scraper]))
   end
 
   private
 
+  sig { void }
   def load_resource
-    @scraper = Scraper.friendly.find(params[:id])
+    @scraper = T.let(Scraper.friendly.find(params[:id]), T.nilable(Scraper))
   end
 
+  sig { returns(ActionController::Parameters) }
   def scraper_params
     s = T.cast(params.require(:scraper), ActionController::Parameters)
     if can? :memory_setting, @scraper
