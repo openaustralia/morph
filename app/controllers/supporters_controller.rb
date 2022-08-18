@@ -1,16 +1,21 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 class SupportersController < ApplicationController
+  extend T::Sig
+
   before_action :authenticate_user!, except: %i[new index]
   before_action :load_stripe_library
 
+  sig { void }
   def index; end
 
+  sig { void }
   def new
     authenticate_user! if params[:plan_id]
   end
 
+  sig { void }
   def create
     authenticated_user = T.must(current_user)
 
@@ -32,6 +37,7 @@ class SupportersController < ApplicationController
     redirect_to supporters_path
   end
 
+  sig { void }
   def create_one_time
     authenticated_user = T.must(current_user)
     params_amount = T.cast(params[:amount], T.any(String, Numeric))
@@ -57,12 +63,13 @@ class SupportersController < ApplicationController
     redirect_to supporters_path
   end
 
+  sig { void }
   def update
     authenticated_user = T.must(current_user)
     plan_id = T.cast(params[:plan_id], String)
 
-    @from_plan = authenticated_user.plan
-    @to_plan = Plan.new(plan_id)
+    @from_plan = T.let(authenticated_user.plan, T.nilable(Plan))
+    @to_plan = T.let(Plan.new(plan_id), T.nilable(Plan))
 
     customer = Stripe::Customer.retrieve T.must(authenticated_user.stripe_customer_id)
     subscription = customer.subscriptions.retrieve authenticated_user.stripe_subscription_id
@@ -76,7 +83,8 @@ class SupportersController < ApplicationController
 
   private
 
+  sig { void }
   def load_stripe_library
-    @load_stripe_library = true
+    @load_stripe_library = T.let(true, T.nilable(T::Boolean))
   end
 end
