@@ -144,7 +144,7 @@ class ScrapersController < ApplicationController
   sig { void }
   def stop
     scraper = T.must(@scraper)
-  
+
     authorize! :stop, scraper
     scraper.stop!
     scraper.reload
