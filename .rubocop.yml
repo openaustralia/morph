@@ -46,7 +46,6 @@ Sorbet/StrictSigil:
     - app/lib/discourse/*
     - app/helpers/*
     - app/controllers/api_controller.rb
-    - app/controllers/application_controller.rb
     - app/controllers/admin/*
     - app/lib/morph/github.rb
 
