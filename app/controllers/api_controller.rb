@@ -15,10 +15,12 @@ class ApiController < ApplicationController
   # This will be a long running request
   # TODO: Document this API
   def run_remote
+    params_code = T.cast(params[:code], ActionDispatch::Http::UploadedFile)
+
     response.headers["Content-Type"] = "text/event-stream"
     run = Run.create(queued_at: Time.zone.now, auto: false, owner: current_user)
     # TODO: Shouldn't need to untar here because it just gets retarred
-    Archive::Tar::Minitar.unpack(params[:code].tempfile, run.repo_path)
+    Archive::Tar::Minitar.unpack(params_code.tempfile, run.repo_path)
     runner = Morph::Runner.new(run)
     runner.go { |_timestamp, s, text| stream_message(s, text) }
   ensure
