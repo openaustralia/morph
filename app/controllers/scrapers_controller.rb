@@ -42,25 +42,26 @@ class ScrapersController < ApplicationController
     params_scraper = T.cast(params[:scraper], ActionController::Parameters)
     authenticated_user = T.must(current_user)
 
-    @scraper = Scraper.new(
+    scraper = Scraper.new(
       original_language_key: params_scraper[:original_language_key],
       owner_id: params_scraper[:owner_id],
       name: params_scraper[:name],
       description: params_scraper[:description]
     )
-    @scraper.full_name = "#{@scraper.owner.to_param}/#{@scraper.name}"
-    authorize! :create, @scraper
-    if @scraper.valid?
-      @scraper.create_create_scraper_progress!(
+    scraper.full_name = "#{scraper.owner.to_param}/#{scraper.name}"
+    authorize! :create, scraper
+    if scraper.valid?
+      scraper.create_create_scraper_progress!(
         heading: "New scraper",
         message: "Queuing",
         progress: 5
       )
-      @scraper.save
-      CreateScraperWorker.perform_async(@scraper.id, authenticated_user.id,
-                                        scraper_url(@scraper))
-      redirect_to @scraper
+      scraper.save!
+      CreateScraperWorker.perform_async(T.must(scraper.id), T.must(authenticated_user.id),
+                                        scraper_url(scraper))
+      redirect_to scraper
     else
+      @scraper = scraper
       render :new
     end
   end
@@ -83,18 +84,19 @@ class ScrapersController < ApplicationController
     full_name = T.cast(params_scraper[:full_name], String)
     authenticated_user = T.must(current_user)
 
-    @scraper = Scraper.new_from_github(full_name, authenticated_user.octokit_client)
-    authorize! :create_github, @scraper
-    if @scraper.save
-      @scraper.create_create_scraper_progress!(
+    scraper = Scraper.new_from_github(full_name, authenticated_user.octokit_client)
+    authorize! :create_github, scraper
+    if scraper.save
+      scraper.create_create_scraper_progress!(
         heading: "Adding from GitHub",
         message: "Queuing",
         progress: 5
       )
-      @scraper.save
-      CreateFromGithubWorker.perform_async(@scraper.id)
-      redirect_to @scraper
+      scraper.save!
+      CreateFromGithubWorker.perform_async(T.must(scraper.id))
+      redirect_to scraper
     else
+      @scraper = scraper
       render :github
     end
   end

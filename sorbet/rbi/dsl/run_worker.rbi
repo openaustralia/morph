@@ -6,13 +6,13 @@
 
 class RunWorker
   class << self
-    sig { params(run_id: T.untyped).returns(String) }
+    sig { params(run_id: ::Integer).returns(String) }
     def perform_async(run_id); end
 
-    sig { params(interval: T.any(DateTime, Time), run_id: T.untyped).returns(String) }
+    sig { params(interval: T.any(DateTime, Time), run_id: ::Integer).returns(String) }
     def perform_at(interval, run_id); end
 
-    sig { params(interval: Numeric, run_id: T.untyped).returns(String) }
+    sig { params(interval: Numeric, run_id: ::Integer).returns(String) }
     def perform_in(interval, run_id); end
   end
 end

@@ -6,13 +6,13 @@
 
 class RefreshOrganizationInfoFromGithubWorker
   class << self
-    sig { params(id: T.untyped).returns(String) }
+    sig { params(id: ::Integer).returns(String) }
     def perform_async(id); end
 
-    sig { params(interval: T.any(DateTime, Time), id: T.untyped).returns(String) }
+    sig { params(interval: T.any(DateTime, Time), id: ::Integer).returns(String) }
     def perform_at(interval, id); end
 
-    sig { params(interval: Numeric, id: T.untyped).returns(String) }
+    sig { params(interval: Numeric, id: ::Integer).returns(String) }
     def perform_in(interval, id); end
   end
 end

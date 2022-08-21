@@ -22,6 +22,6 @@ class ScraperAutoRunWorker
 
     run = scraper.runs.create(queued_at: Time.zone.now, auto: true, owner_id: scraper.owner_id)
     # Throw the actual run onto the background so it can be safely restarted
-    RunWorker.perform_async(run.id)
+    RunWorker.perform_async(T.must(run.id))
   end
 end

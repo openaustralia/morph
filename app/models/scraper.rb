@@ -242,7 +242,7 @@ class Scraper < ApplicationRecord
     return unless runnable?
 
     run = runs.create(queued_at: Time.zone.now, auto: false, owner_id: owner_id)
-    RunWorker.perform_async(run.id)
+    RunWorker.perform_async(T.must(run.id))
   end
 
   # If repo is still using the old "master" branch name then the url below will

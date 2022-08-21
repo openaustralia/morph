@@ -20,7 +20,7 @@ class ConnectionLogsController < ApplicationController
         rescue ActiveRecord::RecordNotUnique
           domain = Domain.find_by!(name: params[:host])
         end
-        UpdateDomainWorker.perform_async(domain.id)
+        UpdateDomainWorker.perform_async(T.must(domain.id))
       end
 
       ConnectionLog.create!(

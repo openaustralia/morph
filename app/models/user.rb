@@ -195,7 +195,7 @@ class User < Owner
     user.refresh_info_from_github!
     # Also every time you login it should update the list of organizations that
     # the user is attached to but do this in a background job
-    RefreshUserOrganizationsWorker.perform_async(user.id)
+    RefreshUserOrganizationsWorker.perform_async(T.must(user.id))
     user
   end
 

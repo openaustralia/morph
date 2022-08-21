@@ -6,13 +6,13 @@
 
 class DeliverWebhookWorker
   class << self
-    sig { params(webhook_delivery_id: T.untyped).returns(String) }
+    sig { params(webhook_delivery_id: ::Integer).returns(String) }
     def perform_async(webhook_delivery_id); end
 
-    sig { params(interval: T.any(DateTime, Time), webhook_delivery_id: T.untyped).returns(String) }
+    sig { params(interval: T.any(DateTime, Time), webhook_delivery_id: ::Integer).returns(String) }
     def perform_at(interval, webhook_delivery_id); end
 
-    sig { params(interval: Numeric, webhook_delivery_id: T.untyped).returns(String) }
+    sig { params(interval: Numeric, webhook_delivery_id: ::Integer).returns(String) }
     def perform_in(interval, webhook_delivery_id); end
   end
 end

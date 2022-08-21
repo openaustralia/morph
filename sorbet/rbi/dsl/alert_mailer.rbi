@@ -8,9 +8,9 @@ class AlertMailer
   class << self
     sig do
       params(
-        user: T.untyped,
-        broken_scrapers: T.untyped,
-        successful_scrapers: T.untyped
+        user: ::User,
+        broken_scrapers: T::Array[::Scraper],
+        successful_scrapers: T::Array[::Scraper]
       ).returns(::ActionMailer::MessageDelivery)
     end
     def alert_email(user, broken_scrapers, successful_scrapers); end

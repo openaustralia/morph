@@ -6,13 +6,13 @@
 
 class CreateFromGithubWorker
   class << self
-    sig { params(scraper_id: T.untyped).returns(String) }
+    sig { params(scraper_id: ::Integer).returns(String) }
     def perform_async(scraper_id); end
 
-    sig { params(interval: T.any(DateTime, Time), scraper_id: T.untyped).returns(String) }
+    sig { params(interval: T.any(DateTime, Time), scraper_id: ::Integer).returns(String) }
     def perform_at(interval, scraper_id); end
 
-    sig { params(interval: Numeric, scraper_id: T.untyped).returns(String) }
+    sig { params(interval: Numeric, scraper_id: ::Integer).returns(String) }
     def perform_in(interval, scraper_id); end
   end
 end
