@@ -82,7 +82,7 @@ module Morph
       end
     end
 
-    sig { params(query: T.nilable(String), readonly: T::Boolean, block: T.proc.params(row: T::Hash[String, String]).void).void }
+    sig { params(query: T.nilable(String), readonly: T::Boolean, block: T.proc.params(row: T::Hash[String, T.untyped]).void).void }
     def sql_query_streaming(query, readonly: true, &block)
       raise SQLite3::Exception, "No query specified" if query.blank?
 
@@ -115,7 +115,7 @@ module Morph
 
     # SUPER IMPORTANT: Only use this method if the result is small because
     # it keeps the whole thing in memory. Otherwise use sql_query_streaming
-    sig { params(query: T.nilable(String), readonly: T::Boolean).returns(T::Array[T::Hash[String, String]]) }
+    sig { params(query: T.nilable(String), readonly: T::Boolean).returns(T::Array[T::Hash[String, T.untyped]]) }
     def sql_query(query, readonly: true)
       array = []
       sql_query_streaming(query, readonly: readonly) do |row|
