@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 # Run API used by the morph command-line client
@@ -85,7 +85,7 @@ class ApiController < ApplicationController
       # IO.copy_stream(@scraper.database.sqlite_db_path, response.stream)
     end
     ApiQuery.log!(
-      query: params[:query],
+      query: nil,
       scraper: @scraper,
       owner: owner,
       benchmark: bench,
@@ -106,6 +106,8 @@ class ApiController < ApplicationController
   end
 
   def data_json(owner)
+    params_query = T.cast(params[:query], String)
+
     # When calculating the size here we're ignoring a few bytes at the front and end
     size = 0
     bench = Benchmark.measure do
@@ -114,7 +116,7 @@ class ApiController < ApplicationController
       mime_type = params[:callback] ? "application/javascript" : "application/json"
       response.headers["Content-Type"] = "#{mime_type}; charset=utf-8"
       i = 0
-      @scraper.database.sql_query_streaming(params[:query]) do |row|
+      @scraper.database.sql_query_streaming(params_query) do |row|
         # In case there is an error with the query wait for that to work before
         # generating the first output
         if i.zero?
@@ -132,7 +134,7 @@ class ApiController < ApplicationController
       json_footer(params[:callback])
     end
     ApiQuery.log!(
-      query: params[:query],
+      query: params_query,
       scraper: @scraper,
       owner: owner,
       benchmark: bench,
@@ -150,13 +152,15 @@ class ApiController < ApplicationController
   end
 
   def data_csv(owner)
+    params_query = T.cast(params[:query], String)
+
     size = 0
     bench = Benchmark.measure do
       # Tell nginx and passenger not to buffer this
       response.headers["X-Accel-Buffering"] = "no"
       response.headers["Content-Disposition"] = "attachment; filename=#{@scraper.name}.csv"
       displayed_header = T.let(false, T::Boolean)
-      @scraper.database.sql_query_streaming(params[:query]) do |row|
+      @scraper.database.sql_query_streaming(params_query) do |row|
         # only show the header once at the beginning
         unless displayed_header
           size += csv_header(row)
@@ -168,7 +172,7 @@ class ApiController < ApplicationController
       end
     end
     ApiQuery.log!(
-      query: params[:query],
+      query: params_query,
       scraper: @scraper,
       owner: owner,
       benchmark: bench,
@@ -207,13 +211,15 @@ class ApiController < ApplicationController
   end
 
   def data_atom(owner)
+    params_query = T.cast(params[:query], String)
+
     # Only measuring the size of the entry blocks. We're ignoring the header.
     size = 0
     bench = Benchmark.measure do
       # Tell nginx and passenger not to buffer this
       response.headers["X-Accel-Buffering"] = "no"
       displayed_header = T.let(false, T::Boolean)
-      @scraper.database.sql_query_streaming(params[:query]) do |row|
+      @scraper.database.sql_query_streaming(params_query) do |row|
         unless displayed_header
           atom_header
           displayed_header = true
@@ -234,7 +240,7 @@ class ApiController < ApplicationController
       atom_footer
     end
     ApiQuery.log!(
-      query: params[:query],
+      query: params_query,
       scraper: @scraper,
       owner: owner,
       benchmark: bench,

@@ -192,7 +192,7 @@ describe ApiController do
       end
 
       it "returns json" do
-        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :json }
+        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :json, query: "something" }
         expect(response).to be_success
         expect(JSON.parse(response.body)).to eq [
           {
@@ -206,7 +206,7 @@ describe ApiController do
       end
 
       it "returns jsonp" do
-        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :json, callback: "foo" }
+        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :json, callback: "foo", query: "something" }
         expect(response).to be_success
         expect(response.body).to eq <<~RESPONSE
           /**/foo([
@@ -217,7 +217,7 @@ describe ApiController do
       end
 
       it "returns csv" do
-        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :csv }
+        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :csv, query: "something" }
         expect(response).to be_success
 
         expect(response.body)
@@ -235,7 +235,7 @@ describe ApiController do
         # TODO: Remove this workaround when we've upgraded rails
         allow(SizedQueue).to receive(:new).and_return(SizedQueue.new(1000))
 
-        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :atom }
+        get :data, params: { id: "mlandauer/a_scraper", key: "1234", format: :atom, query: "something" }
 
         expect(response).to be_success
         expect(response.body).to eq <<~RESPONSE
@@ -247,9 +247,9 @@ describe ApiController do
             <author>
               <name>mlandauer</name>
             </author>
-            <id>http://test.host/mlandauer/a_scraper/data.atom?key=1234</id>
+            <id>http://test.host/mlandauer/a_scraper/data.atom?key=1234&query=something</id>
             <link href="http://test.host/mlandauer/a_scraper"/>
-            <link href="http://test.host/mlandauer/a_scraper/data.atom?key=1234" rel="self"/>
+            <link href="http://test.host/mlandauer/a_scraper/data.atom?key=1234&query=something" rel="self"/>
             <entry>
               <title>Foo</title>
               <content>Bar</content>
