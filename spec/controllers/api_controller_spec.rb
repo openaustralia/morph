@@ -52,11 +52,11 @@ describe ApiController do
       runner = instance_double(Morph::Runner)
       allow(Morph::Runner).to receive(:new).and_return(runner)
       allow(runner).to receive(:go).and_yield(
-        nil, "internalout", "Injecting configuration and compiling...\n"
+        nil, :internalout, "Injecting configuration and compiling...\n"
       ).and_yield(
-        nil, "internalout", "Injecting scraper and running...\n"
+        nil, :internalout, "Injecting scraper and running...\n"
       ).and_yield(
-        nil, "stdout", "Hello!\n"
+        nil, :stdout, "Hello!\n"
       )
       allow(runner).to receive(:container_for_run).and_return(nil)
 
