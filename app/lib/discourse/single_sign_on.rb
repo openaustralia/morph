@@ -3,29 +3,36 @@
 
 module Discourse
   class SingleSignOn
-    ACCESSORS = %i[nonce name username email about_me external_email external_username external_name external_id].freeze
+    extend T::Sig
+
+    ACCESSORS = T.let(%i[nonce name username email about_me external_email external_username external_name external_id].freeze, T::Array[Symbol])
     FIXNUMS = [].freeze
     NONCE_EXPIRY_TIME = 10.minutes
 
-    attr_accessor(*ACCESSORS)
+    attr_accessor(:nonce, :name, :username, :email, :about_me, :external_email, :external_username, :external_name, :external_id)
     attr_writer :sso_secret, :sso_url
 
+    sig { void }
     def self.sso_secret
       raise "sso_secret not implemented on class, be sure to set it on instance"
     end
 
+    sig { void }
     def self.sso_url
       raise "sso_url not implemented on class, be sure to set it on instance"
     end
 
+    sig { returns(String) }
     def sso_secret
       @sso_secret || self.class.sso_secret
     end
 
+    sig { returns(String) }
     def sso_url
       @sso_url || self.class.sso_url
     end
 
+    sig { params(payload: String, sso_secret: T.nilable(String)).returns(SingleSignOn) }
     def self.parse(payload, sso_secret = nil)
       sso = new
       sso.sso_secret = sso_secret if sso_secret
@@ -45,20 +52,24 @@ module Discourse
       sso
     end
 
+    sig { params(payload: String).returns(String) }
     def sign(payload)
       OpenSSL::HMAC.hexdigest("sha256", sso_secret, payload)
     end
 
+    sig { params(base_url: T.nilable(String)).returns(String) }
     def to_url(base_url = nil)
-      base = base_url.to_s || sso_url.to_s
+      base = (base_url || sso_url).to_s
       "#{base}#{base.include?('?') ? '&' : '?'}#{payload}"
     end
 
+    sig { returns(String) }
     def payload
       payload = Base64.encode64(unsigned_payload)
       "sso=#{CGI.escape(payload)}&sig=#{sign(payload)}"
     end
 
+    sig { returns(String) }
     def unsigned_payload
       payload = {}
       ACCESSORS.each do |k|
