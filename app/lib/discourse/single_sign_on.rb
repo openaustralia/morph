@@ -6,8 +6,6 @@ module Discourse
     extend T::Sig
 
     ACCESSORS = T.let(%i[nonce name username email about_me external_email external_username external_name external_id].freeze, T::Array[Symbol])
-    FIXNUMS = [].freeze
-    NONCE_EXPIRY_TIME = 10.minutes
 
     attr_accessor(:nonce, :name, :username, :email, :about_me, :external_email, :external_username, :external_name, :external_id)
     attr_writer :sso_secret, :sso_url
@@ -46,7 +44,6 @@ module Discourse
 
       ACCESSORS.each do |k|
         val = decoded_hash[k.to_s]
-        val = val.to_i if FIXNUMS.include? k
         sso.send("#{k}=", val)
       end
       sso
