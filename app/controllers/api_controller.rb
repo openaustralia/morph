@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 # Run API used by the morph command-line client
@@ -314,6 +314,6 @@ class ApiController < ApplicationController
 
   sig { returns(T.nilable(User)) }
   def current_user
-    @current_user ||= User.find_by(api_key: params[:api_key])
+    @current_user ||= T.let(User.find_by(api_key: params[:api_key]), T.nilable(User))
   end
 end

@@ -27,7 +27,6 @@ Sorbet/TrueSigil:
     # TODO: Work our way through this list to remove the excluded
     - app/admin/*
     - app/controllers/users/omniauth_callbacks_controller.rb
-    - app/controllers/api_controller.rb
     - config/deploy/*
     - config.ru
     - spec/**/*
@@ -45,7 +44,6 @@ Sorbet/StrictSigil:
     - sync.ru
     - app/lib/discourse/*
     - app/helpers/*
-    - app/controllers/api_controller.rb
     - app/controllers/admin/*
     - app/lib/morph/github.rb
 
