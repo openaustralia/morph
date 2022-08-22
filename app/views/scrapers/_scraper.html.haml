@@ -1,7 +1,7 @@
 - highlight = {} unless defined?(highlight) && highlight
 
 = link_to scraper, class: "list-group-item" do
-  %div.scraper-block
+  .scraper-block
     - unless scraper.language.blank?
       %small.scraper-lang.pull-right= scraper.language.human
     %strong.full_name= highlight[:"full_name.word_middle"] ? highlight[:"full_name.word_middle"].html_safe : scraper.full_name

@@ -1,6 +1,6 @@
 - cache ["v5", scraper, hide_owner, show_errored_detail] do
   = link_to scraper, class: "list-group-item" do
-    %div.scraper-block
+    .scraper-block
       - unless scraper.language.blank?
         %small.scraper-lang.pull-right= scraper.language.human
       .icon-box.pull-right= render partial: "scrapers/auto_clock", locals: {scraper: scraper}

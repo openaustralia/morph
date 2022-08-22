@@ -7,15 +7,6 @@
 # versions of Haml-Lint, may require this file to be generated again.
 
 linters:
-
-  # Offense count: 4
-  ImplicitDiv:
-    exclude:
-      - "app/views/admin/dashboard/_maximum_concurrent_scrapers_form.html.haml"
-      - "app/views/scrapers/_data.html.haml"
-      - "app/views/scrapers/_scraper.html.haml"
-      - "app/views/scrapers/_scraper_base.html.haml"
-
   # Offense count: 288
   LineLength:
     enabled: false
