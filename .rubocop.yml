@@ -42,7 +42,6 @@ Sorbet/StrictSigil:
     - config.ru
     - spec/**/*
     - sync.ru
-    - app/lib/discourse/single_sign_on.rb
     - app/helpers/application_helper.rb
     - app/controllers/admin/site_settings_controller.rb
     - app/lib/morph/github.rb

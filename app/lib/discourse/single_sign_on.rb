@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Discourse
@@ -7,17 +7,53 @@ module Discourse
 
     ACCESSORS = T.let(%i[nonce name username email about_me external_email external_username external_name external_id].freeze, T::Array[Symbol])
 
-    attr_accessor(:nonce, :name, :username, :email, :about_me, :external_email, :external_username, :external_name, :external_id)
-    attr_writer :sso_secret, :sso_url
+    sig { returns(T.nilable(String)) }
+    attr_accessor :nonce
 
-    sig { void }
+    sig { returns(T.nilable(String)) }
+    attr_accessor :name
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :username
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :email
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :about_me
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :external_email
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :external_username
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :external_name
+
+    sig { returns(T.nilable(Integer)) }
+    attr_accessor :external_id
+
+    sig { params(sso_secret: String).returns(String) }
+    attr_writer :sso_secret
+
+    sig { params(sso_url: String).returns(String) }
+    attr_writer :sso_url
+
+    sig { returns(T.noreturn) }
     def self.sso_secret
       raise "sso_secret not implemented on class, be sure to set it on instance"
     end
 
-    sig { void }
+    sig { returns(T.noreturn) }
     def self.sso_url
       raise "sso_url not implemented on class, be sure to set it on instance"
+    end
+
+    sig { void }
+    def initialize
+      @sso_secret = T.let(nil, T.nilable(String))
+      @sso_url = T.let(nil, T.nilable(String))
     end
 
     sig { returns(String) }

@@ -16,7 +16,7 @@ class DiscourseSsoController < ApplicationController
     sso.name = user.name
     sso.username = user.nickname
     sso.external_id = user.id # unique to your application
-    sso.sso_secret = secret
+    sso.sso_secret = T.must(secret)
 
     redirect_to sso.to_url("#{ENV.fetch('DISCOURSE_URL', nil)}/session/sso_login")
   end
