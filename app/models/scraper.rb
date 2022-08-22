@@ -158,7 +158,7 @@ class Scraper < ApplicationRecord
 
   sig { returns(Float) }
   def total_wall_time
-    runs.to_a.sum(&:wall_time)
+    runs.to_a.sum(&:wall_time).to_f
   end
 
   sig { returns(Float) }

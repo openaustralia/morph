@@ -8,7 +8,7 @@ module OwnersHelper
   include ERB::Util
   include ActionView::Helpers::AssetTagHelper
 
-  sig { params(owner: Owner, size: Integer, show_tooltip: T::Boolean, tooltip_text: T.nilable(String)).returns(String) }
+  sig { params(owner: Owner, size: Integer, show_tooltip: T::Boolean, tooltip_text: T.nilable(String)).returns(T.nilable(String)) }
   def owner_image(owner, size:, show_tooltip: true, tooltip_text: nil)
     options = { size: "#{size}x#{size}", class: "" }
     options[:class] += " img-circle" if owner.user?
