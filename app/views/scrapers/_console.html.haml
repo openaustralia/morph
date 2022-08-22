@@ -1,5 +1,5 @@
 #scraper
   - if scraper.last_run
-    %h3#console_title{data: {toggle: "collapse", target: "#console"}}
+    %h3#console_title{ data: { toggle: "collapse", target: "#console" } }
       Console output of last run
     = render partial: "runs/console", locals: {run: scraper.last_run, open: true}

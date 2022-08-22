@@ -1,7 +1,7 @@
-%nav.site-header.navbar.navbar-default.navbar-fixed-top(role="navigation")
+%nav.site-header.navbar.navbar-default.navbar-fixed-top{ role: "navigation" }
   .container
     .navbar-header
-      %button.navbar-toggle(type="button" data-toggle="collapse" data-target=".site-header .navbar-collapse")
+      %button.navbar-toggle{ type: "button", :data: { toggle: "collapse", target: ".site-header .navbar-collapse" } }
         %span.sr-only Toggle navigation
         %span.icon-bar
         %span.icon-bar
@@ -16,22 +16,22 @@
         %li= link_to "Documentation", documentation_index_path
         %li.help
           = link_to "https://help.morph.io/", target: "_blank" do
-            %span.glyphicon.glyphicon-new-window{"aria-hidden" => "true"}
+            %span.glyphicon.glyphicon-new-window{ "aria-hidden" => "true" }
             Help forum
 
       %ul.nav.navbar-nav.navbar-right
         %li
           - if user_signed_in?
-            %li(class="dropdown")
-              %a(href="#" class="dropdown-toggle" data-toggle="dropdown")
+            %li.dropdown
+              %a.dropdown-toggle{ href: "#", data: { toggle: "dropdown" } }
                 = owner_image(current_user, size: 20, show_tooltip: false)
                 = current_user.nickname
-                %b(class="caret")
-              %ul(class="dropdown-menu")
+                %b.caret
+              %ul.dropdown-menu
                 %li= link_to "Your profile", current_user
                 %li= link_to "Sign out", destroy_user_session_path
                 - if current_user.admin?
-                  %li(class="divider")
+                  %li.divider
                   %li= link_to "Admin dashboard", admin_dashboard_path
                   %li= link_to "Running scrapers", running_scrapers_path
           - else

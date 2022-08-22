@@ -74,11 +74,11 @@
             = link_to scraper.main_scraper_filename, scraper.github_url_main_scraper_file, target: "_blank"
     %p
       .form-group
-        %label(for="git_url") git clone URL
+        %label{ for: "git_url" } git clone URL
         .input-group
-          %input.form-control#git_url{type: "text", value: scraper.git_url_https, disabled: true}
+          %input.form-control#git_url{ type: "text", value: scraper.git_url_https, disabled: true }
           %span.input-group-btn
-            %button.btn.btn-default#copy_to_clipboard_button{type: "button", data: {"clipboard-target" => "git_url"}}
+            %button.btn.btn-default#copy_to_clipboard_button{ type: "button", data:{ "clipboard-target" => "git_url" } }
               %i.fa.fa-copy
     :javascript
       $(document).ready(function() {

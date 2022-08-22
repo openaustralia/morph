@@ -9,18 +9,18 @@
 
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
-          %li{class: ("active" if table == active_table)}
+          %li{ class: ("active" if table == active_table) }
             = link_to table, "#table_#{table}", data: {toggle: "tab"}
 
       .tab-content
         - scraper.database.table_names.each do |table|
-          .tab-pane{class: ("active" if table == active_table), id: "table_#{table}"}
+          .tab-pane{ class: ("active" if table == active_table), id: "table_#{table}" }
             - rows = scraper.database.first_ten_rows(table)
             = render "scrapers/data_download_links", scraper: scraper, table: table
 
             %p rows #{[10, scraper.database.no_rows(table)].min} / #{scraper.database.no_rows(table)}
             .table-responsive.scraper-data.scroller-frame
-              %table.table.table-striped.table-bordered.table-condensed.tablesaw.tablesaw-stack.scroller-panel{data: {tablesaw: {mode: "stack" }}}
+              %table.table.table-striped.table-bordered.table-condensed.tablesaw.tablesaw-stack.scroller-panel{ data: { tablesaw: { mode: "stack" } } }
                 - unless rows.empty?
                   %thead
                     %tr
@@ -31,7 +31,7 @@
                       %tr
                         - row.each_value do |v|
                           %td
-                            .has-popover{data: {toggle: "popover", placement: "bottom", trigger: "hover", content: v, container: "body"}}
+                            .has-popover{ data: { toggle: "popover", placement: "bottom", trigger: "hover", content: v, container: "body" } }
                               = link_url_or_escape(v.to_s)
   - else
     %h3 Data

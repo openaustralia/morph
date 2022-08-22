@@ -1,7 +1,7 @@
 %h1.full_name= full_name_with_links(scraper)
 %h2= scraper.create_scraper_progress.heading
 .progress.progress-striped.active
-  .progress-bar(style="width: #{scraper.create_scraper_progress.progress}%")
+  .progress-bar{ style: "width: #{scraper.create_scraper_progress.progress}%" }
     - if scraper.create_scraper_progress.message
       = scraper.create_scraper_progress.message
       &hellip;

@@ -3,11 +3,11 @@
 %div
   %ul.nav.nav-tabs(role="tablist")
     - Morph::Language.languages_supported.each_with_index do |l, i|
-      %li{role: "presentation", class: ("active" if i == 0)}
+      %li{ role: "presentation", class: ("active" if i == 0) }
         = link_to "##{id_prefix}-#{l.key}", 'aria-controls' => "##{id_prefix}-#{l.key}", role: "tab", 'data-toggle' => "tab" do
           = language_name_with_icon(l.key, size: "20x20")
 
   .tab-content
     - Morph::Language.languages_supported.each_with_index do |l, i|
-      .tab-pane{role: "tabpanel", id: "#{id_prefix}-#{l.key}", class: ('active' if i == 0)}
+      .tab-pane{ role: "tabpanel", id: "#{id_prefix}-#{l.key}", class: ('active' if i == 0) }
         = render "#{path}/#{l.key}"

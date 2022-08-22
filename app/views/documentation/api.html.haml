@@ -98,34 +98,34 @@
 
 %div
   %ul.nav.nav-tabs(role="tablist")
-    %li.active{role: "presentation"}
+    %li.active{ role: "presentation" }
       = link_to "#example-curl", 'aria-controls' => "#examples-curl", role: "tab", 'data-toggle' => "tab" do
         Curl
-    %li{role: "presentation"}
+    %li{ role: "presentation" }
       = link_to "#example-ruby", 'aria-controls' => "#example-ruby", role: "tab", 'data-toggle' => "tab" do
         = language_name_with_icon(:ruby, size: "18x18")
-    %li{role: "presentation"}
+    %li{ role: "presentation" }
       = link_to "#example-python", 'aria-controls' => "#example-python", role: "tab", 'data-toggle' => "tab" do
         = language_name_with_icon(:python, size: "18x18")
-    %li{role: "presentation"}
+    %li{ role: "presentation" }
       = link_to "#example-javascript", 'aria-controls' => "#example-javascript", role: "tab", 'data-toggle' => "tab" do
         = image_tag('languages/javascript.png', size: '18x18')
         Javascript
-    %li{role: "presentation"}
+    %li{ role: "presentation" }
       = link_to "#example-php", 'aria-controls' => "#example-php", role: "tab", 'data-toggle' => "tab" do
         = image_tag('languages/php.png', size: '18x18')
         PHP
 
   .tab-content
-    .tab-pane.active{role: "tabpanel", id: "example-curl"}
+    .tab-pane.active{ role: "tabpanel", id: "example-curl" }
       = render "documentation/api_examples/curl"
-    .tab-pane{role: "tabpanel", id: "example-ruby"}
+    .tab-pane{ role: "tabpanel", id: "example-ruby" }
       #{render "documentation/api_examples/ruby"}
-    .tab-pane{role: "tabpanel", id: "example-python"}
+    .tab-pane{ role: "tabpanel", id: "example-python" }
       = render "documentation/api_examples/python"
-    .tab-pane{role: "tabpanel", id: "example-javascript"}
+    .tab-pane{ role: "tabpanel", id: "example-javascript" }
       = render "documentation/api_examples/javascript"
-    .tab-pane{role: "tabpanel", id: "example-php"}
+    .tab-pane{ role: "tabpanel", id: "example-php" }
       = render "documentation/api_examples/php"
 
 :javascript

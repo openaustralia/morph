@@ -18,8 +18,8 @@
           = org.nickname
 
   .tab-content
-    .tab-pane.active{id: "owner_#{current_user.nickname}"}
+    .tab-pane.active{ id: "owner_#{current_user.nickname}" }
       = render partial: "github_form_loader", locals: {owner: current_user}
     - current_user.organizations.each do |org|
-      .tab-pane{id: "owner_#{org.nickname}"}
+      .tab-pane{ id: "owner_#{org.nickname}" }
         = render partial: "github_form_loader", locals: {owner: org}

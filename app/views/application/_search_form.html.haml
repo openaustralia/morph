@@ -1,11 +1,11 @@
 =form_tag search_path, method: "get", class: "search-form form-inline" do
-  %label.sr-only{for: "query"} Search
+  %label.sr-only{ for: "query" } Search
   .input-group.col-sm-12.col-md-9.col-lg-8
     = hidden_field_tag :type, @type
     = hidden_field_tag :show, @show
-    %input.form-control#query{required: "required", type: "search", maxlength: "256", name: "q", value: "#{@q if !@q.blank?}"}/
+    %input.form-control#query{ required: "required", type: "search", maxlength: "256", name: "q", value: "#{@q if !@q.blank?}" }/
     .input-group-btn
-      %button.btn.btn-primary{type: "submit"} Search
+      %button.btn.btn-primary{ type: "submit" } Search
   - if @q.blank?
     %p.search-suggestions
       Try #{link_to "parliament", search_path(q: "parliament")},

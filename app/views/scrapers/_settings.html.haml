@@ -35,14 +35,14 @@
         .row
           .col-sm-3
             = webhook_form.input :url, wrapper: :vertical_input_group do
-              %span.webhook-status.input-group-addon{class: webhook_last_delivery_status(webhook_form.object)}
+              %span.webhook-status.input-group-addon{ class: webhook_last_delivery_status(webhook_form.object) }
                 - if webhook_form.object.deliveries.any?
                   - if webhook_form.object.last_delivery.success?
-                    %span.fa.fa-check{data: {toggle: 'tooltip'}, title: 'Last delivery was successful.'}
+                    %span.fa.fa-check{ data: { toggle: 'tooltip' }, title: 'Last delivery was successful.' }
                   - else
-                    %span.fa.fa-warning{data: {toggle: 'tooltip'}, title: "Last delivery was not successful. Invalid HTTP Response: #{webhook_form.object.last_delivery.response_code}."}
+                    %span.fa.fa-warning{ data: { toggle: 'tooltip' }, title: "Last delivery was not successful. Invalid HTTP Response: #{webhook_form.object.last_delivery.response_code}." }
                 - else
-                  %span.fa.fa-plug{data: {toggle: 'tooltip'}, title: 'No deliveries yet'}
+                  %span.fa.fa-plug{ data: { toggle: 'tooltip' }, title: 'No deliveries yet' }
               = webhook_form.input_field :url, class: 'form-control'
           .col-sm-1
             = link_to_remove_association webhook_form do
