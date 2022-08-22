@@ -1,7 +1,7 @@
 -# Show some documentation for each language in a set of tabs
 -# Pass in "id_prefix" and "path"
 %div
-  %ul.nav.nav-tabs(role="tablist")
+  %ul.nav.nav-tabs{ role: "tablist" }
     - Morph::Language.languages_supported.each_with_index do |l, i|
       %li{ role: "presentation", class: ("active" if i == 0) }
         = link_to "##{id_prefix}-#{l.key}", 'aria-controls' => "##{id_prefix}-#{l.key}", role: "tab", 'data-toggle' => "tab" do

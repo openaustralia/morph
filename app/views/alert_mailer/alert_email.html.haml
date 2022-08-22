@@ -1,9 +1,9 @@
 -# CSS and HTML structure taken from https://github.com/leemunroe/html-email-template
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-%html(xmlns="http://www.w3.org/1999/xhtml")
+%html{ xmlns: "http://www.w3.org/1999/xhtml" }
   %head
-    %meta(name="viewport" content="width=device-width")
-    %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+    %meta{ name: "viewport", content: "width=device-width" }
+    %meta{ "http-equiv": "Content-Type", content: "text/html; charset=UTF-8" }
     %title= @subject
     -# The css below will get automatically inlined when it's sent to cuttlefish.io for delivery
     %style
@@ -191,16 +191,16 @@
           vertical-align: middle;
         }
 
-  %body(bgcolor="#f6f6f6")
+  %body{ bgcolor: "#f6f6f6" }
     - if @user.never_alerted?
       %table.body-wrap
         %tr
           %td
-          %td.container(bgcolor="#FFFFFF")
+          %td.container{ bgcolor: "#FFFFFF" }
             .content
               %table
                 %tr
-                  %td(align="center")
+                  %td{ align: "center" }
                     %p
                       Hello and welcome to your morph.io alert email.
                       You're getting this because you signed up for morph.io and a scraper you're watching has a problem that you might like to fix.
@@ -212,11 +212,11 @@
     %table.body-wrap
       %tr
         %td
-        %td.container(bgcolor="#FFFFFF")
+        %td.container{ bgcolor: "#FFFFFF" }
           .content
             %table
               %tr
-                %td(style="text-align: center")
+                %td{ style: "text-align: center" }
                   %h2
                     -# Hacky way to get full url in there
                     = image_tag attachments['logo_75x75.png'].url, size: "75x75"
@@ -248,7 +248,7 @@
           .content
             %table
               %tr
-                %td(align="center")
+                %td{ align: "center" }
                   %p
                     Annoyed by these emails? Then
                     = link_to "change what you're watching", watching_user_url(@user, @analytics_params)

@@ -35,7 +35,7 @@
                               = link_url_or_escape(v.to_s)
   - else
     %h3 Data
-    .alert.alert-danger(role="alert")
+    .alert.alert-danger{ role: "alert" }
       The sqlite database is not valid. This is very unusual.
       It may have happened if the scraper died
       unexpectedly in the middle of writing to the database.

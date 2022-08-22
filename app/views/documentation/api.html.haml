@@ -17,28 +17,28 @@
 -# TODO: Write this whole form in a more concise way using the magic of simple_form
 = simple_form_for @scraper, html: {class: "form-horizontal"} do |f|
   .string.input.optional.stringish.form-group#scraper_full_name_input
-    %label.control-label.col-sm-1(for="scraper_full_name") [scraper]
+    %label.control-label.col-sm-1{ for: "scraper_full_name" } [scraper]
     .col-sm-5
-      %input.form-control#scraper_full_name(maxlength="255" name="scraper[full_name]" type="text" value="#{@scraper.full_name}")
+      %input.form-control#scraper_full_name{ maxlength: "255", name: "scraper[full_name]", type: "text", value: "#{@scraper.full_name}" }
       %span.help-block The full name of the scraper as seen in the url
   .string.input.optional.stringish.form-group#query_input
-    %label.control-label.col-sm-1(for="query") [sql]
+    %label.control-label.col-sm-1{ for: "query" } [sql]
     .col-sm-5
-      %input.form-control#query(maxlength="255" name="query" type="text" value="#{@query}")
+      %input.form-control#query{ maxlength: "255", name: "query", type: "text", value: "#{@query}" }
       %span.help-block
         The SQL query to perform on the scraper data.
         Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
   .string.input.optional.stringish.form-group#format_input
-    %label.control-label.col-sm-1(for="format") [format]
+    %label.control-label.col-sm-1{ for: "format" } [format]
     .col-sm-3
-      %select.form-control#format(name="format")
+      %select.form-control#format{ name: "format" }
         = options_for_select(["json", "csv", "atom"])
       %span.help-block
         Format of outputted data
   .string.input.optional.stringish.form-group#callback_input
-    %label.control-label.col-sm-1(for="callback") [callback]
+    %label.control-label.col-sm-1{ for: "callback" } [callback]
     .col-sm-5
-      %input.form-control#callback(maxlength="255" name="query" type="text")
+      %input.form-control#callback{ maxlength: "255", name: "query", type: "text" }
       %span.help-block
         (Optional) To return JSONP set "callback" to the name of your javascript callback function.
   #atom_notes
@@ -53,30 +53,30 @@
       fields together with the double pipe (<code>||</code>) operator.
 
     .string.input.optional.stringish.form-group#query_input
-      %label.control-label.col-sm-1(for="title") title
+      %label.control-label.col-sm-1{ for: "title" } title
       .col-sm-5
-        %input.form-control#title(maxlength="255" name="title" type="text")
+        %input.form-control#title{ maxlength: "255", name: "title", type: "text" }
 
     .string.input.optional.stringish.form-group#query_input
-      %label.control-label.col-sm-1(for="content") content
+      %label.control-label.col-sm-1{ for: "content" } content
       .col-sm-5
-        %input.form-control#content(maxlength="255" name="content" type="text")
+        %input.form-control#content{ maxlength: "255", name: "content", type: "text" }
 
     .string.input.optional.stringish.form-group#query_input
-      %label.control-label.col-sm-1(for="link") link
+      %label.control-label.col-sm-1{ for: "link" } link
       .col-sm-5
-        %input.form-control#link(maxlength="255" name="link" type="text")
+        %input.form-control#link{ maxlength: "255", name: "link", type: "text" }
 
     .string.input.optional.stringish.form-group#query_input
-      %label.control-label.col-sm-1(for="date") date
+      %label.control-label.col-sm-1{ for: "date" } date
       .col-sm-5
-        %input.form-control#date(maxlength="255" name="date" type="text")
+        %input.form-control#date{ maxlength: "255", name: "date", type: "text" }
 
   - if current_user
     .row
       .col-sm-6
         .string.input.optional.stringish.form-group#api_key_input
-          %label.control-label.col-sm-2(for="api_key") [api_key]
+          %label.control-label.col-sm-2{ for: "api_key" } [api_key]
           .col-sm-10
             %p.form-control-static#api_key= current_user.api_key
             %span.help-block
@@ -87,7 +87,7 @@
     .row
       .col-sm-6
         .string.input.optional.stringish.form-group#api_key_input
-          %label.control-label.col-sm-2(for="api_key") [api_key]
+          %label.control-label.col-sm-2{ for: "api_key" } [api_key]
           .col-sm-10
             %p#api_key
               = button_link_to "sign in with GitHub", user_github_omniauth_authorize_path
@@ -97,7 +97,7 @@
   To do the API query with the values above
 
 %div
-  %ul.nav.nav-tabs(role="tablist")
+  %ul.nav.nav-tabs{ role: "tablist" }
     %li.active{ role: "presentation" }
       = link_to "#example-curl", 'aria-controls' => "#examples-curl", role: "tab", 'data-toggle' => "tab" do
         Curl
