@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_15_063813) do
+ActiveRecord::Schema.define(version: 2022_08_22_205118) do
 
   create_table "active_admin_comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "namespace"
@@ -197,7 +197,7 @@ ActiveRecord::Schema.define(version: 2022_08_15_063813) do
     t.integer "owner_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "full_name"
+    t.string "full_name", null: false
     t.string "github_url"
     t.string "git_url"
     t.boolean "auto_run", default: false, null: false

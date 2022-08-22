@@ -117,7 +117,7 @@ describe Scraper do
   end
 
   context "with a scraper with some downloads" do
-    let(:scraper) { described_class.create!(name: "scraper", owner: owner1) }
+    let(:scraper) { described_class.create!(name: "scraper", owner: owner1, full_name: "") }
     let(:owner1) { User.create }
     let(:owner2) { User.create }
 

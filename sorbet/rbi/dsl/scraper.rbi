@@ -666,10 +666,10 @@ class Scraper
     sig { void }
     def forked_by_id_will_change!; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(::String) }
     def full_name; end
 
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    sig { params(value: ::String).returns(::String) }
     def full_name=(value); end
 
     sig { returns(T::Boolean) }
@@ -684,10 +684,10 @@ class Scraper
     sig { returns(T::Boolean) }
     def full_name_came_from_user?; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def full_name_change; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def full_name_change_to_be_saved; end
 
     sig { returns(T::Boolean) }
@@ -696,7 +696,7 @@ class Scraper
     sig { returns(T.nilable(::String)) }
     def full_name_in_database; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def full_name_previous_change; end
 
     sig { returns(T::Boolean) }
@@ -1200,7 +1200,7 @@ class Scraper
     sig { returns(T::Boolean) }
     def saved_change_to_forked_by_id?; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_full_name; end
 
     sig { returns(T::Boolean) }
