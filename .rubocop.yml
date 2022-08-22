@@ -14,6 +14,8 @@ AllCops:
       - config/*
       - config/initializers/*
       - config/environments/*
+      - config/deploy/*
+      - config.ru
       - bin/*
       - db/scrapers/repos/**/*
       - default_files/*/*/*
@@ -27,8 +29,6 @@ Sorbet/TrueSigil:
     # TODO: Work our way through this list to remove the excluded
     - app/admin/*
     - app/controllers/users/omniauth_callbacks_controller.rb
-    - config/deploy/*
-    - config.ru
     - spec/**/*
     - sync.ru
 
@@ -38,8 +38,6 @@ Sorbet/StrictSigil:
     # TODO: Work our way through this list to remove the excluded
     - app/admin/*
     - app/controllers/users/omniauth_callbacks_controller.rb
-    - config/deploy/*
-    - config.ru
     - spec/**/*
     - sync.ru
     - app/controllers/admin/site_settings_controller.rb
