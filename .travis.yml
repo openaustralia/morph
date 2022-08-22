@@ -18,6 +18,7 @@ script:
   # Also fail if any static type checking fails
   - bundle exec srb
   - bundle exec rubocop
+  - bundle exec haml-lint
 
 after_success:
   - bundle exec codeclimate-test-reporter

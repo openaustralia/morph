@@ -1,0 +1,5 @@
+inherit_from: .haml-lint_todo.yml
+
+exclude:
+  - lib/templates/haml/scaffold/_form.html.haml
+  

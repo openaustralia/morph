@@ -112,6 +112,8 @@ group :development do
   gem "spoom"
   gem "tapioca", require: false
 
+  gem "haml-lint"
+  
   gem "capistrano-rails"
   gem "capistrano-rvm"
   gem "growl"
