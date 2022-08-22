@@ -38,7 +38,6 @@ Sorbet/StrictSigil:
     - app/admin/*
     - spec/**/*
     - sync.ru
-    - app/controllers/admin/site_settings_controller.rb
     - app/lib/morph/github.rb
 
 # This conflicts with the type checking that sorbet does

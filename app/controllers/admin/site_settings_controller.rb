@@ -1,8 +1,11 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Admin
   class SiteSettingsController < ApplicationController
+    extend T::Sig
+
+    sig { void }
     def toggle_read_only_mode
       authorize! :toggle_read_only_mode, SiteSetting
       SiteSetting.toggle_read_only_mode!
@@ -10,6 +13,7 @@ module Admin
       redirect_to admin_dashboard_url
     end
 
+    sig { void }
     def update_maximum_concurrent_scrapers
       params_maximum_concurrent_scrapers = T.cast(params[:maximum_concurrent_scrapers], T.any(String, Numeric))
 
