@@ -26,7 +26,6 @@ AllCops:
 Sorbet/TrueSigil:
   Enabled: true
   Exclude:
-    # TODO: Work our way through this list to remove the excluded
     - app/admin/*
     - spec/**/*
     - sync.ru
@@ -34,11 +33,9 @@ Sorbet/TrueSigil:
 Sorbet/StrictSigil:
   Enabled: true
   Exclude:
-    # TODO: Work our way through this list to remove the excluded
     - app/admin/*
     - spec/**/*
     - sync.ru
-    - app/lib/morph/github.rb
 
 # This conflicts with the type checking that sorbet does
 Lint/SafeNavigationConsistency:
