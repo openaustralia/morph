@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module ApplicationHelper
@@ -16,6 +16,7 @@ module ApplicationHelper
     distance_of_time_in_words(0, secs, include_seconds: true)
   end
 
+  sig { params(name: T.nilable(String), options: T.untyped, html_options: T::Hash[Symbol, T.untyped], block: T.nilable(T.proc.void)).returns(String) }
   def button_link_to(name = nil, options = {}, html_options = {}, &block)
     if block_given?
       html_options = options
