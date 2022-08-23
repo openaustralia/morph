@@ -10,4 +10,4 @@
         = highlight[:description] ? highlight[:description].html_safe : scraper.description
       - unless scraper.scraped_domains.empty?
         %p.scraper-domains-list.text-muted
-          = highlight[:"scraped_domain_names.word_end"] ? highlight[:"scraped_domain_names.word_end"].html_safe : simplified_scraped_domains_list(scraper.scraped_domains)
+          = highlight[:"scraped_domain_names.word_end"] ? highlight[:"scraped_domain_names.word_end"].html_safe : simplified_scraped_domains_list(scraper.scraped_domains.to_a)

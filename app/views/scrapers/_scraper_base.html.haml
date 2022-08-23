@@ -15,7 +15,7 @@
         - unless scraper.description.blank?
           = scraper.description
         - unless scraper.scraped_domains.length == 0
-          %p.scraper-domains-list.text-muted= simplified_scraped_domains_list(scraper.scraped_domains)
+          %p.scraper-domains-list.text-muted= simplified_scraped_domains_list(scraper.scraped_domains.to_a)
     - if show_errored_detail
       .scraper-error-info.row
         - if scraper.latest_successful_run_time
