@@ -48,11 +48,6 @@ linters:
     exclude:
       - "app/views/documentation/api.html.haml"
 
-  # Offense count: 39
-  Indentation:
-    exclude:
-      - "app/views/shared/_footer.html.haml"
-
   # Offense count: 1
   FinalNewline:
     exclude:

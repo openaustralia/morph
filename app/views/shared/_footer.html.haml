@@ -1,40 +1,40 @@
 %footer.site-footer
-	.container.text-muted
-		.row
-			.col-sm-6
-				%h4 contact us
-				%ul.list-unstyled
-					%li
-						%i.fa.fa-twitter
-						= link_to "@morph_io", "https://twitter.com/morph_io"
-					%li
-						%i.fa.fa-envelope
-						= mail_to "contact@oaf.org.au"
-					%li
-						%i.fa.fa-github-alt
-						= link_to "GitHub", "https://github.com/openaustralia/morph"
-			.col-sm-6.text-right
-				%h4 morph.io is open source
-				%ul.list-unstyled
-					%li
-						= link_to "Source code", "https://github.com/openaustralia/morph"
-						%i.fa.fa-github-alt
-					%li
-						= link_to 'Help forum', "https://help.morph.io/", target: "_blank"
-						%i.fa.fa-question-circle
-					%li
-						= link_to "https://github.com/openaustralia/morph/issues?state=open", target: "_blank" do
-							Suggest a
-							%strong feature
-							or report an
-							%strong issue
-						%i.fa.fa-bug
-				%p
-					%small= link_to APP_VERSION, "https://github.com/openaustralia/morph/commit/#{APP_VERSION}"
-		.row.text-center
-			%p
-				Made with
-				%i.fa.fa-heart-o.fa-lg
-				by the
-				= link_to "OpenAustralia&nbsp;Foundation".html_safe, "https://www.openaustraliafoundation.org.au"
-				for you
+  .container.text-muted
+    .row
+      .col-sm-6
+        %h4 contact us
+        %ul.list-unstyled
+          %li
+            %i.fa.fa-twitter
+            = link_to "@morph_io", "https://twitter.com/morph_io"
+          %li
+            %i.fa.fa-envelope
+            = mail_to "contact@oaf.org.au"
+          %li
+            %i.fa.fa-github-alt
+            = link_to "GitHub", "https://github.com/openaustralia/morph"
+      .col-sm-6.text-right
+        %h4 morph.io is open source
+        %ul.list-unstyled
+          %li
+            = link_to "Source code", "https://github.com/openaustralia/morph"
+            %i.fa.fa-github-alt
+          %li
+            = link_to 'Help forum', "https://help.morph.io/", target: "_blank"
+            %i.fa.fa-question-circle
+          %li
+            = link_to "https://github.com/openaustralia/morph/issues?state=open", target: "_blank" do
+              Suggest a
+              %strong feature
+              or report an
+              %strong issue
+            %i.fa.fa-bug
+        %p
+          %small= link_to APP_VERSION, "https://github.com/openaustralia/morph/commit/#{APP_VERSION}"
+    .row.text-center
+      %p
+        Made with
+        %i.fa.fa-heart-o.fa-lg
+        by the
+        = link_to "OpenAustralia&nbsp;Foundation".html_safe, "https://www.openaustraliafoundation.org.au"
+        for you
