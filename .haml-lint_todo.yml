@@ -29,10 +29,6 @@ linters:
       - "app/views/documentation/api.html.haml"
       - "app/views/users/stats.html.haml"
 
-  # Offense count: 49
-  InstanceVariables:
-    enabled: false
-
   # Offense count: 1
   SpaceBeforeScript:
     exclude:

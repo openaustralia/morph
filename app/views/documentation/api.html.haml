@@ -118,15 +118,15 @@
 
   .tab-content
     .tab-pane.active{ role: "tabpanel", id: "example-curl" }
-      = render "documentation/api_examples/curl"
+      = render "documentation/api_examples/curl", scraper: @scraper, query: @query
     .tab-pane{ role: "tabpanel", id: "example-ruby" }
-      #{render "documentation/api_examples/ruby"}
+      #{render "documentation/api_examples/ruby", scraper: @scraper, query: @query}
     .tab-pane{ role: "tabpanel", id: "example-python" }
-      = render "documentation/api_examples/python"
+      = render "documentation/api_examples/python", scraper: @scraper, query: @query
     .tab-pane{ role: "tabpanel", id: "example-javascript" }
-      = render "documentation/api_examples/javascript"
+      = render "documentation/api_examples/javascript", scraper: @scraper, query: @query
     .tab-pane{ role: "tabpanel", id: "example-php" }
-      = render "documentation/api_examples/php"
+      = render "documentation/api_examples/php", scraper: @scraper, query: @query
 
 :javascript
   $(function() {

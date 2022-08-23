@@ -1,4 +1,4 @@
-- if can? :destroy, @scraper
+- if can? :destroy, scraper
   .row
     .col-md-8
       .panel.panel-danger#danger-settings
@@ -11,12 +11,12 @@
             %h4 Clear your scraper’s database
             .danger-settings-action-body
               %p
-                - if @scraper.data?
-                  Your #{pluralize(@scraper.sqlite_total_rows, "row")}
+                - if scraper.data?
+                  Your #{pluralize(scraper.sqlite_total_rows, "row")}
                   of scraped data will be gone!
                 - else
                   All your data will be gone!
-              = button_to clear_scraper_path(@scraper), {class: "btn btn-warning", data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?"}} do
+              = button_to clear_scraper_path(scraper), {class: "btn btn-warning", data: {confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?"}} do
                 Clear database
                 %i.glyphicon.glyphicon-th-list
           %li.list-group-item
@@ -25,6 +25,6 @@
               %p
                 Delete the entire scraper from morph.io,
                 %em data and all.
-              = button_to @scraper, {class: "btn btn-danger", method: :delete, data: {confirm: "Scraper #{@scraper.full_name} and its database will be deleted from morph.io. Are you sure you want to delete your scraper?"}} do
+              = button_to scraper, {class: "btn btn-danger", method: :delete, data: {confirm: "Scraper #{scraper.full_name} and its database will be deleted from morph.io. Are you sure you want to delete your scraper?"}} do
                 Delete your scraper
                 %i.glyphicon.glyphicon-remove

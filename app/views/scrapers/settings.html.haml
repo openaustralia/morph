@@ -7,5 +7,5 @@
 
   %p= link_to "Back to the scraper", @scraper
 
-  = render "settings"
-  = render "danger"
+  = render "settings", scraper: @scraper
+  = render "danger", scraper: @scraper

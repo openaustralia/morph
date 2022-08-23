@@ -9,12 +9,12 @@
         - if @owner.name
           %h1
             = @owner.name
-            = render 'supporter_badge'
+            = render 'supporter_badge', owner: @owner, new_supporter: @new_supporter
           %h4= @owner.nickname
         - else
           %h1
             = @owner.nickname
-            = render 'supporter_badge'
+            = render 'supporter_badge', owner: @owner, new_supporter: @new_supporter
 
         %ul.list-unstyled
           - unless @owner.company.blank?

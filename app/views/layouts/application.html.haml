@@ -24,7 +24,7 @@
 
   %body
     = render "google_analytics"
-    = render "shared/nav"
+    = render "shared/nav", q: @q
 
     - if signed_in? && SiteSetting.read_only_mode
       .alert.alert-warning.read-only-mode

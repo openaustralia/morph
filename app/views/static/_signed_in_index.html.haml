@@ -3,7 +3,7 @@
     %h1.label-heading
       %small.pre-heading Find data and code you can use
       Search over #{pluralize(scraper_rounded_count, "scraper")}
-    = render partial: "search_form"
+    = render partial: "search_form", q: q, type: type, show: show
 
 - if current_user.scrapers.empty?
   .banner-add-scraper.banner

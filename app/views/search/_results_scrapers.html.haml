@@ -1,16 +1,16 @@
-- if @all_scrapers.total_count.zero?
+- if all_scrapers.total_count.zero?
   .col-xs-12.col-md-9
     .alert.alert-info
-      = no_search_results_message("scrapers", @q)
+      = no_search_results_message("scrapers", q)
 - else
   %aside.col-xs-12.col-md-3
-    = render partial: "scraper_search_filter_controls"
+    = render partial: "scraper_search_filter_controls", locals: { q: q, show: show, filtered_scrapers: filtered_scrapers, all_scrapers: all_scrapers }
 
   .col-xs-12.col-md-9
-    - if @scrapers.total_count.zero?
+    - if scrapers.total_count.zero?
       .alert.alert-info
-        = no_search_results_message("scrapers <em>with data,</em> that are".html_safe, @q)
+        = no_search_results_message("scrapers <em>with data,</em> that are".html_safe, q)
     - else
-      - @scrapers.with_highlights.each do |scraper, highlights|
+      - scrapers.with_highlights.each do |scraper, highlights|
         = render scraper, highlight: highlights
-      = paginate @scrapers
+      = paginate scrapers

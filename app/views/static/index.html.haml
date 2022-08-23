@@ -1,6 +1,6 @@
 - set_meta_tags description: "Hassle-free web scraping. Over #{scraper_rounded_count} free public scrapers, or write your own in Ruby, Python, PHP, Perl or Node. Push to the cloud and then set and forget."
 
 - if signed_in?
-  = render "signed_in_index"
+  = render "signed_in_index", q: @q, type: @type, show: @show
 - else
   = render "signed_out_index"

@@ -4,7 +4,7 @@
 .container
   %h1.label-heading
     Search
-  = render partial: "search_form"
+  = render partial: "search_form", q: @q, type: @type, show: @show
   - if @q
     - if @all_scrapers.total_count.zero? && @owners.empty?
       %h2 No results found
@@ -18,9 +18,9 @@
     - else
       .search-results.row
         .col-xs-12
-          = render partial: "search_type_nav"
+          = render partial: "search_type_nav", locals: { q: @q, show: @show, type: @type, all_scrapers: @all_scrapers, owners: @owners }
 
         - if @type == "users"
-          = render "results_owners"
+          = render "results_owners", q: @q, owners: @owners
         - else
-          = render "results_scrapers"
+          = render "results_scrapers", q: @q, show: @show, scrapers: @scrapers, filtered_scrapers: @filtered_scrapers, all_scrapers: @all_scrapers

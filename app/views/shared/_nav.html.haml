@@ -40,7 +40,7 @@
       = form_tag search_path, method: "get", role: "search", class: "navbar-form navbar-right" do
         .input-group
           = label_tag :q, "Search", class: 'sr-only'
-          = search_field_tag :q, @q, maxlength: "256", name: "q", type: "search", placeholder: "Search", class: "form-control"
+          = search_field_tag :q, q, maxlength: "256", name: "q", type: "search", placeholder: "Search", class: "form-control"
           .input-group-btn
             = button_tag value: 'Submit', class: 'btn btn-default', name: nil do
               %span.sr-only Submit

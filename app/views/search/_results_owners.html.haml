@@ -1,7 +1,7 @@
 .col-xs-12
-  - if @owners.total_count.zero?
-    .alert.alert-info= no_search_results_message("users", @q)
+  - if owners.total_count.zero?
+    .alert.alert-info= no_search_results_message("users", q)
   - else
-    - @owners.with_highlights.each do |owner, highlights|
+    - owners.with_highlights.each do |owner, highlights|
       = render owner, highlight: highlights
-    = paginate @owners
+    = paginate owners

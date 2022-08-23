@@ -75,7 +75,7 @@ class ScrapersController < ApplicationController
   sig { void }
   def github_form
     @scraper = Scraper.new
-    render partial: "github_form", locals: { owner: Owner.find(params[:id]) }
+    render partial: "github_form", locals: { scraper: @scraper, owner: Owner.find(params[:id]) }
   end
 
   sig { void }

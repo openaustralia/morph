@@ -1,4 +1,4 @@
-= simple_form_for @scraper, url: github_scrapers_path do |f|
+= simple_form_for scraper, url: github_scrapers_path do |f|
   = f.input :full_name, as: :radio_buttons, collection: Morph::Github.public_repos(current_user, owner).map{|r| [radio_description(r), r.full_name, {disabled: Scraper.where(full_name: r.full_name).exists?}]}, label: false, include_blank: false, input_html: {class: "owner_#{h owner.nickname}"}
   = f.button :submit, "Add Scraper", id: "#{h owner.nickname}_scraper_submit_action"
 

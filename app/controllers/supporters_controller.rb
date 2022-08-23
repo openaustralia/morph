@@ -78,7 +78,7 @@ class SupportersController < ApplicationController
     authenticated_user.update! stripe_plan_id: subscription[:plan][:id]
 
     session[:new_supporter] = true
-    redirect_to user_path(authenticated_user), notice: render_to_string(partial: "update_flash")
+    redirect_to user_path(authenticated_user), notice: render_to_string(partial: "update_flash", locals: { from_plan: @from_plan, to_plan: @to_plan })
   end
 
   private
