@@ -4,7 +4,7 @@
 .container
   %h1.label-heading
     Search
-  = render partial: "search_form", q: @q, type: @type, show: @show
+  = render partial: "search_form", locals: { q: @q, type: @type, show: @show }
   - if @q
     - if @all_scrapers.total_count.zero? && @owners.empty?
       %h2 No results found
