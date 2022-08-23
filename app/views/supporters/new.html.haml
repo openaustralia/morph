@@ -30,18 +30,18 @@
     .row.one-time-contribution
       %p
         Monthly contribution not right for you?
-        = link_to 'Make a one time contribution', '#supporter-one-time-form',
-          data: {toggle: "collapse"}
-      = form_tag create_one_time_supporters_path, id: "supporter-one-time-form", class: 'form-inline collapse'  do
+        = link_to "Make a one time contribution", "#supporter-one-time-form",
+          data: { toggle: "collapse" }
+      = form_tag create_one_time_supporters_path, id: "supporter-one-time-form", class: "form-inline collapse" do
         = hidden_field_tag "stripeTokenOneTime"
         .form-group
-          = label_tag 'amount', 'Amount (in US dollars)', class: 'sr-only'
+          = label_tag "amount", "Amount (in US dollars)", class: "sr-only"
           .input-group
             .input-group-addon $
-            = number_field_tag 'amount', 20, placeholder: 'Amount', class: 'form-control'
+            = number_field_tag "amount", 20, placeholder: "Amount", class: "form-control"
         = button_tag "Contribute", class: "btn btn-success",
-          data: {key: Rails.configuration.stripe[:publishable_key],
-                email: current_user.email}
+          data: { key: Rails.configuration.stripe[:publishable_key],
+                  email: current_user.email }
 
 .plan-questions
   .container

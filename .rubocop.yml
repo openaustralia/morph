@@ -23,12 +23,19 @@ AllCops:
       - lib/morph/limit_output.rb
       - app/helpers/bootstrap_flash_helper.rb
 
+Sorbet/FalseSigil:
+  Exclude:
+    # Views are picked up in rubocop by haml-lint
+    - app/views/**/*
+
 Sorbet/TrueSigil:
   Enabled: true
   Exclude:
     - app/admin/*
     - spec/**/*
     - sync.ru
+    # Views are picked up in rubocop by haml-lint
+    - app/views/**/*
 
 Sorbet/StrictSigil:
   Enabled: true
@@ -36,6 +43,8 @@ Sorbet/StrictSigil:
     - app/admin/*
     - spec/**/*
     - sync.ru
+    # Views are picked up in rubocop by haml-lint
+    - app/views/**/*
 
 # This conflicts with the type checking that sorbet does
 Lint/SafeNavigationConsistency:

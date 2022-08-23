@@ -6,33 +6,33 @@
 
 %pre
   %code
-    GET #{api_url_in_html(content_tag(:em, "[scraper]"), content_tag(:em, "[format]"), content_tag(:em, "[api_key]"), content_tag(:em, "[sql]"), "")}
+    GET #{api_url_in_html(content_tag(:em, '[scraper]'), content_tag(:em, '[format]'), content_tag(:em, '[api_key]'), content_tag(:em, '[sql]'), '')}
 
 %p.alert.alert-info.download-privacy-notice
   Your API calls will be shown as downloads on the scraper page.
-  = link_to "Why?", documentation_index_path(anchor: "open-downloads"), title: 'Read about why downloader information is public and open.'
+  = link_to "Why?", documentation_index_path(anchor: "open-downloads"), title: "Read about why downloader information is public and open."
 
 %h2 Parameters
 
 -# TODO: Write this whole form in a more concise way using the magic of simple_form
-= simple_form_for @scraper, html: {class: "form-horizontal"} do |f|
+= simple_form_for @scraper, html: { class: "form-horizontal" } do |f|
   .string.input.optional.stringish.form-group#scraper-full-name-input
     %label.control-label.col-sm-1{ for: "scraper-full-name" } [scraper]
     .col-sm-5
-      %input.form-control#scraper-full-name{ maxlength: "255", name: "scraper[full_name]", type: "text", value: "#{@scraper.full_name}" }
+      %input.form-control#scraper-full-name{ maxlength: "255", name: "scraper[full_name]", type: "text", value: @scraper.full_name }
       %span.help-block The full name of the scraper as seen in the url
   .string.input.optional.stringish.form-group#query-input
     %label.control-label.col-sm-1{ for: "query" } [sql]
     .col-sm-5
-      %input.form-control#query{ maxlength: "255", name: "query", type: "text", value: "#{@query}" }
+      %input.form-control#query{ maxlength: "255", name: "query", type: "text", value: @query }
       %span.help-block
         The SQL query to perform on the scraper data.
-        Ensure it is #{link_to "url encoded", "https://en.wikipedia.org/wiki/Percent-encoding"}.
+        Ensure it is #{link_to 'url encoded', 'https://en.wikipedia.org/wiki/Percent-encoding'}.
   .string.input.optional.stringish.form-group#format-input
     %label.control-label.col-sm-1{ for: "format" } [format]
     .col-sm-3
       %select.form-control#format{ name: "format" }
-        = options_for_select(["json", "csv", "atom"])
+        = options_for_select(%w[json csv atom"])
       %span.help-block
         Format of outputted data
   .string.input.optional.stringish.form-group#callback-input
@@ -86,7 +86,7 @@
 
     - if current_user
       .col-sm-3
-        = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.api_key, {"data-content" => "#{owner_image(o, size: 20, show_tooltip: false)} #{o.nickname}"}]}, include_blank: false, hint: "Choose which api key you want to use", label: false
+        = f.input :owner_id, collection: current_user.all_owners.map { |o| [o.nickname, o.api_key, { "data-content" => "#{owner_image(o, size: 20, show_tooltip: false)} #{o.nickname}" }] }, include_blank: false, hint: "Choose which api key you want to use", label: false
 
 %h2 Example
 %p
@@ -95,28 +95,28 @@
 %div
   %ul.nav.nav-tabs{ role: "tablist" }
     %li.active{ role: "presentation" }
-      = link_to "#example-curl", 'aria-controls' => "#examples-curl", role: "tab", 'data-toggle' => "tab" do
+      = link_to "#example-curl", "aria-controls" => "#examples-curl", role: "tab", "data-toggle" => "tab" do
         Curl
     %li{ role: "presentation" }
-      = link_to "#example-ruby", 'aria-controls' => "#example-ruby", role: "tab", 'data-toggle' => "tab" do
+      = link_to "#example-ruby", "aria-controls" => "#example-ruby", role: "tab", "data-toggle" => "tab" do
         = language_name_with_icon(:ruby, size: "18x18")
     %li{ role: "presentation" }
-      = link_to "#example-python", 'aria-controls' => "#example-python", role: "tab", 'data-toggle' => "tab" do
+      = link_to "#example-python", "aria-controls" => "#example-python", role: "tab", "data-toggle" => "tab" do
         = language_name_with_icon(:python, size: "18x18")
     %li{ role: "presentation" }
-      = link_to "#example-javascript", 'aria-controls' => "#example-javascript", role: "tab", 'data-toggle' => "tab" do
-        = image_tag('languages/javascript.png', size: '18x18')
+      = link_to "#example-javascript", "aria-controls" => "#example-javascript", role: "tab", "data-toggle" => "tab" do
+        = image_tag("languages/javascript.png", size: "18x18")
         Javascript
     %li{ role: "presentation" }
-      = link_to "#example-php", 'aria-controls' => "#example-php", role: "tab", 'data-toggle' => "tab" do
-        = image_tag('languages/php.png', size: '18x18')
+      = link_to "#example-php", "aria-controls" => "#example-php", role: "tab", "data-toggle" => "tab" do
+        = image_tag("languages/php.png", size: "18x18")
         PHP
 
   .tab-content
     .tab-pane.active{ role: "tabpanel", id: "example-curl" }
       = render "documentation/api_examples/curl", scraper: @scraper, query: @query
     .tab-pane{ role: "tabpanel", id: "example-ruby" }
-      #{render "documentation/api_examples/ruby", scraper: @scraper, query: @query}
+      = render "documentation/api_examples/ruby", scraper: @scraper, query: @query
     .tab-pane{ role: "tabpanel", id: "example-python" }
       = render "documentation/api_examples/python", scraper: @scraper, query: @query
     .tab-pane{ role: "tabpanel", id: "example-javascript" }

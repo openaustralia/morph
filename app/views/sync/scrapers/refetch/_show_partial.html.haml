@@ -1,5 +1,5 @@
 %div
   - if scraper.create_scraper_progress
-    = render partial: "scrapers/show_forking", locals: {scraper: scraper}
+    = render partial: "scrapers/show_forking", locals: { scraper: scraper }
   - else
-    = render partial: "scrapers/show_normal", locals: {scraper: scraper}
+    = render partial: "scrapers/show_normal", locals: { scraper: scraper }

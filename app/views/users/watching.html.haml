@@ -18,10 +18,10 @@
     .list-group
       - @user.scrapers_watched.each do |scraper|
         .row
-          .col-md-11= render partial: "sync/scrapers/scraper", locals: {scraper: scraper}
+          .col-md-11= render partial: "sync/scrapers/scraper", locals: { scraper: scraper }
           .col-md-1
             - if @user == current_user
-              = render partial: "scrapers/watch_button", locals: {scraper: scraper}
+              = render partial: "scrapers/watch_button", locals: { scraper: scraper }
 
   - @user.users_watched.each do |user|
     .row
@@ -29,7 +29,7 @@
         %h2= link_to user.nickname, user
       .col-md-1
         - if @user == current_user
-          .button_title_adjust= render partial: "owners/watch_button", locals: {owner: user}
+          .button_title_adjust= render partial: "owners/watch_button", locals: { owner: user }
     .row
       .col-md-11
         - if user.scrapers.empty?
@@ -43,7 +43,7 @@
         %h2= link_to organization.nickname, organization
       .col-md-1
         - if @user == current_user
-          .button_title_adjust= render partial: "owners/watch_button", locals: {owner: organization}
+          .button_title_adjust= render partial: "owners/watch_button", locals: { owner: organization }
     .row
       .col-md-11
         - if organization.scrapers.empty?

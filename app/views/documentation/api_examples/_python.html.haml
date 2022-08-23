@@ -17,7 +17,7 @@
 
     print r.json()
 
-= block.sub('[scraper_url]', "#{api_root}<span class='full_name'>#{h(scraper.full_name)}</span>").sub('[api_key]', "<span class='unescaped-api_key'>#{current_user ? current_user.api_key : '[api_key]'}</span>").sub('[query]', "<span class='unescaped-query'>#{h(query)}</span>").html_safe
+= block.sub("[scraper_url]", "#{api_root}<span class='full_name'>#{h(scraper.full_name)}</span>").sub("[api_key]", "<span class='unescaped-api_key'>#{current_user ? current_user.api_key : '[api_key]'}</span>").sub("[query]", "<span class='unescaped-query'>#{h(query)}</span>").html_safe
 
 %p
   You'll need the requests library if you don't already have it. Install it with
