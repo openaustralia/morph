@@ -225,14 +225,14 @@ span.internalout {
   margin-top: 5em;
 }
 
-#console_title:after {
+#console-title:after {
     content: "(hide)";
 }
-#console_title.collapsed:after {
+#console-title.collapsed:after {
     content: "(show)";
 }
 
-#scraper_settings {
+#scraper-settings {
   margin-bottom: 4em;
 }
 
@@ -251,16 +251,16 @@ span.internalout {
   }
 }
 
-#scraper_run input {
+#scraper-run input {
   width: 200px;
 }
 
 // Workaround for copy to clipboard
-#copy_to_clipboard_button.zeroclipboard-is-hover {
+#copy-to-clipboard-button.zeroclipboard-is-hover {
   background-color:#ebebeb;
   border-color: #adadad;
 }
-#copy_to_clipboard_button.zeroclipboard-is-active {
+#copy-to-clipboard-button.zeroclipboard-is-active {
   background-color:#ebebeb;
   border-color: #adadad;
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);

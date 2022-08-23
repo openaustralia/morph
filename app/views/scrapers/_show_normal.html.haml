@@ -24,7 +24,7 @@
           %p= scraper.scraped_domains.first.meta_or_title
 
     - if can? :run, scraper
-      #scraper_run
+      #scraper-run
         = render partial: "scrapers/run_button", locals: {scraper: scraper}
 
   .col-md-2
@@ -53,12 +53,12 @@
     = render partial: "scrapers/history", locals: {scraper: scraper}
   .col-md-2
     - if can? :settings, scraper
-      #scraper_settings
+      #scraper-settings
         = button_link_to settings_scraper_path(scraper) do
           %i.fa.fa-sliders
           Settings
 
-    #scraper_code
+    #scraper-code
       %h4
         %i.fa.fa-github-square.fa-lg
         Scraper code
@@ -76,12 +76,12 @@
       .form-group
         %label{ for: "git_url" } git clone URL
         .input-group
-          %input.form-control#git_url{ type: "text", value: scraper.git_url_https, disabled: true }
+          %input.form-control#git-url{ type: "text", value: scraper.git_url_https, disabled: true }
           %span.input-group-btn
-            %button.btn.btn-default#copy_to_clipboard_button{ type: "button", data:{ "clipboard-target" => "git_url" } }
+            %button.btn.btn-default#copy-to-clipboard-button{ type: "button", data:{ "clipboard-target" => "git_url" } }
               %i.fa.fa-copy
     :javascript
       $(document).ready(function() {
-        var clip = new ZeroClipboard($("#copy_to_clipboard_button"));
+        var clip = new ZeroClipboard($("#copy-to-clipboard-button"));
         $("#global-zeroclipboard-html-bridge").tooltip({title: "copy to clipboard", placement: 'bottom'});
       });

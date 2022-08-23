@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 console_scroll_to_bottom = ->
-  objDiv = document.getElementById("log_lines")
+  objDiv = document.getElementById("log-lines")
   if objDiv != null
     objDiv.scrollTop = objDiv.scrollHeight
 
