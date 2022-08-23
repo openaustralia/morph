@@ -1,4 +1,4 @@
-#console.collapse{ class: ("in" if open) }
+.collapse#console{ class: ("in" if open) }
   .log_lines#log_lines
     = render partial: "sync/log_lines/log_line", collection: run.log_lines.order('log_lines.id')
     = sync_new partial: "log_line", resource: LogLine.new, scope: run

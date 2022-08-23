@@ -3,8 +3,8 @@
   .btn-group
     = link_to search_path(q: q), class: "btn btn-default #{('active' unless show == 'all')}" do
       With data
-      %span.badge #{filtered_scrapers.total_count}
+      %span.badge= filtered_scrapers.total_count
 
     = link_to search_path(q: q, show: "all"), class: "btn btn-default #{('active' if show == 'all')}" do
       All
-      %span.badge #{all_scrapers.total_count}
+      %span.badge= all_scrapers.total_count

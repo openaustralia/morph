@@ -48,22 +48,6 @@ linters:
     exclude:
       - "app/views/documentation/api.html.haml"
 
-  # Offense count: 1
-  ClassesBeforeIds:
-    exclude:
-      - "app/views/runs/_console.html.haml"
-
-  # Offense count: 1
-  ClassAttributeWithStaticValue:
-    exclude:
-      - "app/views/scrapers/_webhook_fields.html.haml"
-
-  # Offense count: 4
-  UnnecessaryInterpolation:
-    exclude:
-      - "app/views/search/_scraper_search_filter_controls.html.haml"
-      - "app/views/search/_search_type_nav.html.haml"
-
   # Offense count: 39
   Indentation:
     exclude:
