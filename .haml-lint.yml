@@ -2,4 +2,9 @@ inherit_from: .haml-lint_todo.yml
 
 exclude:
   - lib/templates/haml/scaffold/_form.html.haml
-  
+
+linters:
+  # Syntax highlighting doesn't seem to work very well with the suggested
+  # type of multi-line comments. So, disabling them.
+  ConsecutiveComments:
+    enabled: false

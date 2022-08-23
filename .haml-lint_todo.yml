@@ -34,20 +34,6 @@ linters:
     exclude:
       - "app/views/application/_search_form.html.haml"
 
-  # Offense count: 1
-  RubyComments:
-    exclude:
-      - "app/views/documentation/_examples.html.haml"
-
-  # Offense count: 5
-  ConsecutiveComments:
-    exclude:
-      - "app/views/documentation/_language_tabs.html.haml"
-      - "app/views/owners/show.html.haml"
-      - "app/views/scrapers/_scraper_base.html.haml"
-      - "app/views/scrapers/_show_normal.html.haml"
-      - "app/views/static/_vanity_stats.html.haml"
-
   # Offense count: 23
   IdNames:
     exclude:
