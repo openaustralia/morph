@@ -2,6 +2,9 @@ inherit_from: .haml-lint_todo.yml
 
 exclude:
   - lib/templates/haml/scaffold/_form.html.haml
+  # Exclude vendor to make this work on travis
+  - vendor/**/*
+
 
 linters:
   # Syntax highlighting doesn't seem to work very well with the suggested
