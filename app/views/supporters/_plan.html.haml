@@ -1,5 +1,5 @@
 .col-xs-3.col-centered
-  %ul{ class: "plan #{plan.stripe_plan_id} #{"featured" if plan.stripe_plan_id == 'morph_standard'}" }
+  %ul{ class: "plan #{plan.stripe_plan_id} #{'featured' if plan.stripe_plan_id == 'morph_standard'}" }
     %li.plan-name
       = plan_image_tag(plan)
       = plan.name
