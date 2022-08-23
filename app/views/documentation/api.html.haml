@@ -52,45 +52,41 @@
       To make it easier, you can specify mappings below, and this will update your query above. You can link
       fields together with the double pipe (<code>||</code>) operator.
 
-    .string.input.optional.stringish.form-group#query-input
+    .string.input.optional.stringish.form-group#title-input
       %label.control-label.col-sm-1{ for: "title" } title
       .col-sm-5
         %input.form-control#title{ maxlength: "255", name: "title", type: "text" }
 
-    .string.input.optional.stringish.form-group#query-input
+    .string.input.optional.stringish.form-group#content-input
       %label.control-label.col-sm-1{ for: "content" } content
       .col-sm-5
         %input.form-control#content{ maxlength: "255", name: "content", type: "text" }
 
-    .string.input.optional.stringish.form-group#query-input
+    .string.input.optional.stringish.form-group#link-input
       %label.control-label.col-sm-1{ for: "link" } link
       .col-sm-5
         %input.form-control#link{ maxlength: "255", name: "link", type: "text" }
 
-    .string.input.optional.stringish.form-group#query-input
+    .string.input.optional.stringish.form-group#date-input
       %label.control-label.col-sm-1{ for: "date" } date
       .col-sm-5
         %input.form-control#date{ maxlength: "255", name: "date", type: "text" }
 
-  - if current_user
-    .row
-      .col-sm-6
-        .string.input.optional.stringish.form-group#api-key-input
-          %label.control-label.col-sm-2{ for: "api-key" } [api_key]
-          .col-sm-10
+  .row
+    .col-sm-6
+      .string.input.optional.stringish.form-group#api-key-input
+        %label.control-label.col-sm-2{ for: "api-key" } [api_key]
+        .col-sm-10
+          - if current_user
             %p.form-control-static#api-key= current_user.api_key
             %span.help-block
               Don't tell anyone else what the api key is
+          - else
+            %p= button_link_to "sign in with GitHub", user_github_omniauth_authorize_path
+
+    - if current_user
       .col-sm-3
         = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.api_key, {"data-content" => "#{owner_image(o, size: 20, show_tooltip: false)} #{o.nickname}"}]}, include_blank: false, hint: "Choose which api key you want to use", label: false
-  - else
-    .row
-      .col-sm-6
-        .string.input.optional.stringish.form-group#api-key-input
-          %label.control-label.col-sm-2{ for: "api-key" } [api_key]
-          .col-sm-10
-            %p#api-key
-              = button_link_to "sign in with GitHub", user_github_omniauth_authorize_path
 
 %h2 Example
 %p

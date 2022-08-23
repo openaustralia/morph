@@ -11,3 +11,8 @@ linters:
   # type of multi-line comments. So, disabling them.
   ConsecutiveComments:
     enabled: false
+
+  # This limits the number of lines in a view template and is a little bit arbitrary
+  # Maybe reinstate this in the future?
+  ViewLength:
+    enabled: false

@@ -22,23 +22,6 @@ linters:
       - "app/views/alert_mailer/alert_email.html.haml"
       - "app/views/scrapers/_show_forking.html.haml"
 
-  # Offense count: 3
-  ViewLength:
-    exclude:
-      - "app/views/alert_mailer/alert_email.html.haml"
-      - "app/views/documentation/api.html.haml"
-      - "app/views/users/stats.html.haml"
-
-  # Offense count: 1
-  SpaceBeforeScript:
-    exclude:
-      - "app/views/application/_search_form.html.haml"
-
-  # Offense count: 9
-  RepeatedId:
-    exclude:
-      - "app/views/documentation/api.html.haml"
-
   # Offense count: 1
   FinalNewline:
     exclude:
