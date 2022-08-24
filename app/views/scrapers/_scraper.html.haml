@@ -4,10 +4,10 @@
   .scraper-block
     - if scraper.language.present?
       %small.scraper-lang.pull-right= scraper.language.human
-    %strong.full_name= highlight[:"full_name.word_middle"] ? highlight[:"full_name.word_middle"].html_safe : scraper.full_name
+    %strong.full_name= highlight[:"full_name.word_middle"] ? sanitize_highlight(highlight[:"full_name.word_middle"]) : scraper.full_name
     %div
       - if scraper.description.present?
-        = highlight[:description] ? highlight[:description].html_safe : scraper.description
+        = highlight[:description] ? sanitize_highlight(highlight[:description]) : scraper.description
       - unless scraper.scraped_domains.empty?
         %p.scraper-domains-list.text-muted
-          = highlight[:"scraped_domain_names.word_end"] ? highlight[:"scraped_domain_names.word_end"].html_safe : simplified_scraped_domains_list(scraper.scraped_domains.to_a)
+          = highlight[:"scraped_domain_names.word_end"] ? sanitize_highlight(highlight[:"scraped_domain_names.word_end"]) : simplified_scraped_domains_list(scraper.scraped_domains.to_a)

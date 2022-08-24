@@ -9,6 +9,7 @@ module ApplicationHelper
   include ActionView::Helpers::OutputSafetyHelper
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::DateHelper
+  include ActionView::Helpers::SanitizeHelper
   include Kernel
 
   sig { params(secs: Float).returns(String) }
@@ -42,5 +43,12 @@ module ApplicationHelper
   def language_name_with_icon(key, options = {})
     l = Morph::Language.new(key)
     safe_join([image_tag(l.image_path, options), " ", l.human])
+  end
+
+  # Special method just for sanitizing the result of searchkick highlights and
+  # marking it as html safe
+  sig { params(text:String).returns(String) }
+  def sanitize_highlight(text)
+    sanitize(text, tags: ["em"])
   end
 end

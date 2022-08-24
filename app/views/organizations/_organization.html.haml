@@ -7,13 +7,10 @@
     .media-body
       %h2.media-heading.h4
         - if organization.name.present?
-          -# Hmmm... not sure I should just blindly mark it as safe
-          = highlight[:name] ? highlight[:name].html_safe : organization.name
+          = highlight[:name] ? sanitize_highlight(highlight[:name]) : organization.name
         - else
-          = highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
+          = highlight[:nickname] ? sanitize_highlight(highlight[:nickname]) : organization.nickname
 
-      -# Hmmm... not sure I should just blindly mark it as safe
-      %strong.owner-nickname= highlight[:nickname] ? highlight[:nickname].html_safe : organization.nickname
+      %strong.owner-nickname= highlight[:nickname] ? sanitize_highlight(highlight[:nickname]) : organization.nickname
       - if organization.company.present?
-        -# Hmmm... not sure I should just blindly mark it as safe
-        %div= highlight[:company] ? highlight[:company].html_safe : organization.company
+        %div= highlight[:company] ? sanitize_highlight(highlight[:company]) : organization.company
