@@ -1,6 +1,6 @@
 #status
   - if scraper.last_run
-    = render partial: "runs/status", locals: {run: scraper.last_run}
+    = render partial: "runs/status", locals: { run: scraper.last_run }
   - else
     .alert.alert-info
       This scraper has not yet been run

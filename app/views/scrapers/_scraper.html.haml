@@ -2,11 +2,11 @@
 
 = link_to scraper, class: "list-group-item" do
   .scraper-block
-    - unless scraper.language.blank?
+    - if scraper.language.present?
       %small.scraper-lang.pull-right= scraper.language.human
     %strong.full_name= highlight[:"full_name.word_middle"] ? highlight[:"full_name.word_middle"].html_safe : scraper.full_name
     %div
-      - unless scraper.description.blank?
+      - if scraper.description.present?
         = highlight[:description] ? highlight[:description].html_safe : scraper.description
       - unless scraper.scraped_domains.empty?
         %p.scraper-domains-list.text-muted

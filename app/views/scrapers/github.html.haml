@@ -3,23 +3,23 @@
 .container
   %h1= title
 
-  = render 'documentation/languages'
-  = render 'documentation/format_intro'
+  = render "documentation/languages"
+  = render "documentation/format_intro"
 
   %ul.nav.nav-tabs
     %li.active
-      = link_to "#owner_#{current_user.nickname}", data: {toggle: "tab"} do
+      = link_to "#owner_#{current_user.nickname}", data: { toggle: "tab" } do
         = owner_image(current_user, size: 30)
         = current_user.nickname
     - current_user.organizations.each do |org|
       %li
-        = link_to "#owner_#{org.nickname}", data: {toggle: "tab"} do
+        = link_to "#owner_#{org.nickname}", data: { toggle: "tab" } do
           = owner_image(org, size: 30)
           = org.nickname
 
   .tab-content
     .tab-pane.active{ id: "owner_#{current_user.nickname}" }
-      = render partial: "github_form_loader", locals: {owner: current_user}
+      = render partial: "github_form_loader", locals: { owner: current_user }
     - current_user.organizations.each do |org|
       .tab-pane{ id: "owner_#{org.nickname}" }
-        = render partial: "github_form_loader", locals: {owner: org}
+        = render partial: "github_form_loader", locals: { owner: org }

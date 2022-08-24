@@ -1,20 +1,19 @@
 - cache ["v5", scraper, hide_owner, show_errored_detail] do
   = link_to scraper, class: "list-group-item" do
     .scraper-block
-      - unless scraper.language.blank?
+      - if scraper.language.present?
         %small.scraper-lang.pull-right= scraper.language.human
-      .icon-box.pull-right= render partial: "scrapers/auto_clock", locals: {scraper: scraper}
+      .icon-box.pull-right= render partial: "scrapers/auto_clock", locals: { scraper: scraper }
       -# TODO: Refactor this so that we're not duplicating logic of checking queued and running
       -# here as well as in "scrapers/running_indicator" partial
       - if scraper.queued? || scraper.running?
-        .icon-box.pull-right= render partial: "scrapers/running_indicator", locals: {scraper: scraper}
-      - elsif scraper.last_run && scraper.last_run.finished_with_errors?
+        .icon-box.pull-right= render partial: "scrapers/running_indicator", locals: { scraper: scraper }
+      - elsif scraper.last_run&.finished_with_errors?
         %span.label.label-danger.pull-right errored
       %strong.full_name= hide_owner ? scraper.name : scraper.full_name
       %div
-        - unless scraper.description.blank?
-          = scraper.description
-        - unless scraper.scraped_domains.length == 0
+        = scraper.description.presence
+        - unless scraper.scraped_domains.length.zero?
           %p.scraper-domains-list.text-muted= simplified_scraped_domains_list(scraper.scraped_domains.to_a)
     - if show_errored_detail
       .scraper-error-info.row

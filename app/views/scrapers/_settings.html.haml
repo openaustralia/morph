@@ -1,13 +1,13 @@
 %h3 Settings
 = simple_form_for scraper do |f|
   = f.error_notification
-  = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: {disabled: !(can? :update, scraper)}
+  = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: { disabled: !(can? :update, scraper) }
   - if can? :memory_setting, scraper
     = f.input :memory_mb, hint: "If set overrides the default memory in megabytes allocated to this scraper (#{number_to_human_size Morph::DockerRunner.default_memory_limit}). This is currently only available to admins and should be used with caution because scheduling currently assumes everything is using the same amount of memory"
   %h4 Secret environment variables
   %p
     Environment variables can be used to pass secret values to your scraper such as API keys.
-    = link_to 'Read documentation', secret_values_documentation_index_path
+    = link_to "Read documentation", secret_values_documentation_index_path
   .row
     .col-sm-3
       %label Name
@@ -25,7 +25,7 @@
   %h4 Webhooks
   %p
     We’ll make an HTTP POST request to each webhook URL every time this scraper finishes running.
-    = link_to 'Read documentation', webhooks_documentation_index_path
+    = link_to "Read documentation", webhooks_documentation_index_path
   .row
     .col-sm-3
       %label URL
@@ -38,12 +38,12 @@
               %span.webhook-status.input-group-addon{ class: webhook_last_delivery_status(webhook_form.object) }
                 - if webhook_form.object.deliveries.any?
                   - if webhook_form.object.last_delivery.success?
-                    %span.fa.fa-check{ data: { toggle: 'tooltip' }, title: 'Last delivery was successful.' }
+                    %span.fa.fa-check{ data: { toggle: "tooltip" }, title: "Last delivery was successful." }
                   - else
-                    %span.fa.fa-warning{ data: { toggle: 'tooltip' }, title: "Last delivery was not successful. Invalid HTTP Response: #{webhook_form.object.last_delivery.response_code}." }
+                    %span.fa.fa-warning{ data: { toggle: "tooltip" }, title: "Last delivery was not successful. Invalid HTTP Response: #{webhook_form.object.last_delivery.response_code}." }
                 - else
-                  %span.fa.fa-plug{ data: { toggle: 'tooltip' }, title: 'No deliveries yet' }
-              = webhook_form.input_field :url, class: 'form-control'
+                  %span.fa.fa-plug{ data: { toggle: "tooltip" }, title: "No deliveries yet" }
+              = webhook_form.input_field :url, class: "form-control"
           .col-sm-1
             = link_to_remove_association webhook_form do
               %i.fa.fa-times-circle.fa-2x

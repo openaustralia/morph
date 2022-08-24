@@ -4,13 +4,13 @@
   - if scraper.finished_runs.count > 5
     %ul.list-group
       - scraper.finished_runs.limit(5).each do |run|
-        = render partial: "runs/history", locals: {run: run}
+        = render partial: "runs/history", locals: { run: run }
       %li.list-group-item.text-center ...
-      = render partial: 'scrapers/scraper_created_history_item', locals: {scraper: scraper}
+      = render partial: "scrapers/scraper_created_history_item", locals: { scraper: scraper }
     %p.text-center
-      = link_to 'Show complete history', history_scraper_path(scraper)
+      = link_to "Show complete history", history_scraper_path(scraper)
   - else
     %ul.list-group
       - scraper.finished_runs.each do |run|
-        = render partial: "runs/history", locals: {run: run}
-      = render partial: 'scrapers/scraper_created_history_item', locals: {scraper: scraper}
+        = render partial: "runs/history", locals: { run: run }
+      = render partial: "scrapers/scraper_created_history_item", locals: { scraper: scraper }

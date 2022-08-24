@@ -5,11 +5,11 @@
       .large-icon-box.pull-right
         - if can? :settings, scraper
           = link_to settings_scraper_path(scraper) do
-            = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
+            = render partial: "scrapers/auto_clock", locals: { scraper: scraper }
         - else
-          = render partial: "scrapers/auto_clock", locals: {scraper: scraper}
+          = render partial: "scrapers/auto_clock", locals: { scraper: scraper }
       .large-icon-box.pull-right
-        = render partial: "scrapers/running_indicator", locals: {scraper: scraper}
+        = render partial: "scrapers/running_indicator", locals: { scraper: scraper }
 
     %h4= scraper.description
 
@@ -25,11 +25,11 @@
 
     - if can? :run, scraper
       #scraper-run
-        = render partial: "scrapers/run_button", locals: {scraper: scraper}
+        = render partial: "scrapers/run_button", locals: { scraper: scraper }
 
   .col-md-2
     - if signed_in?
-      .button_title_adjust= render partial: "scrapers/watch_button", locals: {scraper: scraper}
+      .button_title_adjust= render partial: "scrapers/watch_button", locals: { scraper: scraper }
 %hr
 .row
   .col-md-10
@@ -46,11 +46,11 @@
           = link_to contributor do
             = owner_image(contributor, size: 30)
 
-    = render partial: "scrapers/status", locals: {scraper: scraper}
-    = render partial: "scrapers/console", locals: {scraper: scraper}
-    = render partial: "scrapers/data", locals: {scraper: scraper}
-    = render partial: "scrapers/statistics", locals: {scraper: scraper}
-    = render partial: "scrapers/history", locals: {scraper: scraper}
+    = render partial: "scrapers/status", locals: { scraper: scraper }
+    = render partial: "scrapers/console", locals: { scraper: scraper }
+    = render partial: "scrapers/data", locals: { scraper: scraper }
+    = render partial: "scrapers/statistics", locals: { scraper: scraper }
+    = render partial: "scrapers/history", locals: { scraper: scraper }
   .col-md-2
     - if can? :settings, scraper
       #scraper-settings
@@ -62,23 +62,23 @@
       %h4
         %i.fa.fa-github-square.fa-lg
         Scraper code
-      - unless scraper.language.blank?
+      - if scraper.language.present?
         %strong.scraper-lang= scraper.language.human
       - if scraper.github_url
         %p
 
-          = link_to scraper.github_url, target: "_blank" do
+          = link_to scraper.github_url, target: "_blank", rel: "noopener" do
             = scraper.name
           - if scraper.main_scraper_filename
             \/
-            = link_to scraper.main_scraper_filename, scraper.github_url_main_scraper_file, target: "_blank"
+            = link_to scraper.main_scraper_filename, scraper.github_url_main_scraper_file, target: "_blank", rel: "noopener"
     %p
       .form-group
         %label{ for: "git_url" } git clone URL
         .input-group
           %input.form-control#git-url{ type: "text", value: scraper.git_url_https, disabled: true }
           %span.input-group-btn
-            %button.btn.btn-default#copy-to-clipboard-button{ type: "button", data:{ "clipboard-target" => "git_url" } }
+            %button.btn.btn-default#copy-to-clipboard-button{ type: "button", data: { "clipboard-target" => "git_url" } }
               %i.fa.fa-copy
     :javascript
       $(document).ready(function() {

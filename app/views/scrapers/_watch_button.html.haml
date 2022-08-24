@@ -4,11 +4,11 @@
       %i.fa.fa-eye-slash
       Unwatch
   - elsif current_user.watching?(scraper)
-    = button_to watch_scraper_path(scraper), class: "btn btn-default has-tooltip", data: {placement: "bottom", title: "Stop receiving alerts for this scraper"} do
+    = button_to watch_scraper_path(scraper), class: "btn btn-default has-tooltip", data: { placement: "bottom", title: "Stop receiving alerts for this scraper" } do
       %i.fa.fa-eye-slash
       Unwatch
   - else
-    = button_to watch_scraper_path(scraper), class: "btn btn-default has-tooltip", data: {placement: "bottom", title: "Receive alerts when this scraper errors"} do
+    = button_to watch_scraper_path(scraper), class: "btn btn-default has-tooltip", data: { placement: "bottom", title: "Receive alerts when this scraper errors" } do
       %i.fa.fa-eye
       Watch
   = link_to watchers_scraper_path(scraper) do
