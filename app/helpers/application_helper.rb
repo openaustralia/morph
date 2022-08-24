@@ -47,7 +47,7 @@ module ApplicationHelper
 
   # Special method just for sanitizing the result of searchkick highlights and
   # marking it as html safe
-  sig { params(text:String).returns(String) }
+  sig { params(text: String).returns(String) }
   def sanitize_highlight(text)
     sanitize(text, tags: ["em"])
   end
