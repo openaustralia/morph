@@ -1,1 +1,1 @@
-= content_tag(:span, h(log_line.text).gsub("\n", "&#x000A;").html_safe, class: "#{log_line.stream} log_line")
+= content_tag(:span, log_line.text, class: "#{log_line.stream} log_line")
