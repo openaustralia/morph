@@ -15,7 +15,7 @@
         %li= link_to "Pricing", new_supporter_path
         %li= link_to "Documentation", documentation_index_path
         %li.help
-          = link_to "https://help.morph.io/", target: "_blank" do
+          = link_to "https://help.morph.io/", target: "_blank", rel: "noopener" do
             %span.glyphicon.glyphicon-new-window{ "aria-hidden" => "true" }
             Help forum
 
@@ -39,9 +39,9 @@
 
       = form_tag search_path, method: "get", role: "search", class: "navbar-form navbar-right" do
         .input-group
-          = label_tag :q, "Search", class: 'sr-only'
+          = label_tag :q, "Search", class: "sr-only"
           = search_field_tag :q, q, maxlength: "256", name: "q", type: "search", placeholder: "Search", class: "form-control"
           .input-group-btn
-            = button_tag value: 'Submit', class: 'btn btn-default', name: nil do
+            = button_tag value: "Submit", class: "btn btn-default", name: nil do
               %span.sr-only Submit
               %i.fa.fa-search
