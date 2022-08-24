@@ -5,7 +5,7 @@
     - if owner.alerts.empty?
       no scrapers
     - else
-      = link_to "#{pluralize(owner.all_scrapers_watched.count, 'scrapers')}", watching_user_path(owner)
+      = link_to pluralize(owner.all_scrapers_watched.count, "scrapers"), watching_user_path(owner)
 - unless scrapers.empty?
   %p
     Total run time used:

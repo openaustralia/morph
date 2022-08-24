@@ -1,8 +1,8 @@
 - if current_user.watching?(owner)
-  = button_to watch_owner_path(owner), class: "btn btn-default has-tooltip watch" + (can?(:watch, owner) ? "" : "disabled"), data: {placement: "bottom", title: "Stop receiving alerts for #{owner.nickname}'s scrapers"} do
+  = button_to watch_owner_path(owner), class: "btn btn-default has-tooltip watch#{can?(:watch, owner) ? '' : ' disabled'}", data: { placement: "bottom", title: "Stop receiving alerts for #{owner.nickname}'s scrapers" } do
     %i.fa.fa-eye-slash
     Unwatch
 - else
-  = button_to watch_owner_path(owner), class: "btn btn-default has-tooltip watch" + (can?(:watch, owner) ? "" : "disabled"), data: {placement: "bottom", title: "Receive alerts when any of #{owner.nickname}'s scrapers errors"} do
+  = button_to watch_owner_path(owner), class: "btn btn-default has-tooltip watch#{can?(:watch, owner) ? '' : ' disabled'}", data: { placement: "bottom", title: "Receive alerts when any of #{owner.nickname}'s scrapers errors" } do
     %i.fa.fa-eye
     Watch

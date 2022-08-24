@@ -1,5 +1,5 @@
-- cache ['v6', run] do
-  %li.list-group-item{ class: run.finished_successfully? ? 'alert-success' : 'alert-danger' }
+- cache ["v6", run] do
+  %li.list-group-item{ class: run.finished_successfully? ? "alert-success" : "alert-danger" }
     - if run.auto?
       Auto
     - else
@@ -19,12 +19,12 @@
       %div
         run time
         - if run.wall_time < 60
-          = format('%.f s', run.wall_time)
+          = format("%.f s", run.wall_time)
         - else
           = distance_of_time_in_words(run.wall_time)
       %div
     %div= database_changes_in_words(run)
     %div
-      - if run.connection_logs.size > 0
-        = pluralize(run.connection_logs.size, 'page')
+      - if run.connection_logs.size.positive?
+        = pluralize(run.connection_logs.size, "page")
         scraped

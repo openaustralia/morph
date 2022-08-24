@@ -9,33 +9,33 @@
         - if @owner.name
           %h1
             = @owner.name
-            = render 'supporter_badge', owner: @owner, new_supporter: @new_supporter
+            = render "supporter_badge", owner: @owner, new_supporter: @new_supporter
           %h4= @owner.nickname
         - else
           %h1
             = @owner.nickname
-            = render 'supporter_badge', owner: @owner, new_supporter: @new_supporter
+            = render "supporter_badge", owner: @owner, new_supporter: @new_supporter
 
         %ul.list-unstyled
-          - unless @owner.company.blank?
+          - if @owner.company.present?
             %li
               %i.fa.fa-users.fa-fw.text-muted
               = @owner.company
-          - unless @owner.location.blank?
+          - if @owner.location.present?
             %li
               %i.fa.fa-map-marker.fa-fw.text-muted
               = @owner.location
-          - unless @owner.blog.blank?
+          - if @owner.blog.present?
             %li
               %i.fa.fa-link.fa-fw.text-muted
               = link_to @owner.blog, @owner.blog
         %p
           %i.fa.fa-github-alt.fa-fw.text-muted
-          = link_to "#{@owner.nickname} on GitHub", @owner.github_url, target: "_blank"
+          = link_to "#{@owner.nickname} on GitHub", @owner.github_url, target: "_blank", rel: "noopener"
 
       .col-md-2.owner-box
         - if signed_in?
-          .pull-right= render partial: "watch_button", locals: {owner: @owner}
+          .pull-right= render partial: "watch_button", locals: { owner: @owner }
         - if can? :settings, @owner
           .pull-right= button_link_to "Settings", settings_owner_path(@owner)
 
@@ -58,9 +58,9 @@
     %h3= pluralize(@scrapers.count, "scraper")
     .list-group= sync partial: "scraper_without_owner", collection: @running_scrapers
     .list-group= sync partial: "scraper_without_owner", collection: @erroring_scrapers
-    .list-group= sync partial: "scraper_without_owner", collection: @other_scrapers.sort{|a,b| b.updated_at <=> a.updated_at}
+    .list-group= sync partial: "scraper_without_owner", collection: @other_scrapers.sort { |a, b| b.updated_at <=> a.updated_at }
 
-  - if @owner == current_user || @owner.organization? && @owner.users.include?(current_user)
+  - if @owner == current_user || (@owner.organization? && @owner.users.include?(current_user))
     = button_link_to "New scraper", new_scraper_path
 
   - if @owner.user? && !@owner.other_scrapers_contributed_to.empty?

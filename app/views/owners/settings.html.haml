@@ -14,7 +14,12 @@
         They
       will need this to use the API and the morph.io command line client
     %p
-      This key is just for #{@owner == current_user ? "you" : "them"}. Don't give it to anyone else.
+      This key is just for
+      - if @owner == current_user
+        you.
+      - else
+        them.
+      Don't give it to anyone else.
   - else
     %p
       Use this API key if you want the usage to be recorded against the organization #{@owner.nickname}.

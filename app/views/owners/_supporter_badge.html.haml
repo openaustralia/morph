@@ -1,4 +1,4 @@
 - if owner.supporter?
-  %small.supporter-plan{ class: ('bounceInDown animated' if new_supporter) }
-    = link_to plan_image_tag(Plan.new(owner.stripe_plan_id), '48x48'), new_supporter_path
+  %small.supporter-plan{ class: ("bounceInDown animated" if new_supporter) }
+    = link_to plan_image_tag(Plan.new(owner.stripe_plan_id), "48x48"), new_supporter_path
     = link_to owner.plan.name, new_supporter_path
