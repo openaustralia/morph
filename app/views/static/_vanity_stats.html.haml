@@ -1,7 +1,7 @@
 .banner.banner-metrics
   .container
     %h3 This week at morph.io
-    - cache 'vanity_stats', :expires_in => 1.hour do
+    - cache "vanity_stats", expires_in: 1.hour do
       -# .metric-box.col-sm-4
       -#   %strong= number_with_delimiter(Morph::VanityStats.total_pages_scraped_in_last_week)
       -#   web pages scraped

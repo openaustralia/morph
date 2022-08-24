@@ -9,10 +9,10 @@
   = button_tag plan_change_word(current_user.plan, plan),
                id: plan.stripe_plan_id,
                class: "btn btn-default btn-lg",
-               data: {key: Rails.configuration.stripe[:publishable_key],
-                      description: plan.name,
-                      amount: plan.price_in_cents,
-                      email: current_user.email,
-                      plan_id: plan.stripe_plan_id,
-                      stripe: !current_user.supporter?,
-                      image: image_path(plan.image_name)}
+               data: { key: Rails.configuration.stripe[:publishable_key],
+                       description: plan.name,
+                       amount: plan.price_in_cents,
+                       email: current_user.email,
+                       plan_id: plan.stripe_plan_id,
+                       stripe: !current_user.supporter?,
+                       image: image_path(plan.image_name) }

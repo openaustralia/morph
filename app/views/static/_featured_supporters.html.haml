@@ -10,4 +10,4 @@
             %li.owner-item= link_to owner_image(owner, size: 60), owner
 .row
   .col-xs-12
-    %p= link_to "See more of the #{pluralize(Owner.all_supporters.count, "supporter")}…", supporters_path
+    %p= link_to "See more of the #{pluralize(Owner.all_supporters.count, 'supporter')}…", supporters_path

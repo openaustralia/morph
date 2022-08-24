@@ -1,9 +1,9 @@
-- if !current_user.watched_broken_scrapers_ordered_by_urgency.empty?
+- unless current_user.watched_broken_scrapers_ordered_by_urgency.empty?
   .scraper-alert-panel.panel.panel-danger
     %h2.panel-heading
-      #{pluralize(current_user.watched_broken_scrapers_ordered_by_urgency.count, 'scraper')}
+      = pluralize(current_user.watched_broken_scrapers_ordered_by_urgency.count, "scraper")
       you are watching
-      #{current_user.watched_broken_scrapers_ordered_by_urgency.count > 1 ? 'need' : 'needs'}
+      = current_user.watched_broken_scrapers_ordered_by_urgency.count > 1 ? "need" : "needs"
       help
     .scraper-alerts-list.list-group= sync partial: "scraper_with_errors", collection: current_user.watched_broken_scrapers_ordered_by_urgency
   %p= link_to "Manage your watched scrapers", watching_user_path(current_user)
