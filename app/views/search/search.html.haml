@@ -1,5 +1,5 @@
-- title "Search#{" ‘" + @q + "’" if @q}"
-- description "Search morph.io scrapers and users#{" for ‘" + @q + "’" if @q}"
+- title "Search#{" ‘#{@q}’" if @q}"
+- description "Search morph.io scrapers and users#{" for ‘#{@q}’" if @q}"
 
 .container
   %h1.label-heading
@@ -14,7 +14,7 @@
       %ul
         %li check the spelling
         %li try some more general or alternate terms
-      %p You could also try browsing all #{link_to "scrapers", scrapers_path} or #{link_to "users", users_path}.
+      %p You could also try browsing all #{link_to 'scrapers', scrapers_path} or #{link_to 'users', users_path}.
     - else
       .search-results.row
         .col-xs-12

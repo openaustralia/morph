@@ -1,9 +1,9 @@
 %ul.search-type-nav.nav.nav-tabs
-  %li{ class: ('active' unless type == "users"), role: "presentation" }
+  %li{ class: ("active" unless type == "users"), role: "presentation" }
     = link_to search_path(q: q, show: show, type: nil) do
       Scrapers
       %span.badge= all_scrapers.total_count
-  %li{ class: ('active' if type == "users"), role: "presentation" }
+  %li{ class: ("active" if type == "users"), role: "presentation" }
     = link_to search_path(q: q, show: show, type: "users") do
       Users
       %span.badge= owners.total_count
