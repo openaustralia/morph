@@ -10,7 +10,7 @@
       %ul.nav.nav-tabs
         - scraper.database.table_names.each do |table|
           %li{ class: ("active" if table == active_table) }
-            = link_to table, "#table_#{table}", data: {toggle: "tab"}
+            = link_to table, "#table_#{table}", data: { toggle: "tab" }
 
       .tab-content
         - scraper.database.table_names.each do |table|
@@ -43,8 +43,8 @@
       - if can? :destroy, scraper
         To fix this:
         %ol
-          %li= button_link_to "Download a copy of the current sqlite database", data_scraper_path(scraper, :format => :sqlite, key: current_user.api_key)
-          %li= button_to "Clear the database", clear_scraper_path(scraper), {class: "btn btn-danger"}
+          %li= button_link_to "Download a copy of the current sqlite database", data_scraper_path(scraper, format: :sqlite, key: current_user.api_key)
+          %li= button_to "Clear the database", clear_scraper_path(scraper), { class: "btn btn-danger" }
           %li Rerun your scraper
       - else
         The owner of this scraper can take some simple steps to fix this.

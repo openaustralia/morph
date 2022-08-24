@@ -5,9 +5,9 @@
       = button_link_to "sign in with GitHub", user_github_omniauth_authorize_path
   .btn-group
     = button_link_to "Download table (as CSV)", data_scraper_path(scraper, format: :csv, query: scraper.database.select_all(table), key: (current_user.api_key if current_user)), disabled: !signed_in?
-    = button_link_to "Download SQLite database (#{number_to_human_size scraper.sqlite_db_size})", data_scraper_path(scraper, :format => :sqlite, key: (current_user.api_key if current_user)), disabled: !signed_in?
+    = button_link_to "Download SQLite database (#{number_to_human_size scraper.sqlite_db_size})", data_scraper_path(scraper, format: :sqlite, key: (current_user.api_key if current_user)), disabled: !signed_in?
     = button_link_to "Use the API", api_documentation_index_path(scraper: scraper.full_name)
   - if user_signed_in?
     %span.download-privacy-notice.alert.alert-info
       Your downloads will be shown above.
-      = link_to "Why?", documentation_index_path(anchor: "open-downloads"), title: 'Read about why downloader information is public and open.'
+      = link_to "Why?", documentation_index_path(anchor: "open-downloads"), title: "Read about why downloader information is public and open."

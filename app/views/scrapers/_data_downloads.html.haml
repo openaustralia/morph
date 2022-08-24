@@ -2,8 +2,8 @@
   %strong
     Downloaded
     = pluralize(scraper.download_count, "time")
-  - if scraper.download_count > 0
+  - if scraper.download_count.positive?
     by
-    - scraper.download_count_by_owner.each do |downloader,count|
+    - scraper.download_count_by_owner.each do |downloader, count|
       = link_to downloader do
         = owner_image(downloader, size: 30, tooltip_text: "Downloaded #{pluralize(count, 'time')} by #{downloader.nickname}")
