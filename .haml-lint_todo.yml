@@ -17,8 +17,3 @@ linters:
     exclude:
       - "app/views/alert_mailer/alert_email.html.haml"
       - "app/views/scrapers/_show_forking.html.haml"
-
-  # Offense count: 1
-  FinalNewline:
-    exclude:
-      - "app/views/sync/log_lines/_log_line.html.haml"
