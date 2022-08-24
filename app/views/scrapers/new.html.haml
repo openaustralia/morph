@@ -5,7 +5,7 @@
 
   %p
     Already have a repository on Github? Then,
-    #{link_to "add the scraper from Github", github_new_scraper_path}.
+    #{link_to 'add the scraper from Github', github_new_scraper_path}.
   %p
     It's easier to start here though. We'll create a template scraper for you
     in your preferred language.
@@ -13,18 +13,24 @@
   = simple_form_for @scraper do |f|
     .row
       .col-sm-6
-        = f.input :original_language_key, collection: Morph::Language.languages_supported.map{|l| [l.human, l.key, {"data-content" => "#{image_tag(l.image_path, size: '20x20')} #{l.human}"}]}, include_blank: false, hint: "The language you would like to write your scraper in. You can change this later.", label: "Language"
+        = f.input :original_language_key,
+                  collection: Morph::Language.languages_supported.map { |l| [l.human, l.key, { "data-content" => "#{image_tag(l.image_path, size: '20x20')} #{l.human}" }] },
+                  include_blank: false,
+                  hint: "The language you would like to write your scraper in. You can change this later.",
+                  label: "Language"
 
     .row
       - if current_user.all_owners.count == 1
         = f.input :owner_id, as: "hidden", input_html: { value: current_user.id }
       - else
         .col-sm-2
-          = f.input :owner_id, collection: current_user.all_owners.map{|o| [o.nickname, o.id, {"data-content" => "#{owner_image(o, size: 20, show_tooltip: false)} #{o.nickname}"}]}, include_blank: false
+          = f.input :owner_id,
+                    collection: current_user.all_owners.map { |o| [o.nickname, o.id, { "data-content" => "#{owner_image(o, size: 20, show_tooltip: false)} #{o.nickname}" }] },
+                    include_blank: false
 
       .col-sm-6
         = f.input :name do
-          - name_input_field = f.input_field :name, class: "form-control", placeholder:"city_of_sydney_development_applications"
+          - name_input_field = f.input_field :name, class: "form-control", placeholder: "city_of_sydney_development_applications"
           - if current_user.all_owners.count == 1
             = name_input_field
           - else

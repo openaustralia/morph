@@ -6,15 +6,15 @@
         .large-icon-box.pull-right
           - if can? :settings, @scraper
             = link_to settings_scraper_path(@scraper) do
-              = render partial: "scrapers/auto_clock", locals: {scraper: @scraper}
+              = render partial: "scrapers/auto_clock", locals: { scraper: @scraper }
           - else
-            = render partial: "scrapers/auto_clock", locals: {scraper: @scraper}
+            = render partial: "scrapers/auto_clock", locals: { scraper: @scraper }
         .large-icon-box.pull-right
-          = render partial: "scrapers/running_indicator", locals: {scraper: @scraper}
+          = render partial: "scrapers/running_indicator", locals: { scraper: @scraper }
         %h4= @scraper.description
     .col-md-2
       - if signed_in?
-        .button_title_adjust= render partial: "scrapers/watch_button", locals: {scraper: @scraper}
+        .button_title_adjust= render partial: "scrapers/watch_button", locals: { scraper: @scraper }
   %hr
 
   - if @scraper.all_watchers.empty?
