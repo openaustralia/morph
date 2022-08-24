@@ -12,10 +12,6 @@ linters:
   LineLength:
     enabled: false
 
-  # Offense count: 793
-  RuboCop:
-    enabled: false
-
   # Offense count: 2
   InlineStyles:
     exclude:
