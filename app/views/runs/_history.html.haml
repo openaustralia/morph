@@ -19,7 +19,7 @@
       %div
         run time
         - if run.wall_time < 60
-          = format("%.f s", run.wall_time)
+          = format("%.0f s", run.wall_time)
         - else
           = distance_of_time_in_words(run.wall_time)
       %div
