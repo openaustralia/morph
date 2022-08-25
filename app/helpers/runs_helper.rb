@@ -34,14 +34,14 @@ module RunsHelper
 
   sig { params(domain: Domain).returns(String) }
   def scraped_domain_link(domain)
-    link_to h(domain.name), h("http://#{domain.name}"), target: "_blank", rel: "noopener"
+    link_to domain.name, "http://#{domain.name}", target: "_blank", rel: "noopener"
   end
 
   sig { params(scraped_domains: T::Array[Domain], with_links: T::Boolean).returns(String) }
   def scraped_domains_list(scraped_domains, with_links: true)
-    d = scraped_domains.map { |domain| (with_links ? scraped_domain_link(domain) : h(domain.name)) }
+    d = scraped_domains.map { |domain| (with_links ? scraped_domain_link(domain) : domain.name) }
     # If there are more than 3 in the list then summarise
-    summary_of_array(d, "other domain".html_safe).to_sentence.html_safe
+    to_sentence(summary_of_array(d, "other domain"))
   end
 
   sig { params(scraped_domains: T::Array[Domain]).returns(String) }
