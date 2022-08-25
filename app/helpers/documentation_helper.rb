@@ -6,6 +6,7 @@ module DocumentationHelper
 
   # For sorbet
   include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::SanitizeHelper
   include ERB::Util
   include StaticHelper
 
@@ -16,9 +17,8 @@ module DocumentationHelper
 
   sig { params(text: String, scraper: Scraper, user: T.nilable(User), query: String).returns(String) }
   def substitute_api_params(text, scraper:, user:, query:)
-    text.sub("[scraper_url]", "#{api_root}<span class='full_name'>#{h(scraper.full_name)}</span>")
-        .sub("[api_key]", "<span class='unescaped-api-key'>#{user ? user.api_key : '[api_key]'}</span>")
-        .sub("[query]", "<span class='unescaped-query'>#{h(query)}</span>")
-        .html_safe
+    sanitize(text.sub("[scraper_url]", "#{api_root}<span class='full_name'>#{h(scraper.full_name)}</span>")
+                 .sub("[api_key]", "<span class='unescaped-api-key'>#{user ? user.api_key : '[api_key]'}</span>")
+                 .sub("[query]", "<span class='unescaped-query'>#{h(query)}</span>"))
   end
 end
