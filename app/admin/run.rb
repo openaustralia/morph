@@ -60,7 +60,7 @@ ActiveAdmin.register Run do
         run.log_lines.order("log_lines.id").each do |line|
           tr do
             td line.stream
-            td h(line.text).gsub("\n", "<br/>").html_safe
+            td sanitize(h(line.text).gsub("\n", "<br/>"))
           end
         end
       end
