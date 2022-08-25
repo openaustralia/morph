@@ -4,6 +4,26 @@
 require "spec_helper"
 
 describe ScrapersHelper do
+  describe "#radio_description2" do
+    context "when repo does not already exists as a scraper" do
+      it do
+        result = helper.radio_description2(full_name: "foo/bar", name: "bar", description: "lovely", url: "https://github.com/foo/bar")
+        expect(result).to eq "<strong>bar</strong> &mdash; lovely (<a target=\"_blank\" rel=\"noopener\" href=\"https://github.com/foo/bar\">on GitHub</a>)"
+        expect(result).to be_html_safe
+      end
+    end
+
+    context "when repo already exists as a scraper" do
+      it do
+        # Adding github_id to avoid validation
+        create(:scraper, full_name: "foo/bar", github_id: 123)
+        result = helper.radio_description2(full_name: "foo/bar", name: "bar", description: "lovely", url: "https://github.com/foo/bar")
+        expect(result).to eq "<p class=\"text-muted\"><strong>bar</strong> &mdash; lovely</p>"
+        expect(result).to be_html_safe
+      end
+    end
+  end
+
   describe "#url?" do
     it { expect(helper.url?("foobar")).to be false }
     it { expect(helper.url?("http://example.com blah")).to be false }
