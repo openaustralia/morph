@@ -18,16 +18,22 @@ module ScrapersHelper
   sig { params(full_name: String, name: String, description: String, url: String).returns(String) }
   def radio_description2(full_name:, name:, description:, url:)
     scraper = Scraper.where(full_name: full_name).first
-    a = content_tag(:strong, name)
-    a += " &mdash; #{description}".html_safe if description.present?
+    a = []
+    a << content_tag(:strong, name)
+    if description.present?
+      a << " &mdash; ".html_safe
+      a << description
+    end
     if scraper
-      content_tag(:p, a, class: "text-muted")
+      content_tag(:p, safe_join(a), class: "text-muted")
     else
-      a += " (".html_safe + link_to("on GitHub", url, target: "_blank", rel: "noopener") + ")".html_safe
-      a
+      link = link_to("on GitHub", url, target: "_blank", rel: "noopener")
+      a << " ("
+      a << link
+      a << ")"
+      safe_join(a)
     end
   end
-
 
   sig { params(scraper: Scraper).returns(String) }
   def full_name_with_links(scraper)
