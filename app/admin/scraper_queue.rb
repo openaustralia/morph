@@ -3,7 +3,11 @@
 
 ActiveAdmin.register_page "Scraper Queue" do
   content do
-    para "Jobs in the #{link_to 'Sidekiq', admin_sidekiq_path} scraper queue.".html_safe
+    para do
+      text_node "Jobs in the"
+      a "Sidekiq", href: admin_sidekiq_path
+      text_node "scraper queue."
+    end
 
     workers = Sidekiq::Workers.new
     active_runs = workers.collect do |_process_id, _thread_id, work|
