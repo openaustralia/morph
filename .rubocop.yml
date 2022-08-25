@@ -346,3 +346,5 @@ RSpec/Capybara/SpecificMatcher: # new in 2.12
   Enabled: true
 RSpec/Rails/HaveHttpStatus: # new in 2.12
   Enabled: true
+Style/MagicCommentFormat: # new in 1.35
+  Enabled: true
