@@ -191,6 +191,10 @@
           vertical-align: middle;
         }
 
+        .center-text {
+          text-align: center;
+        }
+
   %body{ bgcolor: "#f6f6f6" }
     - if @user.never_alerted?
       %table.body-wrap
@@ -216,7 +220,7 @@
           .content
             %table
               %tr
-                %td{ style: "text-align: center" }
+                %td.center-text
                   %h2
                     -# Hacky way to get full url in there
                     = image_tag attachments["logo_75x75.png"].url, size: "75x75"
