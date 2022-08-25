@@ -11,9 +11,3 @@ linters:
   # Offense count: 291
   LineLength:
     enabled: false
-
-  # Offense count: 2
-  InlineStyles:
-    exclude:
-      - "app/views/alert_mailer/alert_email.html.haml"
-      - "app/views/scrapers/_show_forking.html.haml"
