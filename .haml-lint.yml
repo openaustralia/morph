@@ -1,5 +1,3 @@
-inherit_from: .haml-lint_todo.yml
-
 exclude:
   - lib/templates/haml/scaffold/_form.html.haml
   # Exclude vendor to make this work on travis
@@ -15,4 +13,10 @@ linters:
   # This limits the number of lines in a view template and is a little bit arbitrary
   # Maybe reinstate this in the future?
   ViewLength:
+    enabled: false
+
+  # There are a lot of far too long lines in the code and in the view templates
+  # It would be good to address this but I guess it's not super-urgent right now.
+  # So, just disabling for the time being
+  LineLength:
     enabled: false
