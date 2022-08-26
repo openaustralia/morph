@@ -305,7 +305,7 @@ class Scraper < ApplicationRecord
 
   sig { void }
   def update_repo_size
-    update_attribute(:repo_size, Scraper.directory_size(repo_path))
+    update!(repo_size: Scraper.directory_size(repo_path))
   end
 
   sig { returns(String) }
