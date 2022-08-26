@@ -30,7 +30,8 @@ module Morph
         synchronise_repo_ignore_submodules(File.join(repo_path, submodule.path), submodule.url)
       end
       true
-    rescue Rugged::HTTPError
+    rescue Rugged::HTTPError, Rugged::SubmoduleError
+      # TODO: Give the user more detailed feedback about the problem
       # Indicate there was a problem
       false
     end
