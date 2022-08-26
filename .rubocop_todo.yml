@@ -11,11 +11,6 @@
 RSpec/ExampleLength:
   Max: 49
 
-# Offense count: 4
-RSpec/MessageChain:
-  Exclude:
-    - 'spec/controllers/api_controller_spec.rb'
-
 # Offense count: 66
 RSpec/MultipleExpectations:
   Max: 10

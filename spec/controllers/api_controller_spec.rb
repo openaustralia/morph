@@ -104,7 +104,9 @@ describe ApiController do
       allow(Scraper).to receive(:friendly).and_return(friendly)
       allow(friendly).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
       allow(friendly).to receive(:find).with("mlandauer/a_scraper").and_return(scraper)
-      allow(scraper).to receive_message_chain(:database, :sql_query_streaming).and_yield(
+      database = instance_double(Morph::Database)
+      allow(scraper).to receive(:database).and_return(database)
+      allow(database).to receive(:sql_query_streaming).and_yield(
         "title" => "Foo",
         "content" => "Bar",
         "link" => "http://example.com",
