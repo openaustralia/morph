@@ -124,9 +124,8 @@ class ScrapersController < ApplicationController
 
     authorize! :update, scraper
     if scraper.update(scraper_params)
-      flash[:notice] = "Scraper settings successfully updated"
       sync_update scraper
-      redirect_to scraper
+      redirect_to scraper, notice: t(".success")
     else
       render :settings
     end

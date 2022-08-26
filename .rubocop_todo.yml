@@ -33,11 +33,3 @@ RSpec/MultipleMemoizedHelpers:
 # Offense count: 26
 RSpec/NestedGroups:
   Max: 4
-
-# Offense count: 5
-Rails/I18nLocaleTexts:
-  Exclude:
-    - 'app/controllers/scrapers_controller.rb'
-    - 'app/models/scraper.rb'
-    - 'app/models/variable.rb'
-    - 'app/models/webhook.rb'

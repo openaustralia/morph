@@ -6,10 +6,7 @@ class Variable < ApplicationRecord
   extend T::Sig
 
   belongs_to :scraper
-  validates :name, format: {
-    with: /\AMORPH_[A-Z0-9_]+\z/,
-    message: "should look something like MORPH_SEAGULL"
-  }
+  validates :name, format: { with: /\AMORPH_[A-Z0-9_]+\z/ }
   validates :value, presence: true
 
   # Given an array of Variable objects returns a hash of names and values

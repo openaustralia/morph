@@ -32,13 +32,8 @@ class Scraper < ApplicationRecord
 
   has_many :api_queries, dependent: :delete_all
 
-  validates :name, presence: true, format: {
-    with: /\A[a-zA-Z0-9_-]+\z/,
-    message: "can only have letters, numbers, '_' and '-'"
-  }
-  validates :name, uniqueness: {
-    scope: :owner, message: "is already taken on morph.io"
-  }
+  validates :name, presence: true, format: { with: /\A[a-zA-Z0-9_-]+\z/ }
+  validates :name, uniqueness: { scope: :owner }
   validate :not_used_on_github, on: :create, if: proc { |s| s.github_id.blank? && s.name.present? }
 
   extend FriendlyId

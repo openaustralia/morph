@@ -30,4 +30,17 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  scrapers:
+    update:
+      success: "Scraper settings successfully updated"
+
+  activerecord:
+    errors:
+      models:
+        webhook:
+          taken: "already another webhook with this URL"
+        variable:
+          invalid: "should look something like MORPH_SEAGULL"
+        scraper:
+          taken: "is already taken on morph.io"
+          invalid: "can only have letters, numbers, '_' and '-'"
