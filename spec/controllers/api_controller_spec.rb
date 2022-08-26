@@ -125,6 +125,14 @@ describe ApiController do
     end
 
     context "when user not signed in and no key provided" do
+      it "returns a 404 for a scraper that doesn't exist" do
+        get :data, params: { id: "mlandauer/not_exist", format: :json }
+        expect(response.code).to eq "404"
+        expect(JSON.parse(response.body))
+          .to eq "error" => "can't find scraper mlandauer/not_exist"
+        expect(response.content_type).to eq "application/json"
+      end
+
       it "returns an error in json" do
         get :data, params: { id: "mlandauer/a_scraper", format: :json }
         expect(response.code).to eq "401"

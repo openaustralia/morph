@@ -42,7 +42,13 @@ class ApiController < ApplicationController
 
   sig { void }
   def data
-    scraper = T.let(Scraper.friendly.find(params[:id]), Scraper)
+    begin
+      scraper = T.let(Scraper.friendly.find(params[:id]), Scraper)
+    rescue ActiveRecord::RecordNotFound
+      render_error "can't find scraper #{params[:id]}", 404
+      return
+    end
+
     @scraper = T.let(scraper, T.nilable(Scraper))
 
     # response.stream.write('Hello!')
