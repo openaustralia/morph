@@ -86,9 +86,7 @@ describe ApiController do
   describe "#data" do
     let(:user) { create(:user, nickname: "mlandauer") }
 
-    render_views
-
-    before do
+    let(:scraper) do
       VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
         # Freezing time so that the updated time of the scraper is set to a
         # consistent time. Makes a later test easier to handle
@@ -97,31 +95,21 @@ describe ApiController do
                          full_name: "mlandauer/a_scraper")
         end
       end
+    end
 
-      allow_any_instance_of(Scraper)
-        .to receive_message_chain(:database, :sql_query) do
-        [
-          {
-            "title" => "Foo",
-            "content" => "Bar",
-            "link" => "http://example.com",
-            "date" => "2013-01-01"
-          }
-        ]
-      end
-      allow_any_instance_of(Scraper)
-        .to receive_message_chain(:database, :sql_query_streaming).and_yield(
-          "title" => "Foo",
-          "content" => "Bar",
-          "link" => "http://example.com",
-          "date" => "2013-01-01"
-        )
-      allow_any_instance_of(Scraper)
-        .to receive_message_chain(:database, :sqlite_db_path)
-        .and_return("/path/to/db.sqlite")
-      allow_any_instance_of(Scraper)
-        .to receive_message_chain(:database, :sqlite_db_size)
-        .and_return(12)
+    render_views
+
+    before do
+      friendly = class_double(Scraper)
+      allow(Scraper).to receive(:friendly).and_return(friendly)
+      allow(friendly).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+      allow(friendly).to receive(:find).with("mlandauer/a_scraper").and_return(scraper)
+      allow(scraper).to receive_message_chain(:database, :sql_query_streaming).and_yield(
+        "title" => "Foo",
+        "content" => "Bar",
+        "link" => "http://example.com",
+        "date" => "2013-01-01"
+      )
     end
 
     context "when user not signed in and no key provided" do
