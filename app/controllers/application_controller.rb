@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Handle omniauth failure. See https://github.com/plataformatec/devise/wiki/OmniAuth%3A-Overview#using-omniauth-without-other-authentications
-  sig { params(_scope: T.untyped).void }
+  sig { params(_scope: T.untyped).returns(String) }
   def new_session_path(_scope)
     new_user_session_path
   end
