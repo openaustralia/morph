@@ -210,8 +210,12 @@
 
 # Dependencies required by GitHub markup gem. See
 # https://github.com/github/markup#markups
-- name: Install dependency for restructured text support
-  pip: name=docutils state=present
+# We're using version 0.18 of docutils because we're on python 3.5.2
+- name: Install dependency for restructured text support (python 3)
+  pip:
+    virtualenv_python: python3
+    name: docutils==0.18
+    state: present
 
 - name: Install dependency for rugged gem
   apt:
