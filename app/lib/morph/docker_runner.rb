@@ -27,6 +27,8 @@ module Morph
     DOCKER_BRIDGE = "morph"
     DOCKER_NETWORK_SUBNET = "192.168.0.0/16"
 
+    class LongRunningScraper < StandardError; end
+
     sig { returns(String) }
     def self.time_file
       "/app/time.output"
@@ -187,6 +189,12 @@ module Morph
           end
         end
       end
+    rescue Docker::Error::TimeoutError
+      # We get this when we attach to a container and it doesn't produce any output for a while. It's
+      # an entirely expected consequence of the way we're doing things. We do want to raise an exception
+      # because we want the background queue to automatically restart the job. To make it clear that this
+      # is a special exception we will re-raise it under a different name
+      raise LongRunningScraper
     end
 
     # This should only get called on a stopped container where all the logs
