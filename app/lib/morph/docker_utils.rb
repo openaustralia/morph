@@ -161,31 +161,40 @@ module Morph
       Docker::Container.all
     end
 
+    sig { params(chunk: String).returns(T::Array[String]) }
+    def self.process_json_stream_chunk(chunk)
+      buffer = +""
+      result = []
+      # Sometimes a chunk contains multiple lines of json
+      chunk.split("\n").each do |line|
+        parsed_line = JSON.parse(line)
+        next unless parsed_line.key?("stream")
+
+        buffer << parsed_line["stream"]
+        # Buffer output until an end-of-line is detected. This
+        # makes line output more consistent across platforms.
+        # Make sure that buffer can't grow out of control by limiting
+        # it's size around 256 bytes
+        if buffer[-1..-1] == "\n" || buffer.length >= 256
+          result << buffer
+          buffer = +""
+        end
+      end
+      result << buffer if buffer != ""
+      result
+    end
+
     sig { params(dir: String, connection_options: T::Hash[Symbol, Integer], block: T.proc.params(text: String).void).returns(T.nilable(Docker::Image)) }
     def self.docker_build_from_dir(dir, connection_options, &block)
       # How does this connection get closed?
       connection = docker_connection(connection_options)
       temp = create_tar_file(dir)
-      buffer = +""
       Docker::Image.build_from_tar(
         temp, { "forcerm" => 1 }, connection
       ) do |chunk|
-        # Sometimes a chunk contains multiple lines of json
-        chunk.split("\n").each do |line|
-          parsed_line = JSON.parse(line)
-          next unless parsed_line.key?("stream")
-
-          buffer << parsed_line["stream"]
-          # Buffer output until an end-of-line is detected. This
-          # makes line output more consistent across platforms.
-          # Make sure that buffer can't grow out of control by limiting
-          # it's size around 256 bytes
-          if buffer[-1..-1] == "\n" || buffer.length >= 256
-            block.call buffer
-            buffer = +""
-          end
+        process_json_stream_chunk(chunk).each do |text|
+          block.call(text)
         end
-        block.call buffer if buffer != ""
       end
     # This exception gets thrown if there is an error during the build (for
     # example if the compile fails). In this case we just want to return nil
