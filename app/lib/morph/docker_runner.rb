@@ -44,6 +44,12 @@ module Morph
       Morph::DockerUtils.get_or_pull_image("#{BUILDSTEP_IMAGE}:#{platform}")
     end
 
+    # Pulls all the separately tagged buildstep images
+    sig { void }
+    def self.update_docker_images!
+      Morph::DockerUtils.pull_docker_image(BUILDSTEP_IMAGE)
+    end
+
     # "memory" is the memory limit applied to running container (in bytes). If nil uses the default (set in default_memory_limit)
     sig do
       params(repo_path: String, env_variables: T::Hash[String, String], container_labels: T::Hash[String, String],
@@ -245,12 +251,6 @@ module Morph
                                File.join(dest, entry))
         end
       end
-    end
-
-    # Pulls all the separately tagged buildstep images
-    sig { void }
-    def self.update_docker_images!
-      Morph::DockerUtils.pull_docker_image(BUILDSTEP_IMAGE)
     end
 
     sig { params(image: Docker::Image, commands: T::Array[String], dir: String, block: T.proc.params(text: String).void).returns(T.nilable(Docker::Image)) }

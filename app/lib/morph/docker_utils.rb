@@ -15,6 +15,20 @@ module Morph
       end
     end
 
+    # If image is present locally use that. If it isn't then pull it from
+    # the hub. This makes initial setup easier
+    sig { params(name: String).returns(Docker::Image) }
+    def self.get_or_pull_image(name)
+      Docker::Image.get(name)
+    rescue Docker::Error::NotFoundError
+      Docker::Image.create("fromImage" => name) do |chunk|
+        chunk.split("\n").each do |c|
+          data = JSON.parse(c)
+          Rails.logger.info "#{data['status']} #{data['id']} #{data['progress']}\n"
+        end
+      end
+    end
+
     # Returns temporary file which it is your responsibility
     # to remove after you're done with it
     sig { params(directory: String).returns(Tempfile) }
@@ -51,20 +65,6 @@ module Morph
       tmp.close
       extract_tar_file(T.must(tmp.path), directory)
       tmp.unlink
-    end
-
-    # If image is present locally use that. If it isn't then pull it from
-    # the hub. This makes initial setup easier
-    sig { params(name: String).returns(Docker::Image) }
-    def self.get_or_pull_image(name)
-      Docker::Image.get(name)
-    rescue Docker::Error::NotFoundError
-      Docker::Image.create("fromImage" => name) do |chunk|
-        chunk.split("\n").each do |c|
-          data = JSON.parse(c)
-          Rails.logger.info "#{data['status']} #{data['id']} #{data['progress']}\n"
-        end
-      end
     end
 
     sig { params(container: Docker::Container, label_key: String).returns(T.nilable(String)) }
