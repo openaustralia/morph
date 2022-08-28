@@ -7,11 +7,13 @@ module Morph
   class DockerUtils
     extend T::Sig
 
-    sig { params(image: String).returns(Docker::Image) }
-    def self.pull_docker_image(image)
-      Docker::Image.create("fromImage" => image) do |chunk|
-        data = JSON.parse(chunk)
-        Rails.logger.info "#{data['status']} #{data['id']} #{data['progress']}"
+    sig { params(name: String).returns(Docker::Image) }
+    def self.pull_docker_image(name)
+      Docker::Image.create("fromImage" => name) do |chunk|
+        chunk.split("\n").each do |c|
+          data = JSON.parse(c)
+          Rails.logger.info "#{data['status']} #{data['id']} #{data['progress']}"
+        end
       end
     end
 
@@ -21,12 +23,7 @@ module Morph
     def self.get_or_pull_image(name)
       Docker::Image.get(name)
     rescue Docker::Error::NotFoundError
-      Docker::Image.create("fromImage" => name) do |chunk|
-        chunk.split("\n").each do |c|
-          data = JSON.parse(c)
-          Rails.logger.info "#{data['status']} #{data['id']} #{data['progress']}\n"
-        end
-      end
+      pull_docker_image(name)
     end
 
     # Returns temporary file which it is your responsibility
