@@ -267,7 +267,8 @@ module Morph
           # We don't want to show the standard docker build output
           unless c =~ %r{^Step \d+/\d+ :} || c =~ /^ ---> / ||
                  c =~ /^Removing intermediate container / ||
-                 c =~ /^Successfully built /
+                 c =~ /^Successfully built / ||
+                 c == "\n"
             block.call c
           end
         end
