@@ -163,6 +163,8 @@ module Morph
 
     sig { params(chunk: String).returns(T::Array[String]) }
     def self.process_json_stream_chunk(chunk)
+      raise "Expected chunk to end in a carriage return" unless chunk[-1..-1] == "\n"
+
       buffer = +""
       result = []
       # Sometimes a chunk contains multiple lines of json
