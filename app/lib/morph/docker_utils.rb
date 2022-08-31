@@ -161,7 +161,7 @@ module Morph
       Docker::Container.all
     end
 
-    sig { params(chunk: String).returns(T::Array[String]) }
+    sig { params(chunk: String).returns([T::Array[String], String]) }
     def self.process_json_stream_chunk(chunk)
       raise "Expected chunk to end in a carriage return" unless chunk[-1..-1] == "\n"
 
@@ -183,7 +183,7 @@ module Morph
         end
       end
       result << buffer if buffer != ""
-      result
+      [result, ""]
     end
 
     sig { params(dir: String, connection_options: T::Hash[Symbol, Integer], block: T.proc.params(text: String).void).returns(T.nilable(Docker::Image)) }
@@ -191,10 +191,13 @@ module Morph
       # How does this connection get closed?
       connection = docker_connection(connection_options)
       temp = create_tar_file(dir)
+      buffer = +""
       Docker::Image.build_from_tar(
         temp, { "forcerm" => 1 }, connection
       ) do |chunk|
-        process_json_stream_chunk(chunk).each do |text|
+        buffer += chunk
+        texts, buffer = process_json_stream_chunk(buffer)
+        texts.each do |text|
           block.call(text)
         end
       end

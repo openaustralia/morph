@@ -140,23 +140,23 @@ describe Morph::DockerUtils do
 
   describe ".process_json_stream_chunk" do
     it "parses a single line of json" do
-      expect(described_class.process_json_stream_chunk(%({"stream": "foo\\n"}\n))).to eq %W[foo\n]
+      expect(described_class.process_json_stream_chunk(%({"stream": "foo\\n"}\n))).to eq [%W[foo\n], ""]
     end
 
     it "ignores a json line if it's not a stream" do
-      expect(described_class.process_json_stream_chunk(%({"foo": "bar\\n"}\n))).to eq []
+      expect(described_class.process_json_stream_chunk(%({"foo": "bar\\n"}\n))).to eq [[], ""]
     end
 
     it "handles one chunk containing multiple json lines" do
-      expect(described_class.process_json_stream_chunk(%({"stream": "foo\\n"}\n{"stream": "bar\\n"}\n))).to eq %W[foo\n bar\n]
+      expect(described_class.process_json_stream_chunk(%({"stream": "foo\\n"}\n{"stream": "bar\\n"}\n))).to eq [%W[foo\n bar\n], ""]
     end
 
     it "buffers the output until there is a carriage returns at the end" do
-      expect(described_class.process_json_stream_chunk(%({"stream": "foo"}\n{"stream": "bar\\n"}\n{"stream": "twist\\n"}\n))).to eq %W[foobar\n twist\n]
+      expect(described_class.process_json_stream_chunk(%({"stream": "foo"}\n{"stream": "bar\\n"}\n{"stream": "twist\\n"}\n))).to eq [%W[foobar\n twist\n], ""]
     end
 
     it "returns the output even if there isn't a carriage return at the end" do
-      expect(described_class.process_json_stream_chunk(%({"stream": "foo"}\n{"stream": "bar"}\n{"stream": "twist"}\n))).to eq %w[foobartwist]
+      expect(described_class.process_json_stream_chunk(%({"stream": "foo"}\n{"stream": "bar"}\n{"stream": "twist"}\n))).to eq [%w[foobartwist], ""]
     end
   end
 end
