@@ -158,5 +158,9 @@ describe Morph::DockerUtils do
     it "returns the output even if there isn't a carriage return at the end" do
       expect(described_class.process_json_stream_chunk(%({"stream": "foo"}\n{"stream": "bar"}\n{"stream": "twist"}\n))).to eq [%w[foobartwist], ""]
     end
+
+    it "buffers the chunk if it doesn't end in a carriage return" do
+      expect(described_class.process_json_stream_chunk(%({"stream": "fo))).to eq [%w[], %({"stream": "fo)]
+    end
   end
 end
