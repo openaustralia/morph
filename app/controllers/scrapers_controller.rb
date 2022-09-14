@@ -5,25 +5,22 @@ class ScrapersController < ApplicationController
   extend T::Sig
 
   before_action :authenticate_user!, except: %i[
-    index show data watchers history
+    index show watchers history
   ]
   before_action :load_resource, only: %i[
-    settings show destroy update run stop clear data watch
+    settings show destroy update run stop clear watch
     watchers history
   ]
 
   # All methods
   # :settings, :index, :new, :create, :github, :github_form, :create_github,
   # :show, :destroy, :update, :run, :stop,
-  # :clear, :data, :watch, :watchers, :history, :running
+  # :clear, :watch, :watchers, :history, :running
 
   sig { void }
   def settings
     authorize! :settings, @scraper
   end
-
-  sig { void }
-  def data; end
 
   sig { void }
   def index
