@@ -32,6 +32,7 @@ describe "User" do
       it { is_expected.not_to be_able_to(:github, Scraper) }
       it { is_expected.not_to be_able_to(:github_form, Scraper) }
       it { is_expected.not_to be_able_to(:create_github, Scraper) }
+      it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
 
       it { is_expected.not_to be_able_to(:settings, scraper) }
       it { is_expected.not_to be_able_to(:destroy, scraper) }
@@ -67,7 +68,7 @@ describe "User" do
       # SiteSetting
       # Can not
       it { is_expected.not_to be_able_to(:toggle_read_only_mode, SiteSetting) }
-      it { is_expected.not_to be_able_to(:update_maximum_concurrent_scrapers, SiteSetting) }
+      it { is_expected.not_to be_able_to(:update_sidekiq_maximum_concurrent_scrapers, SiteSetting) }
 
       # Run
       it { is_expected.not_to be_able_to(:create, Run) }
@@ -91,6 +92,7 @@ describe "User" do
       it { is_expected.to be_able_to(:watch, scraper) }
 
       # Can not
+      it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
       it { is_expected.not_to be_able_to(:settings, scraper) }
       it { is_expected.not_to be_able_to(:destroy, scraper) }
       it { is_expected.not_to be_able_to(:update, scraper) }
@@ -171,6 +173,17 @@ describe "User" do
 
       # Run
       it { is_expected.to be_able_to(:create, Run) }
+    end
+
+    context "when an admin" do
+      let(:user) { create(:user, admin: true) }
+
+      # Just checking for extra permissions an admin is expected to have
+      it { is_expected.to be_able_to(:settings, organization) }
+      it { is_expected.to be_able_to(:settings, other_user) }
+      it { is_expected.to be_able_to(:memory_setting, Scraper) }
+      it { is_expected.to be_able_to(:toggle_read_only_mode, SiteSetting) }
+      it { is_expected.to be_able_to(:update_sidekiq_maximum_concurrent_scrapers, SiteSetting) }
     end
   end
 end

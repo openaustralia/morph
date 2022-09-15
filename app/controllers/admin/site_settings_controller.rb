@@ -17,6 +17,7 @@ module Admin
     def update_maximum_concurrent_scrapers
       params_maximum_concurrent_scrapers = T.cast(params[:maximum_concurrent_scrapers], T.any(String, Numeric))
 
+      # TODO: Rename this in CanCanCan to match action name
       authorize! :update_sidekiq_maximum_concurrent_scrapers, SiteSetting
       SiteSetting.maximum_concurrent_scrapers = params_maximum_concurrent_scrapers.to_i
       flash[:notice] = "Updated maximum concurrent scrapers to #{SiteSetting.maximum_concurrent_scrapers}"
