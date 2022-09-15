@@ -20,7 +20,7 @@ describe "User" do
 
       # Can
       it { is_expected.to be_able_to(:index, Scraper) }
-      pending { is_expected.to be_able_to(:running, Scraper) }
+      it { is_expected.to be_able_to(:running, Scraper) }
       it { is_expected.to be_able_to(:show, scraper) }
       it { is_expected.to be_able_to(:watchers, scraper) }
       pending { is_expected.to be_able_to(:history, scraper) }

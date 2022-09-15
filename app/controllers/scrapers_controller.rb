@@ -5,7 +5,7 @@ class ScrapersController < ApplicationController
   extend T::Sig
 
   before_action :authenticate_user!, except: %i[
-    index show watchers history
+    index show watchers history running
   ]
   before_action :load_resource, only: %i[
     settings show destroy update run stop clear watch
@@ -180,6 +180,7 @@ class ScrapersController < ApplicationController
 
   sig { void }
   def running
+    authorize! :running, Scraper
     @scrapers = T.let(Scraper.running, T.nilable(T::Array[Scraper]))
   end
 

@@ -37,7 +37,7 @@ class Ability
     end
 
     # Everyone can list all the scrapers
-    can %i[index show watchers], Scraper
+    can %i[index show watchers running], Scraper
     # TODO: Don't like the use of persisted? here. Refactor.
     can %i[new github], Scraper unless !user.persisted? || SiteSetting.read_only_mode
 
