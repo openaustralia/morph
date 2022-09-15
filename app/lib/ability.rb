@@ -66,7 +66,7 @@ class Ability
     can %i[index watching], User
     can :stats, User
     can :toggle_read_only_mode, SiteSetting if user.admin?
-    can :update_sidekiq_maximum_concurrent_scrapers, SiteSetting if user.admin?
+    can :update_maximum_concurrent_scrapers, SiteSetting if user.admin?
 
     can :create, Run unless !user.persisted? || SiteSetting.read_only_mode
   end

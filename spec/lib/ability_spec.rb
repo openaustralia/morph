@@ -68,7 +68,7 @@ describe "User" do
       # SiteSetting
       # Can not
       it { is_expected.not_to be_able_to(:toggle_read_only_mode, SiteSetting) }
-      it { is_expected.not_to be_able_to(:update_sidekiq_maximum_concurrent_scrapers, SiteSetting) }
+      it { is_expected.not_to be_able_to(:update_maximum_concurrent_scrapers, SiteSetting) }
 
       # Run
       it { is_expected.not_to be_able_to(:create, Run) }
@@ -183,7 +183,7 @@ describe "User" do
       it { is_expected.to be_able_to(:settings, other_user) }
       it { is_expected.to be_able_to(:memory_setting, Scraper) }
       it { is_expected.to be_able_to(:toggle_read_only_mode, SiteSetting) }
-      it { is_expected.to be_able_to(:update_sidekiq_maximum_concurrent_scrapers, SiteSetting) }
+      it { is_expected.to be_able_to(:update_maximum_concurrent_scrapers, SiteSetting) }
     end
   end
 end
