@@ -131,10 +131,10 @@ describe "User" do
       # Can
       it { is_expected.to be_able_to(:show, organization) }
       it { is_expected.to be_able_to(:watch, organization) }
+      it { is_expected.to be_able_to(:settings_redirect, organization) }
 
       # Can not
       it { is_expected.not_to be_able_to(:settings, organization) }
-      it { is_expected.not_to be_able_to(:settings_redirect, organization) }
       it { is_expected.not_to be_able_to(:reset_key, organization) }
 
       context "when the organization has the user as a member" do
@@ -147,7 +147,7 @@ describe "User" do
         it { is_expected.to be_able_to(:show, organization) }
         it { is_expected.to be_able_to(:watch, organization) }
         it { is_expected.to be_able_to(:settings, organization) }
-        pending { is_expected.to be_able_to(:settings_redirect, Organization) }
+        it { is_expected.to be_able_to(:settings_redirect, Organization) }
         it { is_expected.to be_able_to(:reset_key, organization) }
       end
 
@@ -157,7 +157,7 @@ describe "User" do
       it { is_expected.to be_able_to(:stats, User) }
       it { is_expected.to be_able_to(:watching, other_user) }
       it { is_expected.to be_able_to(:show, other_user) }
-      pending { is_expected.to be_able_to(:settings_redirect, User) }
+      it { is_expected.to be_able_to(:settings_redirect, User) }
       it { is_expected.to be_able_to(:watch, other_user) }
 
       # Can not

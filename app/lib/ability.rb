@@ -43,6 +43,7 @@ class Ability
 
     # You can look at your own settings
     can :settings, Owner, id: user.id
+    can :settings_redirect, Owner if user.persisted?
     can :reset_key, Owner, id: user.id unless SiteSetting.read_only_mode
 
     # user should be able to see settings for an org they're part of
