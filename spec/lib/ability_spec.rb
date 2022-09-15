@@ -20,17 +20,17 @@ describe "User" do
 
       # Can
       it { is_expected.to be_able_to(:index, Scraper) }
-      it { is_expected.to be_able_to(:new, Scraper) }
       pending { is_expected.to be_able_to(:running, Scraper) }
       it { is_expected.to be_able_to(:show, scraper) }
       it { is_expected.to be_able_to(:watchers, scraper) }
       pending { is_expected.to be_able_to(:history, scraper) }
 
       # Can not
-      pending { is_expected.not_to be_able_to(:create, Scraper) }
-      pending { is_expected.not_to be_able_to(:github, Scraper) }
+      it { is_expected.not_to be_able_to(:new, Scraper) }
+      it { is_expected.not_to be_able_to(:create, Scraper) }
+      it { is_expected.not_to be_able_to(:github, Scraper) }
       it { is_expected.not_to be_able_to(:github_form, Scraper) }
-      pending { is_expected.not_to be_able_to(:create_github, Scraper) }
+      it { is_expected.not_to be_able_to(:create_github, Scraper) }
 
       it { is_expected.not_to be_able_to(:settings, scraper) }
       it { is_expected.not_to be_able_to(:destroy, scraper) }

@@ -16,7 +16,8 @@ class Ability
       # Admins also have the special power to update the memory setting and increase the memory available to the scraper
       can :memory_setting, Scraper
     end
-    unless SiteSetting.read_only_mode
+    # TODO: Don't like the use of persisted? here. Refactor.
+    unless !user.persisted? || SiteSetting.read_only_mode
       can %i[destroy update run stop clear create create_github],
           Scraper,
           owner_id: user.id
@@ -37,7 +38,8 @@ class Ability
 
     # Everyone can list all the scrapers
     can %i[index show watchers], Scraper
-    can %i[new github], Scraper unless SiteSetting.read_only_mode
+    # TODO: Don't like the use of persisted? here. Refactor.
+    can %i[new github], Scraper unless !user.persisted? || SiteSetting.read_only_mode
 
     # You can look at your own settings
     can :settings, Owner, id: user.id
