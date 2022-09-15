@@ -16,14 +16,12 @@ describe "User" do
     end
 
     context "when an unauthenticated user" do
-      # TODO: Fix things so that the pending tests pass
-
       # Can
       it { is_expected.to be_able_to(:index, Scraper) }
       it { is_expected.to be_able_to(:running, Scraper) }
       it { is_expected.to be_able_to(:show, scraper) }
       it { is_expected.to be_able_to(:watchers, scraper) }
-      pending { is_expected.to be_able_to(:history, scraper) }
+      it { is_expected.to be_able_to(:history, scraper) }
 
       # Can not
       it { is_expected.not_to be_able_to(:new, Scraper) }

@@ -176,7 +176,9 @@ class ScrapersController < ApplicationController
   end
 
   sig { void }
-  def history; end
+  def history
+    authorize! :history, @scraper
+  end
 
   sig { void }
   def running
