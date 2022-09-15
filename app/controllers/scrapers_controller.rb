@@ -71,6 +71,7 @@ class ScrapersController < ApplicationController
   # For rendering ajax partial in github action
   sig { void }
   def github_form
+    authorize! :github_form, Scraper
     @scraper = Scraper.new
     render partial: "github_form", locals: { scraper: @scraper, owner: Owner.find(params[:id]) }
   end

@@ -86,7 +86,7 @@ describe "User" do
       it { is_expected.to be_able_to(:new, Scraper) }
       it { is_expected.to be_able_to(:create, Scraper) }
       it { is_expected.to be_able_to(:github, Scraper) }
-      pending { is_expected.to be_able_to(:github_form, Scraper) }
+      it { is_expected.to be_able_to(:github_form, Scraper) }
       it { is_expected.to be_able_to(:create_github, Scraper) }
 
       # Can not
