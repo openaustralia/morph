@@ -15,4 +15,9 @@ FactoryBot.define do
   end
 
   factory :organization
+
+  factory :organizations_user do
+    user
+    organization
+  end
 end
