@@ -184,6 +184,65 @@ describe "User" do
       it { is_expected.to be_able_to(:memory_setting, Scraper) }
       it { is_expected.to be_able_to(:toggle_read_only_mode, SiteSetting) }
       it { is_expected.to be_able_to(:update_maximum_concurrent_scrapers, SiteSetting) }
+
+      context "when the site is in read-only mode" do
+        before do
+          SiteSetting.read_only_mode = true
+        end
+
+        it { is_expected.not_to be_able_to(:new, Scraper) }
+        it { is_expected.not_to be_able_to(:create, Scraper) }
+        it { is_expected.not_to be_able_to(:github, Scraper) }
+        it { is_expected.not_to be_able_to(:github_form, Scraper) }
+        it { is_expected.not_to be_able_to(:create_github, Scraper) }
+        it { is_expected.not_to be_able_to(:watch, scraper) }
+
+        context "when scraper is owner by the user" do
+          before do
+            scraper.update(owner: user)
+          end
+
+          it { is_expected.not_to be_able_to(:destroy, scraper) }
+          it { is_expected.not_to be_able_to(:update, scraper) }
+          it { is_expected.not_to be_able_to(:run, scraper) }
+          it { is_expected.not_to be_able_to(:stop, scraper) }
+          it { is_expected.not_to be_able_to(:clear, scraper) }
+          it { is_expected.not_to be_able_to(:watch, scraper) }
+        end
+
+        context "when scraper is owned by an organization the user is a member of" do
+          before do
+            scraper.update(owner: organization)
+            create(:organizations_user, organization: organization, user: user)
+          end
+
+          it { is_expected.not_to be_able_to(:destroy, scraper) }
+          it { is_expected.not_to be_able_to(:update, scraper) }
+          it { is_expected.not_to be_able_to(:run, scraper) }
+          it { is_expected.not_to be_able_to(:stop, scraper) }
+          it { is_expected.not_to be_able_to(:clear, scraper) }
+          it { is_expected.not_to be_able_to(:watch, scraper) }
+        end
+
+        # Organization
+        it { is_expected.not_to be_able_to(:watch, organization) }
+
+        context "when the organization has the user as a member" do
+          before do
+            create(:organizations_user, organization: organization, user: user)
+          end
+
+          # Organization
+          it { is_expected.not_to be_able_to(:watch, organization) }
+          it { is_expected.not_to be_able_to(:reset_key, organization) }
+        end
+
+        # User
+        it { is_expected.not_to be_able_to(:watch, other_user) }
+
+        # Run
+        it { is_expected.not_to be_able_to(:create, Run) }
+      end
     end
   end
 end
