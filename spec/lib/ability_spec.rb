@@ -88,6 +88,7 @@ describe "User" do
       it { is_expected.to be_able_to(:github, Scraper) }
       it { is_expected.to be_able_to(:github_form, Scraper) }
       it { is_expected.to be_able_to(:create_github, Scraper) }
+      it { is_expected.to be_able_to(:watch, scraper) }
 
       # Can not
       it { is_expected.not_to be_able_to(:settings, scraper) }
@@ -96,7 +97,6 @@ describe "User" do
       it { is_expected.not_to be_able_to(:run, scraper) }
       it { is_expected.not_to be_able_to(:stop, scraper) }
       it { is_expected.not_to be_able_to(:clear, scraper) }
-      it { is_expected.not_to be_able_to(:watch, scraper) }
 
       context "when scraper is owner by the user" do
         before do
@@ -109,7 +109,7 @@ describe "User" do
         it { is_expected.to be_able_to(:run, scraper) }
         it { is_expected.to be_able_to(:stop, scraper) }
         it { is_expected.to be_able_to(:clear, scraper) }
-        it { is_expected.not_to be_able_to(:watch, scraper) }
+        it { is_expected.to be_able_to(:watch, scraper) }
       end
 
       context "when scraper is owned by an organization the user is a member of" do
@@ -124,7 +124,7 @@ describe "User" do
         it { is_expected.to be_able_to(:run, scraper) }
         it { is_expected.to be_able_to(:stop, scraper) }
         it { is_expected.to be_able_to(:clear, scraper) }
-        it { is_expected.not_to be_able_to(:watch, scraper) }
+        it { is_expected.to be_able_to(:watch, scraper) }
       end
 
       # Organization

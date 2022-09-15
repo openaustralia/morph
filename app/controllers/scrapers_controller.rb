@@ -164,6 +164,7 @@ class ScrapersController < ApplicationController
   # Toggle whether we're watching this scraper
   sig { void }
   def watch
+    authorize! :watch, @scraper
     scraper = T.must(@scraper)
     authenticated_user = T.must(current_user)
 

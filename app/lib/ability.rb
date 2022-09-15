@@ -39,7 +39,7 @@ class Ability
     # Everyone can list all the scrapers
     can %i[index show watchers running history], Scraper
     # TODO: Don't like the use of persisted? here. Refactor.
-    can %i[new github github_form], Scraper unless !user.persisted? || SiteSetting.read_only_mode
+    can %i[new github github_form watch], Scraper unless !user.persisted? || SiteSetting.read_only_mode
 
     # You can look at your own settings
     can :settings, Owner, id: user.id
