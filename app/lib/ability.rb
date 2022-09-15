@@ -67,6 +67,6 @@ class Ability
     can :toggle_read_only_mode, SiteSetting if user.admin?
     can :update_sidekiq_maximum_concurrent_scrapers, SiteSetting if user.admin?
 
-    can :create, Run unless SiteSetting.read_only_mode
+    can :create, Run unless !user.persisted? || SiteSetting.read_only_mode
   end
 end

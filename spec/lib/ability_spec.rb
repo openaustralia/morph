@@ -63,6 +63,14 @@ describe "User" do
       it { is_expected.not_to be_able_to(:settings_redirect, other_user) }
       it { is_expected.not_to be_able_to(:reset_key, other_user) }
       it { is_expected.not_to be_able_to(:watch, other_user) }
+
+      # SiteSetting
+      # Can not
+      it { is_expected.not_to be_able_to(:toggle_read_only_mode, SiteSetting) }
+      it { is_expected.not_to be_able_to(:update_maximum_concurrent_scrapers, SiteSetting) }
+
+      # Run
+      it { is_expected.not_to be_able_to(:create, Run) }
     end
   end
 end
