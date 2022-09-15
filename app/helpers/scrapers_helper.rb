@@ -15,7 +15,7 @@ module ScrapersHelper
     radio_description2(full_name: repo.full_name, name: repo.name, description: repo.description, url: repo.rels[:html].href)
   end
 
-  sig { params(full_name: String, name: String, description: String, url: String).returns(String) }
+  sig { params(full_name: String, name: String, description: T.nilable(String), url: String).returns(String) }
   def radio_description2(full_name:, name:, description:, url:)
     scraper = Scraper.where(full_name: full_name).first
     a = []
