@@ -58,7 +58,8 @@ class Ability
 
     # Everyone can show and watch anyone
     can :show, Owner
-    can :watch, Owner unless SiteSetting.read_only_mode
+    # TODO: Don't like the use of persisted? here. Refactor.
+    can :watch, Owner unless !user.persisted? || SiteSetting.read_only_mode
 
     # Everybody can look at all the users and see who they are watching
     can %i[index watching], User

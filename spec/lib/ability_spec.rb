@@ -14,8 +14,11 @@ describe "User" do
         create(:scraper)
       end
     end
+    let(:organization) { create(:organization) }
+    let(:other_user) { create(:user) }
 
     context "when an unauthenticated user" do
+      # Scraper
       # Can
       it { is_expected.to be_able_to(:index, Scraper) }
       it { is_expected.to be_able_to(:running, Scraper) }
@@ -37,6 +40,26 @@ describe "User" do
       it { is_expected.not_to be_able_to(:stop, scraper) }
       it { is_expected.not_to be_able_to(:clear, scraper) }
       it { is_expected.not_to be_able_to(:watch, scraper) }
+
+      # Organization
+      # Can
+      it { is_expected.to be_able_to(:show, organization) }
+
+      # Can not
+      it { is_expected.not_to be_able_to(:settings, organization) }
+      it { is_expected.not_to be_able_to(:settings_redirect, organization) }
+      it { is_expected.not_to be_able_to(:reset_key, organization) }
+      it { is_expected.not_to be_able_to(:watch, organization) }
+
+      # User
+      # Can
+      it { is_expected.to be_able_to(:show, other_user) }
+
+      # Can not
+      it { is_expected.not_to be_able_to(:settings, other_user) }
+      it { is_expected.not_to be_able_to(:settings_redirect, other_user) }
+      it { is_expected.not_to be_able_to(:reset_key, other_user) }
+      it { is_expected.not_to be_able_to(:watch, other_user) }
     end
   end
 end
