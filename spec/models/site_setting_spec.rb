@@ -40,17 +40,17 @@ describe SiteSetting do
     end
 
     it "updates the sidekiq value at the same time" do
-      allow(described_class).to receive(:update_sidekiq_maximum_concurrent_scrapers!)
+      allow(described_class).to receive(:update_maximum_concurrent_scrapers!)
       described_class.maximum_concurrent_scrapers = 10
-      expect(described_class).to have_received(:update_sidekiq_maximum_concurrent_scrapers!)
+      expect(described_class).to have_received(:update_maximum_concurrent_scrapers!)
     end
   end
 
-  describe ".update_sidekiq_maximum_concurrent_scrapers!" do
+  describe ".update_maximum_concurrent_scrapers!" do
     it "sets the sidekiq value" do
       allow(Sidekiq::Queue["scraper"]).to receive(:limit=)
       described_class.maximum_concurrent_scrapers = 10
-      described_class.update_sidekiq_maximum_concurrent_scrapers!
+      described_class.update_maximum_concurrent_scrapers!
       expect(Sidekiq::Queue["scraper"]).to have_received(:limit=).twice.with(10)
     end
   end
