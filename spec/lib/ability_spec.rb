@@ -53,6 +53,9 @@ describe "User" do
 
       # User
       # Can
+      it { is_expected.to be_able_to(:index, User) }
+      it { is_expected.to be_able_to(:stats, User) }
+      it { is_expected.to be_able_to(:watching, other_user) }
       it { is_expected.to be_able_to(:show, other_user) }
 
       # Can not
