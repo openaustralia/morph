@@ -130,11 +130,6 @@ class Owner < ApplicationRecord
     "db/scrapers/data/#{to_param}"
   end
 
-  sig { returns(Ability) }
-  def ability
-    @ability ||= T.let(Ability.new(self), T.nilable(Ability))
-  end
-
   sig { returns(T::Boolean) }
   def supporter?
     stripe_plan_id.present?

@@ -33,8 +33,8 @@ describe ApiController do
     end
 
     it "fails when site is in read-only mode" do
-      ability = instance_double(Ability)
-      allow(Ability).to receive(:new).with(user).and_return(ability)
+      ability = instance_double(RunAbility)
+      allow(RunAbility).to receive(:new).with(user).and_return(ability)
       allow(ability).to receive(:can?).with(:create, Run).and_return(false)
 
       post :run_remote, params: { api_key: user.api_key, code: code }

@@ -298,7 +298,7 @@ class ApiController < ApplicationController
 
   sig { void }
   def can_run
-    return if current_user&.ability&.can? :create, Run
+    return if RunAbility.new(current_user).can? :create, Run
 
     render json: {
       stream: "internalerr",
