@@ -26,7 +26,6 @@ class OwnerAbility
 
     # Everyone can show and watch anyone
     can :show, Owner
-    # TODO: Don't like the use of persisted? here. Refactor.
     can :watch, Owner unless user.nil? || SiteSetting.read_only_mode
   end
 end
