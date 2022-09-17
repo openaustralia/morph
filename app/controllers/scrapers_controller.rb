@@ -190,6 +190,13 @@ class ScrapersController < ApplicationController
 
   private
 
+  # Overriding the default ability class name used because we've split them out. See
+  # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/split_ability.md
+  sig { returns(ScraperAbility) }
+  def current_ability
+    @current_ability ||= T.let(ScraperAbility.new(current_user), T.nilable(ScraperAbility))
+  end
+
   sig { void }
   def load_resource
     @scraper = T.let(Scraper.friendly.find(params[:id]), T.nilable(Scraper))
