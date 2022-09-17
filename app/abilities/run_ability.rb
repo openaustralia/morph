@@ -8,6 +8,9 @@ class RunAbility
 
   sig { params(user: T.nilable(Owner)).void }
   def initialize(user)
-    can :create, Run unless user.nil? || SiteSetting.read_only_mode
+    # Nothing given to anonymous users
+    return unless user
+
+    can :create, Run unless SiteSetting.read_only_mode
   end
 end

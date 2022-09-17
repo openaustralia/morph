@@ -8,7 +8,13 @@ class SiteSettingAbility
 
   sig { params(user: T.nilable(Owner)).void }
   def initialize(user)
-    can :toggle_read_only_mode, SiteSetting if user&.admin?
-    can :update_maximum_concurrent_scrapers, SiteSetting if user&.admin?
+    # No powers given to anonymous users here
+    return unless user
+
+    # No powers given to logged in ("normal") users here
+    return unless user.admin?
+
+    can :toggle_read_only_mode, SiteSetting
+    can :update_maximum_concurrent_scrapers, SiteSetting
   end
 end
