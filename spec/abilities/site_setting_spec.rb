@@ -9,13 +9,6 @@ describe "User" do
     subject(:ability) { SiteSettingAbility.new(user) }
 
     let(:user) { nil }
-    let(:scraper) do
-      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        create(:scraper)
-      end
-    end
-    let(:organization) { create(:organization) }
-    let(:other_user) { create(:user) }
 
     context "when an unauthenticated user" do
       it { is_expected.not_to be_able_to(:toggle_read_only_mode, SiteSetting) }

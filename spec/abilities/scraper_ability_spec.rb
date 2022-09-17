@@ -15,7 +15,6 @@ describe "User" do
       end
     end
     let(:organization) { create(:organization) }
-    let(:other_user) { create(:user) }
 
     context "when an unauthenticated user" do
       it { is_expected.to be_able_to(:index, Scraper) }
