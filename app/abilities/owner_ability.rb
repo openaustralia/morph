@@ -8,10 +8,17 @@ class OwnerAbility
 
   sig { params(user: T.nilable(Owner)).void }
   def initialize(user)
+    # Everyone can show and watch anyone
+    can :show, Owner
+
+    return unless user
+
     # You can look at your own settings
-    can :settings, Owner, id: user&.id
-    can :settings_redirect, Owner unless user.nil?
-    can :reset_key, Owner, id: user&.id unless SiteSetting.read_only_mode
+    can :settings, Owner, id: user.id
+    can :settings_redirect, Owner
+    can :reset_key, Owner, id: user.id unless SiteSetting.read_only_mode
+    # Can watch any owner of repos
+    can :watch, Owner unless SiteSetting.read_only_mode
 
     # user should be able to see settings for an org they're part of
     if user.is_a?(User)
@@ -21,11 +28,9 @@ class OwnerAbility
       end
     end
 
-    # Admins can look at all owner settings
-    can :settings, Owner if user&.admin?
+    return unless user.admin?
 
-    # Everyone can show and watch anyone
-    can :show, Owner
-    can :watch, Owner unless user.nil? || SiteSetting.read_only_mode
+    # Admins can look at all owner settings
+    can :settings, Owner
   end
 end
