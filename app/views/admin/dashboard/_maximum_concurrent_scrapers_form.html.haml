@@ -1,4 +1,4 @@
-= form_tag update_maximum_concurrent_scrapers_admin_site_settings_path, method: :post do
+= form_tag admin_dashboard_update_maximum_concurrent_scrapers_path, method: :post do
   %div
     = label_tag "Maximum concurrent scrapers"
     = number_field_tag "maximum_concurrent_scrapers", SiteSetting.maximum_concurrent_scrapers
