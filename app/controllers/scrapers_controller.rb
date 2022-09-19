@@ -185,7 +185,9 @@ class ScrapersController < ApplicationController
   sig { void }
   def running
     authorize! :running, Scraper
-    @scrapers = T.let(Scraper.running, T.nilable(T::Array[Scraper]))
+    # TODO: Can't use Scraper.accessible_by(current_ability) because "running" below is not acting as a scope. Would be great to fix this.
+    # So, we're doing this slightly ugly work around of checking each scraper in turn whether it can be seen by the user
+    @scrapers = T.let(Scraper.running.select { |s| can?(:show, s) }, T.nilable(T::Array[Scraper]))
   end
 
   private
