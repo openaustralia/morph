@@ -29,6 +29,8 @@ describe "ScraperAbility" do
     it { is_expected.not_to be_able_to(:watchers, private_scraper) }
     it { is_expected.to be_able_to(:history, scraper) }
     it { is_expected.not_to be_able_to(:history, private_scraper) }
+    it { is_expected.not_to be_able_to(:data, scraper) }
+    it { is_expected.not_to be_able_to(:data, private_scraper) }
     it { is_expected.not_to be_able_to(:new, Scraper) }
     it { is_expected.not_to be_able_to(:create, Scraper) }
     it { is_expected.not_to be_able_to(:github, Scraper) }
@@ -62,6 +64,8 @@ describe "ScraperAbility" do
     it { is_expected.to be_able_to(:create_github, Scraper) }
     it { is_expected.to be_able_to(:watch, scraper) }
     it { is_expected.not_to be_able_to(:watch, private_scraper) }
+    it { is_expected.to be_able_to(:data, scraper) }
+    it { is_expected.not_to be_able_to(:data, private_scraper) }
     it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
     it { is_expected.not_to be_able_to(:settings, scraper) }
     it { is_expected.not_to be_able_to(:destroy, scraper) }
@@ -99,6 +103,7 @@ describe "ScraperAbility" do
       it { is_expected.to be_able_to(:stop, private_scraper) }
       it { is_expected.to be_able_to(:clear, private_scraper) }
       it { is_expected.to be_able_to(:watch, private_scraper) }
+      it { is_expected.to be_able_to(:data, private_scraper) }
     end
 
     context "when scraper is owned by an organization the user is a member of" do
@@ -132,6 +137,7 @@ describe "ScraperAbility" do
       it { is_expected.to be_able_to(:stop, private_scraper) }
       it { is_expected.to be_able_to(:clear, private_scraper) }
       it { is_expected.to be_able_to(:watch, private_scraper) }
+      it { is_expected.to be_able_to(:data, private_scraper) }
     end
   end
 
