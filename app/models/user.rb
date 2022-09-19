@@ -15,9 +15,9 @@ class User < Owner
   # In most cases people have contributed to the scrapers that they own so we
   # really don't want to see these twice. This method just removes their own
   # scrapers from the list
-  sig { returns(T::Array[Scraper]) }
+  sig { returns(ActiveRecord::AssociationRelation) }
   def other_scrapers_contributed_to
-    scrapers_contributed_to - scrapers
+    scrapers_contributed_to.where.not(owner: self)
   end
 
   # A list of all owners thst this user can write to. Includes itself

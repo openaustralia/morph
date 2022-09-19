@@ -35,6 +35,8 @@ class OwnersController < ApplicationController
     @running_scrapers = T.let(running_scrapers, T.nilable(T::Array[Scraper]))
     @erroring_scrapers = T.let(erroring_scrapers, T.nilable(T::Array[Scraper]))
     @other_scrapers = T.let(other_scrapers, T.nilable(T::Array[Scraper]))
+
+    @other_scrapers_contributed_to = T.let(@owner.other_scrapers_contributed_to.accessible_by(current_ability), T.nilable(ActiveRecord::AssociationRelation)) if @owner.is_a?(User)
   end
 
   sig { void }

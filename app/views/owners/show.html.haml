@@ -63,11 +63,11 @@
   - if @owner == current_user || (@owner.organization? && @owner.users.include?(current_user))
     = button_link_to "New scraper", new_scraper_path
 
-  - if @owner.user? && !@owner.other_scrapers_contributed_to.empty?
+  - if @owner.user? && !@other_scrapers_contributed_to.empty?
     %h3
       Contributed to
-      = pluralize(@owner.other_scrapers_contributed_to.count, "scraper")
-    .list-group= sync partial: "scraper", collection: @owner.other_scrapers_contributed_to
+      = pluralize(@other_scrapers_contributed_to.count, "scraper")
+    .list-group= sync partial: "scraper", collection: @other_scrapers_contributed_to
 
   -# Temporarily disabling the display of these statistics because the calculation of
   -# owner.wall_time and owner.cpu_time is really slow with an owner with lots of scrapers that
