@@ -16,8 +16,8 @@ class OwnersController < ApplicationController
     # Only do this once
     session[:new_supporter] = false if @new_supporter
 
-    scrapers = T.must(@owner).scrapers
-    @scrapers = T.let(scrapers, T.nilable(ActiveRecord::Associations::CollectionProxy))
+    scrapers = Scraper.accessible_by(current_ability).where(owner: @owner)
+    @scrapers = T.let(scrapers, T.nilable(ActiveRecord::Relation))
 
     # Split out scrapers into different groups
     running_scrapers = []
@@ -66,7 +66,7 @@ class OwnersController < ApplicationController
   # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/split_ability.md
   sig { returns(OwnerAbility) }
   def current_ability
-    @current_ability ||= T.let(OwnerAbility.new(current_user), T.nilable(OwnerAbility))
+    @current_ability ||= T.let(OwnerAbility.new(current_user).merge(ScraperAbility.new(current_user)), T.nilable(OwnerAbility))
   end
 
   sig { void }
