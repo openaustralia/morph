@@ -4,6 +4,8 @@
   .scraper-block
     - if scraper.language.present?
       %small.scraper-lang.pull-right= scraper.language.human
+    - if scraper.private?
+      %i.fa.fa-lock.text-muted
     %strong.full_name= highlight[:"full_name.word_middle"] ? sanitize_highlight(highlight[:"full_name.word_middle"]) : scraper.full_name
     %div
       - if scraper.description.present?
