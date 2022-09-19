@@ -6,7 +6,7 @@ class UserAbility
 
   include CanCan::Ability
 
-  sig { params(_user: T.nilable(Owner)).void }
+  sig { params(_user: T.nilable(User)).void }
   def initialize(_user)
     # Everybody can look at all the users and see who they are watching
     can %i[index watching], User

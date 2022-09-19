@@ -6,7 +6,7 @@ class OwnerAbility
 
   include CanCan::Ability
 
-  sig { params(user: T.nilable(Owner)).void }
+  sig { params(user: T.nilable(User)).void }
   def initialize(user)
     # Everyone can show and watch anyone
     can :show, Owner
@@ -21,11 +21,9 @@ class OwnerAbility
     can :watch, Owner unless SiteSetting.read_only_mode
 
     # user should be able to see settings for an org they're part of
-    if user.is_a?(User)
-      user.organizations.each do |org|
-        can :settings, Owner, id: org.id
-        can :reset_key, Owner, id: org.id unless SiteSetting.read_only_mode
-      end
+    user.organizations.each do |org|
+      can :settings, Owner, id: org.id
+      can :reset_key, Owner, id: org.id unless SiteSetting.read_only_mode
     end
 
     return unless user.admin?
