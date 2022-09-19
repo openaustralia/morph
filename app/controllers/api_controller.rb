@@ -60,19 +60,23 @@ class ApiController < ApplicationController
       render_error "API key is missing", 401
       return
     else
-      owner = Owner.find_by(api_key: api_key)
-      if owner.nil?
+      @current_owner = T.let(Owner.find_by(api_key: api_key), T.nilable(Owner))
+      if @current_owner.nil?
         render_error "API key is not valid", 401
         return
       end
     end
 
+    # TODO: Refactor this into a more standard form
+    # raise unless ScraperAbility.new(owner).can?(:data, @scraper)
+    authorize! :data, @scraper
+
     begin
       respond_to do |format|
-        format.sqlite { data_sqlite(scraper, owner) }
-        format.json   { data_json(scraper, owner) }
-        format.csv    { data_csv(scraper, owner)    }
-        format.atom   { data_atom(scraper, owner)   }
+        format.sqlite { data_sqlite(scraper, @current_owner) }
+        format.json   { data_json(scraper, @current_owner) }
+        format.csv    { data_csv(scraper, @current_owner)    }
+        format.atom   { data_atom(scraper, @current_owner)   }
       end
     rescue SQLite3::Exception => e
       render_error e.to_s, 400
@@ -82,6 +86,13 @@ class ApiController < ApplicationController
   end
 
   private
+
+  # Overriding the default ability class name used because we've split them out. See
+  # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/split_ability.md
+  sig { returns(ScraperAbility) }
+  def current_ability
+    @current_ability ||= T.let(ScraperAbility.new(@current_owner), T.nilable(ScraperAbility))
+  end
 
   sig { params(scraper: Scraper, owner: Owner).void }
   def data_sqlite(scraper, owner)
