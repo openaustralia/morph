@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_25_202409) do
+ActiveRecord::Schema.define(version: 2022_09_19_011435) do
 
   create_table "active_admin_comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "namespace"
@@ -208,6 +208,7 @@ ActiveRecord::Schema.define(version: 2022_08_25_202409) do
     t.bigint "sqlite_db_size", default: 0, null: false
     t.integer "create_scraper_progress_id"
     t.integer "memory_mb"
+    t.boolean "private", default: false, null: false
     t.index ["create_scraper_progress_id"], name: "fk_rails_44c3dd8af8"
     t.index ["full_name"], name: "index_scrapers_on_full_name", unique: true
     t.index ["owner_id", "name"], name: "index_scrapers_on_owner_id_and_name", unique: true
