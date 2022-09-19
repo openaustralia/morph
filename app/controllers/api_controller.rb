@@ -298,7 +298,7 @@ class ApiController < ApplicationController
 
   sig { void }
   def can_run
-    return if RunAbility.new(current_user).can? :create, Run
+    return unless SiteSetting.read_only_mode
 
     render json: {
       stream: "internalerr",
