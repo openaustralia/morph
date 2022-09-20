@@ -5,7 +5,7 @@
         %i.fa.fa-lock.text-muted.has-tooltip{ data: { placement: "left", title: "Scraper is private" } }
       = full_name_with_links(scraper)
       .large-icon-box.pull-right
-        - if can? :settings, scraper
+        - if can? :edit, scraper
           = link_to settings_scraper_path(scraper) do
             = render partial: "scrapers/auto_clock", locals: { scraper: scraper }
         - else
@@ -25,7 +25,7 @@
         %blockquote
           %p= scraper.scraped_domains.first.meta_or_title
 
-    - if can? :run, scraper
+    - if can? :update, scraper
       #scraper-run
         = render partial: "scrapers/run_button", locals: { scraper: scraper }
 
@@ -54,7 +54,7 @@
     = render partial: "scrapers/statistics", locals: { scraper: scraper }
     = render partial: "scrapers/history", locals: { scraper: scraper }
   .col-md-2
-    - if can? :settings, scraper
+    - if can? :edit, scraper
       #scraper-settings
         = button_link_to settings_scraper_path(scraper) do
           %i.fa.fa-sliders
