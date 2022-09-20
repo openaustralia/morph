@@ -133,7 +133,7 @@ class ScrapersController < ApplicationController
   def run
     scraper = T.must(@scraper)
 
-    authorize! :run, scraper
+    authorize! :update, scraper
     scraper.queue!
     scraper.reload
     sync_update scraper
@@ -144,7 +144,7 @@ class ScrapersController < ApplicationController
   def stop
     scraper = T.must(@scraper)
 
-    authorize! :stop, scraper
+    authorize! :update, scraper
     scraper.stop!
     scraper.reload
     sync_update scraper
