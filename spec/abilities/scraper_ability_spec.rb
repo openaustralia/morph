@@ -22,7 +22,6 @@ describe "ScraperAbility" do
 
   context "when an unauthenticated user" do
     it { is_expected.to be_able_to(:index, Scraper) }
-    it { is_expected.to be_able_to(:running, Scraper) }
     it { is_expected.to be_able_to(:show, scraper) }
     it { is_expected.not_to be_able_to(:show, private_scraper) }
     it { is_expected.not_to be_able_to(:data, scraper) }
@@ -43,7 +42,6 @@ describe "ScraperAbility" do
     let(:user) { create(:user) }
 
     it { is_expected.to be_able_to(:index, Scraper) }
-    it { is_expected.to be_able_to(:running, Scraper) }
     it { is_expected.to be_able_to(:show, scraper) }
     it { is_expected.not_to be_able_to(:show, private_scraper) }
     it { is_expected.to be_able_to(:new, Scraper) }
