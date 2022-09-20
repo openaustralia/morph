@@ -44,7 +44,7 @@ namespace :deploy do
   task :docker do
     on roles(:app) do
       within release_path do
-        execute :bundle, "exec rake app:update_docker_images RAILS_ENV=production"
+        execute :rake, "app:update_docker_images RAILS_ENV=production"
       end
     end
   end
@@ -53,7 +53,7 @@ namespace :deploy do
   task :fix_queue_run_inconsistencies do
     on roles(:app) do
       within release_path do
-        execute :bundle, "exec rake app:emergency:fix_queue_run_inconsistencies RAILS_ENV=production"
+        execute :rake, "app:emergency:fix_queue_run_inconsistencies RAILS_ENV=production"
       end
     end
   end
@@ -88,7 +88,7 @@ namespace :searchkick do
     task :all do
       on roles(:app) do
         within release_path do
-          execute :bundle, "exec rake searchkick:reindex:all RAILS_ENV=production"
+          execute :rake, "searchkick:reindex:all RAILS_ENV=production"
         end
       end
     end
