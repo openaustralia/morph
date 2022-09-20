@@ -53,6 +53,8 @@ namespace :deploy do
   task :fix_queue_run_inconsistencies do
     on roles(:app) do
       within release_path do
+        # Wait one minute so that everything has plenty of time to get started before we run this check (and workaround)
+        execute :sleep, "60"
         execute :rake, "app:emergency:fix_queue_run_inconsistencies RAILS_ENV=production"
       end
     end
@@ -109,4 +111,4 @@ after "deploy:docker", "foreman:restart"
 # that not-automating the workaround would compell us to fix the problem properly. Well this clearly
 # hasn't happened. So, it's time to automate the workaround
 # TODO: Remove this workaround as soon as we can
-after "foreman:restart", "deploy:fix_queue_run_inconsistencies"
+after "deploy:cleanup", "deploy:fix_queue_run_inconsistencies"
