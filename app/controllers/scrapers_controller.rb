@@ -155,7 +155,7 @@ class ScrapersController < ApplicationController
   def clear
     scraper = T.must(@scraper)
 
-    authorize! :clear, scraper
+    authorize! :destroy, scraper
     scraper.database.clear
     scraper.reindex
     redirect_to scraper

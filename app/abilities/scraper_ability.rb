@@ -21,7 +21,7 @@ class ScraperAbility
     can %i[index show edit data], Scraper, owner_id: owner.id
 
     unless SiteSetting.read_only_mode
-      can %i[destroy update run stop clear create watch],
+      can %i[destroy update run stop create watch],
           Scraper,
           owner_id: owner.id
     end
@@ -33,7 +33,7 @@ class ScraperAbility
         can %i[index show edit data], Scraper, owner_id: org.id
         next if SiteSetting.read_only_mode
 
-        can %i[destroy update run stop clear create watch],
+        can %i[destroy update run stop create watch],
             Scraper,
             owner_id: org.id
       end

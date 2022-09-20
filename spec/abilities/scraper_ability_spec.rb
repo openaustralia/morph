@@ -34,7 +34,6 @@ describe "ScraperAbility" do
     it { is_expected.not_to be_able_to(:update, scraper) }
     it { is_expected.not_to be_able_to(:run, scraper) }
     it { is_expected.not_to be_able_to(:stop, scraper) }
-    it { is_expected.not_to be_able_to(:clear, scraper) }
     it { is_expected.not_to be_able_to(:watch, scraper) }
   end
 
@@ -56,7 +55,6 @@ describe "ScraperAbility" do
     it { is_expected.not_to be_able_to(:update, scraper) }
     it { is_expected.not_to be_able_to(:run, scraper) }
     it { is_expected.not_to be_able_to(:stop, scraper) }
-    it { is_expected.not_to be_able_to(:clear, scraper) }
 
     context "when scraper is owner by the user" do
       before do
@@ -68,7 +66,6 @@ describe "ScraperAbility" do
       it { is_expected.to be_able_to(:update, scraper) }
       it { is_expected.to be_able_to(:run, scraper) }
       it { is_expected.to be_able_to(:stop, scraper) }
-      it { is_expected.to be_able_to(:clear, scraper) }
       it { is_expected.to be_able_to(:watch, scraper) }
     end
 
@@ -83,7 +80,6 @@ describe "ScraperAbility" do
       it { is_expected.to be_able_to(:update, private_scraper) }
       it { is_expected.to be_able_to(:run, private_scraper) }
       it { is_expected.to be_able_to(:stop, private_scraper) }
-      it { is_expected.to be_able_to(:clear, private_scraper) }
       it { is_expected.to be_able_to(:watch, private_scraper) }
       it { is_expected.to be_able_to(:data, private_scraper) }
     end
@@ -99,7 +95,6 @@ describe "ScraperAbility" do
       it { is_expected.to be_able_to(:update, scraper) }
       it { is_expected.to be_able_to(:run, scraper) }
       it { is_expected.to be_able_to(:stop, scraper) }
-      it { is_expected.to be_able_to(:clear, scraper) }
       it { is_expected.to be_able_to(:watch, scraper) }
     end
 
@@ -115,7 +110,6 @@ describe "ScraperAbility" do
       it { is_expected.to be_able_to(:update, private_scraper) }
       it { is_expected.to be_able_to(:run, private_scraper) }
       it { is_expected.to be_able_to(:stop, private_scraper) }
-      it { is_expected.to be_able_to(:clear, private_scraper) }
       it { is_expected.to be_able_to(:watch, private_scraper) }
       it { is_expected.to be_able_to(:data, private_scraper) }
     end
@@ -145,7 +139,6 @@ describe "ScraperAbility" do
         it { is_expected.not_to be_able_to(:update, scraper) }
         it { is_expected.not_to be_able_to(:run, scraper) }
         it { is_expected.not_to be_able_to(:stop, scraper) }
-        it { is_expected.not_to be_able_to(:clear, scraper) }
         it { is_expected.not_to be_able_to(:watch, scraper) }
       end
 
@@ -159,7 +152,6 @@ describe "ScraperAbility" do
         it { is_expected.not_to be_able_to(:update, scraper) }
         it { is_expected.not_to be_able_to(:run, scraper) }
         it { is_expected.not_to be_able_to(:stop, scraper) }
-        it { is_expected.not_to be_able_to(:clear, scraper) }
         it { is_expected.not_to be_able_to(:watch, scraper) }
       end
     end
