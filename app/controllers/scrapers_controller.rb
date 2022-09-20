@@ -65,13 +65,13 @@ class ScrapersController < ApplicationController
 
   sig { void }
   def github
-    authorize! :github, Scraper
+    authorize! :new, Scraper
   end
 
   # For rendering ajax partial in github action
   sig { void }
   def github_form
-    authorize! :github_form, Scraper
+    authorize! :new, Scraper
     @scraper = Scraper.new
     render partial: "github_form", locals: { scraper: @scraper, owner: Owner.find(params[:id]) }
   end
@@ -83,7 +83,7 @@ class ScrapersController < ApplicationController
     authenticated_user = T.must(current_user)
 
     scraper = Scraper.new_from_github(full_name, authenticated_user.octokit_client)
-    authorize! :create_github, scraper
+    authorize! :create, scraper
     if scraper.save
       scraper.create_create_scraper_progress!(
         heading: "Adding from GitHub",

@@ -14,14 +14,14 @@ class ScraperAbility
     return unless owner
 
     can :data, Scraper, private: false
-    can %i[new github github_form], Scraper unless SiteSetting.read_only_mode
+    can :new, Scraper unless SiteSetting.read_only_mode
     can :watch, Scraper, private: false unless SiteSetting.read_only_mode
 
     # user can view scrapers owned by them (even if private) and settings of scrapers they own
     can %i[index show watchers running history edit data], Scraper, owner_id: owner.id
 
     unless SiteSetting.read_only_mode
-      can %i[destroy update run stop clear create create_github watch],
+      can %i[destroy update run stop clear create watch],
           Scraper,
           owner_id: owner.id
     end
@@ -33,7 +33,7 @@ class ScraperAbility
         can %i[index show watchers running history edit data], Scraper, owner_id: org.id
         next if SiteSetting.read_only_mode
 
-        can %i[destroy update run stop clear create create_github watch],
+        can %i[destroy update run stop clear create watch],
             Scraper,
             owner_id: org.id
       end
