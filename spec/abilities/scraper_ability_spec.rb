@@ -37,7 +37,7 @@ describe "ScraperAbility" do
     it { is_expected.not_to be_able_to(:github_form, Scraper) }
     it { is_expected.not_to be_able_to(:create_github, Scraper) }
     it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
-    it { is_expected.not_to be_able_to(:settings, scraper) }
+    it { is_expected.not_to be_able_to(:edit, scraper) }
     it { is_expected.not_to be_able_to(:destroy, scraper) }
     it { is_expected.not_to be_able_to(:update, scraper) }
     it { is_expected.not_to be_able_to(:run, scraper) }
@@ -67,7 +67,7 @@ describe "ScraperAbility" do
     it { is_expected.to be_able_to(:data, scraper) }
     it { is_expected.not_to be_able_to(:data, private_scraper) }
     it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
-    it { is_expected.not_to be_able_to(:settings, scraper) }
+    it { is_expected.not_to be_able_to(:edit, scraper) }
     it { is_expected.not_to be_able_to(:destroy, scraper) }
     it { is_expected.not_to be_able_to(:update, scraper) }
     it { is_expected.not_to be_able_to(:run, scraper) }
@@ -79,7 +79,7 @@ describe "ScraperAbility" do
         scraper.update(owner: user)
       end
 
-      it { is_expected.to be_able_to(:settings, scraper) }
+      it { is_expected.to be_able_to(:edit, scraper) }
       it { is_expected.to be_able_to(:destroy, scraper) }
       it { is_expected.to be_able_to(:update, scraper) }
       it { is_expected.to be_able_to(:run, scraper) }
@@ -96,7 +96,7 @@ describe "ScraperAbility" do
       it { is_expected.to be_able_to(:show, private_scraper) }
       it { is_expected.to be_able_to(:watchers, private_scraper) }
       it { is_expected.to be_able_to(:history, private_scraper) }
-      it { is_expected.to be_able_to(:settings, private_scraper) }
+      it { is_expected.to be_able_to(:edit, private_scraper) }
       it { is_expected.to be_able_to(:destroy, private_scraper) }
       it { is_expected.to be_able_to(:update, private_scraper) }
       it { is_expected.to be_able_to(:run, private_scraper) }
@@ -112,7 +112,7 @@ describe "ScraperAbility" do
         create(:organizations_user, organization: organization, user: user)
       end
 
-      it { is_expected.to be_able_to(:settings, scraper) }
+      it { is_expected.to be_able_to(:edit, scraper) }
       it { is_expected.to be_able_to(:destroy, scraper) }
       it { is_expected.to be_able_to(:update, scraper) }
       it { is_expected.to be_able_to(:run, scraper) }
@@ -130,7 +130,7 @@ describe "ScraperAbility" do
       it { is_expected.to be_able_to(:show, private_scraper) }
       it { is_expected.to be_able_to(:watchers, private_scraper) }
       it { is_expected.to be_able_to(:history, private_scraper) }
-      it { is_expected.to be_able_to(:settings, private_scraper) }
+      it { is_expected.to be_able_to(:edit, private_scraper) }
       it { is_expected.to be_able_to(:destroy, private_scraper) }
       it { is_expected.to be_able_to(:update, private_scraper) }
       it { is_expected.to be_able_to(:run, private_scraper) }

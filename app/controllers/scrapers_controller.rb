@@ -19,7 +19,7 @@ class ScrapersController < ApplicationController
 
   sig { void }
   def settings
-    authorize! :settings, @scraper
+    authorize! :edit, @scraper
   end
 
   sig { void }

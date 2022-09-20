@@ -18,7 +18,7 @@ class ScraperAbility
     can :watch, Scraper, private: false unless SiteSetting.read_only_mode
 
     # user can view scrapers owned by them (even if private) and settings of scrapers they own
-    can %i[index show watchers running history settings data], Scraper, owner_id: owner.id
+    can %i[index show watchers running history edit data], Scraper, owner_id: owner.id
 
     unless SiteSetting.read_only_mode
       can %i[destroy update run stop clear create create_github watch],
@@ -30,7 +30,7 @@ class ScraperAbility
     # member of
     if owner.is_a?(User)
       owner.organizations.each do |org|
-        can %i[index show watchers running history settings data], Scraper, owner_id: org.id
+        can %i[index show watchers running history edit data], Scraper, owner_id: org.id
         next if SiteSetting.read_only_mode
 
         can %i[destroy update run stop clear create create_github watch],
