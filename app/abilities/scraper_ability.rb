@@ -19,23 +19,14 @@ class ScraperAbility
 
     # user can view scrapers owned by them (even if private) and settings of scrapers they own
     can %i[index show data], Scraper, owner_id: owner.id
-
-    unless SiteSetting.read_only_mode
-      can %i[destroy edit update create watch],
-          Scraper,
-          owner_id: owner.id
-    end
+    can %i[destroy edit update create watch], Scraper, owner_id: owner.id unless SiteSetting.read_only_mode
 
     # user can view scrapers and settings of scrapers belonging to an org they are a
     # member of
     if owner.is_a?(User)
       owner.organizations.each do |org|
         can %i[index show data], Scraper, owner_id: org.id
-        next if SiteSetting.read_only_mode
-
-        can %i[destroy edit update create watch],
-            Scraper,
-            owner_id: org.id
+        can %i[destroy edit update create watch], Scraper, owner_id: org.id unless SiteSetting.read_only_mode
       end
     end
 
