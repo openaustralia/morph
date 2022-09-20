@@ -1,13 +1,12 @@
 # typed: strict
 # frozen_string_literal: true
 
-class OwnerAbility
+class OwnerAbility < Ability
   extend T::Sig
-
-  include CanCan::Ability
 
   sig { params(user: T.nilable(User)).void }
   def initialize(user)
+    super
     # Everyone can show and watch anyone
     can :show, Owner
 

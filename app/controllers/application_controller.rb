@@ -34,4 +34,13 @@ class ApplicationController < ActionController::Base
   def after_sign_out_path_for(_resource)
     request.referer ? URI.parse(request.referer).path : root_path
   end
+
+  # Overriding the default ability class name used because we've split them out. See
+  # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/split_ability.md
+  # Putting this here we are making it available to the render_sync refetch controller
+  # which inherits from this class. I know. It's really ugly. I'm sorry.
+  sig { returns(Ability) }
+  def current_ability
+    @current_ability ||= T.let(ScraperAbility.new(current_user), T.nilable(ScraperAbility))
+  end
 end

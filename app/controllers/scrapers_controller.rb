@@ -194,7 +194,7 @@ class ScrapersController < ApplicationController
 
   # Overriding the default ability class name used because we've split them out. See
   # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/split_ability.md
-  sig { returns(ScraperAbility) }
+  sig { returns(Ability) }
   def current_ability
     @current_ability ||= T.let(ScraperAbility.new(current_user), T.nilable(ScraperAbility))
   end

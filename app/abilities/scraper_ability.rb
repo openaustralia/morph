@@ -1,13 +1,14 @@
 # typed: strict
 # frozen_string_literal: true
 
-class ScraperAbility
+class ScraperAbility < Ability
   extend T::Sig
 
   include CanCan::Ability
 
   sig { params(owner: T.nilable(Owner)).void }
   def initialize(owner)
+    super
     # Everyone can list all (non private) scrapers
     can :read, Scraper, private: false
 
