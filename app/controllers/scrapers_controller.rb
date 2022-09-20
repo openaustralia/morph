@@ -179,7 +179,7 @@ class ScrapersController < ApplicationController
 
   sig { void }
   def history
-    authorize! :history, @scraper
+    authorize! :show, @scraper
   end
 
   sig { void }
