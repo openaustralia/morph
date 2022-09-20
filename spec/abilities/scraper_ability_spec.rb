@@ -25,8 +25,6 @@ describe "ScraperAbility" do
     it { is_expected.to be_able_to(:running, Scraper) }
     it { is_expected.to be_able_to(:show, scraper) }
     it { is_expected.not_to be_able_to(:show, private_scraper) }
-    it { is_expected.to be_able_to(:watchers, scraper) }
-    it { is_expected.not_to be_able_to(:watchers, private_scraper) }
     it { is_expected.not_to be_able_to(:data, scraper) }
     it { is_expected.not_to be_able_to(:data, private_scraper) }
     it { is_expected.not_to be_able_to(:new, Scraper) }
@@ -48,8 +46,6 @@ describe "ScraperAbility" do
     it { is_expected.to be_able_to(:running, Scraper) }
     it { is_expected.to be_able_to(:show, scraper) }
     it { is_expected.not_to be_able_to(:show, private_scraper) }
-    it { is_expected.to be_able_to(:watchers, scraper) }
-    it { is_expected.not_to be_able_to(:watchers, private_scraper) }
     it { is_expected.to be_able_to(:new, Scraper) }
     it { is_expected.to be_able_to(:create, Scraper) }
     it { is_expected.to be_able_to(:watch, scraper) }
@@ -84,7 +80,6 @@ describe "ScraperAbility" do
       end
 
       it { is_expected.to be_able_to(:show, private_scraper) }
-      it { is_expected.to be_able_to(:watchers, private_scraper) }
       it { is_expected.to be_able_to(:edit, private_scraper) }
       it { is_expected.to be_able_to(:destroy, private_scraper) }
       it { is_expected.to be_able_to(:update, private_scraper) }
@@ -117,7 +112,6 @@ describe "ScraperAbility" do
       end
 
       it { is_expected.to be_able_to(:show, private_scraper) }
-      it { is_expected.to be_able_to(:watchers, private_scraper) }
       it { is_expected.to be_able_to(:edit, private_scraper) }
       it { is_expected.to be_able_to(:destroy, private_scraper) }
       it { is_expected.to be_able_to(:update, private_scraper) }

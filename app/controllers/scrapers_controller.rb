@@ -174,7 +174,7 @@ class ScrapersController < ApplicationController
 
   sig { void }
   def watchers
-    authorize! :watchers, @scraper
+    authorize! :show, @scraper
   end
 
   sig { void }
