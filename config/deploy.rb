@@ -48,6 +48,15 @@ namespace :deploy do
       end
     end
   end
+
+  desc "Fix queue run inconsistencies"
+  task :fix_queue_run_inconsistencies do
+    on roles(:app) do
+      within release_path do
+        execute :bundle, "exec rake app:emergency:fix_queue_run_inconsistencies RAILS_ENV=production"
+      end
+    end
+  end
 end
 
 namespace :foreman do
@@ -94,3 +103,10 @@ after "deploy:docker", "foreman:restart"
 # However, not that on a first deploy you do need to run the searchkick:reindex:all
 # task otherwise things won't work as expected
 #after "foreman:restart", "searchkick:reindex:all"
+
+# This is a horrrible workaround for sidekiq losing running jobs on the queue when it is restarted
+# For the longest time we've been running this by hand after every deploy, hoping somewhat foolishly
+# that not-automating the workaround would compell us to fix the problem properly. Well this clearly
+# hasn't happened. So, it's time to automate the workaround
+# TODO: Remove this workaround as soon as we can
+after "foreman:restart", "deploy:fix_queue_run_inconsistencies"
