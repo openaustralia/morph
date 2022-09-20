@@ -18,21 +18,23 @@ class ScraperAbility
     can :watch, Scraper, private: false unless SiteSetting.read_only_mode
 
     # user can view scrapers owned by them (even if private) and settings of scrapers they own
-    can %i[read data], Scraper, owner_id: owner.id
-    can %i[destroy update watch], Scraper, owner_id: owner.id unless SiteSetting.read_only_mode
+    can_control_scrapers_owned_by(owner)
 
     # user can view scrapers and settings of scrapers belonging to an org they are a
     # member of
-    if owner.is_a?(User)
-      owner.organizations.each do |org|
-        can %i[read data], Scraper, owner_id: org.id
-        can %i[destroy update create watch], Scraper, owner_id: org.id unless SiteSetting.read_only_mode
-      end
-    end
+    owner.organizations.each { |org| can_control_scrapers_owned_by(org) } if owner.is_a?(User)
 
     return unless owner.admin?
 
     # Admins also have the special power to update the memory setting and increase the memory available to the scraper
     can :memory_setting, Scraper
+  end
+
+  private
+
+  sig { params(owner: Owner).void }
+  def can_control_scrapers_owned_by(owner)
+    can %i[read data], Scraper, owner_id: owner.id
+    can %i[destroy update watch], Scraper, owner_id: owner.id unless SiteSetting.read_only_mode
   end
 end
