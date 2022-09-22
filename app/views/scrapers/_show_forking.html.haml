@@ -1,4 +1,7 @@
-%h1.full_name= full_name_with_links(scraper)
+%h1.full_name
+  - if scraper.private?
+    %i.fa.fa-lock.text-muted.has-tooltip{ data: { placement: "left", title: "Scraper is private" } }
+  = full_name_with_links(scraper)
 %h2= scraper.create_scraper_progress.heading
 .progress.progress-striped.active
   -# haml-lint:disable InlineStyles
