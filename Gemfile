@@ -13,6 +13,7 @@ gem "mysql2"
 gem "sqlite3"
 
 gem "bootstrap-sass"
+# Used to put images inside pulldowns
 gem "bootstrap-select-rails"
 gem "cocoon"
 gem "devise"
