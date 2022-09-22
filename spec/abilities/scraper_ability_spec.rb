@@ -117,6 +117,7 @@ describe "ScraperAbility" do
       it { is_expected.not_to be_able_to(:new, Scraper) }
       it { is_expected.not_to be_able_to(:create, Scraper) }
       it { is_expected.not_to be_able_to(:watch, scraper) }
+      it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
 
       context "when scraper is owner by the user" do
         before do
