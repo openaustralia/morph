@@ -21,6 +21,12 @@ module GeneratedUrlHelpersModule
   def admin_comments_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_dashboard_toggle_read_only_mode_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_dashboard_update_maximum_concurrent_scrapers_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_dashboard_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }

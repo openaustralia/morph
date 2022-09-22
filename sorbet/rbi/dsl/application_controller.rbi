@@ -13,9 +13,6 @@ class ApplicationController
 
   module HelperMethods
     include ::Ransack::Helpers::FormHelper
-    include ::ActionView::Helpers::SanitizeHelper
-    include ::ActionView::Helpers::TextHelper
-    include ::ERB::Util
     include ::ActionDispatch::Routing::PolymorphicRoutes
     include ::ActionDispatch::Routing::UrlFor
     include ::GeneratedUrlHelpersModule
@@ -24,19 +21,22 @@ class ApplicationController
     include ::ActionView::Helpers::CaptureHelper
     include ::ActionView::Helpers::OutputSafetyHelper
     include ::ActionView::Helpers::TagHelper
+    include ::ActionView::Helpers::TextHelper
     include ::ActionView::Helpers::UrlHelper
     include ::ActionView::Helpers::AssetUrlHelper
     include ::ActionView::Helpers::AssetTagHelper
     include ::ActionView::Helpers::DateHelper
+    include ::ActionView::Helpers::SanitizeHelper
     include ::Kernel
     include ::ApplicationHelper
     include ::BootstrapFlashHelper
+    include ::ERB::Util
+    include ::StaticHelper
     include ::DocumentationHelper
     include ::OwnersHelper
     include ::RunsHelper
     include ::ScrapersHelper
     include ::SearchHelper
-    include ::StaticHelper
     include ::SupportersHelper
     include ::UsersHelper
     include ::RenderSync::ConfigHelper

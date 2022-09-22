@@ -24,6 +24,12 @@ module GeneratedPathHelpersModule
   def admin_dashboard_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_dashboard_toggle_read_only_mode_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_dashboard_update_maximum_concurrent_scrapers_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_docker_containers_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
