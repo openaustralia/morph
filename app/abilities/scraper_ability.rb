@@ -15,8 +15,10 @@ class ScraperAbility < Ability
     return unless owner
 
     can :data, Scraper, private: false
-    can :create, Scraper unless SiteSetting.read_only_mode
-    can :watch, Scraper, private: false unless SiteSetting.read_only_mode
+    unless SiteSetting.read_only_mode
+      can :create, Scraper
+      can :watch, Scraper, private: false
+    end
 
     # user can view scrapers owned by them (even if private) and settings of scrapers they own
     can_control_scrapers_owned_by(owner)
