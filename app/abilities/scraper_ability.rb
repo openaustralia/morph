@@ -30,7 +30,8 @@ class ScraperAbility < Ability
     return unless owner.admin?
 
     # Admins also have the special power to update the memory setting and increase the memory available to the scraper
-    can :memory_setting, Scraper unless SiteSetting.read_only_mode
+    # They can also create private scrapers
+    can %i[memory_setting create_private], Scraper unless SiteSetting.read_only_mode
   end
 
   private

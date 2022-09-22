@@ -28,6 +28,7 @@ describe "ScraperAbility" do
     it { is_expected.not_to be_able_to(:data, private_scraper) }
     it { is_expected.not_to be_able_to(:new, Scraper) }
     it { is_expected.not_to be_able_to(:create, Scraper) }
+    it { is_expected.not_to be_able_to(:create_private, Scraper) }
     it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
     it { is_expected.not_to be_able_to(:edit, scraper) }
     it { is_expected.not_to be_able_to(:destroy, scraper) }
@@ -43,6 +44,7 @@ describe "ScraperAbility" do
     it { is_expected.not_to be_able_to(:show, private_scraper) }
     it { is_expected.to be_able_to(:new, Scraper) }
     it { is_expected.to be_able_to(:create, Scraper) }
+    it { is_expected.not_to be_able_to(:create_private, Scraper) }
     it { is_expected.to be_able_to(:watch, scraper) }
     it { is_expected.not_to be_able_to(:watch, private_scraper) }
     it { is_expected.to be_able_to(:data, scraper) }
@@ -108,6 +110,7 @@ describe "ScraperAbility" do
 
     # Just checking for extra permissions an admin is expected to have
     it { is_expected.to be_able_to(:memory_setting, Scraper) }
+    it { is_expected.to be_able_to(:create_private, Scraper) }
 
     context "when the site is in read-only mode" do
       before do
@@ -118,6 +121,7 @@ describe "ScraperAbility" do
       it { is_expected.not_to be_able_to(:create, Scraper) }
       it { is_expected.not_to be_able_to(:watch, scraper) }
       it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
+      it { is_expected.not_to be_able_to(:create_private, Scraper) }
 
       context "when scraper is owner by the user" do
         before do
