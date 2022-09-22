@@ -32,7 +32,7 @@ describe Morph::Language do
         # # Read in a page
         # page = agent.get("http://foo.com")
         #
-        # # Find somehing on the page using css selectors
+        # # Find something on the page using css selectors
         # p page.at('div.content')
         #
         # # Write out to the sqlite database using scraperwiki library
