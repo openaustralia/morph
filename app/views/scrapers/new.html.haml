@@ -47,13 +47,10 @@
                   hint: "Tip: Remember to include key words like location and organisation names, and the terms you would search when looking for this data."
 
     - if can? :create_private, Scraper
-      .panel.panel-info
-        .panel-heading
-          Special feature only available to certain users
-        .panel-body
-          .row
-            .col-sm-6
-              -# TODO: Add better explanation (and make it look more like github)
-              = f.input :private, as: :radio_buttons, collection: [["Public", false], ["Private", true]], label: "Visibility"
+      = render "shared/special_feature_panel" do
+        .row
+          .col-sm-6
+            -# TODO: Add better explanation (and make it look more like github)
+            = f.input :private, as: :radio_buttons, collection: [["Public", false], ["Private", true]], label: "Visibility"
 
     = f.button :submit, class: "btn-primary"
