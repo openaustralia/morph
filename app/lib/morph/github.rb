@@ -38,19 +38,11 @@ module Morph
 
     # Will create a repository. Works for both an individual and an
     # organisation. Returns a repo
-    sig { params(user: User, owner: Owner, name: String, options: T::Hash[Symbol, T.untyped]).void }
-    def self.create_repository(user, owner, name, options = {})
-      if user == owner
-        user.octokit_client.create_repository(
-          name,
-          options.merge(auto_init: true)
-        )
-      else
-        user.octokit_client.create_repository(
-          name,
-          options.merge(auto_init: true, organization: owner.nickname)
-        )
-      end
+    sig { params(user: User, owner: Owner, name: String, description: T.nilable(String)).void }
+    def self.create_repository(user:, owner:, name:, description:)
+      options = { description: description, auto_init: true }
+      options[:organization] = owner.nickname if user != owner
+      user.octokit_client.create_repository(name, options)
     end
 
     # Returns a list of all public repos. Works for both an individual and
