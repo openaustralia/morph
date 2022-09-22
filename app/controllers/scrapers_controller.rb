@@ -207,22 +207,14 @@ class ScrapersController < ApplicationController
   sig { returns(ActionController::Parameters) }
   def scraper_params
     s = T.cast(params.require(:scraper), ActionController::Parameters)
-    if can? :memory_setting, @scraper
-      s.permit(:auto_run, :memory_mb,
-               variables_attributes: %i[
-                 id name value _destroy
-               ],
-               webhooks_attributes: %i[
-                 id url _destroy
-               ])
-    else
-      s.permit(:auto_run,
-               variables_attributes: %i[
-                 id name value _destroy
-               ],
-               webhooks_attributes: %i[
-                 id url _destroy
-               ])
-    end
+    permitted_attributes = [:auto_run]
+    permitted_attributes << :memory_mb if can? :memory_setting, @scraper
+    s.permit(*permitted_attributes,
+             variables_attributes: %i[
+               id name value _destroy
+             ],
+             webhooks_attributes: %i[
+               id url _destroy
+             ])
   end
 end
