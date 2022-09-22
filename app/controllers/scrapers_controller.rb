@@ -39,12 +39,22 @@ class ScrapersController < ApplicationController
     params_scraper = T.cast(params[:scraper], ActionController::Parameters)
     authenticated_user = T.must(current_user)
 
-    scraper = Scraper.new(
-      original_language_key: params_scraper[:original_language_key],
-      owner_id: params_scraper[:owner_id],
-      name: params_scraper[:name],
-      description: params_scraper[:description]
-    )
+    scraper = if can? :create_private, Scraper
+                Scraper.new(
+                  original_language_key: params_scraper[:original_language_key],
+                  owner_id: params_scraper[:owner_id],
+                  name: params_scraper[:name],
+                  description: params_scraper[:description],
+                  private: params_scraper[:private]
+                )
+              else
+                Scraper.new(
+                  original_language_key: params_scraper[:original_language_key],
+                  owner_id: params_scraper[:owner_id],
+                  name: params_scraper[:name],
+                  description: params_scraper[:description]
+                )
+              end
     scraper.full_name = "#{scraper.owner.to_param}/#{scraper.name}"
     authorize! :create, scraper
     if scraper.valid?
