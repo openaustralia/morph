@@ -46,4 +46,10 @@
                   placeholder: "e.g. City of Sydney Development Applications",
                   hint: "Tip: Remember to include key words like location and organisation names, and the terms you would search when looking for this data."
 
+    - if can? :create_private, Scraper
+      .row
+        .col-sm-6
+          -# TODO: Add better explanation (and make it look more like github)
+          = f.input :private, as: :radio_buttons, collection: [["Public", false], ["Private", true]], label: "Visibility"
+
     = f.button :submit, class: "btn-primary"
