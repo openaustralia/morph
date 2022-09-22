@@ -39,7 +39,6 @@ module Morph
     end
 
     # The main section of the scraper running that is run in the background
-    # TODO: Is stream always String or Symbol or both?
     sig { params(block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
     def synch_and_go!(&block)
       scraper = run.scraper
