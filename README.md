@@ -57,6 +57,7 @@ to run Elasticsearch.
 Edit `config/database.yml` with your database settings
 
 <!-- TODO: Update this for the new GitHub apps (also below they're called OAuth apps now) -->
+<!-- TODO: Add instructions for debugging and working with callbacks for the GitHub app in development with https://webhook.site and https://ngrok.com/ >
 
 Create an [application on GitHub](https://github.com/settings/applications/new) so that morph.io can talk to GitHub. Fill in the following values
 
