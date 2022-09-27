@@ -330,7 +330,7 @@ class Scraper < ApplicationRecord
   # Returns true if successfull
   sig { returns(T::Boolean) }
   def synchronise_repo
-    url = git_url_https
+    url = git_url_https_with_app_access
     return false if url.nil?
 
     success = Morph::Github.synchronise_repo(repo_path, url)
@@ -350,6 +350,14 @@ class Scraper < ApplicationRecord
   def git_url_https
     url = git_url
     "https#{url[3..-1]}" if url
+  end
+
+  # This is all a bit hacky
+  # TODO: Tidy up
+  sig { returns(T.nilable(String)) }
+  def git_url_https_with_app_access
+    token = Morph::Github.app_installation_access_token(T.must(owner))
+    git_url_https&.sub("https://", "https://x-access-token:#{token}@")
   end
 
   sig { params(run: Run).void }
