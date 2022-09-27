@@ -32,7 +32,8 @@ module Morph
         synchronise_repo_ignore_submodules(File.join(repo_path, submodule.path), submodule.url)
       end
       true
-    rescue Rugged::HTTPError, Rugged::SubmoduleError
+    rescue Rugged::HTTPError, Rugged::SubmoduleError => e
+      Rails.logger.warn "Error during Github.synchronise_repo: #{e}"
       # TODO: Give the user more detailed feedback about the problem
       # Indicate there was a problem
       false
@@ -154,6 +155,24 @@ module Morph
       }
 
       JWT.encode(payload, private_key, "RS256")
+    end
+
+    sig { returns(Octokit::Client) }
+    def self.jwt_client
+      Octokit::Client.new(bearer_token: jwt)
+    end
+
+    sig { params(owner: Owner).returns(Integer) }
+    def self.app_installation_id_for_owner(owner)
+      # Curious. This single API endpoint seems to support both users and organizations despite there being
+      # two separate API endpoints available. Hmmm... Well, let's just run with that then...
+      # TODO: If there is no installation for the owner below raises Octokit::NotFound. Handle this!
+      jwt_client.find_user_installation(owner.nickname).id
+    end
+
+    sig { params(owner: Owner).returns(String) }
+    def self.app_installation_access_token(owner)
+      jwt_client.create_app_installation_access_token(app_installation_id_for_owner(owner)).token
     end
   end
 end
