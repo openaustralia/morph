@@ -14,6 +14,8 @@ module Morph
       if File.exist?(repo_path) && !Dir.empty?(repo_path)
         Rails.logger.info "Updating git repo #{repo_path}..."
         repo = Rugged::Repository.new(repo_path)
+        # Always update the remote with the latest git_url because the token in it expires quickly
+        repo.remotes.set_url("origin", git_url)
         repo.fetch("origin")
         repo.reset("FETCH_HEAD", :hard)
         repo
