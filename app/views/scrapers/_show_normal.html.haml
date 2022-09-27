@@ -68,7 +68,6 @@
         %strong.scraper-lang= scraper.language.human
       - if scraper.github_url
         %p
-
           = link_to scraper.github_url, target: "_blank", rel: "noopener" do
             = scraper.name
           - if scraper.main_scraper_filename
