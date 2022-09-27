@@ -689,6 +689,7 @@ DEPENDENCIES
   jbuilder
   jquery-rails
   jquery-ui-rails (~> 5)
+  jwt
   kaminari
   kaminari-bootstrap (~> 3.0.1)
   memory_profiler

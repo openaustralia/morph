@@ -103,6 +103,9 @@ gem "sorbet-static-and-runtime"
 # TODO: Figure out what's going on here
 gem "psych", "< 4"
 
+# For making JSON Web Tokens used by Github API
+gem "jwt"
+
 group :production do
   gem "dalli"
 end
