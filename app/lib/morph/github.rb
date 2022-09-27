@@ -82,6 +82,14 @@ module Morph
       nil
     end
 
+    sig { returns(T.nilable(Integer)) }
+    def self.app_id
+      v = ENV.fetch("GITHUB_APP_ID", nil)
+      return v if v.nil?
+
+      v.to_i
+    end
+
     sig { returns(T.nilable(String)) }
     def self.app_client_id
       ENV.fetch("GITHUB_APP_CLIENT_ID", nil)
@@ -142,7 +150,7 @@ module Morph
         # JWT expiration time (10 minute maximum)
         exp: Time.now.to_i + (10 * 60),
         # GitHub App's identifier
-        iss: app_client_id
+        iss: app_id
       }
 
       JWT.encode(payload, private_key, "RS256")
