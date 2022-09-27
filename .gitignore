@@ -31,6 +31,8 @@ vagrant_ansible_inventory_local
 vagrant_ansible_inventory_production
 vagrant_ansible_inventory_production2
 config/database.yml
+# Private key for morph GitHub application
+config/morph-github-app.private-key.pem
 coverage
 db/backups
 docker_images/morph-mitmdump/mitmproxy/mitmproxy-dhparam.pem

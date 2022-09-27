@@ -6,6 +6,8 @@ module Morph
   class Github
     extend T::Sig
 
+    MORPH_GITHUB_APP_PRIVATE_KEY_PATH = "config/morph-github-app.private-key.pem"
+
     # Returns Rugged::Repository
     sig { params(repo_path: String, git_url: String).returns(Rugged::Repository) }
     def self.synchronise_repo_ignore_submodules(repo_path, git_url)
@@ -125,6 +127,25 @@ module Morph
       # github call returns nil if the git repo is completely empty
       contributors = [] unless contributors.is_a?(Array)
       contributors.map { |c| c["login"] }
+    end
+
+    sig { returns(String) }
+    def self.jwt
+      # Private key contents
+      private_pem = File.read(MORPH_GITHUB_APP_PRIVATE_KEY_PATH)
+      private_key = OpenSSL::PKey::RSA.new(private_pem)
+
+      # Generate the JWT
+      payload = {
+        # issued at time, 60 seconds in the past to allow for clock drift
+        iat: Time.now.to_i - 60,
+        # JWT expiration time (10 minute maximum)
+        exp: Time.now.to_i + (10 * 60),
+        # GitHub App's identifier
+        iss: app_client_id
+      }
+
+      JWT.encode(payload, private_key, "RS256")
     end
   end
 end
