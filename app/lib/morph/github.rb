@@ -80,6 +80,16 @@ module Morph
       nil
     end
 
+    sig { returns(T.nilable(String)) }
+    def self.app_client_id
+      ENV.fetch("GITHUB_APP_CLIENT_ID", nil)
+    end
+
+    sig { returns(T.nilable(String)) }
+    def self.app_client_secret
+      ENV.fetch("GITHUB_APP_CLIENT_SECRET", nil)
+    end
+
     # Return a new github access token for a user given their old one.
     # Useful after #heartbleed.
     # No support for this method yet in octokit (it's brand new) so do
@@ -87,14 +97,11 @@ module Morph
     sig { params(access_token: String).void }
     def self.reset_authorization(access_token)
       # POST https://api.github.com/applications/:client_id/tokens/:access_token
-      client_id = ENV.fetch("GITHUB_APP_CLIENT_ID", nil)
-      client_secret = ENV.fetch("GITHUB_APP_CLIENT_SECRET", nil)
-
       conn = Faraday.new(url: "https://api.github.com") do |faraday|
-        faraday.request :authorization, :basic, client_id, client_secret
+        faraday.request :authorization, :basic, app_client_id, app_client_secret
         faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
       end
-      res = conn.post("/applications/#{client_id}/tokens/#{access_token}")
+      res = conn.post("/applications/#{app_client_id}/tokens/#{access_token}")
       JSON.parse(res.body)["token"]
     end
 
@@ -109,11 +116,8 @@ module Morph
 
       # I'm struggling to make a request with the application id and secret using octokit.
       # So, instead let's do it ourselves
-      client_id = ENV.fetch("GITHUB_APP_CLIENT_ID", nil)
-      client_secret = ENV.fetch("GITHUB_APP_CLIENT_SECRET", nil)
-
       conn = Faraday.new(url: "https://api.github.com") do |faraday|
-        faraday.request :authorization, :basic, client_id, client_secret
+        faraday.request :authorization, :basic, app_client_id, app_client_secret
         faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
       end
       res = conn.get("/repos/#{repo_full_name}/contributors")
