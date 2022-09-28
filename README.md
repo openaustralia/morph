@@ -56,8 +56,19 @@ to run Elasticsearch.
 
 Edit `config/database.yml` with your database settings
 
+### Tunnel GitHub webhook traffic back to your local development machine
+
+We use "ngrok" a tool that makes tunnelling internet traffic to a local development machine easy. First [download ngrok](https://ngrok.com/download) if you don't have it already. Then,
+
+    ngrok http 5100
+
+Make note of the `http://*.ngrok.io` forwarding URL.
+
+<!-- TODO: Add instructions for debugging and working with callbacks for the GitHub app in development with https://webhook.site -->
+
+### Creating Github Application
+
 <!-- TODO: Update this for the new GitHub apps (also below they're called OAuth apps now) -->
-<!-- TODO: Add instructions for debugging and working with callbacks for the GitHub app in development with https://webhook.site and https://ngrok.com/ >
 
 Create an [application on GitHub](https://github.com/settings/applications/new) so that morph.io can talk to GitHub. Fill in the following values
 
