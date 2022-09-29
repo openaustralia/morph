@@ -11,7 +11,7 @@ class CreateFromGithubWorker
   def perform(scraper_id)
     scraper = Scraper.find(scraper_id)
     scraper.create_scraper_progress.update_progress("Synching repository", 50)
-    scraper.synchronise_repo
+    SynchroniseRepoService.call(scraper)
     scraper.create_scraper_progress.finished
   end
 end

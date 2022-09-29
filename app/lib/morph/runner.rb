@@ -48,7 +48,7 @@ module Morph
       return if scraper.nil? || run.finished?
 
       # TODO: Indicate that scraper is running before we do the synching
-      success = scraper.synchronise_repo
+      success = SynchroniseRepoService.call(scraper)
 
       unless success
         c = "There was a problem getting the latest scraper code from GitHub"

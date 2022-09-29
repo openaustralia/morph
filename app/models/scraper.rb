@@ -327,24 +327,6 @@ class Scraper < ApplicationRecord
     client.update_ref(full_name, "heads/main", commit.sha)
   end
 
-  # Returns true if successfull
-  sig { returns(T::Boolean) }
-  def synchronise_repo
-    url = git_url_https_with_app_access
-    return false if url.nil?
-
-    success = Morph::Github.synchronise_repo(repo_path, url)
-    return false unless success
-
-    update_repo_size
-    update_contributors
-    true
-  rescue Grit::Git::CommandFailed => e
-    Rails.logger.error "git command failed: #{e}"
-    Rails.logger.error "Ignoring and moving onto the next one..."
-    false
-  end
-
   # Return the https version of the git clone url (git_url)
   sig { returns(T.nilable(String)) }
   def git_url_https

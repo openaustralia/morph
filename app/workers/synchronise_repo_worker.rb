@@ -9,6 +9,6 @@ class SynchroniseRepoWorker
 
   sig { params(id: Integer).void }
   def perform(id)
-    Scraper.find(id).synchronise_repo
+    SynchroniseRepoService.call(Scraper.find(id))
   end
 end
