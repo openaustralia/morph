@@ -75,14 +75,6 @@ class AppRake
       Morph::DockerRunner.update_docker_images!
     end
 
-    desc "Synchronise all repositories"
-    task synchronise_repos: :environment do
-      Scraper.all.each do |s|
-        SynchroniseRepoWorker.perform_async(s.id)
-      end
-      puts "Put jobs on to the background queue to synchronise all repositories"
-    end
-
     desc "Promote user to admin"
     task promote_to_admin: :environment do
       puts "Which github nickname do you want to promote to admin?"
