@@ -270,11 +270,6 @@ class Scraper < ApplicationRecord
     platform
   end
 
-  sig { returns(String) }
-  def current_revision_from_repo
-    Morph::Github.current_revision_from_repo(repo_path)
-  end
-
   # Overwrites whatever there was before in that repo
   # Obviously use with great care
   sig { params(user: User, files: T::Hash[String, String], message: String).void }

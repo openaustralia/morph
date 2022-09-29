@@ -110,7 +110,7 @@ module Morph
       # puts "Starting...\n"
       run.database.backup
       run.update(started_at: Time.zone.now,
-                 git_revision: run.scraper&.current_revision_from_repo)
+                 git_revision: Morph::Github.current_revision_from_repo(run.repo_path))
       sync_update run.scraper if run.scraper
       FileUtils.mkdir_p run.data_path
       FileUtils.chmod 0o777, run.data_path
