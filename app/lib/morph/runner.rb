@@ -243,7 +243,6 @@ module Morph
           )
         end
       end
-      Morph::Database.tidy_data_path(run.data_path)
 
       run.update(status_code: status_code, finished_at: Time.zone.now)
 
