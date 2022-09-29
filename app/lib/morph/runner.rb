@@ -53,7 +53,7 @@ module Morph
       rescue SynchroniseRepoService::NoAppInstallationForOwner
         # TODO: Include all currently used scrapers under that owner in the list of suggested repositories
         # TODO: Could we make system error messages clickable?
-        c = "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to https://github.com/apps/#{ENV.fetch('GITHUB_APP_NAME', nil)}/installations/new/permissions?suggested_target_id=#{scraper.owner.uid}"
+        c = "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to https://github.com/apps/#{ENV.fetch('GITHUB_APP_NAME', nil)}/installations/new/permissions?suggested_target_id=#{T.must(scraper.owner).uid}"
         log(nil, :stderr, c)
         block.call nil, :stderr, c if block_given?
         run.update(status_code: 999, finished_at: Time.zone.now)
