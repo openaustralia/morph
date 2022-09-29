@@ -1,9 +1,10 @@
-# typed: strict
+# typed: true
 # frozen_string_literal: true
 
 require "action_view/dependency_tracker"
 require "bootsnap/setup"
 require "bundler/setup"
+require "cancan/matchers"
 require "capybara/rspec"
 require "csv"
 require "devise/orm/active_record"
@@ -14,6 +15,7 @@ require "optparse"
 require "rails/all"
 require "rails_autolink/helpers"
 require "rspec/rails"
+require "rspec/sorbet"
 require "sidekiq/cli"
 require "sidekiq/testing"
 require "sidekiq/web"
