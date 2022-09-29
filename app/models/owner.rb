@@ -140,4 +140,11 @@ class Owner < ApplicationRecord
     s = stripe_plan_id
     Plan.new(s) if s
   end
+
+  # This returns a url to install the Morph Github app for this owner
+  # TODO: Include all currently used scrapers for this owner in the list of suggested repositories
+  sig { returns(String) }
+  def app_install_url
+    "https://github.com/apps/#{ENV.fetch('GITHUB_APP_NAME', nil)}/installations/new/permissions?suggested_target_id=#{uid}"
+  end
 end

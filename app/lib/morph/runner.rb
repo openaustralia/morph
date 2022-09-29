@@ -84,10 +84,9 @@ module Morph
       begin
         success = SynchroniseRepoService.call(scraper)
       rescue SynchroniseRepoService::NoAppInstallationForOwner
-        # TODO: Include all currently used scrapers under that owner in the list of suggested repositories
         error(
           status_code: 999,
-          text: "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to https://github.com/apps/#{ENV.fetch('GITHUB_APP_NAME', nil)}/installations/new/permissions?suggested_target_id=#{T.must(scraper.owner).uid}",
+          text: "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to #{T.must(scraper.owner).app_install_url}",
           &block
         )
         return
