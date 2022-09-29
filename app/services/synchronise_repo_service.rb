@@ -14,12 +14,22 @@ class SynchroniseRepoService
     success = Morph::Github.synchronise_repo(scraper.repo_path, url)
     return false unless success
 
-    scraper.update_repo_size
-    scraper.update_contributors
+    update_repo_size(scraper)
+    update_contributors(scraper)
     true
   rescue Grit::Git::CommandFailed => e
     Rails.logger.error "git command failed: #{e}"
     Rails.logger.error "Ignoring and moving onto the next one..."
     false
+  end
+
+  sig { params(scraper: Scraper).void }
+  def self.update_repo_size(scraper)
+    scraper.update_repo_size
+  end
+
+  sig { params(scraper: Scraper).void }
+  def self.update_contributors(scraper)
+    scraper.update_contributors
   end
 end
