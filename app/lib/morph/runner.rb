@@ -65,9 +65,9 @@ module Morph
       block.call timestamp, stream, text if block_given?
     end
 
-    sig { params(text: String, stream: Symbol, status_code: Integer, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
-    def error(text:, stream:, status_code:, &block)
-      block.call(nil, stream, text) if block_given?
+    sig { params(text: String, status_code: Integer, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
+    def error(text:, status_code:, &block)
+      block.call(nil, :internalerr, text) if block_given?
       run.update(status_code: status_code, finished_at: Time.zone.now)
       sync_update run.scraper if run.scraper
     end
@@ -87,7 +87,6 @@ module Morph
         # TODO: Include all currently used scrapers under that owner in the list of suggested repositories
         # TODO: Could we make system error messages clickable?
         error(
-          stream: :stderr,
           status_code: 999,
           text: "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to https://github.com/apps/#{ENV.fetch('GITHUB_APP_NAME', nil)}/installations/new/permissions?suggested_target_id=#{T.must(scraper.owner).uid}",
           &block
@@ -96,7 +95,7 @@ module Morph
       end
 
       unless success
-        error(text: "There was a problem getting the latest scraper code from GitHub", stream: :stderr, status_code: 999, &block)
+        error(text: "There was a problem getting the latest scraper code from GitHub", status_code: 999, &block)
         return
       end
 
@@ -141,13 +140,13 @@ module Morph
         supported_scraper_files =
           Morph::Language.languages_supported.map(&:scraper_filename)
         supported_scraper_files_as_text = supported_scraper_files.to_sentence(last_word_connector: ", or ")
-        error(text: "Can't find scraper code. Expected to find a file called #{supported_scraper_files_as_text} in the root directory", stream: :stderr, status_code: 999, &block)
+        error(text: "Can't find scraper code. Expected to find a file called #{supported_scraper_files_as_text} in the root directory", status_code: 999, &block)
         return
       end
 
       platform = run.scraper&.platform
       unless platform.nil? || Morph::DockerRunner::PLATFORMS.include?(platform)
-        error(text: "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}.", stream: :stderr, status_code: 999, &block)
+        error(text: "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}.", status_code: 999, &block)
         return
       end
 
