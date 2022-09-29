@@ -102,10 +102,7 @@ module Morph
       # If container already exists we just attach to it
       c = container_for_run
       if c.nil?
-        c = compile_and_start_run(max_lines) do |stream, text|
-          # TODO: Could we get sensible timestamps out at this stage too?
-          block.call nil, stream, text if block_given?
-        end
+        c = compile_and_start_run(max_lines, &block)
         since = nil
       else
         # The timestamp of the last log line we've already captured
@@ -121,7 +118,9 @@ module Morph
       attach_to_run_and_finish(c, since, &block)
     end
 
-    sig { params(max_lines: Integer, block: T.proc.params(stream: Symbol, text: String).void).returns(T.nilable(Docker::Container)) }
+    # TODO: Could we get sensible timestamps out at this stage too?
+    # Right now we're just returning nil for the timestamps here
+    sig { params(max_lines: Integer, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).returns(T.nilable(Docker::Container)) }
     def compile_and_start_run(max_lines = Runner.default_max_lines, &block)
       # puts "Starting...\n"
       run.database.backup
@@ -137,14 +136,14 @@ module Morph
           Morph::Language.languages_supported.map(&:scraper_filename)
         supported_scraper_files_as_text = supported_scraper_files.to_sentence(last_word_connector: ", or ")
         m = "Can't find scraper code. Expected to find a file called #{supported_scraper_files_as_text} in the root directory"
-        block.call :stderr, m
+        block.call(nil, :stderr, m) if block_given?
         run.update(status_code: 999, finished_at: Time.zone.now)
         return
       end
 
       platform = run.scraper&.platform
       unless platform.nil? || Morph::DockerRunner::PLATFORMS.include?(platform)
-        block.call :stderr, "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}."
+        block.call(nil, :stderr, "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}.") if block_given?
         run.update(status_code: 999, finished_at: Time.zone.now)
         return
       end

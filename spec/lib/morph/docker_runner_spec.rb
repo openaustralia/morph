@@ -17,7 +17,7 @@ describe Morph::DockerRunner do
 
     it "lets me know that it can't select a buildpack" do
       logs = []
-      c = described_class.compile_and_start_run(repo_path: dir) do |stream, text|
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
         logs << [stream, text]
       end
 
@@ -120,7 +120,7 @@ describe Morph::DockerRunner do
       c.kill
       c.delete
 
-      c = described_class.compile_and_start_run(repo_path: dir) do |stream, text|
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
         logs << [stream, text]
       end
 
@@ -234,7 +234,7 @@ describe Morph::DockerRunner do
       copy_test_scraper("stream_output_ruby")
 
       logs = []
-      c = described_class.compile_and_start_run(repo_path: dir) do |_stream, text|
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, _stream, text|
         logs << [Time.zone.now, text]
       end
       described_class.attach_to_run(c) do |_timestamp, _stream, text|
@@ -250,7 +250,6 @@ describe Morph::DockerRunner do
       copy_test_scraper("stream_output_ruby")
 
       logs = []
-      # TODO: Really should be able to call compile_and_start_run without a block
       c = described_class.compile_and_start_run(repo_path: dir)
       # Simulate the log process stopping
       last_timestamp = nil
