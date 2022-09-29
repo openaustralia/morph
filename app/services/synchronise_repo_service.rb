@@ -30,7 +30,10 @@ class SynchroniseRepoService
 
   sig { params(scraper: Scraper).void }
   def self.update_contributors(scraper)
-    scraper.update_contributors
+    nicknames = Morph::Github.contributor_nicknames(scraper.full_name)
+    contributors = nicknames.map { |n| User.find_or_create_by_nickname(n) }
+    # TODO: Use update! here?
+    scraper.update(contributors: contributors)
   end
 
   # It seems silly implementing this

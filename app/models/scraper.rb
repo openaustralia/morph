@@ -117,13 +117,6 @@ class Scraper < ApplicationRecord
     Morph::Language.new(o.to_sym) if o
   end
 
-  sig { void }
-  def update_contributors
-    nicknames = Morph::Github.contributor_nicknames(full_name)
-    contributors = nicknames.map { |n| User.find_or_create_by_nickname(n) }
-    update(contributors: contributors)
-  end
-
   sig { returns(ActiveRecord::AssociationRelation) }
   def successful_runs
     runs.order(finished_at: :desc).finished_successfully
