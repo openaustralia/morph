@@ -45,6 +45,7 @@ Sorbet/StrictSigil:
     - sync.ru
     # Views are picked up in rubocop by haml-lint
     - app/views/**/*
+    - sorbet/tapioca/require.rb
 
 # This conflicts with the type checking that sorbet does
 Lint/SafeNavigationConsistency:
