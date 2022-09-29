@@ -59,7 +59,6 @@ describe Morph::Runner do
           raise Sidekiq::Shutdown if c.include? "2..."
         end
       end.to raise_error(Sidekiq::Shutdown)
-      p logs
       run.reload
       expect(run).to be_running
       # We expect the container to still be running
