@@ -109,8 +109,9 @@ module Morph
     def compile_and_start_run(max_lines = Runner.default_max_lines, &block)
       # puts "Starting...\n"
       run.database.backup
-      run.update(started_at: Time.zone.now,
-                 git_revision: Morph::Github.current_revision_from_repo(run.repo_path))
+      # If the run is not part of a scraper (e.g. through the api) then there won't be a git repository
+      git_revision = Morph::Github.current_revision_from_repo(run.repo_path) unless run.scraper.nil?
+      run.update(started_at: Time.zone.now, git_revision: git_revision)
       sync_update run.scraper if run.scraper
       FileUtils.mkdir_p run.data_path
       FileUtils.chmod 0o777, run.data_path
