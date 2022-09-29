@@ -183,5 +183,11 @@ module Morph
 
       jwt_client.create_app_installation_access_token(id).token
     end
+
+    sig { params(repo_path: String).returns(String) }
+    def self.current_revision_from_repo(repo_path)
+      r = Rugged::Repository.new(repo_path)
+      r.head.target_id
+    end
   end
 end

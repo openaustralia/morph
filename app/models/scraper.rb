@@ -272,8 +272,7 @@ class Scraper < ApplicationRecord
 
   sig { returns(String) }
   def current_revision_from_repo
-    r = Rugged::Repository.new(repo_path)
-    r.head.target_id
+    Morph::Github.current_revision_from_repo(repo_path)
   end
 
   # Overwrites whatever there was before in that repo
