@@ -15,8 +15,7 @@ class Run < ApplicationRecord
   scope :finished_successfully, -> { where(status_code: 0) }
   scope :running, -> { where(finished_at: nil).where.not(started_at: nil) }
 
-  delegate :git_url, :full_name, :current_revision_from_repo,
-           to: :scraper, allow_nil: true
+  delegate :git_url, :full_name, to: :scraper, allow_nil: true
   delegate :utime, :stime, :cpu_time, to: :metric, allow_nil: true
 
   # rubocop:disable Style/SymbolProc
