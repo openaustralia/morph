@@ -211,7 +211,7 @@ module Morph
           However, this could also be related to an intermittent problem which we're
           working hard to resolve: https://github.com/openaustralia/morph/issues/1064
         ERROR
-        block.call Time.zone.now, :stderr, m if block_given?
+        block.call Time.zone.now, :internalerr, m if block_given?
         status_code = 998
       end
 
