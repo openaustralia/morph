@@ -61,7 +61,7 @@ class EmergencyRake
           else
             puts "Queueing #{index + 1}/#{total} #{domain}"
             d = Domain.create!(name: domain)
-            UpdateDomainWorker.perform_async(d.id)
+            UpdateDomainWorker.perform_async(T.must(d.id))
           end
         end
       end
