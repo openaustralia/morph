@@ -40,7 +40,7 @@ module Morph
 
     # The main section of the scraper running that is run in the background
     sig { params(block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
-    def synch_and_go!(&block)
+    def synch_and_go_with_logging!(&block)
       scraper = run.scraper
       # If this run belongs to a scraper that has just been deleted
       # or if the run has already been marked as finished then

@@ -21,6 +21,6 @@ class RunWorker
     runner = Morph::Runner.new(run)
     raise NoRemainingSlotsError if Morph::Runner.available_slots.zero? && runner.container_for_run.nil?
 
-    runner.synch_and_go!
+    runner.synch_and_go_with_logging!
   end
 end

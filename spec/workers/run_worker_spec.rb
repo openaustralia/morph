@@ -8,12 +8,12 @@ describe RunWorker do
 
   it "calls the runner" do
     run = Run.create!(owner: user)
-    runner = instance_double(Morph::Runner, synch_and_go!: nil)
+    runner = instance_double(Morph::Runner, synch_and_go_with_logging!: nil)
     allow(Morph::Runner).to receive(:new).with(run).and_return(runner)
 
     described_class.new.perform(run.id)
 
-    expect(runner).to have_received(:synch_and_go!)
+    expect(runner).to have_received(:synch_and_go_with_logging!)
   end
 
   it "does nothing if the run does not exist anymore" do
