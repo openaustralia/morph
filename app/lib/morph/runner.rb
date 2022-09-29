@@ -54,8 +54,7 @@ module Morph
         # TODO: Include all currently used scrapers under that owner in the list of suggested repositories
         # TODO: Could we make system error messages clickable?
         c = "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to https://github.com/apps/#{ENV.fetch('GITHUB_APP_NAME', nil)}/installations/new/permissions?suggested_target_id=#{T.must(scraper.owner).uid}"
-        log(nil, :stderr, c)
-        block.call nil, :stderr, c if block_given?
+        log(nil, :stderr, c, &block)
         run.update(status_code: 999, finished_at: Time.zone.now)
         sync_update scraper if scraper
         return
@@ -63,8 +62,7 @@ module Morph
 
       unless success
         c = "There was a problem getting the latest scraper code from GitHub"
-        log(nil, :stderr, c)
-        block.call nil, :stderr, c if block_given?
+        log(nil, :stderr, c, &block)
         run.update(status_code: 999, finished_at: Time.zone.now)
         sync_update scraper if scraper
         return
@@ -76,13 +74,12 @@ module Morph
     sig { params(max_lines: Integer, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
     def go_with_logging(max_lines = Runner.default_max_lines, &block)
       go(max_lines) do |timestamp, s, c|
-        log(timestamp, s, c)
-        block.call timestamp, s, c if block_given?
+        log(timestamp, s, c, &block)
       end
     end
 
-    sig { params(timestamp: T.nilable(Time), stream: Symbol, text: String).void }
-    def log(timestamp, stream, text)
+    sig { params(timestamp: T.nilable(Time), stream: Symbol, text: String, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
+    def log(timestamp, stream, text, &block)
       Rails.logger.info "#{stream}: #{text}" if Rails.env.development?
       # Not using create on association to try to avoid memory bloat
       # Truncate text so that it fits in the database
@@ -90,6 +87,7 @@ module Morph
       # particularly careful with unicode.
       line = LogLine.create!(run: run, timestamp: timestamp, stream: stream.to_s, text: text.mb_chars.limit(65535).to_s)
       sync_new line, scope: run unless Rails.env.test?
+      block.call timestamp, stream, text if block_given?
     end
 
     sig { params(max_lines: Integer, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
