@@ -68,7 +68,9 @@ module Morph
         return
       end
 
-      go_with_logging
+      go(Runner.default_max_lines) do |timestamp, stream, text|
+        log(timestamp, stream, text, &block)
+      end
     end
 
     sig { params(max_lines: Integer, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
