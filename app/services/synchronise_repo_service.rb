@@ -8,7 +8,7 @@ class SynchroniseRepoService
   # TODO: Return more helpful error messages
   sig { params(scraper: Scraper).returns(T::Boolean) }
   def self.call(scraper)
-    url = scraper.git_url_https_with_app_access
+    url = git_url_https_with_app_access(scraper)
     return false if url.nil?
 
     success = Morph::Github.synchronise_repo(scraper.repo_path, url)
@@ -21,6 +21,17 @@ class SynchroniseRepoService
     Rails.logger.error "git command failed: #{e}"
     Rails.logger.error "Ignoring and moving onto the next one..."
     false
+  end
+
+  # This is all a bit hacky
+  # TODO: Tidy up
+  # Also returns nil if there is no app installed for the owner
+  sig { params(scraper: Scraper).returns(T.nilable(String)) }
+  def self.git_url_https_with_app_access(scraper)
+    token = Morph::Github.app_installation_access_token(T.must(scraper.owner))
+    return nil if token.nil?
+
+    scraper.git_url_https&.sub("https://", "https://x-access-token:#{token}@")
   end
 
   sig { params(scraper: Scraper).void }
