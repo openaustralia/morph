@@ -25,11 +25,32 @@ class SynchroniseRepoService
 
   sig { params(scraper: Scraper).void }
   def self.update_repo_size(scraper)
-    scraper.update_repo_size
+    scraper.update!(repo_size: directory_size(scraper.repo_path))
   end
 
   sig { params(scraper: Scraper).void }
   def self.update_contributors(scraper)
     scraper.update_contributors
+  end
+
+  # It seems silly implementing this
+  sig { params(directory: String).returns(Integer) }
+  def self.directory_size(directory)
+    r = 0
+    if File.exist?(directory)
+      # Ick
+      files = Dir.entries(directory)
+      files.delete(".")
+      files.delete("..")
+      files.map { |f| File.join(directory, f) }.each do |f|
+        s = File.lstat(f)
+        r += if s.file?
+               s.size
+             else
+               directory_size(f)
+             end
+      end
+    end
+    r
   end
 end

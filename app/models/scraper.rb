@@ -277,32 +277,6 @@ class Scraper < ApplicationRecord
     platform
   end
 
-  # It seems silly implementing this
-  sig { params(directory: String).returns(Integer) }
-  def self.directory_size(directory)
-    r = 0
-    if File.exist?(directory)
-      # Ick
-      files = Dir.entries(directory)
-      files.delete(".")
-      files.delete("..")
-      files.map { |f| File.join(directory, f) }.each do |f|
-        s = File.lstat(f)
-        r += if s.file?
-               s.size
-             else
-               Scraper.directory_size(f)
-             end
-      end
-    end
-    r
-  end
-
-  sig { void }
-  def update_repo_size
-    update!(repo_size: Scraper.directory_size(repo_path))
-  end
-
   sig { returns(String) }
   def current_revision_from_repo
     r = Grit::Repo.new(repo_path)
