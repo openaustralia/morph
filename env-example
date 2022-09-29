@@ -3,6 +3,8 @@
 # Copy this to .env and fill in the x's - these values are then automatically loaded as environment variables
 # See https://github.com/bkeepers/dotenv for more information
 
+GITHUB_APP_ID=xxxxxx
+GITHUB_APP_NAME=xxxxxxxxxx
 GITHUB_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
 GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 

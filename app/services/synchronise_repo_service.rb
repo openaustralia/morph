@@ -4,14 +4,14 @@
 class SynchroniseRepoService
   extend T::Sig
 
+  # Says that the morph github app has not been installed on the user or organization
+  class NoAppInstallationForOwner < StandardError; end
+
   # Returns true if successfull
   # TODO: Return more helpful error messages
   sig { params(scraper: Scraper).returns(T::Boolean) }
   def self.call(scraper)
-    url = git_url_https_with_app_access(scraper)
-    return false if url.nil?
-
-    success = Morph::Github.synchronise_repo(scraper.repo_path, url)
+    success = Morph::Github.synchronise_repo(scraper.repo_path, git_url_https_with_app_access(scraper))
     return false unless success
 
     update_repo_size(scraper)
@@ -21,11 +21,10 @@ class SynchroniseRepoService
 
   # This is all a bit hacky
   # TODO: Tidy up
-  # Also returns nil if there is no app installed for the owner
-  sig { params(scraper: Scraper).returns(T.nilable(String)) }
+  sig { params(scraper: Scraper).returns(String) }
   def self.git_url_https_with_app_access(scraper)
     token = Morph::Github.app_installation_access_token(T.must(scraper.owner))
-    return nil if token.nil?
+    raise NoAppInstallationForOwner if token.nil?
 
     scraper.git_url_https&.sub("https://", "https://x-access-token:#{token}@")
   end
