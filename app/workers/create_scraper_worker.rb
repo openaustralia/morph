@@ -39,6 +39,7 @@ class CreateScraperWorker
 
     # This block should happily run several times (after failures)
     scraper.create_scraper_progress.update_progress("Synching repository", 80)
+    # TODO: We're ignoring any errors in the synchronising. Do we want to do this?
     SynchroniseRepoService.call(scraper)
     scraper.create_scraper_progress.finished
   end
