@@ -65,6 +65,13 @@ module Morph
       block.call timestamp, stream, text if block_given?
     end
 
+    sig { params(text: String, stream: Symbol, status_code: Integer, block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
+    def error(text:, stream:, status_code:, &block)
+      block.call(nil, stream, text) if block_given?
+      run.update(status_code: status_code, finished_at: Time.zone.now)
+      sync_update run.scraper if run.scraper
+    end
+
     sig { params(block: T.nilable(T.proc.params(timestamp: T.nilable(Time), stream: Symbol, text: String).void)).void }
     def synch_and_go!(&block)
       scraper = run.scraper
@@ -79,18 +86,17 @@ module Morph
       rescue SynchroniseRepoService::NoAppInstallationForOwner
         # TODO: Include all currently used scrapers under that owner in the list of suggested repositories
         # TODO: Could we make system error messages clickable?
-        c = "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to https://github.com/apps/#{ENV.fetch('GITHUB_APP_NAME', nil)}/installations/new/permissions?suggested_target_id=#{T.must(scraper.owner).uid}"
-        block.call(nil, :stderr, c) if block_given?
-        run.update(status_code: 999, finished_at: Time.zone.now)
-        sync_update scraper if scraper
+        error(
+          stream: :stderr,
+          status_code: 999,
+          text: "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to https://github.com/apps/#{ENV.fetch('GITHUB_APP_NAME', nil)}/installations/new/permissions?suggested_target_id=#{T.must(scraper.owner).uid}",
+          &block
+        )
         return
       end
 
       unless success
-        c = "There was a problem getting the latest scraper code from GitHub"
-        block.call(nil, :stderr, c) if block_given?
-        run.update(status_code: 999, finished_at: Time.zone.now)
-        sync_update scraper if scraper
+        error(text: "There was a problem getting the latest scraper code from GitHub", stream: :stderr, status_code: 999, &block)
         return
       end
 
@@ -135,16 +141,13 @@ module Morph
         supported_scraper_files =
           Morph::Language.languages_supported.map(&:scraper_filename)
         supported_scraper_files_as_text = supported_scraper_files.to_sentence(last_word_connector: ", or ")
-        m = "Can't find scraper code. Expected to find a file called #{supported_scraper_files_as_text} in the root directory"
-        block.call(nil, :stderr, m) if block_given?
-        run.update(status_code: 999, finished_at: Time.zone.now)
+        error(text: "Can't find scraper code. Expected to find a file called #{supported_scraper_files_as_text} in the root directory", stream: :stderr, status_code: 999, &block)
         return
       end
 
       platform = run.scraper&.platform
       unless platform.nil? || Morph::DockerRunner::PLATFORMS.include?(platform)
-        block.call(nil, :stderr, "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}.") if block_given?
-        run.update(status_code: 999, finished_at: Time.zone.now)
+        error(text: "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}.", stream: :stderr, status_code: 999, &block)
         return
       end
 
