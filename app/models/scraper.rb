@@ -354,9 +354,12 @@ class Scraper < ApplicationRecord
 
   # This is all a bit hacky
   # TODO: Tidy up
+  # Also returns nil if there is no app installed for the owner
   sig { returns(T.nilable(String)) }
   def git_url_https_with_app_access
     token = Morph::Github.app_installation_access_token(T.must(owner))
+    return nil if token.nil?
+
     git_url_https&.sub("https://", "https://x-access-token:#{token}@")
   end
 
