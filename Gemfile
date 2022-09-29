@@ -31,9 +31,6 @@ gem "foreman", "0.63.0"
 gem "friendly_id"
 
 # For accessing git from ruby
-# See https://github.com/mojombo/grit: "Grit is no longer maintained. Check out rugged."
-# TODO: Migrate to rugged or whatever best library is
-gem "grit"
 gem "rugged"
 
 gem "haml-rails"

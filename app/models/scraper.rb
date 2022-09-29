@@ -272,8 +272,8 @@ class Scraper < ApplicationRecord
 
   sig { returns(String) }
   def current_revision_from_repo
-    r = Grit::Repo.new(repo_path)
-    Grit::Head.current(r).commit.id
+    r = Rugged::Repository.new(repo_path)
+    r.head.target_id
   end
 
   # Overwrites whatever there was before in that repo

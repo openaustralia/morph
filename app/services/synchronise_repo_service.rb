@@ -17,10 +17,6 @@ class SynchroniseRepoService
     update_repo_size(scraper)
     update_contributors(scraper)
     true
-  rescue Grit::Git::CommandFailed => e
-    Rails.logger.error "git command failed: #{e}"
-    Rails.logger.error "Ignoring and moving onto the next one..."
-    false
   end
 
   # This is all a bit hacky
