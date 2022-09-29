@@ -141,10 +141,12 @@ class Owner < ApplicationRecord
     Plan.new(s) if s
   end
 
-  # This returns a url to install the Morph Github app for this owner
-  # TODO: Include all currently used scrapers for this owner in the list of suggested repositories
+  # This returns a url to install the Morph Github app for this owner. It also suggests the repos to select based on
+  # the scrapers that this owner already has
   sig { returns(String) }
   def app_install_url
-    "https://github.com/apps/#{ENV.fetch('GITHUB_APP_NAME', nil)}/installations/new/permissions?suggested_target_id=#{uid}"
+    name = ENV.fetch("GITHUB_APP_NAME", nil)
+    params = { suggested_target_id: uid, repository_ids: scrapers.map(&:github_id) }
+    "https://github.com/apps/#{name}/installations/new/permissions?#{params.to_query}"
   end
 end
