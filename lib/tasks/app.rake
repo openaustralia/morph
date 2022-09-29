@@ -43,7 +43,7 @@ class AppRake
       interval = 24.hours / scraper_ids.count
       time = 0
       scraper_ids.each do |scraper_id|
-        ScraperAutoRunWorker.perform_in(time, scraper_id)
+        ScraperAutoRunWorker.perform_in(time, T.must(scraper_id))
         time += interval
       end
       puts "Queued #{scraper_ids.count} scrapers to run over the next 24 hours"
