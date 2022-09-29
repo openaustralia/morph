@@ -27,7 +27,7 @@ class SynchroniseRepoService
   # TODO: Tidy up
   sig { params(scraper: Scraper).returns(T.nilable(String)) }
   def self.git_url_https_with_app_access(scraper)
-    token = Morph::Github.app_installation_access_token(T.must(scraper.owner))
+    token = Morph::Github.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
     raise NoAppInstallationForOwner if token.nil?
 
     scraper.git_url_https&.sub("https://", "https://x-access-token:#{token}@")

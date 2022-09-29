@@ -165,20 +165,20 @@ module Morph
     end
 
     # Returns nil if there is no app installed for that owner
-    sig { params(owner: Owner).returns(T.nilable(Integer)) }
-    def self.app_installation_id_for_owner(owner)
+    sig { params(owner_nickname: String).returns(T.nilable(Integer)) }
+    def self.app_installation_id_for_owner(owner_nickname)
       # Curious. This single API endpoint seems to support both users and organizations despite there being
       # two separate API endpoints available. Hmmm... Well, let's just run with that then...
       # TODO: If there is no installation for the owner below raises Octokit::NotFound. Handle this!
-      jwt_client.find_user_installation(owner.nickname).id
+      jwt_client.find_user_installation(owner_nickname).id
     rescue Octokit::NotFound
       nil
     end
 
     # Returns nil if there is no app installed for that owner
-    sig { params(owner: Owner).returns(T.nilable(String)) }
-    def self.app_installation_access_token(owner)
-      id = app_installation_id_for_owner(owner)
+    sig { params(owner_nickname: String).returns(T.nilable(String)) }
+    def self.app_installation_access_token(owner_nickname)
+      id = app_installation_id_for_owner(owner_nickname)
       return nil if id.nil?
 
       jwt_client.create_app_installation_access_token(id).token
