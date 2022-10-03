@@ -26,16 +26,6 @@ class User < Owner
     [self] + organizations.to_a
   end
 
-  sig { void }
-  def reset_authorization!
-    a = access_token
-    return if a.nil?
-
-    update(
-      access_token: Morph::Github.reset_authorization(a)
-    )
-  end
-
   # Send all alerts. This method should be run from a daily cron job
   sig { void }
   def self.process_alerts

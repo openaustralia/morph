@@ -43,14 +43,6 @@ class EmergencyRake
         runs.each { |id| RunWorker.perform_async(id) }
       end
 
-      desc "Reset all user github access tokens (Needed after heartbleed)"
-      task reset_github_access_tokens: :environment do
-        User.all.each do |user|
-          puts user.nickname
-          user.reset_authorization!
-        end
-      end
-
       desc "Get meta info for all domains in the connection logs"
       task get_all_meta_info_for_connection_logs: :environment do
         domains = ConnectionLog.group(:host).pluck(:host)
