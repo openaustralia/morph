@@ -122,24 +122,20 @@ module Morph
     # repo
     sig { params(owner_nickname: String, repo_name: String).returns(T::Array[String]) }
     def self.contributor_nicknames(owner_nickname, repo_name)
-      repo_full_name = "#{owner_nickname}/#{repo_name}"
-
       # This is not an action that is directly initiated by the user. It happens
       # whenever the github repo is synchronised (which happens on every run).
       # So we should authenticated the request using the application
-      # which hopefully will not result in being rate limited.
+      repo_full_name = "#{owner_nickname}/#{repo_name}"
 
-      # I'm struggling to make a request with the application id and secret using octokit.
-      # So, instead let's do it ourselves
-      conn = Faraday.new(url: "https://api.github.com") do |faraday|
-        faraday.request :authorization, :basic, app_client_id, app_client_secret
-        faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
-      end
-      res = conn.get("/repos/#{repo_full_name}/contributors")
-      contributors = JSON.parse(res.body)
-      # github call returns nil if the git repo is completely empty
-      contributors = [] unless contributors.is_a?(Array)
-      contributors.map { |c| c["login"] }
+      token = app_installation_access_token(owner_nickname)
+      # TODO: use error class
+      raise "No token" if token.nil?
+
+      client = Octokit::Client.new(bearer_token: token)
+
+      # TODO: Do we need to handle the situation of the git repo being completely empty?
+      # In a previous version of this function the github call returned nil if the git repo is completely empty
+      client.contributors(repo_full_name).map(&:login)
     end
 
     sig { returns(String) }
