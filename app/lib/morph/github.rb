@@ -120,8 +120,10 @@ module Morph
 
     # Returns nicknames of github users who have contributed to a particular
     # repo
-    sig { params(repo_full_name: String).returns(T::Array[String]) }
-    def self.contributor_nicknames(repo_full_name)
+    sig { params(owner_nickname: String, repo_name: String).returns(T::Array[String]) }
+    def self.contributor_nicknames(owner_nickname, repo_name)
+      repo_full_name = "#{owner_nickname}/#{repo_name}"
+
       # This is not an action that is directly initiated by the user. It happens
       # whenever the github repo is synchronised (which happens on every run).
       # So we should authenticated the request using the application
