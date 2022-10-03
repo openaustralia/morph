@@ -1,3 +1,7 @@
+# We need to explicitly load a couple of libraries because we're using Morph::Environment below
+require "sorbet-runtime"
+require "morph/environment"
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -228,7 +232,7 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
-  config.omniauth :github, ENV['GITHUB_APP_CLIENT_ID'], ENV['GITHUB_APP_CLIENT_SECRET'], scope: "user:email,public_repo"
+  config.omniauth :github, Morph::Environment.github_app_client_id, Morph::Environment.github_app_client_secret, scope: "user:email,public_repo"
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

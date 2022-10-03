@@ -145,8 +145,7 @@ class Owner < ApplicationRecord
   # the scrapers that this owner already has
   sig { returns(String) }
   def app_install_url
-    name = ENV.fetch("GITHUB_APP_NAME", nil)
     params = { suggested_target_id: uid, repository_ids: scrapers.map(&:github_id) }
-    "https://github.com/apps/#{name}/installations/new/permissions?#{params.to_query}"
+    "https://github.com/apps/#{Morph::Environment.github_app_name}/installations/new/permissions?#{params.to_query}"
   end
 end

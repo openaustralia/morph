@@ -85,29 +85,6 @@ module Morph
       nil
     end
 
-    sig { params(env: String).returns(String) }
-    def self.get_required_env(env)
-      v = ENV.fetch(env, nil)
-      raise "environment variable #{env} needs to be set" if v.nil?
-
-      v
-    end
-
-    sig { returns(Integer) }
-    def self.app_id
-      get_required_env("GITHUB_APP_ID").to_i
-    end
-
-    sig { returns(String) }
-    def self.app_client_id
-      get_required_env("GITHUB_APP_CLIENT_ID")
-    end
-
-    sig { returns(String) }
-    def self.app_client_secret
-      get_required_env("GITHUB_APP_CLIENT_SECRET")
-    end
-
     # Returns nicknames of github users who have contributed to a particular
     # repo
     sig { params(owner_nickname: String, repo_name: String).returns(T::Array[String]) }
@@ -141,7 +118,7 @@ module Morph
         # JWT expiration time (10 minute maximum)
         exp: Time.now.to_i + (10 * 60),
         # GitHub App's identifier
-        iss: app_id
+        iss: Morph::Environment.github_app_id
       }
 
       JWT.encode(payload, private_key, "RS256")
