@@ -85,22 +85,27 @@ module Morph
       nil
     end
 
-    sig { returns(T.nilable(Integer)) }
+    sig { params(env: String).returns(String) }
+    def self.get_required_env(env)
+      v = ENV.fetch(env, nil)
+      raise "environment variable #{env} needs to be set" if v.nil?
+
+      v
+    end
+
+    sig { returns(Integer) }
     def self.app_id
-      v = ENV.fetch("GITHUB_APP_ID", nil)
-      return v if v.nil?
-
-      v.to_i
+      get_required_env("GITHUB_APP_ID").to_i
     end
 
-    sig { returns(T.nilable(String)) }
+    sig { returns(String) }
     def self.app_client_id
-      ENV.fetch("GITHUB_APP_CLIENT_ID", nil)
+      get_required_env("GITHUB_APP_CLIENT_ID")
     end
 
-    sig { returns(T.nilable(String)) }
+    sig { returns(String) }
     def self.app_client_secret
-      ENV.fetch("GITHUB_APP_CLIENT_SECRET", nil)
+      get_required_env("GITHUB_APP_CLIENT_SECRET")
     end
 
     # Returns nicknames of github users who have contributed to a particular
