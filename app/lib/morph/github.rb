@@ -102,15 +102,15 @@ module Morph
 
     # Returns nicknames of github users who have contributed to a particular
     # repo
-    sig { params(app_installation_access_token: String, owner_nickname: String, repo_name: String).returns([T::Array[String], T.nilable(NoAccessToRepo)]) }
-    def self.contributor_nicknames(app_installation_access_token, owner_nickname, repo_name)
+    sig { params(app_installation_access_token: String, repo_full_name: String).returns([T::Array[String], T.nilable(NoAccessToRepo)]) }
+    def self.contributor_nicknames(app_installation_access_token, repo_full_name)
       client = Octokit::Client.new(bearer_token: app_installation_access_token)
 
       # TODO: Do we need to handle the situation of the git repo being completely empty?
       # In a previous version of this function the github call returned nil if the git repo is completely empty
       # Note if the app does not have access
       begin
-        contributors = client.contributors("#{owner_nickname}/#{repo_name}").map(&:login)
+        contributors = client.contributors(repo_full_name).map(&:login)
         [contributors, nil]
       rescue Octokit::NotFound
         [[], NoAccessToRepo.new]

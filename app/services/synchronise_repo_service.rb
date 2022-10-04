@@ -39,7 +39,7 @@ class SynchroniseRepoService
 
   sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(Morph::Github::NoAccessToRepo)) }
   def self.update_contributors(app_installation_access_token, scraper)
-    nicknames, error = Morph::Github.contributor_nicknames(app_installation_access_token, T.must(T.must(scraper.owner).nickname), scraper.name)
+    nicknames, error = Morph::Github.contributor_nicknames(app_installation_access_token, scraper.full_name)
     return error if error
 
     contributors = nicknames.map { |n| User.find_or_create_by!(nickname: n) }
