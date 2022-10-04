@@ -12,6 +12,8 @@ module Morph
     class NoAppInstallationForOwner; end
     class NoAccessToRepo; end
     class AppInstallationNoAccessToRepo; end
+    # TODO: Split SynchroniseRepoError into more specific errors that mean something to users
+    class SynchroniseRepoError; end
     # rubocop:enable Lint/EmptyClass
 
     # Returns Rugged::Repository
@@ -32,19 +34,19 @@ module Morph
     end
 
     # Returns true if everything worked
-    sig { params(repo_path: String, git_url: String).returns(T::Boolean) }
+    sig { params(repo_path: String, git_url: String).returns(T.nilable(SynchroniseRepoError)) }
     def self.synchronise_repo(repo_path, git_url)
       repo = synchronise_repo_ignore_submodules(repo_path, git_url)
       repo.submodules.each do |submodule|
         submodule.init
         synchronise_repo_ignore_submodules(File.join(repo_path, submodule.path), submodule.url)
       end
-      true
+      nil
     rescue Rugged::HTTPError, Rugged::SubmoduleError => e
       Rails.logger.warn "Error during Github.synchronise_repo: #{e}"
       # TODO: Give the user more detailed feedback about the problem
       # Indicate there was a problem
-      false
+      SynchroniseRepoError.new
     end
 
     # Will create a repository. Works for both an individual and an

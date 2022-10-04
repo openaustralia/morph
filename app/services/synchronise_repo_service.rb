@@ -30,8 +30,15 @@ class SynchroniseRepoService
 
     url = git_url_https_with_app_access(token, scraper)
 
-    success = Morph::Github.synchronise_repo(scraper.repo_path, url)
-    return SynchroniseRepoError.new unless success
+    error = Morph::Github.synchronise_repo(scraper.repo_path, url)
+    case error
+    when nil
+      nil
+    when Morph::Github::SynchroniseRepoError
+      return SynchroniseRepoError.new
+    else
+      T.absurd(error)
+    end
 
     update_repo_size(scraper)
     error = update_contributors(token, scraper)
