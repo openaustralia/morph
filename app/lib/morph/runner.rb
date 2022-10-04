@@ -102,6 +102,12 @@ module Morph
       when Morph::Github::SynchroniseRepoError, Morph::Github::NoAccessToRepo
         error(text: "There was a problem getting the latest scraper code from GitHub", status_code: 999, &block)
         return
+      when SynchroniseRepoService::RepoNeedsToBePublic
+        error(
+          status_code: 999,
+          text: "The repository #{scraper.full_name} needs to be made public",
+          &block
+        )
       else
         T.absurd(error)
       end

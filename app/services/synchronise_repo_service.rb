@@ -4,9 +4,13 @@
 class SynchroniseRepoService
   extend T::Sig
 
+  # rubocop:disable Lint/EmptyClass
+  class RepoNeedsToBePublic; end
+  # rubocop:enable Lint/EmptyClass
+
   # Returns true if successfull
   # TODO: Return more helpful error messages
-  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, Morph::Github::SynchroniseRepoError))) }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, Morph::Github::SynchroniseRepoError, RepoNeedsToBePublic))) }
   def self.call(scraper)
     # First check that the GitHub Morph app has access to the repository
     # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
@@ -16,6 +20,9 @@ class SynchroniseRepoService
     return error if error
 
     return Morph::Github::AppInstallationNoAccessToRepo.new unless Morph::Github.app_installation_has_access_to?(token, scraper.name)
+
+    # The repository can only be private if the scraper is private
+    return RepoNeedsToBePublic.new unless !Morph::Github.repository_private?(token, scraper.full_name) || scraper.private?
 
     url = git_url_https_with_app_access(token, scraper)
 

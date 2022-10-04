@@ -117,6 +117,12 @@ module Morph
       end
     end
 
+    sig { params(app_installation_access_token: String, repo_full_name: String).returns(T::Boolean) }
+    def self.repository_private?(app_installation_access_token, repo_full_name)
+      client = Octokit::Client.new(bearer_token: app_installation_access_token)
+      client.repository(repo_full_name).visibility == "private"
+    end
+
     sig { returns(String) }
     def self.jwt
       # Private key contents
