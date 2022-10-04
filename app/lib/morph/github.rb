@@ -100,7 +100,7 @@ module Morph
 
     # Returns nicknames of github users who have contributed to a particular
     # repo
-    sig { params(owner_nickname: String, repo_name: String).returns([T::Array[String], T.nilable(T.any(NoAppInstallationForOwner, NoAccessToRepo, AppInstallationNoAccessToRepo))]) }
+    sig { params(owner_nickname: String, repo_name: String).returns([T::Array[String], T.nilable(T.any(NoAppInstallationForOwner, NoAccessToRepo))]) }
     def self.contributor_nicknames(owner_nickname, repo_name)
       # This is not an action that is directly initiated by the user. It happens
       # whenever the github repo is synchronised (which happens on every run).
@@ -114,8 +114,6 @@ module Morph
       else
         T.absurd(error)
       end
-
-      return [[], AppInstallationNoAccessToRepo.new] unless app_installation_has_access_to?(token, repo_name)
 
       client = Octokit::Client.new(bearer_token: token)
 

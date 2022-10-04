@@ -12,6 +12,17 @@ class SynchroniseRepoService
   # TODO: Return more helpful error messages
   sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, SynchroniseRepoError))) }
   def self.call(scraper)
+    token, error = Morph::Github.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
+    case error
+    when nil
+      nil
+    when Morph::Github::NoAppInstallationForOwner
+      return error
+    else
+      T.absurd(error)
+    end
+    return Morph::Github::AppInstallationNoAccessToRepo.new unless Morph::Github.app_installation_has_access_to?(token, scraper.name)
+
     url, error = git_url_https_with_app_access(scraper)
     case error
     when nil
@@ -30,7 +41,7 @@ class SynchroniseRepoService
     case error
     when nil
       nil
-    when Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo
+    when Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo
       error
     else
       T.absurd(error)
@@ -60,13 +71,13 @@ class SynchroniseRepoService
     scraper.update!(repo_size: directory_size(scraper.repo_path))
   end
 
-  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo))) }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo))) }
   def self.update_contributors(scraper)
     nicknames, error = Morph::Github.contributor_nicknames(T.must(T.must(scraper.owner).nickname), scraper.name)
     case error
     when nil
       nil
-    when Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo
+    when Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo
       return error
     else
       T.absurd(error)
