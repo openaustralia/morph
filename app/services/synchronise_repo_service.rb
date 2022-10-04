@@ -12,40 +12,19 @@ class SynchroniseRepoService
     # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
     # the user could run a public scraper even without the Github Morph app having access to the repo
     # connected with the scraper
-
     token, error = Morph::Github.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
-    case error
-    when nil
-      nil
-    when Morph::Github::NoAppInstallationForOwner
-      return error
-    else
-      T.absurd(error)
-    end
+    return error if error
+
     return Morph::Github::AppInstallationNoAccessToRepo.new unless Morph::Github.app_installation_has_access_to?(token, scraper.name)
 
     url = git_url_https_with_app_access(token, scraper)
 
     error = Morph::Github.synchronise_repo(scraper.repo_path, url)
-    case error
-    when nil
-      nil
-    when Morph::Github::SynchroniseRepoError
-      return error
-    else
-      T.absurd(error)
-    end
+    return error if error
 
     update_repo_size(scraper)
     error = update_contributors(token, scraper)
-    case error
-    when nil
-      nil
-    when Morph::Github::NoAccessToRepo
-      error
-    else
-      T.absurd(error)
-    end
+    return error if error
   end
 
   sig { params(app_installation_access_token: String, scraper: Scraper).returns(String) }
@@ -61,14 +40,7 @@ class SynchroniseRepoService
   sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(Morph::Github::NoAccessToRepo)) }
   def self.update_contributors(app_installation_access_token, scraper)
     nicknames, error = Morph::Github.contributor_nicknames(app_installation_access_token, T.must(T.must(scraper.owner).nickname), scraper.name)
-    case error
-    when nil
-      nil
-    when Morph::Github::NoAccessToRepo
-      return error
-    else
-      T.absurd(error)
-    end
+    return error if error
 
     contributors = nicknames.map { |n| User.find_or_create_by!(nickname: n) }
     scraper.update!(contributors: contributors)
