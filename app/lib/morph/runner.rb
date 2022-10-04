@@ -85,7 +85,7 @@ module Morph
       case error
       when nil
         nil
-      when SynchroniseRepoService::NoAppInstallationForOwner
+      when Morph::Github::NoAppInstallationForOwner
         error(
           status_code: 999,
           text: "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to #{T.must(scraper.owner).app_install_url}",

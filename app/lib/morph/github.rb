@@ -96,9 +96,16 @@ module Morph
       # This is not an action that is directly initiated by the user. It happens
       # whenever the github repo is synchronised (which happens on every run).
       # So we should authenticate the request using the application
-      token = app_installation_access_token(owner_nickname)
-      # TODO: use error class
-      raise "Morph Github app is not installed on #{owner_nickname}" if token.nil?
+      token, error = app_installation_access_token(owner_nickname)
+      case error
+      when nil
+        nil
+      when NoAppInstallationForOwner
+        # TODO: use error class
+        raise "Morph Github app is not installed on #{owner_nickname}"
+      else
+        T.absurd(error)
+      end
 
       client = Octokit::Client.new(bearer_token: token)
 
@@ -148,20 +155,20 @@ module Morph
       [0, NoAppInstallationForOwner.new]
     end
 
-    # Returns nil if there is no app installed for that owner
-    sig { params(owner_nickname: String).returns(T.nilable(String)) }
+    sig { params(owner_nickname: String).returns([String, T.nilable(NoAppInstallationForOwner)]) }
     def self.app_installation_access_token(owner_nickname)
       id, error = app_installation_id_for_owner(owner_nickname)
       case error
       when nil
         nil
       when NoAppInstallationForOwner
-        return nil
+        return ["", error]
       else
         T.absurd(error)
       end
 
-      jwt_client.create_app_installation_access_token(id).token
+      token = jwt_client.create_app_installation_access_token(id).token
+      [token, nil]
     end
 
     sig { params(repo_path: String).returns(String) }
