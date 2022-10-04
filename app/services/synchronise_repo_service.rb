@@ -23,15 +23,7 @@ class SynchroniseRepoService
     end
     return Morph::Github::AppInstallationNoAccessToRepo.new unless Morph::Github.app_installation_has_access_to?(token, scraper.name)
 
-    url, error = git_url_https_with_app_access(scraper)
-    case error
-    when nil
-      nil
-    when Morph::Github::NoAppInstallationForOwner
-      return error
-    else
-      T.absurd(error)
-    end
+    url = git_url_https_with_app_access(token, scraper)
 
     success = Morph::Github.synchronise_repo(scraper.repo_path, url)
     return SynchroniseRepoError.new unless success
@@ -48,22 +40,9 @@ class SynchroniseRepoService
     end
   end
 
-  # This is all a bit hacky
-  # TODO: Tidy up
-  sig { params(scraper: Scraper).returns([String, T.nilable(Morph::Github::NoAppInstallationForOwner)]) }
-  def self.git_url_https_with_app_access(scraper)
-    token, error = Morph::Github.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
-    case error
-    when nil
-      nil
-    when Morph::Github::NoAppInstallationForOwner
-      return ["", error]
-    else
-      T.absurd(error)
-    end
-
-    url = scraper.git_url_https.sub("https://", "https://x-access-token:#{token}@")
-    [url, nil]
+  sig { params(app_installation_access_token: String, scraper: Scraper).returns(String) }
+  def self.git_url_https_with_app_access(app_installation_access_token, scraper)
+    scraper.git_url_https.sub("https://", "https://x-access-token:#{app_installation_access_token}@")
   end
 
   sig { params(scraper: Scraper).void }
