@@ -10,7 +10,7 @@ class SynchroniseRepoService
 
   # Returns true if successfull
   # TODO: Return more helpful error messages
-  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, SynchroniseRepoError))) }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, SynchroniseRepoError))) }
   def self.call(scraper)
     url, error = git_url_https_with_app_access(scraper)
     case error
@@ -26,8 +26,15 @@ class SynchroniseRepoService
     return SynchroniseRepoError.new unless success
 
     update_repo_size(scraper)
-    update_contributors(scraper)
-    nil
+    error = update_contributors(scraper)
+    case error
+    when nil
+      nil
+    when Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo
+      error
+    else
+      T.absurd(error)
+    end
   end
 
   # This is all a bit hacky
@@ -53,22 +60,21 @@ class SynchroniseRepoService
     scraper.update!(repo_size: directory_size(scraper.repo_path))
   end
 
-  sig { params(scraper: Scraper).void }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo))) }
   def self.update_contributors(scraper)
     nicknames, error = Morph::Github.contributor_nicknames(T.must(T.must(scraper.owner).nickname), scraper.name)
     case error
     when nil
       nil
-    when Morph::Github::NoAppInstallationForOwner
-      raise NoAppInstallationForOwner
-    when Morph::Github::NoAccessToRepo
-      raise "no access to repo"
+    when Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo
+      return error
     else
       T.absurd(error)
     end
     contributors = nicknames.map { |n| User.find_or_create_by_nickname(n) }
     # TODO: Use update! here?
     scraper.update(contributors: contributors)
+    nil
   end
 
   # It seems silly implementing this
