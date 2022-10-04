@@ -6,11 +6,12 @@ class SynchroniseRepoService
 
   # rubocop:disable Lint/EmptyClass
   class RepoNeedsToBePublic; end
+  class RepoNeedsToBePrivate; end
   # rubocop:enable Lint/EmptyClass
 
   # Returns true if successfull
   # TODO: Return more helpful error messages
-  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, Morph::Github::SynchroniseRepoError, RepoNeedsToBePublic))) }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, Morph::Github::SynchroniseRepoError, RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
   def self.call(scraper)
     # First check that the GitHub Morph app has access to the repository
     # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
@@ -34,10 +35,14 @@ class SynchroniseRepoService
     nil
   end
 
-  sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(RepoNeedsToBePublic)) }
+  sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(T.any(RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
   def self.check_repository_visibility(app_installation_access_token, scraper)
+    repository_private = Morph::Github.repository_private?(app_installation_access_token, scraper.full_name)
+
     # The repository can only be private if the scraper is private
-    return RepoNeedsToBePublic.new unless !Morph::Github.repository_private?(app_installation_access_token, scraper.full_name) || scraper.private?
+    return RepoNeedsToBePublic.new if !scraper.private? && repository_private
+    # Similarly if the scraper is private the repository needs to be private too
+    return RepoNeedsToBePrivate.new if scraper.private? && !repository_private
 
     nil
   end

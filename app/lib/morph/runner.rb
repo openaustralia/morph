@@ -108,6 +108,12 @@ module Morph
           text: "The repository #{scraper.full_name} needs to be made public",
           &block
         )
+      when SynchroniseRepoService::RepoNeedsToBePrivate
+        error(
+          status_code: 999,
+          text: "The repository #{scraper.full_name} needs to be made private",
+          &block
+        )
       else
         T.absurd(error)
       end
