@@ -35,6 +35,7 @@ class Scraper < ApplicationRecord
   validates :name, presence: true, format: { with: /\A[a-zA-Z0-9_-]+\z/ }
   validates :name, uniqueness: { scope: :owner }
   validate :not_used_on_github, on: :create, if: proc { |s| s.github_id.blank? && s.name.present? }
+  validate :app_installed_on_owner, on: :create
 
   extend FriendlyId
   friendly_id :full_name
@@ -310,5 +311,20 @@ class Scraper < ApplicationRecord
     return unless Octokit.client.repository?(full_name)
 
     errors.add(:name, "is already taken on GitHub")
+  end
+
+  sig { void }
+  def app_installed_on_owner
+    return if Rails.env.test?
+
+    _installation_id, error = Morph::Github.app_installation_id_for_owner(T.must(T.must(owner).nickname))
+    case error
+    when nil
+      nil
+    when Morph::Github::NoAppInstallationForOwner
+      errors.add(:owner_id, "Please <a href='#{T.must(owner).app_install_url}'>install the Morph GitHub App</a> on #{T.must(owner).nickname} so that Morph can create the repository".html_safe)
+    else
+      T.absurd(error)
+    end
   end
 end
