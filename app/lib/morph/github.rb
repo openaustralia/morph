@@ -8,6 +8,10 @@ module Morph
 
     MORPH_GITHUB_APP_PRIVATE_KEY_PATH = "config/morph-github-app.private-key.pem"
 
+    # rubocop:disable Lint/EmptyClass
+    class NoAppInstallationForOwner; end
+    # rubocop:enable Lint/EmptyClass
+
     # Returns Rugged::Repository
     sig { params(repo_path: String, git_url: String).returns(Rugged::Repository) }
     def self.synchronise_repo_ignore_submodules(repo_path, git_url)
@@ -133,22 +137,29 @@ module Morph
       Octokit::Client.new(bearer_token: jwt)
     end
 
-    # Returns nil if there is no app installed for that owner
-    sig { params(owner_nickname: String).returns(T.nilable(Integer)) }
+    sig { params(owner_nickname: String).returns([Integer, T.nilable(NoAppInstallationForOwner)]) }
     def self.app_installation_id_for_owner(owner_nickname)
       # Curious. This single API endpoint seems to support both users and organizations despite there being
       # two separate API endpoints available. Hmmm... Well, let's just run with that then...
       # TODO: If there is no installation for the owner below raises Octokit::NotFound. Handle this!
-      jwt_client.find_user_installation(owner_nickname).id
+      installion_id = jwt_client.find_user_installation(owner_nickname).id
+      [installion_id, nil]
     rescue Octokit::NotFound
-      nil
+      [0, NoAppInstallationForOwner.new]
     end
 
     # Returns nil if there is no app installed for that owner
     sig { params(owner_nickname: String).returns(T.nilable(String)) }
     def self.app_installation_access_token(owner_nickname)
-      id = app_installation_id_for_owner(owner_nickname)
-      return nil if id.nil?
+      id, error = app_installation_id_for_owner(owner_nickname)
+      case error
+      when nil
+        nil
+      when NoAppInstallationForOwner
+        return nil
+      else
+        T.absurd(error)
+      end
 
       jwt_client.create_app_installation_access_token(id).token
     end
