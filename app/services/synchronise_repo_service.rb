@@ -9,8 +9,6 @@ class SynchroniseRepoService
   class RepoNeedsToBePrivate; end
   # rubocop:enable Lint/EmptyClass
 
-  # Returns true if successfull
-  # TODO: Return more helpful error messages
   sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, Morph::Github::SynchroniseRepoError, RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
   def self.call(scraper)
     # First check that the GitHub Morph app has access to the repository
