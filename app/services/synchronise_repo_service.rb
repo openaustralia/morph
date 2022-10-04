@@ -21,17 +21,25 @@ class SynchroniseRepoService
 
     return Morph::Github::AppInstallationNoAccessToRepo.new unless Morph::Github.app_installation_has_access_to?(token, scraper.name)
 
-    # The repository can only be private if the scraper is private
-    return RepoNeedsToBePublic.new unless !Morph::Github.repository_private?(token, scraper.full_name) || scraper.private?
+    error = check_repository_visibility(token, scraper)
+    return error if error
 
-    url = git_url_https_with_app_access(token, scraper)
-
-    error = Morph::Github.synchronise_repo(scraper.repo_path, url)
+    error = Morph::Github.synchronise_repo(scraper.repo_path, git_url_https_with_app_access(token, scraper))
     return error if error
 
     update_repo_size(scraper)
     error = update_contributors(token, scraper)
     return error if error
+
+    nil
+  end
+
+  sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(RepoNeedsToBePublic)) }
+  def self.check_repository_visibility(app_installation_access_token, scraper)
+    # The repository can only be private if the scraper is private
+    return RepoNeedsToBePublic.new unless !Morph::Github.repository_private?(app_installation_access_token, scraper.full_name) || scraper.private?
+
+    nil
   end
 
   sig { params(app_installation_access_token: String, scraper: Scraper).returns(String) }
