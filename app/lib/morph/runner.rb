@@ -99,7 +99,7 @@ module Morph
           &block
         )
         return
-      when SynchroniseRepoService::SynchroniseRepoError, Morph::Github::NoAccessToRepo
+      when Morph::Github::SynchroniseRepoError, Morph::Github::NoAccessToRepo
         error(text: "There was a problem getting the latest scraper code from GitHub", status_code: 999, &block)
         return
       else

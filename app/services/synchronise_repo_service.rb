@@ -6,11 +6,10 @@ class SynchroniseRepoService
 
   # Says that the morph github app has not been installed on the user or organization
   class NoAppInstallationForOwner < StandardError; end
-  class SynchroniseRepoError < StandardError; end
 
   # Returns true if successfull
   # TODO: Return more helpful error messages
-  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, SynchroniseRepoError))) }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, Morph::Github::SynchroniseRepoError))) }
   def self.call(scraper)
     # First check that the GitHub Morph app has access to the repository
     # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
@@ -35,7 +34,7 @@ class SynchroniseRepoService
     when nil
       nil
     when Morph::Github::SynchroniseRepoError
-      return SynchroniseRepoError.new
+      return error
     else
       T.absurd(error)
     end
