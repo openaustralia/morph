@@ -289,10 +289,10 @@ class Scraper < ApplicationRecord
   end
 
   # Return the https version of the git clone url (git_url)
-  sig { returns(T.nilable(String)) }
+  sig { returns(String) }
   def git_url_https
-    url = git_url
-    "https#{url[3..-1]}" if url
+    url = T.must(git_url)
+    "https#{url[3..-1]}"
   end
 
   sig { params(run: Run).void }
