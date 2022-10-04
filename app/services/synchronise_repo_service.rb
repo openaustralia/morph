@@ -11,7 +11,15 @@ class SynchroniseRepoService
   # TODO: Return more helpful error messages
   sig { params(scraper: Scraper).returns(T::Boolean) }
   def self.call(scraper)
-    url = git_url_https_with_app_access(scraper)
+    url, error = git_url_https_with_app_access(scraper)
+    case error
+    when NoAppInstallationForOwner
+      raise NoAppInstallationForOwner
+    when nil
+      nil
+    else
+      T.absurd(error)
+    end
 
     success = Morph::Github.synchronise_repo(scraper.repo_path, url)
     return false unless success
@@ -23,12 +31,13 @@ class SynchroniseRepoService
 
   # This is all a bit hacky
   # TODO: Tidy up
-  sig { params(scraper: Scraper).returns(String) }
+  sig { params(scraper: Scraper).returns([String, T.nilable(NoAppInstallationForOwner)]) }
   def self.git_url_https_with_app_access(scraper)
     token = Morph::Github.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
-    raise NoAppInstallationForOwner if token.nil?
+    return ["", NoAppInstallationForOwner.new] if token.nil?
 
-    scraper.git_url_https.sub("https://", "https://x-access-token:#{token}@")
+    url = scraper.git_url_https.sub("https://", "https://x-access-token:#{token}@")
+    [url, nil]
   end
 
   sig { params(scraper: Scraper).void }
