@@ -81,20 +81,22 @@ module Morph
       return if scraper.nil? || run.finished?
 
       # TODO: Indicate that scraper is running before we do the synching
-      begin
-        success = SynchroniseRepoService.call(scraper)
-      rescue SynchroniseRepoService::NoAppInstallationForOwner
+      error = SynchroniseRepoService.call(scraper)
+      case error
+      when nil
+        nil
+      when SynchroniseRepoService::NoAppInstallationForOwner
         error(
           status_code: 999,
           text: "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to #{T.must(scraper.owner).app_install_url}",
           &block
         )
         return
-      end
-
-      unless success
+      when SynchroniseRepoService::SynchroniseRepoError
         error(text: "There was a problem getting the latest scraper code from GitHub", status_code: 999, &block)
         return
+      else
+        T.absurd(error)
       end
 
       go(Runner.default_max_lines, &block)

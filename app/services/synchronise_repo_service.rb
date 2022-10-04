@@ -6,27 +6,28 @@ class SynchroniseRepoService
 
   # Says that the morph github app has not been installed on the user or organization
   class NoAppInstallationForOwner < StandardError; end
+  class SynchroniseRepoError < StandardError; end
 
   # Returns true if successfull
   # TODO: Return more helpful error messages
-  sig { params(scraper: Scraper).returns(T::Boolean) }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(NoAppInstallationForOwner, SynchroniseRepoError))) }
   def self.call(scraper)
     url, error = git_url_https_with_app_access(scraper)
     case error
-    when NoAppInstallationForOwner
-      raise NoAppInstallationForOwner
     when nil
       nil
+    when NoAppInstallationForOwner
+      return NoAppInstallationForOwner.new
     else
       T.absurd(error)
     end
 
     success = Morph::Github.synchronise_repo(scraper.repo_path, url)
-    return false unless success
+    return SynchroniseRepoError.new unless success
 
     update_repo_size(scraper)
     update_contributors(scraper)
-    true
+    nil
   end
 
   # This is all a bit hacky
