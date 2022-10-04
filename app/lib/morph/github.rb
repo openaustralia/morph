@@ -11,6 +11,7 @@ module Morph
     # rubocop:disable Lint/EmptyClass
     class NoAppInstallationForOwner; end
     class NoAccessToRepo; end
+    class AppInstallationNoAccessToRepo; end
     # rubocop:enable Lint/EmptyClass
 
     # Returns Rugged::Repository
@@ -92,7 +93,7 @@ module Morph
 
     # Returns nicknames of github users who have contributed to a particular
     # repo
-    sig { params(owner_nickname: String, repo_name: String).returns([T::Array[String], T.nilable(T.any(NoAppInstallationForOwner, NoAccessToRepo))]) }
+    sig { params(owner_nickname: String, repo_name: String).returns([T::Array[String], T.nilable(T.any(NoAppInstallationForOwner, NoAccessToRepo, AppInstallationNoAccessToRepo))]) }
     def self.contributor_nicknames(owner_nickname, repo_name)
       # This is not an action that is directly initiated by the user. It happens
       # whenever the github repo is synchronised (which happens on every run).
@@ -108,6 +109,13 @@ module Morph
       end
 
       client = Octokit::Client.new(bearer_token: token)
+
+      # TODO: Ensure auto_paginate is true
+      return [[], AppInstallationNoAccessToRepo.new] unless client.list_app_installation_repositories.repositories.map(&:name).include?(repo_name)
+
+      # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
+      # the user could run a public scraper even without the Github Morph app having access to the repo
+      # connected with the scraper
 
       # TODO: Do we need to handle the situation of the git repo being completely empty?
       # In a previous version of this function the github call returned nil if the git repo is completely empty

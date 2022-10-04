@@ -92,6 +92,13 @@ module Morph
           &block
         )
         return
+      when Morph::Github::AppInstallationNoAccessToRepo
+        error(
+          status_code: 999,
+          text: "The Morph Github App installed on #{T.must(scraper.owner).nickname} needs access to the repository #{scraper.name}. Please go to #{T.must(scraper.owner).app_install_url}",
+          &block
+        )
+        return
       when SynchroniseRepoService::SynchroniseRepoError, Morph::Github::NoAccessToRepo
         error(text: "There was a problem getting the latest scraper code from GitHub", status_code: 999, &block)
         return
