@@ -71,9 +71,8 @@ class SynchroniseRepoService
     else
       T.absurd(error)
     end
-    contributors = nicknames.map { |n| User.find_or_create_by_nickname(n) }
-    # TODO: Use update! here?
-    scraper.update(contributors: contributors)
+    contributors = nicknames.map { |n| User.find_or_create_by!(nickname: n) }
+    scraper.update!(contributors: contributors)
     nil
   end
 
