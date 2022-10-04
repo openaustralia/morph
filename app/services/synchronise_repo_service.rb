@@ -4,9 +4,6 @@
 class SynchroniseRepoService
   extend T::Sig
 
-  # Says that the morph github app has not been installed on the user or organization
-  class NoAppInstallationForOwner < StandardError; end
-
   # Returns true if successfull
   # TODO: Return more helpful error messages
   sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, Morph::Github::SynchroniseRepoError))) }
