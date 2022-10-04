@@ -12,6 +12,11 @@ class SynchroniseRepoService
   # TODO: Return more helpful error messages
   sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, SynchroniseRepoError))) }
   def self.call(scraper)
+    # First check that the GitHub Morph app has access to the repository
+    # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
+    # the user could run a public scraper even without the Github Morph app having access to the repo
+    # connected with the scraper
+
     token, error = Morph::Github.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
     case error
     when nil
@@ -33,7 +38,7 @@ class SynchroniseRepoService
     case error
     when nil
       nil
-    when Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo
+    when Morph::Github::NoAccessToRepo, Morph::Github::NoAppInstallationForOwner
       error
     else
       T.absurd(error)
@@ -50,13 +55,23 @@ class SynchroniseRepoService
     scraper.update!(repo_size: directory_size(scraper.repo_path))
   end
 
-  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo))) }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAccessToRepo, Morph::Github::NoAppInstallationForOwner))) }
   def self.update_contributors(scraper)
-    nicknames, error = Morph::Github.contributor_nicknames(T.must(T.must(scraper.owner).nickname), scraper.name)
+    token, error = Morph::Github.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
     case error
     when nil
       nil
-    when Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo
+    when Morph::Github::NoAppInstallationForOwner
+      return error
+    else
+      T.absurd(error)
+    end
+
+    nicknames, error = Morph::Github.contributor_nicknames(token, T.must(T.must(scraper.owner).nickname), scraper.name)
+    case error
+    when nil
+      nil
+    when Morph::Github::NoAccessToRepo
       return error
     else
       T.absurd(error)

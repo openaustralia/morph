@@ -100,26 +100,9 @@ module Morph
 
     # Returns nicknames of github users who have contributed to a particular
     # repo
-    sig { params(owner_nickname: String, repo_name: String).returns([T::Array[String], T.nilable(T.any(NoAppInstallationForOwner, NoAccessToRepo))]) }
-    def self.contributor_nicknames(owner_nickname, repo_name)
-      # This is not an action that is directly initiated by the user. It happens
-      # whenever the github repo is synchronised (which happens on every run).
-      # So we should authenticate the request using the application
-      token, error = app_installation_access_token(owner_nickname)
-      case error
-      when nil
-        nil
-      when NoAppInstallationForOwner
-        return [[], error]
-      else
-        T.absurd(error)
-      end
-
-      client = Octokit::Client.new(bearer_token: token)
-
-      # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
-      # the user could run a public scraper even without the Github Morph app having access to the repo
-      # connected with the scraper
+    sig { params(app_installation_access_token: String, owner_nickname: String, repo_name: String).returns([T::Array[String], T.nilable(NoAccessToRepo)]) }
+    def self.contributor_nicknames(app_installation_access_token, owner_nickname, repo_name)
+      client = Octokit::Client.new(bearer_token: app_installation_access_token)
 
       # TODO: Do we need to handle the situation of the git repo being completely empty?
       # In a previous version of this function the github call returned nil if the git repo is completely empty
