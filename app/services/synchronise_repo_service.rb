@@ -36,13 +36,10 @@ class SynchroniseRepoService
   sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(T.any(RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
   def self.check_repository_visibility(app_installation_access_token, scraper)
     repository_private = Morph::Github.repository_private?(app_installation_access_token, scraper.full_name)
+    # No problem if the visibility of the scraper and the repository match
+    return nil if repository_private == scraper.private?
 
-    # The repository can only be private if the scraper is private
-    return RepoNeedsToBePublic.new if !scraper.private? && repository_private
-    # Similarly if the scraper is private the repository needs to be private too
-    return RepoNeedsToBePrivate.new if scraper.private? && !repository_private
-
-    nil
+    repository_private ? RepoNeedsToBePublic.new : RepoNeedsToBePrivate.new
   end
 
   sig { params(app_installation_access_token: String, scraper: Scraper).returns(String) }
