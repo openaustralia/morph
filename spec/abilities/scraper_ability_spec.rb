@@ -8,16 +8,8 @@ describe "ScraperAbility" do
   subject(:ability) { ScraperAbility.new(user) }
 
   let(:user) { nil }
-  let(:scraper) do
-    VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-      create(:scraper)
-    end
-  end
-  let(:private_scraper) do
-    VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-      create(:scraper, private: true)
-    end
-  end
+  let(:scraper) { create(:scraper) }
+  let(:private_scraper) { create(:scraper, private: true) }
   let(:organization) { create(:organization) }
 
   context "when an unauthenticated user" do

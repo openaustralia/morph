@@ -9,11 +9,7 @@ describe Scraper do
   context "with a scraper with a couple of runs" do
     let(:time1) { 2.minutes.ago }
     let(:time2) { 1.minute.ago }
-    let(:scraper) do
-      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        create(:scraper)
-      end
-    end
+    let(:scraper) { create(:scraper) }
     let!(:run1) do
       run = scraper.runs.create!(owner: user, finished_at: time1)
       Metric.create(utime: 10.2, stime: 2.4, run_id: run.id)
@@ -79,19 +75,15 @@ describe Scraper do
   describe "unique names" do
     it "does not allow duplicate scraper names for a user" do
       user = create :user
-      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        create :scraper, name: "my_scraper", owner: user
-        expect(build(:scraper, name: "my_scraper", owner: user)).not_to be_valid
-      end
+      create :scraper, name: "my_scraper", owner: user
+      expect(build(:scraper, name: "my_scraper", owner: user)).not_to be_valid
     end
 
     it "allows the same scraper name for a different user" do
       user1 = create :user
       user2 = create :user
-      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        create :scraper, name: "my_scraper", owner: user1
-        expect(build(:scraper, name: "my_scraper", owner: user2)).to be_valid
-      end
+      create :scraper, name: "my_scraper", owner: user1
+      expect(build(:scraper, name: "my_scraper", owner: user2)).to be_valid
     end
   end
 
@@ -211,22 +203,18 @@ describe Scraper do
 
     context "with no webhooks" do
       it "doesn't queue any background jobs" do
-        VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-          scraper = create(:scraper)
-          expect do
-            scraper.deliver_webhooks(run)
-          end.not_to change(DeliverWebhookWorker.jobs, :size)
-        end
+        scraper = create(:scraper)
+        expect do
+          scraper.deliver_webhooks(run)
+        end.not_to change(DeliverWebhookWorker.jobs, :size)
       end
     end
 
     context "with webhooks" do
       let!(:scraper) do
-        VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-          scraper = create(:scraper)
-          3.times { |n| scraper.webhooks.create!(url: "https://example.org/#{n}") }
-          scraper
-        end
+        scraper = create(:scraper)
+        3.times { |n| scraper.webhooks.create!(url: "https://example.org/#{n}") }
+        scraper
       end
 
       it "queues up a background job for each webhook" do

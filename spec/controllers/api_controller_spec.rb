@@ -85,13 +85,11 @@ describe ApiController do
     let(:user) { create(:user, nickname: "mlandauer") }
 
     let(:scraper) do
-      VCR.use_cassette("scraper_validations", allow_playback_repeats: true) do
-        # Freezing time so that the updated time of the scraper is set to a
-        # consistent time. Makes a later test easier to handle
-        Timecop.freeze(Time.utc(2000)) do
-          Scraper.create(owner: user, name: "a_scraper",
-                         full_name: "mlandauer/a_scraper")
-        end
+      # Freezing time so that the updated time of the scraper is set to a
+      # consistent time. Makes a later test easier to handle
+      Timecop.freeze(Time.utc(2000)) do
+        Scraper.create(owner: user, name: "a_scraper",
+                       full_name: "mlandauer/a_scraper")
       end
     end
 

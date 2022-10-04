@@ -308,6 +308,7 @@ class Scraper < ApplicationRecord
 
   sig { void }
   def not_used_on_github
+    return if Rails.env.test?
     return unless Octokit.client.repository?(full_name)
 
     errors.add(:name, "is already taken on GitHub")

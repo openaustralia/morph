@@ -72,7 +72,7 @@ RSpec.configure do |config|
   config.before(:suite) do
     Searchkick.disable_callbacks
     DatabaseCleaner.start
-    VCR.use_cassette("scraper_validations") { FactoryBot.lint }
+    FactoryBot.lint
   ensure
     DatabaseCleaner.clean
   end

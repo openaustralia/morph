@@ -4,11 +4,7 @@
 require "spec_helper"
 
 RSpec.describe Webhook, type: :model do
-  let(:scraper) do
-    VCR.use_cassette("scraper_validations") do
-      create(:scraper)
-    end
-  end
+  let(:scraper) { create(:scraper) }
 
   describe "#url" do
     it "requires a url" do

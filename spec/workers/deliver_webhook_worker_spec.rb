@@ -4,11 +4,7 @@
 require "spec_helper"
 
 describe DeliverWebhookWorker, :vcr do
-  let(:scraper) do
-    VCR.use_cassette("scraper_validations") do
-      create(:scraper)
-    end
-  end
+  let(:scraper) { create(:scraper) }
   let(:run) { create(:run) }
 
   it "works" do
