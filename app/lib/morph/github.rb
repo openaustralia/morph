@@ -91,6 +91,13 @@ module Morph
       nil
     end
 
+    sig { params(app_installation_access_token: String, repo_name: String).returns(T::Boolean) }
+    def self.app_installation_has_access_to?(app_installation_access_token, repo_name)
+      client = Octokit::Client.new(bearer_token: app_installation_access_token)
+      # TODO: Ensure auto_paginate is true
+      client.list_app_installation_repositories.repositories.map(&:name).include?(repo_name)
+    end
+
     # Returns nicknames of github users who have contributed to a particular
     # repo
     sig { params(owner_nickname: String, repo_name: String).returns([T::Array[String], T.nilable(T.any(NoAppInstallationForOwner, NoAccessToRepo, AppInstallationNoAccessToRepo))]) }
@@ -108,10 +115,9 @@ module Morph
         T.absurd(error)
       end
 
-      client = Octokit::Client.new(bearer_token: token)
+      return [[], AppInstallationNoAccessToRepo.new] unless app_installation_has_access_to?(token, repo_name)
 
-      # TODO: Ensure auto_paginate is true
-      return [[], AppInstallationNoAccessToRepo.new] unless client.list_app_installation_repositories.repositories.map(&:name).include?(repo_name)
+      client = Octokit::Client.new(bearer_token: token)
 
       # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
       # the user could run a public scraper even without the Github Morph app having access to the repo
