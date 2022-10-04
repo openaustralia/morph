@@ -34,11 +34,11 @@ class SynchroniseRepoService
     return SynchroniseRepoError.new unless success
 
     update_repo_size(scraper)
-    error = update_contributors(scraper)
+    error = update_contributors(token, scraper)
     case error
     when nil
       nil
-    when Morph::Github::NoAccessToRepo, Morph::Github::NoAppInstallationForOwner
+    when Morph::Github::NoAccessToRepo
       error
     else
       T.absurd(error)
@@ -55,19 +55,9 @@ class SynchroniseRepoService
     scraper.update!(repo_size: directory_size(scraper.repo_path))
   end
 
-  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAccessToRepo, Morph::Github::NoAppInstallationForOwner))) }
-  def self.update_contributors(scraper)
-    token, error = Morph::Github.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
-    case error
-    when nil
-      nil
-    when Morph::Github::NoAppInstallationForOwner
-      return error
-    else
-      T.absurd(error)
-    end
-
-    nicknames, error = Morph::Github.contributor_nicknames(token, T.must(T.must(scraper.owner).nickname), scraper.name)
+  sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(Morph::Github::NoAccessToRepo)) }
+  def self.update_contributors(app_installation_access_token, scraper)
+    nicknames, error = Morph::Github.contributor_nicknames(app_installation_access_token, T.must(T.must(scraper.owner).nickname), scraper.name)
     case error
     when nil
       nil
@@ -76,6 +66,7 @@ class SynchroniseRepoService
     else
       T.absurd(error)
     end
+
     contributors = nicknames.map { |n| User.find_or_create_by!(nickname: n) }
     scraper.update!(contributors: contributors)
     nil
