@@ -36,25 +36,9 @@ class ScrapersController < ApplicationController
 
   sig { void }
   def create
-    params_scraper = T.cast(params[:scraper], ActionController::Parameters)
     authenticated_user = T.must(current_user)
 
-    scraper = if can? :create_private, Scraper
-                Scraper.new(
-                  original_language_key: params_scraper[:original_language_key],
-                  owner_id: params_scraper[:owner_id],
-                  name: params_scraper[:name],
-                  description: params_scraper[:description],
-                  private: params_scraper[:private]
-                )
-              else
-                Scraper.new(
-                  original_language_key: params_scraper[:original_language_key],
-                  owner_id: params_scraper[:owner_id],
-                  name: params_scraper[:name],
-                  description: params_scraper[:description]
-                )
-              end
+    scraper = Scraper.new(create_scraper_params)
     scraper.full_name = "#{scraper.owner.to_param}/#{scraper.name}"
     authorize! :create, scraper
     if scraper.valid?
@@ -226,5 +210,13 @@ class ScrapersController < ApplicationController
              webhooks_attributes: %i[
                id url _destroy
              ])
+  end
+
+  sig { returns(ActionController::Parameters) }
+  def create_scraper_params
+    s = T.cast(params.require(:scraper), ActionController::Parameters)
+    permitted_attributes = %i[original_language_key owner_id name description]
+    permitted_attributes << :private if can? :create_private, Scraper
+    s.permit(*permitted_attributes)
   end
 end
