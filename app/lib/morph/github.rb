@@ -91,18 +91,22 @@ module Morph
     def self.contributor_nicknames(owner_nickname, repo_name)
       # This is not an action that is directly initiated by the user. It happens
       # whenever the github repo is synchronised (which happens on every run).
-      # So we should authenticated the request using the application
-      repo_full_name = "#{owner_nickname}/#{repo_name}"
-
+      # So we should authenticate the request using the application
       token = app_installation_access_token(owner_nickname)
       # TODO: use error class
-      raise "No token" if token.nil?
+      raise "Morph Github app is not installed on #{owner_nickname}" if token.nil?
 
       client = Octokit::Client.new(bearer_token: token)
 
       # TODO: Do we need to handle the situation of the git repo being completely empty?
       # In a previous version of this function the github call returned nil if the git repo is completely empty
-      client.contributors(repo_full_name).map(&:login)
+      # Note if the app does not have access
+      begin
+        client.contributors("#{owner_nickname}/#{repo_name}").map(&:login)
+      rescue Octokit::NotFound
+        # TODO: Use error class?
+        raise "Morph Github app on #{owner_nickname} needs access to #{repo_name}"
+      end
     end
 
     sig { returns(String) }
