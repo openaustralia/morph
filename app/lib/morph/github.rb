@@ -10,6 +10,7 @@ module Morph
 
     # rubocop:disable Lint/EmptyClass
     class NoAppInstallationForOwner; end
+    class NoAccessToRepo; end
     # rubocop:enable Lint/EmptyClass
 
     # Returns Rugged::Repository
@@ -91,7 +92,7 @@ module Morph
 
     # Returns nicknames of github users who have contributed to a particular
     # repo
-    sig { params(owner_nickname: String, repo_name: String).returns(T::Array[String]) }
+    sig { params(owner_nickname: String, repo_name: String).returns([T::Array[String], T.nilable(T.any(NoAppInstallationForOwner, NoAccessToRepo))]) }
     def self.contributor_nicknames(owner_nickname, repo_name)
       # This is not an action that is directly initiated by the user. It happens
       # whenever the github repo is synchronised (which happens on every run).
@@ -101,8 +102,7 @@ module Morph
       when nil
         nil
       when NoAppInstallationForOwner
-        # TODO: use error class
-        raise "Morph Github app is not installed on #{owner_nickname}"
+        return [[], error]
       else
         T.absurd(error)
       end
@@ -113,10 +113,10 @@ module Morph
       # In a previous version of this function the github call returned nil if the git repo is completely empty
       # Note if the app does not have access
       begin
-        client.contributors("#{owner_nickname}/#{repo_name}").map(&:login)
+        contributors = client.contributors("#{owner_nickname}/#{repo_name}").map(&:login)
+        [contributors, nil]
       rescue Octokit::NotFound
-        # TODO: Use error class?
-        raise "Morph Github app on #{owner_nickname} needs access to #{repo_name}"
+        [[], NoAccessToRepo.new]
       end
     end
 
