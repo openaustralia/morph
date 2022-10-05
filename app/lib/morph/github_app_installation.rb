@@ -104,13 +104,17 @@ module Morph
       end
     end
 
+    sig { params(app_installation_access_token: String, repo_path: String, git_url_https: String).returns(Rugged::Repository) }
+    def self.synchronise_repo_ignore_submodules2(app_installation_access_token, repo_path, git_url_https)
+      synchronise_repo_ignore_submodules(repo_path, git_url_https_with_app_access(app_installation_access_token, git_url_https))
+    end
+
     sig { params(app_installation_access_token: String, repo_path: String, git_url_https: String).returns(T.nilable(SynchroniseRepoError)) }
     def self.synchronise_repo(app_installation_access_token, repo_path, git_url_https)
-      git_url = git_url_https_with_app_access(app_installation_access_token, git_url_https)
-      repo = synchronise_repo_ignore_submodules(repo_path, git_url)
+      repo = synchronise_repo_ignore_submodules2(app_installation_access_token, repo_path, git_url_https)
       repo.submodules.each do |submodule|
         submodule.init
-        synchronise_repo_ignore_submodules(File.join(repo_path, submodule.path), submodule.url)
+        synchronise_repo_ignore_submodules2(app_installation_access_token, File.join(repo_path, submodule.path), submodule.url)
       end
       nil
     rescue Rugged::HTTPError, Rugged::SubmoduleError => e
