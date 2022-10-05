@@ -36,6 +36,15 @@ module Morph
       GithubAppInstallation.confirm_app_installation_has_access_to(token, repo_name)
     end
 
+    sig { params(repo_name: String).returns([T::Boolean, T.nilable(Morph::GithubAppInstallation::NoAppInstallationForOwner)]) }
+    def repository_private?(repo_name)
+      token, error = access_token
+      return [false, error] if error
+
+      result = GithubAppInstallation.repository_private?(token, repo_name)
+      [result, nil]
+    end
+
     # Returns Rugged::Repository
     sig { params(repo_path: String, git_url: String).returns(Rugged::Repository) }
     def self.synchronise_repo_ignore_submodules(repo_path, git_url)

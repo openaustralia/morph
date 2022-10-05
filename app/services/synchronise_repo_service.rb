@@ -23,7 +23,7 @@ class SynchroniseRepoService
     error = installation.confirm_has_access_to(scraper.name)
     return error if error
 
-    error = check_repository_visibility(token, scraper)
+    error = check_repository_visibility(installation, scraper)
     return error if error
 
     error = Morph::GithubAppInstallation.synchronise_repo(scraper.repo_path, git_url_https_with_app_access(token, scraper))
@@ -36,9 +36,11 @@ class SynchroniseRepoService
     nil
   end
 
-  sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(T.any(RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
-  def self.check_repository_visibility(app_installation_access_token, scraper)
-    repository_private = Morph::GithubAppInstallation.repository_private?(app_installation_access_token, scraper.full_name)
+  sig { params(installation: Morph::GithubAppInstallation, scraper: Scraper).returns(T.nilable(T.any(RepoNeedsToBePublic, RepoNeedsToBePrivate, Morph::GithubAppInstallation::NoAppInstallationForOwner))) }
+  def self.check_repository_visibility(installation, scraper)
+    repository_private, error = installation.repository_private?(scraper.full_name)
+    return error if error
+
     # No problem if the visibility of the scraper and the repository match
     return nil if repository_private == scraper.private?
 
