@@ -113,19 +113,13 @@ module Morph
       [repo, nil]
     end
 
+    # Returns nicknames of github users who have contributed to a particular repo
     sig { params(repo_full_name: String).returns([T::Array[String], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }
     def contributor_nicknames(repo_full_name)
       token, error = access_token
       return [[], error] if error
 
-      GithubAppInstallation.contributor_nicknames(token, repo_full_name)
-    end
-
-    # Returns nicknames of github users who have contributed to a particular
-    # repo
-    sig { params(app_installation_access_token: String, repo_full_name: String).returns([T::Array[String], T.nilable(NoAccessToRepo)]) }
-    def self.contributor_nicknames(app_installation_access_token, repo_full_name)
-      client = Octokit::Client.new(bearer_token: app_installation_access_token)
+      client = Octokit::Client.new(bearer_token: token)
 
       # TODO: Do we need to handle the situation of the git repo being completely empty?
       # In a previous version of this function the github call returned nil if the git repo is completely empty
