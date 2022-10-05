@@ -73,12 +73,17 @@ module Morph
       [token, nil]
     end
 
+    sig { returns([Octokit::Client, T.nilable(NoAppInstallationForOwner)]) }
+    def octokit_client
+      token, error = access_token
+      [Octokit::Client.new(bearer_token: token), error]
+    end
+
     sig { params(repo_name: String).returns(T.nilable(T.any(NoAppInstallationForOwner, AppInstallationNoAccessToRepo))) }
     def confirm_has_access_to(repo_name)
-      token, error = access_token
+      client, error = octokit_client
       return error if error
 
-      client = Octokit::Client.new(bearer_token: token)
       # TODO: Ensure auto_paginate is true
       if client.list_app_installation_repositories.repositories.map(&:name).include?(repo_name)
         nil
@@ -89,10 +94,9 @@ module Morph
 
     sig { params(repo_full_name: String).returns([T::Boolean, T.nilable(NoAppInstallationForOwner)]) }
     def repository_private?(repo_full_name)
-      token, error = access_token
+      client, error = octokit_client
       return [false, error] if error
 
-      client = Octokit::Client.new(bearer_token: token)
       result = (client.repository(repo_full_name).visibility == "private")
       [result, nil]
     end
@@ -143,10 +147,8 @@ module Morph
     # Returns nicknames of github users who have contributed to a particular repo
     sig { params(repo_full_name: String).returns([T::Array[String], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }
     def contributor_nicknames(repo_full_name)
-      token, error = access_token
+      client, error = octokit_client
       return [[], error] if error
-
-      client = Octokit::Client.new(bearer_token: token)
 
       # TODO: Do we need to handle the situation of the git repo being completely empty?
       # In a previous version of this function the github call returned nil if the git repo is completely empty
