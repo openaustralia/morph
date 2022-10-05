@@ -45,6 +45,15 @@ module Morph
       [result, nil]
     end
 
+    # TODO: Wouldn't it make sense to pass the base repo path, the repo name and instead work out the git_url_https from that?
+    sig { params(repo_path: String, git_url_https: String).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAppInstallationForOwner, Morph::GithubAppInstallation::SynchroniseRepoError))) }
+    def synchronise_repo(repo_path, git_url_https)
+      token, error = access_token
+      return error if error
+
+      GithubAppInstallation.synchronise_repo(token, repo_path, git_url_https)
+    end
+
     # Returns Rugged::Repository
     sig { params(repo_path: String, git_url: String).returns(Rugged::Repository) }
     def self.synchronise_repo_ignore_submodules(repo_path, git_url)
