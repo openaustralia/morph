@@ -62,9 +62,9 @@ module Morph
       end
     end
 
-    # Returns true if everything worked
-    sig { params(repo_path: String, git_url: String).returns(T.nilable(SynchroniseRepoError)) }
-    def self.synchronise_repo(repo_path, git_url)
+    sig { params(app_installation_access_token: String, repo_path: String, git_url_https: String).returns(T.nilable(SynchroniseRepoError)) }
+    def self.synchronise_repo(app_installation_access_token, repo_path, git_url_https)
+      git_url = git_url_https_with_app_access(app_installation_access_token, git_url_https)
       repo = synchronise_repo_ignore_submodules(repo_path, git_url)
       repo.submodules.each do |submodule|
         submodule.init

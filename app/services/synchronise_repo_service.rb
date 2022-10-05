@@ -26,7 +26,7 @@ class SynchroniseRepoService
     error = check_repository_visibility(installation, scraper)
     return error if error
 
-    error = Morph::GithubAppInstallation.synchronise_repo(scraper.repo_path, Morph::GithubAppInstallation.git_url_https_with_app_access(token, scraper.git_url_https))
+    error = Morph::GithubAppInstallation.synchronise_repo(token, scraper.repo_path, scraper.git_url_https)
     return error if error
 
     update_repo_size(scraper)
