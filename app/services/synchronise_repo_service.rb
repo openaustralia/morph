@@ -15,7 +15,9 @@ class SynchroniseRepoService
     # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
     # the user could run a public scraper even without the Github Morph app having access to the repo
     # connected with the scraper
-    token, error = Morph::GithubAppInstallation.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
+    installation = Morph::GithubAppInstallation.new(T.must(T.must(scraper.owner).nickname))
+
+    token, error = installation.access_token
     return error if error
 
     return Morph::GithubAppInstallation::AppInstallationNoAccessToRepo.new unless Morph::GithubAppInstallation.app_installation_has_access_to?(token, scraper.name)

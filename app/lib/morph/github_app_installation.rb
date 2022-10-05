@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Morph
-  module GithubAppInstallation
+  class GithubAppInstallation
     extend T::Sig
 
     MORPH_GITHUB_APP_PRIVATE_KEY_PATH = "config/morph-github-app.private-key.pem"
@@ -14,6 +14,19 @@ module Morph
     # TODO: Split SynchroniseRepoError into more specific errors that mean something to users
     class SynchroniseRepoError; end
     # rubocop:enable Lint/EmptyClass
+
+    sig { returns(String) }
+    attr_reader :owner_nickname
+
+    sig { params(owner_nickname: String).void }
+    def initialize(owner_nickname)
+      @owner_nickname = owner_nickname
+    end
+
+    sig { returns([String, T.nilable(NoAppInstallationForOwner)]) }
+    def access_token
+      @access_token ||= T.let(GithubAppInstallation.app_installation_access_token(owner_nickname), T.nilable([String, T.nilable(NoAppInstallationForOwner)]))
+    end
 
     # Returns Rugged::Repository
     sig { params(repo_path: String, git_url: String).returns(Rugged::Repository) }
