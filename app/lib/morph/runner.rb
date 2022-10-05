@@ -85,21 +85,21 @@ module Morph
       case error
       when nil
         nil
-      when Morph::Github::NoAppInstallationForOwner
+      when Morph::GithubAppInstallation::NoAppInstallationForOwner
         error(
           status_code: 999,
           text: "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to #{T.must(scraper.owner).app_install_url}",
           &block
         )
         return
-      when Morph::Github::AppInstallationNoAccessToRepo
+      when Morph::GithubAppInstallation::AppInstallationNoAccessToRepo
         error(
           status_code: 999,
           text: "The Morph Github App installed on #{T.must(scraper.owner).nickname} needs access to the repository #{scraper.name}. Please go to #{T.must(scraper.owner).app_install_url}",
           &block
         )
         return
-      when Morph::Github::SynchroniseRepoError, Morph::Github::NoAccessToRepo
+      when Morph::GithubAppInstallation::SynchroniseRepoError, Morph::GithubAppInstallation::NoAccessToRepo
         error(text: "There was a problem getting the latest scraper code from GitHub", status_code: 999, &block)
         return
       when SynchroniseRepoService::RepoNeedsToBePublic

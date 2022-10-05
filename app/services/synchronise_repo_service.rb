@@ -9,21 +9,21 @@ class SynchroniseRepoService
   class RepoNeedsToBePrivate; end
   # rubocop:enable Lint/EmptyClass
 
-  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Github::NoAppInstallationForOwner, Morph::Github::NoAccessToRepo, Morph::Github::AppInstallationNoAccessToRepo, Morph::Github::SynchroniseRepoError, RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAppInstallationForOwner, Morph::GithubAppInstallation::NoAccessToRepo, Morph::GithubAppInstallation::AppInstallationNoAccessToRepo, Morph::GithubAppInstallation::SynchroniseRepoError, RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
   def self.call(scraper)
     # First check that the GitHub Morph app has access to the repository
     # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
     # the user could run a public scraper even without the Github Morph app having access to the repo
     # connected with the scraper
-    token, error = Morph::Github.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
+    token, error = Morph::GithubAppInstallation.app_installation_access_token(T.must(T.must(scraper.owner).nickname))
     return error if error
 
-    return Morph::Github::AppInstallationNoAccessToRepo.new unless Morph::Github.app_installation_has_access_to?(token, scraper.name)
+    return Morph::GithubAppInstallation::AppInstallationNoAccessToRepo.new unless Morph::GithubAppInstallation.app_installation_has_access_to?(token, scraper.name)
 
     error = check_repository_visibility(token, scraper)
     return error if error
 
-    error = Morph::Github.synchronise_repo(scraper.repo_path, git_url_https_with_app_access(token, scraper))
+    error = Morph::GithubAppInstallation.synchronise_repo(scraper.repo_path, git_url_https_with_app_access(token, scraper))
     return error if error
 
     update_repo_size(scraper)
@@ -35,7 +35,7 @@ class SynchroniseRepoService
 
   sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(T.any(RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
   def self.check_repository_visibility(app_installation_access_token, scraper)
-    repository_private = Morph::Github.repository_private?(app_installation_access_token, scraper.full_name)
+    repository_private = Morph::GithubAppInstallation.repository_private?(app_installation_access_token, scraper.full_name)
     # No problem if the visibility of the scraper and the repository match
     return nil if repository_private == scraper.private?
 
@@ -52,9 +52,9 @@ class SynchroniseRepoService
     scraper.update!(repo_size: directory_size(scraper.repo_path))
   end
 
-  sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(Morph::Github::NoAccessToRepo)) }
+  sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(Morph::GithubAppInstallation::NoAccessToRepo)) }
   def self.update_contributors(app_installation_access_token, scraper)
-    nicknames, error = Morph::Github.contributor_nicknames(app_installation_access_token, scraper.full_name)
+    nicknames, error = Morph::GithubAppInstallation.contributor_nicknames(app_installation_access_token, scraper.full_name)
     return error if error
 
     contributors = nicknames.map { |n| User.find_or_create_by!(nickname: n) }
