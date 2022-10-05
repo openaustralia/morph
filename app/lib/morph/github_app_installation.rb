@@ -51,15 +51,22 @@ module Morph
       token, error = access_token
       return error if error
 
-      GithubAppInstallation.confirm_app_installation_has_access_to(token, repo_name)
+      client = Octokit::Client.new(bearer_token: token)
+      # TODO: Ensure auto_paginate is true
+      if client.list_app_installation_repositories.repositories.map(&:name).include?(repo_name)
+        nil
+      else
+        AppInstallationNoAccessToRepo.new
+      end
     end
 
-    sig { params(repo_name: String).returns([T::Boolean, T.nilable(NoAppInstallationForOwner)]) }
-    def repository_private?(repo_name)
+    sig { params(repo_full_name: String).returns([T::Boolean, T.nilable(NoAppInstallationForOwner)]) }
+    def repository_private?(repo_full_name)
       token, error = access_token
       return [false, error] if error
 
-      result = GithubAppInstallation.repository_private?(token, repo_name)
+      client = Octokit::Client.new(bearer_token: token)
+      result = (client.repository(repo_full_name).visibility == "private")
       [result, nil]
     end
 
@@ -113,22 +120,6 @@ module Morph
       SynchroniseRepoError.new
     end
 
-    sig { params(app_installation_access_token: String, repo_name: String).returns(T::Boolean) }
-    def self.app_installation_has_access_to?(app_installation_access_token, repo_name)
-      client = Octokit::Client.new(bearer_token: app_installation_access_token)
-      # TODO: Ensure auto_paginate is true
-      client.list_app_installation_repositories.repositories.map(&:name).include?(repo_name)
-    end
-
-    sig { params(app_installation_access_token: String, repo_name: String).returns(T.nilable(AppInstallationNoAccessToRepo)) }
-    def self.confirm_app_installation_has_access_to(app_installation_access_token, repo_name)
-      if Morph::GithubAppInstallation.app_installation_has_access_to?(app_installation_access_token, repo_name)
-        nil
-      else
-        AppInstallationNoAccessToRepo.new
-      end
-    end
-
     # Returns nicknames of github users who have contributed to a particular
     # repo
     sig { params(app_installation_access_token: String, repo_full_name: String).returns([T::Array[String], T.nilable(NoAccessToRepo)]) }
@@ -144,12 +135,6 @@ module Morph
       rescue Octokit::NotFound
         [[], NoAccessToRepo.new]
       end
-    end
-
-    sig { params(app_installation_access_token: String, repo_full_name: String).returns(T::Boolean) }
-    def self.repository_private?(app_installation_access_token, repo_full_name)
-      client = Octokit::Client.new(bearer_token: app_installation_access_token)
-      client.repository(repo_full_name).visibility == "private"
     end
 
     sig { returns(String) }
