@@ -28,6 +28,14 @@ module Morph
       @access_token ||= T.let(GithubAppInstallation.app_installation_access_token(owner_nickname), T.nilable([String, T.nilable(NoAppInstallationForOwner)]))
     end
 
+    sig { params(repo_name: String).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAppInstallationForOwner, Morph::GithubAppInstallation::AppInstallationNoAccessToRepo))) }
+    def confirm_has_access_to(repo_name)
+      token, error = access_token
+      return error if error
+
+      GithubAppInstallation.confirm_app_installation_has_access_to(token, repo_name)
+    end
+
     # Returns Rugged::Repository
     sig { params(repo_path: String, git_url: String).returns(Rugged::Repository) }
     def self.synchronise_repo_ignore_submodules(repo_path, git_url)

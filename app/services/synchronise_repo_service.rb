@@ -20,7 +20,7 @@ class SynchroniseRepoService
     token, error = installation.access_token
     return error if error
 
-    error = Morph::GithubAppInstallation.confirm_app_installation_has_access_to(token, scraper.name)
+    error = installation.confirm_has_access_to(scraper.name)
     return error if error
 
     error = check_repository_visibility(token, scraper)
