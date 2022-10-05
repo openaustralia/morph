@@ -53,7 +53,18 @@ module Morph
 
     sig { returns([String, T.nilable(NoAppInstallationForOwner)]) }
     def access_token_no_caching
-      GithubAppInstallation.app_installation_access_token(owner_nickname)
+      id, error = installation_id
+      case error
+      when nil
+        nil
+      when NoAppInstallationForOwner
+        return ["", error]
+      else
+        T.absurd(error)
+      end
+
+      token = GithubAppInstallation.jwt_client.create_app_installation_access_token(id).token
+      [token, nil]
     end
 
     sig { params(repo_name: String).returns(T.nilable(T.any(NoAppInstallationForOwner, AppInstallationNoAccessToRepo))) }
@@ -175,22 +186,6 @@ module Morph
       [installion_id, nil]
     rescue Octokit::NotFound
       [0, NoAppInstallationForOwner.new]
-    end
-
-    sig { params(owner_nickname: String).returns([String, T.nilable(NoAppInstallationForOwner)]) }
-    def self.app_installation_access_token(owner_nickname)
-      id, error = app_installation_id_for_owner(owner_nickname)
-      case error
-      when nil
-        nil
-      when NoAppInstallationForOwner
-        return ["", error]
-      else
-        T.absurd(error)
-      end
-
-      token = jwt_client.create_app_installation_access_token(id).token
-      [token, nil]
     end
   end
 end
