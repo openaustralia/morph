@@ -167,5 +167,10 @@ module Morph
       token = jwt_client.create_app_installation_access_token(id).token
       [token, nil]
     end
+
+    sig { params(app_installation_access_token: String, git_url_https: String).returns(String) }
+    def self.git_url_https_with_app_access(app_installation_access_token, git_url_https)
+      git_url_https.sub("https://", "https://x-access-token:#{app_installation_access_token}@")
+    end
   end
 end
