@@ -28,7 +28,7 @@ module Morph
       @access_token ||= T.let(GithubAppInstallation.app_installation_access_token(owner_nickname), T.nilable([String, T.nilable(NoAppInstallationForOwner)]))
     end
 
-    sig { params(repo_name: String).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAppInstallationForOwner, Morph::GithubAppInstallation::AppInstallationNoAccessToRepo))) }
+    sig { params(repo_name: String).returns(T.nilable(T.any(NoAppInstallationForOwner, AppInstallationNoAccessToRepo))) }
     def confirm_has_access_to(repo_name)
       token, error = access_token
       return error if error
@@ -36,7 +36,7 @@ module Morph
       GithubAppInstallation.confirm_app_installation_has_access_to(token, repo_name)
     end
 
-    sig { params(repo_name: String).returns([T::Boolean, T.nilable(Morph::GithubAppInstallation::NoAppInstallationForOwner)]) }
+    sig { params(repo_name: String).returns([T::Boolean, T.nilable(NoAppInstallationForOwner)]) }
     def repository_private?(repo_name)
       token, error = access_token
       return [false, error] if error
@@ -46,7 +46,7 @@ module Morph
     end
 
     # TODO: Wouldn't it make sense to pass the base repo path, the repo name and instead work out the git_url_https from that?
-    sig { params(repo_path: String, git_url_https: String).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAppInstallationForOwner, Morph::GithubAppInstallation::SynchroniseRepoError))) }
+    sig { params(repo_path: String, git_url_https: String).returns(T.nilable(T.any(NoAppInstallationForOwner, SynchroniseRepoError))) }
     def synchronise_repo(repo_path, git_url_https)
       token, error = access_token
       return error if error
@@ -107,7 +107,7 @@ module Morph
       if Morph::GithubAppInstallation.app_installation_has_access_to?(app_installation_access_token, repo_name)
         nil
       else
-        Morph::GithubAppInstallation::AppInstallationNoAccessToRepo.new
+        AppInstallationNoAccessToRepo.new
       end
     end
 
