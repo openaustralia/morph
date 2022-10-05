@@ -54,6 +54,14 @@ module Morph
       GithubAppInstallation.synchronise_repo(token, repo_path, git_url_https)
     end
 
+    sig { params(repo_full_name: String).returns([T::Array[String], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }
+    def contributor_nicknames(repo_full_name)
+      token, error = access_token
+      return [[], error] if error
+
+      GithubAppInstallation.contributor_nicknames(token, repo_full_name)
+    end
+
     # Returns Rugged::Repository
     sig { params(repo_path: String, git_url: String).returns(Rugged::Repository) }
     def self.synchronise_repo_ignore_submodules(repo_path, git_url)
