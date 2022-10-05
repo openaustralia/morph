@@ -38,12 +38,22 @@ module Morph
 
     sig { returns([Integer, T.nilable(NoAppInstallationForOwner)]) }
     def installation_id
-      @installation_id ||= T.let(GithubAppInstallation.app_installation_id_for_owner(owner_nickname), T.nilable([Integer, T.nilable(NoAppInstallationForOwner)]))
+      @installation_id ||= T.let(installation_id_no_caching, T.nilable([Integer, T.nilable(NoAppInstallationForOwner)]))
+    end
+
+    sig { returns([Integer, T.nilable(NoAppInstallationForOwner)]) }
+    def installation_id_no_caching
+      GithubAppInstallation.app_installation_id_for_owner(owner_nickname)
     end
 
     sig { returns([String, T.nilable(NoAppInstallationForOwner)]) }
     def access_token
-      @access_token ||= T.let(GithubAppInstallation.app_installation_access_token(owner_nickname), T.nilable([String, T.nilable(NoAppInstallationForOwner)]))
+      @access_token ||= T.let(access_token_no_caching, T.nilable([String, T.nilable(NoAppInstallationForOwner)]))
+    end
+
+    sig { returns([String, T.nilable(NoAppInstallationForOwner)]) }
+    def access_token_no_caching
+      GithubAppInstallation.app_installation_access_token(owner_nickname)
     end
 
     sig { params(repo_name: String).returns(T.nilable(T.any(NoAppInstallationForOwner, AppInstallationNoAccessToRepo))) }
