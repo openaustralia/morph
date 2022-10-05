@@ -23,6 +23,24 @@ module Morph
       @owner_nickname = owner_nickname
     end
 
+    sig { returns(T::Boolean) }
+    def installed?
+      _id, error = installation_id
+      case error
+      when nil
+        true
+      when NoAppInstallationForOwner
+        false
+      else
+        T.absurd(error)
+      end
+    end
+
+    sig { returns([Integer, T.nilable(NoAppInstallationForOwner)]) }
+    def installation_id
+      @installation_id ||= T.let(GithubAppInstallation.app_installation_id_for_owner(owner_nickname), T.nilable([Integer, T.nilable(NoAppInstallationForOwner)]))
+    end
+
     sig { returns([String, T.nilable(NoAppInstallationForOwner)]) }
     def access_token
       @access_token ||= T.let(GithubAppInstallation.app_installation_access_token(owner_nickname), T.nilable([String, T.nilable(NoAppInstallationForOwner)]))
