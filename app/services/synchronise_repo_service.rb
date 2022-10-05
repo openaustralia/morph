@@ -17,9 +17,6 @@ class SynchroniseRepoService
     # connected with the scraper
     installation = Morph::GithubAppInstallation.new(T.must(T.must(scraper.owner).nickname))
 
-    token, error = installation.access_token
-    return error if error
-
     error = installation.confirm_has_access_to(scraper.name)
     return error if error
 
@@ -30,7 +27,7 @@ class SynchroniseRepoService
     return error if error
 
     update_repo_size(scraper)
-    error = update_contributors(token, scraper)
+    error = update_contributors(installation, scraper)
     return error if error
 
     nil
@@ -52,8 +49,11 @@ class SynchroniseRepoService
     scraper.update!(repo_size: directory_size(scraper.repo_path))
   end
 
-  sig { params(app_installation_access_token: String, scraper: Scraper).returns(T.nilable(Morph::GithubAppInstallation::NoAccessToRepo)) }
-  def self.update_contributors(app_installation_access_token, scraper)
+  sig { params(installation: Morph::GithubAppInstallation, scraper: Scraper).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAccessToRepo, Morph::GithubAppInstallation::NoAppInstallationForOwner))) }
+  def self.update_contributors(installation, scraper)
+    app_installation_access_token, error = installation.access_token
+    return error if error
+
     nicknames, error = Morph::GithubAppInstallation.contributor_nicknames(app_installation_access_token, scraper.full_name)
     return error if error
 
