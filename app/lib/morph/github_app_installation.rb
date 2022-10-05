@@ -95,7 +95,9 @@ module Morph
       token, error = access_token
       return [Rugged::Repository.new, error] if error
 
-      git_url = GithubAppInstallation.git_url_https_with_app_access(token, git_url_https)
+      # Allow git to access as the github application
+      git_url = git_url_https.sub("https://", "https://x-access-token:#{token}@")
+
       repo = if File.exist?(repo_path) && !Dir.empty?(repo_path)
                Rails.logger.info "Updating git repo #{repo_path}..."
                repo = Rugged::Repository.new(repo_path)
@@ -185,11 +187,6 @@ module Morph
 
       token = jwt_client.create_app_installation_access_token(id).token
       [token, nil]
-    end
-
-    sig { params(app_installation_access_token: String, git_url_https: String).returns(String) }
-    def self.git_url_https_with_app_access(app_installation_access_token, git_url_https)
-      git_url_https.sub("https://", "https://x-access-token:#{app_installation_access_token}@")
     end
   end
 end
