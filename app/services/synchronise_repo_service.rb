@@ -26,7 +26,7 @@ class SynchroniseRepoService
     error = check_repository_visibility(installation, scraper)
     return error if error
 
-    error = Morph::GithubAppInstallation.synchronise_repo(scraper.repo_path, git_url_https_with_app_access(token, scraper))
+    error = Morph::GithubAppInstallation.synchronise_repo(scraper.repo_path, git_url_https_with_app_access(token, scraper.git_url_https))
     return error if error
 
     update_repo_size(scraper)
@@ -47,9 +47,9 @@ class SynchroniseRepoService
     repository_private ? RepoNeedsToBePublic.new : RepoNeedsToBePrivate.new
   end
 
-  sig { params(app_installation_access_token: String, scraper: Scraper).returns(String) }
-  def self.git_url_https_with_app_access(app_installation_access_token, scraper)
-    scraper.git_url_https.sub("https://", "https://x-access-token:#{app_installation_access_token}@")
+  sig { params(app_installation_access_token: String, git_url_https: String).returns(String) }
+  def self.git_url_https_with_app_access(app_installation_access_token, git_url_https)
+    git_url_https.sub("https://", "https://x-access-token:#{app_installation_access_token}@")
   end
 
   sig { params(scraper: Scraper).void }
