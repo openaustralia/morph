@@ -73,10 +73,20 @@ module Morph
     # TODO: Wouldn't it make sense to pass the base repo path, the repo name and instead work out the git_url_https from that?
     sig { params(repo_path: String, git_url_https: String).returns(T.nilable(T.any(NoAppInstallationForOwner, SynchroniseRepoError))) }
     def synchronise_repo(repo_path, git_url_https)
-      token, error = access_token
+      repo, error = synchronise_repo_ignore_submodules(repo_path, git_url_https)
       return error if error
 
-      GithubAppInstallation.synchronise_repo(token, repo_path, git_url_https)
+      repo.submodules.each do |submodule|
+        submodule.init
+        _repo, error2 = synchronise_repo_ignore_submodules(File.join(repo_path, submodule.path), submodule.url)
+        return error2 if error2
+      end
+      nil
+    rescue Rugged::HTTPError, Rugged::SubmoduleError => e
+      Rails.logger.warn "Error during Github.synchronise_repo: #{e}"
+      # TODO: Give the user more detailed feedback about the problem
+      # Indicate there was a problem
+      SynchroniseRepoError.new
     end
 
     # TODO: Wouldn't it make sense to pass the base repo path, the repo name and instead work out the git_url_https from that?
@@ -85,8 +95,20 @@ module Morph
       token, error = access_token
       return [Rugged::Repository.new, error] if error
 
-      result = GithubAppInstallation.synchronise_repo_ignore_submodules(token, repo_path, git_url_https)
-      [result, nil]
+      git_url = GithubAppInstallation.git_url_https_with_app_access(token, git_url_https)
+      repo = if File.exist?(repo_path) && !Dir.empty?(repo_path)
+               Rails.logger.info "Updating git repo #{repo_path}..."
+               repo = Rugged::Repository.new(repo_path)
+               # Always update the remote with the latest git_url because the token in it expires quickly
+               repo.remotes.set_url("origin", git_url)
+               repo.fetch("origin")
+               repo.reset("FETCH_HEAD", :hard)
+               repo
+             else
+               Rails.logger.info "Cloning git repo #{git_url_https}..."
+               Rugged::Repository.clone_at(git_url, repo_path)
+             end
+      [repo, nil]
     end
 
     sig { params(repo_full_name: String).returns([T::Array[String], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }
@@ -95,38 +117,6 @@ module Morph
       return [[], error] if error
 
       GithubAppInstallation.contributor_nicknames(token, repo_full_name)
-    end
-
-    sig { params(app_installation_access_token: String, repo_path: String, git_url_https: String).returns(Rugged::Repository) }
-    def self.synchronise_repo_ignore_submodules(app_installation_access_token, repo_path, git_url_https)
-      git_url = git_url_https_with_app_access(app_installation_access_token, git_url_https)
-      if File.exist?(repo_path) && !Dir.empty?(repo_path)
-        Rails.logger.info "Updating git repo #{repo_path}..."
-        repo = Rugged::Repository.new(repo_path)
-        # Always update the remote with the latest git_url because the token in it expires quickly
-        repo.remotes.set_url("origin", git_url)
-        repo.fetch("origin")
-        repo.reset("FETCH_HEAD", :hard)
-        repo
-      else
-        Rails.logger.info "Cloning git repo #{git_url_https}..."
-        Rugged::Repository.clone_at(git_url, repo_path)
-      end
-    end
-
-    sig { params(app_installation_access_token: String, repo_path: String, git_url_https: String).returns(T.nilable(SynchroniseRepoError)) }
-    def self.synchronise_repo(app_installation_access_token, repo_path, git_url_https)
-      repo = synchronise_repo_ignore_submodules(app_installation_access_token, repo_path, git_url_https)
-      repo.submodules.each do |submodule|
-        submodule.init
-        synchronise_repo_ignore_submodules(app_installation_access_token, File.join(repo_path, submodule.path), submodule.url)
-      end
-      nil
-    rescue Rugged::HTTPError, Rugged::SubmoduleError => e
-      Rails.logger.warn "Error during Github.synchronise_repo: #{e}"
-      # TODO: Give the user more detailed feedback about the problem
-      # Indicate there was a problem
-      SynchroniseRepoError.new
     end
 
     # Returns nicknames of github users who have contributed to a particular
