@@ -323,7 +323,11 @@ class Scraper < ApplicationRecord
     when nil
       nil
     when Morph::Github::NoAppInstallationForOwner
-      errors.add(:owner_id, "Please <a href='#{T.must(owner).app_install_url}'>install the Morph GitHub App</a> on #{T.must(owner).nickname} so that Morph can create the repository".html_safe)
+      # I think I18n.t doesn't support the _html suffix to make the string automatically html safe. So we're doing it by hand
+      message = I18n.t("activerecord.errors.models.scraper.app_installed_on_owner", install_url: T.must(owner).app_install_url, owner: T.must(owner).nickname)
+      # rubocop:disable Rails/OutputSafety
+      errors.add(:owner_id, message.html_safe)
+      # rubocop:enable Rails/OutputSafety
     else
       T.absurd(error)
     end
