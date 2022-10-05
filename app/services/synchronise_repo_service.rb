@@ -20,7 +20,8 @@ class SynchroniseRepoService
     token, error = installation.access_token
     return error if error
 
-    return Morph::GithubAppInstallation::AppInstallationNoAccessToRepo.new unless Morph::GithubAppInstallation.app_installation_has_access_to?(token, scraper.name)
+    error = Morph::GithubAppInstallation.confirm_app_installation_has_access_to(token, scraper.name)
+    return error if error
 
     error = check_repository_visibility(token, scraper)
     return error if error

@@ -68,6 +68,15 @@ module Morph
       client.list_app_installation_repositories.repositories.map(&:name).include?(repo_name)
     end
 
+    sig { params(app_installation_access_token: String, repo_name: String).returns(T.nilable(AppInstallationNoAccessToRepo)) }
+    def self.confirm_app_installation_has_access_to(app_installation_access_token, repo_name)
+      if Morph::GithubAppInstallation.app_installation_has_access_to?(app_installation_access_token, repo_name)
+        nil
+      else
+        Morph::GithubAppInstallation::AppInstallationNoAccessToRepo.new
+      end
+    end
+
     # Returns nicknames of github users who have contributed to a particular
     # repo
     sig { params(app_installation_access_token: String, repo_full_name: String).returns([T::Array[String], T.nilable(NoAccessToRepo)]) }
