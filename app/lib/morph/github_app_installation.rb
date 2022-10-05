@@ -87,9 +87,9 @@ module Morph
       GithubAppInstallation.contributor_nicknames(token, repo_full_name)
     end
 
-    # Returns Rugged::Repository
-    sig { params(repo_path: String, git_url: String).returns(Rugged::Repository) }
-    def self.synchronise_repo_ignore_submodules(repo_path, git_url)
+    sig { params(app_installation_access_token: String, repo_path: String, git_url_https: String).returns(Rugged::Repository) }
+    def self.synchronise_repo_ignore_submodules(app_installation_access_token, repo_path, git_url_https)
+      git_url = git_url_https_with_app_access(app_installation_access_token, git_url_https)
       if File.exist?(repo_path) && !Dir.empty?(repo_path)
         Rails.logger.info "Updating git repo #{repo_path}..."
         repo = Rugged::Repository.new(repo_path)
@@ -99,22 +99,17 @@ module Morph
         repo.reset("FETCH_HEAD", :hard)
         repo
       else
-        Rails.logger.info "Cloning git repo #{git_url}..."
+        Rails.logger.info "Cloning git repo #{git_url_https}..."
         Rugged::Repository.clone_at(git_url, repo_path)
       end
     end
 
-    sig { params(app_installation_access_token: String, repo_path: String, git_url_https: String).returns(Rugged::Repository) }
-    def self.synchronise_repo_ignore_submodules2(app_installation_access_token, repo_path, git_url_https)
-      synchronise_repo_ignore_submodules(repo_path, git_url_https_with_app_access(app_installation_access_token, git_url_https))
-    end
-
     sig { params(app_installation_access_token: String, repo_path: String, git_url_https: String).returns(T.nilable(SynchroniseRepoError)) }
     def self.synchronise_repo(app_installation_access_token, repo_path, git_url_https)
-      repo = synchronise_repo_ignore_submodules2(app_installation_access_token, repo_path, git_url_https)
+      repo = synchronise_repo_ignore_submodules(app_installation_access_token, repo_path, git_url_https)
       repo.submodules.each do |submodule|
         submodule.init
-        synchronise_repo_ignore_submodules2(app_installation_access_token, File.join(repo_path, submodule.path), submodule.url)
+        synchronise_repo_ignore_submodules(app_installation_access_token, File.join(repo_path, submodule.path), submodule.url)
       end
       nil
     rescue Rugged::HTTPError, Rugged::SubmoduleError => e
