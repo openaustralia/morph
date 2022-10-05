@@ -43,7 +43,13 @@ module Morph
 
     sig { returns([Integer, T.nilable(NoAppInstallationForOwner)]) }
     def installation_id_no_caching
-      GithubAppInstallation.app_installation_id_for_owner(owner_nickname)
+      # Curious. This single API endpoint seems to support both users and organizations despite there being
+      # two separate API endpoints available. Hmmm... Well, let's just run with that then...
+      # TODO: If there is no installation for the owner below raises Octokit::NotFound. Handle this!
+      installion_id = GithubAppInstallation.jwt_client.find_user_installation(owner_nickname).id
+      [installion_id, nil]
+    rescue Octokit::NotFound
+      [0, NoAppInstallationForOwner.new]
     end
 
     sig { returns([String, T.nilable(NoAppInstallationForOwner)]) }
@@ -175,17 +181,6 @@ module Morph
     sig { returns(Octokit::Client) }
     def self.jwt_client
       Octokit::Client.new(bearer_token: jwt)
-    end
-
-    sig { params(owner_nickname: String).returns([Integer, T.nilable(NoAppInstallationForOwner)]) }
-    def self.app_installation_id_for_owner(owner_nickname)
-      # Curious. This single API endpoint seems to support both users and organizations despite there being
-      # two separate API endpoints available. Hmmm... Well, let's just run with that then...
-      # TODO: If there is no installation for the owner below raises Octokit::NotFound. Handle this!
-      installion_id = jwt_client.find_user_installation(owner_nickname).id
-      [installion_id, nil]
-    rescue Octokit::NotFound
-      [0, NoAppInstallationForOwner.new]
     end
   end
 end
