@@ -1,0 +1,5 @@
+// Style links in errors in forms the same colour as the main bit of the text
+.simple_form .has-error a {
+  color: inherit;
+  text-decoration: underline;
+}
