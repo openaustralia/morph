@@ -17,14 +17,14 @@ module ScrapersHelper
 
   sig { params(full_name: String, name: String, description: T.nilable(String), url: String).returns(String) }
   def radio_description2(full_name:, name:, description:, url:)
-    scraper = Scraper.where(full_name: full_name).first
+    exists_on_morph = Scraper.exists?(full_name: full_name)
     a = []
     a << content_tag(:strong, name)
     if description.present?
       a << " &mdash; ".html_safe
       a << description
     end
-    if scraper
+    if exists_on_morph
       content_tag(:p, safe_join(a), class: "text-muted")
     else
       link = link_to("on GitHub", url, target: "_blank", rel: "noopener")
