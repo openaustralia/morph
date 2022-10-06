@@ -390,6 +390,10 @@ h1.full_name {
 
 .log_line {
   white-space: pre;
+  a {
+    text-decoration: underline;
+    color: inherit;
+  }
 }
 
 .watch-button {
