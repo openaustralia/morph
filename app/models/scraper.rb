@@ -36,6 +36,7 @@ class Scraper < ApplicationRecord
   validates :name, uniqueness: { scope: :owner }
   validate :not_used_on_github, on: :create, if: proc { |s| s.github_id.blank? && s.name.present? }
   validate :app_installed_on_owner, on: :create
+  validate :app_has_access_to_repo, on: :create
 
   extend FriendlyId
   friendly_id :full_name
@@ -304,6 +305,13 @@ class Scraper < ApplicationRecord
     end
   end
 
+  # A link just to install the GitHub Morph app for the repo associated with this scraper
+  sig { returns(String) }
+  def app_install_url
+    params = { suggested_target_id: T.must(owner).uid, repository_ids: github_id }
+    "https://github.com/apps/#{Morph::Environment.github_app_name}/installations/new/permissions?#{params.to_query}"
+  end
+
   private
 
   sig { void }
@@ -325,6 +333,36 @@ class Scraper < ApplicationRecord
     message = I18n.t("activerecord.errors.models.scraper.app_installed_on_owner", install_url: T.must(owner).app_install_url, owner: T.must(owner).nickname)
     # rubocop:disable Rails/OutputSafety
     errors.add(:owner_id, message.html_safe)
+    # rubocop:enable Rails/OutputSafety
+  end
+
+  # In the case where a scraper is created from an already existing repository on github then the "github_id" is populated
+  # on creation and we need to check that the GitHub Morph application has access to the specific repository
+  sig { void }
+  def app_has_access_to_repo
+    return if Rails.env.test?
+    return if github_id.blank?
+
+    installation = Morph::GithubAppInstallation.new(T.must(T.must(owner).nickname))
+    error = installation.confirm_has_access_to(name)
+    return if error.nil?
+
+    # I think I18n.t doesn't support the _html suffix to make the string automatically html safe. So we're doing it by hand
+    message = case error
+              when Morph::GithubAppInstallation::NoAppInstallationForOwner
+                I18n.t("activerecord.errors.models.scraper.app_installed_on_owner",
+                       install_url: app_install_url,
+                       owner: T.must(owner).nickname)
+              when Morph::GithubAppInstallation::AppInstallationNoAccessToRepo
+                I18n.t("activerecord.errors.models.scraper.app_installation_no_access_to_repo",
+                       install_url: app_install_url,
+                       owner: T.must(owner).nickname,
+                       repo: name)
+              else
+                T.absurd(error)
+              end
+    # rubocop:disable Rails/OutputSafety
+    errors.add(:full_name, message.html_safe)
     # rubocop:enable Rails/OutputSafety
   end
 end

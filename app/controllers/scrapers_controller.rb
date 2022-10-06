@@ -59,7 +59,8 @@ class ScrapersController < ApplicationController
 
   sig { void }
   def github
-    authorize! :new, Scraper
+    @scraper = Scraper.new
+    authorize! :new, @scraper
   end
 
   # For rendering ajax partial in github action

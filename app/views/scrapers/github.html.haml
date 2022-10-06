@@ -17,6 +17,10 @@
           = owner_image(org, size: 30)
           = org.nickname
 
+  -# This form is only here to show a possible error message
+  = simple_form_for @scraper do |f|
+    .has-error= f.error :full_name
+
   .tab-content
     .tab-pane.active{ id: "owner_#{current_user.nickname}" }
       = render partial: "github_form_loader", locals: { owner: current_user }
