@@ -18,6 +18,11 @@ module ScrapersHelper
   sig { params(full_name: String, name: String, description: T.nilable(String), url: String).returns(String) }
   def radio_description2(full_name:, name:, description:, url:)
     exists_on_morph = Scraper.exists?(full_name: full_name)
+    radio_description3(name: name, description: description, url: url, exists_on_morph: exists_on_morph)
+  end
+
+  sig { params(name: String, description: T.nilable(String), url: String, exists_on_morph: T::Boolean).returns(String) }
+  def radio_description3(name:, description:, url:, exists_on_morph:)
     a = []
     a << content_tag(:strong, name)
     if description.present?
