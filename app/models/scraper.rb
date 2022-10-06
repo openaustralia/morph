@@ -330,7 +330,7 @@ class Scraper < ApplicationRecord
     return if installation.installed?
 
     # I think I18n.t doesn't support the _html suffix to make the string automatically html safe. So we're doing it by hand
-    message = I18n.t("activerecord.errors.models.scraper.app_installed_on_owner", install_url: T.must(owner).app_install_url, owner: T.must(owner).nickname)
+    message = I18n.t("activerecord.errors.models.scraper.no_app_installation_for_owner", install_url: T.must(owner).app_install_url, owner: T.must(owner).nickname)
     # rubocop:disable Rails/OutputSafety
     errors.add(:owner_id, message.html_safe)
     # rubocop:enable Rails/OutputSafety
@@ -350,7 +350,7 @@ class Scraper < ApplicationRecord
     # I think I18n.t doesn't support the _html suffix to make the string automatically html safe. So we're doing it by hand
     message = case error
               when Morph::GithubAppInstallation::NoAppInstallationForOwner
-                I18n.t("activerecord.errors.models.scraper.app_installed_on_owner",
+                I18n.t("activerecord.errors.models.scraper.no_app_installation_for_owner",
                        install_url: app_install_url,
                        owner: T.must(owner).nickname)
               when Morph::GithubAppInstallation::AppInstallationNoAccessToRepo
