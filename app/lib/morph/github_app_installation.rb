@@ -92,12 +92,12 @@ module Morph
       end
     end
 
-    sig { params(repo_full_name: String).returns([T::Boolean, T.nilable(NoAppInstallationForOwner)]) }
-    def repository_private?(repo_full_name)
+    sig { params(repo_name: String).returns([T::Boolean, T.nilable(NoAppInstallationForOwner)]) }
+    def repository_private?(repo_name)
       client, error = octokit_client
       return [false, error] if error
 
-      result = (client.repository(repo_full_name).visibility == "private")
+      result = (client.repository("#{owner_nickname}/#{repo_name}").visibility == "private")
       [result, nil]
     end
 
@@ -145,8 +145,8 @@ module Morph
     end
 
     # Returns nicknames of github users who have contributed to a particular repo
-    sig { params(repo_full_name: String).returns([T::Array[String], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }
-    def contributor_nicknames(repo_full_name)
+    sig { params(repo_name: String).returns([T::Array[String], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }
+    def contributor_nicknames(repo_name)
       client, error = octokit_client
       return [[], error] if error
 
@@ -154,7 +154,7 @@ module Morph
       # In a previous version of this function the github call returned nil if the git repo is completely empty
       # Note if the app does not have access
       begin
-        contributors = client.contributors(repo_full_name).map(&:login)
+        contributors = client.contributors("#{owner_nickname}/#{repo_name}").map(&:login)
         [contributors, nil]
       rescue Octokit::NotFound
         [[], NoAccessToRepo.new]

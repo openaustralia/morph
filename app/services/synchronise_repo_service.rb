@@ -35,7 +35,7 @@ class SynchroniseRepoService
 
   sig { params(installation: Morph::GithubAppInstallation, scraper: Scraper).returns(T.nilable(T.any(RepoNeedsToBePublic, RepoNeedsToBePrivate, Morph::GithubAppInstallation::NoAppInstallationForOwner))) }
   def self.check_repository_visibility(installation, scraper)
-    repository_private, error = installation.repository_private?(scraper.full_name)
+    repository_private, error = installation.repository_private?(scraper.name)
     return error if error
 
     # No problem if the visibility of the scraper and the repository match
@@ -51,7 +51,7 @@ class SynchroniseRepoService
 
   sig { params(installation: Morph::GithubAppInstallation, scraper: Scraper).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAccessToRepo, Morph::GithubAppInstallation::NoAppInstallationForOwner))) }
   def self.update_contributors(installation, scraper)
-    nicknames, error = installation.contributor_nicknames(scraper.full_name)
+    nicknames, error = installation.contributor_nicknames(scraper.name)
     return error if error
 
     contributors = nicknames.map { |n| User.find_or_create_by!(nickname: n) }
