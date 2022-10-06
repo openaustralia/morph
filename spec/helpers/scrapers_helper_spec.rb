@@ -16,7 +16,7 @@ describe ScrapersHelper do
     context "when repo already exists as a scraper" do
       it do
         result = helper.radio_description(exists_on_morph: true, name: "bar", description: "lovely", url: "https://github.com/foo/bar")
-        expect(result).to eq "<p class=\"text-muted\"><strong>bar</strong> &mdash; lovely</p>"
+        expect(result).to eq "<span class=\"text-muted\"><strong>bar</strong> &mdash; lovely</span>"
         expect(result).to be_html_safe
       end
     end

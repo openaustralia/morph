@@ -18,7 +18,7 @@ module ScrapersHelper
       a << description
     end
     if exists_on_morph
-      content_tag(:p, safe_join(a), class: "text-muted")
+      content_tag(:span, safe_join(a), class: "text-muted")
     else
       link = link_to("on GitHub", url, target: "_blank", rel: "noopener")
       a << " ("
