@@ -68,9 +68,9 @@ class ScrapersController < ApplicationController
     authorize! :new, Scraper
     @scraper = Scraper.new
     owner = Owner.find(params[:id])
+    morph_scraper_full_names = owner.scrapers.pluck(:full_name)
     collection = Morph::Github.public_repos(T.must(current_user), owner).map do |r|
-      # TODO: Only do one lookup to the database
-      exists_on_morph = Scraper.exists?(full_name: r.full_name)
+      exists_on_morph = morph_scraper_full_names.include?(r.full_name)
       description = helpers.radio_description(
         name: r.name,
         description: r.description,
