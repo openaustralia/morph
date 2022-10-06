@@ -9,7 +9,7 @@ class SearchController < ApplicationController
     default_owner_search_params = { highlight: { fields: %i[nickname name company blog] }, page: params[:page], per_page: 10 }
     default_scraper_search_params = { fields: [{ full_name: :word_middle }, :description, { scraped_domain_names: :word_end }], highlight: true, page: params[:page], per_page: 10 }
 
-    q = T.cast(params[:q], String)
+    q = T.cast(params[:q], T.nilable(String))
     @q = T.let(q, T.nilable(String))
     type = T.cast(params[:type], T.nilable(String))
     @type = T.let(type, T.nilable(String))
