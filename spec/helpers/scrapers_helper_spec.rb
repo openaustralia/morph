@@ -4,10 +4,10 @@
 require "spec_helper"
 
 describe ScrapersHelper do
-  describe "#radio_description3" do
+  describe "#radio_description" do
     context "when repo does not already exists as a scraper" do
       it do
-        result = helper.radio_description3(exists_on_morph: false, name: "bar", description: "lovely", url: "https://github.com/foo/bar")
+        result = helper.radio_description(exists_on_morph: false, name: "bar", description: "lovely", url: "https://github.com/foo/bar")
         expect(result).to eq "<strong>bar</strong> &mdash; lovely (<a target=\"_blank\" rel=\"noopener\" href=\"https://github.com/foo/bar\">on GitHub</a>)"
         expect(result).to be_html_safe
       end
@@ -15,7 +15,7 @@ describe ScrapersHelper do
 
     context "when repo already exists as a scraper" do
       it do
-        result = helper.radio_description3(exists_on_morph: true, name: "bar", description: "lovely", url: "https://github.com/foo/bar")
+        result = helper.radio_description(exists_on_morph: true, name: "bar", description: "lovely", url: "https://github.com/foo/bar")
         expect(result).to eq "<p class=\"text-muted\"><strong>bar</strong> &mdash; lovely</p>"
         expect(result).to be_html_safe
       end

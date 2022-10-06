@@ -10,7 +10,7 @@ module ScrapersHelper
   include RunsHelper
 
   sig { params(name: String, description: T.nilable(String), url: String, exists_on_morph: T::Boolean).returns(String) }
-  def radio_description3(name:, description:, url:, exists_on_morph:)
+  def radio_description(name:, description:, url:, exists_on_morph:)
     a = []
     a << content_tag(:strong, name)
     if description.present?

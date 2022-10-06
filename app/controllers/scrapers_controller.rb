@@ -71,7 +71,7 @@ class ScrapersController < ApplicationController
     collection = Morph::Github.public_repos(T.must(current_user), owner).map do |r|
       # TODO: Only do one lookup to the database
       exists_on_morph = Scraper.exists?(full_name: r.full_name)
-      description = helpers.radio_description3(
+      description = helpers.radio_description(
         name: r.name,
         description: r.description,
         url: r.rels[:html].href,
