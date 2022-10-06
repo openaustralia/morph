@@ -29,6 +29,9 @@
                     include_blank: false
 
       .col-sm-6
+        -# Hacky: Also display errors on owner_id even when the field is hidden
+        - if current_user.all_owners.count == 1
+          .has-error= f.error :owner_id
         = f.input :name do
           - name_input_field = f.input_field :name, class: "form-control", placeholder: "city_of_sydney_development_applications"
           - if current_user.all_owners.count == 1
