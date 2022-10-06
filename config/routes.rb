@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       get 'libraries'
       get 'language_version'
       get 'webhooks'
+      get "github_app"
     end
   end
 

@@ -1,0 +1,25 @@
+- title "GitHub App"
+
+%h1= title
+
+%h2 What does it do?
+%p
+  The GitHub App is the new way that Morph gets access to GitHub and does things on your behalf.
+
+%h2 Where does it need to be installed?
+%p
+  The GitHub App needs to be installed to create scrapers in the normal way. If you're adding a new scraper from an existing repository
+  on GitHub the GitHub App needs to have access to that repository. If you want to have scrapers on an organization you're part of then
+  you'll also need to install the App on that organization.
+
+%h2 Why has this changed?
+
+%p
+  This new way of giving access to GitHub gives you more fine-grained control. In the past you had to give "public" access to your
+  entire collection of repositories including any organisations that you are part of. Now, you can instead choose the specific
+  repositories that you want Morph to have access to. So in simple terms you can trust us less.
+
+%p
+  Also, by switching over to this new way it opens up the possibility of tightening the integration between Morph and GitHub.
+  For instance, we could add a feature to automatically run scrapers whenever you push some new code to GitHub. This feature
+  would certainly have been possible before but moving over to using a GitHub App makes implementing this more straighforward.
