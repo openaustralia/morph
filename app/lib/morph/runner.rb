@@ -88,14 +88,14 @@ module Morph
       when Morph::GithubAppInstallation::NoAppInstallationForOwner
         error(
           status_code: 999,
-          text: "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to #{T.must(scraper.owner).app_install_url}",
+          text: "Please install the Morph Github App on #{T.must(scraper.owner).nickname} so that Morph can access this repository on GitHub. Please go to #{T.must(scraper.owner).app_install_url}\n\nWhy? See #{Rails.application.routes.url_helpers.github_app_documentation_index_url}",
           &block
         )
         return
       when Morph::GithubAppInstallation::AppInstallationNoAccessToRepo
         error(
           status_code: 999,
-          text: "The Morph Github App installed on #{T.must(scraper.owner).nickname} needs access to the repository #{scraper.name}. Please go to #{T.must(scraper.owner).app_install_url}",
+          text: "The Morph Github App installed on #{T.must(scraper.owner).nickname} needs access to the repository #{scraper.name}. Please go to #{T.must(scraper.owner).app_install_url}\n\nWhy? See #{Rails.application.routes.url_helpers.github_app_documentation_index_url}",
           &block
         )
         return

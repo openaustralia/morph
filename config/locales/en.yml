@@ -44,5 +44,5 @@ en:
         scraper:
           taken: "is already taken on morph.io"
           invalid: "can only have letters, numbers, '_' and '-'"
-          no_app_installation_for_owner: "Please <a href='%{install_url}'>install the Morph GitHub App</a> on %{owner} so that Morph can create the repository"
-          app_installation_no_access_to_repo: "The Morph GitHub App on %{owner} does not have access to the repository %{repo}. Please <a href='%{install_url}'>give the Morph GitHub App access</a>."
+          no_app_installation_for_owner: "Please <a href='%{install_url}'>install the Morph GitHub App</a> on %{owner} so that Morph can create the repository. <a href='%{why_url}'>Why?</a>"
+          app_installation_no_access_to_repo: "The Morph GitHub App on %{owner} does not have access to the repository %{repo}. Please <a href='%{install_url}'>give the Morph GitHub App access</a>. <a href='%{why_url}'>Why?</a>"
