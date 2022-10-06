@@ -9,13 +9,6 @@ module ScrapersHelper
   include ActionView::Helpers::UrlHelper
   include RunsHelper
 
-  # TODO: Refactor this not to use repo object
-  sig { params(repo: T.untyped).returns(String) }
-  def radio_description(repo)
-    exists_on_morph = Scraper.exists?(full_name: repo.full_name)
-    radio_description3(name: repo.name, description: repo.description, url: repo.rels[:html].href, exists_on_morph: exists_on_morph)
-  end
-
   sig { params(name: String, description: T.nilable(String), url: String, exists_on_morph: T::Boolean).returns(String) }
   def radio_description3(name:, description:, url:, exists_on_morph:)
     a = []

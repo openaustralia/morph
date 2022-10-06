@@ -69,9 +69,16 @@ class ScrapersController < ApplicationController
     @scraper = Scraper.new
     owner = Owner.find(params[:id])
     collection = Morph::Github.public_repos(T.must(current_user), owner).map do |r|
-      # TODO: Refactor the way we're using radio_description here. It seems kind of all messed up including
-      # that we're doing a database lookup in a helper. Eek!
-      [helpers.radio_description(r), r.full_name, { disabled: Scraper.exists?(full_name: r.full_name) }]
+      # TODO: Only do one lookup to the database
+      exists_on_morph = Scraper.exists?(full_name: r.full_name)
+      description = helpers.radio_description3(
+        name: r.name,
+        description: r.description,
+        url: r.rels[:html].href,
+        exists_on_morph: exists_on_morph
+      )
+
+      [description, r.full_name, { disabled: exists_on_morph }]
     end
     render partial: "github_form", locals: { scraper: @scraper, owner: owner, collection: collection }
   end
