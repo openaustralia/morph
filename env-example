@@ -40,7 +40,7 @@ DISCOURSE_URL=http://discuss.dev.morph.io
 
 # Used by mitmproxy to communicate via the api back to morph
 MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
-MORPH_URL=http://localhost:3000
+MORPH_URL=http://localhost:5100
 
 # Error reporting to Honeybadger
 HONEYBADGER_API_KEY=xxxxxxxx
