@@ -221,10 +221,10 @@ Leave your answer your blank which will install the certificate for all of them
 
 ### Scraper<->mitmdump SSL
 
-Scapers talk out to Teh Internet by being routed through the mitmdump2
+Scrapers talk out to the internet by being routed through the mitmdump2
 proxy container. The default container you'll get on a devops install
 has no SSL certificates. This makes it easy for traffic to get out,
-but means we can't replicate some problems that occure when the SSL
+but means we can't replicate some problems that occur when the SSL
 validation fails.
 
 To work around this, you'll have to rebuild the mitmdump container. Look in `/var/www/current/docker_images/morph-mitmdump`; there's a `Makefile` that will aid in building the new image.
