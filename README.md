@@ -8,7 +8,6 @@
 * Simple API to grab data
 * Schedule scrapers or run manually
 * Process isolation via [Docker](https://www.docker.com/)
-* Trivial to move scraper code and data from [ScraperWiki Classic](https://classic.scraperwiki.com/)
 * Email alerts for broken scrapers
 
 ## Dependencies
