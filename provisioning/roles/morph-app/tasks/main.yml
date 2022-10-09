@@ -63,6 +63,12 @@
   template: src=env dest=/var/www/shared/.env owner=deploy group=deploy
   # TODO: If this changes we should rerun foreman as well
 
+- name: Install Morph Github App private key
+  copy:
+    src: morph-github-app.private-key.pem
+    dest: /var/www/shared/config
+    mode: 0400
+
 # TODO: This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
 - name: Install foreman

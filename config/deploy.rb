@@ -12,7 +12,7 @@ set :deploy_to, '/var/www'
 # set :log_level, :debug
 # set :pty, true
 
-set :linked_files, %w{config/database.yml config/sync.yml .env}
+set :linked_files, %w{config/database.yml config/sync.yml config/morph-github-app.private-key.pem .env}
 set :linked_dirs, %w{db/scrapers public/sitemaps tmp/pids log}
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
