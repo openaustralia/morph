@@ -11,6 +11,9 @@
 # Run this from the root directory so that it picks up the ansible.cfg
 # and so knows where to look for the ansible vault password
 
+# To get the value of an encrypted variable:
+# ansible morph.io -i provisioning/hosts -m debug -a "var=github_app_client_id"
+
 # Ubuntu 16.04 LTS doesn't come with python pre-installed. We need that for
 # Ansible to work (for the gather facts). So install python first
 - hosts: all
