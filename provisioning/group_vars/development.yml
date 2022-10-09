@@ -10,6 +10,7 @@ morph_url: https://dev.morph.io
 server_name: dev.morph.io
 backups: false
 cron_jobs: false
+# Need to fill in proper values for github app in development below
 github_app_client_id: fe879e7c8951e83fd46b
 github_app_client_secret: !vault |
           $ANSIBLE_VAULT;1.1;AES256

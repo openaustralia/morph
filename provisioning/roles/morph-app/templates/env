@@ -6,6 +6,8 @@ RAILS_ENV=production
 # Copy this to .env and fill in the x's - these values are then automatically loaded as environment variables
 # See https://github.com/bkeepers/dotenv for more information
 
+GITHUB_APP_ID={{ github_app_id }}
+GITHUB_APP_NAME={{ github_app_name }}
 GITHUB_APP_CLIENT_ID={{ github_app_client_id }}
 GITHUB_APP_CLIENT_SECRET={{ github_app_client_secret }}
 
