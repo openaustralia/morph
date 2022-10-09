@@ -67,6 +67,8 @@
   copy:
     src: morph-github-app.private-key.pem
     dest: /var/www/shared/config
+    owner: deploy
+    group: deploy
     mode: 0400
 
 # TODO: This is a nasty hack. Would be much nicer to do this in the capistrano
