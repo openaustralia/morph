@@ -19,9 +19,6 @@ module Morph
     # an organization. List is sorted by push date
     sig { params(user: User, owner: Owner).returns(T::Array[T.untyped]) }
     def self.public_repos(user, owner)
-      # TODO: Move this to an initializer
-      Octokit.auto_paginate = true
-
       if user == owner
         user.octokit_client.repositories(owner.nickname,
                                          sort: :pushed, type: :public)

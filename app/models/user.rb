@@ -174,7 +174,9 @@ class User < Owner
 
   sig { returns(Octokit::Client) }
   def octokit_client
-    Octokit::Client.new access_token: access_token
+    client = Octokit::Client.new access_token: access_token
+    client.auto_paginate = true
+    client
   end
 
   sig { params(auth: T.untyped, _signed_in_resource: T.nilable(User)).returns(User) }

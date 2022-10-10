@@ -76,7 +76,9 @@ module Morph
     sig { returns([Octokit::Client, T.nilable(NoAppInstallationForOwner)]) }
     def octokit_client
       token, error = access_token
-      [Octokit::Client.new(bearer_token: token), error]
+      client = Octokit::Client.new(bearer_token: token)
+      client.auto_paginate = true
+      [client, error]
     end
 
     sig { params(repo_name: String).returns(T.nilable(T.any(NoAppInstallationForOwner, AppInstallationNoAccessToRepo))) }
@@ -84,7 +86,6 @@ module Morph
       client, error = octokit_client
       return error if error
 
-      # TODO: Ensure auto_paginate is true
       if client.list_app_installation_repositories.repositories.map(&:name).include?(repo_name)
         nil
       else
