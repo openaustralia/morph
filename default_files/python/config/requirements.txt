@@ -108,7 +108,7 @@ Scrapy==0.14.1
 # Changed from 15.2.4 to 15.6.2
 adspygoogle.adwords==15.6.2
 # Changed this from 2.0b9 to 3.0.2
-nltk==3.0.2
+nltk==3.6.6
 # Changed this from 1.0.25 to 1.0.2
 pydot==1.0.2
 # Changed this from 0.21.1 to 0.22.3
