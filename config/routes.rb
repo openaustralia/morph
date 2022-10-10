@@ -103,30 +103,22 @@ Rails.application.routes.draw do
   resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
 
-  # Escaping of params with "/" in them changed in Rails 4.1
-  #
-  # resources :scrapers, path: "/", id: /[^\/]+\/[^\/]+/, only: [:show, :update, :destroy] do
-  #   member do
-  #     get 'data'
-  #     get 'watchers'
-  #     get 'settings'
-  #
-  #     post 'watch'
-  #     post 'run'
-  #     post 'stop'
-  #     post 'clear'
-  #   end
-  # end
-  get '*id/data', to: "api#data", as: :data_scraper, id: /[^\/]+\/[^\/]+/
-  get '*id/watchers', to: "scrapers#watchers", as: :watchers_scraper, id: /[^\/]+\/[^\/]+/
-  get '*id/settings', to: "scrapers#settings", as: :settings_scraper, id: /[^\/]+\/[^\/]+/
-  get '*id/history', to: "scrapers#history", as: :history_scraper, id: /[^\/]+\/[^\/]+/
-  post '*id/watch', to: "scrapers#watch", as: :watch_scraper, id: /[^\/]+\/[^\/]+/
-  post '*id/run', to: "scrapers#run", as: :run_scraper, id: /[^\/]+\/[^\/]+/
-  post '*id/stop', to: "scrapers#stop", as: :stop_scraper, id: /[^\/]+\/[^\/]+/
-  post '*id/clear', to: "scrapers#clear", as: :clear_scraper, id: /[^\/]+\/[^\/]+/
-  get '*id', to: "scrapers#show", as: :scraper, id: /[^\/]+\/[^\/]+/
-  put '*id', to: "scrapers#update", id: /[^\/]+\/[^\/]+/
-  patch '*id', to: "scrapers#update", id: /[^\/]+\/[^\/]+/
-  delete '*id', to: "scrapers#destroy", id: /[^\/]+\/[^\/]+/
+  # We have to do this very verbosily because we're using a wildcard (*) for the
+  # id because we don't want rails to escape the slashes in the id when generating
+  # urls. We also can't use wildcards in resources so we basically need to generate
+  # the routes by hand here.
+  scope id: /[^\/]+\/[^\/]+/ do
+    get '*id/data', to: "api#data", as: :data_scraper
+    get '*id/watchers', to: "scrapers#watchers", as: :watchers_scraper
+    get '*id/settings', to: "scrapers#settings", as: :settings_scraper
+    get '*id/history', to: "scrapers#history", as: :history_scraper
+    post '*id/watch', to: "scrapers#watch", as: :watch_scraper
+    post '*id/run', to: "scrapers#run", as: :run_scraper
+    post '*id/stop', to: "scrapers#stop", as: :stop_scraper
+    post '*id/clear', to: "scrapers#clear", as: :clear_scraper
+    get '*id', to: "scrapers#show", as: :scraper
+    put '*id', to: "scrapers#update"
+    patch '*id', to: "scrapers#update"
+    delete '*id', to: "scrapers#destroy"
+  end
 end
