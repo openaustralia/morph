@@ -11,7 +11,7 @@ Creoleparser==0.7.4
 Genshi==0.6
 Jinja2==2.6
 Markdown==2.2.0
-Pygments==1.4
+Pygments==2.7.4
 SQLAlchemy==0.6.6
 Twisted==11.1.0
 Unidecode==0.04.9
