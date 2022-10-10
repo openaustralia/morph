@@ -3,7 +3,7 @@
     .col-sm-3
       = f.input :name, input_html: { class: "name" }
     .col-sm-8
-      = f.input :value
+      = f.input :value, input_html: { rows: 1 }
     .col-sm-1
       = link_to_remove_association f do
         %i.fa.fa-times-circle.fa-2x
