@@ -1,14 +1,14 @@
 - if can? :destroy, scraper
+  %h2 Danger Zone
   .row
     .col-md-8
       .panel.panel-danger#danger-settings
         .panel-heading
-          %h3.panel-title Here be dragons!
           %p
             %strong Be careful, these actions can’t be undone.
         %ul.danger-settings-options-list.list-group
           %li.list-group-item
-            %h4 Clear your scraper’s database
+            %h3 Clear your scraper’s database
             .danger-settings-action-body
               %p
                 - if scraper.data?
@@ -17,11 +17,11 @@
                   of scraped data will be gone!
                 - else
                   All your data will be gone!
-              = button_to clear_scraper_path(scraper), { class: "btn btn-warning", data: { confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?" } } do
+              = button_to clear_scraper_path(scraper), { class: "btn btn-danger", data: { confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?" } } do
                 Clear database
                 %i.glyphicon.glyphicon-th-list
           %li.list-group-item
-            %h4 Delete your scraper
+            %h3 Delete your scraper
             .danger-settings-action-body
               %p
                 Delete the entire scraper from morph.io,
