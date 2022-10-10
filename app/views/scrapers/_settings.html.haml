@@ -3,8 +3,10 @@
   = f.error_notification
   = f.input :auto_run, hint: "Automatically run this scraper once per day", input_html: { disabled: !(can? :update, scraper) }
   - if can? :memory_setting, scraper
-    = render "shared/special_feature_panel" do
-      = f.input :memory_mb, hint: "If set overrides the default memory in megabytes allocated to this scraper (#{number_to_human_size Morph::DockerRunner.default_memory_limit}). This is currently only available to admins and should be used with caution because scheduling currently assumes everything is using the same amount of memory"
+    .row
+      .col-md-8
+        = render "shared/special_feature_panel" do
+          = f.input :memory_mb, hint: "If set overrides the default memory in megabytes allocated to this scraper (#{number_to_human_size Morph::DockerRunner.default_memory_limit}). This is currently only available to admins and should be used with caution because scheduling currently assumes everything is using the same amount of memory"
   %h3 Secret environment variables
   %p
     Environment variables can be used to pass secret values to your scraper such as API keys.
