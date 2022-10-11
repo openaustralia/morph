@@ -9,7 +9,7 @@ class ScrapersController < ApplicationController
   ]
   before_action :load_resource, only: %i[
     settings show destroy update run stop clear watch
-    watchers history
+    watchers history toggle_privacy
   ]
 
   # All methods
@@ -196,6 +196,24 @@ class ScrapersController < ApplicationController
     # TODO: Can't use Scraper.accessible_by(current_ability) because "running" below is not acting as a scope. Would be great to fix this.
     # So, we're doing this slightly ugly work around of checking each scraper in turn whether it can be seen by the user
     @scrapers = T.let(Scraper.running.select { |s| can?(:show, s) }, T.nilable(T::Array[Scraper]))
+  end
+
+  sig { void }
+  def toggle_privacy
+    # TODO: Rename create_private to something more sensible
+    authorize! :create_private, @scraper
+    scraper = T.must(@scraper)
+    new_privacy = !scraper.private
+    scraper.transaction do
+      scraper.update!(private: new_privacy)
+      # TODO: Extract this into a method on Morph::Github
+      if new_privacy
+        T.must(current_user).octokit_client.set_private(scraper.full_name)
+      else
+        T.must(current_user).octokit_client.set_public(scraper.full_name)
+      end
+    end
+    redirect_to @scraper, notice: "#{scraper.full_name} is now #{helpers.privacy_in_words(scraper.private)} on morph.io"
   end
 
   private

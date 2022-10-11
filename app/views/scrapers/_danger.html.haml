@@ -20,6 +20,17 @@
               = button_to clear_scraper_path(scraper), { class: "btn btn-danger", data: { confirm: "All the data you’ve scraped will be deleted. Are you sure you want to clear your scraper’s database?" } } do
                 Clear database
                 %i.glyphicon.glyphicon-th-list
+          - if can? :create_private, scraper
+            %li.list-group-item
+              = render "shared/special_feature_panel" do
+                %h3 Change scraper and repository visibility
+                .danger-settings-action-body
+                  %p
+                    Your scraper and repository are currently
+                    = privacy_in_words(scraper.private)
+                  = button_to toggle_privacy_scraper_path(scraper), class: "btn btn-danger" do
+                    Make
+                    = privacy_in_words(!scraper.private)
           %li.list-group-item
             %h3 Delete your scraper
             .danger-settings-action-body

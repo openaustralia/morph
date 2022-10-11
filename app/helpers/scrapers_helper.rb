@@ -92,4 +92,9 @@ module ScrapersHelper
   def scraper_rounded_count
     floor_to_hundreds(Scraper.count)
   end
+
+  sig { params(private: T::Boolean).returns(String) }
+  def privacy_in_words(private)
+    private ? "private" : "public"
+  end
 end
