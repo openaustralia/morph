@@ -151,7 +151,7 @@ module Morph
       # puts "Starting...\n"
       run.database.backup
       # If the run is not part of a scraper (e.g. through the api) then there won't be a git repository
-      git_revision = Morph::Github.current_revision_from_repo(run.repo_path) unless run.scraper.nil?
+      git_revision = Rugged::Repository.new(run.repo_path).head.target_id unless run.scraper.nil?
       run.update(started_at: Time.zone.now, git_revision: git_revision)
       sync_update run.scraper if run.scraper
       FileUtils.mkdir_p run.data_path
