@@ -304,6 +304,9 @@ module Morph
             # Doing this not very nice thing in lieu of figuring out how
             # to set our custom CA cert for all of node
             "ENV NODE_TLS_REJECT_UNAUTHORIZED 0",
+            # In development to debug what the buildpacks are doing it can be useful to turn on
+            # the TRACE environment variable below by uncommenting the line
+            # "ENV TRACE true",
             "RUN /bin/herokuish buildpack build"
           ],
           dir, &block
