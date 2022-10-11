@@ -199,7 +199,7 @@ class User < Owner
            blog: user.blog,
            company: user.company,
            location: user.location,
-           email: Morph::Github.primary_email(self))
+           email: Morph::Github.new(self).primary_email)
   rescue Octokit::Unauthorized, Octokit::NotFound
     false
   end

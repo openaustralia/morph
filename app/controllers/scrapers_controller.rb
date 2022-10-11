@@ -70,7 +70,7 @@ class ScrapersController < ApplicationController
     @scraper = Scraper.new
     owner = Owner.find(params[:id])
     morph_scraper_full_names = owner.scrapers.pluck(:full_name)
-    collection = Morph::Github.public_repos(T.must(current_user), owner).map do |r|
+    collection = Morph::Github.new(T.must(current_user)).public_repos(owner).map do |r|
       exists_on_morph = morph_scraper_full_names.include?(r.full_name)
       description = helpers.radio_description(
         name: r.name,

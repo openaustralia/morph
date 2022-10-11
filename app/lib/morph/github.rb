@@ -2,14 +2,22 @@
 # frozen_string_literal: true
 
 module Morph
-  # Service layer for talking to the Github API
+  # Service layer for talking to the Github API. Acts on behalf of a user
   class Github
     extend T::Sig
 
+    sig { returns(User) }
+    attr_reader :user
+
+    sig { params(user: User).void }
+    def initialize(user)
+      @user = user
+    end
+
     # Will create a repository. Works for both an individual and an
     # organisation. Returns a repo
-    sig { params(user: User, owner: Owner, name: String, description: T.nilable(String), private: T::Boolean).void }
-    def self.create_repository(user:, owner:, name:, description:, private:)
+    sig { params(owner: Owner, name: String, description: T.nilable(String), private: T::Boolean).void }
+    def create_repository(owner:, name:, description:, private:)
       options = { description: description, private: private, auto_init: true }
       options[:organization] = owner.nickname if user != owner
       user.octokit_client.create_repository(name, options)
@@ -17,8 +25,8 @@ module Morph
 
     # Returns a list of all public repos. Works for both an individual and
     # an organization. List is sorted by push date
-    sig { params(user: User, owner: Owner).returns(T::Array[T.untyped]) }
-    def self.public_repos(user, owner)
+    sig { params(owner: Owner).returns(T::Array[T.untyped]) }
+    def public_repos(owner)
       if user == owner
         user.octokit_client.repositories(owner.nickname,
                                          sort: :pushed, type: :public)
@@ -31,17 +39,16 @@ module Morph
       end
     end
 
-    sig { params(user: User).returns(T.nilable(String)) }
-    def self.primary_email(user)
+    sig { returns(T.nilable(String)) }
+    def primary_email
       # TODO: If email isn't verified probably should not send email to it
-      e = emails(user)
-      e&.find(&:primary)&.email
+      emails&.find(&:primary)&.email
     end
 
     # Needs user:email oauth scope for this to work
     # Will return nil if you don't have the right scope
-    sig { params(user: User).returns(T.nilable(T::Array[T.untyped])) }
-    def self.emails(user)
+    sig { returns(T.nilable(T::Array[T.untyped])) }
+    def emails
       user.octokit_client.emails(accept: "application/vnd.github.v3")
     rescue Octokit::NotFound, Octokit::Unauthorized
       nil
