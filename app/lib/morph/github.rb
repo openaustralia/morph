@@ -41,17 +41,12 @@ module Morph
       repos.map { |r| new_repo(r) }
     end
 
+    # Needs user:email oauth scope for this to work
+    # Will return nil if you don't have the right scope
     sig { returns(T.nilable(String)) }
     def primary_email
       # TODO: If email isn't verified probably should not send email to it
-      emails&.find(&:primary)&.email
-    end
-
-    # Needs user:email oauth scope for this to work
-    # Will return nil if you don't have the right scope
-    sig { returns(T.nilable(T::Array[T.untyped])) }
-    def emails
-      user.octokit_client.emails(accept: "application/vnd.github.v3")
+      user.octokit_client.emails(accept: "application/vnd.github.v3").find(&:primary)&.email
     rescue Octokit::NotFound, Octokit::Unauthorized
       nil
     end
