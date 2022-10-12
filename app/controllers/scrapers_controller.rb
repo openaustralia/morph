@@ -75,7 +75,7 @@ class ScrapersController < ApplicationController
       description = helpers.radio_description(
         name: r.name,
         description: r.description,
-        url: r.rels[:html].href,
+        url: r.rels.html.href,
         exists_on_morph: exists_on_morph
       )
 
