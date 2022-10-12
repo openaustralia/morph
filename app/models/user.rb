@@ -195,7 +195,7 @@ class User < Owner
   def refresh_info_from_github!
     user = octokit_client.user(nickname)
     update(name: user.name,
-           gravatar_url: user._rels[:avatar].href,
+           gravatar_url: user.rels[:avatar].href,
            blog: user.blog,
            company: user.company,
            location: user.location,
