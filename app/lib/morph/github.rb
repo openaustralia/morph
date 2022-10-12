@@ -25,7 +25,8 @@ module Morph
 
     # Returns a list of all public repos. Works for both an individual and
     # an organization. List is sorted by push date
-    sig { params(owner: Owner).returns(T::Array[T.untyped]) }
+    # TODO: Just pass in nickname of owner
+    sig { params(owner: ::Owner).returns(T::Array[T.untyped]) }
     def public_repos(owner)
       if user == owner
         user.octokit_client.repositories(owner.nickname,
@@ -77,21 +78,39 @@ module Morph
       const :rels, Rels
     end
 
-    # TODO: Return properly typed object
-    sig { params(full_name: String).returns(Repo) }
-    def repository(full_name)
-      repo = user.octokit_client.repository(full_name)
+    sig { params(owner: T.untyped).returns(Owner) }
+    def new_owner(owner)
+      Owner.new(nickname: owner.nickname, login: owner.login)
+    end
+
+    sig { params(rel: T.untyped).returns(Rel) }
+    def new_rel(rel)
+      Rel.new(href: rel.href)
+    end
+
+    sig { params(rels: T.untyped).returns(Rels) }
+    def new_rels(rels)
+      Rels.new(
+        html: new_rel(rels[:html]),
+        git: new_rel(rels[:git])
+      )
+    end
+
+    sig { params(repo: T.untyped).returns(Repo) }
+    def new_repo(repo)
       Repo.new(
-        owner: Owner.new(nickname: repo.owner.nickname, login: repo.owner.login),
+        owner: new_owner(repo.owner),
         name: repo.name,
         full_name: repo.full_name,
         description: repo.description,
         id: repo.id,
-        rels: Rels.new(
-          html: Rel.new(href: repo.rels[:html].href),
-          git: Rel.new(href: repo.rels[:git].href)
-        )
+        rels: new_rels(repo.rels)
       )
+    end
+
+    sig { params(full_name: String).returns(Repo) }
+    def repository(full_name)
+      new_repo(user.octokit_client.repository(full_name))
     end
   end
 end
