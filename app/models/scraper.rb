@@ -101,9 +101,9 @@ class Scraper < ApplicationRecord
 
   # Given a scraper name on github populates the fields for a morph.io scraper
   # but doesn't save it
-  sig { params(full_name: String, octokit_client: Octokit::Client).returns(Scraper) }
-  def self.new_from_github(full_name, octokit_client)
-    repo = octokit_client.repository(full_name)
+  sig { params(full_name: String, user: User).returns(Scraper) }
+  def self.new_from_github(full_name, user)
+    repo = user.octokit_client.repository(full_name)
     repo_owner = Owner.find_by!(nickname: repo.owner.login)
     # Populate a new scraper with information from the repo
     Scraper.new(
