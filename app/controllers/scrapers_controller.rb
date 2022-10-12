@@ -70,7 +70,7 @@ class ScrapersController < ApplicationController
     @scraper = Scraper.new
     owner = Owner.find(params[:id])
     morph_scraper_full_names = owner.scrapers.pluck(:full_name)
-    collection = Morph::Github.new(T.must(current_user)).public_repos(owner).map do |r|
+    collection = T.must(current_user).github.public_repos(owner).map do |r|
       exists_on_morph = morph_scraper_full_names.include?(r.full_name)
       description = helpers.radio_description(
         name: r.name,
@@ -206,7 +206,7 @@ class ScrapersController < ApplicationController
     new_privacy = !scraper.private
     scraper.transaction do
       scraper.update!(private: new_privacy)
-      Morph::Github.new(T.must(current_user)).update_privacy(scraper.full_name, new_privacy)
+      T.must(current_user).github.update_privacy(scraper.full_name, new_privacy)
     end
     redirect_to @scraper, notice: "#{scraper.full_name} is now #{helpers.privacy_in_words(scraper.private)} on morph.io"
   end

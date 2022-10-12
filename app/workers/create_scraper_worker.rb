@@ -17,7 +17,7 @@ class CreateScraperWorker
     # TODO: Do this in a less hacky and more general way
     if scraper.create_scraper_progress.progress <= 20
       scraper.create_scraper_progress.update_progress("Creating GitHub repository", 20)
-      Morph::Github.new(current_user).create_repository(owner: scraper.owner, name: scraper.name, description: scraper.description, private: scraper.private)
+      current_user.github.create_repository(owner: scraper.owner, name: scraper.name, description: scraper.description, private: scraper.private)
     end
 
     # This block should happily run several times (after failures)
@@ -28,7 +28,7 @@ class CreateScraperWorker
       "README.md" => "This is a scraper that runs on [Morph](https://morph.io). To get started [see the documentation](https://morph.io/documentation)"
     )
 
-    Morph::Github.new(current_user).add_commit_to_root(scraper.full_name, files, "Add template for morph.io scraper")
+    current_user.github.add_commit_to_root(scraper.full_name, files, "Add template for morph.io scraper")
 
     # This block should happily run several times (after failures)
     scraper.create_scraper_progress.update_progress("Get repository info", 60)
@@ -37,7 +37,7 @@ class CreateScraperWorker
     scraper.update(description: scraper2.description, github_id: scraper2.github_id,
                    owner_id: scraper2.owner_id, github_url: scraper2.github_url, git_url: scraper2.git_url)
 
-    Morph::Github.new(current_user).update_repo_homepage(scraper.full_name, scraper_url)
+    current_user.github.update_repo_homepage(scraper.full_name, scraper_url)
 
     # This block should happily run several times (after failures)
     scraper.create_scraper_progress.update_progress("Synching repository", 80)

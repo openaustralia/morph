@@ -158,7 +158,7 @@ class User < Owner
 
   sig { void }
   def refresh_organizations!
-    refreshed_organizations = Morph::Github.new(self).organizations(T.must(nickname)).map do |data|
+    refreshed_organizations = github.organizations(T.must(nickname)).map do |data|
       org = Organization.find_or_create(data.id.to_s, data.login)
       org.refresh_info_from_github!(self)
       org
@@ -186,13 +186,13 @@ class User < Owner
 
   sig { void }
   def refresh_info_from_github!
-    user = Morph::Github.new(self).user_from_github(T.must(nickname))
+    user = github.user_from_github(T.must(nickname))
     update(name: user.name,
            gravatar_url: user.rels.avatar.href,
            blog: user.blog,
            company: user.company,
            location: user.location,
-           email: Morph::Github.new(self).primary_email)
+           email: github.primary_email)
   rescue Octokit::Unauthorized, Octokit::NotFound
     false
   end
@@ -222,5 +222,10 @@ class User < Owner
   sig { returns(T::Boolean) }
   def never_alerted?
     alerted_at.blank?
+  end
+
+  sig { returns(Morph::Github) }
+  def github
+    Morph::Github.new(self)
   end
 end
