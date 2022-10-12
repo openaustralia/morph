@@ -276,18 +276,7 @@ class Scraper < ApplicationRecord
   # Obviously use with great care
   sig { params(user: User, files: T::Hash[String, String], message: String).void }
   def add_commit_to_root_on_github(user, files, message)
-    client = user.octokit_client
-    blobs = files.map do |filename, content|
-      {
-        path: filename,
-        mode: "100644",
-        type: "blob",
-        content: content
-      }
-    end
-    tree = client.create_tree(full_name, blobs)
-    commit = client.create_commit(full_name, message, tree.sha)
-    client.update_ref(full_name, "heads/main", commit.sha)
+    Morph::Github.new(user).add_commit_to_root(full_name, files, message)
   end
 
   # Return the https version of the git clone url (git_url)

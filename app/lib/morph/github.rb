@@ -117,5 +117,23 @@ module Morph
         user.octokit_client.set_public(repo_full_name)
       end
     end
+
+    # Overwrites whatever there was before in that repo
+    # Obviously use with great care
+    sig { params(repo_full_name: String, files: T::Hash[String, String], message: String).void }
+    def add_commit_to_root(repo_full_name, files, message)
+      client = user.octokit_client
+      blobs = files.map do |filename, content|
+        {
+          path: filename,
+          mode: "100644",
+          type: "blob",
+          content: content
+        }
+      end
+      tree = client.create_tree(repo_full_name, blobs)
+      commit = client.create_commit(repo_full_name, message, tree.sha)
+      client.update_ref(repo_full_name, "heads/main", commit.sha)
+    end
   end
 end
