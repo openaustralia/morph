@@ -6,17 +6,21 @@ module Morph
   class Github
     extend T::Sig
 
-    sig { returns(User) }
-    attr_reader :user
+    sig { returns(String) }
+    attr_reader :user_access_token
 
-    sig { params(user: User).void }
-    def initialize(user)
-      @user = user
+    sig { returns(String) }
+    attr_reader :user_nickname
+
+    sig { params(user_nickname: String, user_access_token: String).void }
+    def initialize(user_nickname:, user_access_token:)
+      @user_nickname = user_nickname
+      @user_access_token = user_access_token
     end
 
     sig { returns(Octokit::Client) }
     def octokit_client
-      client = Octokit::Client.new access_token: user.access_token
+      client = Octokit::Client.new access_token: user_access_token
       client.auto_paginate = true
       client
     end
@@ -26,7 +30,7 @@ module Morph
     sig { params(owner_nickname: String, name: String, description: T.nilable(String), private: T::Boolean).void }
     def create_repository(owner_nickname:, name:, description:, private:)
       options = { description: description, private: private, auto_init: true }
-      options[:organization] = owner_nickname if user.nickname != owner_nickname
+      options[:organization] = owner_nickname if user_nickname != owner_nickname
       octokit_client.create_repository(name, options)
     end
 
@@ -35,7 +39,7 @@ module Morph
     # TODO: Just pass in nickname of owner
     sig { params(owner_nickname: String).returns(T::Array[Repo]) }
     def public_repos(owner_nickname)
-      if user.nickname == owner_nickname
+      if user_nickname == owner_nickname
         octokit_client.repositories(owner_nickname,
                                     sort: :pushed, type: :public)
       else

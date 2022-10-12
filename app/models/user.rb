@@ -224,8 +224,10 @@ class User < Owner
     alerted_at.blank?
   end
 
+  # Note that calling this method will fail if the user has no access_token. This will be
+  # the case if the user has not yet logged since the switch-over of the week of Oct 10 2022.
   sig { returns(Morph::Github) }
   def github
-    Morph::Github.new(self)
+    Morph::Github.new(user_nickname: T.must(nickname), user_access_token: T.must(access_token))
   end
 end
