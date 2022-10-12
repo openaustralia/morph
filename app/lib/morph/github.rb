@@ -135,5 +135,10 @@ module Morph
       commit = client.create_commit(repo_full_name, message, tree.sha)
       client.update_ref(repo_full_name, "heads/main", commit.sha)
     end
+
+    sig { params(repo_full_name: String, url: String).void }
+    def update_repo_homepage(repo_full_name, url)
+      user.octokit_client.edit_repository(repo_full_name, homepage: url)
+    end
   end
 end

@@ -36,7 +36,8 @@ class CreateScraperWorker
     # Copy the new data across
     scraper.update(description: scraper2.description, github_id: scraper2.github_id,
                    owner_id: scraper2.owner_id, github_url: scraper2.github_url, git_url: scraper2.git_url)
-    current_user.octokit_client.edit_repository(scraper.full_name, homepage: scraper_url)
+
+    Morph::Github.new(current_user).update_repo_homepage(scraper.full_name, scraper_url)
 
     # This block should happily run several times (after failures)
     scraper.create_scraper_progress.update_progress("Synching repository", 80)
