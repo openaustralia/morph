@@ -23,25 +23,25 @@ module Morph
 
     # Will create a repository. Works for both an individual and an
     # organisation. Returns a repo
-    sig { params(owner: Owner, name: String, description: T.nilable(String), private: T::Boolean).void }
-    def create_repository(owner:, name:, description:, private:)
+    sig { params(owner_nickname: String, name: String, description: T.nilable(String), private: T::Boolean).void }
+    def create_repository(owner_nickname:, name:, description:, private:)
       options = { description: description, private: private, auto_init: true }
-      options[:organization] = owner.nickname if user != owner
+      options[:organization] = owner_nickname if user.nickname != owner_nickname
       octokit_client.create_repository(name, options)
     end
 
     # Returns a list of all public repos. Works for both an individual and
     # an organization. List is sorted by push date
     # TODO: Just pass in nickname of owner
-    sig { params(owner: ::Owner).returns(T::Array[Repo]) }
-    def public_repos(owner)
-      if user == owner
-        octokit_client.repositories(owner.nickname,
+    sig { params(owner_nickname: String).returns(T::Array[Repo]) }
+    def public_repos(owner_nickname)
+      if user.nickname == owner_nickname
+        octokit_client.repositories(owner_nickname,
                                     sort: :pushed, type: :public)
       else
         # This call doesn't seem to support sort by pushed.
         # So, doing it ourselves
-        repos = octokit_client.organization_repositories(owner.nickname,
+        repos = octokit_client.organization_repositories(owner_nickname,
                                                          type: :public)
         repos.sort { |a, b| b.pushed_at.to_i <=> a.pushed_at.to_i }
       end
