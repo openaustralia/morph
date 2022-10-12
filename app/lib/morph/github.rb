@@ -162,5 +162,11 @@ module Morph
     def organization(nickname)
       new_owner(user.octokit_client.organization(nickname))
     end
+
+    # TODO: Return proper typed object
+    sig { params(nickname: String).returns(T::Array[T.untyped]) }
+    def organizations(nickname)
+      user.octokit_client.organizations(nickname)
+    end
   end
 end

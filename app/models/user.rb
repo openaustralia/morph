@@ -158,14 +158,14 @@ class User < Owner
 
   sig { void }
   def refresh_organizations!
-    refreshed_organizations = octokit_client.organizations(nickname).map do |data|
+    refreshed_organizations = Morph::Github.new(self).organizations(T.must(nickname)).map do |data|
       org = Organization.find_or_create(data.id.to_s, data.login)
       org.refresh_info_from_github!(self)
       org
     end
 
     # Watch any new organizations
-    (refreshed_organizations - organizations).each do |o|
+    (refreshed_organizations - organizations.to_a).each do |o|
       watch o
     end
 
