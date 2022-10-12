@@ -61,11 +61,11 @@ module Morph
     class Owner < T::Struct
       const :nickname, String
       const :login, String
-      const :name, String
-      const :blog, String
-      const :company, String
-      const :location, String
-      const :email, String
+      const :name, T.nilable(String)
+      const :blog, T.nilable(String)
+      const :company, T.nilable(String)
+      const :location, T.nilable(String)
+      const :email, T.nilable(String)
       const :rels, Rels
       const :id, Integer
     end
@@ -84,7 +84,7 @@ module Morph
       const :owner, Owner
       const :name, String
       const :full_name, String
-      const :description, String
+      const :description, T.nilable(String)
       const :id, Integer
       const :rels, Rels
     end
