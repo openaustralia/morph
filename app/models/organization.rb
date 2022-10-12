@@ -19,12 +19,6 @@ class Organization < Owner
     true
   end
 
-  # TODO: Use find_or_create_by instaead
-  sig { params(uid: String, nickname: String).returns(Organization) }
-  def self.find_or_create(uid, nickname)
-    Organization.find_by(uid: uid) || Organization.create(uid: uid, nickname: nickname)
-  end
-
   sig { params(user: User).void }
   def refresh_info_from_github!(user)
     data = user.github.organization(T.must(nickname))

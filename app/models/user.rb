@@ -159,7 +159,7 @@ class User < Owner
   sig { void }
   def refresh_organizations!
     refreshed_organizations = github.organizations(T.must(nickname)).map do |data|
-      org = Organization.find_or_create(data.id.to_s, data.login)
+      org = Organization.find_or_create_by!(uid: data.id.to_s, nickname: data.login)
       org.refresh_info_from_github!(self)
       org
     end
