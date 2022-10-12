@@ -188,7 +188,7 @@ class User < Owner
   def refresh_info_from_github!
     user = Morph::Github.new(self).user_from_github(T.must(nickname))
     update(name: user.name,
-           gravatar_url: user.rels[:avatar].href,
+           gravatar_url: user.rels.avatar.href,
            blog: user.blog,
            company: user.company,
            location: user.location,

@@ -178,10 +178,9 @@ module Morph
     end
 
     # TODO: Figure out a better name for this method
-    # TODO: Return properly typed object
-    sig { params(nickname: String).returns(T.untyped) }
+    sig { params(nickname: String).returns(Owner) }
     def user_from_github(nickname)
-      octokit_client.user(nickname)
+      new_owner(octokit_client.user(nickname))
     end
   end
 end
