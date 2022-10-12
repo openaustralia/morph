@@ -54,10 +54,44 @@ module Morph
       nil
     end
 
+    class Owner < T::Struct
+      const :nickname, String
+      const :login, String
+    end
+
+    class Rel < T::Struct
+      const :href, String
+    end
+
+    class Rels < T::Struct
+      const :html, Rel
+      const :git, Rel
+    end
+
+    class Repo < T::Struct
+      const :owner, Owner
+      const :name, String
+      const :full_name, String
+      const :description, String
+      const :id, Integer
+      const :rels, Rels
+    end
+
     # TODO: Return properly typed object
-    sig { params(full_name: String).returns(T.untyped) }
+    sig { params(full_name: String).returns(Repo) }
     def repository(full_name)
-      user.octokit_client.repository(full_name)
+      repo = user.octokit_client.repository(full_name)
+      Repo.new(
+        owner: Owner.new(nickname: repo.owner.nickname, login: repo.owner.login),
+        name: repo.name,
+        full_name: repo.full_name,
+        description: repo.description,
+        id: repo.id,
+        rels: Rels.new(
+          html: Rel.new(href: repo.rels[:html].href),
+          git: Rel.new(href: repo.rels[:git].href)
+        )
+      )
     end
   end
 end

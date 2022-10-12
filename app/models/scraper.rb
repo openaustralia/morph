@@ -109,7 +109,7 @@ class Scraper < ApplicationRecord
     Scraper.new(
       name: repo.name, full_name: repo.full_name, description: repo.description,
       github_id: repo.id, owner_id: repo_owner.id,
-      github_url: repo.rels[:html].href, git_url: repo.rels[:git].href
+      github_url: repo.rels.html.href, git_url: repo.rels.git.href
     )
   end
 
