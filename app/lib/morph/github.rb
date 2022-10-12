@@ -53,5 +53,11 @@ module Morph
     rescue Octokit::NotFound, Octokit::Unauthorized
       nil
     end
+
+    # TODO: Return properly typed object
+    sig { params(full_name: String).returns(T.untyped) }
+    def repository(full_name)
+      user.octokit_client.repository(full_name)
+    end
   end
 end

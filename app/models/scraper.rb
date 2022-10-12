@@ -103,7 +103,7 @@ class Scraper < ApplicationRecord
   # but doesn't save it
   sig { params(full_name: String, user: User).returns(Scraper) }
   def self.new_from_github(full_name, user)
-    repo = user.octokit_client.repository(full_name)
+    repo = Morph::Github.new(user).repository(full_name)
     repo_owner = Owner.find_by!(nickname: repo.owner.login)
     # Populate a new scraper with information from the repo
     Scraper.new(
