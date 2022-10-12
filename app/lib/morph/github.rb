@@ -169,5 +169,12 @@ module Morph
     def organizations(nickname)
       user.octokit_client.organizations(nickname).map { |o| new_owner(o) }
     end
+
+    # TODO: Figure out a better name for this method
+    # TODO: Return properly typed object
+    sig { params(nickname: String).returns(T.untyped) }
+    def user_from_github(nickname)
+      user.octokit_client.user(nickname)
+    end
   end
 end
