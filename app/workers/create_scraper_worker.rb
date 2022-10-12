@@ -27,7 +27,8 @@ class CreateScraperWorker
       # TODO: Don't use hardcoded urls
       "README.md" => "This is a scraper that runs on [Morph](https://morph.io). To get started [see the documentation](https://morph.io/documentation)"
     )
-    scraper.add_commit_to_root_on_github(current_user, files, "Add template for morph.io scraper")
+
+    Morph::Github.new(current_user).add_commit_to_root(scraper.full_name, files, "Add template for morph.io scraper")
 
     # This block should happily run several times (after failures)
     scraper.create_scraper_progress.update_progress("Get repository info", 60)

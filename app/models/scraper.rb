@@ -272,13 +272,6 @@ class Scraper < ApplicationRecord
     platform
   end
 
-  # Overwrites whatever there was before in that repo
-  # Obviously use with great care
-  sig { params(user: User, files: T::Hash[String, String], message: String).void }
-  def add_commit_to_root_on_github(user, files, message)
-    Morph::Github.new(user).add_commit_to_root(full_name, files, message)
-  end
-
   # Return the https version of the git clone url (git_url)
   sig { returns(String) }
   def git_url_https
