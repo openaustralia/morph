@@ -14,13 +14,15 @@ module Morph
       @user = user
     end
 
+    delegate :octokit_client, to: :user
+
     # Will create a repository. Works for both an individual and an
     # organisation. Returns a repo
     sig { params(owner: Owner, name: String, description: T.nilable(String), private: T::Boolean).void }
     def create_repository(owner:, name:, description:, private:)
       options = { description: description, private: private, auto_init: true }
       options[:organization] = owner.nickname if user != owner
-      user.octokit_client.create_repository(name, options)
+      octokit_client.create_repository(name, options)
     end
 
     # Returns a list of all public repos. Works for both an individual and
@@ -29,13 +31,13 @@ module Morph
     sig { params(owner: ::Owner).returns(T::Array[Repo]) }
     def public_repos(owner)
       if user == owner
-        user.octokit_client.repositories(owner.nickname,
-                                         sort: :pushed, type: :public)
+        octokit_client.repositories(owner.nickname,
+                                    sort: :pushed, type: :public)
       else
         # This call doesn't seem to support sort by pushed.
         # So, doing it ourselves
-        repos = user.octokit_client.organization_repositories(owner.nickname,
-                                                              type: :public)
+        repos = octokit_client.organization_repositories(owner.nickname,
+                                                         type: :public)
         repos.sort { |a, b| b.pushed_at.to_i <=> a.pushed_at.to_i }
       end
       repos.map { |r| new_repo(r) }
@@ -46,7 +48,7 @@ module Morph
     sig { returns(T.nilable(String)) }
     def primary_email
       # TODO: If email isn't verified probably should not send email to it
-      user.octokit_client.emails(accept: "application/vnd.github.v3").find(&:primary)&.email
+      octokit_client.emails(accept: "application/vnd.github.v3").find(&:primary)&.email
     rescue Octokit::NotFound, Octokit::Unauthorized
       nil
     end
@@ -125,15 +127,15 @@ module Morph
 
     sig { params(full_name: String).returns(Repo) }
     def repository(full_name)
-      new_repo(user.octokit_client.repository(full_name))
+      new_repo(octokit_client.repository(full_name))
     end
 
     sig { params(repo_full_name: String, private: T::Boolean).void }
     def update_privacy(repo_full_name, private)
       if private
-        user.octokit_client.set_private(repo_full_name)
+        octokit_client.set_private(repo_full_name)
       else
-        user.octokit_client.set_public(repo_full_name)
+        octokit_client.set_public(repo_full_name)
       end
     end
 
@@ -141,7 +143,7 @@ module Morph
     # Obviously use with great care
     sig { params(repo_full_name: String, files: T::Hash[String, String], message: String).void }
     def add_commit_to_root(repo_full_name, files, message)
-      client = user.octokit_client
+      client = octokit_client
       blobs = files.map do |filename, content|
         {
           path: filename,
@@ -157,24 +159,24 @@ module Morph
 
     sig { params(repo_full_name: String, url: String).void }
     def update_repo_homepage(repo_full_name, url)
-      user.octokit_client.edit_repository(repo_full_name, homepage: url)
+      octokit_client.edit_repository(repo_full_name, homepage: url)
     end
 
     sig { params(nickname: String).returns(Owner) }
     def organization(nickname)
-      new_owner(user.octokit_client.organization(nickname))
+      new_owner(octokit_client.organization(nickname))
     end
 
     sig { params(nickname: String).returns(T::Array[Owner]) }
     def organizations(nickname)
-      user.octokit_client.organizations(nickname).map { |o| new_owner(o) }
+      octokit_client.organizations(nickname).map { |o| new_owner(o) }
     end
 
     # TODO: Figure out a better name for this method
     # TODO: Return properly typed object
     sig { params(nickname: String).returns(T.untyped) }
     def user_from_github(nickname)
-      user.octokit_client.user(nickname)
+      octokit_client.user(nickname)
     end
   end
 end
