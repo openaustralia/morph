@@ -160,7 +160,7 @@ class User < Owner
   def refresh_organizations!
     refreshed_organizations = octokit_client.organizations(nickname).map do |data|
       org = Organization.find_or_create(data.id.to_s, data.login)
-      org.refresh_info_from_github!(octokit_client)
+      org.refresh_info_from_github!(self)
       org
     end
 

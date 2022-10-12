@@ -25,9 +25,9 @@ class Organization < Owner
     Organization.find_by(uid: uid) || Organization.create(uid: uid, nickname: nickname)
   end
 
-  sig { params(octokit_client: Octokit::Client).void }
-  def refresh_info_from_github!(octokit_client)
-    data = octokit_client.organization(nickname)
+  sig { params(user: User).void }
+  def refresh_info_from_github!(user)
+    data = user.octokit_client.organization(nickname)
     update(
       nickname: data.login, name: data.name, blog: data.blog,
       company: data.company, location: data.location, email: data.email,

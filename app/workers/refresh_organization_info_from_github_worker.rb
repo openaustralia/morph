@@ -12,6 +12,6 @@ class RefreshOrganizationInfoFromGithubWorker
     org = Organization.find(id)
     # Use first member of organization to make the github calls
     first_user = org.users.first
-    org.refresh_info_from_github!(first_user.octokit_client) if first_user
+    org.refresh_info_from_github!(first_user) if first_user
   end
 end
