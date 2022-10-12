@@ -14,7 +14,12 @@ module Morph
       @user = user
     end
 
-    delegate :octokit_client, to: :user
+    sig { returns(Octokit::Client) }
+    def octokit_client
+      client = Octokit::Client.new access_token: user.access_token
+      client.auto_paginate = true
+      client
+    end
 
     # Will create a repository. Works for both an individual and an
     # organisation. Returns a repo

@@ -172,13 +172,6 @@ class User < Owner
     self.organizations = refreshed_organizations
   end
 
-  sig { returns(Octokit::Client) }
-  def octokit_client
-    client = Octokit::Client.new access_token: access_token
-    client.auto_paginate = true
-    client
-  end
-
   sig { params(auth: T.untyped, _signed_in_resource: T.nilable(User)).returns(User) }
   def self.find_for_github_oauth(auth, _signed_in_resource = nil)
     user = User.find_or_create_by(provider: auth.provider, uid: auth.uid)
