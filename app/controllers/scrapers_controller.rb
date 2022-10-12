@@ -206,12 +206,7 @@ class ScrapersController < ApplicationController
     new_privacy = !scraper.private
     scraper.transaction do
       scraper.update!(private: new_privacy)
-      # TODO: Extract this into a method on Morph::Github
-      if new_privacy
-        T.must(current_user).octokit_client.set_private(scraper.full_name)
-      else
-        T.must(current_user).octokit_client.set_public(scraper.full_name)
-      end
+      Morph::Github.new(T.must(current_user)).update_privacy(scraper.full_name, new_privacy)
     end
     redirect_to @scraper, notice: "#{scraper.full_name} is now #{helpers.privacy_in_words(scraper.private)} on morph.io"
   end

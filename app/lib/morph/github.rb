@@ -108,5 +108,14 @@ module Morph
     def repository(full_name)
       new_repo(user.octokit_client.repository(full_name))
     end
+
+    sig { params(repo_full_name: String, private: T::Boolean).void }
+    def update_privacy(repo_full_name, private)
+      if private
+        user.octokit_client.set_private(repo_full_name)
+      else
+        user.octokit_client.set_public(repo_full_name)
+      end
+    end
   end
 end
