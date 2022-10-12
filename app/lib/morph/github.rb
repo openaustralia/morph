@@ -54,6 +54,12 @@ module Morph
     class Owner < T::Struct
       const :nickname, String
       const :login, String
+      const :name, String
+      const :blog, String
+      const :company, String
+      const :location, String
+      const :email, String
+      const :rels, Rels
     end
 
     class Rel < T::Struct
@@ -63,6 +69,7 @@ module Morph
     class Rels < T::Struct
       const :html, Rel
       const :git, Rel
+      const :avatar, Rel
     end
 
     class Repo < T::Struct
@@ -76,7 +83,16 @@ module Morph
 
     sig { params(owner: T.untyped).returns(Owner) }
     def new_owner(owner)
-      Owner.new(nickname: owner.nickname, login: owner.login)
+      Owner.new(
+        nickname: owner.nickname,
+        login: owner.login,
+        name: owner.name,
+        blog: owner.blog,
+        company: owner.company,
+        location: owner.location,
+        email: owner.email,
+        rels: new_rels(owner.rels)
+      )
     end
 
     sig { params(rel: T.untyped).returns(Rel) }
@@ -88,7 +104,8 @@ module Morph
     def new_rels(rels)
       Rels.new(
         html: new_rel(rels[:html]),
-        git: new_rel(rels[:git])
+        git: new_rel(rels[:git]),
+        avatar: new_rel(rels[:avatar])
       )
     end
 
@@ -141,10 +158,9 @@ module Morph
       user.octokit_client.edit_repository(repo_full_name, homepage: url)
     end
 
-    # TODO: Return properly typed object
-    sig { params(nickname: String).returns(T.untyped) }
+    sig { params(nickname: String).returns(Owner) }
     def organization(nickname)
-      user.octokit_client.organization(nickname)
+      new_owner(user.octokit_client.organization(nickname))
     end
   end
 end
