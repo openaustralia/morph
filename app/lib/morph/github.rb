@@ -140,5 +140,11 @@ module Morph
     def update_repo_homepage(repo_full_name, url)
       user.octokit_client.edit_repository(repo_full_name, homepage: url)
     end
+
+    # TODO: Return properly typed object
+    sig { params(nickname: String).returns(T.untyped) }
+    def organization(nickname)
+      user.octokit_client.organization(nickname)
+    end
   end
 end

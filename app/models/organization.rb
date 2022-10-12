@@ -27,7 +27,7 @@ class Organization < Owner
 
   sig { params(user: User).void }
   def refresh_info_from_github!(user)
-    data = user.octokit_client.organization(nickname)
+    data = Morph::Github.new(user).organization(T.must(nickname))
     update(
       nickname: data.login, name: data.name, blog: data.blog,
       company: data.company, location: data.location, email: data.email,
