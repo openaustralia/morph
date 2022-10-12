@@ -60,6 +60,7 @@ module Morph
       const :location, String
       const :email, String
       const :rels, Rels
+      const :id, Integer
     end
 
     class Rel < T::Struct
@@ -91,7 +92,8 @@ module Morph
         company: owner.company,
         location: owner.location,
         email: owner.email,
-        rels: new_rels(owner.rels)
+        rels: new_rels(owner.rels),
+        id: owner.id
       )
     end
 
@@ -163,10 +165,9 @@ module Morph
       new_owner(user.octokit_client.organization(nickname))
     end
 
-    # TODO: Return proper typed object
-    sig { params(nickname: String).returns(T::Array[T.untyped]) }
+    sig { params(nickname: String).returns(T::Array[Owner]) }
     def organizations(nickname)
-      user.octokit_client.organizations(nickname)
+      user.octokit_client.organizations(nickname).map { |o| new_owner(o) }
     end
   end
 end
