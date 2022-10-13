@@ -162,6 +162,54 @@ module Morph
       end
     end
 
+    class Permissions < T::Struct
+      const :pull, T::Boolean
+      const :triage, T::Boolean
+      const :push, T::Boolean
+      const :maintain, T::Boolean
+      const :admin, T::Boolean
+    end
+
+    class Collaborator < T::Struct
+      const :login, String
+      const :permissions, Permissions
+    end
+
+    sig { params(permissions: T.untyped).returns(Permissions) }
+    def new_permissions(permissions)
+      Permissions.new(
+        pull: permissions.pull,
+        triage: permissions.triage,
+        push: permissions.push,
+        maintain: permissions.maintain,
+        admin: permissions.admin
+      )
+    end
+
+    sig { params(collaborator: T.untyped).returns(Collaborator) }
+    def new_collaborator(collaborator)
+      Collaborator.new(
+        login: collaborator.login,
+        permissions: new_permissions(collaborator.permissions)
+      )
+    end
+
+    # Returns list of collaborators on this repo including the permissions they have
+    sig { params(repo_name: String).returns([T::Array[T.untyped], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }
+    def collaborators(repo_name)
+      client, error = octokit_client
+      return [[], error] if error
+
+      begin
+        collaborators = client.collaborators("#{owner_nickname}/#{repo_name}").map do |c|
+          new_collaborator(c)
+        end
+        [collaborators, nil]
+      rescue Octokit::NotFound
+        [[], NoAccessToRepo.new]
+      end
+    end
+
     sig { returns(String) }
     def self.jwt
       # Private key contents
