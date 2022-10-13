@@ -186,6 +186,30 @@ class Scraper
     def build_owner(*args, &blk); end
 
     sig { returns(T::Array[T.untyped]) }
+    def collaboration_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def collaboration_ids=(ids); end
+
+    sig { returns(::Collaboration::PrivateCollectionProxy) }
+    def collaborations; end
+
+    sig { params(value: T::Enumerable[::Collaboration]).void }
+    def collaborations=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def collaborator_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def collaborator_ids=(ids); end
+
+    sig { returns(::Owner::PrivateCollectionProxy) }
+    def collaborators; end
+
+    sig { params(value: T::Enumerable[::Owner]).void }
+    def collaborators=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
     def contribution_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }

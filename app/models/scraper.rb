@@ -20,6 +20,8 @@ class Scraper < ApplicationRecord
   has_many :metrics, through: :runs
   has_many :contributions, dependent: :delete_all
   has_many :contributors, through: :contributions, source: :user
+  has_many :collaborations, dependent: :delete_all
+  has_many :collaborators, through: :collaborations, source: :owner
   has_many :watches, class_name: "Alert", foreign_key: :watch_id, dependent: :delete_all, inverse_of: :watch
   has_many :watchers, through: :watches, source: :user
   belongs_to :create_scraper_progress, dependent: :delete, optional: true
