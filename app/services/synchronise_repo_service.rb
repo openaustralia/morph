@@ -30,6 +30,9 @@ class SynchroniseRepoService
     error = update_contributors(installation, scraper)
     return error if error
 
+    error = update_collaborators(installation, scraper)
+    return error if error
+
     nil
   end
 
@@ -56,6 +59,27 @@ class SynchroniseRepoService
 
     contributors = nicknames.map { |n| User.find_or_create_by!(nickname: n) }
     scraper.update!(contributors: contributors)
+    nil
+  end
+
+  sig { params(installation: Morph::GithubAppInstallation, scraper: Scraper).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAccessToRepo, Morph::GithubAppInstallation::NoAppInstallationForOwner))) }
+  def self.update_collaborators(installation, scraper)
+    collaborators, error = installation.collaborators(scraper.name)
+    return error if error
+
+    collaborations = collaborators.map do |c|
+      u = User.find_or_create_by!(nickname: c.login)
+      collaboration = scraper.collaborations.find_or_initialize_by(owner: u)
+      collaboration.update!(
+        admin: c.permissions.admin,
+        maintain: c.permissions.maintain,
+        pull: c.permissions.pull,
+        push: c.permissions.push,
+        triage: c.permissions.triage
+      )
+      collaboration
+    end
+    scraper.update!(collaborations: collaborations)
     nil
   end
 
