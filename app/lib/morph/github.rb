@@ -76,7 +76,6 @@ module Morph
     end
 
     class Owner < T::Struct
-      const :nickname, String
       const :login, String
       const :name, T.nilable(String)
       const :blog, T.nilable(String)
@@ -99,7 +98,6 @@ module Morph
     sig { params(owner: T.untyped).returns(Owner) }
     def new_owner(owner)
       Owner.new(
-        nickname: owner.nickname,
         login: owner.login,
         name: owner.name,
         blog: owner.blog,
