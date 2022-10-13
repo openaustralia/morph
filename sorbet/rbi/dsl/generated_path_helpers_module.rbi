@@ -117,6 +117,9 @@ module GeneratedPathHelpersModule
   def edit_admin_owner_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def github_app_documentation_index_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def github_form_scrapers_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -241,6 +244,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def sync_refetch_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def toggle_privacy_scraper_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def toggle_read_only_mode_admin_site_settings_path(*args); end

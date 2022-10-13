@@ -117,6 +117,9 @@ module GeneratedUrlHelpersModule
   def edit_admin_owner_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def github_app_documentation_index_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def github_form_scrapers_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -241,6 +244,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def sync_refetch_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def toggle_privacy_scraper_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def toggle_read_only_mode_admin_site_settings_url(*args); end
