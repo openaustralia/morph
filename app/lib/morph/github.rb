@@ -62,6 +62,19 @@ module Morph
       nil
     end
 
+    class Rel < T::Struct
+      const :href, String
+    end
+
+    class OwnerRels < T::Struct
+      const :avatar, Rel
+    end
+
+    class RepoRels < T::Struct
+      const :html, Rel
+      const :git, Rel
+    end
+
     class Owner < T::Struct
       const :nickname, String
       const :login, String
@@ -70,18 +83,8 @@ module Morph
       const :company, T.nilable(String)
       const :location, T.nilable(String)
       const :email, T.nilable(String)
-      const :rels, Rels
+      const :rels, OwnerRels
       const :id, Integer
-    end
-
-    class Rel < T::Struct
-      const :href, String
-    end
-
-    class Rels < T::Struct
-      const :html, Rel
-      const :git, Rel
-      const :avatar, Rel
     end
 
     class Repo < T::Struct
@@ -90,7 +93,7 @@ module Morph
       const :full_name, String
       const :description, T.nilable(String)
       const :id, Integer
-      const :rels, Rels
+      const :rels, RepoRels
     end
 
     sig { params(owner: T.untyped).returns(Owner) }
@@ -103,7 +106,7 @@ module Morph
         company: owner.company,
         location: owner.location,
         email: owner.email,
-        rels: new_rels(owner.rels),
+        rels: new_owner_rels(owner.rels),
         id: owner.id
       )
     end
@@ -113,12 +116,18 @@ module Morph
       Rel.new(href: rel.href)
     end
 
-    sig { params(rels: T.untyped).returns(Rels) }
-    def new_rels(rels)
-      Rels.new(
-        html: new_rel(rels[:html]),
-        git: new_rel(rels[:git]),
+    sig { params(rels: T.untyped).returns(OwnerRels) }
+    def new_owner_rels(rels)
+      OwnerRels.new(
         avatar: new_rel(rels[:avatar])
+      )
+    end
+
+    sig { params(rels: T.untyped).returns(RepoRels) }
+    def new_repo_rels(rels)
+      RepoRels.new(
+        html: new_rel(rels[:html]),
+        git: new_rel(rels[:git])
       )
     end
 
@@ -130,7 +139,7 @@ module Morph
         full_name: repo.full_name,
         description: repo.description,
         id: repo.id,
-        rels: new_rels(repo.rels)
+        rels: new_repo_rels(repo.rels)
       )
     end
 
