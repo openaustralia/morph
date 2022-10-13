@@ -195,7 +195,7 @@ module Morph
     end
 
     # Returns list of collaborators on this repo including the permissions they have
-    sig { params(repo_name: String).returns([T::Array[T.untyped], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }
+    sig { params(repo_name: String).returns([T::Array[Collaborator], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }
     def collaborators(repo_name)
       client, error = octokit_client
       return [[], error] if error
