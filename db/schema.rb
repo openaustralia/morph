@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_19_011435) do
+ActiveRecord::Schema.define(version: 2022_10_13_051602) do
 
   create_table "active_admin_comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "namespace"
@@ -52,6 +52,21 @@ ActiveRecord::Schema.define(version: 2022_09_19_011435) do
     t.index ["created_at"], name: "index_api_queries_on_created_at"
     t.index ["owner_id"], name: "index_api_queries_on_owner_id"
     t.index ["scraper_id"], name: "index_api_queries_on_scraper_id"
+  end
+
+  create_table "collaborations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
+    t.integer "scraper_id", null: false
+    t.integer "owner_id", null: false
+    t.boolean "admin", null: false
+    t.boolean "maintain", null: false
+    t.boolean "pull", null: false
+    t.boolean "push", null: false
+    t.boolean "triage", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_collaborations_on_owner_id"
+    t.index ["scraper_id", "owner_id"], name: "index_collaborations_on_scraper_id_and_owner_id"
+    t.index ["scraper_id"], name: "index_collaborations_on_scraper_id"
   end
 
   create_table "connection_logs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
@@ -251,6 +266,8 @@ ActiveRecord::Schema.define(version: 2022_09_19_011435) do
   end
 
   add_foreign_key "api_queries", "scrapers"
+  add_foreign_key "collaborations", "owners"
+  add_foreign_key "collaborations", "scrapers"
   add_foreign_key "connection_logs", "domains"
   add_foreign_key "connection_logs", "runs"
   add_foreign_key "contributions", "scrapers"
