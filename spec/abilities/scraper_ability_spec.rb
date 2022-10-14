@@ -46,7 +46,7 @@ describe "ScraperAbility" do
     it { is_expected.not_to be_able_to(:destroy, scraper) }
     it { is_expected.not_to be_able_to(:update, scraper) }
 
-    context "when scraper is owner by the user" do
+    context "when scraper is owned by the user" do
       before do
         scraper.update(owner: user)
       end
@@ -57,7 +57,7 @@ describe "ScraperAbility" do
       it { is_expected.to be_able_to(:watch, scraper) }
     end
 
-    context "when private scraper is owner by the user" do
+    context "when private scraper is owned by the user" do
       before do
         private_scraper.update(owner: user)
       end
@@ -115,7 +115,7 @@ describe "ScraperAbility" do
       it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
       it { is_expected.not_to be_able_to(:create_private, Scraper) }
 
-      context "when scraper is owner by the user" do
+      context "when scraper is owned by the user" do
         before do
           scraper.update(owner: user)
         end
