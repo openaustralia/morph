@@ -6,6 +6,23 @@ class ScraperAbility < Ability
 
   include CanCan::Ability
 
+  # This models which scrapers can be accessed and what can be done. We're generally
+  # trying to follow what Github does so that there are the least surprises for users.
+  #
+  # With just public scrapers everyone can view them but you have to be either the
+  # owner of the scraper or a member of an organization which owns the scraper to be
+  # able to modify and run the scraper. This isn't what Github does exactly but has
+  # been close enough not to cause too much confusion.
+  #
+  # With private scrapers it becomes much more important to more faithfully follow
+  # the complex model that Github uses.
+  #
+  # For compatibility (in the short term) we are going to maintain the current
+  # model for public scrapers but use a new more fine-grained approach for
+  # private scrapers.
+  #
+  # TODO: Move over to using the same fine-grained approach for everyone
+
   sig { params(owner: T.nilable(Owner)).void }
   def initialize(owner)
     super
