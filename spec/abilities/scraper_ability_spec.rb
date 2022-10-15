@@ -162,12 +162,12 @@ describe "ScraperAbility" do
           create(:organizations_user, organization: organization, user: user)
         end
 
-        it { is_expected.to be_able_to(:show, scraper) }
-        it { is_expected.to be_able_to(:edit, scraper) }
-        it { is_expected.to be_able_to(:destroy, scraper) }
-        it { is_expected.to be_able_to(:update, scraper) }
-        it { is_expected.to be_able_to(:watch, scraper) }
-        it { is_expected.to be_able_to(:data, scraper) }
+        it { is_expected.not_to be_able_to(:show, scraper) }
+        it { is_expected.not_to be_able_to(:edit, scraper) }
+        it { is_expected.not_to be_able_to(:destroy, scraper) }
+        it { is_expected.not_to be_able_to(:update, scraper) }
+        it { is_expected.not_to be_able_to(:watch, scraper) }
+        it { is_expected.not_to be_able_to(:data, scraper) }
       end
     end
   end

@@ -41,12 +41,14 @@ class ScraperAbility < Ability
     can :watch, Scraper, collaborations: { owner: owner, pull: true } unless SiteSetting.read_only_mode
     can %i[destroy update], Scraper, collaborations: { owner: owner, admin: true } unless SiteSetting.read_only_mode
 
-    # user can view scrapers owned by them (even if private) and settings of scrapers they own
-    can_control_scrapers_owned_by(owner)
+    # user can view scrapers owned by them and settings of scrapers they own
+    can_control_public_scrapers_owned_by(owner)
 
     # user can view scrapers and settings of scrapers belonging to an org they are a
-    # member of
-    owner.organizations.each { |org| can_control_scrapers_owned_by(org) } if owner.is_a?(User)
+    # member of but only if the scrapers are public
+    # This is to maintain backwards compatibility
+    # TODO: Remove this when possible
+    owner.organizations.each { |org| can_control_public_scrapers_owned_by(org) } if owner.is_a?(User)
 
     return unless owner.admin?
 
@@ -58,8 +60,8 @@ class ScraperAbility < Ability
   private
 
   sig { params(owner: Owner).void }
-  def can_control_scrapers_owned_by(owner)
-    can %i[read data], Scraper, owner_id: owner.id
-    can %i[destroy update watch], Scraper, owner_id: owner.id unless SiteSetting.read_only_mode
+  def can_control_public_scrapers_owned_by(owner)
+    can %i[read data], Scraper, owner_id: owner.id, private: false
+    can %i[destroy update watch], Scraper, owner_id: owner.id, private: false unless SiteSetting.read_only_mode
   end
 end
