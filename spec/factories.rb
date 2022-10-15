@@ -5,8 +5,8 @@ FactoryBot.define do
   factory :user
 
   factory :scraper do
-    name { "my_scraper" }
-    full_name { "mlandauer/my_scraper" }
+    sequence(:name) { |n| "my_scraper#{n}" }
+    sequence(:full_name) { |n| "mlandauer/my_scraper#{n}" }
     owner factory: :user
   end
 
@@ -19,5 +19,15 @@ FactoryBot.define do
   factory :organizations_user do
     user
     organization
+  end
+
+  factory :collaboration do
+    owner factory: :user
+    scraper
+    admin { false }
+    maintain { false }
+    pull { false }
+    push { false }
+    triage { false }
   end
 end

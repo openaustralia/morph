@@ -93,7 +93,7 @@ describe "ScraperAbility" do
     end
 
     context "with a private scraper" do
-      context "when scraper is not owned by the user" do
+      context "when user is not a collaborator on the scraper" do
         let(:user) { create(:user) }
         let(:scraper) { create(:scraper, private: true) }
 
@@ -105,14 +105,34 @@ describe "ScraperAbility" do
         it { is_expected.not_to be_able_to(:update, scraper) }
       end
 
-      context "when scraper is owned by the user" do
+      context "when user is a collaborator with no permissions on the scraper" do
         let(:user) { create(:user) }
-        let(:scraper) { create(:scraper, private: true, owner: user) }
+        let(:scraper) { create(:scraper, private: true) }
+
+        before do
+          create(:collaboration, scraper: scraper, owner: user)
+        end
+
+        it { is_expected.not_to be_able_to(:show, scraper) }
+        it { is_expected.not_to be_able_to(:edit, scraper) }
+        it { is_expected.not_to be_able_to(:destroy, scraper) }
+        it { is_expected.not_to be_able_to(:update, scraper) }
+        it { is_expected.not_to be_able_to(:watch, scraper) }
+        it { is_expected.not_to be_able_to(:data, scraper) }
+      end
+
+      context "when user is a collaborator with read permissions only on the scraper" do
+        let(:user) { create(:user) }
+        let(:scraper) { create(:scraper, private: true) }
+
+        before do
+          create(:collaboration, scraper: scraper, owner: user, pull: true)
+        end
 
         it { is_expected.to be_able_to(:show, scraper) }
-        it { is_expected.to be_able_to(:edit, scraper) }
-        it { is_expected.to be_able_to(:destroy, scraper) }
-        it { is_expected.to be_able_to(:update, scraper) }
+        it { is_expected.not_to be_able_to(:edit, scraper) }
+        it { is_expected.not_to be_able_to(:destroy, scraper) }
+        it { is_expected.not_to be_able_to(:update, scraper) }
         it { is_expected.to be_able_to(:watch, scraper) }
         it { is_expected.to be_able_to(:data, scraper) }
       end
