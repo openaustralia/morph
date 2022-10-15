@@ -13,89 +13,108 @@ describe "ScraperAbility" do
   let(:organization) { create(:organization) }
 
   context "when an unauthenticated user" do
-    it { is_expected.to be_able_to(:index, Scraper) }
-    it { is_expected.to be_able_to(:show, scraper) }
-    it { is_expected.not_to be_able_to(:show, private_scraper) }
-    it { is_expected.not_to be_able_to(:data, scraper) }
-    it { is_expected.not_to be_able_to(:data, private_scraper) }
-    it { is_expected.not_to be_able_to(:new, Scraper) }
-    it { is_expected.not_to be_able_to(:create, Scraper) }
-    it { is_expected.not_to be_able_to(:create_private, Scraper) }
-    it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
-    it { is_expected.not_to be_able_to(:edit, scraper) }
-    it { is_expected.not_to be_able_to(:destroy, scraper) }
-    it { is_expected.not_to be_able_to(:update, scraper) }
-    it { is_expected.not_to be_able_to(:watch, scraper) }
+    context "with a public scraper" do
+      it { is_expected.to be_able_to(:index, Scraper) }
+      it { is_expected.to be_able_to(:show, scraper) }
+      it { is_expected.not_to be_able_to(:data, scraper) }
+      it { is_expected.not_to be_able_to(:new, Scraper) }
+      it { is_expected.not_to be_able_to(:create, Scraper) }
+      it { is_expected.not_to be_able_to(:create_private, Scraper) }
+      it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
+      it { is_expected.not_to be_able_to(:edit, scraper) }
+      it { is_expected.not_to be_able_to(:destroy, scraper) }
+      it { is_expected.not_to be_able_to(:update, scraper) }
+      it { is_expected.not_to be_able_to(:watch, scraper) }
+    end
+
+    context "with a private scraper" do
+      it { is_expected.not_to be_able_to(:show, private_scraper) }
+      it { is_expected.not_to be_able_to(:data, private_scraper) }
+      it { is_expected.not_to be_able_to(:edit, private_scraper) }
+      it { is_expected.not_to be_able_to(:destroy, private_scraper) }
+      it { is_expected.not_to be_able_to(:update, private_scraper) }
+      it { is_expected.not_to be_able_to(:watch, private_scraper) }
+    end
   end
 
   context "when a regular authenticated user" do
     let(:user) { create(:user) }
 
-    context "when scraper is now owned by the user" do
-      it { is_expected.to be_able_to(:index, Scraper) }
-      it { is_expected.to be_able_to(:show, scraper) }
-      it { is_expected.not_to be_able_to(:show, private_scraper) }
-      it { is_expected.to be_able_to(:new, Scraper) }
-      it { is_expected.to be_able_to(:create, Scraper) }
-      it { is_expected.not_to be_able_to(:create_private, Scraper) }
-      it { is_expected.to be_able_to(:watch, scraper) }
-      it { is_expected.not_to be_able_to(:watch, private_scraper) }
-      it { is_expected.to be_able_to(:data, scraper) }
-      it { is_expected.not_to be_able_to(:data, private_scraper) }
-      it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
-      it { is_expected.not_to be_able_to(:edit, scraper) }
-      it { is_expected.not_to be_able_to(:destroy, scraper) }
-      it { is_expected.not_to be_able_to(:update, scraper) }
-    end
-
-    context "when scraper is owned by the user" do
-      before do
-        scraper.update(owner: user)
+    context "with a public scraper" do
+      context "when scraper is not owned by the user" do
+        it { is_expected.to be_able_to(:index, Scraper) }
+        it { is_expected.to be_able_to(:show, scraper) }
+        it { is_expected.to be_able_to(:new, Scraper) }
+        it { is_expected.to be_able_to(:create, Scraper) }
+        it { is_expected.not_to be_able_to(:create_private, Scraper) }
+        it { is_expected.to be_able_to(:watch, scraper) }
+        it { is_expected.to be_able_to(:data, scraper) }
+        it { is_expected.not_to be_able_to(:memory_setting, Scraper) }
+        it { is_expected.not_to be_able_to(:edit, scraper) }
+        it { is_expected.not_to be_able_to(:destroy, scraper) }
+        it { is_expected.not_to be_able_to(:update, scraper) }
       end
 
-      it { is_expected.to be_able_to(:edit, scraper) }
-      it { is_expected.to be_able_to(:destroy, scraper) }
-      it { is_expected.to be_able_to(:update, scraper) }
-      it { is_expected.to be_able_to(:watch, scraper) }
-    end
+      context "when scraper is owned by the user" do
+        before do
+          scraper.update(owner: user)
+        end
 
-    context "when private scraper is owned by the user" do
-      before do
-        private_scraper.update(owner: user)
+        it { is_expected.to be_able_to(:edit, scraper) }
+        it { is_expected.to be_able_to(:destroy, scraper) }
+        it { is_expected.to be_able_to(:update, scraper) }
+        it { is_expected.to be_able_to(:watch, scraper) }
       end
 
-      it { is_expected.to be_able_to(:show, private_scraper) }
-      it { is_expected.to be_able_to(:edit, private_scraper) }
-      it { is_expected.to be_able_to(:destroy, private_scraper) }
-      it { is_expected.to be_able_to(:update, private_scraper) }
-      it { is_expected.to be_able_to(:watch, private_scraper) }
-      it { is_expected.to be_able_to(:data, private_scraper) }
+      context "when scraper is owned by an organization the user is a member of" do
+        before do
+          scraper.update(owner: organization)
+          create(:organizations_user, organization: organization, user: user)
+        end
+
+        it { is_expected.to be_able_to(:edit, scraper) }
+        it { is_expected.to be_able_to(:destroy, scraper) }
+        it { is_expected.to be_able_to(:update, scraper) }
+        it { is_expected.to be_able_to(:watch, scraper) }
+      end
     end
 
-    context "when scraper is owned by an organization the user is a member of" do
-      before do
-        scraper.update(owner: organization)
-        create(:organizations_user, organization: organization, user: user)
+    context "with a private scraper" do
+      context "when scraper is not owned by the user" do
+        it { is_expected.not_to be_able_to(:show, private_scraper) }
+        it { is_expected.not_to be_able_to(:watch, private_scraper) }
+        it { is_expected.not_to be_able_to(:data, private_scraper) }
+        it { is_expected.not_to be_able_to(:edit, private_scraper) }
+        it { is_expected.not_to be_able_to(:destroy, private_scraper) }
+        it { is_expected.not_to be_able_to(:update, private_scraper) }
       end
 
-      it { is_expected.to be_able_to(:edit, scraper) }
-      it { is_expected.to be_able_to(:destroy, scraper) }
-      it { is_expected.to be_able_to(:update, scraper) }
-      it { is_expected.to be_able_to(:watch, scraper) }
-    end
+      context "when scraper is owned by the user" do
+        before do
+          private_scraper.update(owner: user)
+        end
 
-    context "when private scraper is owned by an organization the user is a member of" do
-      before do
-        private_scraper.update(owner: organization)
-        create(:organizations_user, organization: organization, user: user)
+        it { is_expected.to be_able_to(:show, private_scraper) }
+        it { is_expected.to be_able_to(:edit, private_scraper) }
+        it { is_expected.to be_able_to(:destroy, private_scraper) }
+        it { is_expected.to be_able_to(:update, private_scraper) }
+        it { is_expected.to be_able_to(:watch, private_scraper) }
+        it { is_expected.to be_able_to(:data, private_scraper) }
       end
 
-      it { is_expected.to be_able_to(:show, private_scraper) }
-      it { is_expected.to be_able_to(:edit, private_scraper) }
-      it { is_expected.to be_able_to(:destroy, private_scraper) }
-      it { is_expected.to be_able_to(:update, private_scraper) }
-      it { is_expected.to be_able_to(:watch, private_scraper) }
-      it { is_expected.to be_able_to(:data, private_scraper) }
+      context "when scraper is owned by an organization the user is a member of" do
+        before do
+          private_scraper.update(owner: organization)
+          create(:organizations_user, organization: organization, user: user)
+        end
+
+        it { is_expected.to be_able_to(:show, private_scraper) }
+        it { is_expected.to be_able_to(:edit, private_scraper) }
+        it { is_expected.to be_able_to(:destroy, private_scraper) }
+        it { is_expected.to be_able_to(:update, private_scraper) }
+        it { is_expected.to be_able_to(:watch, private_scraper) }
+        it { is_expected.to be_able_to(:data, private_scraper) }
+      end
     end
   end
 
