@@ -39,6 +39,7 @@ class ScraperAbility < Ability
 
     can %i[read data], Scraper, collaborations: { owner: owner, pull: true }
     can :watch, Scraper, collaborations: { owner: owner, pull: true } unless SiteSetting.read_only_mode
+    can %i[destroy update], Scraper, collaborations: { owner: owner, admin: true } unless SiteSetting.read_only_mode
 
     # user can view scrapers owned by them (even if private) and settings of scrapers they own
     can_control_scrapers_owned_by(owner)

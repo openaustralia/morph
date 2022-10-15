@@ -137,6 +137,22 @@ describe "ScraperAbility" do
         it { is_expected.to be_able_to(:data, scraper) }
       end
 
+      context "when user is a collaborator with admin permissions on the scraper" do
+        let(:user) { create(:user) }
+        let(:scraper) { create(:scraper, private: true) }
+
+        before do
+          create(:collaboration, scraper: scraper, owner: user, pull: true, admin: true)
+        end
+
+        it { is_expected.to be_able_to(:show, scraper) }
+        it { is_expected.to be_able_to(:edit, scraper) }
+        it { is_expected.to be_able_to(:destroy, scraper) }
+        it { is_expected.to be_able_to(:update, scraper) }
+        it { is_expected.to be_able_to(:watch, scraper) }
+        it { is_expected.to be_able_to(:data, scraper) }
+      end
+
       context "when scraper is owned by an organization the user is a member of" do
         let(:user) { create(:user) }
         let(:organization) { create(:organization) }
