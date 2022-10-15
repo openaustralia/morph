@@ -48,6 +48,18 @@ class ScrapersController < ApplicationController
         progress: 5
       )
       scraper.save!
+      # Make sure that we add the user as a collaborator immediately so that
+      # if the scraper is private they can see it while it is being created.
+      # The actual collaborators list will get populated when the repository
+      # is synchronised.
+      scraper.collaborations.create!(
+        owner: current_user,
+        admin: true,
+        maintain: true,
+        pull: true,
+        push: true,
+        triage: true
+      )
       CreateScraperWorker.perform_async(T.must(scraper.id), T.must(authenticated_user.id),
                                         scraper_url(scraper))
       redirect_to scraper
