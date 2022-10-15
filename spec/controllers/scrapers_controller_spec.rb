@@ -65,7 +65,7 @@ describe ScrapersController do
         Scraper.create(owner: other_user, name: "a_scraper",
                        full_name: "otheruser/a_scraper")
         expect { delete :destroy, params: { id: "otheruser/a_scraper" } }
-          .to raise_error(CanCan::AccessDenied)
+          .to raise_error(ActiveRecord::RecordNotFound)
         expect(Scraper.count).to eq 1
       end
 
@@ -74,7 +74,7 @@ describe ScrapersController do
         Scraper.create(owner: other_organisation, name: "a_scraper",
                        full_name: "otherorg/a_scraper")
         expect { delete :destroy, params: { id: "otherorg/a_scraper" } }
-          .to raise_error(CanCan::AccessDenied)
+          .to raise_error(ActiveRecord::RecordNotFound)
         expect(Scraper.count).to eq 1
       end
     end

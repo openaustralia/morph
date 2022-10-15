@@ -4,6 +4,12 @@
 class ScrapersController < ApplicationController
   extend T::Sig
 
+  # Follow what GitHub does here. When you are not authorised to see
+  # a scraper it just gives a 404
+  rescue_from CanCan::AccessDenied do |_exception|
+    raise ActiveRecord::RecordNotFound
+  end
+
   before_action :authenticate_user!, except: %i[
     index show watchers history running
   ]
