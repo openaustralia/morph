@@ -84,10 +84,6 @@
           - else
             %p= button_link_to "sign in with GitHub", user_github_omniauth_authorize_path
 
-    - if current_user
-      .col-sm-3
-        = f.input :owner_id, collection: current_user.all_owners.map { |o| [o.nickname, o.api_key, { "data-content" => "#{owner_image(o, size: 20, show_tooltip: false)} #{o.nickname}" }] }, include_blank: false, hint: "Choose which api key you want to use", label: false
-
 %h2 Example
 %p
   To do the API query with the values above
@@ -140,14 +136,6 @@
     function update_query() {
       $("pre span.unescaped-query").html($("#query").val());
       $("pre span.query").html(encodeURIComponent($("#query").val()));
-      update_link_url();
-    }
-
-    function update_api_key() {
-      api_key = $("#scraper_owner_id").val();
-      $("#api-key").html(api_key);
-      $("pre span.unescaped-api-key").html(api_key);
-      $("pre span.api-key").html(encodeURIComponent(api_key));
       update_link_url();
     }
 
@@ -206,13 +194,11 @@
 
     update_full_name();
     update_query();
-    update_api_key();
     update_format();
     update_callback();
 
     $("#scraper-full-name").change(update_full_name).keyup(update_full_name);
     $("#query").change(update_query).keyup(update_query);
-    $("#scraper_owner_id").change(update_api_key);
     $("#format").change(update_format);
     $("#callback").change(update_callback).keyup(update_callback);
     $("#title").change(update_atom_query).keyup(update_atom_query);
