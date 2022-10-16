@@ -36,7 +36,6 @@ module Morph
 
     # Returns a list of all public repos. Works for both an individual and
     # an organization. List is sorted by push date
-    # TODO: Just pass in nickname of owner
     sig { params(owner_nickname: String).returns(T::Array[Repo]) }
     def public_repos(owner_nickname)
       repos = if user_nickname == owner_nickname
