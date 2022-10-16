@@ -39,16 +39,16 @@ module Morph
     # TODO: Just pass in nickname of owner
     sig { params(owner_nickname: String).returns(T::Array[Repo]) }
     def public_repos(owner_nickname)
-      if user_nickname == owner_nickname
-        octokit_client.repositories(owner_nickname,
-                                    sort: :pushed, type: :public)
-      else
-        # This call doesn't seem to support sort by pushed.
-        # So, doing it ourselves
-        repos = octokit_client.organization_repositories(owner_nickname,
-                                                         type: :public)
-        repos.sort { |a, b| b.pushed_at.to_i <=> a.pushed_at.to_i }
-      end
+      repos = if user_nickname == owner_nickname
+                octokit_client.repositories(owner_nickname,
+                                            sort: :pushed, type: :public)
+              else
+                # This call doesn't seem to support sort by pushed.
+                # So, doing it ourselves
+                repos = octokit_client.organization_repositories(owner_nickname,
+                                                                 type: :public)
+                repos.sort { |a, b| b.pushed_at.to_i <=> a.pushed_at.to_i }
+              end
       repos.map { |r| new_repo(r) }
     end
 
