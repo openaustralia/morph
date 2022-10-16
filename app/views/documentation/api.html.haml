@@ -15,7 +15,7 @@
 %h2 Parameters
 
 -# TODO: Write this whole form in a more concise way using the magic of simple_form
-= simple_form_for @scraper, html: { class: "form-horizontal" } do |f|
+= simple_form_for @scraper, html: { class: "form-horizontal" } do
   .string.input.optional.stringish.form-group#scraper-full-name-input
     %label.control-label.col-sm-1{ for: "scraper-full-name" } [scraper]
     .col-sm-5
