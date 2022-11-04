@@ -13,7 +13,7 @@ Jinja2==2.6
 Markdown==2.2.0
 Pygments==1.4
 SQLAlchemy==0.6.6
-Twisted==11.1.0
+Twisted==22.10.0
 Unidecode==0.04.9
 anyjson==0.3.3
 argparse==1.2.1
