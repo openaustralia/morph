@@ -82,7 +82,7 @@ GEM
       activeresource (~> 3.0)
     hpricot (0.8.4)
     htmlentities (4.3.1)
-    httparty (0.8.3)
+    httparty (0.10.0)
       multi_json (~> 1.0)
       multi_xml
     httpauth (0.1)
@@ -106,7 +106,6 @@ GEM
       i18n (~> 0.4)
       json
     monster_mash (0.3.0)
-      typhoeus (>= 0.3.3)
       typhoeus (>= 0.3.3)
     multi_json (1.1.0)
     multi_xml (0.5.1)
@@ -230,7 +229,7 @@ DEPENDENCIES
   highrise (= 3.0.3)
   hpricot (= 0.8.4)
   htmlentities (= 4.3.1)
-  httparty (= 0.8.3)
+  httparty (= 0.10.0)
   httpauth (= 0.1)
   httpclient (= 2.2.4)
   i18n (= 0.6.0)
