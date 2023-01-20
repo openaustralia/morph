@@ -42,7 +42,7 @@ html5lib==0.90
 httplib2==0.7.4
 imposm.parser==1.0.3
 jellyfish==0.2.0
-mechanize==0.2.5
+mechanize==0.4.6
 mock==0.7.2
 networkx==1.6
 ngram==3.3.0
