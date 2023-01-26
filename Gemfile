@@ -175,7 +175,7 @@ gem "coffee-rails"
 # Use jquery as the JavaScript library
 gem "jquery-rails"
 # Hold back jquery-ui-rails. We get Sprockets::FileNotFound with newer version
-gem "jquery-ui-rails", "~> 5"
+gem "jquery-ui-rails", "~> 6"
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 # Disabling so we can browser traces on newrelic
