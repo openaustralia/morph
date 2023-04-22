@@ -72,7 +72,7 @@ rdflib==3.1.0
 requests-foauth==0.1.1
 requests==1.0.4
 selenium==2.5.0
-simplejson==2.2.1
+simplejson==2.6.1
 suds==0.4
 tweepy==1.7.1
 tweetstream==1.1.1
