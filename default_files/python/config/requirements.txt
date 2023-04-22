@@ -70,7 +70,7 @@ python-stdnum==0.7
 pytz==2011k
 rdflib==3.1.0
 requests-foauth==0.1.1
-requests==1.0.4
+requests==2.20.0
 selenium==2.5.0
 simplejson==2.2.1
 suds==0.4
