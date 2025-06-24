@@ -36,15 +36,16 @@ jobs:
       STRIPE_PUBLISHABLE_KEY: pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
       STRIPE_SECRET_KEY: sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
       RAILS_ENV: test
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          # The MySQL docker container requires these environment variables to be set
-          # so we can create and migrate the test database.
-          # See: https://hub.docker.com/_/mysql
-          MYSQL_DATABASE: scraping_test
-          MYSQL_ROOT_PASSWORD: testrootpass
+    # services:
+    #   commented out - we'll use the mysql from `make services-up`
+    #   mysql:
+    #     image: mysql:8.0
+    #     env:
+    #       # The MySQL docker container requires these environment variables to be set
+    #       # so we can create and migrate the test database.
+    #       # See: https://hub.docker.com/_/mysql
+    #       MYSQL_DATABASE: scraping_test
+    #       MYSQL_ROOT_PASSWORD: testrootpass
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v3
