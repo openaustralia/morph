@@ -1,4 +1,4 @@
-class CreateLogLines < ActiveRecord::Migration
+class CreateLogLines < ActiveRecord::Migration[4.2]
   def change
     create_table :log_lines do |t|
       t.integer :run_id

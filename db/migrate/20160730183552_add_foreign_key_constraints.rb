@@ -1,4 +1,4 @@
-class AddForeignKeyConstraints < ActiveRecord::Migration
+class AddForeignKeyConstraints < ActiveRecord::Migration[4.2]
   def change
     add_foreign_key :api_queries, :scrapers
     add_foreign_key :connection_logs, :runs

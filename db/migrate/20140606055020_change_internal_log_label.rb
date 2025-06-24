@@ -1,4 +1,4 @@
-class ChangeInternalLogLabel < ActiveRecord::Migration
+class ChangeInternalLogLabel < ActiveRecord::Migration[4.2]
   def up
     LogLine.where({stream: "internal"}).update_all({stream: "internalerr"})
   end

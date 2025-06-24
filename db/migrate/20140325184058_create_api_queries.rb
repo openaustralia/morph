@@ -1,4 +1,4 @@
-class CreateApiQueries < ActiveRecord::Migration
+class CreateApiQueries < ActiveRecord::Migration[4.2]
   def change
     create_table :api_queries do |t|
       t.string :type

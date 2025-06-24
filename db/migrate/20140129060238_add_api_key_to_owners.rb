@@ -1,4 +1,4 @@
-class AddApiKeyToOwners < ActiveRecord::Migration
+class AddApiKeyToOwners < ActiveRecord::Migration[4.2]
   def change
     add_column :owners, :api_key, :string
     Owner.reset_column_information

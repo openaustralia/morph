@@ -1,4 +1,4 @@
-class AddDbChangesToRuns < ActiveRecord::Migration
+class AddDbChangesToRuns < ActiveRecord::Migration[4.2]
   def change
     add_column :runs, :tables_added, :integer
     add_column :runs, :tables_removed, :integer

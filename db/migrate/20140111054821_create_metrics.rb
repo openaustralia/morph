@@ -1,4 +1,4 @@
-class CreateMetrics < ActiveRecord::Migration
+class CreateMetrics < ActiveRecord::Migration[4.2]
   def change
     create_table :metrics do |t|
       t.float :wall_time
