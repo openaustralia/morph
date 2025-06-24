@@ -35,6 +35,7 @@ jobs:
       # Stripe payment processor
       STRIPE_PUBLISHABLE_KEY: pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
       STRIPE_SECRET_KEY: sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+      RAILS_ENV: test
     services:
       mysql:
         image: mysql:8.0
