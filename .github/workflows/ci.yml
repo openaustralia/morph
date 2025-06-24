@@ -62,7 +62,7 @@ jobs:
           bundler-cache: true
 
       - name: Prepare database for testing
-        run: bundle exec rails db:prepare
+        run: bundle exec rails db:create db:migrate
 
       - name: Run rspec
         run: bundle exec rspec spec -fd
