@@ -52,9 +52,9 @@ jobs:
         run: cp config/database-ci.yml config/database.yml
 
       - name: Start Services
-        uses: make services-up
-        with:
-          stack-version: 7.5.1
+        run: make services-up
+        # with:
+        #   stack-version: 7.5.1
 
       - name: Install Ruby (version given by .ruby-version) and Bundler
         uses: ruby/setup-ruby@v1
