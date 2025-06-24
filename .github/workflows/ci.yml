@@ -11,22 +11,22 @@ jobs:
   rspec:
     runs-on: ubuntu-latest
     env:
-      # GITHUB_APP_ID: xxxxxx
-      # GITHUB_APP_NAME: xxxxxxxxxx
-      # GITHUB_APP_CLIENT_ID: xxxxxxxxxxxxxxxxxxxx
-      # GITHUB_APP_CLIENT_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      GITHUB_APP_ID: xxxxxx
+      GITHUB_APP_NAME: xxxxxxxxxx
+      GITHUB_APP_CLIENT_ID: xxxxxxxxxxxxxxxxxxxx
+      GITHUB_APP_CLIENT_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       ELASTICSEARCH_URL: http://127.0.0.1:9288
       SECRET_KEY_BASE: c788cda5c584f5f4746b5f133dbc10e1fe0c718692358f27ef44cc45b8df4709c999771adb3254ac91b06001851aa0f4a5fa9b5ba44482c7406b6f709e715f37
-      # DIGITAL_OCEAN_CLIENT_ID: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-      # DIGITAL_OCEAN_API_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      DIGITAL_OCEAN_CLIENT_ID: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      DIGITAL_OCEAN_API_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       # Secret for authenticating sync / faye
       SYNC_AUTH_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       # Secret for single sign on authentication for Discourse
-      # DISCOURSE_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxx
-      # DISCOURSE_URL: http://discuss.dev.morph.io
+      DISCOURSE_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxx
+      DISCOURSE_URL: http://discuss.dev.morph.io
       # Used by mitmproxy to communicate via the api back to morph
-      # MITMPROXY_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxx
-      # MORPH_URL: http://localhost:5100
+      MITMPROXY_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxx
+      MORPH_URL: http://localhost:5100
       # Error reporting to Honeybadger
       HONEYBADGER_API_KEY: xxxxxxxx
       # We're using Cuttlefish to send mail
