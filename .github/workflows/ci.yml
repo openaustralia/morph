@@ -68,7 +68,7 @@ jobs:
           sudo mysql -proot -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD, INDEX on *.* TO '${{ env.DB_USER }}'@'localhost' WITH GRANT OPTION;"
           echo
           echo "making database"
-          mysql -e "CREATE DATABASE ${{ env.DB_DATABASE }};"" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }};
+          mysql -e "CREATE DATABASE ${{ env.DB_DATABASE }};"" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}";
 
       - name: Start Services
         run: make services-up
