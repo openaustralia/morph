@@ -61,14 +61,15 @@ jobs:
           set -euv
           sudo /etc/init.d/mysql start
           echo
-          echo "Creating db user"
+          echo "Creating database"
+          mysql -proot -e "CREATE DATABASE ${{ env.DB_DATABASE }};"
+          echo
+          echo "Creating database user"
           sudo mysql -proot -e "CREATE USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';"
           echo
           echo "Granting powers to db users"
-          sudo mysql -proot -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD, INDEX on *.* TO '${{ env.DB_USER }}'@'localhost' WITH GRANT OPTION;"
+          sudo mysql -proot -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD, INDEX on ${{ env.DB_DATABASE }}.* TO '${{ env.DB_USER }}'@'localhost' WITH GRANT OPTION;"
           echo
-          echo "making database"
-          mysql -e "CREATE DATABASE ${{ env.DB_DATABASE }};"" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}";
 
       - name: Start Services
         run: make services-up
