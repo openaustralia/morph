@@ -82,6 +82,9 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: "pull OpenAustralia docker images"
+        run: docker pull openaustralia/buildstep:latest
+
       - name: Prepare database for testing
         run: bundle exec rails db:create db:migrate
 
