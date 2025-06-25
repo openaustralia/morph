@@ -59,8 +59,8 @@ jobs:
       - name: Set up MySQL
         run: |
           sudo /etc/init.d/mysql start
-          sudo mysql -e "CREATE USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';"
-          sudo mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD, INDEX on *.* TO '${{ env.DB_USER }}'@'localhost' WITH GRANT OPTION;"
+          sudo mysql -proot -e "CREATE USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';"
+          sudo mysql -proot -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD, INDEX on *.* TO '${{ env.DB_USER }}'@'localhost' WITH GRANT OPTION;"
           mysql -e "CREATE DATABASE ${{ env.DB_DATABASE }};"" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }};
 
       - name: Start Services
