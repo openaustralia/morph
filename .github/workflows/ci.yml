@@ -68,7 +68,7 @@ jobs:
           sudo mysql -proot -e "CREATE USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';"
           echo
           echo "Granting powers to db users"
-          sudo mysql -proot -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD, INDEX on ${{ env.DB_DATABASE }}.* TO '${{ env.DB_USER }}'@'localhost' WITH GRANT OPTION;"
+          sudo mysql -proot -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD, INDEX on *.* TO '${{ env.DB_USER }}'@'localhost' WITH GRANT OPTION;"
           echo
           mysqladmin ping --user=${{ env.DB_USER }} --password=${{ env.DB_PASSWORD }} --port 3306 --host localhost
 
