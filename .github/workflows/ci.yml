@@ -36,22 +36,32 @@ jobs:
       STRIPE_PUBLISHABLE_KEY: pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
       STRIPE_SECRET_KEY: sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
       RAILS_ENV: test
+      DB_DATABASE: scraping_test
+      DB_USER: scraping
+      DB_PASSWORD: password
     # services:
-    #   commented out - we'll use the mysql from `make services-up`
     #   mysql:
     #     image: mysql:8.0
     #     env:
-    #       # The MySQL docker container requires these environment variables to be set
-    #       # so we can create and migrate the test database.
-    #       # See: https://hub.docker.com/_/mysql
     #       MYSQL_DATABASE: scraping_test
-    #       MYSQL_ROOT_PASSWORD: testrootpass
+    #       MYSQL_USER: scraping
+    #       MYSQL_ROOT_PASSWORD: password
+    #     ports:
+    #     - 33306:3306
+    #     options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v3
 
       - name: configure rails database
         run: cp config/database-ci.yml config/database.yml
+
+      - name: Set up MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          sudo mysql -e "CREATE USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';"
+          sudo mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD, INDEX on *.* TO '${{ env.DB_USER }}'@'localhost' WITH GRANT OPTION;"
+          mysql -e "CREATE DATABASE ${{ env.DB_DATABASE }};"" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }};
 
       - name: Start Services
         run: make services-up
