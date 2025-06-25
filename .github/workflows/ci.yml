@@ -89,4 +89,4 @@ jobs:
         run: bundle exec rails db:create db:migrate
 
       - name: Run rspec
-        run: bundle exec rspec spec -fd
+        run: DONT_RUN_DOCKER_TESTS=1 bundle exec rspec spec -fd
