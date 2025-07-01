@@ -56,3 +56,6 @@ services-up:
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml up --build -d
 services-down:
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml down --remove-orphans
+
+test:
+	RAILS_ENV=test bundle exec rspec
