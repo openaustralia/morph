@@ -11,7 +11,6 @@
 * Email alerts for broken scrapers
 
 ## Dependencies
-
 Ruby, Docker, MySQL, SQLite 3, Redis, mitmproxy.
 (See below for more details about installing Docker)
 
@@ -27,7 +26,6 @@ User-facing:
 * [openaustralia/scraperwiki-ruby](https://github.com/openaustralia/scraperwiki-ruby) - Fork of [scraperwiki/scraperwiki-ruby](https://github.com/scraperwiki/scraperwiki-ruby) updated to use morph.io naming conventions
 
 Docker images:
-
 * [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Base image for running scrapers in containers
 
 ## Installing Docker
@@ -76,7 +74,6 @@ You'll need to create an application on GitHub So that morph.io can talk to GitH
 * [Create GitHub application on the openaustralia organization for use in production](https://github.com/organizations/openaustralia/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
 
 You will need to add add and change a few values manually:
-
 * Disable "Expire user authorization tokens"
 * Add an image - you can use the standard logo at `app/assets/images/logo.png` (you can add this after the app is created)
 * If the webhooks are active and being used in production (currently not the case) then
@@ -85,7 +82,7 @@ You will need to add add and change a few values manually:
 Next you'll need to fill in some values in the `.env` file which come from the GitHub App that you've just created.
 
 * `GITHUB_APP_ID` - Look for "App ID" near the top of the page. This should be an integer
-* `GITHUB_APP_NAME` - Look for "Public link". The name is what appears after "<https://github.com/apps/>". It's essentially a url happy version of the name you gave the app.
+* `GITHUB_APP_NAME` - Look for "Public link". The name is what appears after "https://github.com/apps/". It's essentially a url happy version of the name you gave the app.
 * `GITHUB_APP_CLIENT_ID` - Look for "Client ID" near the top of the page.
 * `GITHUB_APP_CLIENT_SECRET` - Go to "Generate a new client secret".
 
@@ -117,9 +114,7 @@ By default, RSpec will skip tests that have been tagged as being slow. To change
 
 By default, RSpec will run certain tests against a running Docker server. These tests are quite slow, but not have been tagged as slow. To stop Rspec from running these tests, add the following to your `.env`:
 
-    ```
     DONT_RUN_DOCKER_TESTS=1
-    ```
 
 ### Guard Livereload
 
@@ -131,9 +126,9 @@ Guard will also run tests when needed. Some tests do integration tests against a
 running docker server. These particular tests are very slow. If you want to
 disable them,
 
-    ```bash
-    DONT_RUN_DOCKER_TESTS=1 bundle exec guard
-    ```
+```
+DONT_RUN_DOCKER_TESTS=1 bundle exec guard
+```
 
 ### Mail in development
 
@@ -158,9 +153,9 @@ Discourse runs in a container and should usually be restarted automatically by d
 
 However, if the container goes away for some reason, it can be restarted:
 
-    ```
-    root@morph:/var/discourse# ./launcher rebuild app
-    ```
+```
+root@morph:/var/discourse# ./launcher rebuild app
+```
 
 This will pull down the latest docker image, rebuild, and restart the container.
 
@@ -188,7 +183,7 @@ Once the box is created and provisioned, deploy the application to your Vagrant 
 
     cap local deploy
 
-Now visit <https://dev.morph.io/>
+Now visit https://dev.morph.io/
 
 ## Production provisioning and deployment
 
@@ -204,21 +199,19 @@ When you've changed the Ansible playbooks to modify the infrastructure you'll wa
 
 We're using Let's Encrypt for SSL certificates. It's not 100% automated.
 On a completely fresh install (with a new domain) as root:
-
-    ```
-    certbot --nginx certonly -m contact@oaf.org.au --agree-tos
-    ```
+```
+certbot --nginx certonly -m contact@oaf.org.au --agree-tos
+```
 
 It should show something like this:
-
-    ```
-    Which names would you like to activate HTTPS for?
-    -------------------------------------------------------------------------------
-    1: morph.io
-    2: api.morph.io
-    3: faye.morph.io
-    4: help.morph.io
-    ```
+```
+Which names would you like to activate HTTPS for?
+-------------------------------------------------------------------------------
+1: morph.io
+2: api.morph.io
+3: faye.morph.io
+4: help.morph.io
+```
 
 Leave your answer your blank which will install the certificate for all of them
 
