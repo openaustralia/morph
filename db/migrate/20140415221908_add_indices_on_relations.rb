@@ -1,4 +1,4 @@
-class AddIndicesOnRelations < ActiveRecord::Migration
+class AddIndicesOnRelations < ActiveRecord::Migration[4.2]
   def change
     add_index :alerts, :user_id
     # I'm imagining the two below will be better as a compound index but do the dumb and

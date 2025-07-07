@@ -1,4 +1,4 @@
-class AddDomainIdToConnectionLogs < ActiveRecord::Migration
+class AddDomainIdToConnectionLogs < ActiveRecord::Migration[4.2]
   class ConnectionLog < ActiveRecord::Base
   end
 

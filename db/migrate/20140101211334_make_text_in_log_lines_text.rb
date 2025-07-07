@@ -1,4 +1,4 @@
-class MakeTextInLogLinesText < ActiveRecord::Migration
+class MakeTextInLogLinesText < ActiveRecord::Migration[4.2]
   def up
     change_column :log_lines, :text, :text
   end

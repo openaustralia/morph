@@ -1,4 +1,4 @@
-class DropDelayedJobTable < ActiveRecord::Migration
+class DropDelayedJobTable < ActiveRecord::Migration[4.2]
   def change
     drop_table "delayed_jobs" do |t|
       t.integer  "priority",   default: 0, null: false

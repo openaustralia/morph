@@ -1,4 +1,4 @@
-class SwitchUsersToSti < ActiveRecord::Migration
+class SwitchUsersToSti < ActiveRecord::Migration[4.2]
   class User < ActiveRecord::Base
   end
 

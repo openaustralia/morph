@@ -1,4 +1,4 @@
-class AddCollaboratorsToScrapers < ActiveRecord::Migration[5.2]
+class AddCollaboratorsToScrapers < ActiveRecord::Migration[4.2][5.2]
   def change
     create_table :collaborations do |t|
       t.references :scraper, foreign_key: true, type: :integer, null: false

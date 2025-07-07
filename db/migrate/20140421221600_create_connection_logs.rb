@@ -1,4 +1,4 @@
-class CreateConnectionLogs < ActiveRecord::Migration
+class CreateConnectionLogs < ActiveRecord::Migration[4.2]
   def change
     create_table :connection_logs do |t|
       t.integer :run_id

@@ -1,4 +1,4 @@
-class SimplifyConnectionLogsTable < ActiveRecord::Migration
+class SimplifyConnectionLogsTable < ActiveRecord::Migration[4.2]
   def change
     # Removing a bunch of data that we were wanting to collect but weren't
     # actually using. Doing this because this table was growing very large

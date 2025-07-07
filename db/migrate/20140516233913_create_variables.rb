@@ -1,4 +1,4 @@
-class CreateVariables < ActiveRecord::Migration
+class CreateVariables < ActiveRecord::Migration[4.2]
   def change
     create_table :variables do |t|
       t.string :name

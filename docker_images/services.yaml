@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  elasticsearch:
+    image: elasticsearch:7.8.0
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - network
+    ports:
+      - 9288:9200
+
+  redis:
+    image: redis:6
+    networks:
+      - network
+    ports:
+      - 6379:6379
+
+  # mysql:
+  #   image: mysql
+  #   ports:
+  #     - 3306:3306
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: testrootpass
+
+networks:
+  network: {}

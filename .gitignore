@@ -48,3 +48,4 @@ provisioning/roles/morph-app/files/ssl/dev.morph.io.pem
 provisioning/roles/geerlingguy.elasticsearch/
 .venv/
 .vscode
+vendor/bundle/*

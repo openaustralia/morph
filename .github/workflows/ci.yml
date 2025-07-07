@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    # branches:
+    #   - main
+    #   - master
+  pull_request:
+
+jobs:
+  rspec:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_APP_ID: xxxxxx
+      GITHUB_APP_NAME: xxxxxxxxxx
+      GITHUB_APP_CLIENT_ID: xxxxxxxxxxxxxxxxxxxx
+      GITHUB_APP_CLIENT_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      ELASTICSEARCH_URL: http://127.0.0.1:9288
+      SECRET_KEY_BASE: c788cda5c584f5f4746b5f133dbc10e1fe0c718692358f27ef44cc45b8df4709c999771adb3254ac91b06001851aa0f4a5fa9b5ba44482c7406b6f709e715f37
+      DIGITAL_OCEAN_CLIENT_ID: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      DIGITAL_OCEAN_API_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      # Secret for authenticating sync / faye
+      SYNC_AUTH_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      # Secret for single sign on authentication for Discourse
+      DISCOURSE_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxx
+      DISCOURSE_URL: http://discuss.dev.morph.io
+      # Used by mitmproxy to communicate via the api back to morph
+      MITMPROXY_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxx
+      MORPH_URL: http://localhost:5100
+      # Error reporting to Honeybadger
+      HONEYBADGER_API_KEY: xxxxxxxx
+      # We're using Cuttlefish to send mail
+      CUTTLEFISH_USERNAME: xxxxxxx
+      CUTTLEFISH_PASSWORD: xxxxxxxxxxxxxxxxxxxx
+      # Stripe payment processor
+      STRIPE_PUBLISHABLE_KEY: pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+      STRIPE_SECRET_KEY: sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+      RAILS_ENV: test
+      DB_DATABASE: scraping_test
+      DB_USER: scraping
+      DB_PASSWORD: password
+    # services:
+    #   mysql:
+    #     image: mysql:8.0
+    #     env:
+    #       MYSQL_DATABASE: scraping_test
+    #       MYSQL_USER: scraping
+    #       MYSQL_ROOT_PASSWORD: password
+    #     ports:
+    #     - 33306:3306
+    #     options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+
+      - name: configure rails database
+        run: cp config/database-ci.yml config/database.yml
+
+      - name: Set up MySQL
+        run: |
+          set -euv
+          sudo /etc/init.d/mysql start
+          echo
+          echo "Creating database"
+          sudo mysql -proot -e "CREATE DATABASE ${{ env.DB_DATABASE }};"
+          echo
+          echo "Creating database user"
+          sudo mysql -proot -e "CREATE USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';"
+          echo
+          echo "Granting powers to db users"
+          sudo mysql -proot -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD, INDEX on *.* TO '${{ env.DB_USER }}'@'localhost' WITH GRANT OPTION;"
+          echo
+          mysqladmin ping --user=${{ env.DB_USER }} --password=${{ env.DB_PASSWORD }} --port 3306 --host localhost
+
+      - name: Start Services
+        run: make services-up
+        # with:
+        #   stack-version: 7.5.1
+
+      - name: Install Ruby (version given by .ruby-version) and Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: "pull OpenAustralia docker images"
+        run: docker pull openaustralia/buildstep:latest
+
+      - name: Prepare database for testing
+        run: bundle exec rails db:create db:migrate
+
+      - name: Run rspec
+        run: DONT_RUN_DOCKER_TESTS=1 bundle exec rspec spec -fd

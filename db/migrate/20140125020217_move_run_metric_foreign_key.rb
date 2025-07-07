@@ -1,4 +1,4 @@
-class MoveRunMetricForeignKey < ActiveRecord::Migration
+class MoveRunMetricForeignKey < ActiveRecord::Migration[4.2]
   def change
     add_column :metrics, :run_id, :integer
     reversible do |dir|

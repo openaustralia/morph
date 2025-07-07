@@ -1,4 +1,4 @@
-class CreateContributions < ActiveRecord::Migration
+class CreateContributions < ActiveRecord::Migration[4.2]
   def change
     create_table :contributions do |t|
       t.integer :scraper_id

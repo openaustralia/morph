@@ -231,11 +231,14 @@ To work around this, you'll have to rebuild the mitmdump container. Look in `/va
 
 Once that's done, you'll need to build a new version of the `openaustralia/buildstep`:
 
-* `cd`
-* `git clone https://github.com/openaustralia/buildstep.git`
-* `cd buildstep`
-* `cp /var/www/current/docker_images/morph-mitmdump/mitmproxy/mitmproxy-ca-cert.pem .`
-* `docker image build -t openaustralia/buildstep:latest .`
+```bash
+cd
+git clone https://github.com/openaustralia/buildstep.git`
+cd buildstep
+cp /var/www/current/docker_images/morph-mitmdump/mitmproxy/mitmproxy-ca-cert.pem .
+ln -s Dockerfile.heroku-24  Dockerfile
+docker image build -t openaustralia/buildstep:latest .
+```
 
 You should now be able to see in `docker image list --all` that your new image is ready. The next time you run a scraper it will be rebuilt using the new buildstep image.
 
