@@ -51,6 +51,10 @@ jobs:
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v3
+      - uses: qltysh/qlty-action/coverage@v1
+        with:
+          token: "{{secrets.QLTY_COVERAGE_TOKEN}}"
+          files: target/lcov.info
 
       - name: configure rails database
         run: cp config/database-ci.yml config/database.yml
