@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/openaustralia/morph.png?branch=master)](https://travis-ci.com/openaustralia/morph) [![Code Climate](https://codeclimate.com/github/openaustralia/morph.png)](https://codeclimate.com/github/openaustralia/morph)
+[![CI](https://github.com/openaustralia/morph/actions/workflows/ci.yml/badge.svg)](https://github.com/openaustralia/morph/actions/workflows/ci.yml)
 
 # morph.io: A scraping platform
 
