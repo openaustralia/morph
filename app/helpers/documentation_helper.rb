@@ -12,7 +12,7 @@ module DocumentationHelper
 
   sig { params(text: String, file: String).returns(String) }
   def improve_button(text, file)
-    link_to text, "https://github.com/openaustralia/morph/blob/master/app/views/documentation/#{file}", class: "btn btn-default improve pull-right"
+    link_to text, "https://github.com/openaustralia/morph/blob/main/app/views/documentation/#{file}", class: "btn btn-default improve pull-right"
   end
 
   sig { params(text: String, scraper: Scraper, user: T.nilable(User), query: String).returns(String) }
