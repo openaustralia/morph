@@ -107,7 +107,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Run rubocop
+      - name: Rubocop
         run: bundle exec rubocop
-      - name: Run rubocop
+      - name: Haml Lint
         run: bundle exec haml-lint
