@@ -550,6 +550,8 @@ GEM
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
+    simplecov-teamcity-summary (1.0.0)
+      simplecov
     simplecov_json_formatter (0.1.4)
     sinatra (2.2.2)
       mustermann (~> 2.0)
@@ -724,6 +726,7 @@ DEPENDENCIES
   sidekiq-limit_fetch
   simple_form
   simplecov
+  simplecov-teamcity-summary
   sinatra (>= 1.3.0)
   sitemap_generator
   sorbet-static-and-runtime
