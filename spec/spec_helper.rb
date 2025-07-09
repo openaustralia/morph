@@ -2,8 +2,8 @@
 # frozen_string_literal: true
 
 require "simplecov"
-SimpleCov.start 'rails' do
-  formatter SimpleCov::Formatter::JSONFormatter  if ENV['CI']
+SimpleCov.start "rails" do
+  formatter SimpleCov::Formatter::JSONFormatter if ENV["CI"]
   track_files "**/*.rb"
   SimpleCov.minimum_coverage 50
 end

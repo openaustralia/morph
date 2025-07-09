@@ -154,7 +154,7 @@ group :test do
   gem "rails-controller-testing"
   gem "rspec-activemodel-mocks"
   gem "simplecov", require: false
-  gem 'simplecov-teamcity-summary', require: false
+  gem "simplecov-teamcity-summary", require: false
   gem "timecop"
   gem "vcr"
   gem "webmock"
