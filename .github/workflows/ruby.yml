@@ -97,3 +97,17 @@ jobs:
         with:
           token: "{{secrets.QLTY_COVERAGE_TOKEN}}"
           files: target/lcov.info
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+      
+      - name: Install Ruby (version given by .ruby-version) and Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Run rubocop
+        run: bundle exec rubocop
+      
