@@ -51,10 +51,6 @@ jobs:
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v3
-      - uses: qltysh/qlty-action/coverage@v1
-        with:
-          token: "{{secrets.QLTY_COVERAGE_TOKEN}}"
-          files: target/lcov.info
 
       - name: configure rails database
         run: cp config/database-ci.yml config/database.yml
@@ -92,6 +88,12 @@ jobs:
         run: bundle exec rails db:create db:migrate
 
       - name: Run rspec
+        run: DONT_RUN_DOCKER_TESTS=1 bundle exec rspec spec -fd
+      
+      - name: Report coverage
+        uses: qltysh/qlty-action/coverage@v1
         env:
           QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
-        run: DONT_RUN_DOCKER_TESTS=1 bundle exec rspec spec -fd
+        with:
+          token: "{{secrets.QLTY_COVERAGE_TOKEN}}"
+          files: target/lcov.info
