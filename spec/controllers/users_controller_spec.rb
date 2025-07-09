@@ -7,7 +7,7 @@ RSpec.describe UsersController, type: :controller do
   let(:user) { create(:user) }
 
   describe "GET #index" do
-    context "as an authenticated user" do
+    context "when authenticated" do
       before { sign_in user }
 
       it "returns http success for html" do
@@ -29,7 +29,7 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    context "as a guest" do
+    context "when a guest" do
       it "returns http success" do
         get :index
         expect(response).to have_http_status(:success)
