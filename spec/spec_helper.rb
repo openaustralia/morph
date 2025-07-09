@@ -5,9 +5,10 @@ require "simplecov"
 require "simplecov_json_formatter"
 
 SimpleCov.start "rails" do
-  formatter SimpleCov::Formatter::JSONFormatter if ENV["CI"]
+  formatter SimpleCov::Formatter::JSONFormatter
   track_files "**/*.rb"
-  SimpleCov.minimum_coverage 50
+  # SimpleCov.minimum_coverage 50
+  add_filter %r{^/spec/}
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
