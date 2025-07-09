@@ -1,4 +1,4 @@
-[![CI](https://github.com/openaustralia/morph/actions/workflows/ci.yml/badge.svg)](https://github.com/openaustralia/morph/actions/workflows/ci.yml)
+[![CI](https://github.com/openaustralia/morph/actions/workflows/ruby.yml/badge.svg)](https://github.com/openaustralia/morph/actions/workflows/ruby.yml)
 [![Maintainability](https://qlty.sh/gh/openaustralia/projects/morph/maintainability.png)](https://qlty.sh/gh/openaustralia/projects/morph)
 
 # morph.io: A scraping platform
