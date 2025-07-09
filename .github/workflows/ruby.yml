@@ -97,7 +97,7 @@ jobs:
         with:
           token: "{{secrets.QLTY_COVERAGE_TOKEN}}"
           files: target/lcov.info
-  rubocop:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
@@ -107,7 +107,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-
       - name: Run rubocop
         run: bundle exec rubocop
-      
+      - name: Run rubocop
+        run: bundle exec haml-lint
