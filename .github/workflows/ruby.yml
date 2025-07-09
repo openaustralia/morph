@@ -90,13 +90,11 @@ jobs:
       - name: Run rspec
         run: DONT_RUN_DOCKER_TESTS=1 bundle exec rspec spec -fd
       
-      - name: Report coverage
-        uses: qltysh/qlty-action/coverage@v1
-        env:
-          QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+      - uses: qltysh/qlty-action/coverage@v1
         with:
-          token: "{{secrets.QLTY_COVERAGE_TOKEN}}"
-          files: target/lcov.info
+          oidc: true
+          files: coverage/coverage.json
+
   lint:
     runs-on: ubuntu-latest
     steps:
