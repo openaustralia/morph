@@ -89,3 +89,23 @@ jobs:
 
       - name: Run rspec
         run: DONT_RUN_DOCKER_TESTS=1 bundle exec rspec spec -fd
+      
+      - uses: qltysh/qlty-action/coverage@v1
+        with:
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: coverage/coverage.json
+          
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+      
+      - name: Install Ruby (version given by .ruby-version) and Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Rubocop
+        run: bundle exec rubocop
+      - name: Haml Lint
+        run: bundle exec haml-lint

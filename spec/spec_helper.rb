@@ -2,7 +2,14 @@
 # frozen_string_literal: true
 
 require "simplecov"
-SimpleCov.start "rails"
+require "simplecov_json_formatter"
+
+SimpleCov.start "rails" do
+  formatter SimpleCov::Formatter::JSONFormatter
+  track_files "**/*.rb"
+  # SimpleCov.minimum_coverage 50
+  add_filter %r{^/spec/}
+end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= "test"

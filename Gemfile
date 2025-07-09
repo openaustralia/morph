@@ -148,13 +148,13 @@ end
 
 group :test do
   gem "capybara"
-  gem "codeclimate-test-reporter", require: nil
   gem "database_cleaner"
   gem "factory_bot_rails"
   gem "nokogiri"
   gem "rails-controller-testing"
   gem "rspec-activemodel-mocks"
   gem "simplecov", require: false
+  gem "simplecov-teamcity-summary", require: false
   gem "timecop"
   gem "vcr"
   gem "webmock"
