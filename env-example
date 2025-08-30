@@ -10,7 +10,7 @@ GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # In development you can run elasticsearch on docker very easily which means
 # you don't have to install it.
-# Just use: docker-compose up
+# Just use: docker compose up
 # Then, point it at the right place. You can get the ip address of docker
 # by running: docker-machine ip
 # If you're on Linux you can probably comment the line below out

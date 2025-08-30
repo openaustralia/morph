@@ -46,7 +46,7 @@ Install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/).
 Morph needs Elasticsearch to run. We've made things easier for development by using docker
 to run Elasticsearch.
 
-    docker-compose up
+    docker compose up
 
 ## To Install Morph
 
