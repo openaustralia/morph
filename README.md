@@ -3,7 +3,7 @@
 
 # morph.io: A scraping platform
 
-* A [Heroku](https://www.heroku.com/) for [Scrapers](https://en.wikipedia.org/wiki/Web_scraping)
+* A [Heroku](https://www.heroku.com/) lookalike system for [Scrapers](https://en.wikipedia.org/wiki/Web_scraping)
 * All code and collaboration through [GitHub](https://github.com/)
 * Write your scrapers in Ruby, Python, PHP, Perl or JavaScript (NodeJS, PhantomJS)
 * Simple API to grab data
@@ -15,7 +15,7 @@
 Ruby, Docker, MySQL, SQLite 3, Redis, mitmproxy.
 (See below for more details about installing Docker)
 
-Development is supported on Linux (Ubuntu 20.04) and Mac OS X.
+Development is supported on Linux (Ubuntu 20.04) and Mac OS X and later versions using docker compose.
 
 ## Repositories
 
@@ -145,8 +145,8 @@ This section will not be relevant to most people. It will however be relevant if
 
 We're using [Ansible Vault](https://docs.ansible.com/ansible/2.4/vault.html) to encrypt certain files, like the private key for the SSL certificate.
 
-To make this work you will need to put the password in a
-file at `~/.infrastructure_ansible_vault_pass.txt`. This is the same password as used in the [openaustralia/infrastructure](https://github.com/openaustralia/infrastructure) GitHub repository.
+To make this work you will need to put the password in a file at `../.infrastructure_ansible_vault_pass.txt`.
+This is the same password as used in the [openaustralia/infrastructure](https://github.com/openaustralia/infrastructure) GitHub repository.
 
 ## Restarting Discourse
 
@@ -168,7 +168,36 @@ Install [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbo
 
 Install a couple of Vagrant plugins: `vagrant plugin install vagrant-hostsupdater vagrant-disksize`
 
-Install [rbenv](https://github.com/rbenv/rbenv) and [ruby-build](https://github.com/rbenv/ruby-build#readme).
+Install a Ruby Version Manager, for example (from latest to oldest):
+- [mise](https://mise.jdx.dev/) - modern, polyglot and fast (includes language installer)
+- [chruby](https://github.com/postmodern/chruby) and [ruby-install](https://github.com/postmodern/ruby-install) - a lightweight alternative
+- [rbenv](https://github.com/rbenv/rbenv) and [ruby-build](https://github.com/rbenv/ruby-build#readme) - the leader between 2015 and 2020
+- [rvm](https://rvm.io/) - used on production and staging, the old faithful and well known ruby version manager
+
+If on Ubuntu, install libreadline-dev: `sudo apt install libreadline-dev libsqlite3-dev`
+
+Install the required ruby version: `rbenv install`
+
+Install capistrano: `gem install capistrano`
+
+Run `make roles` to install some required ansible roles.
+
+Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
+
+
+## Production devops development
+
+> This method defaults to creating a 4Gb VirtualBox VM, which can strain an 8Gb Mac. We suggest tweaking the Vagrantfile to restrict ram usage to 2Gb at first, or using a machine with at least 12Gb ram.
+
+Install [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbox.org) and [Ansible](http://www.ansible.com/).
+
+Install a couple of Vagrant plugins: `vagrant plugin install vagrant-hostsupdater vagrant-disksize`
+
+Install a Ruby Version Manager, for example (from latest to oldest): 
+- [mise](https://mise.jdx.dev/) - modern, polyglot and fast (includes language installer)
+- [chruby](https://github.com/postmodern/chruby) and [ruby-install](https://github.com/postmodern/ruby-install) - a lightweight alternative
+- [rbenv](https://github.com/rbenv/rbenv) and [ruby-build](https://github.com/rbenv/ruby-build#readme) - the leader between 2015 and 2020
+- [rvm](https://rvm.io/) - used on production and staging, the old faithful and well known ruby version manager
 
 If on Ubuntu, install libreadline-dev: `sudo apt install libreadline-dev libsqlite3-dev`
 
