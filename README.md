@@ -11,13 +11,105 @@
 * Process isolation via [Docker](https://www.docker.com/)
 * Email alerts for broken scrapers
 
-## Dependencies
-Ruby, Docker, MySQL, SQLite 3, Redis, mitmproxy.
-(See below for more details about installing Docker)
+## Hardware requirements
 
-Development is supported on Linux (Ubuntu 20.04) and Mac OS X and later versions using docker compose.
+A system capable of running a supported version of Ubuntu LTS, macOS/X or MS Windows is required. 
+The Virtual machines / docker containers take around 4 GB, so 8 GB of memory is probably the minimum,
+preferably 16 Gb if you use an IDE with all the bells and whistles.
 
-## Repositories
+Application Code Development Environment
+----------------------------------------
+
+### Requirements
+
+Docker compose is used to provide a consistent development environment.
+
+Install either a supported version of [Docker Engine](https://docs.docker.com/engine/install/)
+directly or as part of [Docker Desktop](https://docs.docker.com/desktop/)
+develop the Ruby on Rails application code base.
+
+* Docker compose is used to run up containers for
+    * elasticsearch
+    * mitmproxy,
+    * MySQL,
+    * Redis,
+    * Ruby, SQLite 3 on main development container,
+ 
+  (See below for more details about installing Docker)
+
+### Installing Docker
+
+#### On Linux
+
+Install [Docker engine](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/) for Ubuntu.
+
+Your user account should be able to manipulate Docker (just add your user to the `docker` group).
+
+#### On Mac OS X
+
+Install [Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/).
+
+### Starting docker containers
+
+Morph needs various services to run. We've made things easier for development by using docker
+to run Elasticsearch and the other services as well as the web container for the ruby on rails application itself.
+
+    docker compose up
+
+## Configuring morph development environment
+
+    bundle install
+    cp config/database.yml.example config/database.yml
+    cp env-example .env
+
+Edit `config/database.yml` with your database settings and `.env` with your local environment
+
+Infrastructure as Code Development Environment
+----------------------------------------------
+
+### Requirements
+
+Vagrant is used with the virtualbox provider to provide a local staging environment to develop
+the ansible playbooks and roles used to provision the servers.
+
+Install [Virtualbox](https://www.virtualbox.org/wiki/Downloads) as a provider
+
+Install [Vagrant](https://developer.hashicorp.com/vagrant/install)
+
+Install a Tool version manager, for example [mise](https://mise.jdx.dev/getting-started.html) to manage tool versions
+
+Install python using your tool manager: `mise install python`
+
+Check `python --version` matches the contents of `.python-version`
+
+Install Ansible using `pip install -r provisioning/requirements.txt`
+
+Install ansible roles as per the comment on `provisioning/requirements.yml` - note these roles are ignored (as per `.gitignore`)
+and are thus **not** committed to the git repo
+```
+cd provisioning 
+ansible-galaxy install -r requirements.yml -p roles
+```
+
+If you are using `mise` then ensure the idomatic version files for ruby (`.ruby-version`) and python (`.python-version`) are enabled.
+Check `~/.config/mise/config.toml` contains:
+```
+[settings]
+idiomatic_version_file_enable_tools = ["ruby","python"]
+```
+
+Ensure you are running the python version specified in `.python-version` using `python --version`
+
+Install the required ansbile version using pip:
+```bash
+pip install -r provisioning/requirements.txt
+```
+
+Checkout the infrastructure repo as a sibling directory and generate ssl certificates as per its README.md.
+This will move a self signed ssl certificate into this project for its use in development.
+
+Repositories
+------------
 
 User-facing:
 
@@ -28,33 +120,6 @@ User-facing:
 
 Docker images:
 * [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Base image for running scrapers in containers
-
-## Installing Docker
-
-### On Linux
-
-Just follow the instructions on the [Docker site](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/).
-
-Your user account should be able to manipulate Docker (just add your user to the `docker` group).
-
-### On Mac OS X
-
-Install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/).
-
-## Starting up Elasticsearch
-
-Morph needs Elasticsearch to run. We've made things easier for development by using docker
-to run Elasticsearch.
-
-    docker compose up
-
-## To Install Morph
-
-    bundle install
-    cp config/database.yml.example config/database.yml
-    cp env-example .env
-
-Edit `config/database.yml` with your database settings
 
 ### Tunnel GitHub webhook traffic back to your local development machine
 
@@ -193,7 +258,6 @@ Install capistrano: `gem install capistrano`
 Run `make roles` to install some required ansible roles.
 
 Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
-
 
 ## Production devops development
 
