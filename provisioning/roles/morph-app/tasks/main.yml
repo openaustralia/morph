@@ -73,8 +73,9 @@
 
 # TODO: This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
+# Lock down version as v0.90.0 requires thor ~> 1.4 which requires Ruby version >= 2.6.0
 - name: Install foreman
-  gem: name=foreman state=latest user_install=no
+  gem: name=foreman version=0.89.1 state=present user_install=no
 
 - name: Create log directory
   file: path=/var/log/morph owner=deploy group=deploy state=directory
