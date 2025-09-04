@@ -30,6 +30,15 @@ Vagrant.configure("2") do |config|
       ansible.groups = {
         "development" => ["local"]
       }
+      raw_args = []
+      if ENV['TAGS']
+        raw_args <<= ["--tags=#{ENV['TAGS']}"]
+      end
+      if ENV['START_AT_TASK']
+        sat = "*#{ENV['START_AT_TASK']}*".gsub(' ', '*')
+        raw_args <<= ["--start-at-task=#{sat}"]
+      end
+      ansible.raw_arguments  = raw_args
     end
   end
 end

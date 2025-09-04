@@ -23,17 +23,17 @@
   tasks:
   - name: install python 2
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    tags: ['python'] 
 
-# Some features in the playbook need ansible2.5, so let's check for that first
-
+# Some features in the playbook need ansible2.5+ and later ubuntu require more recent ansible, so let's check for that first
 
 - hosts: all
   pre_tasks:
     - name: Verify Ansible meets version requirements.
       assert:
-        that: "ansible_version.full | version_compare('2.5', '>=')"
+        that: "ansible_version.full is version('2.9.17', '>=')"
         msg: >
-          "You must update Ansible to at least 2.5 to use this playbook."
+          "You must update Ansible to at least 2.9.17 to use this playbook."
 
 - hosts: all
   become: true
@@ -43,9 +43,10 @@
         update_cache: yes
         cache_valid_time: 300
         upgrade: yes
+      tags: ['upgrade'] 
   roles:
-    - morph-app
-    - discourse
+    - { role: morph-app, tags: ['morph'] }
+    - { role: discourse, tags: ['discourse'] }
   # The default behaviour is for handlers not to get called if a playbook fails
   # for any reason. Make handlers get called
   force_handlers: True
