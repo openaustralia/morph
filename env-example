@@ -1,6 +1,7 @@
 # Secret configuration
 
-# Copy this to .env and fill in the x's - these values are then automatically loaded as environment variables
+# Copy this to .env and fill in the x's for development (ansible creates the .env for staging/production)
+# These values are then automatically loaded as environment variables in the ruby app
 # See https://github.com/bkeepers/dotenv for more information
 
 GITHUB_APP_ID=xxxxxx
