@@ -1,5 +1,6 @@
 services:
   # This is a work in progress
+  # Ruby,
   # web:
   #   build: .
   #   command: bundle exec rails s -p 3000 -b '0.0.0.0'
@@ -25,6 +26,10 @@ services:
   # This is a work in progress
   # TODO: Add data volume
   # TODO: Use a specific version of mysql
+  # TODO: MySQL
+  # TODO SQLite 3
+  # TODO Redis
+  # TODO mitmproxy
   # db:
   #   image: mysql
   #   ports:
