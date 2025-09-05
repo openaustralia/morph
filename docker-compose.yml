@@ -1,15 +1,26 @@
 services:
-  # This is a work in progress
-  # Ruby,
-  # web:
-  #   build: .
-  #   command: bundle exec rails s -p 3000 -b '0.0.0.0'
-  #   volumes:
-  #     - .:/morph
-  #   ports:
-  #     - "3000:3000"
-  #   links:
-  #     - db
+  web:
+    build: .
+    # Sorbet doesn't currently build for Linux ARM64 (see https://github.com/sorbet/sorbet/issues/4119)
+    # So, we're forced to build the container as linux/amd64 always and lean on Rosetta
+    # on Apple silicon for running this.
+    # Important: if you're on Apple Silicon ensure that "Use Rosetta for x86/amd64 emulation on Apple Silicon"
+    # is switched on in Docker Desktop.
+    platform: linux/amd64
+    volumes:
+      - .:/app
+      - gem_cache:/usr/local/bundle/gems
+    ports:
+      - "33000:3000"
+    depends_on:
+      - mysql
+      - redis
+#      - mailcatcher
+      - elasticsearch
+      - mitmdump2
+#    command: "bin/dev"
+    tty: true
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
 
   # TODO: Add data volume
   elasticsearch:
@@ -18,30 +29,54 @@ services:
     # and ssl for the time being
     image: elasticsearch:7.17.7
     ports:
-      - "9200:9200"
+      - "39200:9200"
     mem_limit: 1073741824
     environment:
       - "discovery.type=single-node"
 
-  # This is a work in progress
-  # TODO: Add data volume
-  # TODO: Use a specific version of mysql
-  # TODO: MySQL
-  # TODO SQLite 3
-  # TODO Redis
-  # TODO mitmproxy
-  # db:
-  #   image: mysql
-  #   ports:
-  #     - "3306"
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: abc123
+#  mailcatcher:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.mailcatcher
+#    ports:
+#      - "31080:1080"
 
-  # This is a work in progress
-  # proxy:
-  #   build: docker_images/morph-mitmdump
-  #   links:
-  #     - web
-  #   environment:
-  #     MORPH_URL: http://web:3000
-  #     MITMPROXY_SECRET: afisdifubekfnasi
+  mitmdump2:
+    image: openaustralia/morph-mitmdump
+    network_mode: host
+    environment:
+      MORPH_URL: http://web:33000
+      MITMPROXY_SECRET: abc123
+
+  # https://hub.docker.com/layers/mysql/mysql-server/5.7.41/images/sha256-1178cdd375f758968cd834ac4057bae41307e64b7c69a9e145896e7b11f48064
+  mysql:
+    # Same version as used in production
+    image: mysql/mysql-server:5.7.33
+    # There isn't yet a linux/arm64 build of postgis on docker
+    # See https://github.com/postgis/docker-postgis/issues/216
+    platform: linux/amd64
+    ports:
+      # Access the database using the container
+      - "33306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      # The values below need to be the same in config/database.yml
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: abc123
+
+  # https://hub.docker.com/layers/library/redis/3.0.6/images/sha256-6a692a76c2081888b589e26e6ec835743119fe453d67ecf03df7de5b73d69842
+  redis:
+    # Ansible installed 3.0.6, but we need a v2 docker image
+    # FIXME: append -alpine for smaller image
+    image: redis:3.2
+    ports:
+      - "36379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  gem_cache:
+  mysql_data:
+  redis_data:
+  elasticsearch_data:
