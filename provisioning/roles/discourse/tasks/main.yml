@@ -17,6 +17,8 @@
     state: directory
     mode: '0755'
 
+# FIXME: Discord bootstrap freezes
+
 - name: Bootstrap discourse app
   shell: timeout 2400 ./launcher bootstrap app
   args:
