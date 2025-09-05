@@ -11,9 +11,38 @@
 - name: Copy over app configuration
   template: src=app.yml dest=/var/discourse/containers/app.yml owner=deploy group=deploy
 
+- name: Ensure shared directory has correct permissions
+  file:
+    path: /var/discourse/shared/standalone
+    state: directory
+    mode: '0755'
+
 - name: Bootstrap discourse app
-  command: ./launcher bootstrap app chdir=/var/discourse creates=/var/discourse/shared/standalone/log/rails/production.log
+  shell: timeout 2400 ./launcher bootstrap app
+  args:
+    chdir: /var/discourse
+    creates: /var/discourse/shared/standalone/log/rails/production.log
+  ignore_errors: yes
+  register: bootstrap_result
   notify: start discourse
+
+- name: Check system resources before bootstrap
+  shell: |
+    echo "=== Memory ==="
+    free -h
+    echo "=== Disk ==="
+    df -h
+    echo "=== Docker Status ==="
+    systemctl status docker --no-pager
+  register: system_check
+
+- name: Display system status
+  debug:
+    var: system_check.stdout_lines
+
+- name: Display bootstrap result
+  debug:
+    msg: "Bootstrap {{ 'succeeded' if bootstrap_result.rc == 0 else 'failed or timed out' }}"
 
 - name: Generate the nginx config for the app
   template: src=discourse.nginx dest=/etc/nginx/sites-available/{{ discourse_server_name }} owner=root group=root mode=644
