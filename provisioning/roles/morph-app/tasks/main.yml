@@ -63,6 +63,9 @@
   template: src=env dest=/var/www/shared/.env owner=deploy group=deploy
   # TODO: If this changes we should rerun foreman as well
 
+- name: Create directory /var/www/shared/config
+  file: path=/var/www/shared/config owner=deploy group=deploy state=directory
+
 - name: Install Morph Github App private key
   copy:
     src: morph-github-app.private-key.pem
@@ -104,9 +107,6 @@
     name: morph
     password: "{{ mysql_password }}"
     priv: 'morph.*:ALL'
-
-- name: Create directory /var/www/shared/config
-  file: path=/var/www/shared/config owner=deploy group=deploy state=directory
 
 - name: Copy over database configuration for application
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy
