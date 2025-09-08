@@ -53,7 +53,18 @@ To stop the services then use
 
     docker compose down
 
+To run tests use
 
+    docker compose exec web bin/rake db:test:prepare
+    docker compose exec web bin/rake
+
+To get a bash shell in the running container
+
+    docker compose exec web bash -i
+
+To run commands in a temporary container rather than the currently running container, use instead
+
+    docker compose run web --rm -it bash -i
 
 
 Read [Docker Development Commands](doc/docker_development_commands.md) for a collection of useful commands.
