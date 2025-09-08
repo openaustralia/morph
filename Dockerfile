@@ -35,6 +35,6 @@ COPY --chown=deploy:deploy Gemfile.lock /app/Gemfile.lock
 RUN echo "Install gems..." \
     && bundle install
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["bin/docker-entrypoint"]
 
 CMD ["bin/rails", "server", "-p", "3000", "-b", "0.0.0.0"]
