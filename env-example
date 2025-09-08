@@ -4,10 +4,38 @@
 # These values are then automatically loaded as environment variables in the ruby app
 # See https://github.com/bkeepers/dotenv for more information
 
+# We're using Cuttlefish to send mail
+#CUTTLEFISH_SERVER= (default)
+CUTTLEFISH_USERNAME=xxxxxxx
+CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx
+
+# Secret for single sign on authentication for Discourse
+DISCOURSE_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
+DISCOURSE_URL=http://discuss.dev.morph.io
+
 GITHUB_APP_ID=xxxxxx
 GITHUB_APP_NAME=xxxxxxxxxx
 GITHUB_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
 GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Used by mitmproxy to communicate via the api back to morph
+MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
+MORPH_URL=http://localhost:5100
+
+# This secret key is used for verifying the integrity of signed cookies.
+# If you change this key, all old signed cookies will become invalid!
+# You can use `rake secret` to generate a secure secret key.
+SECRET_KEY_BASE=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Stripe payment processor
+STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+
+# Secret for authenticating sync / faye
+SYNC_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# -------------------------------
+# Code Development Only
 
 # In development you can run elasticsearch on docker very easily which means
 # you don't have to install it.
@@ -17,10 +45,23 @@ GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # If you're on Linux you can probably comment the line below out
 ELASTICSEARCH_URL=http://192.168.99.100:9288
 
-# This secret key is used for verifying the integrity of signed cookies.
-# If you change this key, all old signed cookies will become invalid!
-# You can use `rake secret` to generate a secure secret key.
-SECRET_KEY_BASE=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# See https://hub.docker.com/_/mysql
+MYSQL_ROOT_PASSWORD=password
+
+# -------------------------------
+# Optional
+
+# FIXME: Either remove or document how deployment to digital ocean could be done
+# For deployment to a Digital Ocean
+#DIGITAL_OCEAN_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# DIGITAL_OCEAN_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# If this is Linux then your docker daemon is likely running locally on a socket. In that case the DOCKER_URL
+# and DOCKER_TCP does not need to be set (comment the lines below out).
+# If this is OS X, then your docker daemon will be running inside a VM with a tunneled port (see instructions
+# in the README for how to set this up)
+#DOCKER_URL=http://localhost:4243
+#DOCKER_TCP=localhost:4243
 
 # Google Analytics (leave commented out to disable)
 #GOOGLE_ANALYTICS_TRACKING_ID=xx-xxxxxxx-xx
@@ -28,28 +69,6 @@ SECRET_KEY_BASE=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # Heap Analytics (leave commented out to disable)
 #HEAP_ANALYTICS_TRACKING_ID=xxxxxxxxxx
 
-# For deployment to a Digital Ocean
-DIGITAL_OCEAN_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-DIGITAL_OCEAN_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# Secret for authenticating sync / faye
-SYNC_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# Secret for single sign on authentication for Discourse
-DISCOURSE_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
-DISCOURSE_URL=http://discuss.dev.morph.io
-
-# Used by mitmproxy to communicate via the api back to morph
-MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
-MORPH_URL=http://localhost:5100
-
 # Error reporting to Honeybadger
-HONEYBADGER_API_KEY=xxxxxxxx
+#HONEYBADGER_API_KEY=xxxxxxxx
 
-# We're using Cuttlefish to send mail
-CUTTLEFISH_USERNAME=xxxxxxx
-CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx
-
-# Stripe payment processor
-STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
-STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxx

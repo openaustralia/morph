@@ -6,22 +6,42 @@ RAILS_ENV=production
 # Copy this to .env and fill in the x's - these values are then automatically loaded as environment variables
 # See https://github.com/bkeepers/dotenv for more information
 
+# We're using Cuttlefish to send mail
+CUTTLEFISH_SERVER={{ cuttlefish_server }}
+CUTTLEFISH_USERNAME={{ cuttlefish_username }}
+CUTTLEFISH_PASSWORD={{ cuttlefish_password }}
+
+# Secret for single sign on authentication for Discourse
+DISCOURSE_SECRET={{ discourse_secret }}
+DISCOURSE_URL=https://{{ discourse_server_name }}
+
 GITHUB_APP_ID={{ github_app_id }}
 GITHUB_APP_NAME={{ github_app_name }}
 GITHUB_APP_CLIENT_ID={{ github_app_client_id }}
 GITHUB_APP_CLIENT_SECRET={{ github_app_client_secret }}
 
-# If this is Linux then your docker daemon is likely running locally on a socket. In that case the DOCKER_URL
-# and DOCKER_TCP does not need to be set (comment the lines below out).
-# If this is OS X, then your docker daemon will be running inside a VM with a tunneled port (see instructions
-# in the README for how to set this up)
-#DOCKER_URL=http://localhost:4243
-#DOCKER_TCP=localhost:4243
+# Used by mitmproxy to communicate via the api back to morph
+MITMPROXY_SECRET={{ mitmproxy_secret }}
+MORPH_URL={{ morph_url }}
 
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
 # You can use `rake secret` to generate a secure secret key.
 SECRET_KEY_BASE={{ secret_key_base }}
+
+# Stripe payment processor
+STRIPE_PUBLISHABLE_KEY={{ stripe_publishable_key }}
+STRIPE_SECRET_KEY={{ stripe_secret_key }}
+
+# Secret for authenticating sync / faye
+SYNC_AUTH_TOKEN={{ sync_auth_token }}
+
+# -------------------
+# Optional
+
+# Production and staging use linux so DOCKER_URL and DOCKER_TCP should need to be set
+
+# Elasticsearch should be installed locally in production, so ELASTICSEARCH_URL is not required
 
 {% if google_analytics_tracking_id is defined %}
 # Google Analytics (leave commented out to disable)
@@ -33,27 +53,7 @@ GOOGLE_ANALYTICS_TRACKING_ID={{ google_analytics_tracking_id }}
 HEAP_ANALYTICS_TRACKING_ID={{ heap_analytics_tracking_id }}
 {% endif %}
 
-# Secret for authenticating sync / faye
-SYNC_AUTH_TOKEN={{ sync_auth_token }}
-
-# Secret for single sign on authentication for Discourse
-DISCOURSE_SECRET={{ discourse_secret }}
-DISCOURSE_URL=https://{{ discourse_server_name }}
-
-# Used by mitmproxy to communicate via the api back to morph
-MITMPROXY_SECRET={{ mitmproxy_secret }}
-MORPH_URL={{ morph_url }}
-
 {% if honeybadger_api_key is defined %}
 # Error reporting to Honeybadger
 HONEYBADGER_API_KEY={{ honeybadger_api_key }}
 {% endif %}
-
-# We're using Cuttlefish to send mail
-CUTTLEFISH_SERVER={{ cuttlefish_server }}
-CUTTLEFISH_USERNAME={{ cuttlefish_username }}
-CUTTLEFISH_PASSWORD={{ cuttlefish_password }}
-
-# Stripe payment processor
-STRIPE_PUBLISHABLE_KEY={{ stripe_publishable_key }}
-STRIPE_SECRET_KEY={{ stripe_secret_key }}
