@@ -50,6 +50,9 @@ coverage
 # Backups
 db/backups
 
+# local override of docker compose config
+/docker-compose.override.yml
+
 # Provisioning artifacts
 docker_images/morph-mitmdump/mitmproxy/mitmproxy-dhparam.pem
 playbook.retry

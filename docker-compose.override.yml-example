@@ -1,0 +1,24 @@
+  # NOTE - copy  to docker-compose.override.yml if you want
+  # fixed rather than random ports on the host for services below
+  # or to override other configuration
+
+services:
+  web:
+    ports:
+      - "3001:3000"  # Example: override if 3000 conflicts
+
+  elasticsearch:
+    ports:
+      - "9500:9200"
+
+  mysql:
+    ports:
+      - "3307:3306"
+
+  redis:
+    ports:
+      - "16379:6379"
+
+  mitmdump2:
+    ports:
+      - "8008:8080"
