@@ -47,7 +47,14 @@ On Linux, Your user account should be able to manipulate Docker (just add your u
 Morph needs various services to run. We've made things easier for development by using docker
 to run Elasticsearch and the other services as well as the web container for the ruby on rails application itself.
 
-    docker compose up
+    docker compose up --build
+
+To stop the services then use
+
+    docker compose down
+
+
+
 
 Read [Docker Development Commands](doc/docker_development_commands.md) for a collection of useful commands.
 
