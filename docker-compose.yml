@@ -13,7 +13,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # Don't put in .env as the ansible rules add redis to the VM directly
+      # Keep out of .env file so you can run development on host or in docker
+      ELASTICSEARCH_URL: "http://elasticsearch:9288"
+      # FIXME: Pass url for mitmdump2
+      MYSQL_HOST: "mysql"
+      MYSQL_USER: "root"
       REDIS_URL: "redis://redis:6379"
     depends_on:
       elasticsearch:
