@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # Old urls getting redirected to new ones
-  get "/api", to: redirect {|params, req| "/documentation/api?#{req.query_string}"}
+  get "/api", to: redirect { |params, req| "/documentation/api?#{req.query_string}" }
   # This just gets redirected elsewhere
   get '/settings', to: "owners#settings_redirect"
   # TODO: Hmm would be nice if this could be tidier
@@ -14,8 +14,13 @@ Rails.application.routes.draw do
   end
 
   # Owner.table_exists? is workaround to allow migration to add STI Owner/User table to run
-  if Owner.table_exists?
-    devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  begin
+    if Owner.table_exists?
+      devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+    end
+  rescue ActiveRecord::NoDatabaseError, Mysql2::Error::ConnectionError => e
+    # Database doesn't exist yet - skip this initialization
+    Rails.logger.info "Skipping omniauth routes initialization: #{e}"
   end
 
   get "/discourse/sso", to: "discourse_sso#sso"
