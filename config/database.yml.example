@@ -1,5 +1,7 @@
 development: &development
   adapter: mysql2
+  encoding: utf8mb4
+  collation: utf8mb4_0900_ai_ci
   username: <%= ENV.fetch("MYSQL_USER", "scraping").inspect %>
   password: <%= ENV.fetch("MYSQL_ROOT_PASSWORD", "").inspect %>
   host: <%= ENV.fetch("MYSQL_HOST", "localhost").inspect %>
