@@ -17,7 +17,8 @@ if [ "${1}" == "bin/rails" ] && [ "${2}" == "server" ]; then
             rm -f /app/tmp/pids/server.pid
         fi
     fi
-    bin/rails db:prepare
+    bin/rails db:create db:migrate
+    # FIXME: later rails equivalent: bin/rails db:prepare
 fi
 
 exec "$@"
