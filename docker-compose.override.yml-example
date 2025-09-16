@@ -4,7 +4,12 @@
 
 # Copy the ruby-service definition from docker-compose.yml
 x-ruby-service: &ruby-service
-  build: .
+  build:
+    context: .
+    args:
+      UID: ${UID:-1000}
+      GID: ${GID:-1000}
+      DOCKER_GID: ${DOCKER_GID:-999}
   # Sorbet doesn't currently build for Linux ARM64 (see https://github.com/sorbet/sorbet/issues/4119)
   # So, we're forced to build the container as linux/amd64 always and lean on Rosetta
   # on Apple silicon for running this.
@@ -14,12 +19,15 @@ x-ruby-service: &ruby-service
   volumes:
     - .:/app
     - gem_cache:/usr/local/bundle/gems
+    - /var/run/docker.sock:/var/run/docker.sock
   environment:
+    DISABLE_SPRING: "1"
     ELASTICSEARCH_URL: "http://elasticsearch:9288"
     # FIXME: Pass url for mitmdump2
     MYSQL_HOST: "mysql"
     MYSQL_USER: "root"
     REDIS_URL: "redis://redis:6379"
+    MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD must be set, preferably in the .env file}
 
 # And now override things...
 
@@ -40,13 +48,16 @@ services:
     ports:
       - "8008:8080"
 
-  # Add this if you like guard!
+  # Add this if you like guard - auto runs tests and live reload when pages change
   guard:
-      <<: *ruby-service
-      depends_on:
-        mysql:
-          condition: service_healthy
-        redis:
-          condition: service_healthy
-      command: bundle exec guard
-
+    <<: *ruby-service
+    ports:
+      - "35729:35729"  # LiveReload port
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: bundle exec guard
+    tty: true
+    stdin_open: true

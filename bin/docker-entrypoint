@@ -4,7 +4,9 @@ set -ex
 # Enable jemalloc for reduced memory usage and latency.
 if [ -z "${LD_PRELOAD+x}" ]; then
     LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
-    export LD_PRELOAD
+    if [ -n "$LD_PRELOAD" ]; then
+        export LD_PRELOAD
+    fi
 fi
 
 # If running the rails server then create or migrate existing database
@@ -21,4 +23,9 @@ if [ "${1}" == "bin/rails" ] && [ "${2}" == "server" ]; then
     # FIXME: later rails equivalent: bin/rails db:prepare
 fi
 
-exec "$@"
+if [ "$(stat -c %G /var/run/docker.sock)" != "docker" ]; then
+    echo "WARNING: Docker socket not owned by docker group"
+    ls -ld /var/run/docker.sock
+fi
+
+exec /usr/bin/tini -- "$@"

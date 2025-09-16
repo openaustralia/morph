@@ -1,26 +1,27 @@
 FROM ruby:2.7.6
 
-WORKDIR /app
+RUN echo "Install a javascript runtime and other gem dependencies ..." \
+    && apt-get update  \
+    && apt-get install -y \
+       nodejs \
+       cmake \
+       pkg-config \
+       libgit2-dev \
+       sudo \
+       tini
 
-RUN echo "Run everything as a non-root "deploy" user..." \
-    && groupadd --gid 1000 deploy \
-    && useradd --uid 1000 --gid 1000 -m deploy
+ARG UID=1000
+ARG GID=1000
+ARG DOCKER_GID=999
 
-RUN echo "Add sudo support so that we can install software by hand later on..." \
-    && apt-get update \
-    && apt-get install -y sudo \
+RUN echo "Run everything as a non-root 'deploy' user with sudo support ..." \
+    && groupadd --gid $GID deploy \
+    && groupadd -g $DOCKER_GID docker \
+    && useradd --uid $UID --gid deploy --groups docker -m deploy \
     && echo deploy ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/deploy \
     && chmod 0440 /etc/sudoers.d/deploy
 
-RUN echo "Install a javascript runtime ..." \
-    && apt-get update  \
-    && apt-get install -y nodejs
-
-RUN echo "Install gem dependencies ..." \
-    && apt-get install -y \
-       cmake \
-       pkg-config \
-       libgit2-dev
+WORKDIR /app
 
 USER deploy
 

@@ -34,6 +34,9 @@ STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
 # Secret for authenticating sync / faye
 SYNC_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+# So we can access docker in docker in tests - Set to docker id in /etc/groups
+DOCKER_GID=999
+
 # -------------------------------
 # Code Development Only
 
@@ -64,3 +67,6 @@ MYSQL_ROOT_PASSWORD=password
 # Error reporting to Honeybadger
 #HONEYBADGER_API_KEY=xxxxxxxx
 
+# Set if your login User and Group Id's differ so files are created with the correct permissions
+UID=1001
+GID=1001
