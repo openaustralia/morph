@@ -130,7 +130,7 @@ group :development do
   gem "binding_of_caller"
   gem "memory_profiler"
   gem "pry-rails"
-  gem "spring"
+  gem "spring", '~> 3.1.1' # to be compatible with rails 5.2 version (4.0+ is rails 6.0 only)
   gem "spring-commands-rspec"
 
   gem "rubocop"
