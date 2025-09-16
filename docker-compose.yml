@@ -1,24 +1,26 @@
+x-ruby-service: &ruby-service
+  build: .
+  # Sorbet doesn't currently build for Linux ARM64 (see https://github.com/sorbet/sorbet/issues/4119)
+  # So, we're forced to build the container as linux/amd64 always and lean on Rosetta
+  # on Apple silicon for running this.
+  # Important: if you're on Apple Silicon ensure that "Use Rosetta for x86/amd64 emulation on Apple Silicon"
+  # is switched on in Docker Desktop.
+  platform: linux/amd64
+  volumes:
+    - .:/app
+    - gem_cache:/usr/local/bundle/gems
+  environment:
+    ELASTICSEARCH_URL: "http://elasticsearch:9288"
+    # FIXME: Pass url for mitmdump2
+    MYSQL_HOST: "mysql"
+    MYSQL_USER: "root"
+    REDIS_URL: "redis://redis:6379"
+
 services:
   web:
-    build: .
-    # Sorbet doesn't currently build for Linux ARM64 (see https://github.com/sorbet/sorbet/issues/4119)
-    # So, we're forced to build the container as linux/amd64 always and lean on Rosetta
-    # on Apple silicon for running this.
-    # Important: if you're on Apple Silicon ensure that "Use Rosetta for x86/amd64 emulation on Apple Silicon"
-    # is switched on in Docker Desktop.
-    platform: linux/amd64
-    volumes:
-      - .:/app
-      - gem_cache:/usr/local/bundle/gems
+    <<: *ruby-service 
     ports:
       - "3000:3000"
-    environment:
-      # Keep out of .env file so you can run development on host or in docker
-      ELASTICSEARCH_URL: "http://elasticsearch:9288"
-      # FIXME: Pass url for mitmdump2
-      MYSQL_HOST: "mysql"
-      MYSQL_USER: "root"
-      REDIS_URL: "redis://redis:6379"
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -35,6 +37,26 @@ services:
     #    command: "bin/dev"
     command: bin/rails server -p 3000 -b '0.0.0.0'
 
+  worker:
+    <<: *ruby-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: bundle exec sidekiq -C config/sidekiq.yml
+
+  faye:
+    <<: *ruby-service
+    ports:
+      - "9292:9292"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: bundle exec dotenv rackup sync.ru -E production
+
   # NOTE - copy docker-compose.override.yml-example to docker-compose.override.yml if you want
   # fixed rather than random ports on the host for services below
 
@@ -44,7 +66,7 @@ services:
     # and ssl for the time being
     image: elasticsearch:7.17.7
     ports:
-      - "9200"
+      - "9200:9200"
     mem_limit: 1073741824
     environment:
       - "discovery.type=single-node"

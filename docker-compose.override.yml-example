@@ -2,14 +2,31 @@
   # fixed rather than random ports on the host for services below
   # or to override other configuration
 
+# Copy the ruby-service definition from docker-compose.yml
+x-ruby-service: &ruby-service
+  build: .
+  # Sorbet doesn't currently build for Linux ARM64 (see https://github.com/sorbet/sorbet/issues/4119)
+  # So, we're forced to build the container as linux/amd64 always and lean on Rosetta
+  # on Apple silicon for running this.
+  # Important: if you're on Apple Silicon ensure that "Use Rosetta for x86/amd64 emulation on Apple Silicon"
+  # is switched on in Docker Desktop.
+  platform: linux/amd64
+  volumes:
+    - .:/app
+    - gem_cache:/usr/local/bundle/gems
+  environment:
+    ELASTICSEARCH_URL: "http://elasticsearch:9288"
+    # FIXME: Pass url for mitmdump2
+    MYSQL_HOST: "mysql"
+    MYSQL_USER: "root"
+    REDIS_URL: "redis://redis:6379"
+
+# And now override things...
+
 services:
   web:
     ports:
       - "3001:3000"  # Example: override if 3000 conflicts
-
-  elasticsearch:
-    ports:
-      - "9500:9200"
 
   mysql:
     ports:
@@ -22,3 +39,14 @@ services:
   mitmdump2:
     ports:
       - "8008:8080"
+
+  # Add this if you like guard!
+  guard:
+      <<: *ruby-service
+      depends_on:
+        mysql:
+          condition: service_healthy
+        redis:
+          condition: service_healthy
+      command: bundle exec guard
+
