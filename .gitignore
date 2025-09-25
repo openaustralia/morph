@@ -23,7 +23,6 @@
 /tmp/pids/*.pid
 
 # Temp files
-,*
 *.bak
 
 # Used by direnv / dotenv library to load environment variables.
