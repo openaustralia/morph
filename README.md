@@ -97,11 +97,14 @@ Docker images:
 ### Tunnel GitHub webhook traffic back to your local development machine
 
 We use "ngrok" a tool that makes tunnelling internet traffic to a local development machine easy. 
+
 First [download ngrok](https://ngrok.com/download) if you don't have it already. Then,
 
-    ngrok http 5100
+    ngrok http 3000
+    # or set the url, eg:
+    ngrok http 3000 --url https://$USER-morph.ngrok-free.dev
 
-Make note of the `http://*.ngrok.io` forwarding URL.
+Make note of the `http://*.ngrok-free.dev` forwarding URL (drop the `--url` arg if you want a random url)
 
 <!-- TODO: Add instructions for debugging and working with callbacks for the GitHub app in development with https://webhook.site -->
 
@@ -110,20 +113,23 @@ Make note of the `http://*.ngrok.io` forwarding URL.
 You'll need to create an application on GitHub So that morph.io can talk to GitHub. 
 We've pre-filled most of the important fields for a few different configurations below:
 
-* [Create GitHub application on your personal account for use in development](https://github.com/settings/apps/new?name=Morph.io+(development)&description=Get+structured+data+out+of+the+web&url=http://127.0.0.1:5100&callback_urls[]=http://127.0.0.1:5100/users/auth/github/callback&setup_url=http://127.0.0.1:5100&setup_on_update=true&public=true&webhook_active=false&webhook_url=http://127.0.0.1:5100/github/webhook&administration=write&contents=write&emails=read)
+* [Create GitHub application on your personal account for use in development, port 3000](https://github.com/settings/apps/new?name=Morph.io+(development)&description=Get+structured+data+out+of+the+web&url=http://127.0.0.1:3000&callback_urls[]=http://127.0.0.1:3000/users/auth/github/callback&setup_url=http://127.0.0.1:3000&setup_on_update=true&public=true&webhook_active=false&administration=write&contents=write&emails=read)
 * [Create GitHub application on your personal account for use in production](https://github.com/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
 * [Create GitHub application on the openaustralia organization for use in production](https://github.com/organizations/openaustralia/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
 
 You will need to add and change a few values manually:
 * Disable "Expire user authorization tokens"
 * Add an image - you can use the standard logo at `app/assets/images/logo.png` (you can add this after the app is created)
-* If the webhooks are active and being used in production (currently not the case) then
-  you'll also need to add a "Webhook secret" for security.
+* If the webhooks are active and being used in production (currently not the case) then you'll also need to 
+  * add a "Webhook secret" for security.
+  * add a "Webhook URL" - the ngrok url with `/github/webhook` on the end
+* Select "Any Account" if you are demoing with a team
+* Change the port if you are not using the default port 3000 for the rails app
 
 Next you'll need to fill in some values in the `.env` file which come from the GitHub App that you've just created.
 
 * `GITHUB_APP_ID` - Look for "App ID" near the top of the page. This should be an integer
-* `GITHUB_APP_NAME` - Look for "Public link". The name is what appears after "https://github.com/apps/". 
+* `GITHUB_APP_NAME` - Look for "Public link". The name is what appears after "https://github.com/settings/apps/". 
   It's essentially a url happy version of the name you gave the app.
 * `GITHUB_APP_CLIENT_ID` - Look for "Client ID" near the top of the page.
 * `GITHUB_APP_CLIENT_SECRET` - Go to "Generate a new client secret".
