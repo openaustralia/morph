@@ -1,4 +1,11 @@
 ---
 dependencies:
   - role: deploy-user
-    github_users: ['mlandauer', 'henare', 'jamezpolley', 'simonzippy', 'br3nda', 'ianheggie-oaf']
+    github_users: 
+    - 'br3nda'
+    - 'henare'
+    - "ianheggie-oaf'
+    - 'jamezpolley'
+    - 'mlandauer'
+    - 'simonzippy'
+
