@@ -1,0 +1,31 @@
+#!/bin/bash
+set -ex
+
+# Enable jemalloc for reduced memory usage and latency.
+if [ -z "${LD_PRELOAD+x}" ]; then
+    LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
+    if [ -n "$LD_PRELOAD" ]; then
+        export LD_PRELOAD
+    fi
+fi
+
+# If running the rails server then create or migrate existing database
+if [ "${1}" == "bin/rails" ] && [ "${2}" == "server" ]; then
+  # Remove a potentially pre-existing server.pid for Rails if the process is dead
+    if [ -f /app/tmp/pids/server.pid ]; then
+        pid=$(cat /app/tmp/pids/server.pid)
+        if ! kill -0 "$pid" 2>/dev/null; then
+            echo "INFO: Previous server process $pid has died - removing pid lock!"
+            rm -f /app/tmp/pids/server.pid
+        fi
+    fi
+    bin/rails db:create db:migrate
+    # FIXME: later rails equivalent: bin/rails db:prepare
+fi
+
+if [ "$(stat -c %G /var/run/docker.sock)" != "docker" ]; then
+    echo "WARNING: Docker socket not owned by docker group"
+    ls -ld /var/run/docker.sock
+fi
+
+exec /usr/bin/tini -- "$@"

@@ -1,6 +1,8 @@
 # Install required roles with
 # cd provisioning
 # ansible-galaxy install -r requirements.yml -p roles
+#
+# Note: These roles are listed in .gitignore so they are not committed to the git repo
 
 - src: geerlingguy.elasticsearch
   version: 5.1.0

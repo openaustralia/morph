@@ -63,6 +63,9 @@
   template: src=env dest=/var/www/shared/.env owner=deploy group=deploy
   # TODO: If this changes we should rerun foreman as well
 
+- name: Create directory /var/www/shared/config
+  file: path=/var/www/shared/config owner=deploy group=deploy state=directory
+
 - name: Install Morph Github App private key
   copy:
     src: morph-github-app.private-key.pem
@@ -73,8 +76,9 @@
 
 # TODO: This is a nasty hack. Would be much nicer to do this in the capistrano
 # deploy. But security concerns (the need for passwordless sudo) make this hard.
+# Lock down version as v0.90.0 requires thor ~> 1.4 which requires Ruby version >= 2.6.0
 - name: Install foreman
-  gem: name=foreman state=latest user_install=no
+  gem: name=foreman version=0.89.1 state=present user_install=no
 
 - name: Create log directory
   file: path=/var/log/morph owner=deploy group=deploy state=directory
@@ -103,9 +107,6 @@
     name: morph
     password: "{{ mysql_password }}"
     priv: 'morph.*:ALL'
-
-- name: Create directory /var/www/shared/config
-  file: path=/var/www/shared/config owner=deploy group=deploy state=directory
 
 - name: Copy over database configuration for application
   template: src=database.yml dest=/var/www/shared/config/database.yml owner=deploy group=deploy

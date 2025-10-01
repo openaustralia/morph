@@ -15,6 +15,7 @@ jobs:
       GITHUB_APP_CLIENT_ID: xxxxxxxxxxxxxxxxxxxx
       GITHUB_APP_CLIENT_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       ELASTICSEARCH_URL: http://127.0.0.1:9288
+      # WARNING: Don't use this SECRET_KEY_BASE anywhere else!!
       SECRET_KEY_BASE: c788cda5c584f5f4746b5f133dbc10e1fe0c718692358f27ef44cc45b8df4709c999771adb3254ac91b06001851aa0f4a5fa9b5ba44482c7406b6f709e715f37
       DIGITAL_OCEAN_CLIENT_ID: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       DIGITAL_OCEAN_API_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -13,7 +13,7 @@
 
 # TODO: Is it possible to extract this list of dependencies automatically from rvm?
 # Or allow rvm to do the install - but that would require the deploy user to have the permissions
-- name: "Ensure ruby-2.7.6 dependencies installed"
+- name: "Ensure ruby-2.7.6 dependencies are installed"
   apt: pkg={{ item }}
   with_items:
     - patch

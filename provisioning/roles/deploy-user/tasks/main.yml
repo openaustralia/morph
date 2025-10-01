@@ -40,5 +40,5 @@
     state: present
     regexp: "^#?PasswordAuthentication"
     line: "PasswordAuthentication no"
-  when: add_authorized_keys|success
+  when: add_authorized_keys is succeeded
   notify: sshd restart

@@ -1,42 +1,154 @@
-services:
-  # This is a work in progress
-  # web:
-  #   build: .
-  #   command: bundle exec rails s -p 3000 -b '0.0.0.0'
-  #   volumes:
-  #     - .:/morph
-  #   ports:
-  #     - "3000:3000"
-  #   links:
-  #     - db
+x-ruby-service: &ruby-service
+  build:
+    context: .
+    args:
+      UID: ${UID:-1000}
+      GID: ${GID:-1000}
+      DOCKER_GID: ${DOCKER_GID:-999}
+  # Sorbet doesn't currently build for Linux ARM64 (see https://github.com/sorbet/sorbet/issues/4119)
+  # So, we're forced to build the container as linux/amd64 always and lean on Rosetta
+  # on Apple silicon for running this.
+  # Important: if you're on Apple Silicon ensure that "Use Rosetta for x86/amd64 emulation on Apple Silicon"
+  # is switched on in Docker Desktop.
+  platform: linux/amd64
+  volumes:
+    - .:/app
+    - gem_cache:/usr/local/bundle/gems
+    - /var/run/docker.sock:/var/run/docker.sock
+  environment:
+    DISABLE_SPRING: "1"
+    ELASTICSEARCH_URL: "http://elasticsearch:9288"
+    # FIXME: Pass url for mitmdump2
+    MYSQL_HOST: "mysql"
+    MYSQL_USER: "root"
+    REDIS_URL: "redis://redis:6379"
+    MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD must be set, preferably in the .env file}
 
-  # TODO: Add data volume
+services:
+  web:
+    <<: *ruby-service 
+    ports:
+      - "3000:3000"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      # mailcatcher:
+      #   condition: service_started
+      mitmdump2:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    tty: true
+    #    command: "bin/dev"
+    command: bin/rails server -p 3000 -b '0.0.0.0'
+
+  worker:
+    <<: *ruby-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: bundle exec sidekiq -C config/sidekiq.yml
+
+  faye:
+    <<: *ruby-service
+    ports:
+      - "9292:9292"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: bundle exec dotenv rackup sync.ru -E production
+
+  # NOTE - copy docker-compose.override.yml-example to docker-compose.override.yml if you want
+  # fixed rather than random ports on the host for services below
+
   elasticsearch:
     # We're using elasticsearch 7 (rather than the current latest
     # 8.3.3) is because we don't want to bother with authentication
     # and ssl for the time being
-    image: elasticsearch:7.17.5
+    image: elasticsearch:7.17.7
     ports:
       - "9200:9200"
     mem_limit: 1073741824
     environment:
       - "discovery.type=single-node"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=green&timeout=5s || exit 1"]
+      start_period: 2s
+      interval: 1s
+      timeout: 10s
+      retries: 120
 
-  # This is a work in progress
-  # TODO: Add data volume
-  # TODO: Use a specific version of mysql
-  # db:
-  #   image: mysql
-  #   ports:
-  #     - "3306"
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: abc123
+#  mailcatcher:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.mailcatcher
+#    ports:
+#      - "31080:1080"
 
-  # This is a work in progress
-  # proxy:
-  #   build: docker_images/morph-mitmdump
-  #   links:
-  #     - web
-  #   environment:
-  #     MORPH_URL: http://web:3000
-  #     MITMPROXY_SECRET: afisdifubekfnasi
+  mitmdump2:
+    image: openaustralia/morph-mitmdump
+    ports:
+      - "8080"
+    network_mode: host
+    environment:
+      MORPH_URL: http://web:3000
+      MITMPROXY_SECRET: ${MITMPROXY_SECRET:?MITMPROXY_SECRET must be set, preferably in the .env file}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      start_period: 2s
+      interval: 1s
+      timeout: 10s
+      retries: 120
+
+  # https://hub.docker.com/layers/mysql/mysql-server/5.7.41/images/sha256-1178cdd375f758968cd834ac4057bae41307e64b7c69a9e145896e7b11f48064
+  mysql:
+    # Same version as used in production
+    image: mysql/mysql-server:5.7.33
+    # There isn't yet a linux/arm64 build of postgis on docker
+    # See https://github.com/postgis/docker-postgis/issues/216
+    platform: linux/amd64
+    ports:
+      - "3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      # The values below need to be the same in config/database.yml
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD must be set, preferably in the .env file}
+      MYSQL_ROOT_HOST: '%'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      start_period: 2s
+      interval: 1s
+      timeout: 10s
+      retries: 120
+
+  # https://hub.docker.com/layers/library/redis/3.0.6/images/sha256-6a692a76c2081888b589e26e6ec835743119fe453d67ecf03df7de5b73d69842
+  redis:
+    # Ansible installed 3.0.6, but we need a v2 docker image
+    # FIXME: append -alpine for smaller image
+    image: redis:3.2
+    ports:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      start_period: 2s
+      interval: 1s
+      timeout: 10s
+      retries: 120
+      
+volumes:
+  gem_cache:
+  elasticsearch_data:
+  mysql_data:
+  redis_data:
