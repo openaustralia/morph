@@ -53,6 +53,17 @@ services:
     <<: *ruby-service
     ports:
       - "35729:35729"  # LiveReload port
+    # too many conflicts with spring - disabling it for guard!
+    environment:
+      - DISABLE_SPRING=1
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: bundle exec guard
+    tty: true
+    stdin_open: true
     depends_on:
       mysql:
         condition: service_healthy
