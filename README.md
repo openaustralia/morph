@@ -101,10 +101,8 @@ We use "ngrok" a tool that makes tunnelling internet traffic to a local developm
 First [download ngrok](https://ngrok.com/download) if you don't have it already. Then,
 
     ngrok http 3000
-    # or set the url, eg:
-    ngrok http 3000 --url https://$USER-morph.ngrok-free.dev
 
-Make note of the `http://*.ngrok-free.dev` forwarding URL (drop the `--url` arg if you want a random url)
+Make note of the ngrok forwarding url (`*.ngrok-free.dev`).
 
 <!-- TODO: Add instructions for debugging and working with callbacks for the GitHub app in development with https://webhook.site -->
 
@@ -119,12 +117,15 @@ We've pre-filled most of the important fields for a few different configurations
 
 You will need to add and change a few values manually:
 * Disable "Expire user authorization tokens"
+* Select "Any Account" if you are demoing with a team
+* Add extra callback urls:
+  * http://0.0.0.0:3000/users/auth/github/callback  # if you click on the url puma lists on start up
+  * <forwarding url noted above>/users/auth/github/callback
+  * Change the port for the local urls if you are not using the default port 3000 for the rails app
 * Add an image - you can use the standard logo at `app/assets/images/logo.png` (you can add this after the app is created)
 * If the webhooks are active and being used in production (currently not the case) then you'll also need to 
   * add a "Webhook secret" for security.
   * add a "Webhook URL" - the ngrok url with `/github/webhook` on the end
-* Select "Any Account" if you are demoing with a team
-* Change the port if you are not using the default port 3000 for the rails app
 
 Next you'll need to fill in some values in the `.env` file which come from the GitHub App that you've just created.
 
