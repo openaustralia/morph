@@ -1,6 +1,6 @@
-  # NOTE - copy  to docker-compose.override.yml if you want
-  # fixed rather than random ports on the host for services below
-  # or to override other configuration
+# NOTE - copy  to docker-compose.override.yml if you want
+# fixed rather than random ports on the host for services below
+# or to override other configuration
 
 # Copy the ruby-service definition from docker-compose.yml
 x-ruby-service: &ruby-service
@@ -61,14 +61,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: bundle exec guard
-    tty: true
-    stdin_open: true
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      web:
+        condition: service_started  # avoid race condition on bundle install
     command: bundle exec guard
     tty: true
     stdin_open: true

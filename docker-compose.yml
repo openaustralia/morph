@@ -28,6 +28,7 @@ services:
   web:
     <<: *ruby-service 
     ports:
+      # Always expose on host! (use override to expose anything else)
       - "3000:3000"
     depends_on:
       elasticsearch:
@@ -52,17 +53,21 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      web:
+        condition: service_started  # avoid race condition on bundle install
     command: bundle exec sidekiq -C config/sidekiq.yml
 
   faye:
     <<: *ruby-service
     ports:
-      - "9292:9292"
+      - "9292"
     depends_on:
       mysql:
         condition: service_healthy
       redis:
         condition: service_healthy
+      web:
+        condition: service_started  # avoid race condition on bundle install
     command: bundle exec dotenv rackup sync.ru -E production
 
   # NOTE - copy docker-compose.override.yml-example to docker-compose.override.yml if you want
@@ -74,7 +79,7 @@ services:
     # and ssl for the time being
     image: elasticsearch:7.17.7
     ports:
-      - "9200:9200"
+      - "9200"
     mem_limit: 1073741824
     environment:
       - "discovery.type=single-node"
