@@ -1,6 +1,9 @@
-.PHONY: all ansible venv roles help up provision local-deploy production-deploy clobber services-up services-down test
+.PHONY: all clean deploy help lint \
+        production-deploy production-provision provision \
+        roles services-down services-up \
+        test up vagrant-plugins venv
 VENV := .venv/bin
-SHELL = /bin/bash
+SHELL := /bin/bash
 PYTHON_VERSION := $(shell cat .python-version 2>/dev/null || echo "python3")
 
 all: help
@@ -68,6 +71,12 @@ lint: ## Lint code
 	bundle exec rubocop
 	bundle exec haml-lint
 
-clean: ## Clean out venv and installed roles
-	rm -rf .venv provisioning/.roles-installed
+clean: ## Clean out venv, installed roles and rails tmp/cache
 	[ -f provisioning/requirements.yml ] && $(VENV)/ansible-galaxy remove -r provisioning/requirements.yml -p provisioning/roles || true
+	rm -rf .venv provisioning/.roles-installed tmp/cache
+
+clobber: clean ## Remove everything including logs
+	rm -f log/*.log
+
+docker-clean: services-down ## Remove all Docker resources
+	docker system prune -af --volumes
