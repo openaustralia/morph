@@ -1,7 +1,7 @@
 .PHONY: all clean deploy help lint \
         production-deploy production-provision provision \
         roles services-down services-up \
-        test up vagrant-plugins venv
+        share-web test up vagrant-plugins venv
 VENV := .venv/bin
 SHELL := /bin/bash
 PYTHON_VERSION := $(shell cat .python-version 2>/dev/null || echo "python3")
@@ -22,16 +22,11 @@ provisioning/.roles-installed: venv provisioning/requirements.yml
 	${VENV}/ansible-galaxy install -r provisioning/requirements.yml -p provisioning/roles
 	touch provisioning/.roles-installed
 
-vagrant-plugins: ## Ensure required Vagrant plugins are installed
-	@for plugin in vagrant-hostsupdater vagrant-disksize vagrant-vbguest; do \
-		vagrant plugin list | grep -q $$plugin || vagrant plugin install $$plugin; \
-	done
-
 help: ## This help dialog.
 	@IFS=$$'\n' ; \
 	help_lines=(`fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##/:/'`); \
-	printf "%-30s %s\n" "target" "help" ; \
-	printf "%-30s %s\n" "------" "----" ; \
+	printf "%-30s %s\n" "Target" "Description" ; \
+	printf "%-30s %s\n" "------" "-----------" ; \
 	for help_line in $${help_lines[@]}; do \
 		IFS=$$':' ; \
 		help_split=($$help_line) ; \
@@ -43,26 +38,51 @@ help: ## This help dialog.
 		printf "%s\n" $$help_info; \
 	done
 
-up: venv roles vagrant-plugins ## launch local vagrant VM
+vagrant-plugins: ## Ensure required Vagrant plugins are installed
+	@plugins=$$(vagrant plugin list); \
+	for plugin in vagrant-hostsupdater vagrant-disksize vagrant-vbguest; do \
+		if echo "$$plugins" | grep -q $$plugin; then \
+			[ "$(MAKECMDGOALS)" != "vagrant-plugins" ] || echo "$$plugin plugin is already installed"; \
+		else \
+			vagrant plugin install $$plugin; \
+		fi; \
+	done
+
+vagrant-up: venv roles vagrant-plugins ## launch local vagrant VM
 	vagrant up local
 
-provision: venv roles vagrant-plugins ## Provision local vagrant VM using ansible
+vagrant-provision: venv roles vagrant-plugins ## Provision local vagrant VM using ansible
 	vagrant provision local
 
 production-provision: venv roles ## Provision production using ansible
 	${VENV}/ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
 
-deploy: ## Deploy app to local vagrant VM
+vagrant-deploy: ## Deploy app to local vagrant VM
 	bundle exec cap local deploy
 
 production-deploy: ## Deploy app to production
 	bundle exec cap production deploy
 
-services-up: ## Run up services required for CI / development (not MySQL)
-	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml up --build -d
+docker-up: ## Full Docker environment including ruby containers (ephemeral data)
+	docker compose -f docker-compose.yml up
 
-services-down: ## Run up services required for CI / development
+docker-up-persistent: ## Full Docker environment including ruby containers (persistent data)
+	docker compose -f docker-compose.yml -f docker_images/persistent_services.yaml up
+
+services-up: ## Run up services required for CI / development (use SERVICES="redis elasticsearch" to exclude mysql)
+	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml up --build -d ${SERVICES}
+
+persistent-services-up: ## Run up services with persistent data
+	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml -f docker_images/persistent_services.yaml up --build -d ${SERVICES}
+
+services-down: ## Close down services required for CI / development
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml down --remove-orphans
+
+services-logs: ## View logs for services (use SERVICES=elasticsearch for specific service)
+	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml logs $(SERVICES)
+
+services-status: ## Check status of services
+	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml ps
 
 test: ## Run rspec tests
 	RAILS_ENV=test bundle exec rspec
@@ -80,3 +100,7 @@ clobber: clean ## Remove everything including logs
 
 docker-clean: services-down ## Remove all Docker resources
 	docker system prune -af --volumes
+
+share-web: ## Share web server on port 3000 to the internet
+	ngrok http 3000
+
