@@ -11,7 +11,7 @@ ruby_version: "{{ lookup('file', '../.ruby-version') | trim }}"
 bundler_version: 2.1.4
 apt_packages:
   - cmake
-  - ruby-foreman
+  - language-pack-en
   - libffi-dev
   - libgdbm-dev
   - libgmp-dev
@@ -21,8 +21,10 @@ apt_packages:
   - libssl-dev
   - libyaml-dev
   - pkg-config
+  - ruby-foreman
   - sqlite3
   - zlib1g-dev
+
 backup_gpg_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           61643232663363396235343339656666303161663462373838613430623162633162303330666330
