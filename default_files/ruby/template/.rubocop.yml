@@ -1,0 +1,167 @@
+AllCops:
+  Exclude:
+    - bin/*
+
+# Bumping max line length to something a little more reasonable (RubyMine default)
+
+Layout/LineLength:
+  Max: 120
+
+# We prefer double quotes here and it we're making liberal use of multi-line
+# strings so it makes sense to enforce those to be consistent oo
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  ConsistentQuotesInMultiline: true
+
+# Matthew: This one I disagree with. Putting separators in large numbers makes sense
+# in some circumstances but in others (an example id in a database table)
+# it's just nonsensical. Also, I think this one might also be a bit US centric.
+
+Style/NumericLiterals:
+  Enabled: false
+
+# Avoid dumping everything in a Kitchen Sink! Each file should have a single clear responsibility
+
+Metrics/ClassLength:
+  Enabled: true
+  Max: 200
+
+Metrics/ModuleLength:
+  Enabled: true
+  Max: 200
+
+# Keep Methods and blocks readable without scrolling down a page
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 30
+
+Metrics/BlockLength:
+  Max: 20
+  Exclude:
+    - 'spec/**/*'
+    - 'lib/*/authorities.rb'
+
+# Long lists are easy to make mistakes in calls - use keyword arguments for any args that are optional or numerous
+Metrics/ParameterLists:
+  Enabled: true
+  Max: 5
+
+# Match RubyMine's formatting
+Layout/IndentationWidth:
+  Width: 2
+
+Layout/ParameterAlignment:
+  EnforcedStyle: with_first_parameter
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: aligned
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+# RubyMine and Rubocop disagree on exact indentation
+Layout/LineEndStringConcatenationIndentation:
+  Enabled: false
+
+# Valuable StandardRB additions
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+
+# avoid Errors when something could be nil
+Style/SafeNavigation:
+  Enabled: true
+
+# be kind to the next programmer: Use meaningful parameter names
+Naming/MethodParameterName:
+  Enabled: true
+
+# Matthew: Disable a bunch of metrics to do with code complexity. These as are all
+# a bit hard-nosed. Maybe after we've done a pass with Code Climate we
+# can revisit these [IanH: changed to relaxed version above]
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+# Enable specifc new cops
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/DuplicateElsifCondition:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/AccessorGrouping:
+  Enabled: true
+
+Style/ArrayCoercion:
+  Enabled: true
+
+Style/BisectedAttrAccessor:
+  Enabled: true
+
+Style/CaseLikeIf:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/HashAsLastArrayItem:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashLikeCase:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/RedundantAssignment:
+  Enabled: true
+
+Style/RedundantFetchBlock:
+  Enabled: true
+
+Style/RedundantFileExtensionInRequire:
+  Enabled: true
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
+

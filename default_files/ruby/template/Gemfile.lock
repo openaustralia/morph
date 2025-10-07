@@ -10,38 +10,86 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    domain_name (0.5.24)
-      unf (>= 0.0.5, < 1.0.0)
-    http-cookie (1.0.2)
+    addressable (2.8.7)
+      public_suffix (>= 2.0.2, < 7.0)
+    ast (2.4.3)
+    base64 (0.3.0)
+    connection_pool (2.5.4)
+    domain_name (0.6.20240107)
+    http-cookie (1.1.0)
       domain_name (~> 0.5)
     httpclient (2.6.0.1)
-    mechanize (2.7.3)
-      domain_name (~> 0.5, >= 0.5.1)
-      http-cookie (~> 1.0)
-      mime-types (~> 2.0)
-      net-http-digest_auth (~> 1.1, >= 1.1.1)
-      net-http-persistent (~> 2.5, >= 2.5.2)
-      nokogiri (~> 1.4)
-      ntlm-http (~> 0.1, >= 0.1.1)
-      webrobots (>= 0.0.9, < 0.2)
-    mime-types (2.5)
-    mini_portile (0.6.2)
-    net-http-digest_auth (1.4)
-    net-http-persistent (2.9.4)
-    nokogiri (1.6.6.2)
-      mini_portile (~> 0.6.0)
-    ntlm-http (0.1.1)
-    sqlite3 (1.3.10)
+    json (2.15.0)
+    language_server-protocol (3.17.0.5)
+    lint_roller (1.1.0)
+    logger (1.7.0)
+    mechanize (2.8.5)
+      addressable (~> 2.8)
+      domain_name (~> 0.5, >= 0.5.20190701)
+      http-cookie (~> 1.0, >= 1.0.3)
+      mime-types (~> 3.0)
+      net-http-digest_auth (~> 1.4, >= 1.4.1)
+      net-http-persistent (>= 2.5.2, < 5.0.dev)
+      nokogiri (~> 1.11, >= 1.11.2)
+      rubyntlm (~> 0.6, >= 0.6.3)
+      webrick (~> 1.7)
+      webrobots (~> 0.1.2)
+    mime-types (3.7.0)
+      logger
+      mime-types-data (~> 3.2025, >= 3.2025.0507)
+    mime-types-data (3.2025.0924)
+    net-http-digest_auth (1.4.1)
+    net-http-persistent (4.0.6)
+      connection_pool (~> 2.2, >= 2.2.4)
+    nokogiri (1.15.7-x86_64-linux)
+      racc (~> 1.4)
+    parallel (1.27.0)
+    parser (3.3.9.0)
+      ast (~> 2.4.1)
+      racc
+    prism (1.5.1)
+    public_suffix (6.0.2)
+    racc (1.8.1)
+    rainbow (3.1.1)
+    regexp_parser (2.11.3)
+    rubocop (1.81.1)
+      json (~> 2.3)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
+      parallel (~> 1.10)
+      parser (>= 3.3.0.2)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 2.9.3, < 3.0)
+      rubocop-ast (>= 1.47.1, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 2.4.0, < 4.0)
+    rubocop-ast (1.47.1)
+      parser (>= 3.3.7.2)
+      prism (~> 1.4)
+    ruby-progressbar (1.13.0)
+    rubyntlm (0.6.5)
+      base64
+    sqlite3 (1.6.9-x86_64-linux)
     sqlite_magic (0.0.3)
       sqlite3
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.7.1)
-    webrobots (0.1.1)
+    unicode-display_width (3.2.0)
+      unicode-emoji (~> 4.1)
+    unicode-emoji (4.1.0)
+    webrick (1.9.1)
+    webrobots (0.1.2)
 
 PLATFORMS
-  ruby
+  x86_64-linux
 
 DEPENDENCIES
-  mechanize
+  mechanize (~> 2.8.5)
+  nokogiri (~> 1.15.0)
+  rubocop
   scraperwiki!
+  sqlite3 (~> 1.6.3)
+
+RUBY VERSION
+   ruby 3.2.2p53
+
+BUNDLED WITH
+   2.4.10
