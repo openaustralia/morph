@@ -13,20 +13,30 @@ describe Morph::DockerRunner do
     let!(:dir) { Dir.mktmpdir }
     let!(:container_count) { Morph::DockerUtils.stopped_containers.count }
 
-    after { FileUtils.remove_entry dir }
+    before { @docker_output = [] }
+
+    after do |example|
+      FileUtils.remove_entry dir
+      if example.exception && @docker_output
+        puts "\n=== DOCKER BUILD OUTPUT ==="
+        @docker_output.each do |stream, text|
+          puts "#{stream}: #{text}" if text&.strip.present?
+        end
+        puts "=========================\n"
+      end
+    end
 
     it "lets me know that it can't select a buildpack" do
-      logs = []
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
-        logs << [stream, text]
+        @docker_output  << [stream, text]
       end
 
       # For some reason (which I don't understand) on travis it returns
       # extra lines with carriage returns. So, ignore these
-      logs = logs.reject { |l| l[1] == "\n" }
+      @docker_output = @docker_output.reject { |l| l[1] == "\n" }
 
       expect(c).to be_nil
-      expect(logs).to eq [
+      expect(@docker_output).to eq [
         [:internalout, "Injecting configuration and compiling...\n"],
         [:internalout, "\e[1G       \e[1G-----> Unable to select a buildpack\n"]
       ]
@@ -36,14 +46,19 @@ describe Morph::DockerRunner do
 
     it "stops if a python compile fails" do
       copy_test_scraper("failing_compile_python")
-      c = described_class.compile_and_start_run(repo_path: dir)
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+        @docker_output  << [stream, text]
+      end
       expect(c).to be_nil
     end
 
-    it "is able to run hello world" do
+    it "is able to run hello world js on heroku-18" do
       copy_test_scraper("hello_world_js")
 
-      c = described_class.compile_and_start_run(repo_path: dir)
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+        @docker_output  << [stream, text]
+      end
+      expect(c).not_to be_nil
       logs = []
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -67,7 +82,10 @@ describe Morph::DockerRunner do
       # Limit the buffer size just for testing
       report = MemoryProfiler.report do
         with_smaller_chunk_size do
-          c = described_class.compile_and_start_run(repo_path: dir)
+          c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+            @docker_output  << [stream, text]
+          end
+          expect(c).not_to be_nil
           described_class.attach_to_run(c)
           described_class.finish(c, [])
         end
@@ -83,7 +101,10 @@ describe Morph::DockerRunner do
     it "attaches the container to a special morph-only docker network" do
       copy_test_scraper("hello_world_js")
 
-      c = described_class.compile_and_start_run(repo_path: dir)
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+        @docker_output  << [stream, text]
+      end
+      expect(c).not_to be_nil
       expect(c.json["HostConfig"]["NetworkMode"]).to eq "morph"
       # Check that the network has some things set
       network_info = Docker::Network.get("morph").info
@@ -98,7 +119,10 @@ describe Morph::DockerRunner do
     it "is able to run hello world from a sub-directory" do
       copy_test_scraper("hello_world_subdirectory_js")
 
-      c = described_class.compile_and_start_run(repo_path: dir)
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+        @docker_output  << [stream, text]
+      end
+      expect(c).not_to be_nil
       logs = []
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         logs << [stream, text]
@@ -113,7 +137,10 @@ describe Morph::DockerRunner do
       copy_test_scraper("hello_world_js")
 
       # Do the compile once to make sure the cache is primed
-      c = described_class.compile_and_start_run(repo_path: dir)
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+        @docker_output  << [stream, text]
+      end
+      expect(c).not_to be_nil
       logs = []
       # Clean up container because we're not calling finish
       # which normally does the cleanup
@@ -122,6 +149,7 @@ describe Morph::DockerRunner do
 
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
         logs << [stream, text]
+        @docker_output  << [stream, text]
       end
 
       # For some reason (which I don't understand) on travis it returns
@@ -140,13 +168,13 @@ describe Morph::DockerRunner do
       copy_test_scraper("hello_world_ruby")
 
       c = described_class.compile_and_start_run(repo_path: dir)
-      logs = []
+      @docker_output = []
       described_class.attach_to_run(c) do |_timestamp, stream, text|
-        logs << [stream, text]
+        @docker_output << [stream, text]
       end
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 0
-      expect(logs).to eq [
+      expect(@docker_output).to eq [
         [:stdout, "Hello world!\n"]
       ]
       expect(Morph::DockerUtils.stopped_containers.count)
@@ -170,17 +198,17 @@ describe Morph::DockerRunner do
     it "is able to pass environment variables" do
       copy_test_scraper("display_env_ruby")
 
-      logs = []
+      @docker_output = []
       c = described_class.compile_and_start_run(
         repo_path: dir, env_variables: { "AN_ENV_VARIABLE" => "Hello world!" }
       )
       described_class.attach_to_run(c) do |_timestamp, stream, text|
-        logs << [stream, text]
+        @docker_output << [stream, text]
       end
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 0
       # These logs will actually be different if the compile isn't cached
-      expect(logs).to eq [
+      expect(@docker_output).to eq [
         [:stdout, "Hello world!\n"]
       ]
     end
@@ -191,13 +219,13 @@ describe Morph::DockerRunner do
       c = described_class.compile_and_start_run(
         repo_path: dir
       )
-      logs = []
+      @docker_output = []
       described_class.attach_to_run(c) do |_timestamp, stream, text|
-        logs << [stream, text]
+        @docker_output << [stream, text]
       end
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 0
-      expect(logs).to eq [[:stdout, "/etc/ssl/certs/ca-certificates.crt\n"]]
+      expect(@docker_output).to eq [[:stdout, "/etc/ssl/certs/ca-certificates.crt\n"]]
     end
 
     it "returns the ip address of the container" do
@@ -215,14 +243,14 @@ describe Morph::DockerRunner do
     it "returns a non-zero error code if the scraper fails" do
       copy_test_scraper("failing_scraper_ruby")
 
-      logs = []
+      @docker_output = []
       c = described_class.compile_and_start_run(repo_path: dir)
       described_class.attach_to_run(c) do |_timestamp, stream, text|
-        logs << [stream, text]
+        @docker_output << [stream, text]
       end
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 1
-      expect(logs).to eq [
+      expect(@docker_output).to eq [
         [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
         [:stderr, "This is not going to run as ruby code so should return an error\n"],
         [:stderr, "                 ^\n"],
@@ -233,16 +261,16 @@ describe Morph::DockerRunner do
     it "streams output if the right things are set for the language" do
       copy_test_scraper("stream_output_ruby")
 
-      logs = []
+      @docker_output = []
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, _stream, text|
-        logs << [Time.zone.now, text]
+        @docker_output << [Time.zone.now, text]
       end
       described_class.attach_to_run(c) do |_timestamp, _stream, text|
-        logs << [Time.zone.now, text]
+        @docker_output << [Time.zone.now, text]
       end
       described_class.finish(c, [])
-      start_time = logs.find { |l| l[1] == "Started!\n" }[0]
-      end_time = logs.find { |l| l[1] == "Finished!\n" }[0]
+      start_time = @docker_output.find { |l| l[1] == "Started!\n" }[0]
+      end_time = @docker_output.find { |l| l[1] == "Finished!\n" }[0]
       expect(end_time - start_time).to be_within(0.1).of(1.0)
     end
 
