@@ -52,6 +52,68 @@ describe Morph::DockerRunner do
       expect(c).to be_nil
     end
 
+    it "is able to run nodejs example" do
+      copy_example_scraper("nodejs")
+
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+        @docker_output  << [stream, text]
+      end
+      expect(c).not_to be_nil
+      described_class.attach_to_run(c) do |_timestamp, stream, text|
+        @docker_output << [stream, text]
+      end
+      result = described_class.finish(c, [])
+      expect(result.status_code).to eq 0
+      expect(@docker_output).to eq [[:stdout, "Hello world!\n"]]
+    end
+
+    it "is able to run perl example" do
+      copy_example_scraper("perl")
+
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+        @docker_output  << [stream, text]
+      end
+      expect(c).not_to be_nil
+      described_class.attach_to_run(c) do |_timestamp, stream, text|
+        @docker_output << [stream, text]
+      end
+      result = described_class.finish(c, [])
+      expect(result.status_code).to eq 0
+      expect(@docker_output).to eq [[:stdout, "Hello world!\n"]]
+    end
+
+    it "is able to run php example" do
+      copy_example_scraper("php")
+
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+        @docker_output  << [stream, text]
+      end
+      expect(c).not_to be_nil
+      described_class.attach_to_run(c) do |_timestamp, stream, text|
+        @docker_output << [stream, text]
+      end
+      result = described_class.finish(c, [])
+      expect(result.status_code).to eq 0
+      expect(@docker_output).to eq [[:stdout, "Hello world!\n"]]
+    end
+
+    # FIXME: test python when we add heroku-24 as ceder-4 and heroku-18 can't find any python versions
+
+    it "is able to run ruby example" do
+      copy_example_scraper("ruby")
+
+      c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
+        @docker_output  << [stream, text]
+      end
+      expect(c).not_to be_nil
+      described_class.attach_to_run(c) do |_timestamp, stream, text|
+        @docker_output << [stream, text]
+      end
+      result = described_class.finish(c, [])
+      expect(result.status_code).to eq 0
+      expect(@docker_output).to eq [[:stdout, "Hello world!\n"]]
+    end
+
     it "is able to run hello world js on heroku-18" do
       copy_test_scraper("hello_world_js")
 
@@ -454,6 +516,13 @@ end
 def copy_test_scraper(name)
   FileUtils.cp_r(
     File.join(File.dirname(__FILE__), "test_scrapers", "docker_runner_spec", name, "."),
+    dir
+  )
+end
+
+def copy_example_scraper(name)
+  FileUtils.cp_r(
+    File.join(File.dirname(__FILE__), "..", "..", "..", "default_files", name, "template", "."),
     dir
   )
 end
