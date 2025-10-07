@@ -191,6 +191,13 @@ By default in development mails are sent to [Mailcatcher](http://mailcatcher.me/
 
     gem install mailcatcher
 
+## Rubymine specific advice
+
+### Disable Spring in RubyMine:
+
+Under Run → Edit Configurations → your RSpec configuration,
+set Environment variable: DISABLE_SPRING=1
+
 ## Deploying to production
 
 This section will not be relevant to most people. It will however be relevant if you're deploying to a production server.
