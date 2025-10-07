@@ -26,7 +26,7 @@ gem "faraday", "~> 2"
 gem "faraday-retry"
 
 gem "font-awesome-rails"
-# Use same version deployed to server because provisioning/roles/morph-app/tasks/main.yml:80
+# Use same version as ruby-foreman package as Production uses system foreman
 gem "foreman", "0.63.0"
 gem "friendly_id"
 
