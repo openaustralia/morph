@@ -11,6 +11,7 @@ ruby_version: "{{ lookup('file', '../.ruby-version') | trim }}"
 bundler_version: 2.2.33
 apt_packages:
   - cmake
+  - curl
   - language-pack-en
   - libffi-dev
   - libgdbm-dev
