@@ -25,6 +25,12 @@ apt_packages:
   - sqlite3
   - zlib1g-dev
 
+bash_alias_lines:
+  - "alias cdmorph='if [ \"$USER\" = \"deploy\" ]; then cd /var/www/current; export RAILS_ENV=production; env | egrep RAILS_ENV; else cd /vagrant ; echo \"development. sudo -u deploy -i for production!\"; fi'"
+  - 'alias be="bundle exec"'
+  - 'alias r="bundle exec rails"'
+  - 'alias rk="bundle exec rake"'
+
 backup_gpg_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           61643232663363396235343339656666303161663462373838613430623162633162303330666330
