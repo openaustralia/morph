@@ -1,10 +1,13 @@
 {
   "version": "0.0.1",
   "main": "scraper.js",
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
-    "cheerio": "latest",
-    "request": "latest",
-    "sqlite3": "latest"
+    "cheerio": "1.0.0-rc.12",
+    "request": "^2.88.2",
+    "sqlite3": "^5.1.6"
   },
   "keywords": [
     "scraper",

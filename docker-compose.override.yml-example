@@ -1,6 +1,6 @@
-  # NOTE - copy  to docker-compose.override.yml if you want
-  # fixed rather than random ports on the host for services below
-  # or to override other configuration
+# NOTE - copy  to docker-compose.override.yml if you want
+# fixed rather than random ports on the host for services below
+# or to override other configuration
 
 # Copy the ruby-service definition from docker-compose.yml
 x-ruby-service: &ruby-service
@@ -53,11 +53,16 @@ services:
     <<: *ruby-service
     ports:
       - "35729:35729"  # LiveReload port
+    # too many conflicts with spring - disabling it for guard!
+    environment:
+      - DISABLE_SPRING=1
     depends_on:
       mysql:
         condition: service_healthy
       redis:
         condition: service_healthy
+      web:
+        condition: service_started  # avoid race condition on bundle install
     command: bundle exec guard
     tty: true
     stdin_open: true

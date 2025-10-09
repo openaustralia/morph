@@ -1,3 +1,6 @@
+include:
+  - docker_images/services.yaml
+
 x-ruby-service: &ruby-service
   build:
     context: .
@@ -28,6 +31,7 @@ services:
   web:
     <<: *ruby-service 
     ports:
+      # Always expose on host! (use override to expose anything else)
       - "3000:3000"
     depends_on:
       elasticsearch:
@@ -52,40 +56,25 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      web:
+        condition: service_started  # avoid race condition on bundle install
     command: bundle exec sidekiq -C config/sidekiq.yml
 
   faye:
     <<: *ruby-service
     ports:
-      - "9292:9292"
+      - "9292"
     depends_on:
       mysql:
         condition: service_healthy
       redis:
         condition: service_healthy
+      web:
+        condition: service_started  # avoid race condition on bundle install
     command: bundle exec dotenv rackup sync.ru -E production
 
   # NOTE - copy docker-compose.override.yml-example to docker-compose.override.yml if you want
   # fixed rather than random ports on the host for services below
-
-  elasticsearch:
-    # We're using elasticsearch 7 (rather than the current latest
-    # 8.3.3) is because we don't want to bother with authentication
-    # and ssl for the time being
-    image: elasticsearch:7.17.7
-    ports:
-      - "9200:9200"
-    mem_limit: 1073741824
-    environment:
-      - "discovery.type=single-node"
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=green&timeout=5s || exit 1"]
-      start_period: 2s
-      interval: 1s
-      timeout: 10s
-      retries: 120
 
 #  mailcatcher:
 #    build:
@@ -109,46 +98,7 @@ services:
       timeout: 10s
       retries: 120
 
-  # https://hub.docker.com/layers/mysql/mysql-server/5.7.41/images/sha256-1178cdd375f758968cd834ac4057bae41307e64b7c69a9e145896e7b11f48064
-  mysql:
-    # Same version as used in production
-    image: mysql/mysql-server:5.7.33
-    # There isn't yet a linux/arm64 build of postgis on docker
-    # See https://github.com/postgis/docker-postgis/issues/216
-    platform: linux/amd64
-    ports:
-      - "3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    environment:
-      # The values below need to be the same in config/database.yml
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD must be set, preferably in the .env file}
-      MYSQL_ROOT_HOST: '%'
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      start_period: 2s
-      interval: 1s
-      timeout: 10s
-      retries: 120
-
-  # https://hub.docker.com/layers/library/redis/3.0.6/images/sha256-6a692a76c2081888b589e26e6ec835743119fe453d67ecf03df7de5b73d69842
-  redis:
-    # Ansible installed 3.0.6, but we need a v2 docker image
-    # FIXME: append -alpine for smaller image
-    image: redis:3.2
-    ports:
-      - "6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      start_period: 2s
-      interval: 1s
-      timeout: 10s
-      retries: 120
       
 volumes:
   gem_cache:
-  elasticsearch_data:
-  mysql_data:
-  redis_data:
+

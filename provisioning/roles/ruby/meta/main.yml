@@ -1,11 +1,4 @@
 ---
 dependencies:
   - role: deploy-user
-    github_users: 
-    - 'br3nda'
-    - 'henare'
-    - 'ianheggie-oaf'
-    - 'jamezpolley'
-    - 'mlandauer'
-    - 'simonzippy'
-
+    tags: "deploy-user"

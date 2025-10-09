@@ -10,6 +10,8 @@
         "ext-sqlite3": "*",
         "ext-pdo_sqlite": "*",
         "ext-gd": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "byjg/pgbrowser" : "*",
+        "torann/dom-parser": "*"
     }
 }

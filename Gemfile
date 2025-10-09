@@ -26,7 +26,7 @@ gem "faraday", "~> 2"
 gem "faraday-retry"
 
 gem "font-awesome-rails"
-# Use same version deployed to server because provisioning/roles/morph-app/tasks/main.yml:80
+# Use same version as ruby-foreman package as Production uses system foreman
 gem "foreman", "0.63.0"
 gem "friendly_id"
 
@@ -84,7 +84,7 @@ gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"
 
 # For searchkick 5 we need to install the elasticsearch gem ourselves
 # We're using elasticsearch 7 in production so sticking with the same version for the client
-gem "elasticsearch", "~> 7"
+gem "elasticsearch", "~> 7.17"
 gem "searchkick", "~> 5"
 
 gem "stripe"

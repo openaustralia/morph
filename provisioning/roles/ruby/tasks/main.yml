@@ -2,46 +2,73 @@
 - name: Ensure curl is installed
   apt: pkg=curl
 
-- name: Install gpg key for rvm
+- name: "Install gpg key for rvm_users"
   shell: gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-  become_user: deploy
+  become_user: "{{ item }}"
+  loop: "{{ rvm_users }}"
 
 # TODO: Maybe install rvm by installing the package ruby-rvm?
-- name: Ensure rvm installed in deploy user
-  shell: curl -sSL https://get.rvm.io | bash -s stable creates=/home/deploy/.rvm
-  become_user: deploy
+- name: "Ensure rvm installed for rvm_users"
+  shell: "curl -sSL https://get.rvm.io | bash -s stable creates=/home/{{ item }}/.rvm"
+  become_user: "{{ item }}"
+  loop: "{{ rvm_users }}"
 
-# TODO: Is it possible to extract this list of dependencies automatically from rvm?
-# Or allow rvm to do the install - but that would require the deploy user to have the permissions
-- name: "Ensure ruby-2.7.6 dependencies are installed"
-  apt: pkg={{ item }}
-  with_items:
-    - patch
-    - gawk
-    - g++
-    - make
-    - patch
-    - libyaml-dev
-    - libsqlite3-dev
-    - sqlite3
-    - autoconf
-    - libgdbm-dev
-    - libncurses5-dev
-    - automake
-    - libtool
-    - bison
-    - pkg-config
-    - libffi-dev
-    - libreadline6-dev
-    - zlib1g-dev
-    - libssl-dev
-    - libgmp-dev
+- name: "Ensure ruby dependencies are installed"
+  apt:
+    pkg:
+      - autoconf
+      - automake
+      - bison
+      - g++
+      - gawk
+      - libtool
+      - make
+      - patch
+      - pkg-config
 
-- name: Install ruby-2.7.6 with rvm
-  command: /bin/sh -l -c 'rvm install ruby-2.7.6 --autolibs=read-fail' creates=/home/deploy/.rvm/rubies/ruby-2.7.6
-  become_user: deploy
-  notify: Make ruby-2.7.6 the default
+- name: "Ensure gem dependencies are installed"
+  apt:
+    pkg: "{{ apt_packages }}"
 
-- name: Install bundler for ruby 2.7.6
-  command: bash -lc "rvm ruby-2.7.6; gem install bundler --version 2.0.2"
-  become_user: deploy
+- name: "Install ruby-{{ ruby_version }} for rvm_users (with binary)"
+  command: "/bin/bash -l -c 'rvm install ruby-{{ ruby_version }} --autolibs=read-fail'"
+  args:
+    creates: "/home/{{ item }}/.rvm/rubies/ruby-{{ ruby_version }}"
+  become_user: "{{ item }}"
+  loop: "{{ rvm_users }}"
+  async: 300
+  poll: 5
+  register: rvm_install
+  ignore_errors: yes
+  notify: "Set default ruby version"
+
+- name: "Install ruby-{{ ruby_version }} for rvm_users (fallback compile from source)"
+  command: "/bin/bash -l -c 'rvm install ruby-{{ ruby_version }} --disable-binary --autolibs=read-fail'"
+  args:
+    creates: "/home/{{ item.item }}/.rvm/rubies/ruby-{{ ruby_version }}"
+  become_user: "{{ item.item }}"
+  loop: "{{ rvm_install.results }}"
+  async: 1800
+  poll: 5
+  when: item.failed | default(false)
+  notify: "Set default ruby version"
+
+- name: Check if bundler is installed for rvm_users
+  command: /bin/bash -lc "rvm ruby-{{ ruby_version }} do gem list bundler -i -v {{ bundler_version }}"
+  become_user: "{{ item }}"
+  register: bundler_check
+  failed_when: false
+  changed_when: false
+  loop: "{{ rvm_users }}"
+  # Disable use of PTY as it sometimes hangs
+  async: 60
+  poll: 2
+
+- name: Install bundler for ruby {{ ruby_version }} for rvm_users
+  command: /bin/bash -lc "rvm ruby-{{ ruby_version }} do gem install bundler --version {{ bundler_version }}"
+  become_user: "{{ item.item }}"
+  when: item.rc != 0
+  loop: "{{ bundler_check.results }}"
+  # Disable use of PTY as it sometimes hangs
+  async: 300
+  poll: 2

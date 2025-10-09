@@ -20,7 +20,7 @@ GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Used by mitmproxy to communicate via the api back to morph
 MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
-MORPH_URL=http://localhost:5100
+MORPH_URL=http://localhost:3000
 
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!

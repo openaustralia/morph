@@ -45,7 +45,7 @@ module ScrapersHelper
   sig { params(text: String).returns(T::Boolean) }
   def url?(text)
     u = URI.parse(text)
-    u.scheme == "http" || u.scheme == "https"
+    %w[http https].include?(u.scheme)
   rescue URI::InvalidURIError
     false
   end

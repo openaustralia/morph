@@ -79,7 +79,7 @@ class Scraper < ApplicationRecord
 
   sig { returns(T::Array[User]) }
   def all_watchers
-    owner_watchers = (owner&.watchers || [])
+    owner_watchers = owner&.watchers || []
     (watchers + owner_watchers).uniq
   end
 
