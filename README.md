@@ -32,7 +32,15 @@ Read the [provisioning README](provisioning/README.md) for further details.
 * 8 GB of memory is the minimum, 16 GB is recommended
 * SSD Disk
 
-Docker compose is used to provide a consistent development environment.
+### Support for Developers / CI
+
+Docker compose is used to provide redis, elasticsearch and mysql services as required for dev and CI
+(use SERVICES to specify which services to start if you don't want them all).
+
+vagrant is used to provide a local staging environment to test ansible provisioning and capistrano app deployment.
+
+If you don't want to set up ruby on your local host and/or have a different enough docker / mysql / redis version
+then use vagrant and /vagrant mapping of project root.
 
 ## Installing Docker
 
@@ -42,23 +50,56 @@ which includes Docker Engine.
 
 On Linux, Your user account should be able to manipulate Docker (just add your user to the `docker` group).
 
-## Using Docker
+## Installing Vagrant
+
+Install [VirtualBox](https://www.virtualbox.org/) os other supported virtualization provider.
+
+Then install [Vagrant](https://developer.hashicorp.com/vagrant)
+
+## Make targets
+
+Various make targets have been added to for developer convenience when developing on the local host:
+
+* help - This help dialog.
+* vagrant-up - launch local vagrant VM
+* vagrant-provision - Provision local vagrant VM using ansible
+* vagrant-deploy - Deploy app to local vagrant VM
+* services-up - Run up services with persistent data (use SERVICES="redis elasticsearch" to exclude mysql)
+* services-down - Close down services required for CI / development
+* services-logs - View logs for services (use SERVICES='elasticsearch redis' for specific services)
+* services-status - Check status of services
+
+* test - Run rspec tests
+* lint - Lint code
+* share-web - Share web server on port 3000 to the internet
+* clean - Clean out venv, installed roles and rails tmp/cache
+* clobber - Remove everything including logs
+* docker-clean - Remove all Docker resources INCLUDING databases in volumes
+
+targets to use docker compose rather than vagrant for a full development environment (BETA):
+
+* docker-up - Full Docker environment including ruby containers (persistent data) BETA
+
+targets for production:
+
+* production-provision - Provision production using ansible
+* production-deploy - Deploy app to production
 
 Morph needs various services to run. We've made things easier for development by using docker
-to run Elasticsearch and the other services as well as the web container for the ruby on rails application itself.
+to run Elasticsearch and the other services.
 
-    docker compose up --build
+    make services-up 
 
-To stop the services then use
+To stop the services use
 
-    docker compose down
+    make services-down
 
 To run tests use
 
-    docker compose exec web bin/rake db:test:prepare
-    docker compose exec web bin/rake
+    bin/rake db:test:prepare
+    bin/rake
 
-To get a bash shell in the running container
+To get a bash shell in the running web container if you are using the full docker environment:
 
     docker compose exec web bash -i
 
@@ -81,7 +122,6 @@ Install gem requirements by running the following in the web container:
 
     bundle install
 
-
 ## Repositories
 
 User-facing:
@@ -94,13 +134,17 @@ User-facing:
 Docker images:
 * [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Base image for running scrapers in containers
 
+Note - morph builds a docker image using these buildstep images combined with the config files from the scraper to
+build a separate docker image for each scraper with all the dependencies ready to go.
+
 ### Tunnel GitHub webhook traffic back to your local development machine
 
 We use "ngrok" a tool that makes tunnelling internet traffic to a local development machine easy. 
 
 First [download ngrok](https://ngrok.com/download) if you don't have it already. Then,
 
-    ngrok http 3000
+    make share-web
+    # rune: ngrok http 3000
 
 Make note of the ngrok forwarding url (`*.ngrok-free.dev`).
 

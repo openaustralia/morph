@@ -38,7 +38,8 @@ help: ## This help dialog.
 		printf "%s\n" $$help_info; \
 	done
 
-vagrant-plugins: ## Ensure required Vagrant plugins are installed
+ # Ensure required Vagrant plugins are installed
+vagrant-plugins:
 	@plugins=$$(vagrant plugin list); \
 	for plugin in vagrant-hostsupdater vagrant-disksize vagrant-vbguest; do \
 		if echo "$$plugins" | grep -q $$plugin; then \
@@ -63,16 +64,14 @@ vagrant-deploy: ## Deploy app to local vagrant VM
 production-deploy: ## Deploy app to production
 	bundle exec cap production deploy
 
-docker-up: ## Full Docker environment including ruby containers (ephemeral data)
-	docker compose -f docker-compose.yml up
-
-docker-up-persistent: ## Full Docker environment including ruby containers (persistent data)
+docker-up: ## Full Docker environment including ruby containers (persistent data) BETA
 	docker compose -f docker-compose.yml -f docker_images/persistent_services.yaml up
 
-services-up: ## Run up services required for CI / development (use SERVICES="redis elasticsearch" to exclude mysql)
-	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml up --build -d ${SERVICES}
+# Run up services required for CI (no persistence)
+ci-services-up:
+	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml up --build -d redis elasticsearch
 
-persistent-services-up: ## Run up services with persistent data
+services-up: ## Run up services with persistent data (use SERVICES="redis elasticsearch" to exclude mysql)
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml -f docker_images/persistent_services.yaml up --build -d ${SERVICES}
 
 services-down: ## Close down services required for CI / development
@@ -98,9 +97,9 @@ clean: ## Clean out venv, installed roles and rails tmp/cache
 clobber: clean ## Remove everything including logs
 	rm -f log/*.log
 
-docker-clean: services-down ## Remove all Docker resources
+docker-clean: services-down ## Remove all Docker resources INCLUDING databases in volumes
 	docker system prune -af --volumes
 
-share-web: ## Share web server on port 3000 to the internet
-	ngrok http 3000
+share-web: ## Share web server on port 3000 to the internet (use PORT=N to use an alternative port)
+	ngrok http ${PORT:-3000}
 
