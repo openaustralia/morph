@@ -16,7 +16,7 @@
     state: present
 
 - name: Ensure that we have the docker repository
-  apt_repository: repo='deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable'
+  apt_repository: repo='deb [arch=amd64] https://download.docker.com/linux/ubuntu noble stable'
 
 - name: Ensure that the docker package is installed
   apt: pkg=docker-ce

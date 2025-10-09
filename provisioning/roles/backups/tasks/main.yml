@@ -4,7 +4,7 @@
     id: 8507EFA5
     keyserver: keyserver.ubuntu.com
 - name: Add the Percona sources
-  apt_repository: repo='deb https://repo.percona.com/apt xenial main'
+  apt_repository: repo='deb https://repo.percona.com/apt noble main'
 - name: Install percona xtrabackup
   apt: pkg=percona-xtrabackup update_cache=yes cache_valid_time=3600 allow_unauthenticated=yes
 - name: Copy across database backup script

@@ -6,7 +6,7 @@
 Vagrant.configure("2") do |config|
   # local: A local machine that mimics a production deployment
 
-  config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "cloud-image/ubuntu-24.04"
   # This setting depends on installing the plugin https://github.com/sprotheroe/vagrant-disksize:
   # vagrant plugin install vagrant-disksize
   config.disksize.size = "20GB"

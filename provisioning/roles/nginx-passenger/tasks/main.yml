@@ -9,7 +9,7 @@
   apt: pkg=ca-certificates
 
 - name: Ensure we have the passenger repository
-  apt_repository: repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger xenial main'
+  apt_repository: repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger noble main'
 
 - name: Install passenger
   apt: pkg=passenger
