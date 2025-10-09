@@ -1,3 +1,6 @@
+# typed: false
+# frozen_string_literal: true
+
 module DockerImageHelper
   def pull_image_if_missing(image_name)
     return if Docker::Image.exist?(image_name)
