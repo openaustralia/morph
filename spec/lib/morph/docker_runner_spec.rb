@@ -101,6 +101,22 @@ describe Morph::DockerRunner do
       expect(@docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
+    it "is able to run python example" do
+      copy_example_scraper("python")
+
+      c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
+        @docker_output << [stream, text]
+      end
+      pending("FIXME: Fix python example test - requires heroku-24 platform to be implemented")
+      expect(c).not_to be_nil
+      described_class.attach_to_run(c) do |_timestamp, stream, text|
+        @docker_output << [stream, text]
+      end
+      result = described_class.finish(c, [])
+      expect(result.status_code).to eq 0
+      expect(@docker_output.last).to eq [:stdout, "1: Example Domain\n"]
+    end
+
     # FIXME: test python when we add heroku-24 as ceder-4 and heroku-18 can't find any python versions
 
     it "is able to run ruby example" do
