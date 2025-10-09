@@ -1,1 +1,1 @@
-ansible~=2.9.27
+ansible-core~=2.18.9

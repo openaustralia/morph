@@ -28,6 +28,7 @@ Vagrant.configure("2") do |config|
     end
 
     local.vm.provision :ansible do |ansible|
+      ansible.compatibility_mode = "2.0"
       ansible.playbook = "provisioning/playbook.yml"
       ansible.verbose = "v"
       ansible.groups = {

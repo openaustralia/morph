@@ -21,8 +21,8 @@
   gather_facts: False
 
   tasks:
-  - name: install python 2
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  - name: install python 3
+    raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3-minimal)
     tags: ['python'] 
 
 # Some features in the playbook need ansible2.5+ and later ubuntu require more recent ansible, so let's check for that first
