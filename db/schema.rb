@@ -12,13 +12,13 @@
 
 ActiveRecord::Schema.define(version: 2022_10_13_051602) do
 
-  create_table "active_admin_comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "active_admin_comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
     t.string "resource_id", null: false
     t.string "resource_type", null: false
-    t.string "author_type"
     t.integer "author_id"
+    t.string "author_type"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
 
-  create_table "alerts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "alerts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "watch_id"
     t.string "watch_type"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["watch_type"], name: "index_alerts_on_watch_type"
   end
 
-  create_table "api_queries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "api_queries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "type"
     t.text "query"
     t.integer "scraper_id"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["scraper_id"], name: "index_api_queries_on_scraper_id"
   end
 
-  create_table "collaborations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "collaborations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "scraper_id", null: false
     t.integer "owner_id", null: false
     t.boolean "admin", null: false
@@ -69,16 +69,16 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["scraper_id"], name: "index_collaborations_on_scraper_id"
   end
 
-  create_table "connection_logs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "connection_logs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "run_id"
-    t.datetime "created_at"
     t.integer "domain_id"
+    t.datetime "created_at"
     t.index ["created_at"], name: "index_connection_logs_on_created_at"
     t.index ["domain_id"], name: "index_connection_logs_on_domain_id"
     t.index ["run_id"], name: "index_connection_logs_on_run_id"
   end
 
-  create_table "contributions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "contributions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "scraper_id"
     t.integer "user_id"
     t.datetime "created_at"
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["user_id"], name: "index_contributions_on_user_id"
   end
 
-  create_table "create_scraper_progresses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "create_scraper_progresses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "message"
     t.integer "progress"
     t.datetime "created_at"
@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.string "heading"
   end
 
-  create_table "domains", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "domains", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "meta"
     t.datetime "created_at"
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["name"], name: "index_domains_on_name", unique: true
   end
 
-  create_table "log_lines", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "log_lines", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "run_id"
     t.string "stream"
     t.text "text"
@@ -115,7 +115,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["timestamp"], name: "index_log_lines_on_timestamp"
   end
 
-  create_table "metrics", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "metrics", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.float "wall_time"
     t.float "utime"
     t.float "stime"
@@ -132,14 +132,14 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["run_id"], name: "index_metrics_on_run_id"
   end
 
-  create_table "organizations_users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "organizations_users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "organization_id"
     t.integer "user_id"
     t.index ["organization_id"], name: "index_organizations_users_on_organization_id"
     t.index ["user_id"], name: "index_organizations_users_on_user_id"
   end
 
-  create_table "owners", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "owners", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
@@ -172,7 +172,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["nickname"], name: "index_owners_on_nickname"
   end
 
-  create_table "runs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "runs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "scraper_id"
     t.datetime "started_at"
     t.datetime "finished_at"
@@ -205,8 +205,8 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["started_at"], name: "index_runs_on_started_at"
   end
 
-  create_table "scrapers", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "name", null: false
+  create_table "scrapers", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
+    t.string "name", default: "", null: false
     t.string "description"
     t.integer "github_id"
     t.integer "owner_id", null: false
@@ -230,13 +230,13 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["owner_id"], name: "index_scrapers_on_owner_id"
   end
 
-  create_table "site_settings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "site_settings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "settings"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "variables", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "variables", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "value", null: false
     t.integer "scraper_id"
@@ -245,7 +245,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["scraper_id"], name: "fk_rails_f537200e37"
   end
 
-  create_table "webhook_deliveries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "webhook_deliveries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "webhook_id"
     t.integer "run_id"
     t.datetime "sent_at"
@@ -256,7 +256,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["webhook_id"], name: "index_webhook_deliveries_on_webhook_id"
   end
 
-  create_table "webhooks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "webhooks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "scraper_id"
     t.string "url"
     t.datetime "created_at"
