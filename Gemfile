@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# IMPORTANT - ALWAYS Regenerate Sorbet RBI files when you update gem versions
+# bundle exec tapioca gem
+
 source "https://rubygems.org"
 
 ruby "2.7.6"
@@ -7,7 +10,7 @@ ruby "2.7.6"
 gem "dotenv-rails"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "5.2.8.1"
+gem "rails", "6.0.6.1"
 
 gem "mysql2"
 gem "sqlite3"
@@ -91,14 +94,14 @@ gem "stripe"
 gem "validate_url"
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem "bootsnap", "~> 1.4", require: false
 
 # For type checking
 gem "sorbet-static-and-runtime"
 
 # Psych just seems to be giving us trouble
 # TODO: Figure out what's going on here
-gem "psych", "< 4"
+gem "psych" #, "< 4"
 
 # For making JSON Web Tokens used by Github API
 gem "jwt"
@@ -133,7 +136,7 @@ group :development do
   gem "binding_of_caller"
   gem "memory_profiler"
   gem "pry-rails"
-  gem "spring", "~> 3.1.1" # to be compatible with rails 5.2 version (4.0+ is rails 6.0 only)
+  gem "spring", "~> 4.0"
   gem "spring-commands-rspec"
 
   gem "rubocop"
@@ -191,7 +194,7 @@ gem "jbuilder"
 # We're only including sprockets here so we can lock it to an older version
 # For upgrading: https://github.com/rails/sprockets/blob/070fc01947c111d35bb4c836e9bb71962a8e0595/UPGRADING.md#manifestjs
 # TODO: Upgrade to sprockets version 4 and remove the line below
-gem "sprockets", "~> 3"
+gem "sprockets", "~> 4.0"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
