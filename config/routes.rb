@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
   # Old urls getting redirected to new ones
   get "/api", to: redirect { |params, req| "/documentation/api?#{req.query_string}" }
   # This just gets redirected elsewhere
