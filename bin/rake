@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
-load File.expand_path("spring", __dir__)
+# disable spring as it was causing Rails::Application is abstract, you cannot instantiate it directly in railties gem
+# load File.expand_path("spring", __dir__)
 require_relative "../config/boot"
 require "rake"
 Rake.application.run
