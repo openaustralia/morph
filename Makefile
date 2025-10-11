@@ -83,7 +83,7 @@ services-logs: ## View logs for services (use SERVICES=elasticsearch for specifi
 services-status: ## Check status of services
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml ps
 
-test: ## Run rspec tests
+test: ## Run rspec tests (Optionally add RUN_SLOW_TESTS=1 or DONT_RUN_DOCKER_TESTS=1)
 	RAILS_ENV=test bundle exec rspec
 
 lint: ## Lint code
