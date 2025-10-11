@@ -17,7 +17,10 @@ Vagrant.configure("2") do |config|
     local.hostsupdater.aliases = ["faye.dev.morph.io", "api.dev.morph.io", "help.dev.morph.io"]
     local.vm.network :forwarded_port, guest: 22, host: 2200
     local.vm.network :forwarded_port, guest: 4443, host: 4443
-    local.vm.synced_folder ".", "/vagrant", disabled: true
+    # faye.dev.morph.io, dev.morph.io, api.dev.morph.io
+    local.vm.network :forwarded_port, guest: 443, host: 8443
+    # Use vagrant as both staging AND development!
+    # local.vm.synced_folder ".", "/vagrant", disabled: true
 
     local.vm.provider "virtualbox" do |v|
       # Without elasticsearch we can run with 2GB of memory, but otherwise
@@ -33,7 +36,21 @@ Vagrant.configure("2") do |config|
       tags = ENV["TAGS"].to_s.gsub(/[^A-Z0-9_]+/i, ",").split(",").reject { |s| s.to_s == "" }
       if tags.any?
         puts "INFO: Only running TAGS: #{tags.inspect}"
-        ansible.tags = tags if tags.any?
+        ansible.tags = tags
+      end
+      skip_tags = ENV["SKIP_TAGS"].to_s.gsub(/[^A-Z0-9_]+/i, ",").split(",").reject { |s| s.to_s == "" }
+      if skip_tags.any?
+        puts "INFO: Skipping TAGS: #{skip_tags.inspect}"
+        ansible.skip_tags = skip_tags
+      end
+      verbose_flag = if ENV["ANSIBLE_VERBOSE"].to_s =~ /(v+)/
+                       "-#{Regexp.last_match(1)}"
+                     elsif ENV["ANSIBLE_VERBOSE"]
+                       true
+                     end
+      if verbose_flag
+        puts "INFO: Setting verbose: #{verbose_flag}"
+        ansible.verbose = verbose_flag
       end
       start_at_task = "*#{ENV.fetch('START_AT_TASK', nil)}*".gsub(/[^A-Z0-9_]+/i, "*")
       if start_at_task != "*"

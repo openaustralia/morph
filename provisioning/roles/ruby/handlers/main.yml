@@ -1,4 +1,8 @@
 ---
-- name: Make ruby-2.7.6 the default
-  command: /bin/sh -l -c 'rvm alias create default ruby-2.7.6'
-  become_user: deploy
+- name: "Set default ruby version"
+  command: /bin/bash -lc 'rvm alias create default ruby-{{ ruby_version }}'
+  become_user: "{{ item }}"
+  loop: "{{ rvm_users }}"
+  # Disable use of PTY as it sometimes hangs
+  async: 600
+  poll: 2

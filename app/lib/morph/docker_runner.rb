@@ -253,6 +253,7 @@ module Morph
       end
     end
 
+    # Build a docker container
     sig { params(image: Docker::Image, commands: T::Array[String], dir: String, block: T.proc.params(text: String).void).returns(T.nilable(Docker::Image)) }
     def self.docker_build_command(image, commands, dir, &block)
       # Leave the files in dir untouched
@@ -261,7 +262,7 @@ module Morph
         File.write(File.join(dir2, "Dockerfile"), dockerfile_contents_from_commands(image, commands))
 
         Morph::DockerUtils.fix_modification_times(dir2)
-        Morph::DockerUtils.docker_build_from_dir(
+        image = Morph::DockerUtils.docker_build_from_dir(
           dir2, read_timeout: 5.minutes
         ) do |c|
           # We don't want to show the standard docker build output
@@ -272,13 +273,18 @@ module Morph
             block.call c
           end
         end
+        Rails.logger.debug { "Built docker container: #{image&.id || 'FAILED'}" }
+        image
       end
     end
 
     sig { params(image: Docker::Image, commands: T::Array[String]).returns(String) }
     def self.dockerfile_contents_from_commands(image, commands)
-      lines = ["from #{image.id}"] + commands
-      (lines.map { |c| "#{c}\n" }).join
+      repo_digest = image.info["RepoDigests"]&.first
+      repo_tags = image.info["RepoTags"]&.first
+      image_name = repo_digest || repo_tags || raise("Image #{image.id} has no repository name")
+      lines = ["# #{repo_tags}", "FROM #{image_name}"] + commands
+      lines.map { |c| "#{c}\n" }.join
     end
 
     # And build
@@ -288,7 +294,7 @@ module Morph
       Dir.mktmpdir("morph") do |dir|
         FileUtils.mkdir(File.join(dir, "app"))
         copy_config_to_directory(repo_path, File.join(dir, "app"), true)
-        docker_build_command(
+        app_image = docker_build_command(
           image,
           [
             # Insert the configuration part of the application code into the container
@@ -306,11 +312,13 @@ module Morph
             "ENV NODE_TLS_REJECT_UNAUTHORIZED 0",
             # In development to debug what the buildpacks are doing it can be useful to turn on
             # the TRACE environment variable below by uncommenting the line
-            # "ENV TRACE true",
+            ENV["TRACE_BUILD"] ? "ENV TRACE true" : "",
             "RUN /bin/herokuish buildpack build"
           ],
           dir, &block
         )
+        Rails.logger.debug { "Compiled #{repo_path} image with app prerequisites: #{app_image&.id || 'FAILED'}" }
+        app_image
       end
     end
   end

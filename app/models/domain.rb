@@ -36,8 +36,8 @@ class Domain < ApplicationRecord
     ).get
     header = Nokogiri::HTML(doc).at("html head")
     if header
-      tag = (header.at("meta[name='description']") ||
-             header.at("meta[name='Description']"))
+      tag = header.at("meta[name='description']") ||
+            header.at("meta[name='Description']")
     end
     meta = tag["content"] if tag
     title_tag = header.at("title") if header
