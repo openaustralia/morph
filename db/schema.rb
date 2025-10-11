@@ -2,23 +2,23 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `rails
+# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_13_051602) do
+ActiveRecord::Schema.define(version: 2025_10_10_074453) do
 
   create_table "active_admin_comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
     t.string "resource_id", null: false
     t.string "resource_type", null: false
-    t.integer "author_id"
     t.string "author_type"
+    t.integer "author_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
 
   create_table "connection_logs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "run_id"
-    t.integer "domain_id"
     t.datetime "created_at"
+    t.integer "domain_id"
     t.index ["created_at"], name: "index_connection_logs_on_created_at"
     t.index ["domain_id"], name: "index_connection_logs_on_domain_id"
     t.index ["run_id"], name: "index_connection_logs_on_run_id"
