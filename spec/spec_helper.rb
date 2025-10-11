@@ -14,7 +14,7 @@ SimpleCov.start "rails" do
     ]
   )
   track_files "**/*.rb"
-  # SimpleCov.minimum_coverage 50
+  SimpleCov.minimum_coverage 54
   add_filter %r{^/spec/}
   add_filter "/vendor/"
 end
