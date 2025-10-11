@@ -101,7 +101,7 @@ gem "sorbet-static-and-runtime"
 
 # Psych just seems to be giving us trouble
 # TODO: Figure out what's going on here
-gem "psych" #, "< 4"
+gem "psych" # , "< 4"
 
 # For making JSON Web Tokens used by Github API
 gem "jwt"

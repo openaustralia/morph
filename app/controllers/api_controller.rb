@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require 'csv'
+require "csv"
 
 # Run API used by the morph command-line client
 class ApiController < ApplicationController
