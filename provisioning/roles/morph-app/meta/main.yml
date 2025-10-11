@@ -1,20 +1,23 @@
 ---
 dependencies:
-  - { role: docker-server-linode }
-  - { role: nginx-passenger }
-  - { role: ruby }
-  - { role: mysql }
-  - { role: backups }
-  - { role: redis }
+  - { role: docker-server-linode, tags: "docker-server-linode" }
+  - { role: nginx-passenger, tags: "nginx-passenger" }
+  - { role: ruby, tags: "ruby" }
+  - { role: mysql, tags: "mysql" }
+  - { role: backups, tags: "backups" }
+  - { role: redis, tags: "redis" }
   - role: newrelic.newrelic-infra
+    roles: "newrelic"
     nrinfragent_config:
       license_key: "{{ newrelic_license_key }}"
-  - { role: mitmproxy }
-  - { role: certbot }
+  - { role: mitmproxy, tags: "mitmproxy" }
+  - { role: certbot, tags: "certbot" }
   - role: geerlingguy.elasticsearch
+    tags: "elasticsearch"
     elasticsearch_version: 7.x
     elasticsearch_bind_host: 127.0.0.1
   - role: nickhammond.logrotate
+    tags: "logrotate"
     logrotate_scripts:
       - name: rails
         path: "/var/www/shared/log/*.log"

@@ -102,6 +102,7 @@ describe Morph::DockerUtils do
   describe ".find_all_containers_with_label", docker: true do
     before do
       described_class.find_all_containers_with_label("foobar").each(&:delete)
+      pull_image_if_missing("openaustralia/buildstep:latest")
     end
 
     after do
@@ -121,6 +122,10 @@ describe Morph::DockerUtils do
   end
 
   describe ".copy_file" do
+    before do
+      pull_image_if_missing("openaustralia/buildstep:latest")
+    end
+
     it "creates a temporary file locally from a file on a container" do
       c = Docker::Container.create("Cmd" => ["ls"], "Image" => "openaustralia/buildstep", "Labels" => { "foobar" => "1" })
       # Grab file provided by buildstep

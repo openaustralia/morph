@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# IMPORTANT - ALWAYS Regenerate Sorbet RBI files when you update gem versions
+# bundle exec tapioca gem
+
 source "https://rubygems.org"
 
 ruby "2.7.6"
@@ -7,7 +10,7 @@ ruby "2.7.6"
 gem "dotenv-rails"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "5.2.8.1"
+gem "rails", "6.0.6.1"
 
 gem "mysql2"
 gem "sqlite3"
@@ -26,7 +29,7 @@ gem "faraday", "~> 2"
 gem "faraday-retry"
 
 gem "font-awesome-rails"
-# Use same version deployed to server because provisioning/roles/morph-app/tasks/main.yml:80
+# Use same version as ruby-foreman package as Production uses system foreman
 gem "foreman", "0.63.0"
 gem "friendly_id"
 
@@ -84,21 +87,21 @@ gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"
 
 # For searchkick 5 we need to install the elasticsearch gem ourselves
 # We're using elasticsearch 7 in production so sticking with the same version for the client
-gem "elasticsearch", "~> 7"
+gem "elasticsearch", "~> 7.17"
 gem "searchkick", "~> 5"
 
 gem "stripe"
 gem "validate_url"
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem "bootsnap", "~> 1.4", require: false
 
 # For type checking
 gem "sorbet-static-and-runtime"
 
 # Psych just seems to be giving us trouble
 # TODO: Figure out what's going on here
-gem "psych", "< 4"
+gem "psych" # , "< 4"
 
 # For making JSON Web Tokens used by Github API
 gem "jwt"
@@ -130,7 +133,7 @@ group :development do
   gem "binding_of_caller"
   gem "memory_profiler"
   gem "pry-rails"
-  gem "spring", "~> 3.1.1" # to be compatible with rails 5.2 version (4.0+ is rails 6.0 only)
+  gem "spring", "~> 4.0"
   gem "spring-commands-rspec"
 
   gem "rubocop"
@@ -154,6 +157,7 @@ group :test do
   gem "rails-controller-testing"
   gem "rspec-activemodel-mocks"
   gem "simplecov", require: false
+  gem "simplecov-console", require: false
   gem "simplecov-teamcity-summary", require: false
   gem "timecop"
   gem "vcr"
@@ -187,7 +191,7 @@ gem "jbuilder"
 # We're only including sprockets here so we can lock it to an older version
 # For upgrading: https://github.com/rails/sprockets/blob/070fc01947c111d35bb4c836e9bb71962a8e0595/UPGRADING.md#manifestjs
 # TODO: Upgrade to sprockets version 4 and remove the line below
-gem "sprockets", "~> 3"
+gem "sprockets", "~> 4.0"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

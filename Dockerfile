@@ -28,11 +28,6 @@ USER deploy
 COPY --chown=deploy:deploy Gemfile /app/Gemfile
 COPY --chown=deploy:deploy Gemfile.lock /app/Gemfile.lock
 
-# TODO: Update bundler by running "gem install bundler"
-
-COPY --chown=deploy:deploy Gemfile /app/Gemfile
-COPY --chown=deploy:deploy Gemfile.lock /app/Gemfile.lock
-
 RUN echo "Install gems..." \
     && bundle install
 

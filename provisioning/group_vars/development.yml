@@ -2,6 +2,9 @@
 # Configuration for developing using local staging server
 # Note: this is NOT the code development environment run up using docker compose!
 
+rvm_users:
+  - 'deploy'
+  - 'vagrant'
 mitmproxy_secret: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           30356366333637623738396266653336666330363435343661613465613964373635643137306264

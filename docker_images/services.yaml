@@ -1,29 +1,53 @@
-version: "3.7"
-
 services:
+  # Production has elasticsearch: 7.17.6
   elasticsearch:
-    image: elasticsearch:7.8.0
+    image: elasticsearch:7.17.7
     environment:
-      - discovery.type=single-node
+      - "discovery.type=single-node"
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
       - network
     ports:
-      - 9288:9200
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=green&timeout=5s || exit 1"]
+      start_period: 2s
+      interval: 10s
+      timeout: 10s
+      retries: 12
 
+  # Production has redis:3.0.6, but 3.2 is the earliest tag available
   redis:
-    image: redis:6
+    image: redis:3.2
     networks:
       - network
     ports:
-      - 6379:6379
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      start_period: 2s
+      interval: 10s
+      timeout: 10s
+      retries: 12
 
-  # mysql:
-  #   image: mysql
-  #   ports:
-  #     - 3306:3306
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: testrootpass
+  mysql:
+    # Same version as used in production
+    image: mysql:5.7.33
+    # There isn't yet a linux/arm64 build of postgis on docker
+    # See https://github.com/postgis/docker-postgis/issues/216
+    platform: linux/amd64
+    ports:
+      - "3306:3306"
+    environment:
+      # The values below need to be the same in config/database.yml
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-testrootpass}
+      MYSQL_ROOT_HOST: '%'
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      start_period: 2s
+      interval: 10s
+      timeout: 10s
+      retries: 12
 
 networks:
   network: {}

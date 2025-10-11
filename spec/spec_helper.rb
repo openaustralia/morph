@@ -3,12 +3,20 @@
 
 require "simplecov"
 require "simplecov_json_formatter"
+require "simplecov-console"
 
 SimpleCov.start "rails" do
-  formatter SimpleCov::Formatter::JSONFormatter
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
+    [
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCov::Formatter::Console,
+      SimpleCov::Formatter::JSONFormatter
+    ]
+  )
   track_files "**/*.rb"
-  # SimpleCov.minimum_coverage 50
+  SimpleCov.minimum_coverage 54 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
   add_filter %r{^/spec/}
+  add_filter "/vendor/"
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
@@ -75,6 +83,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.include FactoryBot::Syntax::Methods
+  config.include DockerImageHelper
 
   config.before(:suite) do
     Searchkick.disable_callbacks
