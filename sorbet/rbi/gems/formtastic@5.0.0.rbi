@@ -6,7 +6,7 @@
 
 # Provides an intuitive way to build has_many associated records in the same form.
 #
-# source://formtastic-4.0.0/lib/formtastic/engine.rb:1
+# source://formtastic-5.0.0/lib/formtastic/engine.rb:2
 module Formtastic
   extend ::ActiveSupport::Autoload
 end
@@ -15,179 +15,179 @@ end
 #
 # See {Formtastic::Helpers::ActionHelper#namespaced_action_class} for details.
 #
-# source://formtastic-4.0.0/lib/formtastic/action_class_finder.rb:7
+# source://formtastic-5.0.0/lib/formtastic/action_class_finder.rb:8
 class Formtastic::ActionClassFinder < ::Formtastic::NamespacedClassFinder
   # @param builder [FormBuilder]
   # @return [ActionClassFinder] a new instance of ActionClassFinder
   #
-  # source://formtastic-4.0.0/lib/formtastic/action_class_finder.rb:10
+  # source://formtastic-5.0.0/lib/formtastic/action_class_finder.rb:11
   def initialize(builder); end
 
-  # source://formtastic-4.0.0/lib/formtastic/action_class_finder.rb:14
+  # source://formtastic-5.0.0/lib/formtastic/action_class_finder.rb:15
   def class_name(as); end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/actions.rb:2
+# source://formtastic-5.0.0/lib/formtastic/actions.rb:3
 module Formtastic::Actions
   extend ::ActiveSupport::Autoload
 end
 
-# source://formtastic-4.0.0/lib/formtastic/actions/base.rb:3
+# source://formtastic-5.0.0/lib/formtastic/actions/base.rb:4
 module Formtastic::Actions::Base
   include ::Formtastic::LocalizedString
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:8
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:9
   def initialize(builder, template, object, object_name, method, options); end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:102
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:103
   def accesskey; end
 
   # Returns the value of attribute builder.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def builder; end
 
   # Sets the attribute builder
   #
   # @param value the value to set the attribute builder to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def builder=(_arg0); end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:86
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:87
   def button_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:90
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:91
   def button_html_from_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:98
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:99
   def default_button_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:49
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:50
   def default_wrapper_classes; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:38
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:39
   def default_wrapper_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:71
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:72
   def default_wrapper_id; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:94
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:95
   def extra_button_html_options; end
 
   # Returns the value of attribute method.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def method; end
 
   # Sets the attribute method
   #
   # @param value the value to set the attribute method to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def method=(_arg0); end
 
   # Returns the value of attribute object.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def object; end
 
   # Sets the attribute object
   #
   # @param value the value to set the attribute object to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def object=(_arg0); end
 
   # Returns the value of attribute object_name.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def object_name; end
 
   # Sets the attribute object_name
   #
   # @param value the value to set the attribute object_name to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def object_name=(_arg0); end
 
   # Returns the value of attribute options.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def options; end
 
   # Sets the attribute options
   #
   # @param value the value to set the attribute options to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def options=(_arg0); end
 
   # @raise [NotImplementedError]
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:75
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:76
   def supported_methods; end
 
   # Returns the value of attribute template.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def template; end
 
   # Sets the attribute template
   #
   # @param value the value to set the attribute template to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:7
   def template=(_arg0); end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:79
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:80
   def text; end
 
   # @raise [NotImplementedError]
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:19
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:20
   def to_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:23
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:24
   def wrapper(&block); end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:45
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:46
   def wrapper_class; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:53
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:54
   def wrapper_classes_from_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:30
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:31
   def wrapper_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:59
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:60
   def wrapper_html_options_from_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:63
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:64
   def wrapper_id; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:67
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:68
   def wrapper_id_from_options; end
 
   protected
 
   # @raise [Formtastic::UnsupportedMethodForAction]
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:113
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:114
   def check_supported_methods!; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:117
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:118
   def i18n_key; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:130
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:131
   def new_or_persisted_object?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:134
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:135
   def sanitized_object_name; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/base.rb:122
+  # source://formtastic-5.0.0/lib/formtastic/actions/base.rb:123
   def submit_i18n_key; end
 end
 
@@ -228,7 +228,7 @@ end
 # @todo document i18n keys
 # @todo document i18n translation with :label (?)
 #
-# source://formtastic-4.0.0/lib/formtastic/actions/button_action.rb:45
+# source://formtastic-5.0.0/lib/formtastic/actions/button_action.rb:46
 class Formtastic::Actions::ButtonAction
   include ::Formtastic::LocalizedString
   include ::Formtastic::Actions::Base
@@ -236,16 +236,16 @@ class Formtastic::Actions::ButtonAction
 
   # TODO reset_action class?
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/button_action.rb:60
+  # source://formtastic-5.0.0/lib/formtastic/actions/button_action.rb:61
   def to_html; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/actions/buttonish.rb:3
+# source://formtastic-5.0.0/lib/formtastic/actions/buttonish.rb:4
 module Formtastic::Actions::Buttonish
-  # source://formtastic-4.0.0/lib/formtastic/actions/buttonish.rb:9
+  # source://formtastic-5.0.0/lib/formtastic/actions/buttonish.rb:10
   def extra_button_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/buttonish.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/actions/buttonish.rb:6
   def supported_methods; end
 end
 
@@ -289,7 +289,7 @@ end
 # @todo document i18n keys
 # @todo document i18n translation with :label (?)
 #
-# source://formtastic-4.0.0/lib/formtastic/actions/input_action.rb:48
+# source://formtastic-5.0.0/lib/formtastic/actions/input_action.rb:49
 class Formtastic::Actions::InputAction
   include ::Formtastic::LocalizedString
   include ::Formtastic::Actions::Base
@@ -301,7 +301,7 @@ class Formtastic::Actions::InputAction
   # @param *args [Hash] a customizable set of options
   # @see Formtastic::Helpers::ActionHelper#action
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/input_action.rb:63
+  # source://formtastic-5.0.0/lib/formtastic/actions/input_action.rb:64
   def to_html; end
 end
 
@@ -352,7 +352,7 @@ end
 # @todo document i18n translation with :label (?)
 # @todo :prefix and :suffix options? (can also be done with CSS or subclassing for custom Actions)
 #
-# source://formtastic-4.0.0/lib/formtastic/actions/link_action.rb:56
+# source://formtastic-5.0.0/lib/formtastic/actions/link_action.rb:57
 class Formtastic::Actions::LinkAction
   include ::Formtastic::LocalizedString
   include ::Formtastic::Actions::Base
@@ -363,29 +363,29 @@ class Formtastic::Actions::LinkAction
   # @param *args [Hash] a customizable set of options
   # @see Formtastic::Helpers::ActionHelper#action
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/link_action.rb:70
+  # source://formtastic-5.0.0/lib/formtastic/actions/link_action.rb:71
   def supported_methods; end
 
   # TODO reset_action class?
   #
-  # source://formtastic-4.0.0/lib/formtastic/actions/link_action.rb:75
+  # source://formtastic-5.0.0/lib/formtastic/actions/link_action.rb:76
   def to_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/actions/link_action.rb:81
+  # source://formtastic-5.0.0/lib/formtastic/actions/link_action.rb:82
   def url; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/deprecation.rb:4
-Formtastic::Deprecation = ActiveSupport::Deprecation
+# source://formtastic-5.0.0/lib/formtastic/deprecation.rb:5
+Formtastic::Deprecation = T.let(T.unsafe(nil), ActiveSupport::Deprecation)
 
 # Required for formtastic.css to be discoverable in the asset pipeline
 #
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic/engine.rb:4
+# source://formtastic-5.0.0/lib/formtastic/engine.rb:5
 class Formtastic::Engine < ::Rails::Engine; end
 
-# source://formtastic-4.0.0/lib/formtastic/form_builder.rb:2
+# source://formtastic-5.0.0/lib/formtastic/form_builder.rb:3
 class Formtastic::FormBuilder < ::ActionView::Helpers::FormBuilder
   include ::Formtastic::HtmlAttributes
   include ::Formtastic::Helpers::Reflection
@@ -399,365 +399,365 @@ class Formtastic::FormBuilder < ::ActionView::Helpers::FormBuilder
   include ::Formtastic::Helpers::ActionsHelper
   include ::Formtastic::Helpers::ErrorsHelper
 
-  # source://formtastic-4.0.0/lib/formtastic/form_builder.rb:97
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:98
   def initialize(object_name, object, template, options); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def action_class_finder; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def action_class_finder=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def action_class_finder=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def action_class_finder?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def action_namespaces; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def action_namespaces=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def action_namespaces=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def action_namespaces?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def all_fields_required_by_default; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def all_fields_required_by_default=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def all_fields_required_by_default=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def all_fields_required_by_default?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/form_builder.rb:55
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:56
   def auto_index; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def collection_label_methods; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def collection_label_methods=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def collection_label_methods=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def collection_label_methods?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def collection_value_methods; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def collection_value_methods=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def collection_value_methods=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def collection_value_methods?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def custom_namespace; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def custom_namespace=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def custom_namespace=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def custom_namespace?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_commit_button_accesskey; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def default_commit_button_accesskey=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def default_commit_button_accesskey=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_commit_button_accesskey?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_error_list_class; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def default_error_list_class=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def default_error_list_class=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_error_list_class?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_hint_class; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def default_hint_class=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def default_hint_class=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_hint_class?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_inline_error_class; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def default_inline_error_class=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def default_inline_error_class=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_inline_error_class?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_text_area_height; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def default_text_area_height=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def default_text_area_height=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_text_area_height?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_text_area_width; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def default_text_area_width=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def default_text_area_width=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_text_area_width?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_text_field_size; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def default_text_field_size=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def default_text_field_size=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def default_text_field_size?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def escape_html_entities_in_hints_and_labels; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def escape_html_entities_in_hints_and_labels=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def escape_html_entities_in_hints_and_labels=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def escape_html_entities_in_hints_and_labels?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def file_metadata_suffixes; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def file_metadata_suffixes=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def file_metadata_suffixes=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def file_metadata_suffixes?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def file_methods; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def file_methods=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def file_methods=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def file_methods?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def i18n_cache_lookups; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def i18n_cache_lookups=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def i18n_cache_lookups=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def i18n_cache_lookups?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def i18n_localizer; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def i18n_localizer=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def i18n_localizer=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def i18n_localizer?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def i18n_lookups_by_default; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def i18n_lookups_by_default=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def i18n_lookups_by_default=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def i18n_lookups_by_default?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def include_blank_for_select_by_default; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def include_blank_for_select_by_default=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def include_blank_for_select_by_default=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def include_blank_for_select_by_default?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def inline_errors; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def inline_errors=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def inline_errors=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def inline_errors?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def input_class_finder; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def input_class_finder=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def input_class_finder=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def input_class_finder?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def input_namespaces; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def input_namespaces=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def input_namespaces=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def input_namespaces?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def label_str_method; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def label_str_method=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def label_str_method=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def label_str_method?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def optional_string; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def optional_string=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def optional_string=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def optional_string?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def perform_browser_validations; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def perform_browser_validations=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def perform_browser_validations=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def perform_browser_validations?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def priority_countries; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def priority_countries=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def priority_countries=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def priority_countries?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def priority_time_zones; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def priority_time_zones=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def priority_time_zones=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def priority_time_zones?; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def required_string; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def required_string=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def required_string=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def required_string?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/form_builder.rb:93
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:94
   def semantic_fields_for(record_or_name_or_array, *args, &block); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def skipped_columns; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def skipped_columns=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def skipped_columns=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def skipped_columns?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/form_builder.rb:53
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:54
   def template; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def use_required_attribute; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:136
-  def use_required_attribute=(val); end
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+  def use_required_attribute=(_arg0); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
   def use_required_attribute?; end
 
   class << self
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def action_class_finder; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def action_class_finder=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def action_class_finder=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def action_class_finder?; end
 
     # Check {Formtastic::ActionClassFinder} to see how are inputs resolved.
     #
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def action_namespaces; end
 
     # Check {Formtastic::ActionClassFinder} to see how are inputs resolved.
     #
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def action_namespaces=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def action_namespaces=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def action_namespaces?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def all_fields_required_by_default; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def all_fields_required_by_default=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def all_fields_required_by_default=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def all_fields_required_by_default?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def collection_label_methods; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def collection_label_methods=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def collection_label_methods=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def collection_label_methods?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def collection_value_methods; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def collection_value_methods=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def collection_value_methods=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def collection_value_methods?; end
 
     # Defines a new configurable option
@@ -766,357 +766,357 @@ class Formtastic::FormBuilder < ::ActionView::Helpers::FormBuilder
     # @param default [Object] the configuration default value
     # @private
     #
-    # source://formtastic-4.0.0/lib/formtastic/form_builder.rb:13
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:14
     def configure(name, default = T.unsafe(nil)); end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def custom_namespace; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def custom_namespace=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def custom_namespace=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def custom_namespace?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_commit_button_accesskey; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def default_commit_button_accesskey=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def default_commit_button_accesskey=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_commit_button_accesskey?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_error_list_class; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def default_error_list_class=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def default_error_list_class=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_error_list_class?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_hint_class; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def default_hint_class=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def default_hint_class=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_hint_class?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_inline_error_class; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def default_inline_error_class=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def default_inline_error_class=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_inline_error_class?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_text_area_height; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def default_text_area_height=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def default_text_area_height=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_text_area_height?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_text_area_width; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def default_text_area_width=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def default_text_area_width=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_text_area_width?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_text_field_size; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def default_text_field_size=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def default_text_field_size=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def default_text_field_size?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def escape_html_entities_in_hints_and_labels; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def escape_html_entities_in_hints_and_labels=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def escape_html_entities_in_hints_and_labels=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def escape_html_entities_in_hints_and_labels?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def file_metadata_suffixes; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def file_metadata_suffixes=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def file_metadata_suffixes=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def file_metadata_suffixes?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def file_methods; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def file_methods=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def file_methods=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def file_methods?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def i18n_cache_lookups; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def i18n_cache_lookups=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def i18n_cache_lookups=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def i18n_cache_lookups?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def i18n_localizer; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def i18n_localizer=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def i18n_localizer=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def i18n_localizer?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def i18n_lookups_by_default; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def i18n_lookups_by_default=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def i18n_lookups_by_default=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def i18n_lookups_by_default?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def include_blank_for_select_by_default; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def include_blank_for_select_by_default=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def include_blank_for_select_by_default=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def include_blank_for_select_by_default?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def inline_errors; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def inline_errors=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def inline_errors=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def inline_errors?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def input_class_finder; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def input_class_finder=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def input_class_finder=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def input_class_finder?; end
 
     # Check {Formtastic::InputClassFinder} to see how are inputs resolved.
     #
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def input_namespaces; end
 
     # Check {Formtastic::InputClassFinder} to see how are inputs resolved.
     #
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def input_namespaces=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def input_namespaces=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def input_namespaces?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def label_str_method; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def label_str_method=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def label_str_method=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def label_str_method?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def optional_string; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def optional_string=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def optional_string=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def optional_string?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def perform_browser_validations; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def perform_browser_validations=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def perform_browser_validations=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def perform_browser_validations?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def priority_countries; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def priority_countries=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def priority_countries=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def priority_countries?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def priority_time_zones; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def priority_time_zones=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def priority_time_zones=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def priority_time_zones?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def required_string; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def required_string=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def required_string=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def required_string?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def skipped_columns; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def skipped_columns=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def skipped_columns=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def skipped_columns?; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:106
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def use_required_attribute; end
 
     # @api public
     #
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:104
-    def use_required_attribute=(val); end
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
+    def use_required_attribute=(value); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/class/attribute.rb:99
+    # source://formtastic-5.0.0/lib/formtastic/form_builder.rb:15
     def use_required_attribute?; end
   end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/helpers.rb:2
+# source://formtastic-5.0.0/lib/formtastic/helpers.rb:3
 module Formtastic::Helpers; end
 
-# source://formtastic-4.0.0/lib/formtastic/helpers/action_helper.rb:4
+# source://formtastic-5.0.0/lib/formtastic/helpers/action_helper.rb:5
 module Formtastic::Helpers::ActionHelper
   # Renders an action for the form (such as a subit/reset button, or a cancel link).
   #
@@ -1183,14 +1183,14 @@ module Formtastic::Helpers::ActionHelper
   # @param *args [Hash] a customizable set of options
   # @todo document i18n keys
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/action_helper.rb:78
+  # source://formtastic-5.0.0/lib/formtastic/helpers/action_helper.rb:79
   def action(method, options = T.unsafe(nil)); end
 
   protected
 
   # @private
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/action_helper.rb:89
+  # source://formtastic-5.0.0/lib/formtastic/helpers/action_helper.rb:90
   def default_action_type(method, options = T.unsafe(nil)); end
 
   # Takes the `:as` option and attempts to return the corresponding action
@@ -1204,7 +1204,7 @@ module Formtastic::Helpers::ActionHelper
   # @see Helpers::InputHelper#namespaced_input_class
   # @see Formtastic::ActionClassFinder
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/action_helper.rb:107
+  # source://formtastic-5.0.0/lib/formtastic/helpers/action_helper.rb:108
   def namespaced_action_class(as); end
 end
 
@@ -1259,7 +1259,7 @@ end
 # There are many other syntax variations and arguments to customize your form. See the
 # full documentation of {#actions} and {#action} for details.
 #
-# source://formtastic-4.0.0/lib/formtastic/helpers/actions_helper.rb:53
+# source://formtastic-5.0.0/lib/formtastic/helpers/actions_helper.rb:54
 module Formtastic::Helpers::ActionsHelper
   include ::Formtastic::Helpers::FieldsetWrapper
 
@@ -1345,26 +1345,26 @@ module Formtastic::Helpers::ActionsHelper
   # @param *args [Hash] a customizable set of options
   # @todo document i18n keys
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/actions_helper.rb:147
+  # source://formtastic-5.0.0/lib/formtastic/helpers/actions_helper.rb:148
   def actions(*args, &block); end
 
   protected
 
-  # source://formtastic-4.0.0/lib/formtastic/helpers/actions_helper.rb:162
+  # source://formtastic-5.0.0/lib/formtastic/helpers/actions_helper.rb:163
   def default_actions; end
 end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic/helpers/enum.rb:4
+# source://formtastic-5.0.0/lib/formtastic/helpers/enum.rb:5
 module Formtastic::Helpers::Enum
   # Returns the enum (if defined) for the given method
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/enum.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/helpers/enum.rb:7
   def enum_for(method); end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/helpers/errors_helper.rb:3
+# source://formtastic-5.0.0/lib/formtastic/helpers/errors_helper.rb:4
 module Formtastic::Helpers::ErrorsHelper
   include ::Formtastic::Helpers::FileColumnDetection
   include ::Formtastic::Helpers::Reflection
@@ -1399,31 +1399,31 @@ module Formtastic::Helpers::ErrorsHelper
   #   ...
   #   <% end %>
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/errors_helper.rb:41
+  # source://formtastic-5.0.0/lib/formtastic/helpers/errors_helper.rb:42
   def semantic_errors(*args); end
 
   protected
 
-  # source://formtastic-4.0.0/lib/formtastic/helpers/errors_helper.rb:61
+  # source://formtastic-5.0.0/lib/formtastic/helpers/errors_helper.rb:62
   def error_keys(method, options); end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/errors_helper.rb:71
+  # source://formtastic-5.0.0/lib/formtastic/helpers/errors_helper.rb:72
   def has_errors?(method, options); end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/errors_helper.rb:76
+  # source://formtastic-5.0.0/lib/formtastic/helpers/errors_helper.rb:77
   def render_inline_errors?; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/helpers/errors_helper.rb:8
+# source://formtastic-5.0.0/lib/formtastic/helpers/errors_helper.rb:9
 Formtastic::Helpers::ErrorsHelper::INLINE_ERROR_TYPES = T.let(T.unsafe(nil), Array)
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic/helpers/fieldset_wrapper.rb:4
+# source://formtastic-5.0.0/lib/formtastic/helpers/fieldset_wrapper.rb:5
 module Formtastic::Helpers::FieldsetWrapper
   protected
 
@@ -1444,26 +1444,26 @@ module Formtastic::Helpers::FieldsetWrapper
   #   f.inputs :my_little_legend, :title, :body, :author    # Localized (118n) legend with I18n key => I18n.t(:my_little_legend, ...)
   #   f.inputs :title, :body, :author                       # First argument is a column => (no legend)
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/fieldset_wrapper.rb:24
+  # source://formtastic-5.0.0/lib/formtastic/helpers/fieldset_wrapper.rb:25
   def field_set_and_list_wrapping(*args, &block); end
 
-  # source://formtastic-4.0.0/lib/formtastic/helpers/fieldset_wrapper.rb:51
+  # source://formtastic-5.0.0/lib/formtastic/helpers/fieldset_wrapper.rb:52
   def field_set_legend(html_options); end
 
   # Gets the nested_child_index value from the parent builder. It returns a hash with each
   # association that the parent builds.
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/fieldset_wrapper.rb:61
+  # source://formtastic-5.0.0/lib/formtastic/helpers/fieldset_wrapper.rb:62
   def parent_child_index(parent); end
 end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic/helpers/file_column_detection.rb:4
+# source://formtastic-5.0.0/lib/formtastic/helpers/file_column_detection.rb:5
 module Formtastic::Helpers::FileColumnDetection
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/file_column_detection.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/helpers/file_column_detection.rb:7
   def is_file?(method, options = T.unsafe(nil)); end
 end
 
@@ -1513,38 +1513,38 @@ end
 # and fall back to regular Rails helpers, ERB and HTML when needed. In other words, you're never
 # fully committed to The Formtastic Way.
 #
-# source://formtastic-4.0.0/lib/formtastic/helpers/form_helper.rb:49
+# source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:50
 module Formtastic::Helpers::FormHelper
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:67
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:55
   def builder; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:134
-  def builder=(obj); end
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:55
+  def builder=(val); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:67
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:60
   def default_form_class; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:134
-  def default_form_class=(obj); end
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:60
+  def default_form_class=(val); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:67
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:65
   def default_form_model_class_proc; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:134
-  def default_form_model_class_proc=(obj); end
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:65
+  def default_form_model_class_proc=(val); end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:67
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:71
   def formtastic_field_error_proc; end
 
-  # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:134
-  def formtastic_field_error_proc=(obj); end
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:71
+  def formtastic_field_error_proc=(val); end
 
   # Wrapper around Rails' own `fields_for` helper to set the `:builder` option to
   # `Formtastic::FormBuilder`.
   #
   # @see #semantic_form_for
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/form_helper.rb:182
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:183
   def semantic_fields_for(record_name, record_object = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Wrapper around Rails' own `form_for` helper to set the `:builder` option to
@@ -1614,38 +1614,38 @@ module Formtastic::Helpers::FormHelper
   # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html Rails' FormBuilder documentaion (`text_field`, etc)
   # @see FormHelper The overview of the FormBuilder module
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/form_helper.rb:153
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:154
   def semantic_form_for(record_or_name_or_array, *args, &proc); end
 
   protected
 
-  # source://formtastic-4.0.0/lib/formtastic/helpers/form_helper.rb:194
+  # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:195
   def with_custom_field_error_proc(&block); end
 
   class << self
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:60
+    # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:55
     def builder; end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:127
-    def builder=(obj); end
+    # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:55
+    def builder=(val); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:60
+    # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:60
     def default_form_class; end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:127
-    def default_form_class=(obj); end
+    # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:60
+    def default_form_class=(val); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:60
+    # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:65
     def default_form_model_class_proc; end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:127
-    def default_form_model_class_proc=(obj); end
+    # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:65
+    def default_form_model_class_proc=(val); end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:60
+    # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:71
     def formtastic_field_error_proc; end
 
-    # source://activesupport-5.2.8.1/lib/active_support/core_ext/module/attribute_accessors.rb:127
-    def formtastic_field_error_proc=(obj); end
+    # source://formtastic-5.0.0/lib/formtastic/helpers/form_helper.rb:71
+    def formtastic_field_error_proc=(val); end
   end
 end
 
@@ -1683,7 +1683,7 @@ end
 # @see Formtastic::Helpers::InputsHelper#inputs
 # @see Formtastic::Helpers::FormHelper#semantic_form_for
 #
-# source://formtastic-4.0.0/lib/formtastic/helpers/input_helper.rb:38
+# source://formtastic-5.0.0/lib/formtastic/helpers/input_helper.rb:39
 module Formtastic::Helpers::InputHelper
   include ::Formtastic::Helpers::Reflection
   include ::Formtastic::Helpers::Enum
@@ -1839,7 +1839,7 @@ module Formtastic::Helpers::InputHelper
   # @todo Many many more examples. Some of the detail probably needs to be pushed out to the relevant methods too.
   # @todo More i18n examples.
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/input_helper.rb:232
+  # source://formtastic-5.0.0/lib/formtastic/helpers/input_helper.rb:233
   def input(method, options = T.unsafe(nil)); end
 
   protected
@@ -1849,7 +1849,7 @@ module Formtastic::Helpers::InputHelper
   # @return [ActiveModel::Type::Value, #type] in case of rails 5 attributes api
   # @return [ActiveRecord::ConnectionAdapters::Column] in case of rails 4
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/input_helper.rb:306
+  # source://formtastic-5.0.0/lib/formtastic/helpers/input_helper.rb:307
   def column_for(method); end
 
   # First try if we can detect special things like :file. With CarrierWave the method does have
@@ -1863,7 +1863,7 @@ module Formtastic::Helpers::InputHelper
   # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
   # default is a :string, a similar behaviour to Rails' scaffolding.
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/input_helper.rb:254
+  # source://formtastic-5.0.0/lib/formtastic/helpers/input_helper.rb:255
   def default_input_type(method, options = T.unsafe(nil)); end
 
   # Takes the `:as` option and attempts to return the corresponding input
@@ -1885,7 +1885,7 @@ module Formtastic::Helpers::InputHelper
   # @return [Class] An input class constant
   # @see NamespacedClassFinder#find
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/input_helper.rb:341
+  # source://formtastic-5.0.0/lib/formtastic/helpers/input_helper.rb:339
   def namespaced_input_class(as); end
 end
 
@@ -1932,7 +1932,7 @@ end
 #
 # @see Formtastic::Helpers::InputHelper#input
 #
-# source://formtastic-4.0.0/lib/formtastic/helpers/inputs_helper.rb:46
+# source://formtastic-5.0.0/lib/formtastic/helpers/inputs_helper.rb:47
 module Formtastic::Helpers::InputsHelper
   include ::Formtastic::Helpers::FieldsetWrapper
   include ::Formtastic::LocalizedString
@@ -2150,7 +2150,7 @@ module Formtastic::Helpers::InputsHelper
   # @option *args
   # @param *args [Hash] a customizable set of options
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/inputs_helper.rb:279
+  # source://formtastic-5.0.0/lib/formtastic/helpers/inputs_helper.rb:280
   def inputs(*args, &block); end
 
   protected
@@ -2159,28 +2159,28 @@ module Formtastic::Helpers::InputsHelper
   # polymorphic associations because we can't guess which class to use for an automatically
   # generated input.
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/inputs_helper.rb:337
+  # source://formtastic-5.0.0/lib/formtastic/helpers/inputs_helper.rb:338
   def association_columns(*by_associations); end
 
   # Collects content columns (non-relation columns) for the current form object class.
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/inputs_helper.rb:363
+  # source://formtastic-5.0.0/lib/formtastic/helpers/inputs_helper.rb:364
   def content_columns; end
 
-  # source://formtastic-4.0.0/lib/formtastic/helpers/inputs_helper.rb:310
+  # source://formtastic-5.0.0/lib/formtastic/helpers/inputs_helper.rb:311
   def default_columns_for_object; end
 
   # @private
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/inputs_helper.rb:404
+  # source://formtastic-5.0.0/lib/formtastic/helpers/inputs_helper.rb:405
   def field_set_title_from_args(*args); end
 
-  # source://formtastic-4.0.0/lib/formtastic/helpers/inputs_helper.rb:317
+  # source://formtastic-5.0.0/lib/formtastic/helpers/inputs_helper.rb:318
   def fieldset_contents_from_column_list(columns); end
 
   # Collects all foreign key columns
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/inputs_helper.rb:354
+  # source://formtastic-5.0.0/lib/formtastic/helpers/inputs_helper.rb:355
   def foreign_key_columns; end
 
   # Deals with :for option when it's supplied to inputs methods. Additional
@@ -2189,90 +2189,90 @@ module Formtastic::Helpers::InputsHelper
   #
   # It should raise an error if a block with arity zero is given.
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/inputs_helper.rb:375
+  # source://formtastic-5.0.0/lib/formtastic/helpers/inputs_helper.rb:376
   def inputs_for_nested_attributes(*args, &block); end
 end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic/helpers/reflection.rb:4
+# source://formtastic-5.0.0/lib/formtastic/helpers/reflection.rb:5
 module Formtastic::Helpers::Reflection
   # @private
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/reflection.rb:15
+  # source://formtastic-5.0.0/lib/formtastic/helpers/reflection.rb:16
   def association_macro_for_method(method); end
 
   # @private
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/reflection.rb:20
+  # source://formtastic-5.0.0/lib/formtastic/helpers/reflection.rb:21
   def association_primary_key_for_method(method); end
 
   # If an association method is passed in (f.input :author) try to find the
   # reflection object.
   #
-  # source://formtastic-4.0.0/lib/formtastic/helpers/reflection.rb:7
+  # source://formtastic-5.0.0/lib/formtastic/helpers/reflection.rb:8
   def reflection_for(method); end
 end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic/html_attributes.rb:3
+# source://formtastic-5.0.0/lib/formtastic/html_attributes.rb:4
 module Formtastic::HtmlAttributes
   # Returns a namespace passed by option or inherited from parent builders / class configuration
   #
-  # source://formtastic-4.0.0/lib/formtastic/html_attributes.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/html_attributes.rb:6
   def dom_id_namespace; end
 
   protected
 
-  # source://formtastic-4.0.0/lib/formtastic/html_attributes.rb:18
+  # source://formtastic-5.0.0/lib/formtastic/html_attributes.rb:19
   def humanized_attribute_name(method); end
 end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic/i18n.rb:5
+# source://formtastic-5.0.0/lib/formtastic/i18n.rb:6
 module Formtastic::I18n
   class << self
-    # source://formtastic-4.0.0/lib/formtastic/i18n.rb:21
+    # source://formtastic-5.0.0/lib/formtastic/i18n.rb:22
     def t(*args); end
 
-    # source://formtastic-4.0.0/lib/formtastic/i18n.rb:21
+    # source://formtastic-5.0.0/lib/formtastic/i18n.rb:22
     def translate(*args); end
   end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/i18n.rb:7
+# source://formtastic-5.0.0/lib/formtastic/i18n.rb:8
 Formtastic::I18n::DEFAULT_SCOPE = T.let(T.unsafe(nil), Array)
 
-# source://formtastic-4.0.0/lib/formtastic/i18n.rb:8
+# source://formtastic-5.0.0/lib/formtastic/i18n.rb:9
 Formtastic::I18n::DEFAULT_VALUES = T.let(T.unsafe(nil), Hash)
 
-# source://formtastic-4.0.0/lib/formtastic/i18n.rb:9
+# source://formtastic-5.0.0/lib/formtastic/i18n.rb:10
 Formtastic::I18n::SCOPES = T.let(T.unsafe(nil), Array)
 
 # Uses the {Formtastic::NamespacedClassFinder} to look up input class names.
 #
 # See {Formtastic::FormBuilder#namespaced_input_class} for details.
 #
-# source://formtastic-4.0.0/lib/formtastic/input_class_finder.rb:7
+# source://formtastic-5.0.0/lib/formtastic/input_class_finder.rb:8
 class Formtastic::InputClassFinder < ::Formtastic::NamespacedClassFinder
   # @param builder [FormBuilder]
   # @return [InputClassFinder] a new instance of InputClassFinder
   #
-  # source://formtastic-4.0.0/lib/formtastic/input_class_finder.rb:10
+  # source://formtastic-5.0.0/lib/formtastic/input_class_finder.rb:11
   def initialize(builder); end
 
-  # source://formtastic-4.0.0/lib/formtastic/input_class_finder.rb:14
+  # source://formtastic-5.0.0/lib/formtastic/input_class_finder.rb:15
   def class_name(as); end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs.rb:2
+# source://formtastic-5.0.0/lib/formtastic/inputs.rb:3
 module Formtastic::Inputs
   extend ::ActiveSupport::Autoload
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:3
+# source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:4
 module Formtastic::Inputs::Base
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -2289,196 +2289,196 @@ module Formtastic::Inputs::Base
   include ::Formtastic::Inputs::Base::Wrapping
   extend ::ActiveSupport::Autoload
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:7
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:8
   def initialize(builder, template, object, object_name, method, options); end
 
   # Returns the value of attribute builder.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def builder; end
 
   # Sets the attribute builder
   #
   # @param value the value to set the attribute builder to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def builder=(_arg0); end
 
-  # source://activeadmin-2.9.0/lib/active_admin/form_builder.rb:5
+  # source://activeadmin-3.3.0/lib/active_admin/form_builder.rb:6
   def input_wrapping(&block); end
 
   # Returns the value of attribute method.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def method; end
 
   # Sets the attribute method
   #
   # @param value the value to set the attribute method to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def method=(_arg0); end
 
   # Returns the value of attribute object.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def object; end
 
   # Sets the attribute object
   #
   # @param value the value to set the attribute object to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def object=(_arg0); end
 
   # Returns the value of attribute object_name.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def object_name; end
 
   # Sets the attribute object_name
   #
   # @param value the value to set the attribute object_name to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def object_name=(_arg0); end
 
   # Returns the value of attribute options.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def options; end
 
   # Sets the attribute options
   #
   # @param value the value to set the attribute options to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def options=(_arg0); end
 
   # Usefull for raising an error on previously supported option.
   #
   # @raise [ArgumentError]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:37
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:38
   def removed_option!(old_option_name); end
 
   # Returns the value of attribute template.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def template; end
 
   # Sets the attribute template
   #
   # @param value the value to set the attribute template to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:6
   def template=(_arg0); end
 
   # Usefull for deprecating options.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:22
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:23
   def warn_and_correct_option!(old_option_name, new_option_name); end
 
   # Usefull for deprecating options.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base.rb:30
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base.rb:31
   def warn_deprecated_option!(old_option_name, instructions); end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/associations.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/associations.rb:5
 module Formtastic::Inputs::Base::Associations
   include ::Formtastic::Helpers::Reflection
 
   # :belongs_to, etc
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/associations.rb:8
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/associations.rb:9
   def association; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/associations.rb:24
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/associations.rb:25
   def association_primary_key; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/associations.rb:16
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/associations.rb:17
   def belongs_to?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/associations.rb:20
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/associations.rb:21
   def has_many?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/associations.rb:12
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/associations.rb:13
   def reflection; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:5
 module Formtastic::Inputs::Base::Choices
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:42
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:43
   def choice_html(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:58
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:59
   def choice_html_options(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:70
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:71
   def choice_html_safe_value(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:74
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:75
   def choice_input_dom_id(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:46
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:47
   def choice_label(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:54
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:55
   def choice_value(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:28
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:29
   def choice_wrapping(html_options, &block); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:35
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:36
   def choice_wrapping_html_options(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:17
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:18
   def choices_group_wrapping(&block); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:24
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:25
   def choices_group_wrapping_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:7
   def choices_wrapping(&block); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:13
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:14
   def choices_wrapping_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:66
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:67
   def custom_choice_html_options(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:62
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:63
   def default_choice_html_options(choice); end
 
   # Override to remove the for attribute since this isn't associated with any element, as it's
   # nested inside the legend.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:101
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:102
   def label_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:88
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:89
   def legend_html; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/choices.rb:84
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/choices.rb:85
   def value_as_class?; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:5
 module Formtastic::Inputs::Base::Collections
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:49
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:50
   def collection; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:128
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:131
   def collection_for_boolean; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:73
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:74
   def collection_from_association; end
 
   # Assuming the following model:
@@ -2502,168 +2502,168 @@ module Formtastic::Inputs::Base::Collections
   #           active: Custom Active Label Here
   #           archived: Custom Archived Label Here
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:111
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:114
   def collection_from_enum; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:124
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:127
   def collection_from_enum?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:61
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:62
   def collection_from_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:22
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:23
   def label_and_value_method; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:26
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:27
   def label_and_value_method_from_collection(_collection); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:7
   def label_method; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:10
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:11
   def label_method_from_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:45
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:46
   def raw_collection; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:137
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:140
   def send_or_call(duck, object); end
 
   # Avoids an issue where `send_or_call` can be a String and duck can be something simple like
   # `:first`, which obviously String responds to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:147
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:150
   def send_or_call_or_object(duck, object); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:14
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:15
   def value_method; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/collections.rb:18
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/collections.rb:19
   def value_method_from_options; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/database.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/database.rb:5
 module Formtastic::Inputs::Base::Database
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/database.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/database.rb:7
   def column; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/database.rb:15
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/database.rb:13
   def column?; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:5
 module Formtastic::Inputs::Base::DatetimePickerish
   include ::Formtastic::Inputs::Base::Placeholder
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:51
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:52
   def default_maxlength; end
 
   # @raise [NotImplementedError]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:11
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:12
   def default_size; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:55
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:56
   def default_step; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:23
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:24
   def extra_input_html_options; end
 
   # @raise [NotImplementedError]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:7
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:8
   def html_input_type; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:19
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:20
   def input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:45
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:46
   def maxlength; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:33
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:34
   def size; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:39
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:40
   def step; end
 
   # @raise [NotImplementedError]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:15
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:16
   def value; end
 
   protected
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:61
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/datetime_pickerish.rb:62
   def step_from_macro(sym); end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/errors.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/errors.rb:5
 module Formtastic::Inputs::Base::Errors
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/errors.rb:24
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/errors.rb:25
   def error_first_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/errors.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/errors.rb:7
   def error_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/errors.rb:47
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/errors.rb:48
   def error_keys; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/errors.rb:15
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/errors.rb:16
   def error_list_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/errors.rb:29
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/errors.rb:30
   def error_none_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/errors.rb:10
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/errors.rb:11
   def error_sentence_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/errors.rb:37
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/errors.rb:38
   def errors; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/errors.rb:33
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/errors.rb:34
   def errors?; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/fileish.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/fileish.rb:5
 module Formtastic::Inputs::Base::Fileish
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/fileish.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/fileish.rb:7
   def file?; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/hints.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/hints.rb:5
 module Formtastic::Inputs::Base::Hints
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/hints.rb:16
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/hints.rb:17
   def hint?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/hints.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/hints.rb:7
   def hint_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/hints.rb:20
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/hints.rb:21
   def hint_text; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/hints.rb:24
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/hints.rb:25
   def hint_text_from_options; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/html.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/html.rb:5
 module Formtastic::Inputs::Base::Html
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/html.rb:30
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/html.rb:31
   def dom_id; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/html.rb:39
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/html.rb:40
   def dom_index; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/html.rb:21
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/html.rb:22
   def input_html_options; end
 
   # Defines how the instance of an input should be rendered to a HTML string.
@@ -2678,122 +2678,122 @@ module Formtastic::Inputs::Base::Html
   #   end
   # @raise [NotImplementedError]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/html.rb:17
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/html.rb:18
   def to_html; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/labelling.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/labelling.rb:5
 module Formtastic::Inputs::Base::Labelling
   include ::Formtastic::LocalizedString
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/labelling.rb:36
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/labelling.rb:37
   def label_from_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/labelling.rb:8
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/labelling.rb:9
   def label_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/labelling.rb:12
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/labelling.rb:13
   def label_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/labelling.rb:19
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/labelling.rb:20
   def label_text; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/labelling.rb:40
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/labelling.rb:41
   def localized_label; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/labelling.rb:44
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/labelling.rb:45
   def render_label?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/labelling.rb:28
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/labelling.rb:29
   def requirement_text; end
 
   # TODO: why does this need to be memoized in order to make the inputs_spec tests pass?
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/labelling.rb:24
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/labelling.rb:25
   def requirement_text_or_proc; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/naming.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/naming.rb:5
 module Formtastic::Inputs::Base::Naming
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/naming.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/naming.rb:7
   def as; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/naming.rb:18
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/naming.rb:19
   def attributized_method_name; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/naming.rb:22
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/naming.rb:23
   def humanized_method_name; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/naming.rb:35
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/naming.rb:36
   def input_name; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/naming.rb:14
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/naming.rb:15
   def sanitized_method_name; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/naming.rb:10
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/naming.rb:11
   def sanitized_object_name; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/numeric.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/numeric.rb:5
 module Formtastic::Inputs::Base::Numeric
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/numeric.rb:38
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/numeric.rb:39
   def in_option; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/numeric.rb:5
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/numeric.rb:6
   def input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/numeric.rb:33
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/numeric.rb:34
   def max_option; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/numeric.rb:28
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/numeric.rb:29
   def min_option; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/numeric.rb:23
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/numeric.rb:24
   def step_option; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/numeric.rb:42
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/numeric.rb:43
   def wrapper_html_options; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/options.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/options.rb:5
 module Formtastic::Inputs::Base::Options
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/options.rb:10
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/options.rb:11
   def formtastic_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/options.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/options.rb:7
   def input_options; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/placeholder.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/placeholder.rb:5
 module Formtastic::Inputs::Base::Placeholder
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/placeholder.rb:6
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/placeholder.rb:7
   def input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/placeholder.rb:10
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/placeholder.rb:11
   def placeholder_text; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/stringish.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/stringish.rb:5
 module Formtastic::Inputs::Base::Stringish
   # Overrides standard `input_html_options` to provide a `maxlength` and `size` attribute.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/stringish.rb:15
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/stringish.rb:16
   def input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/stringish.rb:26
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/stringish.rb:27
   def maxlength; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/stringish.rb:22
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/stringish.rb:23
   def size; end
 
   # @abstract Override this method in your input class to describe how the input should render itself.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/stringish.rb:7
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/stringish.rb:8
   def to_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/stringish.rb:30
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/stringish.rb:31
   def wrapper_html_options; end
 end
 
@@ -2877,219 +2877,219 @@ end
 # @todo Check what other Rails options are supported (`start_year`, `end_year`, `use_month_numbers`, `use_short_month`, `add_month_numbers`, `prompt`), write tests for them, and otherwise support them
 # @todo Could we take the rendering from Rails' helpers and inject better HTML in and around it rather than re-inventing the whee?
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:94
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:95
 module Formtastic::Inputs::Base::Timeish
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:122
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:123
   def date_fragments; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:126
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:127
   def default_date_fragments; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:149
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:150
   def fragment_id(fragment); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:167
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:168
   def fragment_input_html(fragment); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:138
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:139
   def fragment_label(fragment); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:157
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:158
   def fragment_label_html(fragment); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:153
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:154
   def fragment_name(fragment); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:172
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:173
   def fragment_prefix; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:130
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:131
   def fragment_wrapping(&block); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:134
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:135
   def fragment_wrapping_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:114
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:115
   def fragments; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:224
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:225
   def fragments_inner_wrapping(&block); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:213
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:214
   def fragments_label; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:202
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:203
   def fragments_wrapping(&block); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:209
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:210
   def fragments_wrapping_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:234
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:235
   def hidden_field_name(fragment); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:230
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:231
   def hidden_fragments; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:193
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:194
   def i18n_date_fragments; end
 
   # TODO extract to BlankOptions or similar -- Select uses similar code
   #
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:181
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:182
   def include_blank?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:189
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:190
   def position(fragment); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:185
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:186
   def positions; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:118
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:119
   def time_fragments; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:96
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:97
   def to_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/timeish.rb:162
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/timeish.rb:163
   def value; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:4
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:5
 module Formtastic::Inputs::Base::Validations
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:178
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:179
   def autofocus?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:184
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:185
   def column_limit; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:188
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:189
   def limit; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:166
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:167
   def not_required_through_negated_validation!; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:162
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:163
   def not_required_through_negated_validation?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:174
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:175
   def optional?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:192
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:193
   def readonly?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:196
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:197
   def readonly_attribute?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:204
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:205
   def readonly_from_options?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:130
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:131
   def required?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:158
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:159
   def required_attribute?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:170
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:171
   def responds_to_global_required?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:115
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:116
   def validation_integer_only?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:54
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:55
   def validation_limit; end
 
   # Prefer :less_than_or_equal_to over :less_than, for no particular reason.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:86
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:87
   def validation_max; end
 
   # Prefer :greater_than_or_equal_to over :greater_than, for no particular reason.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:66
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:67
   def validation_min; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:104
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:105
   def validation_step; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:24
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:25
   def validations; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:126
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:127
   def validations?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:34
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:35
   def validator_relevant?(validator); end
 
   private
 
   # Loosely based on
-  # https://github.com/rails/rails/blob/5-2-stable/activemodel/lib/active_model/validations/numericality.rb#L54-L59
+  # https://github.com/rails/rails/blob/459e7cf62252558bbf65f582a230562ab1a76c5e/activemodel/lib/active_model/validations/numericality.rb#L65-L70
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:212
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:213
   def option_value(option, object); end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:15
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:16
 class Formtastic::Inputs::Base::Validations::IndeterminableMaximumAttributeError < ::ArgumentError
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:16
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:17
   def message; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:6
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:7
 class Formtastic::Inputs::Base::Validations::IndeterminableMinimumAttributeError < ::ArgumentError
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/validations.rb:7
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/validations.rb:8
   def message; end
 end
 
 # @todo relies on `dom_id`, `required?`, `optional`, `errors?`, `association_primary_key` & `sanitized_method_name` methods from another module
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/base/wrapping.rb:5
+# source://formtastic-5.0.0/lib/formtastic/inputs/base/wrapping.rb:6
 module Formtastic::Inputs::Base::Wrapping
   # Override this method if you want to change the display order (for example, rendering the
   # errors before the body of the input).
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/wrapping.rb:9
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/wrapping.rb:10
   def input_wrapping(&block); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/wrapping.rb:31
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/wrapping.rb:32
   def wrapper_classes; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/wrapping.rb:27
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/wrapping.rb:28
   def wrapper_classes_raw; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/wrapping.rb:43
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/wrapping.rb:44
   def wrapper_dom_id; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/wrapping.rb:16
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/wrapping.rb:17
   def wrapper_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/base/wrapping.rb:23
+  # source://formtastic-5.0.0/lib/formtastic/inputs/base/wrapping.rb:24
   def wrapper_html_options_raw; end
 end
 
@@ -3121,7 +3121,7 @@ end
 #   <%= f.input :published, :checked_value => "yes", :unchecked_value => "no" %>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:32
+# source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:33
 class Formtastic::Inputs::BooleanInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3138,51 +3138,51 @@ class Formtastic::Inputs::BooleanInput
   include ::Formtastic::Inputs::Base::Wrapping
   include ::Formtastic::Inputs::Base
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:65
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:66
   def check_box_html; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:93
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:94
   def checked?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:73
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:74
   def checked_value; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:42
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:43
   def hidden_field_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:81
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:82
   def input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:85
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:86
   def input_html_options_name; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:54
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:55
   def label_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:61
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:62
   def label_text_with_embedded_checkbox; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:46
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:47
   def label_with_nested_checkbox; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:77
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:78
   def responds_to_global_required?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:35
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:36
   def to_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:69
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:70
   def unchecked_value; end
 
   private
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/boolean_input.rb:99
+  # source://formtastic-5.0.0/lib/formtastic/inputs/boolean_input.rb:100
   def boolean_checked?(value, checked_value); end
 end
 
@@ -3244,7 +3244,7 @@ end
 # @see Formtastic::Inputs::BooleanInput BooleanInput for a single checkbox for boolean (checked = true) inputs
 # @todo Do/can we support the per-item HTML options like RadioInput?
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:67
+# source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:68
 class Formtastic::Inputs::CheckBoxesInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3266,60 +3266,60 @@ class Formtastic::Inputs::CheckBoxesInput
   # @raise [Formtastic::UnsupportedEnumCollection]
   # @return [CheckBoxesInput] a new instance of CheckBoxesInput
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:72
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:73
   def initialize(*args); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:116
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:117
   def check_box_with_hidden_input(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:126
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:127
   def check_box_without_hidden_input(choice); end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:140
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:141
   def checked?(value); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:93
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:94
   def choice_html(choice); end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:144
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:145
   def disabled?(value); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:152
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:153
   def disabled_values; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:136
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:137
   def extra_html_options(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:101
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:102
   def hidden_field_for_all; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:112
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:113
   def hidden_fields_for_every?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:162
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:163
   def input_name; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:148
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:149
   def selected_values; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:77
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:78
   def to_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:158
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:159
   def unchecked_value; end
 
   protected
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:172
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:173
   def checkbox_input(choice); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/check_boxes_input.rb:180
+  # source://formtastic-5.0.0/lib/formtastic/inputs/check_boxes_input.rb:181
   def make_selected_values; end
 end
 
@@ -3347,7 +3347,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/color_input.rb:28
+# source://formtastic-5.0.0/lib/formtastic/inputs/color_input.rb:29
 class Formtastic::Inputs::ColorInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3366,7 +3366,7 @@ class Formtastic::Inputs::ColorInput
   include ::Formtastic::Inputs::Base::Stringish
   include ::Formtastic::Inputs::Base::Placeholder
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/color_input.rb:33
+  # source://formtastic-5.0.0/lib/formtastic/inputs/color_input.rb:34
   def to_html; end
 end
 
@@ -3432,7 +3432,7 @@ end
 #   </li>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/country_input.rb:67
+# source://formtastic-5.0.0/lib/formtastic/inputs/country_input.rb:68
 class Formtastic::Inputs::CountryInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3449,16 +3449,16 @@ class Formtastic::Inputs::CountryInput
   include ::Formtastic::Inputs::Base::Wrapping
   include ::Formtastic::Inputs::Base
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/country_input.rb:80
+  # source://formtastic-5.0.0/lib/formtastic/inputs/country_input.rb:81
   def priority_countries; end
 
   # @raise [CountrySelectPluginMissing]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/country_input.rb:72
+  # source://formtastic-5.0.0/lib/formtastic/inputs/country_input.rb:73
   def to_html; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/inputs/country_input.rb:70
+# source://formtastic-5.0.0/lib/formtastic/inputs/country_input.rb:71
 class Formtastic::Inputs::CountryInput::CountrySelectPluginMissing < ::StandardError; end
 
 # Outputs a label and a text field, along with a datalist tag
@@ -3471,7 +3471,7 @@ class Formtastic::Inputs::CountryInput::CountrySelectPluginMissing < ::StandardE
 # @example Input is used as follows
 #   f.input :fav_book, :as => :datalist, :collection => Book.pluck(:name)
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/datalist_input.rb:13
+# source://formtastic-5.0.0/lib/formtastic/inputs/datalist_input.rb:14
 class Formtastic::Inputs::DatalistInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3490,16 +3490,16 @@ class Formtastic::Inputs::DatalistInput
   include ::Formtastic::Inputs::Base::Stringish
   include ::Formtastic::Inputs::Base::Collections
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/datalist_input.rb:35
+  # source://formtastic-5.0.0/lib/formtastic/inputs/datalist_input.rb:36
   def data_list_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/datalist_input.rb:31
+  # source://formtastic-5.0.0/lib/formtastic/inputs/datalist_input.rb:32
   def html_id_of_datalist; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/datalist_input.rb:27
+  # source://formtastic-5.0.0/lib/formtastic/inputs/datalist_input.rb:28
   def input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/datalist_input.rb:18
+  # source://formtastic-5.0.0/lib/formtastic/inputs/datalist_input.rb:19
   def to_html; end
 end
 
@@ -3561,7 +3561,7 @@ end
 #   <%= f.input :publish_at, :as => :date_picker, :input_html => { :placeholder => "YYYY-MM-DD" } %>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/date_picker_input.rb:70
+# source://formtastic-5.0.0/lib/formtastic/inputs/date_picker_input.rb:71
 class Formtastic::Inputs::DatePickerInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3581,13 +3581,13 @@ class Formtastic::Inputs::DatePickerInput
   include ::Formtastic::Inputs::Base::Placeholder
   include ::Formtastic::Inputs::Base::DatetimePickerish
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/date_picker_input.rb:79
+  # source://formtastic-5.0.0/lib/formtastic/inputs/date_picker_input.rb:80
   def default_size; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/date_picker_input.rb:75
+  # source://formtastic-5.0.0/lib/formtastic/inputs/date_picker_input.rb:76
   def html_input_type; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/date_picker_input.rb:83
+  # source://formtastic-5.0.0/lib/formtastic/inputs/date_picker_input.rb:84
   def value; end
 end
 
@@ -3595,7 +3595,7 @@ end
 #
 # @see Formtastic::Inputs::Base::Timeish Timeish module for documentation of date, time and datetime input options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/date_select_input.rb:6
+# source://formtastic-5.0.0/lib/formtastic/inputs/date_select_input.rb:7
 class Formtastic::Inputs::DateSelectInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3613,18 +3613,18 @@ class Formtastic::Inputs::DateSelectInput
   include ::Formtastic::Inputs::Base
   include ::Formtastic::Inputs::Base::Timeish
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/date_select_input.rb:25
+  # source://formtastic-5.0.0/lib/formtastic/inputs/date_select_input.rb:26
   def fragment_value(fragment); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/date_select_input.rb:15
+  # source://formtastic-5.0.0/lib/formtastic/inputs/date_select_input.rb:16
   def hidden_date_fragments; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/date_select_input.rb:19
+  # source://formtastic-5.0.0/lib/formtastic/inputs/date_select_input.rb:20
   def hidden_fragments; end
 
   # We don't want hour and minute fragments on a date input
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/date_select_input.rb:11
+  # source://formtastic-5.0.0/lib/formtastic/inputs/date_select_input.rb:12
   def time_fragments; end
 end
 
@@ -3692,7 +3692,7 @@ end
 #   <%= f.input :publish_at, :as => :datetime_picker, :local => false %>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/datetime_picker_input.rb:78
+# source://formtastic-5.0.0/lib/formtastic/inputs/datetime_picker_input.rb:79
 class Formtastic::Inputs::DatetimePickerInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3712,13 +3712,13 @@ class Formtastic::Inputs::DatetimePickerInput
   include ::Formtastic::Inputs::Base::Placeholder
   include ::Formtastic::Inputs::Base::DatetimePickerish
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/datetime_picker_input.rb:88
+  # source://formtastic-5.0.0/lib/formtastic/inputs/datetime_picker_input.rb:89
   def default_size; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/datetime_picker_input.rb:83
+  # source://formtastic-5.0.0/lib/formtastic/inputs/datetime_picker_input.rb:84
   def html_input_type; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/datetime_picker_input.rb:92
+  # source://formtastic-5.0.0/lib/formtastic/inputs/datetime_picker_input.rb:93
   def value; end
 end
 
@@ -3726,7 +3726,7 @@ end
 #
 # @see Formtastic::Inputs::Base::Timeish Timeish module for documentation of date, time and datetime input options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/datetime_select_input.rb:7
+# source://formtastic-5.0.0/lib/formtastic/inputs/datetime_select_input.rb:8
 class Formtastic::Inputs::DatetimeSelectInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3769,7 +3769,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/email_input.rb:28
+# source://formtastic-5.0.0/lib/formtastic/inputs/email_input.rb:29
 class Formtastic::Inputs::EmailInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3788,7 +3788,7 @@ class Formtastic::Inputs::EmailInput
   include ::Formtastic::Inputs::Base::Stringish
   include ::Formtastic::Inputs::Base::Placeholder
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/email_input.rb:33
+  # source://formtastic-5.0.0/lib/formtastic/inputs/email_input.rb:34
   def to_html; end
 end
 
@@ -3820,7 +3820,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/file_input.rb:32
+# source://formtastic-5.0.0/lib/formtastic/inputs/file_input.rb:33
 class Formtastic::Inputs::FileInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3837,7 +3837,7 @@ class Formtastic::Inputs::FileInput
   include ::Formtastic::Inputs::Base::Wrapping
   include ::Formtastic::Inputs::Base
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/file_input.rb:34
+  # source://formtastic-5.0.0/lib/formtastic/inputs/file_input.rb:35
   def to_html; end
 end
 
@@ -3868,7 +3868,7 @@ end
 #   form.formtastic li.hidden { display:none; }
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/hidden_input.rb:31
+# source://formtastic-5.0.0/lib/formtastic/inputs/hidden_input.rb:32
 class Formtastic::Inputs::HiddenInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3885,26 +3885,26 @@ class Formtastic::Inputs::HiddenInput
   include ::Formtastic::Inputs::Base::Wrapping
   include ::Formtastic::Inputs::Base
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/hidden_input.rb:44
+  # source://formtastic-5.0.0/lib/formtastic/inputs/hidden_input.rb:45
   def error_html; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/hidden_input.rb:48
+  # source://formtastic-5.0.0/lib/formtastic/inputs/hidden_input.rb:49
   def errors?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/hidden_input.rb:56
+  # source://formtastic-5.0.0/lib/formtastic/inputs/hidden_input.rb:57
   def hint?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/hidden_input.rb:52
+  # source://formtastic-5.0.0/lib/formtastic/inputs/hidden_input.rb:53
   def hint_html; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/hidden_input.rb:34
+  # source://formtastic-5.0.0/lib/formtastic/inputs/hidden_input.rb:35
   def input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/hidden_input.rb:38
+  # source://formtastic-5.0.0/lib/formtastic/inputs/hidden_input.rb:39
   def to_html; end
 end
 
@@ -3970,7 +3970,7 @@ end
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 # @see http://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of Rails' Numericality validation documentation
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/number_input.rb:70
+# source://formtastic-5.0.0/lib/formtastic/inputs/number_input.rb:71
 class Formtastic::Inputs::NumberInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -3989,10 +3989,10 @@ class Formtastic::Inputs::NumberInput
   include ::Formtastic::Inputs::Base::Numeric
   include ::Formtastic::Inputs::Base::Placeholder
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/number_input.rb:82
+  # source://formtastic-5.0.0/lib/formtastic/inputs/number_input.rb:83
   def step_option; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/number_input.rb:75
+  # source://formtastic-5.0.0/lib/formtastic/inputs/number_input.rb:76
   def to_html; end
 end
 
@@ -4020,7 +4020,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/password_input.rb:28
+# source://formtastic-5.0.0/lib/formtastic/inputs/password_input.rb:29
 class Formtastic::Inputs::PasswordInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4039,7 +4039,7 @@ class Formtastic::Inputs::PasswordInput
   include ::Formtastic::Inputs::Base::Stringish
   include ::Formtastic::Inputs::Base::Placeholder
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/password_input.rb:33
+  # source://formtastic-5.0.0/lib/formtastic/inputs/password_input.rb:34
   def to_html; end
 end
 
@@ -4067,7 +4067,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/phone_input.rb:28
+# source://formtastic-5.0.0/lib/formtastic/inputs/phone_input.rb:29
 class Formtastic::Inputs::PhoneInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4086,7 +4086,7 @@ class Formtastic::Inputs::PhoneInput
   include ::Formtastic::Inputs::Base::Stringish
   include ::Formtastic::Inputs::Base::Placeholder
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/phone_input.rb:33
+  # source://formtastic-5.0.0/lib/formtastic/inputs/phone_input.rb:34
   def to_html; end
 end
 
@@ -4206,7 +4206,7 @@ end
 # @see Formtastic::Inputs::RadioInput as an alternative for `belongs_to` associations
 # @todo :disabled like CheckBoxes?
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/radio_input.rb:127
+# source://formtastic-5.0.0/lib/formtastic/inputs/radio_input.rb:128
 class Formtastic::Inputs::RadioInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4225,16 +4225,16 @@ class Formtastic::Inputs::RadioInput
   include ::Formtastic::Inputs::Base::Collections
   include ::Formtastic::Inputs::Base::Choices
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/radio_input.rb:147
+  # source://formtastic-5.0.0/lib/formtastic/inputs/radio_input.rb:148
   def choice_html(choice); end
 
   # Override to remove the for attribute since this isn't associated with any element, as it's
   # nested inside the legend.
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/radio_input.rb:157
+  # source://formtastic-5.0.0/lib/formtastic/inputs/radio_input.rb:158
   def label_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/radio_input.rb:132
+  # source://formtastic-5.0.0/lib/formtastic/inputs/radio_input.rb:133
   def to_html; end
 end
 
@@ -4299,7 +4299,7 @@ end
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 # @see http://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of Rails' Numericality validation documentation
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/range_input.rb:70
+# source://formtastic-5.0.0/lib/formtastic/inputs/range_input.rb:71
 class Formtastic::Inputs::RangeInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4317,16 +4317,16 @@ class Formtastic::Inputs::RangeInput
   include ::Formtastic::Inputs::Base
   include ::Formtastic::Inputs::Base::Numeric
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/range_input.rb:85
+  # source://formtastic-5.0.0/lib/formtastic/inputs/range_input.rb:86
   def max_option; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/range_input.rb:81
+  # source://formtastic-5.0.0/lib/formtastic/inputs/range_input.rb:82
   def min_option; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/range_input.rb:89
+  # source://formtastic-5.0.0/lib/formtastic/inputs/range_input.rb:90
   def step_option; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/range_input.rb:74
+  # source://formtastic-5.0.0/lib/formtastic/inputs/range_input.rb:75
   def to_html; end
 end
 
@@ -4353,7 +4353,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/search_input.rb:27
+# source://formtastic-5.0.0/lib/formtastic/inputs/search_input.rb:28
 class Formtastic::Inputs::SearchInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4372,7 +4372,7 @@ class Formtastic::Inputs::SearchInput
   include ::Formtastic::Inputs::Base::Stringish
   include ::Formtastic::Inputs::Base::Placeholder
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/search_input.rb:32
+  # source://formtastic-5.0.0/lib/formtastic/inputs/search_input.rb:33
   def to_html; end
 end
 
@@ -4519,7 +4519,7 @@ end
 # @see Formtastic::Inputs::RadioInput RadioInput as an alternative for `belongs_to` associations
 # @todo Do/can we support the per-item HTML options like RadioInput?
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:156
+# source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:157
 class Formtastic::Inputs::SelectInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4540,59 +4540,59 @@ class Formtastic::Inputs::SelectInput
   # @raise [Formtastic::UnsupportedEnumCollection]
   # @return [SelectInput] a new instance of SelectInput
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:160
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:161
   def initialize(*args); end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:196
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:197
   def extra_input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:176
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:177
   def include_blank; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:192
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:193
   def input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:205
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:206
   def input_html_options_name; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:213
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:214
   def input_html_options_name_multiple; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:188
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:189
   def input_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:184
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:185
   def label_html_options; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:225
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:226
   def multiple?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:217
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:218
   def multiple_by_association?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:221
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:222
   def multiple_by_options?; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:180
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:181
   def prompt?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:172
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:173
   def select_html; end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:229
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:230
   def single?; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/select_input.rb:165
+  # source://formtastic-5.0.0/lib/formtastic/inputs/select_input.rb:166
   def to_html; end
 end
 
@@ -4621,7 +4621,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/string_input.rb:29
+# source://formtastic-5.0.0/lib/formtastic/inputs/string_input.rb:30
 class Formtastic::Inputs::StringInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4665,7 +4665,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/text_input.rb:28
+# source://formtastic-5.0.0/lib/formtastic/inputs/text_input.rb:29
 class Formtastic::Inputs::TextInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4683,10 +4683,10 @@ class Formtastic::Inputs::TextInput
   include ::Formtastic::Inputs::Base
   include ::Formtastic::Inputs::Base::Placeholder
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/text_input.rb:32
+  # source://formtastic-5.0.0/lib/formtastic/inputs/text_input.rb:33
   def input_html_options; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/text_input.rb:39
+  # source://formtastic-5.0.0/lib/formtastic/inputs/text_input.rb:40
   def to_html; end
 end
 
@@ -4749,7 +4749,7 @@ end
 #   <%= f.input :publish_at, :as => :time_picker, :input_html => { :placeholder => "HH:MM" } %>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/time_picker_input.rb:71
+# source://formtastic-5.0.0/lib/formtastic/inputs/time_picker_input.rb:72
 class Formtastic::Inputs::TimePickerInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4769,16 +4769,16 @@ class Formtastic::Inputs::TimePickerInput
   include ::Formtastic::Inputs::Base::Placeholder
   include ::Formtastic::Inputs::Base::DatetimePickerish
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_picker_input.rb:80
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_picker_input.rb:81
   def default_size; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_picker_input.rb:93
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_picker_input.rb:94
   def default_step; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_picker_input.rb:76
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_picker_input.rb:77
   def html_input_type; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_picker_input.rb:84
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_picker_input.rb:85
   def value; end
 end
 
@@ -4789,7 +4789,7 @@ end
 #
 # @see Formtastic::Inputs::Base::Timeish Timeish module for documentation of date, time and datetime input options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/time_select_input.rb:9
+# source://formtastic-5.0.0/lib/formtastic/inputs/time_select_input.rb:10
 class Formtastic::Inputs::TimeSelectInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4807,18 +4807,18 @@ class Formtastic::Inputs::TimeSelectInput
   include ::Formtastic::Inputs::Base
   include ::Formtastic::Inputs::Base::Timeish
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_select_input.rb:22
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_select_input.rb:23
   def fragment_value(fragment); end
 
   # we don't want year / month / day fragments if :ignore_date => true
   #
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_select_input.rb:14
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_select_input.rb:15
   def fragments; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_select_input.rb:26
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_select_input.rb:27
   def hidden_fragments; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_select_input.rb:18
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_select_input.rb:19
   def value_or_default_value; end
 end
 
@@ -4857,7 +4857,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/time_zone_input.rb:43
+# source://formtastic-5.0.0/lib/formtastic/inputs/time_zone_input.rb:44
 class Formtastic::Inputs::TimeZoneInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4874,10 +4874,10 @@ class Formtastic::Inputs::TimeZoneInput
   include ::Formtastic::Inputs::Base::Wrapping
   include ::Formtastic::Inputs::Base
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_zone_input.rb:53
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_zone_input.rb:54
   def priority_zones; end
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/time_zone_input.rb:46
+  # source://formtastic-5.0.0/lib/formtastic/inputs/time_zone_input.rb:47
   def to_html; end
 end
 
@@ -4905,7 +4905,7 @@ end
 #   </form>
 # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
 #
-# source://formtastic-4.0.0/lib/formtastic/inputs/url_input.rb:28
+# source://formtastic-5.0.0/lib/formtastic/inputs/url_input.rb:29
 class Formtastic::Inputs::UrlInput
   include ::Formtastic::Inputs::Base::Html
   include ::Formtastic::Inputs::Base::Options
@@ -4924,20 +4924,20 @@ class Formtastic::Inputs::UrlInput
   include ::Formtastic::Inputs::Base::Stringish
   include ::Formtastic::Inputs::Base::Placeholder
 
-  # source://formtastic-4.0.0/lib/formtastic/inputs/url_input.rb:33
+  # source://formtastic-5.0.0/lib/formtastic/inputs/url_input.rb:34
   def to_html; end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/localized_string.rb:2
+# source://formtastic-5.0.0/lib/formtastic/localized_string.rb:3
 module Formtastic::LocalizedString
-  # source://formtastic-4.0.0/lib/formtastic/localized_string.rb:4
+  # source://formtastic-5.0.0/lib/formtastic/localized_string.rb:5
   def model_name; end
 
   protected
 
   # @private
   #
-  # source://formtastic-4.0.0/lib/formtastic/localized_string.rb:10
+  # source://formtastic-5.0.0/lib/formtastic/localized_string.rb:11
   def localized_string(key, value, type, options = T.unsafe(nil)); end
 end
 
@@ -4966,69 +4966,69 @@ end
 #   'formtastic.labels.post.title'
 #   'formtastic.labels.title'
 #
-# source://formtastic-4.0.0/lib/formtastic/localizer.rb:26
+# source://formtastic-5.0.0/lib/formtastic/localizer.rb:27
 class Formtastic::Localizer
   # @return [Localizer] a new instance of Localizer
   #
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:55
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:56
   def initialize(current_builder); end
 
   # Returns the value of attribute builder.
   #
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:49
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:50
   def builder; end
 
   # Sets the attribute builder
   #
   # @param value the value to set the attribute builder to.
   #
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:49
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:50
   def builder=(_arg0); end
 
   # @private
   #
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:59
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:60
   def localize(key, value, type, options = T.unsafe(nil)); end
 
   protected
 
   # @private
   #
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:133
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:134
   def escape_html_entities(string); end
 
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:145
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:146
   def i18n_cache_lookups; end
 
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:141
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:142
   def i18n_lookups_by_default; end
 
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:117
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:118
   def normalize_model_name(name); end
 
   class << self
-    # source://formtastic-4.0.0/lib/formtastic/localizer.rb:51
+    # source://formtastic-5.0.0/lib/formtastic/localizer.rb:52
     def cache; end
   end
 end
 
-# source://formtastic-4.0.0/lib/formtastic/localizer.rb:27
+# source://formtastic-5.0.0/lib/formtastic/localizer.rb:28
 class Formtastic::Localizer::Cache
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:40
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:41
   def cache; end
 
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:44
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:45
   def clear!; end
 
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:28
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:29
   def get(key); end
 
   # @return [Boolean]
   #
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:32
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:33
   def has_key?(key); end
 
-  # source://formtastic-4.0.0/lib/formtastic/localizer.rb:36
+  # source://formtastic-5.0.0/lib/formtastic/localizer.rb:37
   def set(key, result); end
 end
 
@@ -5053,12 +5053,12 @@ end
 #   # in config/initializers/formtastic.rb
 #   Formtastic::FormBuilder.input_class_finder = MyInputClassFinder
 #
-# source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:24
+# source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:25
 class Formtastic::NamespacedClassFinder
   # @param namespaces [Array<Module>]
   # @return [NamespacedClassFinder] a new instance of NamespacedClassFinder
   #
-  # source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:36
+  # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:41
   def initialize(namespaces); end
 
   # Converts symbol to class name
@@ -5067,7 +5067,7 @@ class Formtastic::NamespacedClassFinder
   # @example
   #   class_name(:string) == "String"
   #
-  # source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:63
+  # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:68
   def class_name(as); end
 
   # Looks up the given reference in the configured namespaces.
@@ -5077,67 +5077,70 @@ class Formtastic::NamespacedClassFinder
   # const_missing machinery; the second one instead for production
   # checks with .const_defined before referencing the constant.
   #
-  # source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:48
+  # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:53
   def find(as); end
 
   # @private
   #
-  # source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:25
+  # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:26
   def namespaces; end
 
-  # source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:52
+  # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:57
   def resolve(as); end
 
   private
 
   # Use auto-loading in development environment
   #
-  # source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:90
+  # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:89
   def find_by_trying(class_name); end
 
   # Looks up the given class name in the configured namespaces in order,
   # returning the first one that has the class name constant defined.
   #
-  # source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:81
+  # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:80
   def find_with_const_defined(class_name); end
 
   # @private
   #
-  # source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:74
+  # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:74
   def finder(class_name); end
 
   class << self
+    # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:36
+    def finder_method; end
+
     # @return [Boolean]
     #
-    # source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:31
+    # source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:32
     def use_const_defined?; end
   end
 end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic/namespaced_class_finder.rb:28
+# source://formtastic-5.0.0/lib/formtastic/namespaced_class_finder.rb:29
 class Formtastic::NamespacedClassFinder::NotFoundError < ::NameError; end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic.rb:32
+# source://formtastic-5.0.0/lib/formtastic.rb:33
 class Formtastic::PolymorphicInputWithoutCollectionError < ::ArgumentError; end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic.rb:28
+# source://formtastic-5.0.0/lib/formtastic.rb:29
 class Formtastic::UnknownActionError < ::NameError; end
 
-# source://formtastic-4.0.0/lib/formtastic.rb:24
+# source://formtastic-5.0.0/lib/formtastic.rb:25
 class Formtastic::UnknownInputError < ::NameError; end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic.rb:40
+# source://formtastic-5.0.0/lib/formtastic.rb:41
 class Formtastic::UnsupportedEnumCollection < ::NameError; end
 
 # @private
 #
-# source://formtastic-4.0.0/lib/formtastic.rb:36
+# source://formtastic-5.0.0/lib/formtastic.rb:37
 class Formtastic::UnsupportedMethodForAction < ::ArgumentError; end
