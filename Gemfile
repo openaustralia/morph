@@ -199,6 +199,8 @@ gem "jbuilder"
 # For upgrading: https://github.com/rails/sprockets/blob/070fc01947c111d35bb4c836e9bb71962a8e0595/UPGRADING.md#manifestjs
 # TODO: Upgrade to sprockets version 4 and remove the line below
 gem "sprockets", "~> 4.0"
+gem "sprockets-rails"
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
