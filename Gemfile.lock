@@ -792,6 +792,7 @@ DEPENDENCIES
   spring (~> 4.0)
   spring-commands-rspec
   sprockets (~> 4.0)
+  sprockets-rails
   sqlite3
   stripe
   tapioca
