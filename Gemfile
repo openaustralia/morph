@@ -5,12 +5,12 @@
 
 source "https://rubygems.org"
 
-ruby "2.7.6"
+ruby "3.0.7"
 
 gem "dotenv-rails"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "6.1.7.10"
+gem "rails", "7.0.8.7"
 
 gem "mysql2"
 gem "sqlite3"
@@ -49,7 +49,7 @@ gem "sidekiq-limit_fetch"
 
 gem "simple_form"
 # gem 'jquery-turbolinks'
-gem "archive-tar-minitar"
+gem "minitar"
 
 # We're currently only supporting the plain text, markdown and textile
 # markups for the README. If we want more then we need to install some
@@ -76,7 +76,7 @@ gem "sitemap_generator"
 gem "zeroclipboard-rails"
 
 # For the administration interface
-gem "activeadmin"
+gem "activeadmin", "~> 3.2"
 
 gem "faye"
 gem "puma"
