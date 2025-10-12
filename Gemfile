@@ -201,7 +201,6 @@ gem "jbuilder"
 gem "sprockets", "~> 4.0"
 gem "sprockets-rails"
 
-
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem "sdoc", require: false
