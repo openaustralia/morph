@@ -3,7 +3,7 @@
 
 class WebhookDelivery < ApplicationRecord
   extend T::Sig
-  SUCCESSFUL_STATUSES = T.let((200..299).freeze, T::Range[Integer])
+  SUCCESSFUL_STATUSES = T.let((200..299), T::Range[Integer])
 
   belongs_to :webhook
   belongs_to :run
