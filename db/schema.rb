@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_10_11_130403) do
-
+ActiveRecord::Schema[7.0].define(version: 2025_10_12_094450) do
   create_table "active_admin_comments", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -19,8 +18,8 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
     t.string "resource_type", null: false
     t.string "author_type"
     t.integer "author_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
@@ -30,8 +29,8 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
     t.integer "user_id"
     t.integer "watch_id"
     t.string "watch_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["user_id"], name: "index_alerts_on_user_id"
     t.index ["watch_id"], name: "index_alerts_on_watch_id"
     t.index ["watch_type"], name: "index_alerts_on_watch_type"
@@ -47,8 +46,8 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
     t.float "wall_time"
     t.integer "size"
     t.string "format"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["created_at"], name: "index_api_queries_on_created_at"
     t.index ["owner_id"], name: "index_api_queries_on_owner_id"
     t.index ["scraper_id"], name: "index_api_queries_on_scraper_id"
@@ -62,8 +61,8 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
     t.boolean "pull", null: false
     t.boolean "push", null: false
     t.boolean "triage", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["owner_id"], name: "index_collaborations_on_owner_id"
     t.index ["scraper_id", "owner_id"], name: "index_collaborations_on_scraper_id_and_owner_id"
     t.index ["scraper_id"], name: "index_collaborations_on_scraper_id"
@@ -71,7 +70,7 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
 
   create_table "connection_logs", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "run_id"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.integer "domain_id"
     t.index ["created_at"], name: "index_connection_logs_on_created_at"
     t.index ["domain_id"], name: "index_connection_logs_on_domain_id"
@@ -81,8 +80,8 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
   create_table "contributions", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "scraper_id"
     t.integer "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["scraper_id"], name: "index_contributions_on_scraper_id"
     t.index ["user_id"], name: "index_contributions_on_user_id"
   end
@@ -90,16 +89,16 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
   create_table "create_scraper_progresses", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "message"
     t.integer "progress"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "heading"
   end
 
   create_table "domains", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "meta"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.text "title"
     t.index ["name"], name: "index_domains_on_name", unique: true
   end
@@ -108,9 +107,9 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
     t.integer "run_id"
     t.string "stream"
     t.text "text"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "timestamp", precision: 6
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "timestamp"
     t.index ["run_id"], name: "index_log_lines_on_run_id"
     t.index ["timestamp"], name: "index_log_lines_on_timestamp"
   end
@@ -126,8 +125,8 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
     t.integer "oublock"
     t.integer "nvcsw"
     t.integer "nivcsw"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "run_id"
     t.index ["run_id"], name: "index_metrics_on_run_id"
   end
@@ -141,12 +140,12 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
 
   create_table "owners", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "provider"
     t.string "uid"
     t.string "name"
@@ -161,25 +160,25 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
     t.boolean "admin", default: false, null: false
     t.boolean "suspended", default: false, null: false
     t.string "feature_switches"
-    t.datetime "remember_created_at"
+    t.datetime "remember_created_at", precision: nil
     t.string "remember_token"
     t.string "stripe_customer_id"
     t.string "stripe_plan_id"
     t.string "stripe_subscription_id"
     t.string "location"
-    t.datetime "alerted_at"
+    t.datetime "alerted_at", precision: nil
     t.index ["api_key"], name: "index_owners_on_api_key"
     t.index ["nickname"], name: "index_owners_on_nickname"
   end
 
   create_table "runs", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "scraper_id"
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "started_at", precision: nil
+    t.datetime "finished_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "status_code"
-    t.datetime "queued_at"
+    t.datetime "queued_at", precision: nil
     t.boolean "auto", default: false, null: false
     t.string "git_revision"
     t.integer "owner_id", null: false
@@ -210,8 +209,8 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
     t.string "description"
     t.integer "github_id"
     t.integer "owner_id", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "full_name", null: false
     t.string "github_url"
     t.string "git_url"
@@ -232,26 +231,26 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
 
   create_table "site_settings", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "settings"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "variables", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "value", null: false
     t.integer "scraper_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["scraper_id"], name: "fk_rails_f537200e37"
   end
 
   create_table "webhook_deliveries", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "webhook_id"
     t.integer "run_id"
-    t.datetime "sent_at"
+    t.datetime "sent_at", precision: nil
     t.integer "response_code"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["run_id"], name: "index_webhook_deliveries_on_run_id"
     t.index ["webhook_id"], name: "index_webhook_deliveries_on_webhook_id"
   end
@@ -259,8 +258,8 @@ ActiveRecord::Schema.define(version: 2025_10_11_130403) do
   create_table "webhooks", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "scraper_id"
     t.string "url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["scraper_id", "url"], name: "index_webhooks_on_scraper_id_and_url", unique: true
     t.index ["scraper_id"], name: "index_webhooks_on_scraper_id"
   end
