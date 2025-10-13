@@ -3,17 +3,24 @@
   apt_key:
     id: 8507EFA5
     keyserver: keyserver.ubuntu.com
+
 - name: Add the Percona sources
-  apt_repository: repo='deb https://repo.percona.com/apt noble main'
+  apt_repository: repo='deb https://repo.percona.com/apt {{ ubuntu_codename }} main'
+
 - name: Install percona xtrabackup
   apt: pkg=percona-xtrabackup update_cache=yes cache_valid_time=3600 allow_unauthenticated=yes
+
 - name: Copy across database backup script
   copy: src=database-backup.sh dest=/usr/local/bin/database-backup.sh mode=0500
+
 - name: Run database backup at 6:25am
   cron: name="database backup" hour=6 minute=25 user=root job="/usr/local/bin/database-backup.sh"
+
 - name: Install duply
   apt: pkg=duply
+
 - name: Add S3 support to duplicity
   apt: pkg=python-boto
+
 - name: Install ntpd
   apt: pkg=ntp
