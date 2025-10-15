@@ -40,9 +40,9 @@ help: ## This help dialog.
 
  # Ensure required Vagrant plugins are installed
 vagrant-plugins:
-	@plugins=$$(vagrant plugin list); \
+	@installed_plugins=$$(vagrant plugin list); \
 	for plugin in vagrant-hostsupdater vagrant-disksize vagrant-vbguest; do \
-		if echo "$$plugins" | grep -q $$plugin; then \
+		if echo "$$installed_plugins" | grep -q $$plugin; then \
 			[ "$(MAKECMDGOALS)" != "vagrant-plugins" ] || echo "$$plugin plugin is already installed"; \
 		else \
 			vagrant plugin install $$plugin; \
