@@ -40,7 +40,7 @@ Docker compose is used to provide redis, elasticsearch and mysql services as req
 vagrant is used to provide a local staging environment to test ansible provisioning and capistrano app deployment.
 
 If you don't want to set up ruby on your local host and/or have a different enough docker / mysql / redis version
-then use vagrant and /vagrant mapping of project root.
+then `cd /vagrant` within a `vagrant ssh` session to work on the files mapped in from the project root.
 
 ## Installing Docker
 
