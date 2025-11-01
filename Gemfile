@@ -99,9 +99,10 @@ gem "bootsnap", "~> 1.4", require: false
 # For type checking
 gem "sorbet-static-and-runtime"
 
-# Psych just seems to be giving us trouble
-# TODO: Figure out what's going on here
-gem "psych" # , "< 4"
+# Psych 4 introduced breaking changes by changing default to safe mode. 
+#   Rails 6.1 has fix: https://github.com/rails/rails/commit/255b5ff9af57f9b54dee7ec884b12a1ad16f0321
+# TODO: Change to ">= 5.2.4" when we upgrade to Rails 6.1 to pick up security fixes
+gem "psych", ">= 3.3.4", "< 4"
 
 # For making JSON Web Tokens used by Github API
 gem "jwt"
