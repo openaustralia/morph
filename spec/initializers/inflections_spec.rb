@@ -3,7 +3,8 @@
 
 require "spec_helper"
 
-RSpec.describe ActiveSupport::Inflector do
+# rubocop:disable RSpec/DescribeClass
+RSpec.describe "config/initializer for ActiveSupport::Inflector" do
   describe "hero/heroes pluralization required for Plan name" do
     it "pluralizes 'hero' as 'heroes'" do
       expect("hero".pluralize).to eq("heroes")
@@ -22,3 +23,4 @@ RSpec.describe ActiveSupport::Inflector do
     end
   end
 end
+# rubocop:enable RSpec/DescribeClass
