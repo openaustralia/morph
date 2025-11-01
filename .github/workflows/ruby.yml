@@ -72,8 +72,8 @@ jobs:
           echo
           mysqladmin ping --user=${{ env.DB_USER }} --password=${{ env.DB_PASSWORD }} --port 3306 --host localhost
 
-      - name: Start Services
-        run: make services-up
+      - name: Start elasticsearch and redis Services
+        run: make ci-services-up
         # with:
         #   stack-version: 7.5.1
 

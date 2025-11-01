@@ -32,7 +32,15 @@ Read the [provisioning README](provisioning/README.md) for further details.
 * 8 GB of memory is the minimum, 16 GB is recommended
 * SSD Disk
 
-Docker compose is used to provide a consistent development environment.
+### Support for Developers / CI
+
+Docker compose is used to provide redis, elasticsearch and mysql services as required for dev and CI
+(use SERVICES to specify which services to start if you don't want them all).
+
+vagrant is used to provide a local staging environment to test ansible provisioning and capistrano app deployment.
+
+If you don't want to set up ruby on your local host and/or have a different enough docker / mysql / redis version
+then `cd /vagrant` within a `vagrant ssh` session to work on the files mapped in from the project root.
 
 ## Installing Docker
 
@@ -42,23 +50,56 @@ which includes Docker Engine.
 
 On Linux, Your user account should be able to manipulate Docker (just add your user to the `docker` group).
 
-## Using Docker
+## Installing Vagrant
+
+Install [VirtualBox](https://www.virtualbox.org/) os other supported virtualization provider.
+
+Then install [Vagrant](https://developer.hashicorp.com/vagrant)
+
+## Make targets
+
+Various make targets have been added to for developer convenience when developing on the local host:
+
+* help - This help dialog.
+* vagrant-up - launch local vagrant VM
+* vagrant-provision - Provision local vagrant VM using ansible
+* vagrant-deploy - Deploy app to local vagrant VM
+* services-up - Run up services with persistent data (use SERVICES="redis elasticsearch" to exclude mysql)
+* services-down - Close down services required for CI / development
+* services-logs - View logs for services (use SERVICES='elasticsearch redis' for specific services)
+* services-status - Check status of services
+
+* test - Run rspec tests
+* lint - Lint code
+* share-web - Share web server on port 3000 to the internet
+* clean - Clean out venv, installed roles and rails tmp/cache
+* clobber - Remove everything including logs
+* docker-clean - Remove all Docker resources INCLUDING databases in volumes
+
+targets to use docker compose rather than vagrant for a full development environment (BETA):
+
+* docker-up - Full Docker environment including ruby containers (persistent data) BETA
+
+targets for production:
+
+* production-provision - Provision production using ansible
+* production-deploy - Deploy app to production
 
 Morph needs various services to run. We've made things easier for development by using docker
-to run Elasticsearch and the other services as well as the web container for the ruby on rails application itself.
+to run Elasticsearch and the other services.
 
-    docker compose up --build
+    make services-up 
 
-To stop the services then use
+To stop the services use
 
-    docker compose down
+    make services-down
 
 To run tests use
 
-    docker compose exec web bin/rake db:test:prepare
-    docker compose exec web bin/rake
+    bin/rake db:test:prepare
+    bin/rake
 
-To get a bash shell in the running container
+To get a bash shell in the running web container if you are using the full docker environment:
 
     docker compose exec web bash -i
 
@@ -81,7 +122,6 @@ Install gem requirements by running the following in the web container:
 
     bundle install
 
-
 ## Repositories
 
 User-facing:
@@ -94,14 +134,19 @@ User-facing:
 Docker images:
 * [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Base image for running scrapers in containers
 
+Note - morph builds a docker image using these buildstep images combined with the config files from the scraper to
+build a separate docker image for each scraper with all the dependencies ready to go.
+
 ### Tunnel GitHub webhook traffic back to your local development machine
 
 We use "ngrok" a tool that makes tunnelling internet traffic to a local development machine easy. 
+
 First [download ngrok](https://ngrok.com/download) if you don't have it already. Then,
 
-    ngrok http 5100
+    make share-web
+    # rune: ngrok http 3000
 
-Make note of the `http://*.ngrok.io` forwarding URL.
+Make note of the ngrok forwarding url (`*.ngrok-free.dev`).
 
 <!-- TODO: Add instructions for debugging and working with callbacks for the GitHub app in development with https://webhook.site -->
 
@@ -110,20 +155,26 @@ Make note of the `http://*.ngrok.io` forwarding URL.
 You'll need to create an application on GitHub So that morph.io can talk to GitHub. 
 We've pre-filled most of the important fields for a few different configurations below:
 
-* [Create GitHub application on your personal account for use in development](https://github.com/settings/apps/new?name=Morph.io+(development)&description=Get+structured+data+out+of+the+web&url=http://127.0.0.1:5100&callback_urls[]=http://127.0.0.1:5100/users/auth/github/callback&setup_url=http://127.0.0.1:5100&setup_on_update=true&public=true&webhook_active=false&webhook_url=http://127.0.0.1:5100/github/webhook&administration=write&contents=write&emails=read)
+* [Create GitHub application on your personal account for use in development, port 3000](https://github.com/settings/apps/new?name=Morph.io+(development)&description=Get+structured+data+out+of+the+web&url=http://127.0.0.1:3000&callback_urls[]=http://127.0.0.1:3000/users/auth/github/callback&setup_url=http://127.0.0.1:3000&setup_on_update=true&public=true&webhook_active=false&administration=write&contents=write&emails=read)
 * [Create GitHub application on your personal account for use in production](https://github.com/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
 * [Create GitHub application on the openaustralia organization for use in production](https://github.com/organizations/openaustralia/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
 
 You will need to add and change a few values manually:
 * Disable "Expire user authorization tokens"
+* Select "Any Account" if you are demoing with a team
+* Add extra callback urls:
+  * http://0.0.0.0:3000/users/auth/github/callback  # if you click on the url puma lists on start up
+  * <forwarding url noted above>/users/auth/github/callback
+  * Change the port for the local urls if you are not using the default port 3000 for the rails app
 * Add an image - you can use the standard logo at `app/assets/images/logo.png` (you can add this after the app is created)
-* If the webhooks are active and being used in production (currently not the case) then
-  you'll also need to add a "Webhook secret" for security.
+* If the webhooks are active and being used in production (currently not the case) then you'll also need to 
+  * add a "Webhook secret" for security.
+  * add a "Webhook URL" - the ngrok url with `/github/webhook` on the end
 
 Next you'll need to fill in some values in the `.env` file which come from the GitHub App that you've just created.
 
 * `GITHUB_APP_ID` - Look for "App ID" near the top of the page. This should be an integer
-* `GITHUB_APP_NAME` - Look for "Public link". The name is what appears after "https://github.com/apps/". 
+* `GITHUB_APP_NAME` - Look for "Public link". The name is what appears after "https://github.com/settings/apps/". 
   It's essentially a url happy version of the name you gave the app.
 * `GITHUB_APP_CLIENT_ID` - Look for "Client ID" near the top of the page.
 * `GITHUB_APP_CLIENT_SECRET` - Go to "Generate a new client secret".
@@ -183,6 +234,13 @@ DONT_RUN_DOCKER_TESTS=1 bundle exec guard
 By default in development mails are sent to [Mailcatcher](http://mailcatcher.me/). To install
 
     gem install mailcatcher
+
+## Rubymine specific advice
+
+### Disable Spring in RubyMine:
+
+Under Run → Edit Configurations → your RSpec configuration,
+set Environment variable: DISABLE_SPRING=1
 
 ## Deploying to production
 

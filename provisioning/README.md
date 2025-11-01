@@ -68,7 +68,7 @@ This will pull down the latest docker image, rebuild, and restart the container.
 
 Install [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbox.org) and [Ansible](http://www.ansible.com/).
 
-Install a couple of Vagrant plugins: `vagrant plugin install vagrant-hostsupdater vagrant-disksize`
+Install a couple of Vagrant plugins: `vagrant plugin install vagrant-hostsupdater vagrant-disksize vagrant-vbguest`
 
 Install a Ruby Version Manager, for example (from latest to oldest):
 - [mise](https://mise.jdx.dev/) - modern, polyglot and fast (includes language installer)

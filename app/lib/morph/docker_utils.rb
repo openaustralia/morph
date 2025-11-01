@@ -203,7 +203,8 @@ module Morph
       end
     # This exception gets thrown if there is an error during the build (for
     # example if the compile fails). In this case we just want to return nil
-    rescue Docker::Error::UnexpectedResponseError
+    rescue Docker::Error::UnexpectedResponseError => e
+      Rails.logger.debug { "docker_build_from_dir failed with: #{e}" }
       nil
     end
 

@@ -1,0 +1,17 @@
+services:
+  elasticsearch:
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+  mysql:
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    volumes:
+      - redis_data:/data
+
+volumes:
+  elasticsearch_data:
+  mysql_data:
+  redis_data:
