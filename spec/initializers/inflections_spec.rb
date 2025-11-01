@@ -1,9 +1,9 @@
 # typed: false
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe "Custom inflections" do
+RSpec.describe ActiveSupport::Inflector do
   describe "hero/heroes pluralization required for Plan name" do
     it "pluralizes 'hero' as 'heroes'" do
       expect("hero".pluralize).to eq("heroes")
