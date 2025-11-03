@@ -15,6 +15,8 @@
 #   inflect.acronym 'RESTful'
 # end
 
+# KEEP THIS as Rails won't fix inflection (to avoid breaking existing pluralised table names)
 ActiveSupport::Inflector.inflections(:en) do |inflect|
+  # So we can pluralize the "Hero" plan name
   inflect.irregular 'hero', 'heroes'
 end
