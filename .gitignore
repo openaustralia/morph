@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# ignore yarn output
+/node_modules
+
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
