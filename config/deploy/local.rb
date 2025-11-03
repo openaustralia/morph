@@ -18,8 +18,9 @@ task :deploy_from_local_repo do
   end
 end
 
-role :app, %w[deploy@localhost]
-role :web, %w[deploy@localhost]
-role :db,  %w[deploy@localhost]
+# Use 192.168.56.2 instead of localhost so you can set the identity file in ~/.ssh/config just like morph.io
+role :app, %w[deploy@192.168.56.2]
+role :web, %w[deploy@192.168.56.2]
+role :db,  %w[deploy@192.168.56.2]
 
-set :ssh_options, port: 2200
+set :ssh_options, port: 22
