@@ -199,6 +199,9 @@ group :doc do
   gem "sdoc", require: false
 end
 
+# Default gems that need explicit inclusion for deployment
+gem 'date'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
