@@ -1,3 +1,4 @@
 unless defined?(APP_VERSION)
-  APP_VERSION = Rails.env.production? ? File.read(File.join(Rails.root, "REVISION"))[0..6] : `git describe --always`
+  revision_file = File.join(Rails.root, "REVISION")
+  APP_VERSION = Rails.env.production? && File.exist?(revision_file) ? File.read(revision_file)[0..6] : `git describe --always`
 end
