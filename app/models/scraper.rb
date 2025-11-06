@@ -303,14 +303,16 @@ class Scraper < ApplicationRecord
   def trim_log_lines
     has_example_of_status = Hash.new(0)
     count = 0
-    runs.order(id: :desc).each do |run|
+    runs.order(id: :desc).find_each do |run|
       if run.created_at > LogLine::DISCARD_AFTER_DAYS.days.ago ||
          has_example_of_status[run.finished_successfully?] < LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS
         has_example_of_status[run.finished_successfully?] += 1
         next
       end
-      count += run.log_lines.count
-      run.log_lines.delete_all
+      run.transaction do
+        count += run.log_lines.count
+        run.log_lines.delete_all
+      end
     end
     count
   end
