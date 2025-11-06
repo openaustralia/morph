@@ -49,7 +49,7 @@ namespace :db do
       
       # Get filtered owner IDs
       owner_ids = Owner.where(
-        "name LIKE 'ian%' OR name LIKE 'planningalerts%' OR name LIKE 'mlander%' OR name LIKE 'jame%'"
+        "name LIKE 'ian%' OR name LIKE 'planning%' OR name LIKE 'mlander%' OR name LIKE 'openaust%' OR name LIKE 'jame%'"
       ).pluck(:id)
       # Add last 20 created owners
       owner_ids += Owner.order(created_at: :desc).limit(20).pluck(:id)
