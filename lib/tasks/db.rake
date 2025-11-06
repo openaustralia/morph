@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "fileutils"
+
 namespace :db do
   desc "Database Stats"
   task stats: [:environment] do
@@ -43,17 +45,10 @@ namespace :db do
       puts "Dumping complete database structure..."
       structure_file = temp_dir.join("structure.sql")
       temp_files << structure_file
-      system_with_time("mysqldump --no-data morph > #{structure_file}")
-      abort "Failed to create #{structure_file}!" unless File.size!(structure_file)
-
-      # Get filtered owner IDs
-      owner_ids = Owner.where(
-        "name LIKE 'ian%' OR name LIKE 'planning%' OR name LIKE 'mlander%' OR name LIKE 'openaust%' OR name LIKE 'jame%'"
-      ).pluck(:id)
-      # Add last 20 created owners
-      owner_ids += Owner.order(created_at: :desc).limit(20).pluck(:id)
-      owner_ids.uniq!
-      puts "Found #{owner_ids.count} owners to include"
+      mysqldump_cmd("--no-data") do |cmd|
+        system("#{cmd} > #{structure_file}") || abort("Failed to dump DB structure!")
+      end
+      abort "Failed to create #{structure_file}!" unless File.size?(structure_file)
 
       # Dump data for lookup tables (excluding owner-dependent tables - we'll filter those)
       puts "Dumping lookup tables data..."
@@ -64,8 +59,19 @@ namespace :db do
         create_scraper_progresses domains
         site_settings variables webhooks
       ]
-      system_with_time("mysqldump --no-create-info morph #{lookup_tables.join(' ')} > #{lookup_file}")
-      abort "Failed to create #{lookup_file}!" unless File.size!(lookup_file)
+      mysqldump_cmd("--no-create-info") do |cmd|
+        system("#{cmd} #{lookup_tables.join(' ')} > #{lookup_file}") || abort("Failed to dump lookup lookup tables!")
+      end
+      abort "Failed to create #{lookup_file}!" unless File.size?(lookup_file)
+
+      # Get filtered owner IDs
+      owner_ids = Owner.where(
+        "name LIKE 'ian%' OR name LIKE 'planning%' OR name LIKE 'mlander%' OR name LIKE 'openaust%' OR name LIKE 'jame%'"
+      ).pluck(:id)
+      # Add last 20 created owners
+      owner_ids += Owner.order(created_at: :desc).limit(20).pluck(:id)
+      owner_ids.uniq!
+      puts "Found #{owner_ids.count} owners to include"
 
       # Dump filtered owners
       puts "Dumping filtered owners data..."
@@ -79,8 +85,8 @@ namespace :db do
         puts "Dumping filtered #{table} data..."
         file = temp_dir.join("#{table}_data.sql")
         temp_files << file
-        dump_with_id_batches(table, "owner_id", owner_ids, file)
-        abort "Failed to create #{file}!" unless File.size!(file)
+        dump_with_id_batches(table, "user_id", owner_ids, file)
+        abort "Failed to create #{file}!" unless File.size?(file)
       end
 
       # Get scraper IDs for filtered owners
@@ -92,43 +98,47 @@ namespace :db do
       scrapers_file = temp_dir.join("scrapers_data.sql")
       temp_files << scrapers_file
       dump_with_id_batches("scrapers", "id", scraper_ids, scrapers_file)
-      abort "Failed to create #{scrapers_file}!" unless File.size!(scrapers_file)
+      abort "Failed to create #{scrapers_file}!" unless File.size?(scrapers_file)
 
       # Dump filtered runs and api_queries
-      puts "Dumping filtered runs and api_queries data..."
+      puts "Dumping filtered runs ..."
       runs_file = temp_dir.join("runs_data.sql")
       temp_files << runs_file
       dump_with_id_batches("runs", "scraper_id", scraper_ids, runs_file)
-      abort "Failed to create #{runs_file}!" unless File.size!(runs_file)
+      abort "Failed to create #{runs_file}!" unless File.size?(runs_file)
 
+      puts "Dumping filtered api queries ..."
       api_queries_file = temp_dir.join("api_queries_data.sql")
       temp_files << api_queries_file
       dump_with_id_batches("api_queries", "scraper_id", scraper_ids, api_queries_file)
-      abort "Failed to create #{api_queries_file}!" unless File.size!(api_queries_file)
+      abort "Failed to create #{api_queries_file}!" unless File.size?(api_queries_file)
 
       # Get run IDs for filtered scrapers
-      run_ids = Run.where(scraper_id: scraper_ids).pluck(:id)
-      puts "Found #{run_ids.count} runs to process for related tables"
+      run_ids = Run.where(scraper_id: scraper_ids)
+                   .where("created_at > ? OR (MOD(id, 10) = 0 AND created_at > ?) OR MOD(id, 100) = 0", 5.days.ago, 50.days.ago)
+                   .pluck(:id)
+      puts "Found #{run_ids.count} runs to include"
 
       # Dump tables filtered by run_id
       filtered_runs_file = temp_dir.join("filtered_by_runs.sql")
       temp_files << filtered_runs_file
       File.write(filtered_runs_file, "")
 
+      # Webhook deliveries is slow, as is log_lines ...
       %w[webhook_deliveries log_lines connection_logs metrics].each do |table|
-        puts "Dumping #{table}..."
+        puts "Dumping #{table} ..."
         dump_with_id_batches(table, "run_id", run_ids, filtered_runs_file, append: true)
       end
-      abort "Failed to create #{filtered_runs_file}!" unless File.size!(filtered_runs_file)
+      abort "Failed to create #{filtered_runs_file}!" unless File.size?(filtered_runs_file)
 
       # Combine all files
       puts "Creating final backup..."
-      system("cat #{temp_files.join(' ')} > #{backup_file}")
+      system("cat #{temp_files.join(' ')} > #{backup_file}") || abort("Failed to create merged #{backup_file}!")
 
       puts "Done! Output in #{backup_file}"
     ensure
       # Clean up temp files
-      temp_files.each { |f| File.delete(f) if File.exist?(f) }
+      temp_files.each { |f| FileUtils.rm_f(f) }
     end
   end
 
@@ -155,13 +165,6 @@ namespace :db do
   end
 
   private
-
-  def system_with_time(command)
-    start = Time.now
-    result = system(command)
-    puts "  Time: #{(Time.now - start).round(2)}s"
-    result
-  end
 
   def dump_with_id_batches(table, column, ids, output_file, append: false)
     return File.write(output_file, "") if ids.empty? && !append
@@ -193,6 +196,31 @@ namespace :db do
 
     ids_list = ids.join(",")
     redirect = first_batch ? ">" : ">>"
-    system("mysqldump --no-create-info --where=\"#{column} in (#{ids_list})\" morph #{table} #{redirect} #{output_file}")
+    mysqldump_cmd("--no-create-info --where='#{column} in (#{ids_list})'") do |cmd|
+      system("#{cmd} #{table} #{redirect} #{output_file}") || abort("Failed to dump #{table}!")
+    end
+
+  end
+
+  # Returns a string containing the mysqldump command to run
+  # with password in ENV if a block is given, otherwise in the string
+  def mysqldump_cmd(options = "")
+    config = ActiveRecord::Base.connection_config
+    cmd = "mysqldump --no-tablespaces"
+    cmd += " -u#{config[:username]}" if config[:username]
+    cmd += " -p#{config[:password]}" if config[:password] && !block_given?
+    cmd += " -h#{config[:host]}" if config[:host]
+    cmd += " -P#{config[:port]}" if config[:port]
+    cmd += " #{options} #{config[:database]}"
+    if block_given?
+      begin
+        prev = ENV.fetch("MYSQL_PWD", nil)
+        ENV["MYSQL_PWD"] = config[:password]
+        yield cmd
+      ensure
+        ENV["MYSQL_PWD"] = prev
+      end
+    end
+    cmd
   end
 end
