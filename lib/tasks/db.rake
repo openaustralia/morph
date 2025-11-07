@@ -39,37 +39,23 @@ namespace :db do
     backup_file = Rails.root.join("db/backups/filtered_backup.sql")
     temp_dir = Rails.root.join("tmp")
     temp_files = []
-
+    tables = []
     begin
       # Dump complete database structure (no data)
-      puts "Dumping complete database structure..."
-      structure_file = temp_dir.join("structure.sql")
-      temp_files << structure_file
-      mysqldump_cmd("--no-data") do |cmd|
-        system("#{cmd} > #{structure_file}") || abort("Failed to dump DB structure!")
-      end
-      abort "Failed to create #{structure_file}!" unless File.size?(structure_file)
-
-      # Dump data for lookup tables (excluding owner-dependent tables - we'll filter those)
-      puts "Dumping lookup tables data..."
-      lookup_file = temp_dir.join("lookup_data.sql")
-      temp_files << lookup_file
-      lookup_tables = %w[
-        active_admin_comments collaborations
-        create_scraper_progresses domains
-        site_settings variables webhooks
-      ]
-      mysqldump_cmd("--no-create-info") do |cmd|
-        system("#{cmd} #{lookup_tables.join(' ')} > #{lookup_file}") || abort("Failed to dump lookup lookup tables!")
-      end
-      abort "Failed to create #{lookup_file}!" unless File.size?(lookup_file)
+      # puts "Dumping complete database structure..."
+      # structure_file = temp_dir.join("structure.sql")
+      # temp_files << structure_file
+      # mysqldump_cmd("--no-data") do |cmd|
+      #   system("#{cmd} > #{structure_file}") || abort("Failed to dump DB structure!")
+      # end
+      # abort "Failed to create #{structure_file}!" unless File.size?(structure_file)
 
       # Get filtered owner IDs
       owner_ids = Owner.where(
-        "name LIKE 'ian%' OR name LIKE 'planning%' OR name LIKE 'mlander%' OR name LIKE 'openaust%' OR name LIKE 'jame%'"
+        "email LIKE '%@heggie.biz' OR email like '%@oaf.org.au' or admin = 1 or email like '%@jamezpolley.com' or nickname = 'planningalerts-scrapers'"
       ).pluck(:id)
-      # Add last 20 created owners
-      owner_ids += Owner.order(created_at: :desc).limit(20).pluck(:id)
+      # Add last 5 created owners
+      owner_ids += Owner.order(created_at: :desc).limit(5).pluck(:id)
       owner_ids.uniq!
       puts "Found #{owner_ids.count} owners to include"
 
@@ -77,6 +63,7 @@ namespace :db do
       puts "Dumping filtered owners data..."
       owners_file = temp_dir.join("owners_data.sql")
       temp_files << owners_file
+      tables << "owners"
       dump_with_id_batches("owners", "id", owner_ids, owners_file)
 
       # Dump owner-dependent tables filtered by owner_id
@@ -85,6 +72,7 @@ namespace :db do
         puts "Dumping filtered #{table} data..."
         file = temp_dir.join("#{table}_data.sql")
         temp_files << file
+        tables << table
         dump_with_id_batches(table, "user_id", owner_ids, file)
         abort "Failed to create #{file}!" unless File.size?(file)
       end
@@ -97,6 +85,7 @@ namespace :db do
       puts "Dumping filtered scrapers data..."
       scrapers_file = temp_dir.join("scrapers_data.sql")
       temp_files << scrapers_file
+      tables << "scrapers"
       dump_with_id_batches("scrapers", "id", scraper_ids, scrapers_file)
       abort "Failed to create #{scrapers_file}!" unless File.size?(scrapers_file)
 
@@ -104,12 +93,14 @@ namespace :db do
       puts "Dumping filtered runs ..."
       runs_file = temp_dir.join("runs_data.sql")
       temp_files << runs_file
+      tables << "runs"
       dump_with_id_batches("runs", "scraper_id", scraper_ids, runs_file)
       abort "Failed to create #{runs_file}!" unless File.size?(runs_file)
 
       puts "Dumping filtered api queries ..."
       api_queries_file = temp_dir.join("api_queries_data.sql")
       temp_files << api_queries_file
+      tables << "api_queries"
       dump_with_id_batches("api_queries", "scraper_id", scraper_ids, api_queries_file)
       abort "Failed to create #{api_queries_file}!" unless File.size?(api_queries_file)
 
@@ -127,9 +118,27 @@ namespace :db do
       # Webhook deliveries is slow, as is log_lines ...
       %w[webhook_deliveries log_lines connection_logs metrics].each do |table|
         puts "Dumping #{table} ..."
-        dump_with_id_batches(table, "run_id", run_ids, filtered_runs_file, append: true)
+        tables << table
+        dump_with_id_batches(table, "run_id", run_ids, filtered_runs_file) # , append: true)
       end
       abort "Failed to create #{filtered_runs_file}!" unless File.size?(filtered_runs_file)
+
+      # Dump everything from the other tables
+      remaining_file = temp_dir.join("remaining_data.sql")
+      FileUtils.rm_f remaining_file
+      temp_files.unshift remaining_file
+      # Get all tables from database and exclude the ones we've already handled
+      remaining_tables = ActiveRecord::Base.connection.tables - tables
+      puts "Dumping data from remaining #{remaining_tables.size} tables ..."
+      remaining_tables.each do |table|
+        puts "Dumping #{table} data ..."
+        tables << table
+        # --no-create-info
+        mysqldump_cmd("") do |cmd|
+          system("#{cmd} #{table} >> #{remaining_file}") || abort("Failed to dump #{table} table!")
+        end
+      end
+      abort "Failed to create #{remaining_file}!" unless File.size?(remaining_file)
 
       # Combine all files
       puts "Creating final backup..."
@@ -143,14 +152,14 @@ namespace :db do
   end
 
   namespace :trim do
-    desc "Trim old log lines keeping some for both successful and erroneous runs"
+    desc "Remove old log lines keeping some for both successful and erroneous runs"
     task log_lines: :environment do
       zero_counts = 0
       total_count = 0
       puts "Trimming log lines older than #{LogLine::DISCARD_AFTER_DAYS} days,"
       puts "Keeping at least #{LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS} log lines for both successful and erroneous runs"
-      puts "(progress reported each 50 scrapers, or when log lines are deleted)"
-      Scraper.order(:full_name).each do |scraper|
+      puts "(progress reported each 100 scrapers, or when log lines are deleted)"
+      Scraper.order(:full_name).find_each do |scraper|
         count = scraper.trim_log_lines
         if count.zero?
           zero_counts += 1
@@ -159,15 +168,86 @@ namespace :db do
         end
         zero_counts = 0
         puts "", "Removed #{count} log lines from #{scraper.full_name}"
+        total_count += count
       end
       puts "", "Removed #{total_count} log lines from #{Scraper.count} scrapers, leaving #{LogLine.count} log lines remaining"
+    end
+
+    # Trims log lines older than DISCARD_AFTER_DAYS, keeping at least KEEP_AT_LEAST_COUNT_PER_STATUS log lines for
+    # both successful and erroneous runs
+    # Returns the number of log_lines deleted
+    def trim_log_lines
+      cutoff_date = LogLine::DISCARD_AFTER_DAYS.days.ago
+
+      # Get IDs directly using pluck instead of building subqueries with LIMIT
+      keep_ids = []
+      
+      # Keep the most recent N successful runs
+      keep_ids += runs.where(finished_successfully: true)
+                      .order(id: :desc)
+                      .limit(LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS)
+                      .pluck(:id)
+      
+      # Keep the most recent N unsuccessful runs
+      keep_ids += runs.where(finished_successfully: false)
+                      .order(id: :desc)
+                      .limit(LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS)
+                      .pluck(:id)
+      
+      # Keep runs created after the cutoff date
+      keep_ids += runs.where("created_at > ?", cutoff_date)
+                      .pluck(:id)
+      
+      # Remove duplicates
+      keep_ids.uniq!
+
+      total_deleted = 0
+      LogLine.where(run_id: runs.where.not(id: keep_ids).select(:id))
+             .in_batches(of: 200) do |batch|
+        deleted = batch.delete_all
+        total_deleted += deleted
+        sleep(0.05) if deleted.positive?  # Brief pause between chunks to be nice to the database
+      end
+
+      total_deleted
+    end
+
+    desc "Remove connection_logs older than a year"
+    task connection_logs: :environment do
+      puts "Trimming connection_logs older than #{ConnectionLog::DISCARD_AFTER_MONTHS} months ..."
+      before_count = ConnectionLog.count
+      delete_before = ConnectionLog::DISCARD_AFTER_MONTHS.months.ago
+      loop do
+        deleted = ConnectionLog.order(:id).where("created_at < ?", delete_before).limit(200).delete_all
+        print "."
+        break if deleted.zero?
+
+        sleep(0.05)  # Let DB breathe
+      end
+      after_count = ConnectionLog.count
+      puts "Removed #{before_count - after_count} connection_logs, leaving #{after_count} remaining"
+    end
+
+    desc "Remove orphaned domains with no connection logs"
+    task domains: :environment do
+      orphaned_domain_ids = Domain.left_joins(:connection_logs)
+                                  .where(connection_logs: { id: nil })
+                                  .pluck(:id)
+      count = orphaned_domain_ids.count
+      puts "Found #{count} orphaned domains"
+      orphaned_domain_ids.each_slice(200) do |batch|
+        Domain.where(id: batch).delete_all
+        print "."
+        sleep(0.05)  # Let DB breathe
+      end
+      puts "\nDeleted #{count} orphaned domains"
     end
   end
 
   private
 
   def dump_with_id_batches(table, column, ids, output_file, append: false)
-    return File.write(output_file, "") if ids.empty? && !append
+    return File.write(output_file, "") if ids.empty? && append
 
     first_batch = !append
     current_batch = []
@@ -196,10 +276,10 @@ namespace :db do
 
     ids_list = ids.join(",")
     redirect = first_batch ? ">" : ">>"
-    mysqldump_cmd("--no-create-info --where='#{column} in (#{ids_list})'") do |cmd|
+    create_info = first_batch ? "" : "--no-create-info"
+    mysqldump_cmd("#{create_info} --where='#{column} in (#{ids_list})'") do |cmd|
       system("#{cmd} #{table} #{redirect} #{output_file}") || abort("Failed to dump #{table}!")
     end
-
   end
 
   # Returns a string containing the mysqldump command to run

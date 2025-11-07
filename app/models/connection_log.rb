@@ -5,6 +5,8 @@
 class ConnectionLog < ApplicationRecord
   extend T::Sig
 
+  DISCARD_AFTER_MONTHS = 12
+
   sig { returns(T.nilable(String)) }
   attr_reader :ip_address
 
