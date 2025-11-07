@@ -117,6 +117,9 @@ group :development do
 
   gem "capistrano-rails"
   gem "capistrano-rvm"
+  gem "ed25519", "~> 1.3"
+  gem "bcrypt_pbkdf", "~> 1.1"
+
   gem "growl"
   gem "guard"
   gem "guard-livereload", require: false
@@ -205,3 +208,4 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
