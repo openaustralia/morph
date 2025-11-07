@@ -84,7 +84,7 @@ gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"
 
 # For searchkick 5 we need to install the elasticsearch gem ourselves
 # We're using elasticsearch 7 in production so sticking with the same version for the client
-gem "elasticsearch", "~> 7"
+gem "elasticsearch", "~> 7.17"
 gem "searchkick", "~> 5"
 
 gem "stripe"
@@ -117,6 +117,9 @@ group :development do
 
   gem "capistrano-rails"
   gem "capistrano-rvm"
+  gem "ed25519", "~> 1.3"
+  gem "bcrypt_pbkdf", "~> 1.1"
+
   gem "growl"
   gem "guard"
   gem "guard-livereload", require: false
@@ -205,3 +208,4 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
