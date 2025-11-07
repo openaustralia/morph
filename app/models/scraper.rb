@@ -88,9 +88,9 @@ class Scraper < ApplicationRecord
   def download_count_by_owner
     # TODO: Simplify this by using an association on api_query
     count_by_owner_id = api_queries
-                        .group(:owner_id)
-                        .order("count_all desc")
-                        .count
+                          .group(:owner_id)
+                          .order("count_all desc")
+                          .count
     count_by_owner_id.map do |id, count|
       [Owner.find(id), count]
     end
@@ -301,20 +301,39 @@ class Scraper < ApplicationRecord
   # Returns the number of log_lines deleted
   sig { returns(Integer) }
   def trim_log_lines
-    has_example_of_status = Hash.new(0)
-    count = 0
-    runs.order(id: :desc).find_each do |run|
-      if run.created_at > LogLine::DISCARD_AFTER_DAYS.days.ago ||
-         has_example_of_status[run.finished_successfully?] < LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS
-        has_example_of_status[run.finished_successfully?] += 1
-        next
-      end
-      run.transaction do
-        count += run.log_lines.count
-        run.log_lines.delete_all
-      end
+    cutoff_date = LogLine::DISCARD_AFTER_DAYS.days.ago
+
+    # Get IDs directly using pluck instead of building subqueries with LIMIT
+    keep_ids = []
+
+    # Keep the most recent N successful runs
+    keep_ids += runs.where(status_code: 0)
+                    .order(id: :desc)
+                    .limit(LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS)
+                    .pluck(:id)
+
+    # Keep the most recent N unsuccessful runs
+    keep_ids += runs.where.not(status_code: 0)
+                    .order(id: :desc)
+                    .limit(LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS)
+                    .pluck(:id)
+
+    # Keep runs created after the cutoff date
+    keep_ids += runs.where("created_at > ?", cutoff_date)
+                    .pluck(:id)
+
+    # Remove duplicates
+    keep_ids.uniq!
+
+    total_deleted = 0
+    LogLine.where(run_id: runs.where.not(id: keep_ids).select(:id))
+           .in_batches(of: 200) do |batch|
+      deleted = batch.delete_all
+      total_deleted += deleted
+      sleep(0.05) if deleted.positive? # Brief pause between chunks to be nice to the database
     end
-    count
+
+    total_deleted
   end
 
   private
