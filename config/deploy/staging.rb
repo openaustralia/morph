@@ -1,7 +1,8 @@
 # typed: false
 # frozen_string_literal: true
 
-set :stage, :staging
+# Set the stage to production because faye needs it to be production
+set :stage, :production
 
 # Use the url for the origin remote (typically the developer's fork) for staging deployments
 # This overrides the default repo_url from deploy.rb
