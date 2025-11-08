@@ -18,8 +18,11 @@ provisioning/.roles-installed: venv provisioning/requirements.yml
 	${VENV}/ansible-galaxy install -r provisioning/requirements.yml -p provisioning/roles
 	touch provisioning/.roles-installed
 
-ansible: venv roles ## Run Ansible on production
-	${VENV}/ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
+production-ansible: venv roles ## Run Ansible on production
+	${VENV}/ansible-playbook --user=root --inventory-file=provisioning/inventory/production provisioning/playbook.yml
+
+staging-ansible: venv roles ## Run Ansible on production
+	${VENV}/ansible-playbook --user=root --inventory-file=provisioning/inventory/staging.py provisioning/playbook.yml
 
 help: ## This help dialog.
 	@IFS=$$'\n' ; \
@@ -48,6 +51,9 @@ local-deploy:
 
 production-deploy:
 	bundle exec cap production deploy
+
+staging-deploy:
+	bundle exec cap staging deploy
 
 clean:
 	rm -rf .venv provisioning/.roles-installed 
