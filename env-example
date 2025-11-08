@@ -8,6 +8,11 @@ GITHUB_APP_NAME=xxxxxxxxxx
 GITHUB_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
 GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+# Set if you are deploying to staging
+#STAGING_HOSTNAME=morph.your.domain
+# If STAGING_HOSTNAME points to a CDN, then set the following to the actual ip address of the server
+#STAGING_DEPLOY_TO=server-ip-address
+
 # In development you can run elasticsearch on docker very easily which means
 # you don't have to install it.
 # Just use: docker-compose up
