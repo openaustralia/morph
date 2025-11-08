@@ -25,6 +25,8 @@
 /.env
 /.env.local
 /.env.production
+/.env*
+
 /db/scrapers
 .vagrant
 vagrant_ansible_inventory_local
@@ -48,3 +50,4 @@ provisioning/roles/morph-app/files/ssl/dev.morph.io.pem
 provisioning/roles/geerlingguy.elasticsearch/
 .venv/
 .vscode
+
