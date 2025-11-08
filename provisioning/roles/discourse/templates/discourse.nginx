@@ -1,6 +1,8 @@
 server {
   listen 443;
   server_name {{ discourse_server_name }};
+  access_log /var/log/nginx/help.access.log;
+  error_log /var/log/nginx/help.error.log;
 
   ssl on;
   ssl_certificate /etc/letsencrypt/live/{{ server_name }}/fullchain.pem; # managed by Certbot

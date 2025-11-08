@@ -2,4 +2,6 @@
 server {
   listen 80 default_server;
   return 301 https://{{ server_name }}$request_uri;
+  access_log /var/log/nginx/default.access.log;
+  error_log /var/log/nginx/default.error.log;
 }
