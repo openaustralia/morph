@@ -10,7 +10,7 @@ GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Used by capistrano for deployment and ansible playbook in provisioning
 # Required if you are deploying to staging
-#STAGING_HOSTNAME=morph.your.domain
+#STAGING_HOSTNAME=morph-staging.your.domain
 # Required if STAGING_HOSTNAME points to a CDN: set to the actual ip address of the server
 #STAGING_DEPLOY_TO=server-ip-address
 

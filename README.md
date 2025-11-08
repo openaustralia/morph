@@ -219,7 +219,9 @@ When you've changed the Ansible playbooks to modify the infrastructure, you'll w
 
 You can create your own staging server using a VM and DNS provider of your choice.
 
-Decide on a hostname for your staging server (eg morph.your.domain) and set `STAGING_HOSTNAME` in your .env file.
+Decide on a hostname for your staging server (eg morph-staging.your.domain) and set `STAGING_HOSTNAME` in your .env file.
+
+Note: Use morph-staging rather than morph so the ssh shell prompt will remind you if you are on production or staging!
 
 If you are using a CDN then set `STAGING_DEPLOY_TO` to the ip address in your .env file.
 
