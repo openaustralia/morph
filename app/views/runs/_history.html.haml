@@ -1,4 +1,4 @@
-- cache ["v6", run] do
+- cache ["v7", run, current_user.admin?] do
   %li.list-group-item{ class: run.finished_successfully? ? "alert-success" : "alert-danger" }
     - if run.auto?
       Auto
@@ -24,6 +24,11 @@
           = distance_of_time_in_words(run.wall_time)
       %div
     %div= database_changes_in_words(run)
+    - if current_user.admin?
+      .pull-right.hidden-xs
+      %div
+        link_to "View", admin_run_path(run)
+      %div
     %div
       - if run.connection_logs.size.positive?
         = pluralize(run.connection_logs.size, "page")
