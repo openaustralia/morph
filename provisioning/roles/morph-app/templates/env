@@ -3,6 +3,8 @@
 # This is needed by the faye server
 RAILS_ENV=production
 
+SERVER_NAME={{ server_name }}
+
 # Copy this to .env and fill in the x's - these values are then automatically loaded as environment variables
 # See https://github.com/bkeepers/dotenv for more information
 
