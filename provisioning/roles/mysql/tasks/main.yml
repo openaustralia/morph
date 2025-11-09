@@ -4,3 +4,6 @@
 
 - name: Install bits for compiling mysql clients against
   apt: pkg=libmysqlclient-dev
+
+- name: Install efficient zstd compression for backups
+  apt: pkg=zstd
