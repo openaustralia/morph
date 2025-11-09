@@ -141,6 +141,7 @@ namespace :db do
       puts "Keeping at least #{LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS} log lines for both successful and erroneous runs"
       puts "(progress reported each 100 scrapers, or when log lines are deleted)"
       Scraper.order(:full_name).find_each do |scraper|
+        $stdout.flush
         count = scraper.trim_log_lines
         if count.zero?
           zero_counts += 1
@@ -151,46 +152,8 @@ namespace :db do
         puts "", "Removed #{count} log lines from #{scraper.full_name}"
         total_count += count
       end
-      puts "", "Removed #{total_count} log lines from #{Scraper.count} scrapers, leaving #{LogLine.count} log lines remaining"
-    end
-
-    # Trims log lines older than DISCARD_AFTER_DAYS, keeping at least KEEP_AT_LEAST_COUNT_PER_STATUS log lines for
-    # both successful and erroneous runs
-    # Returns the number of log_lines deleted
-    def trim_log_lines
-      cutoff_date = LogLine::DISCARD_AFTER_DAYS.days.ago
-
-      # Get IDs directly using pluck instead of building subqueries with LIMIT
-      keep_ids = []
-      
-      # Keep the most recent N successful runs
-      keep_ids += runs.where(finished_successfully: true)
-                      .order(id: :desc)
-                      .limit(LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS)
-                      .pluck(:id)
-      
-      # Keep the most recent N unsuccessful runs
-      keep_ids += runs.where(finished_successfully: false)
-                      .order(id: :desc)
-                      .limit(LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS)
-                      .pluck(:id)
-      
-      # Keep runs created after the cutoff date
-      keep_ids += runs.where("created_at > ?", cutoff_date)
-                      .pluck(:id)
-      
-      # Remove duplicates
-      keep_ids.uniq!
-
-      total_deleted = 0
-      LogLine.where(run_id: runs.where.not(id: keep_ids).select(:id))
-             .in_batches(of: 200) do |batch|
-        deleted = batch.delete_all
-        total_deleted += deleted
-        sleep(0.05) if deleted.positive?  # Brief pause between chunks to be nice to the database
-      end
-
-      total_deleted
+      puts "", "Removed #{total_count} log lines from #{Scraper.count} scrapers,"
+      puts "leaving #{LogLine.count} log lines remaining"
     end
 
     desc "Remove connection_logs older than a year"
@@ -223,65 +186,5 @@ namespace :db do
       end
       puts "\nDeleted #{count} orphaned domains"
     end
-  end
-
-  private
-
-  def dump_with_id_batches(table, column, ids, output_file, append: false)
-    return File.write(output_file, "") if ids.empty? && append
-
-    first_batch = !append
-    current_batch = []
-
-    ids.each do |id|
-      test_batch = current_batch + [id]
-      test_clause = "#{column} in (#{test_batch.join(',')})"
-
-      # Check if adding this ID would exceed 800 chars
-      if test_clause.length > 800
-        # Dump current batch
-        dump_batch(table, column, current_batch, output_file, first_batch)
-        first_batch = false
-        current_batch = [id]
-      else
-        current_batch << id
-      end
-    end
-
-    # Dump remaining IDs
-    dump_batch(table, column, current_batch, output_file, first_batch) if current_batch.any?
-  end
-
-  def dump_batch(table, column, ids, output_file, first_batch)
-    return if ids.empty?
-
-    ids_list = ids.join(",")
-    redirect = first_batch ? ">" : ">>"
-    create_info = first_batch ? "" : "--no-create-info"
-    mysqldump_cmd("#{create_info} --where='#{column} in (#{ids_list})'") do |cmd|
-      system("#{cmd} #{table} #{redirect} #{output_file}") || abort("Failed to dump #{table}!")
-    end
-  end
-
-  # Returns a string containing the mysqldump command to run
-  # with password in ENV if a block is given, otherwise in the string
-  def mysqldump_cmd(options = "")
-    config = ActiveRecord::Base.connection_config
-    cmd = "mysqldump --no-tablespaces"
-    cmd += " -u#{config[:username]}" if config[:username]
-    cmd += " -p#{config[:password]}" if config[:password] && !block_given?
-    cmd += " -h#{config[:host]}" if config[:host]
-    cmd += " -P#{config[:port]}" if config[:port]
-    cmd += " #{options} #{config[:database]}"
-    if block_given?
-      begin
-        prev = ENV.fetch("MYSQL_PWD", nil)
-        ENV["MYSQL_PWD"] = config[:password]
-        yield cmd
-      ensure
-        ENV["MYSQL_PWD"] = prev
-      end
-    end
-    cmd
   end
 end
