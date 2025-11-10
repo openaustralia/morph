@@ -17,6 +17,10 @@ as well as the following required services
     * mitmproxy
     * MySQL
     * Redis
+## Dependencies
+
+Ruby, Docker, MySQL, SQLite 3, Redis, mitmproxy.
+(See below for more details about installing Docker)
 
 ## Provisioning using Ansible
 
@@ -128,10 +132,15 @@ User-facing:
 
 * [openaustralia/morph](https://github.com/openaustralia/morph) - Main application
 * [openaustralia/morph-cli](https://github.com/openaustralia/morph-cli) - Command-line morph.io tool
-* [openaustralia/scraperwiki-python](https://github.com/openaustralia/scraperwiki-python) - Fork of [scraperwiki/scraperwiki-python](https://github.com/scraperwiki/scraperwiki-python) updated to use morph.io naming conventions
-* [openaustralia/scraperwiki-ruby](https://github.com/openaustralia/scraperwiki-ruby) - Fork of [scraperwiki/scraperwiki-ruby](https://github.com/scraperwiki/scraperwiki-ruby) updated to use morph.io naming conventions
+* [openaustralia/scraperwiki-python](https://github.com/openaustralia/scraperwiki-python) - Fork
+  of [scraperwiki/scraperwiki-python](https://github.com/scraperwiki/scraperwiki-python) updated to use morph.io naming
+  conventions
+* [openaustralia/scraperwiki-ruby](https://github.com/openaustralia/scraperwiki-ruby) - Fork
+  of [scraperwiki/scraperwiki-ruby](https://github.com/scraperwiki/scraperwiki-ruby) updated to use morph.io naming
+  conventions
 
 Docker images:
+
 * [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Base image for running scrapers in containers
 
 Note - morph builds a docker image using these buildstep images combined with the config files from the scraper to
@@ -139,8 +148,7 @@ build a separate docker image for each scraper with all the dependencies ready t
 
 ### Tunnel GitHub webhook traffic back to your local development machine
 
-We use "ngrok" a tool that makes tunnelling internet traffic to a local development machine easy. 
-
+We use "ngrok" a tool that makes tunnelling internet traffic to a local development machine easy.
 First [download ngrok](https://ngrok.com/download) if you don't have it already. Then,
 
     make share-web
@@ -160,14 +168,17 @@ We've pre-filled most of the important fields for a few different configurations
 * [Create GitHub application on the openaustralia organization for use in production](https://github.com/organizations/openaustralia/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
 
 You will need to add and change a few values manually:
+
 * Disable "Expire user authorization tokens"
 * Select "Any Account" if you are demoing with a team
 * Add extra callback urls:
   * http://0.0.0.0:3000/users/auth/github/callback  # if you click on the url puma lists on start up
   * <forwarding url noted above>/users/auth/github/callback
   * Change the port for the local urls if you are not using the default port 3000 for the rails app
-* Add an image - you can use the standard logo at `app/assets/images/logo.png` (you can add this after the app is created)
-* If the webhooks are active and being used in production (currently not the case) then you'll also need to 
+* Add an image - you can use the standard logo at `app/assets/images/logo.png` (you can add this after the app is
+  created)
+* If the webhooks are active and being used in production (currently not the case) then
+  you'll also need to add a "Webhook secret" for security.
   * add a "Webhook secret" for security.
   * add a "Webhook URL" - the ngrok url with `/github/webhook` on the end
 
@@ -244,11 +255,14 @@ set Environment variable: DISABLE_SPRING=1
 
 ## Deploying to production
 
-This section will not be relevant to most people. It will however be relevant if you're deploying to a production server.
+This section will not be relevant to most people. It will however be relevant if you're deploying to a production
+server.
 
 To deploy morph.io to production, normally you'll just want to deploy using Capistrano:
 
     cap production deploy
+
+## Provisioning
 
 Read the [provisioning README](provisioning/README.md) for details of how to provision from updated ansible playbooks.
 
@@ -267,7 +281,8 @@ If you want to contribute an enhancement or a fix:
 * Commit the changes without making changes to any files that aren't related to your enhancement or fix.
 * Send a pull request.
 
-We maintain a list of [issues that are easy fixes](https://github.com/openaustralia/morph/issues?labels=easy+fix&milestone=&page=1&state=open). 
+We maintain a list of
+[issues that are easy fixes](https://github.com/openaustralia/morph/issues?labels=easy+fix&milestone=&page=1&state=open). 
 Fixing one of these is a great way to get started while you get familiar with the codebase.
 
 # Copyright & License

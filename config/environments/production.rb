@@ -1,3 +1,4 @@
+# Configuration for production and staging servers.
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -121,9 +122,9 @@ Rails.application.configure do
     :authentication => :plain
    }
 
-  config.action_mailer.default_url_options = { :host => 'morph.io', protocol: "https" }
-
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
+  host = ENV.fetch("SERVER_NAME", 'morph.io')
+  config.action_mailer.default_url_options = { :host => host, protocol: "https" }
 end
 
 # So that the same host setting is available outside the mailer
