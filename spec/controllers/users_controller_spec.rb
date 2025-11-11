@@ -13,13 +13,13 @@ RSpec.describe UsersController, type: :controller do
       it "returns http success for html" do
         get :index
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to include("text/html")
+        expect(response.media_type).to eq("text/html")
       end
 
       it "returns http success for json" do
         get :index, format: :json
         expect(response).to have_http_status(:success)
-        expect(response.content_type).to include("application/json")
+        expect(response.media_type).to eq("application/json")
       end
 
       it "paginates users for html" do

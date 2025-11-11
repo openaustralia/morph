@@ -116,7 +116,7 @@ describe ApiController do
         expect(response.code).to eq "404"
         expect(JSON.parse(response.body))
           .to eq "error" => "can't find scraper mlandauer/not_exist"
-        expect(response.content_type).to eq "application/json"
+        expect(response.media_type).to eq "application/json"
       end
 
       it "returns an error in json" do
@@ -124,28 +124,28 @@ describe ApiController do
         expect(response.code).to eq "401"
         expect(JSON.parse(response.body))
           .to eq "error" => "API key is missing"
-        expect(response.content_type).to eq "application/json"
+        expect(response.media_type).to eq "application/json"
       end
 
       it "returns csv error as text" do
         get :data, params: { id: "mlandauer/a_scraper", format: :csv }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is missing"
-        expect(response.content_type).to eq "text"
+        expect(response.media_type).to eq "text"
       end
 
       it "returns atom feed error as text" do
         get :data, params: { id: "mlandauer/a_scraper", format: :atom }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is missing"
-        expect(response.content_type).to eq "text"
+        expect(response.media_type).to eq "text"
       end
 
       it "returns sqlite error as text" do
         get :data, params: { id: "mlandauer/a_scraper", format: :sqlite }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is missing"
-        expect(response.content_type).to eq "text"
+        expect(response.media_type).to eq "text"
       end
     end
 
@@ -155,28 +155,28 @@ describe ApiController do
         expect(response.code).to eq "401"
         expect(JSON.parse(response.body))
           .to eq "error" => "API key is not valid"
-        expect(response.content_type).to eq "application/json"
+        expect(response.media_type).to eq "application/json"
       end
 
       it "returns csv error as text" do
         get :data, params: { id: "mlandauer/a_scraper", key: "foo", format: :csv }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is not valid"
-        expect(response.content_type).to eq "text"
+        expect(response.media_type).to eq "text"
       end
 
       it "returns atom feed error as text" do
         get :data, params: { id: "mlandauer/a_scraper", key: "foo", format: :atom }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is not valid"
-        expect(response.content_type).to eq "text"
+        expect(response.media_type).to eq "text"
       end
 
       it "returns sqlite error as text" do
         get :data, params: { id: "mlandauer/a_scraper", key: "foo", format: :sqlite }
         expect(response.code).to eq "401"
         expect(response.body).to eq "API key is not valid"
-        expect(response.content_type).to eq "text"
+        expect(response.media_type).to eq "text"
       end
     end
 
