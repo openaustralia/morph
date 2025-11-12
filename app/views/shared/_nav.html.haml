@@ -6,7 +6,7 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      = link_to "morph.io", root_path, class: "navbar-brand"
+      = link_to hostname, root_path, class: "navbar-brand"
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
         -# TODO: set class to "active" when this is the current page
@@ -15,7 +15,7 @@
         %li= link_to "Pricing", new_supporter_path
         %li= link_to "Documentation", documentation_index_path
         %li.help
-          = link_to "https://help.morph.io/", target: "_blank", rel: "noopener" do
+          = link_to "#{host_origin("help")}/", target: "_blank", rel: "noopener" do
             %span.glyphicon.glyphicon-new-window{ "aria-hidden" => "true" }
             Help forum
 
