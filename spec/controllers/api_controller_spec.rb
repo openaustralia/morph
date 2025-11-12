@@ -42,7 +42,7 @@ describe ApiController do
       expect(parsed).to eq [{
         "stream" => "internalerr",
         "text" => "You currently can't start a scraper run. " \
-                  "See https://morph.io for more details"
+                  "See http://dev.morph.io for more details"
       }]
     end
 
@@ -235,7 +235,7 @@ describe ApiController do
         expect(response.body).to eq <<~RESPONSE
           <?xml version="1.0" encoding="UTF-8"?>
           <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
-            <title>morph.io: mlandauer/a_scraper</title>
+            <title>dev.morph.io: mlandauer/a_scraper</title>
             <subtitle></subtitle>
             <updated>2000-01-01T00:00:00+00:00</updated>
             <author>
