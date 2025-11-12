@@ -6,6 +6,7 @@ github_users:
   - 'jamezpolley'
   - 'mlandauer'
   - 'simonzippy'
+  - 'benrfairless'
 ruby_version: "{{ lookup('file', '../.ruby-version') | trim }}"
 #python_version: "{{ lookup('file', '../.python-version') | trim }}"
 bundler_version: 2.1.4
