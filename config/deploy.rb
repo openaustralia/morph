@@ -39,6 +39,12 @@ set :branch, lambda {
     $stdout.puts "", "Continuing ..."
   end
 
+  if fetch(:repo_url) != 'https://github.com/openaustralia/morph.git'
+    puts "⚠️  WARNING: Deploying branch #{branch} from a fork of the openaustralia repo: #{fetch(:repo_url)}"
+  else
+    puts "⚠️  NOTE: deploying branch #{branch} rather than main" if branch != "main"
+  end
+
   branch
 }
 
