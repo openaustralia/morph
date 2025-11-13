@@ -21,6 +21,12 @@ set :branch, -> {
     puts "⚠️  WARNING: Branch '#{branch}' (commit #{local_sha[0, 9]}) differs from #{fetch(:repo_url)} (commit #{remote_sha[0,9]})"
   end
 
+  if fetch(:repo_url) != 'https://github.com/openaustralia/morph.git'
+    puts "⚠️  WARNING: Deploying branch #{branch} from a fork of the openaustralia repo: #{fetch(:repo_url)}"
+  else
+    puts "⚠️  NOTE: deploying branch #{branch} rather than main" if branch != "main"
+  end
+
   branch
 }
 
