@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "csv"
+
 # Run API used by the morph command-line client
 class ApiController < ApplicationController
   extend T::Sig
@@ -215,7 +217,7 @@ class ApiController < ApplicationController
   def atom_header(scraper)
     response.stream.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
     response.stream.write("<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n")
-    response.stream.write("  <title>morph.io: #{scraper.full_name}</title>\n")
+    response.stream.write("  <title>#{helpers.hostname}: #{scraper.full_name}</title>\n")
     response.stream.write("  <subtitle>#{scraper.description}</subtitle>\n")
     response.stream.write("  <updated>#{DateTime.parse(scraper.updated_at.to_s).rfc3339}</updated>\n")
     response.stream.write("  <author>\n")
@@ -314,7 +316,7 @@ class ApiController < ApplicationController
     render json: {
       stream: "internalerr",
       text: "You currently can't start a scraper run. " \
-            "See https://morph.io for more details"
+            "See #{helpers.host_origin} for more details"
     }
   end
 

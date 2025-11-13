@@ -72,3 +72,14 @@
   # Disable use of PTY as it sometimes hangs
   async: 300
   poll: 2
+
+- name: Create .bash_aliases for rvm_users
+  ansible.builtin.lineinfile:
+    path: "/home/{{ item.0 }}/.bash_aliases"
+    line: "{{ item.1 }}"
+    create: yes
+    owner: "{{ item.0 }}"
+    group: "{{ item.0 }}"
+    mode: '0644'
+  tags: 'bash_aliases'
+  loop: "{{ rvm_users | product(bash_alias_lines) | list }}"

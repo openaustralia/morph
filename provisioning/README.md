@@ -119,14 +119,14 @@ Now visit https://dev.morph.io/
 
 ## Production provisioning
 
-When you've changed the Ansible playbooks to modify the infrastructure you'll want to run:
+When you've changed the Ansible playbooks to modify the infrastructure, you'll want to run:
 
     make ansible
 
 ## SSL certificates
 
 We're using Let's Encrypt for SSL certificates. It's not 100% automated.
-On a completely fresh install (with a new domain) as root:
+On a completely fresh installation (with a new domain) as root:
 ```
 certbot --nginx certonly -m contact@oaf.org.au --agree-tos
 ```
@@ -171,3 +171,76 @@ docker image build -t openaustralia/buildstep:latest .
 
 You should now be able to see in `docker image list --all` that your new image is ready.
 The next time you run a scraper it will be rebuilt using the new buildstep image.
+
+## Staging provisioning and deployment
+
+You can create your own staging server using a VM and DNS provider of your choice.
+
+Decide on a hostname for your staging server (eg morph-staging.your.domain) and set `STAGING_HOSTNAME` in your .env file.
+
+Note: Use morph-staging rather than morph so the ssh shell prompt will remind you if you are on production or staging!
+
+If you are using a CDN then set `STAGING_DEPLOY_TO` to the ip address in your .env file.
+
+1. Create a staging server in Australia (clone an existing server or create a new one)
+2. Create a DNS entry for the staging server, eg `morph.your.domain`
+3. Create CNAME aliases for `help`, `api` and `faye`, eg `help.morph.your.domain`, `api.morph.your.domain`,
+   `faye.morph.your.domain`
+
+Use the Ansible playbooks to modify the infrastructure you'll want to run:
+
+    make ansible
+
+To deploy morph.io to staging, normally you'll just want to deploy using Capistrano:
+
+    cap staging deploy
+
+## SSL certificates
+
+We're using Let's Encrypt for SSL certificates. It's not 100% automated.
+On a completely fresh install (with a new domain) as root:
+
+```
+certbot --nginx certonly -m contact@oaf.org.au --agree-tos
+```
+
+It should show something like this:
+
+```
+Which names would you like to activate HTTPS for?
+
+Which names would you like to activate HTTPS for?
+-------------------------------------------------------------------------------
+1: morph.io
+2: api.morph.io
+3: faye.morph.io
+4: help.morph.io
+```
+
+Leave your answer your blank which will install the certificate for all of them
+
+### Installing certificates for local vagrant build
+
+    sudo certbot certonly --manual -d dev.morph.io --preferred-challenges dns -d api.dev.morph.io -d faye.dev.morph.io -d help.dev.morph.io
+
+This will require the credentials for the dns provider.
+
+### Scraper<->mitmdump SSL
+
+Scrapers talk out to the internet by being routed through the mitmdump2
+proxy container. The default container you'll get on a devops install
+has no SSL certificates. This makes it easy for traffic to get out,
+but means we can't replicate some problems that occur when the SSL
+validation fails.
+
+To work around this, you'll have to rebuild the mitmdump container. Look in `/var/www/current/docker_images/morph-mitmdump`; there's a `Makefile` that will aid in building the new image.
+
+Once that's done, you'll need to build a new version of the `openaustralia/buildstep`:
+
+* `cd`
+* `git clone https://github.com/openaustralia/buildstep.git`
+* `cd buildstep`
+* `cp /var/www/current/docker_images/morph-mitmdump/mitmproxy/mitmproxy-ca-cert.pem .`
+* `docker image build -t openaustralia/buildstep:latest .`
+
+You should now be able to see in `docker image list --all` that your new image is ready. The next time you run a scraper it will be rebuilt using the new buildstep image.

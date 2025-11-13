@@ -22,6 +22,12 @@ provisioning/.roles-installed: venv provisioning/requirements.yml
 	${VENV}/ansible-galaxy install -r provisioning/requirements.yml -p provisioning/roles
 	touch provisioning/.roles-installed
 
+production-ansible: venv roles ## Run Ansible on production
+	${VENV}/ansible-playbook --user=root --inventory-file=provisioning/inventory/production provisioning/playbook.yml
+
+staging-ansible: venv roles ## Run Ansible on production
+	${VENV}/ansible-playbook --user=root --inventory-file=provisioning/inventory/staging.py provisioning/playbook.yml
+
 help: ## This help dialog.
 	@IFS=$$'\n' ; \
 	help_lines=(`fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##/:/'`); \
@@ -83,7 +89,7 @@ services-logs: ## View logs for services (use SERVICES=elasticsearch for specifi
 services-status: ## Check status of services
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml ps
 
-test: ## Run rspec tests
+test: ## Run rspec tests (Optionally add RUN_SLOW_TESTS=1 or DONT_RUN_DOCKER_TESTS=1)
 	RAILS_ENV=test bundle exec rspec
 
 lint: ## Lint code
@@ -103,3 +109,8 @@ docker-clean: services-down ## Remove all Docker resources INCLUDING databases i
 share-web: ## Share web server on port 3000 to the internet (use PORT=N to use an alternative port)
 	ngrok http ${PORT:-3000}
 
+staging-deploy:
+	bundle exec cap staging deploy
+
+clean:
+	rm -rf .venv provisioning/.roles-installed 

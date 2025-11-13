@@ -35,7 +35,7 @@ class Scraper < ApplicationRecord
   has_many :api_queries, dependent: :delete_all
 
   validates :name, presence: true, format: { with: /\A[a-zA-Z0-9_-]+\z/ }
-  validates :name, uniqueness: { scope: :owner }
+  validates :name, uniqueness: { scope: :owner, case_sensitive: false }
   validate :not_used_on_github, on: :create, if: proc { |s| s.github_id.blank? && s.name.present? }
   validate :app_installed_on_owner, on: :create
   validate :app_has_access_to_repo, on: :create
@@ -294,6 +294,46 @@ class Scraper < ApplicationRecord
   def app_install_url
     params = { suggested_target_id: T.must(owner).uid, repository_ids: github_id }
     "https://github.com/apps/#{Morph::Environment.github_app_name}/installations/new/permissions?#{params.to_query}"
+  end
+
+  # Trims log lines older than DISCARD_AFTER_DAYS, keeping at least KEEP_AT_LEAST_COUNT_PER_STATUS log lines for
+  # both successful and erroneous runs
+  # Returns the number of log_lines deleted
+  sig { returns(Integer) }
+  def trim_log_lines
+    cutoff_date = LogLine::DISCARD_AFTER_DAYS.days.ago
+
+    # Get IDs directly using pluck instead of building subqueries with LIMIT
+    keep_ids = []
+
+    # Keep the most recent N successful runs
+    keep_ids += runs.where(status_code: 0)
+                    .order(id: :desc)
+                    .limit(LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS)
+                    .pluck(:id)
+
+    # Keep the most recent N unsuccessful runs
+    keep_ids += runs.where.not(status_code: 0)
+                    .order(id: :desc)
+                    .limit(LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS)
+                    .pluck(:id)
+
+    # Keep runs created after the cutoff date
+    keep_ids += runs.where("created_at > ?", cutoff_date)
+                    .pluck(:id)
+
+    # Remove duplicates
+    keep_ids.uniq!
+
+    total_deleted = 0
+    LogLine.where(run_id: runs.where.not(id: keep_ids).select(:id))
+           .in_batches(of: 200) do |batch|
+      deleted = batch.delete_all
+      total_deleted += deleted
+      sleep(0.05) if deleted.positive? # Brief pause between chunks to be nice to the database
+    end
+
+    total_deleted
   end
 
   private

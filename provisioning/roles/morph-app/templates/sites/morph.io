@@ -1,6 +1,8 @@
 server {
   listen 443;
   server_name {{ server_name }} api.{{ server_name }};
+  access_log /var/log/nginx/morph.access.log;
+  error_log /var/log/nginx/morph.error.log;
   root /var/www/current/public;
   passenger_enabled on;
   passenger_ruby /home/deploy/.rvm/gems/ruby-{{ ruby_version }}/wrappers/ruby;
