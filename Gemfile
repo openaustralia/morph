@@ -118,10 +118,10 @@ group :development do
 
   gem "haml-lint"
 
+  gem "bcrypt_pbkdf", "~> 1.1"
   gem "capistrano-rails"
   gem "capistrano-rvm"
   gem "ed25519", "~> 1.3"
-  gem "bcrypt_pbkdf", "~> 1.1"
 
   gem "growl"
   gem "guard"
@@ -181,7 +181,7 @@ gem "coffee-rails"
 
 # Use jquery as the JavaScript library
 gem "jquery-rails"
-# Hold back jquery-ui-rails. We get Sprockets::FileNotFound with newer version
+# Hold back jquery-ui-rails. We get Sprockets::FileNotFound with a newer version
 gem "jquery-ui-rails", "~> 5"
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -200,7 +200,7 @@ group :doc do
 end
 
 # Default gems that need explicit inclusion for deployment
-gem 'date'
+gem "date"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
@@ -213,4 +213,3 @@ gem 'date'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-

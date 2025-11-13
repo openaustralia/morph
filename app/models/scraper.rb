@@ -88,9 +88,9 @@ class Scraper < ApplicationRecord
   def download_count_by_owner
     # TODO: Simplify this by using an association on api_query
     count_by_owner_id = api_queries
-                          .group(:owner_id)
-                          .order("count_all desc")
-                          .count
+                        .group(:owner_id)
+                        .order("count_all desc")
+                        .count
     count_by_owner_id.map do |id, count|
       [Owner.find(id), count]
     end

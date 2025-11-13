@@ -1,3 +1,4 @@
+# typed: strict
 # frozen_string_literal: true
 
 require "active_support/core_ext/numeric/bytes"
@@ -64,20 +65,19 @@ module DbBackupUtils
 
   def self.puts_help(backup_file)
     size_bytes = File.size(backup_file)
-    human_size = begin
-                   size_bytes.to_s(:human_size)
-                 rescue StandardError => e
-                   Rails.logger.error("Failed to convert #{size_bytes} to human size: #{e}")
-                   "#{size_bytes} bytes"
-                 end
-    puts "Created #{backup_file} backup #{human_size}"
-    puts ""
-    puts "To restore this backup:"
-    puts "  bundle exec rake db:drop db:create  # Create empty database"
-    puts "  zstd -dc #{backup_file} | bundle exec rails db -p"
+    human_size =
+      begin
+        size_bytes.to_s(:human_size)
+      rescue StandardError => e
+        Rails.logger.error("Failed to convert #{size_bytes} to human size: #{e}")
+        "#{size_bytes} bytes"
+      end
+    $stdout.puts "Created #{backup_file} backup #{human_size}"
+    $stdout.puts ""
+    $stdout.puts "To restore this backup:"
+    $stdout.puts "  bundle exec rake db:drop db:create  # Create empty database"
+    $stdout.puts "  zstd -dc #{backup_file} | bundle exec rails db -p"
   end
-
-  private
 
   def self.dump_batch(table, column, ids, output_file, first_batch, compress)
     return if ids.empty?
