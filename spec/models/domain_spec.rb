@@ -1,6 +1,22 @@
 # typed: false
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: domains
+#
+#  id         :integer          not null, primary key
+#  meta       :text(65535)
+#  name       :string(255)      default(""), not null
+#  title      :text(65535)
+#  created_at :datetime
+#  updated_at :datetime
+#
+# Indexes
+#
+#  index_domains_on_name  (name) UNIQUE
+#
+
 require "spec_helper"
 
 describe Domain do
