@@ -207,11 +207,11 @@
   template: src=duply_sqlite_conf dest=/root/.duply/sqlite/conf owner=root group=root mode=0400
 
 - name: Do backups daily of mysql to S3 at 4:40AM
-  cron: name="duply mysql" hour=4 minute=40 user=root job="duply mysql backup"
+  cron: name="duply mysql" hour=4 minute=40 user=root job="ulimit -n 65536 && duply mysql backup"
   when: backups
 
 - name: Do backups daily of sqlite to S3 at 4:40AM
-  cron: name="duply sqlite" hour=4 minute=40 user=root job="duply sqlite backup"
+  cron: name="duply sqlite" hour=4 minute=40 user=root job="ulimit -n 65536 && duply sqlite backup"
   when: backups
 
 - name: Sync configuration
