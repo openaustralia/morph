@@ -14,7 +14,7 @@ SimpleCov.start "rails" do
     ]
   )
   track_files "**/*.rb"
-  # SimpleCov.minimum_coverage 50
+  SimpleCov.minimum_coverage 54 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
   add_filter %r{^/spec/}
   add_filter "/vendor/"
 end
@@ -31,7 +31,7 @@ require "rspec/sorbet"
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.

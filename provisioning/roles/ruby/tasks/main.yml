@@ -1,16 +1,35 @@
 ---
-- name: Ensure curl is installed
-  apt: pkg=curl
+- name: Set bash as default shell for rvm_users as rvm requires it
+  user:
+    name: "{{ item }}"
+    shell: /bin/bash
+  become: true
+  loop: "{{ rvm_users }}"
 
 - name: "Install gpg key for rvm_users"
   shell: gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
   become_user: "{{ item }}"
   loop: "{{ rvm_users }}"
 
-# TODO: Maybe install rvm by installing the package ruby-rvm?
-- name: "Ensure rvm installed for rvm_users"
-  shell: "curl -sSL https://get.rvm.io | bash -s stable creates=/home/{{ item }}/.rvm"
-  become_user: "{{ item }}"
+- name: Add RVM PPA
+  apt_repository:
+    repo: ppa:rael-gc/rvm
+    state: present
+  become: true
+
+- name: Install RVM from package
+  apt:
+    name: rvm
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Add rvm_users to rvm group
+  user:
+    name: "{{ item }}"
+    groups: rvm
+    append: yes
+  become: true
   loop: "{{ rvm_users }}"
 
 - name: "Ensure ruby dependencies are installed"
@@ -21,10 +40,14 @@
       - bison
       - g++
       - gawk
+      - libncurses5-dev
+      - libreadline-dev
+      - libssl-dev
       - libtool
       - make
       - patch
       - pkg-config
+      - zlib1g-dev
 
 - name: "Ensure gem dependencies are installed"
   apt:

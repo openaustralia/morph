@@ -1,4 +1,4 @@
-FROM ruby:2.7.6
+FROM ruby:3.0.7
 
 RUN echo "Install a javascript runtime and other gem dependencies ..." \
     && apt-get update  \
