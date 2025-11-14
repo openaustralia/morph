@@ -1,6 +1,34 @@
 # typed: strict
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: api_queries
+#
+#  id         :integer          not null, primary key
+#  format     :string(255)
+#  query      :text(65535)
+#  size       :integer
+#  stime      :float(24)
+#  type       :string(255)
+#  utime      :float(24)
+#  wall_time  :float(24)
+#  created_at :datetime
+#  updated_at :datetime
+#  owner_id   :integer
+#  scraper_id :integer
+#
+# Indexes
+#
+#  index_api_queries_on_created_at  (created_at)
+#  index_api_queries_on_owner_id    (owner_id)
+#  index_api_queries_on_scraper_id  (scraper_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (scraper_id => scrapers.id)
+#
+
 # A record of a download or an API query
 # == Schema Information
 #

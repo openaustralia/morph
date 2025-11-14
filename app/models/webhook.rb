@@ -20,6 +20,7 @@
 #
 #  fk_rails_...  (scraper_id => scrapers.id)
 #
+
 class Webhook < ApplicationRecord
   extend T::Sig
 
