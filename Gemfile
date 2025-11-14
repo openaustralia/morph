@@ -132,6 +132,7 @@ group :development do
   gem "rack-mini-profiler"
   # gem "flamegraph"
 
+  gem "annotate", "~> 3.2"
   gem "better_errors"
   gem "binding_of_caller"
   gem "memory_profiler"
@@ -213,3 +214,4 @@ gem "date"
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
