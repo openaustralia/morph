@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# ignore yarn output
+/node_modules
+
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
@@ -28,7 +31,6 @@
 # Used by direnv / dotenv library to load environment variables.
 /.env*
 
-# Project specific cache
 /db/scrapers
 
 # Ignore Vagrant artifacts
@@ -117,4 +119,6 @@ build-iPhoneSimulator/
 
 # rspec reports
 /.rspec_status
+
+.vscode
 

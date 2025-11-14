@@ -1,6 +1,18 @@
 # typed: strict
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: create_scraper_progresses
+#
+#  id         :integer          not null, primary key
+#  heading    :string(255)
+#  message    :string(255)
+#  progress   :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 # Progress in morp creating a scraper
 class CreateScraperProgress < ApplicationRecord
   extend T::Sig

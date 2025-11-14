@@ -1,12 +1,30 @@
 # typed: strict
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: domains
+#
+#  id         :integer          not null, primary key
+#  meta       :text(65535)
+#  name       :string(255)      default(""), not null
+#  title      :text(65535)
+#  created_at :datetime
+#  updated_at :datetime
+#
+# Indexes
+#
+#  index_domains_on_name  (name) UNIQUE
+#
+
 # For the benefit of UpdateDomainWorker
 require "nokogiri"
 
 # A domain that is scraped by a scraper
 class Domain < ApplicationRecord
   extend T::Sig
+
+  has_many :connection_logs, dependent: :destroy
 
   # If meta is available use that, otherwise title
   sig { returns(T.nilable(String)) }

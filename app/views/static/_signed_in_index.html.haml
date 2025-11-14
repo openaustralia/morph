@@ -19,7 +19,7 @@
     .new-users-block.col-xs-12
       %h2
         %small.pre-heading Recent new users
-        Welcome to morph.io
+        Welcome to #{hostname}
       %ul.owner-list-simple.list-unstyled.list-inline
         - User.where.not(name: nil).order(created_at: :desc).limit(8).each do |user|
           %li.owner-item= link_to owner_image(user, size: 60), user

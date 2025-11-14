@@ -1,5 +1,22 @@
 # For everything else redirect to ssl site
 server {
   listen 80 default_server;
-  return 301 https://{{ server_name }}$request_uri;
+  access_log /var/log/nginx/default.access.log;
+  error_log /var/log/nginx/default.error.log;
+
+  # Only redirect formats the Rails understands
+  location ~ \.(html|json|atom|rss|sqlite|csv|atom)$ {
+    return 301 https://{{ server_name }}$request_uri;
+  }
+
+  location / {
+    # Redirect pages without a format to https
+    if ($request_uri !~ \.[a-z0-9]+$) {
+      return 301 https://{{ server_name }}$request_uri;
+    }
+
+    # Close connection without response for everything else (unknown extensions)
+    access_log off;
+    return 403;
+  }
 }

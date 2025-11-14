@@ -5,6 +5,8 @@ upstream faye_backend {
 server {
   listen 443;
   server_name faye.{{ server_name }};
+  access_log /var/log/nginx/faye.access.log;
+  error_log /var/log/nginx/faye.error.log;
 
   ssl on;
   ssl_certificate /etc/letsencrypt/live/{{ server_name }}/fullchain.pem; # managed by Certbot

@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+# Pick up ENV from .env file
+
+require "dotenv"
+Dotenv.load
+
 # Load DSL and Setup Up Stages
 require "capistrano/setup"
 
