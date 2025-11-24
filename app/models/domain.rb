@@ -8,6 +8,8 @@ require "nokogiri"
 class Domain < ApplicationRecord
   extend T::Sig
 
+  has_many :connection_logs, dependent: :destroy
+
   # If meta is available use that, otherwise title
   sig { returns(T.nilable(String)) }
   def meta_or_title
