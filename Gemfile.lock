@@ -95,6 +95,7 @@ GEM
       railties (> 3.1)
     base64 (0.3.0)
     bcrypt (3.1.18)
+    bcrypt_pbkdf (1.1.1)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -174,6 +175,7 @@ GEM
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
+    ed25519 (1.3.0)
     elasticsearch (7.17.11)
       elasticsearch-api (= 7.17.11)
       elasticsearch-transport (= 7.17.11)
@@ -696,6 +698,7 @@ DEPENDENCIES
   activeadmin
   archive-tar-minitar
   backstretch-rails
+  bcrypt_pbkdf (~> 1.1)
   better_errors
   binding_of_caller
   bootsnap (~> 1.4)
@@ -713,6 +716,7 @@ DEPENDENCIES
   devise
   docker-api
   dotenv-rails
+  ed25519 (~> 1.3)
   elasticsearch (~> 7.17)
   factory_bot_rails
   faraday (~> 2)
