@@ -112,8 +112,8 @@ namespace :db do
     end
 
     # Get all tables we've already handled
-    handled_tables = %w[owners organizations_users alerts contributions scrapers runs api_queries 
-                       webhook_deliveries log_lines connection_logs metrics]
+    handled_tables = %w[owners organizations_users alerts contributions scrapers runs api_queries
+                        webhook_deliveries log_lines connection_logs metrics]
 
     # Dump remaining tables
     remaining_tables = ActiveRecord::Base.connection.tables - handled_tables
