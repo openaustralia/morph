@@ -22,6 +22,19 @@ GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
 MORPH_URL=http://localhost:3000
 
+# Set if you are deploying to staging
+#STAGING_HOSTNAME=morph.your.domain
+# If STAGING_HOSTNAME points to a CDN, then set the following to the actual ip address of the server
+#STAGING_DEPLOY_TO=server-ip-address
+
+# In development you can run elasticsearch on docker very easily which means
+# you don't have to install it.
+# Just use: docker-compose up
+# Then, point it at the right place. You can get the ip address of docker
+# by running: docker-machine ip
+# If you're on Linux you can probably comment the line below out
+ELASTICSEARCH_URL=http://192.168.99.100:9200
+
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
 # You can use `rake secret` to generate a secure secret key.
