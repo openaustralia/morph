@@ -13,12 +13,16 @@ env_values = dotenv_values(env_path)
 
 staging_hostname = env_values.get('STAGING_HOSTNAME')
 staging_deploy_to = env_values.get('STAGING_DEPLOY_TO')
+github_app_id = env_values.get('GITHUB_APP_ID', 'TODO-SET-IN-.env')
+github_app_name = env_values.get('GITHUB_APP_NAME', 'TODO-SET-IN-.env')
 
 if '--debug' in sys.argv:
     print(f"env_path: {env_path}", file=sys.stderr)
     print(f"env_path exists: {env_path.exists()}", file=sys.stderr)
     print(f"STAGING_HOSTNAME: {staging_hostname}", file=sys.stderr)
     print(f"STAGING_DEPLOY_TO: {staging_deploy_to}", file=sys.stderr)
+    print(f"GITHUB_APP_ID: {github_app_id}", file=sys.stderr)
+    print(f"GITHUB_APP_NAME: {github_app_name}", file=sys.stderr)
 
 if not staging_hostname:
     print("ERROR: STAGING_HOSTNAME not set in .env file", file=sys.stderr)
@@ -32,6 +36,11 @@ if staging_deploy_to:
 # Add staging-specific variables
 hostvars["server_name"] = staging_hostname
 hostvars["morph_url"] = f"https://{staging_hostname}"
+
+hostvars["github_app_id"] = github_app_id
+hostvars["github_app_name"] = github_app_name
+hostvars["github_app_client_id"] = env_values.get('GITHUB_APP_CLIENT_ID', 'TODO-SET-IN-.env')
+hostvars["github_app_client_secret"] = env_values.get('GITHUB_APP_CLIENT_SECRET', 'TODO-SET-IN-.env')
 
 inventory = {
     "_meta": {

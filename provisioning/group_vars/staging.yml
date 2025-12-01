@@ -7,10 +7,8 @@ mitmproxy_secret: "Not-configured-{{ lookup('password', '/dev/null chars=ascii_l
 # FIXME: setup duplicity for a different s3 bucket for staging and then test it can backup to it
 backups: false
 cron_jobs: true
-github_app_id: 245783
-github_app_name: morph-io
-github_app_client_id: Iv1.93381e1d14f773bb
-github_app_client_secret: TODO
+# inventory/staging.py sets the following from .env:
+#   github_app_id, github_app_name, github_app_client_id, github_app_client_secret
 secret_key_base: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           31656161336230343966383038656237636233623664653437656234343732323265616634333166
