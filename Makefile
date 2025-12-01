@@ -5,6 +5,8 @@
 VENV := .venv/bin
 SHELL := /bin/bash
 PYTHON_VERSION := $(shell cat .python-version 2>/dev/null || echo "python3")
+# So inventory uses .venv
+export PATH := $(CURDIR)/$(VENV):$(PATH)
 
 all: help
 
@@ -112,5 +114,3 @@ share-web: ## Share web server on port 3000 to the internet (use PORT=N to use a
 staging-deploy:
 	bundle exec cap staging deploy
 
-clean:
-	rm -rf .venv provisioning/.roles-installed 
