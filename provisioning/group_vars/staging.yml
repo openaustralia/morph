@@ -1,4 +1,6 @@
 ---
+rvm_users:
+  - 'deploy'
 # FIXME: test this when we have a staging mitmproxy server
 mitmproxy_secret: "Not-configured-{{ lookup('password', '/dev/null chars=ascii_letters,digits length=16') }}"
 
