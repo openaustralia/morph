@@ -2,17 +2,22 @@
 # This playbook is for provisioning on a Linode box. It should be at least a Linode 24576 box and have
 # 64 bit Ubuntu 16.04 LTS with 256 MB swap.
 #
-# To run in development:
+# To run in development (local vagrant VM):
 # vagrant provision local
 #
 # To run in production:
-# ansible-playbook --user=root -i provisioning/hosts provisioning/playbook.yml
+# ansible-playbook --user=root -i provisioning/inventory/production provisioning/playbook.yml
+#
+# To run in staging:
+# ansible-playbook --user=root -i provisioning/inventory/staging.py provisioning/playbook.yml
 #
 # Run this from the root directory so that it picks up the ansible.cfg
 # and so knows where to look for the ansible vault password
 
 # To get the value of an encrypted variable:
-# ansible morph.io -i provisioning/hosts -m debug -a "var=github_app_client_id"
+# ansible morph.io -i provisioning/inventory/production -m debug -a "var=github_app_client_id"
+# OR
+# ansible morph.io -i provisioning/inventory/staging.py -m debug -a "var=github_app_client_id"
 
 # Ubuntu 16.04 LTS doesn't come with python pre-installed. We need that for
 # Ansible to work (for the gather facts). So install python first
