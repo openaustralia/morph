@@ -296,6 +296,25 @@ class Scraper < ApplicationRecord
     "https://github.com/apps/#{Morph::Environment.github_app_name}/installations/new/permissions?#{params.to_query}"
   end
 
+  # Trims log lines older than DISCARD_AFTER_DAYS, keeping at least KEEP_AT_LEAST_COUNT_PER_STATUS log lines for
+  # both successful and erroneous runs
+  # Returns the number of log_lines deleted
+  sig { returns(Integer) }
+  def trim_log_lines
+    has_example_of_status = Hash.new(0)
+    count = 0
+    runs.order(id: :desc).each do |run|
+      if run.created_at > LogLine::DISCARD_AFTER_DAYS.days.ago ||
+         has_example_of_status[run.finished_successfully?] < LogLine::KEEP_AT_LEAST_COUNT_PER_STATUS
+        has_example_of_status[run.finished_successfully?] += 1
+        next
+      end
+      count += run.log_lines.count
+      run.log_lines.delete_all
+    end
+    count
+  end
+
   private
 
   sig { void }
