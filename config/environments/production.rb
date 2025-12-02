@@ -116,7 +116,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     :address => (ENV["CUTTLEFISH_SERVER"] || "cuttlefish.io"),
-    :port => 2525,
+    :port => (ENV["CUTTLEFISH_PORT"] || "2525").to_i,
     :user_name => ENV["CUTTLEFISH_USERNAME"],
     :password => ENV["CUTTLEFISH_PASSWORD"],
     :authentication => :plain
