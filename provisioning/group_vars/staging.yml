@@ -50,6 +50,7 @@ honeybadger_api_key: !vault |
           3134
 # FIXME: Change to an oaf test server when we have one
 cuttlefish_server: "{{ lookup('env', 'CUTTLEFISH_SERVER') | default('plannies-mate.thesite.info')}}"
+cuttlefish_port: "{{ lookup('env', 'CUTTLEFISH_PORT') | default('2525')}}"
 #cuttlefish_username:
 #cuttlefish_password:
 

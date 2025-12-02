@@ -71,6 +71,7 @@ honeybadger_api_key: !vault |
           6663656632313538370a646637393536613335663235636162663231393938316138323931323439
           3134
 cuttlefish_server: cuttlefish.oaf.org.au
+cuttlefish_port: 2525
 cuttlefish_username: morph_2
 cuttlefish_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256

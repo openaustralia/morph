@@ -57,6 +57,7 @@ discourse_secret: !vault |
           32336666386637353362623038363435623161333563636135343966353535383336
 # FIXME: Change to an oaf test server when we have one
 cuttlefish_server: "{{ lookup('env', 'CUTTLEFISH_SERVER') | default('plannies-mate.thesite.info')}}"
+cuttlefish_port: "{{ lookup('env', 'CUTTLEFISH_PORT') | default('2525')}}"
 #cuttlefish_username:
 #cuttlefish_password:
 
