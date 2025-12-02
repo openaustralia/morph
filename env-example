@@ -4,10 +4,14 @@
 # These values are then automatically loaded as environment variables in the ruby app
 # See https://github.com/bkeepers/dotenv for more information
 
-# We're using Cuttlefish to send mail
+# We're using Cuttlefish to send mail in production and mailpit to catch mail on staging servers
+# Setting .env on the local machine affects the .env provisioned on vagrant or staging machines
+# but not production
 #CUTTLEFISH_SERVER= (default)
-CUTTLEFISH_USERNAME=xxxxxxx
-CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx
+#CUTTLEFISH_PORT= (default: 2525)
+# Username and password is required by Cuttlefish but not mailpit
+# CUTTLEFISH_USERNAME=xxxxxxx
+# CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx
 
 # Secret for single sign on authentication for Discourse
 DISCOURSE_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
