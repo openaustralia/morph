@@ -1,4 +1,6 @@
 ---
+rails_env: production
+
 rvm_users:
   - 'deploy'
 mitmproxy_secret: !vault |

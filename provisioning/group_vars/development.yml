@@ -1,6 +1,8 @@
 ---
-# Configuration for developing using local staging server
+# Configuration for developing using local vagrant staging server
 # Note: this is NOT the code development environment run up using docker compose!
+
+rails_env: staging
 
 rvm_users:
   - 'deploy'

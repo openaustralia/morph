@@ -1,4 +1,6 @@
 ---
+rails_env: staging
+
 rvm_users:
   - 'deploy'
 # FIXME: test this when we have a staging mitmproxy server

@@ -1,7 +1,7 @@
 # Secret configuration
 
 # This is needed by the faye server
-RAILS_ENV=production
+RAILS_ENV={{ rails_env }}
 
 SERVER_NAME={{ server_name }}
 

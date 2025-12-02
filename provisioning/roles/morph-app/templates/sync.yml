@@ -1,5 +1,5 @@
 # Faye
-production:
+{{ rails_env }}:
   server: "https://faye.{{ server_name }}/faye"
   adapter_javascript_url: "https://faye.{{ server_name }}/faye/faye.js"
   adapter: "Faye"
