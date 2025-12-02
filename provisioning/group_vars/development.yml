@@ -62,8 +62,8 @@ cuttlefish_port: "{{ lookup('env', 'CUTTLEFISH_PORT') | default('2525')}}"
 #cuttlefish_password:
 
 # FIXME: Set to a stripe sandbox! See https://docs.stripe.com/testing
-# stripe_publishable_key: pk_some_value
-# stripe_secret_key:
+stripe_publishable_key: pk_xxxxxxxxxxxxx
+stripe_secret_key: xxxxxxxxxxxxx
 discourse_server_name: help.{{ server_name }}
 # FIXME: Don't use the production password
 mysql_password: !vault |
