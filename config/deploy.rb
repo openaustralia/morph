@@ -3,7 +3,26 @@ set :repo_url, 'https://github.com/openaustralia/morph.git'
 
 set :rvm_ruby_version, '2.7.6'
 
-# ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
+set :branch, -> {
+  branch = ENV['BRANCH'] || `git rev-parse --abbrev-ref HEAD`.strip
+
+  # Check for uncommitted changes
+  unless `git status --porcelain`.strip.empty?
+    puts "\n⚠️  WARNING: You have uncommitted changes locally"
+  end
+
+  # Check if branch exists in deployment repo
+  local_sha = `git rev-parse #{branch}`.strip
+  remote_sha = `git ls-remote #{fetch(:repo_url)} #{branch} 2>/dev/null`.split.first
+
+  if remote_sha.nil? || remote_sha.strip.empty?
+    puts "⚠️  WARNING: Branch '#{branch}' doesn't exist in #{fetch(:repo_url)}"
+  elsif local_sha != remote_sha
+    puts "⚠️  WARNING: Branch '#{branch}' (commit #{local_sha[0, 9]}) differs from #{fetch(:repo_url)} (commit #{remote_sha[0,9]})"
+  end
+
+  branch
+}
 
 set :deploy_to, '/var/www'
 # set :scm, :git
