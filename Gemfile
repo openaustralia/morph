@@ -144,6 +144,8 @@ group :development do
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
   gem "rubocop-sorbet", require: false
+
+  gem "mailcatcher", require: false
 end
 
 group :development, :test do

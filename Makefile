@@ -135,3 +135,5 @@ docker-clean: services-down ## Remove all Docker resources INCLUDING databases i
 share-web: ## Share web server on port 3000 to the internet (use PORT=N to use an alternative port)
 	ngrok http ${PORT:-3000}
 
+mailcatcher: ## run mailcatcher to catch development emails
+	bundle exec mailcatcher
