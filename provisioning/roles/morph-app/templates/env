@@ -8,10 +8,15 @@ SERVER_NAME={{ server_name }}
 # Copy this to .env and fill in the x's - these values are then automatically loaded as environment variables
 # See https://github.com/bkeepers/dotenv for more information
 
-# We're using Cuttlefish to send mail
+# We're using Cuttlefish to send mail in production and mailpit to catch mail on staging servers
+# Setting .env on the local machine affects the .env provisioned on vagrant or staging machines
+# but not production
 CUTTLEFISH_SERVER={{ cuttlefish_server }}
+CUTTLEFISH_PORT={{ cuttlefish_port }}
+{% if cuttlefish_username is defined %}
 CUTTLEFISH_USERNAME={{ cuttlefish_username }}
 CUTTLEFISH_PASSWORD={{ cuttlefish_password }}
+{% endif %}
 
 # Secret for single sign on authentication for Discourse
 DISCOURSE_SECRET={{ discourse_secret }}
