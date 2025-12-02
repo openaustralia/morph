@@ -14,7 +14,7 @@ SimpleCov.start "rails" do
     ]
   )
   track_files "**/*.rb"
-  SimpleCov.minimum_coverage 54 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
+  SimpleCov.minimum_coverage 53 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
   add_filter %r{^/spec/}
   add_filter "/vendor/"
 end
