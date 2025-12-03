@@ -9,7 +9,7 @@
   command: git clone https://github.com/discourse/discourse_docker.git /var/discourse creates=/var/discourse/README.md
 
 - name: Copy over app configuration
-  template: src=app.yml dest=/var/discourse/containers/app.yml owner=deploy group=deploy
+  template: src=app.yml.j2 dest=/var/discourse/containers/app.yml.j2 owner=deploy group=deploy
 
 - name: Ensure shared directory has correct permissions
   file:

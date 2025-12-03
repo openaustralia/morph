@@ -59,8 +59,10 @@ env:
   ## TODO: The mailserver this Discourse instance will use
   DISCOURSE_SMTP_ADDRESS: '{{ cuttlefish_server }}'
   DISCOURSE_SMTP_PORT: 2525
+{% if cuttlefish_username is defined %}
   DISCOURSE_SMTP_USER_NAME: '{{ cuttlefish_username }}'
   DISCOURSE_SMTP_PASSWORD: '{{ cuttlefish_password }}'
+{% endif %}
   DISCOURSE_SMTP_ENABLE_START_TLS: true
 
   ## The CDN address for this Discourse instance (configured to pull)
