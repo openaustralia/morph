@@ -11,14 +11,14 @@ set :branch, -> {
     puts "\n⚠️  WARNING: You have uncommitted changes locally"
   end
 
-  # Check if branch exists in deployment repo
+  # Check if branch is pushed to origin
   local_sha = `git rev-parse #{branch}`.strip
-  remote_sha = `git ls-remote #{fetch(:repo_url)} #{branch} 2>/dev/null`.split.first
+  remote_sha = `git rev-parse origin/#{branch} 2>/dev/null`.strip
 
-  if remote_sha.nil? || remote_sha.strip.empty?
-    puts "⚠️  WARNING: Branch '#{branch}' doesn't exist in #{fetch(:repo_url)}"
+  if remote_sha.empty?
+    puts "\n⚠️  WARNING: Branch '#{branch}' doesn't exist on origin"
   elsif local_sha != remote_sha
-    puts "⚠️  WARNING: Branch '#{branch}' (commit #{local_sha[0, 9]}) differs from #{fetch(:repo_url)} (commit #{remote_sha[0,9]})"
+    puts "\n⚠️  WARNING: Branch '#{branch}' is not pushed to origin (or diverged)"
   end
 
   branch
