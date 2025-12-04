@@ -81,7 +81,7 @@ namespace :deploy do
   task :docker do
     on roles(:app) do
       within release_path do
-        execute :rake, "app:update_docker_images RAILS_ENV=production"
+        execute :rake, "app:update_docker_images RAILS_ENV=#{fetch(:rails_env)}"
       end
     end
   end
@@ -92,7 +92,7 @@ namespace :deploy do
       within release_path do
         # Wait one minute so that everything has plenty of time to get started before we run this check (and workaround)
         execute :sleep, "60"
-        execute :rake, "app:emergency:fix_queue_run_inconsistencies RAILS_ENV=production"
+        execute :rake, "app:emergency:fix_queue_run_inconsistencies RAILS_ENV=#{fetch(:rails_env)}"
       end
     end
   end
@@ -127,7 +127,7 @@ namespace :searchkick do
     task :all do
       on roles(:app) do
         within release_path do
-          execute :rake, "searchkick:reindex:all RAILS_ENV=production"
+          execute :rake, "searchkick:reindex:all RAILS_ENV=#{fetch(:rails_env)}"
         end
       end
     end
