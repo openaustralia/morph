@@ -9,7 +9,7 @@
   shell: visudo -c -f /etc/sudoers.d/deploy.test && cp -f /etc/sudoers.d/deploy.test /etc/sudoers.d/deploy
 
 - name: Export to systemd
-  command: foreman export --user deploy --app morph --procfile /home/deploy/Procfile.production --root /var/www/current --concurrency worker=2,faye=1 systemd /etc/systemd/system
+  command: "foreman export --user deploy --app morph --procfile /home/deploy/Procfile.{{ rails_env }} --root /var/www/current --concurrency worker=2,faye=1 systemd /etc/systemd/system"
   become: yes
   notify: Restart morph service
 

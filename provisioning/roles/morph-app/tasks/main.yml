@@ -107,8 +107,10 @@
 - name: Create log directory
   file: path=/var/log/morph owner=deploy group=deploy state=directory
 
-- name: Ensure Procfile.production copied
-  copy: src=../Procfile.production dest=/home/deploy/Procfile.production
+- name: Ensure Procfile.RAILS_ENV is copied
+  copy:
+    src: "../Procfile.{{ rails_env }}"
+    dest: "/home/deploy/Procfile.{{ rails_env }}"
   notify: Export to systemd
 
 - name: Create sudoers ready for testing
