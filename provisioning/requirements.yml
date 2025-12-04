@@ -15,3 +15,4 @@
 - src: newrelic.newrelic-infra
   version: 0.6.0
 
+- src: https://github.com/angristan/ansible-yarn

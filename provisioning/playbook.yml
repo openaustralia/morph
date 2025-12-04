@@ -45,6 +45,7 @@
         upgrade: yes
       tags: ['upgrade'] 
   roles:
+    - { role: ansible-yarn, tags: ['yarn'] }
     - { role: morph-app, tags: ['morph'] }
     - { role: discourse, tags: ['discourse'] }
   # The default behaviour is for handlers not to get called if a playbook fails
