@@ -1,14 +1,15 @@
 set :application, 'morph'
-set :repo_url, 'https://github.com/openaustralia/morph.git'
+set :repo_url, `git config --get remote.origin.url`.strip
 
 set :rvm_ruby_version, '2.7.6'
 
 set :branch, -> {
   branch = ENV['BRANCH'] || `git rev-parse --abbrev-ref HEAD`.strip
+  warnings = []
 
   # Check for uncommitted changes
   unless `git status --porcelain`.strip.empty?
-    puts "\n⚠️  WARNING: You have uncommitted changes locally"
+    warnings << "WARNING: You have uncommitted local changes"
   end
 
   # Check if branch exists in deployment repo
@@ -16,9 +17,26 @@ set :branch, -> {
   remote_sha = `git ls-remote #{fetch(:repo_url)} #{branch} 2>/dev/null`.split.first
 
   if remote_sha.nil? || remote_sha.strip.empty?
-    puts "⚠️  WARNING: Branch '#{branch}' doesn't exist in #{fetch(:repo_url)}"
+    warnings << "WARNING: Branch '#{branch}' doesn't exist in #{fetch(:repo_url)}"
   elsif local_sha != remote_sha
-    puts "⚠️  WARNING: Branch '#{branch}' (commit #{local_sha[0, 9]}) differs from #{fetch(:repo_url)} (commit #{remote_sha[0,9]})"
+    warnings << "WARNING: Branch '#{branch}' (commit #{local_sha[0, 9]}) differs from #{fetch(:repo_url)} (commit #{remote_sha[0,9]})"
+  end
+
+  if !%w[git@github.com:openaustralia/morph.git https://github.com/openaustralia/morph.git].include? fetch(:repo_url)
+    warnings << "WARNING: Deploying branch #{branch} from a fork of the openaustralia repo: #{fetch(:repo_url)}"
+  else
+    warnings << "NOTE: deploying branch #{branch} rather than main" if branch != "main"
+  end
+
+  if warnings.any?
+    $stdout.puts
+    warnings.each do |warning|
+      $stdout.puts "⚠️  #{warning}"
+    end
+    $stdout.print "Press Control-C if you wish to abort! Deployment will continue in 5 seconds ..."
+    $stdout.flush
+    sleep 5
+    $stdout.puts "", "Continuing ..."
   end
 
   branch
@@ -131,3 +149,4 @@ after "deploy:docker", "foreman:restart"
 # hasn't happened. So, it's time to automate the workaround
 # TODO: Remove this workaround as soon as we can
 after "deploy:cleanup", "deploy:fix_queue_run_inconsistencies"
+
