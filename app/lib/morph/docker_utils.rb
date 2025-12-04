@@ -257,7 +257,7 @@ module Morph
       base_layer_index = layers.find_index { |l| l["Id"] == image_base.id }
       raise "image is not built on top of image_base" if base_layer_index.nil?
 
-      diff_layers = layers[0..base_layer_index - 1]
+      diff_layers = layers[0..(base_layer_index - 1)]
       diff_layers.map { |l| l["Size"] }.sum
     end
 

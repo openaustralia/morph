@@ -132,7 +132,7 @@ group :development do
   gem "rack-mini-profiler"
   # gem "flamegraph"
 
-  gem 'annotaterb', '~> 4.15.0' # 4.16+ requires ruby 3.0
+  gem "annotaterb", "~> 4.15.0" # 4.16+ requires ruby 3.0
   gem "better_errors"
   gem "binding_of_caller"
   gem "memory_profiler"
@@ -211,4 +211,3 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-
