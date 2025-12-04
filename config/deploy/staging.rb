@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 set :stage, :staging
+set :rails_env, :staging
 
 # Use the url for the origin remote (typically the developer's fork) for staging deployments
 # This overrides the default repo_url from deploy.rb
