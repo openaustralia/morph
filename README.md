@@ -270,6 +270,17 @@ If you want to contribute an enhancement or a fix:
 We maintain a list of [issues that are easy fixes](https://github.com/openaustralia/morph/issues?labels=easy+fix&milestone=&page=1&state=open). 
 Fixing one of these is a great way to get started while you get familiar with the codebase.
 
+## Branch naming
+
+To aid readbility, please use the following naming convention:
+
+* feature/: For developing new features.
+* bugfix/: For addressing bugs in the existing codebase.
+* hotfix/: For urgent bug fixes in the production environment, typically branched directly from the stable or main branch.
+* refactor/: For code refactoring efforts.
+* docs/: For changes related to documentation.
+* chore/: For maintenance, dependency updates, tooling changes, and other non-feature work.
+
 # Copyright & License
 
 Copyright OpenAustralia Foundation Limited. Licensed under the Affero GPL. See LICENSE file for more details.
