@@ -1,7 +1,15 @@
 # Faye
-{{ rails_env }}:
+staging:
   server: "https://faye.{{ server_name }}/faye"
   adapter_javascript_url: "https://faye.{{ server_name }}/faye/faye.js"
   adapter: "Faye"
   auth_token: <%= ENV['SYNC_AUTH_TOKEN'] %>
   async: true
+
+production:
+  server: "https://faye.{{ server_name }}/faye"
+  adapter_javascript_url: "https://faye.{{ server_name }}/faye/faye.js"
+  adapter: "Faye"
+  auth_token: <%= ENV['SYNC_AUTH_TOKEN'] %>
+  async: true
+
