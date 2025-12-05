@@ -3,6 +3,45 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+def load_env_vars
+  env_vagrant_path = ".env.vagrant"
+  env_path = ".env"
+
+  env_values = {}
+  [env_path, env_vagrant_path].each do |path|
+    next unless File.exist?(path)
+    File.readlines(path).each do |line|
+      line = line.strip
+      next if line.empty? || line.start_with?("#")
+
+      key, value = line.split("=", 2)
+      next unless key && value
+
+      value = value.strip.gsub(/^"(.*)"$/, '\1')
+      env_values[key.strip] = value
+    end
+  end
+
+  variables = [
+    %w[GITHUB_APP_ID TODO-SET-IN-.env],
+    %w[GITHUB_APP_NAME TODO-SET-IN-.env],
+    %w[GITHUB_APP_CLIENT_ID TODO-SET-IN-.env],
+    %w[GITHUB_APP_CLIENT_SECRET TODO-SET-IN-.env],
+    %w[CUTTLEFISH_SERVER plannies-mate.thesite.info],
+    %w[CUTTLEFISH_PORT 2525],
+    ["CUTTLEFISH_USERNAME", nil],
+    ["CUTTLEFISH_PASSWORD", nil],
+  ]
+
+  extra_vars = {}
+  variables.each do |env_name, default|
+    value = env_values[env_name] || default
+    extra_vars[env_name.downcase.to_sym] = value if value
+  end
+
+  extra_vars
+end
+
 Vagrant.configure("2") do |config|
   # local: A local machine that mimics a production deployment
 
@@ -33,6 +72,7 @@ Vagrant.configure("2") do |config|
       ansible.groups = {
         "development" => ["local"]
       }
+      ansible.extra_vars = load_env_vars
       tags = ENV["TAGS"].to_s.gsub(/[^A-Z0-9_]+/i, ",").split(",").reject { |s| s.to_s == "" }
       if tags.any?
         puts "INFO: Only running TAGS: #{tags.inspect}"
@@ -51,6 +91,7 @@ Vagrant.configure("2") do |config|
       if verbose_flag
         puts "INFO: Setting verbose: #{verbose_flag}"
         ansible.verbose = verbose_flag
+        puts "INFO: Setting extra vars: #{ansible.extra_vars.inspect}"
       end
       start_at_task = "*#{ENV.fetch('START_AT_TASK', nil)}*".gsub(/[^A-Z0-9_]+/i, "*")
       if start_at_task != "*"
