@@ -113,11 +113,13 @@ Read [Docker Development Commands](doc/docker_development_commands.md) for a col
     cp config/database.yml.example config/database.yml
     cp env-example .env
     cp env-staging-example .env.staging # if needed
+    cp env-staging-example .env.vagrant # if needed
 
 Edit 
 * `config/database.yml` with your database settings 
 * `.env` with your local environment and vagrant development settings
 * `.env.staging` with staging environment settings that differ from `.env`
+* `.env.vagrant` with settings for provisioning vagrant that differ from `.env`
 
 Install gem requirements by running the following in the web container:
 
