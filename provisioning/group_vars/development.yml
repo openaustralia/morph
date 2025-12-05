@@ -1,4 +1,3 @@
----
 # Configuration for developing using local vagrant staging server
 # Note: this is NOT the code development environment run up using docker compose!
 ---
