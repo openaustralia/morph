@@ -1,0 +1,14 @@
+# Secret configuration in .env.staging
+
+# Copy this to .env.staging for use when provisioning or deploying to the staging server
+# This overrides the settings in .env
+
+# Use mailpit to catch mail on staging servers
+# Setting .env on the local machine affects the .env provisioned for vagrant or staging machines
+# but not production
+CUTTLEFISH_SERVER=plannies-mate.thesite.info
+CUTTLEFISH_PORT=2525
+
+# Username and password is not required by mailpit
+# CUTTLEFISH_USERNAME=xxxxxxx
+# CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx

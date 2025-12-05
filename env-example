@@ -1,47 +1,47 @@
-# Secret configuration
+# Secret configuration in .env
 
-# Copy this to .env and fill in the x's for development (ansible creates the .env for staging/production)
+# Copy this to .env and fill in the x's for development (ansible creates the .env on staging/production servers)
+# Similarly copy env-staging-example to .env.staging if the staging variables differ from development
 # These values are then automatically loaded as environment variables in the ruby app
 # See https://github.com/bkeepers/dotenv for more information
 
+# -------------------------------------------------------------------
+# Code Development and provisioning staging and development (vagrant)
+
 # We're using Cuttlefish to send mail in production and mailpit to catch mail on staging servers
-# Setting .env on the local machine affects the .env provisioned on vagrant or staging machines
+# Setting .env on the local machine affects the .env provisioned for vagrant or staging machines
 # but not production
-#CUTTLEFISH_SERVER= (default)
-#CUTTLEFISH_PORT= (default: 2525)
+#CUTTLEFISH_SERVER=cuttlefish.oaf.org.au
+#CUTTLEFISH_PORT=2525
 # Username and password is required by Cuttlefish but not mailpit
 # CUTTLEFISH_USERNAME=xxxxxxx
 # CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx
 
-# Secret for single sign on authentication for Discourse
-DISCOURSE_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
-DISCOURSE_URL=http://discuss.dev.morph.io
-
+# OAuth authentication app
 GITHUB_APP_ID=xxxxxx
 GITHUB_APP_NAME=xxxxxxxxxx
 GITHUB_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
 GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-# Used by mitmproxy to communicate via the api back to morph
-MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
-MORPH_URL=http://localhost:3000
+# -------------------------------------------------------------------
+# Provisioning staging only
 
-# Used by capistrano for deployment and ansible playbook in provisioning
-# Required if you are deploying to staging
+# Ansible sets SERVER_NAME in deployed .env file from this value
 #STAGING_HOSTNAME=morph.your.domain
 
 # Required if STAGING_HOSTNAME points to a CDN: set to the actual ip address of the server
 #STAGING_DEPLOY_TO=server-ip-address
 
-# Ansible will set SERVER_NAME in the .env file for you
+# -------------------------------
+# Code Development Only
 
-# In development you can run elasticsearch on docker very easily which means
-# you don't have to install it.
-# Just use: docker-compose up
-# Then, point it at the right place. You can get the ip address of docker
-# by running: docker-machine ip
-# If you're on Linux you can probably comment the line below out
-ELASTICSEARCH_URL=http://192.168.99.100:9200
+# Secret for Discourse to use morph for single sign on authentication
+DISCOURSE_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
+DISCOURSE_URL=http://discuss.dev.morph.io
+
+# Used by mitmproxy to communicate via the api back to morph
+MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
+MORPH_URL=http://localhost:3000
 
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
@@ -64,13 +64,16 @@ DOCKER_GID=999
 # See https://hub.docker.com/_/mysql
 MYSQL_ROOT_PASSWORD=password
 
+# In development you can run elasticsearch on docker very easily which means
+# you don't have to install it.
+# Just use: docker-compose up
+# Then, point it at the right place. You can get the ip address of docker
+# by running: docker-machine ip
+# If you're on Linux you can probably comment the line below out
+ELASTICSEARCH_URL=http://192.168.99.100:9200
+
 # -------------------------------
 # Optional
-
-# FIXME: Either remove or document how deployment to digital ocean could be done
-# For deployment to a Digital Ocean
-#DIGITAL_OCEAN_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-# DIGITAL_OCEAN_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # If this is Linux then your docker daemon is likely running locally on a socket. In that case the DOCKER_URL
 # and DOCKER_TCP does not need to be set (comment the lines below out).
