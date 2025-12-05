@@ -1,6 +1,7 @@
 ---
 # Configuration for developing using local vagrant staging server
 # Note: this is NOT the code development environment run up using docker compose!
+---
 
 rails_env: staging
 
@@ -19,10 +20,8 @@ server_name: dev.morph.io
 backups: false
 cron_jobs: false
 
-github_app_id: "{{ lookup('env', 'GITHUB_APP_ID') }}"
-github_app_name: "{{ lookup('env', 'GITHUB_APP_NAME') }}"
-github_app_client_id: "{{ lookup('env', 'GITHUB_APP_CLIENT_ID') }}"
-github_app_client_secret: "{{ lookup('env', 'GITHUB_APP_CLIENT_SECRET') }}"
+# Vagrantfile sets the following from .env:
+#   github_app_id, github_app_name, github_app_client_id, github_app_client_secret
 
 secret_key_base: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -37,6 +36,9 @@ secret_key_base: !vault |
           66663161373739363531343461333131353932323339616466656236383039393137633162373535
           65316133343138386232393862623934626631363233346135306264363538383131326366333664
           636230353738386564326162343637656565
+# We don't track development usage
+# google_analytics_tracking_id:
+# heap_analytics_tracking_id:
 sync_auth_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           66653662646331613732653262663163336462616665653834336332666334626434366263376639
@@ -47,25 +49,14 @@ sync_auth_token: !vault |
           36353737646434396630653230363166303236623333343463633337656165623565396334393639
           38393735376537616364383332396432306162343935376537393061356337666537386234386139
           66393961643935333835
-# FIXME: Set when we have a staging discord server to test with
-discourse_secret: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          34353433346633646361666566306539326234316638316533333236376565323234313434323831
-          3236326532363730646534653234613137393734663464380a643036363065313663663837333262
-          32336337303137656265666361643365373366323231656335363739366636386362656636663361
-          3630626133653430310a326136333661323164343963366338623639386434656466383964333166
-          32336666386637353362623038363435623161333563636135343966353535383336
-# FIXME: Change to an oaf test server when we have one
-cuttlefish_server: "{{ lookup('env', 'CUTTLEFISH_SERVER') | default('plannies-mate.thesite.info')}}"
-cuttlefish_port: "{{ lookup('env', 'CUTTLEFISH_PORT') | default('2525')}}"
-#cuttlefish_username:
-#cuttlefish_password:
+
+# Vagrantfile sets the following from .env:
+# cuttlefish_server, cuttlefish_port, cuttlefish_username, cuttlefish_password
 
 # FIXME: Set to a stripe sandbox! See https://docs.stripe.com/testing
 stripe_publishable_key: pk_xxxxxxxxxxxxx
 stripe_secret_key: xxxxxxxxxxxxx
 discourse_server_name: help.{{ server_name }}
-# FIXME: Don't use the production password
 mysql_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           65623538656438313437343435303533656330313535376338313738616561303265333830383935

@@ -1,17 +1,28 @@
 ---
+# Configuration for staging server
+---
+
 rails_env: staging
 
 rvm_users:
   - 'deploy'
-# FIXME: test this when we have a staging mitmproxy server
-mitmproxy_secret: "Not-configured-{{ lookup('password', '/dev/null chars=ascii_letters,digits length=16') }}"
 
-# morph_url and server_name are set via inventory/staging.py
+mitmproxy_secret: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30356366333637623738396266653336666330363435343661613465613964373635643137306264
+          3464353831336466633835313163303838366339396530310a323630646233663330643662356165
+          34353363623035643531346661383263306232303563653962626363623937373337346632373131
+          3561326636656663330a646263356464616532623139623438643530666664363430313063336235
+          30646566366262376632336532653364666339383362366263613133636561376436
+
+# inventory/staging.py sets the following from .env.staging or .env:
+# morph_url and server_name
 
 # FIXME: setup duplicity for a different s3 bucket for staging and then test it can backup to it
 backups: false
 cron_jobs: true
-# inventory/staging.py sets the following from .env:
+
+# inventory/staging.py sets the following from .env.staging or .env:
 #   github_app_id, github_app_name, github_app_client_id, github_app_client_secret
 secret_key_base: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -39,15 +50,8 @@ sync_auth_token: !vault |
           36313636373266613463633564323431666161343365333636383037363034656262306331373734
           32366136613330306432623034363738636364663836396239316131373530376432626430626239
           36373837653866663936
-# FIXME: Change when we have a staging discord server to test with
-default_discourse_secret: !vault |
-  $ANSIBLE_VAULT;1.1;AES256
-  35613134643166653739316537353561353863393561383162663638353334363839623832656233
-  3237353565336361373435363161303136623437363030390a356465623734353830363166623363
-  31646237356536386162316363373663366635666631373432326563663930656438653437653762
-  3035316137633564320a633833373264616239663162643365313565313265626135383265653037
-  32316538303439313962613362653734313837616364343530383265326438356639
-discourse_secret: "{{ lookup('env', 'DISCOURSE_SECRET') | default(default_discourse_secret)}}"
+
+# FIXME: consider using a different honeybadge api key
 honeybadger_api_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           38326165373039373430396532633434373366376334653035336133306435393166343030653361
@@ -55,11 +59,9 @@ honeybadger_api_key: !vault |
           30366664643536363235316562376235356235323437653032343430336332343264336464333237
           6663656632313538370a646637393536613335663235636162663231393938316138323931323439
           3134
-# FIXME: Change to an oaf test server when we have one
-cuttlefish_server: "{{ lookup('env', 'CUTTLEFISH_SERVER') | default('plannies-mate.thesite.info')}}"
-cuttlefish_port: "{{ lookup('env', 'CUTTLEFISH_PORT') | default('2525')}}"
-#cuttlefish_username:
-#cuttlefish_password:
+
+# inventory/staging.py sets the following from .env.staging or .env:
+# cuttlefish_server, cuttlefish_port, cuttlefish_username, cuttlefish_password
 
 # FIXME: Set to a stripe sandbox! See https://docs.stripe.com/testing
 stripe_publishable_key: pk_xxxxxxxxxxxxx
