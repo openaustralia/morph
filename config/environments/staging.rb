@@ -3,7 +3,8 @@ require_relative "production"
 
 # Staging-specific overrides
 Rails.application.configure do
-  config.action_mailer.default_url_options = { :host => ENV.fetch("STAGING_HOSTNAME", "morph.example.com"), protocol: "https" }
+  host = ENV.fetch("SERVER_NAME", 'morph-staging.example.com')
+  config.action_mailer.default_url_options = { :host => host, protocol: "https" }
   # FIXME: Change to an oaf test server when we have one
   config.action_mailer.smtp_settings[:address] = ENV.fetch("CUTTLEFISH_SERVER", "plannies-mate.thesite.info")
 end
