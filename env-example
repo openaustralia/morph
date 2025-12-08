@@ -9,9 +9,11 @@
 # Code Development and provisioning staging and development (vagrant)
 
 # We're using Cuttlefish to send mail in production and mailpit to catch mail on staging servers
+# (and mailcatcher locally on development systems which is hard coded)
 # Setting .env on the local machine affects the .env provisioned for vagrant or staging machines
 # but not production
 #CUTTLEFISH_SERVER=cuttlefish.oaf.org.au
+#CUTTLEFISH_SERVER=mailpit.your.domain
 #CUTTLEFISH_PORT=2525
 # Username and password is required by Cuttlefish but not mailpit
 # CUTTLEFISH_USERNAME=xxxxxxx
