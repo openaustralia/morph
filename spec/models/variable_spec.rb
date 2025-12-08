@@ -1,6 +1,25 @@
 # typed: false
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: variables
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  value      :text(65535)      not null
+#  created_at :datetime
+#  updated_at :datetime
+#  scraper_id :integer
+#
+# Indexes
+#
+#  fk_rails_f537200e37  (scraper_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (scraper_id => scrapers.id)
+#
 require "spec_helper"
 
 describe Variable do

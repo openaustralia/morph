@@ -1,6 +1,26 @@
 # typed: false
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: connection_logs
+#
+#  id         :integer          not null, primary key
+#  created_at :datetime
+#  domain_id  :integer
+#  run_id     :integer
+#
+# Indexes
+#
+#  index_connection_logs_on_created_at  (created_at)
+#  index_connection_logs_on_domain_id   (domain_id)
+#  index_connection_logs_on_run_id      (run_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (domain_id => domains.id)
+#  fk_rails_...  (run_id => runs.id)
+#
 require "spec_helper"
 
 describe ConnectionLog do
