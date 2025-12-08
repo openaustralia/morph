@@ -74,6 +74,7 @@
     - ../templates/sites/*
 
 - name: Ensure that .env exists
+  tags: 'foreman'
   template: src=env dest=/var/www/shared/.env owner=deploy group=deploy
   # TODO: If this changes we should rerun foreman as well
 
@@ -107,15 +108,18 @@
 - name: Create log directory
   file: path=/var/log/morph owner=deploy group=deploy state=directory
 
-- name: Ensure Procfile.RAILS_ENV is copied
-  copy:
-    src: "../Procfile.{{ rails_env }}"
-    dest: "/home/deploy/Procfile.{{ rails_env }}"
-  notify: Export to systemd
+- name: Ensure Procfile.systemd is installed
+  tags: 'foreman'
+  template:
+    src: "Procfile.systemd"
+    dest: "/home/deploy/Procfile.systemd"
 
-- name: Create sudoers ready for testing
-  template: src=sudoers dest=/etc/sudoers.d/deploy.test owner=root group=root mode=0440
-  notify: Test sudoers and make it live
+- name: Export to systemd
+  command: "foreman export systemd /etc/systemd/system --user deploy --app morph --procfile /home/deploy/Procfile.systemd --root /var/www/current --formation worker=2,faye=1"
+  become: yes
+  tags: 'foreman'
+  notify: Restart morph service
+  
 
 # TODO: There are serious security concerns with doing this. This will probably be improved
 # as Docker matures
@@ -153,7 +157,9 @@
     src: /usr/share/zoneinfo/Australia/Sydney
     dest: /etc/localtime
     state: link
-  notify: Update timezone
+
+- name: Update timezone
+  command: dpkg-reconfigure --frontend noninteractive tzdata
 
 # TODO: Use special_time (or at least look at using it)
 - name: Setting daily cron job for 10:00am
