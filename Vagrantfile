@@ -10,6 +10,7 @@ def load_env_vars
   env_values = {}
   [env_path, env_vagrant_path].each do |path|
     next unless File.exist?(path)
+
     File.readlines(path).each do |line|
       line = line.strip
       next if line.empty? || line.start_with?("#")
@@ -30,7 +31,7 @@ def load_env_vars
     %w[CUTTLEFISH_SERVER plannies-mate.thesite.info],
     %w[CUTTLEFISH_PORT 2525],
     ["CUTTLEFISH_USERNAME", nil],
-    ["CUTTLEFISH_PASSWORD", nil],
+    ["CUTTLEFISH_PASSWORD", nil]
   ]
 
   extra_vars = {}
