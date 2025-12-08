@@ -163,8 +163,9 @@ You'll need to create an application on GitHub So that morph.io can talk to GitH
 We've pre-filled most of the important fields for a few different configurations below:
 
 * [Create GitHub application on your personal account for use in development, port 3000](https://github.com/settings/apps/new?name=Morph.io+(development)&description=Get+structured+data+out+of+the+web&url=http://127.0.0.1:3000&callback_urls[]=http://127.0.0.1:3000/users/auth/github/callback&setup_url=http://127.0.0.1:3000&setup_on_update=true&public=true&webhook_active=false&administration=write&contents=write&emails=read)
-* [Create GitHub application on your personal account for use in production](https://github.com/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
-* [Create GitHub application on the openaustralia organization for use in production](https://github.com/organizations/openaustralia/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
+* [Create GitHub application on your personal account for use in production](https://github.com/settings/apps/new?name=Morph.io+(your-name)&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
+* On the OpenAustralia foundation, under Settings / Developer settings / GitHub Apps you should see the application already created using:
+  * [Create GitHub application on the openaustralia organization for use in production](https://github.com/organizations/openaustralia/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
 
 You will need to add and change a few values manually:
 
@@ -180,6 +181,15 @@ You will need to add and change a few values manually:
   you'll also need to add a "Webhook secret" for security.
   * add a "Webhook secret" for security.
   * add a "Webhook URL" - the ngrok url with `/github/webhook` on the end
+
+For staging servers, you will need to add the callback url.
+* User settings switch context to Open Australia (if you have sufficient permissions), otherwise you will need to use 
+  an app under your personal or an organisation you have permission for.
+* Navidate to Developer Settings
+* Under gitHub Apps you should have a Morph.io app
+* Click Edit and scoll down to the "Identifying and authorizing users" section
+* Click "Add Callback URL" if your url is not already present, eg:
+  * `https://morph-staging.thesite.info/users/auth/github/callback`
 
 Next you'll need to fill in some values in the `.env` file which come from the GitHub App that you've just created.
 
