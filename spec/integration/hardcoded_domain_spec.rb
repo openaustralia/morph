@@ -22,7 +22,7 @@ describe "Hardcoded domain references", type: :request do
 
   let(:legitimate_morph_io_paths) do
     [
-      "/discourse/sso", # Special case for Discourse SSO
+      "/discourse/sso" # Special case for Discourse SSO
       # '/',           # branding in footer
       # '/about',      # mentions in content
       # etc
