@@ -46,7 +46,6 @@ module Morph
       system "bzip2 db/backups/sqlite_backup.tar"
     end
 
-
     sig { void }
     def self.backup_redis
       Rails.logger.info "Removing any previous Redis backup..."
@@ -81,7 +80,7 @@ module Morph
       system "bunzip2 -k db/backups/mysql_backup.sql.bz2"
       Rails.logger.info "Restoring from MySQL backup..."
       system "mysql #{mysql_auth} #{mysql_database} " \
-               "< db/backups/mysql_backup.sql"
+             "< db/backups/mysql_backup.sql"
       FileUtils.rm_f "db/backups/mysql_backup.sql"
     end
 
