@@ -22,17 +22,6 @@ module Morph
     end
 
     sig { void }
-    def self.restore
-      system "tar xf db/backups/morph_backup.tar"
-      restore_mysql
-      restore_sqlite
-      restore_redis
-      FileUtils.rm_f "db/backups/mysql_backup.sql.bz2"
-      FileUtils.rm_f "db/backups/sqlite_backup.tar.bz2"
-      FileUtils.rm_f "db/backups/redis_backup.rdb.bz2"
-    end
-
-    sig { void }
     def self.backup_mysql
       Rails.logger.info "Removing any previous MySQL backup..."
       FileUtils.rm_f "db/backups/mysql_backup.sql"
@@ -43,16 +32,6 @@ module Morph
              "> db/backups/mysql_backup.sql"
       Rails.logger.info "Compressing MySQL backup..."
       system "bzip2 db/backups/mysql_backup.sql"
-    end
-
-    sig { void }
-    def self.restore_mysql
-      Rails.logger.info "Uncompressing MySQL backup..."
-      system "bunzip2 -k db/backups/mysql_backup.sql.bz2"
-      Rails.logger.info "Restoring from MySQL backup..."
-      system "mysql #{mysql_auth} #{mysql_database} " \
-             "< db/backups/mysql_backup.sql"
-      FileUtils.rm_f "db/backups/mysql_backup.sql"
     end
 
     sig { void }
@@ -67,14 +46,6 @@ module Morph
       system "bzip2 db/backups/sqlite_backup.tar"
     end
 
-    sig { void }
-    def self.restore_sqlite
-      Rails.logger.info "Uncompressing SQLite backup..."
-      system "bunzip2 -k db/backups/sqlite_backup.tar.bz2"
-      Rails.logger.info "Restoring from SQLite backup..."
-      system "tar xf db/backups/sqlite_backup.tar"
-      FileUtils.rm_f "db/backups/sqlite_backup.tar"
-    end
 
     sig { void }
     def self.backup_redis
@@ -90,6 +61,39 @@ module Morph
       system "bzip2 db/backups/redis_backup.rdb"
     end
 
+    # :nocov:
+    # Restore is too hard to automatically unit test
+
+    sig { void }
+    def self.restore
+      system "tar xf db/backups/morph_backup.tar"
+      restore_mysql
+      restore_sqlite
+      restore_redis
+      FileUtils.rm_f "db/backups/mysql_backup.sql.bz2"
+      FileUtils.rm_f "db/backups/sqlite_backup.tar.bz2"
+      FileUtils.rm_f "db/backups/redis_backup.rdb.bz2"
+    end
+
+    sig { void }
+    def self.restore_mysql
+      Rails.logger.info "Uncompressing MySQL backup..."
+      system "bunzip2 -k db/backups/mysql_backup.sql.bz2"
+      Rails.logger.info "Restoring from MySQL backup..."
+      system "mysql #{mysql_auth} #{mysql_database} " \
+               "< db/backups/mysql_backup.sql"
+      FileUtils.rm_f "db/backups/mysql_backup.sql"
+    end
+
+    sig { void }
+    def self.restore_sqlite
+      Rails.logger.info "Uncompressing SQLite backup..."
+      system "bunzip2 -k db/backups/sqlite_backup.tar.bz2"
+      Rails.logger.info "Restoring from SQLite backup..."
+      system "tar xf db/backups/sqlite_backup.tar"
+      FileUtils.rm_f "db/backups/sqlite_backup.tar"
+    end
+
     sig { void }
     def self.restore_redis
       Rails.logger.info "Uncompressing Redis backup..."
@@ -97,6 +101,9 @@ module Morph
       Rails.logger.info "Restore from Redis backup..."
       system "mv db/backups/redis_backup.rdb #{redis_directory}/dump.rdb"
     end
+
+    # End of coverage exclusion region
+    # :nocov:
 
     sig { returns(String) }
     def self.redis_directory
