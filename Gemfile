@@ -195,7 +195,9 @@ gem "jquery-ui-rails", "~> 5"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder"
 
-# Force loading the latest security patch
+# We're only including sprockets here so we can lock it to an older version
+# For upgrading: https://github.com/rails/sprockets/blob/070fc01947c111d35bb4c836e9bb71962a8e0595/UPGRADING.md#manifestjs
+# TODO: Upgrade to sprockets version 4 and remove the line below
 gem "sprockets", "~> 4.0"
 
 group :doc do
