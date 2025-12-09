@@ -9,7 +9,8 @@ ruby "2.7.6"
 
 gem "dotenv-rails"
 
-gem "rails", "6.0.6.1"
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem "rails", "6.1.7.10"
 
 gem "mysql2"
 gem "sqlite3"
