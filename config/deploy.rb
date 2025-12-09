@@ -1,16 +1,20 @@
-set :application, 'morph'
-set :repo_url, `git config --get remote.origin.url`.strip
+# typed: strict
 
-set :rvm_ruby_version, '2.7.6'
+set :application, "morph"
+set :repo_url, "https://github.com/openaustralia/morph.git"
 
-set :branch, -> {
-  branch = ENV['BRANCH'] || `git rev-parse --abbrev-ref HEAD`.strip
+expected_repos = %w[git@github.com:openaustralia/morph.git https://github.com/openaustralia/morph.git]
+current_repo = `git config --get remote.origin.url`.strip
+raise "Deploy from the openaustralia repo (#{expected_repos.join(', ')}) instead of a fork (#{current_repo})" unless expected_repos.include?(current_repo)
+
+set :rvm_ruby_version, "2.7.6"
+
+set :branch, lambda {
+  branch = ENV["BRANCH"] || `git rev-parse --abbrev-ref HEAD`.strip
   warnings = []
 
   # Check for uncommitted changes
-  unless `git status --porcelain`.strip.empty?
-    warnings << "WARNING: You have uncommitted local changes"
-  end
+  warnings << "WARNING: You have uncommitted local changes" unless `git status --porcelain`.strip.empty?
 
   # Check if branch exists in deployment repo
   local_sha = `git rev-parse #{branch}`.strip
@@ -19,14 +23,10 @@ set :branch, -> {
   if remote_sha.nil? || remote_sha.strip.empty?
     warnings << "WARNING: Branch '#{branch}' doesn't exist in #{fetch(:repo_url)}"
   elsif local_sha != remote_sha
-    warnings << "WARNING: Branch '#{branch}' (commit #{local_sha[0, 9]}) differs from #{fetch(:repo_url)} (commit #{remote_sha[0,9]})"
+    warnings << "WARNING: Branch '#{branch}' (commit #{local_sha[0, 9]}) differs from #{fetch(:repo_url)} (commit #{remote_sha[0, 9]})"
   end
 
-  if !%w[git@github.com:openaustralia/morph.git https://github.com/openaustralia/morph.git].include? fetch(:repo_url)
-    warnings << "WARNING: Deploying branch #{branch} from a fork of the openaustralia repo: #{fetch(:repo_url)}"
-  else
-    warnings << "NOTE: deploying branch #{branch} rather than main" if branch != "main"
-  end
+  warnings << "NOTE: deploying branch #{branch} rather than main" if branch != "main"
 
   if warnings.any?
     $stdout.puts
@@ -42,27 +42,26 @@ set :branch, -> {
   branch
 }
 
-set :deploy_to, '/var/www'
+set :deploy_to, "/var/www"
 # set :scm, :git
 
 # set :format, :pretty
 # set :log_level, :debug
 # set :pty, true
 
-set :linked_files, %w{config/database.yml config/sync.yml config/morph-github-app.private-key.pem .env}
-set :linked_dirs, %w{db/scrapers public/sitemaps tmp/pids log}
+set :linked_files, %w[config/database.yml config/sync.yml config/morph-github-app.private-key.pem .env]
+set :linked_dirs, %w[db/scrapers public/sitemaps tmp/pids log]
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 # set :keep_releases, 5
 
 namespace :deploy do
-
-  desc 'Restart application'
+  desc "Restart application"
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
-      execute :touch, release_path.join('tmp/restart.txt')
+      execute :touch, release_path.join("tmp/restart.txt")
     end
   end
 
@@ -75,7 +74,7 @@ namespace :deploy do
     end
   end
 
-  after :finishing, 'deploy:cleanup'
+  after :finishing, "deploy:cleanup"
 
   desc "Build docker images"
   task :docker do
@@ -135,13 +134,13 @@ namespace :searchkick do
 end
 
 # TODO: Hmmm... Need to think about the best order for doing these
-after 'deploy:publishing', 'deploy:restart'
+after "deploy:publishing", "deploy:restart"
 before "deploy:restart", "deploy:docker"
 after "deploy:docker", "foreman:restart"
 # Disable the searchkick reindex on deploys because it just takes *way* too long
 # However, not that on a first deploy you do need to run the searchkick:reindex:all
 # task otherwise things won't work as expected
-#after "foreman:restart", "searchkick:reindex:all"
+# after "foreman:restart", "searchkick:reindex:all"
 
 # This is a horrrible workaround for sidekiq losing running jobs on the queue when it is restarted
 # For the longest time we've been running this by hand after every deploy, hoping somewhat foolishly
@@ -149,4 +148,3 @@ after "deploy:docker", "foreman:restart"
 # hasn't happened. So, it's time to automate the workaround
 # TODO: Remove this workaround as soon as we can
 after "deploy:cleanup", "deploy:fix_queue_run_inconsistencies"
-
