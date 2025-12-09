@@ -10,7 +10,7 @@ ruby "3.0.7"
 gem "dotenv-rails"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "7.0.8.7"
+gem "rails", "7.1.5.2"
 
 gem "mysql2"
 gem "sqlite3"
@@ -66,7 +66,7 @@ gem "haml-coderay"
 gem "honeybadger"
 gem "kaminari"
 gem "kaminari-bootstrap", "~> 3.0.1"
-gem "meta-tags"
+gem 'meta-tags', '~> 2.18'
 gem "multiblock"
 gem "rails_autolink"
 gem "rails-timeago", "~> 2.0"
