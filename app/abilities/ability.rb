@@ -7,5 +7,5 @@ class Ability
   include CanCan::Ability
 
   sig { params(_user: T.nilable(Owner)).void }
-  def initialize(_user); end # rubocop:disable Style/RedundantInitialize
+  def initialize(_user); end
 end

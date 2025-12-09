@@ -22,6 +22,12 @@ AllCops:
       - spec/lib/morph/test_scrapers/*/*/*
       - lib/morph/limit_output.rb
       - app/helpers/bootstrap_flash_helper.rb
+  SuggestExtensions: false
+    #Tip: Based on detected gems, the following RuboCop extension libraries might be helpful:
+    #       * rubocop-capybara (https://rubygems.org/gems/rubocop-capybara)
+    #       * rubocop-factory_bot (https://rubygems.org/gems/rubocop-factory_bot)
+    #       * rubocop-rspec_rails (https://rubygems.org/gems/rubocop-rspec_rails)
+
 
 Sorbet/FalseSigil:
   Exclude:
@@ -223,6 +229,8 @@ Style/QuotedSymbols: # new in 1.16
   Enabled: true
 Style/RedundantInitialize: # new in 1.27
   Enabled: true
+  Exclude:
+    - app/abilities/ability.rb
 Style/RedundantSelfAssignmentBranch: # new in 1.19
   Enabled: true
 Style/SelectByRegexp: # new in 1.22
@@ -259,6 +267,8 @@ Rails/I18nLocaleAssignment: # new in 2.11
   Enabled: true
 Rails/I18nLocaleTexts: # new in 2.14
   Enabled: true
+  Exclude:
+    - spec/**/*
 Rails/Inquiry: # new in 2.7
   Enabled: true
 Rails/MailerName: # new in 2.7
