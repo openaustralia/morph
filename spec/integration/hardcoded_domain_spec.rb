@@ -9,7 +9,7 @@ describe "Hardcoded domain references", type: :request do
 
   let(:active_scraper) do
     Scraper.includes(:owner)
-              .find_by("name LIKE 'Active_scraper%'")
+           .find_by("name LIKE 'Active_scraper%'")
   end
 
   let(:user) do
@@ -19,7 +19,7 @@ describe "Hardcoded domain references", type: :request do
       raise("No active scraper found!")
   end
 
-  let (:run) do
+  let(:run) do
     active_scraper.runs.last || raise("No active scraper run found!")
   end
 
@@ -54,7 +54,7 @@ describe "Hardcoded domain references", type: :request do
       "/sync/refetch", # FIXME: Html response status 400 (params needed?)
       "/*id/data", # FIXME: Html response status 401 (params and an sqlite db needed?)
       "/scrapers/github_form", # FIXME: Couldn't find Owner without an ID (id required?)
-      "/*id/settings", # FIXME: later - some wierd permission error that doesnt happen in practice (ActiveRecord::RecordNotFound)
+      "/*id/settings" # FIXME: later - some wierd permission error that doesnt happen in practice (ActiveRecord::RecordNotFound)
     ]
   end
 
