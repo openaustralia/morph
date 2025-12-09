@@ -137,3 +137,4 @@ share-web: ## Share web server on port 3000 to the internet (use PORT=N to use a
 
 mailcatcher: ## run mailcatcher to catch development emails
 	bundle exec mailcatcher
+
