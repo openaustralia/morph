@@ -210,15 +210,13 @@ FactoryBot.define do
     end
   end
 
-
-
   # An active scraper with runs and queries
   factory :active_scraper, parent: :scraper do
     sequence(:name) { |n| "my_active_scraper#{n}" }
     sequence(:full_name) { |n| "active_owner/active_scraper#{n}" }
 
     after(:create) do |scraper|
-      run = FactoryBot.create(:run, owner: scraper.owner, scraper: scraper)
+      FactoryBot.create(:run, owner: scraper.owner, scraper: scraper)
       # FactoryBot.create(:api_query, owner: scraper.owner, scraper: scraper)
     end
 
