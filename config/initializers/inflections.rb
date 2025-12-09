@@ -20,3 +20,4 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   # So we can pluralize the "Hero" plan name
   inflect.irregular 'hero', 'heroes'
 end
+
