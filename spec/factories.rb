@@ -6,7 +6,7 @@ FactoryBot.define do
     # Required in practice if you collaborate or own a scraper - only 6 users in Prod dont have nicknames
     sequence(:nickname) { |n| "user#{n}" }
     trait :maximal do
-      sequence(:nickname) { |n| FactoryHelpers.max_name("full-user#{n}", 255) }
+      sequence(:nickname) { |n| FactoryHelpers.max_name("full-user#{n}", 127) }
       sequence(:email) { |n| "full-user#{n}@example.com" }
       name { FactoryHelpers.max_string("User name", 255) }
       provider { "github" }
@@ -14,7 +14,7 @@ FactoryBot.define do
       blog { FactoryHelpers.max_string("https://example.com/blog", 255) }
       company { FactoryHelpers.max_string("Acme Corporation", 255) }
       location { FactoryHelpers.max_string("Sydney, Australia", 255) }
-      gravatar_url { FactoryHelpers.max_string("https://gravatar.com/avatar/test", 255) }
+      gravatar_url { FactoryHelpers.max_name("https://gravatar.com/avatar/test", 255) }
       admin { true }
       suspended { false }
       feature_switches { FactoryHelpers.max_serialized("featureN", 255) }
@@ -32,14 +32,11 @@ FactoryBot.define do
 
   factory :scraper do
     sequence(:name) { |n| "my_scraper#{n}" }
-    sequence(:full_name) { |n| "mlandauer/my_scraper#{n}" }
     owner { association(:user) }
+    full_name { "#{owner.nickname}/#{name}" }
 
     trait :maximal do
-      # sequence(:name) { |n| "my_max_scraper#{n}" }
-      name { FactoryHelpers.max_name("scraper", 255) }
-      sequence(:full_name) { |n| FactoryHelpers.max_string("owner/scraper#{n}", 255) }
-      owner { association(:user, :maximal) }
+      sequence(:name) { |n| FactoryHelpers.max_name("my_max_scraper#{n}", 127) }
       description { FactoryHelpers.max_string("Comprehensive scraper description", 255) }
       sequence(:github_id) { |n| 1000000 + n }
       sequence(:github_url) { |n| FactoryHelpers.max_string("https://github.com/owner/scraper#{n}", 255) }
@@ -83,13 +80,13 @@ FactoryBot.define do
 
   factory :organization do
     trait :maximal do
-      sequence(:nickname) { |n| FactoryHelpers.max_name("max-org#{n}", 255) }
+      sequence(:nickname) { |n| FactoryHelpers.max_name("max-org#{n}", 127) }
       sequence(:email) { |n| "max-org#{n}@example.com" }
       name { FactoryHelpers.max_string("Organization Name", 255) }
       provider { "github" }
       sequence(:uid) { |n| "github_org_#{n}" }
       company { FactoryHelpers.max_string("Big Company Inc", 255) }
-      blog { FactoryHelpers.max_string("https://example.com/blog", 255) }
+      blog { FactoryHelpers.max_name("https://example.com/blog", 255) }
       location { FactoryHelpers.max_string("Melbourne, Australia", 255) }
       sign_in_count { 42 }
       current_sign_in_at { 1.day.ago }
@@ -213,7 +210,8 @@ FactoryBot.define do
   # An active scraper with runs and queries
   factory :active_scraper, parent: :scraper do
     sequence(:name) { |n| "my_active_scraper#{n}" }
-    sequence(:full_name) { |n| "active_owner/active_scraper#{n}" }
+    owner { association(:user, nickname: "active_owner") }
+    full_name { "#{owner.nickname}/#{name}" }
 
     after(:create) do |scraper|
       FactoryBot.create(:run, owner: scraper.owner, scraper: scraper)
@@ -221,9 +219,10 @@ FactoryBot.define do
     end
 
     trait :maximal do
-      name { FactoryHelpers.max_name("Active_scraper", 255) }
+      name { FactoryHelpers.max_name("Active_scraper", 127) }
       # full_name { FactoryHelpers.max_string("active_owner/active_scraper", 255) }
       owner { association(:user, :maximal) }
+      full_name { "#{owner.nickname}/#{name}" }
       description { FactoryHelpers.max_string("Active scraper description", 255) }
       # Don't set github_id as it causes validation to github to fail!
       # sequence(:github_id) { |n| 1000000 + n }
@@ -236,13 +235,22 @@ FactoryBot.define do
       sqlite_db_size { 10485760 }
       memory_mb { 512 }
 
-      # after(:create) do |scraper|
-      #   run = FactoryBot.create(:run, :maximal, owner: scraper.owner, scraper: scraper)
-      #   FactoryBot.create(:api_query, :maximal, owner: scraper.owner, scraper: scraper)
-      #   FactoryBot.create(:variable, :maximal, scraper: scraper)
-      #   webhook = FactoryBot.create(:webhook, :maximal, scraper: scraper)
-      #   FactoryBot.create(:webhook_delivery, :maximal, webhook: webhook, run: run)
-      # end
+      after(:create) do |scraper|
+        # Create runs (including last_run)
+        _run1 = FactoryBot.create(:run, :maximal, owner: scraper.owner, scraper: scraper, queued_at: 2.hours.ago)
+        run2 = FactoryBot.create(:run, :maximal, owner: scraper.owner, scraper: scraper, queued_at: 1.hour.ago)
+
+        # Create other associations
+        FactoryBot.create(:api_query, :maximal, owner: scraper.owner, scraper: scraper)
+        FactoryBot.create(:variable, :maximal, scraper: scraper)
+        FactoryBot.create(:contribution, :maximal, scraper: scraper)
+        FactoryBot.create(:collaboration, :maximal, scraper: scraper)
+        FactoryBot.create(:alert, :maximal, watch: scraper)
+
+        # Create webhook with delivery
+        webhook = FactoryBot.create(:webhook, :maximal, scraper: scraper)
+        FactoryBot.create(:webhook_delivery, :maximal, webhook: webhook, run: run2)
+      end
     end
   end
 
