@@ -2,6 +2,11 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+// Added to make tests work when compiled independently
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "variables";
+
 .banner {
   width: 100%;
 
