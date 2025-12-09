@@ -3,6 +3,7 @@
 
 require "spec_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll, RSpec/InstanceVariable
 describe "Hardcoded domain references", type: :request do
   include Devise::Test::IntegrationHelpers
 
@@ -95,3 +96,4 @@ describe "Hardcoded domain references", type: :request do
                           "Found 'morph.io' in responses for:\n#{violations.join("\n")}"
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll, RSpec/InstanceVariable
