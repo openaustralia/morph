@@ -17,6 +17,7 @@ GITHUB_APP_ID=xxxxxx
 GITHUB_APP_NAME=xxxxxxxxxx
 GITHUB_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
 GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GITHUB_APP_INSTALLED_BY=xxxxxxxxxx
 
 # Used by mitmproxy to communicate via the api back to morph
 MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
