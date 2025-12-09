@@ -14,7 +14,6 @@ SimpleCov.start "rails" do
     ]
   )
   track_files "**/*.rb"
-  SimpleCov.minimum_coverage 52 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
   add_filter %r{^/spec/}
   add_filter "/vendor/"
 end
@@ -42,7 +41,7 @@ VCR.configure do |c|
   c.hook_into :webmock
   c.ignore_hosts "codeclimate.com"
   c.ignore_request do |_request|
-    RSpec.current_example&.metadata&.fetch(:github_integration, false)
+    RSpec.current_example&.metadata&.fetch(:github, false)
   end
 end
 
@@ -111,9 +110,29 @@ RSpec.configure do |config|
 
   github_integration_possible = File.exist?(Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH)
 
-  config.filter_run_excluding github: true if ENV["DONT_RUN_GITHUB_TESTS"] && !github_integration_possible
-  config.filter_run_excluding docker: true if ENV["DONT_RUN_DOCKER_TESTS"]
-  config.filter_run_excluding slow: true unless ENV["RUN_SLOW_TESTS"]
+  expected_coverage = 61.23 # percentage
+  if !github_integration_possible
+    $stdout.puts "Skipping GitHub tests because Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH does not exist"
+    config.filter_run_excluding github: true
+    expected_coverage -= 61.23 - 59.74
+  elsif ENV["DONT_RUN_GITHUB_TESTS"]
+    $stdout.puts "Skipping GitHub tests because DONT_RUN_GITHUB_TESTS is set"
+    config.filter_run_excluding github: true
+    expected_coverage -= 61.23 - 59.74
+  end
+  if ENV["DONT_RUN_DOCKER_TESTS"]
+    $stdout.puts "Skipping Docker tests because DONT_RUN_DOCKER_TESTS is set"
+    config.filter_run_excluding docker: true
+    expected_coverage -= 6.0
+  end
+  unless ENV["RUN_SLOW_TESTS"]
+    # Slows down from 38.33 to 129.5 seconds
+    $stdout.puts "Skipping slow tests because RUN_SLOW_TESTS is not set (saves 70% of test time for a loss of 7.6% of coverage)"
+    config.filter_run_excluding slow: true
+    expected_coverage += 68.81 - 61.23
+  end
+  # Round down
+  SimpleCov.minimum_coverage expected_coverage - 0.2
 
   # Make sure sidekiq jobs don't linger between tests
   config.before do
