@@ -1,6 +1,7 @@
 ---
-# This playbook is for provisioning on a Linode box. It should be at least a Linode 24576 box and have
-# 64 bit Ubuntu 16.04 LTS with 256 MB swap.
+# This playbook is for provisioning on a Linode box. It should be at least a Linode 24GB box and have
+# 64 bit Ubuntu 16.04 LTS with 2GB swap device.
+# Vagrant doesn't have a swap partition, so a 4GB swapfile is created
 #
 # To run in development (local vagrant VM):
 # vagrant provision local
@@ -50,6 +51,7 @@
         upgrade: yes
       tags: ['upgrade'] 
   roles:
+    - { role: swapfile, tags: ['swapfile', 'swap'] }
     - { role: ansible-yarn, tags: ['yarn'] }
     - { role: morph-app, tags: ['morph'] }
     - { role: discourse, tags: ['discourse'] }

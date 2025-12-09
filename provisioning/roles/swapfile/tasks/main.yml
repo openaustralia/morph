@@ -1,0 +1,42 @@
+- name: Check if swap is configured
+  shell: swapon --show | grep -c "^/"
+  register: swap_configured
+  changed_when: false
+  failed_when: false
+
+- name: Create swapfile if no swap exists
+  when: swap_configured.stdout == "0"
+  block:
+    - name: Create 4GB swapfile
+      command: fallocate -l 4G /swapfile
+      args:
+        creates: /swapfile
+
+    - name: Set swapfile permissions
+      file:
+        path: /swapfile
+        mode: '0600'
+
+    - name: Make swapfile
+      command: mkswap /swapfile
+      when: swap_configured.stdout == "0"
+
+    - name: Enable swapfile
+      command: swapon /swapfile
+      when: swap_configured.stdout == "0"
+
+    - name: Add swapfile to fstab
+      lineinfile:
+        path: /etc/fstab
+        line: '/swapfile none swapfile sw 0 0'
+        state: present
+      when: swap_configured.stdout == "0"
+
+- name: Verify swap is active
+  command: swapon --show
+  register: swap_status
+  changed_when: false
+
+- name: Display swap status
+  debug:
+    msg: "Swap status: {{ swap_status.stdout }}"

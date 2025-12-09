@@ -23,8 +23,8 @@ Vagrant.configure("2") do |config|
     # local.vm.synced_folder ".", "/vagrant", disabled: true
 
     local.vm.provider "virtualbox" do |v|
-      # Without elasticsearch we can run with 2GB of memory, but otherwise
-      v.memory = 4096
+      # Discourse needs a LOT of memory to bootstrap!
+      v.memory = 8192
     end
 
     local.vm.provision :ansible do |ansible|
