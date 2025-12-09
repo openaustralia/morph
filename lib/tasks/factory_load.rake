@@ -1,4 +1,4 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 namespace :db do
@@ -7,21 +7,21 @@ namespace :db do
     task load: :environment do
       raise "This task can only be run in development environment!" unless Rails.env.development?
 
-      puts "Resetting database..."
+      $stdout.puts "Resetting database..."
       Rake::Task["db:reset"].invoke
 
-      puts "Disabling update of ElasticSearch index..."
+      $stdout.puts "Disabling update of ElasticSearch index..."
       Searchkick.disable_callbacks
 
-      puts "Disabling github validations as we are loading fake scrapers ..."
+      $stdout.puts "Disabling github validations as we are loading fake scrapers ..."
       Scraper.skip_github_validations = true
 
-      puts "Loading test data..."
+      $stdout.puts "Loading test data..."
       require "factory_bot_rails"
       require_relative "../../spec/support/factory_helpers"
       include FactoryHelpers
 
-      # trigger creation of SiteSetting record
+      # trigger creation of a SiteSetting record
       SiteSetting.maximum_concurrent_scrapers
 
       # Create all the possible factory examples
@@ -29,10 +29,10 @@ namespace :db do
 
       admin = User.find_by admin: true
 
-      puts ""
-      puts "Admin user nickname: #{admin.nickname}",
-           "              email: #{admin.email}"
-      puts ""
+      $stdout.puts ""
+      $stdout.puts "Admin user nickname: #{admin.nickname}",
+                   "              email: #{admin.email}"
+      $stdout.puts ""
 
       Rake::Task["db:stats"].invoke
     end
