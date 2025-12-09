@@ -96,7 +96,6 @@ staging-deploy: ## Deploy app to staging
 production-deploy: ## Deploy app to production
 	bundle exec cap production deploy
 
-<<<<<<< HEAD
 docker-up: ## Full Docker environment including ruby containers (persistent data) BETA
 	docker compose -f docker-compose.yml -f docker_images/persistent_services.yaml up
 
@@ -138,13 +137,3 @@ share-web: ## Share web server on port 3000 to the internet (use PORT=N to use a
 
 mailcatcher: ## run mailcatcher to catch development emails
 	bundle exec mailcatcher
-||||||| parent of e27d3fa9 (Update Makefile and provisioning/README.md for new targets)
-clean:
-	rm -rf .venv provisioning/.roles-installed 
-=======
-staging-deploy:
-	bundle exec cap staging deploy
-
-clean:
-	rm -rf .venv provisioning/.roles-installed 
->>>>>>> e27d3fa9 (Update Makefile and provisioning/README.md for new targets)
