@@ -88,6 +88,7 @@ RSpec.configure do |config|
   config.before(:suite) do
     Searchkick.disable_callbacks
     DatabaseCleaner.start
+    # Check factories create valid records (then clean them out)
     FactoryBot.lint
   ensure
     DatabaseCleaner.clean
