@@ -18,7 +18,7 @@ FactoryBot.define do
       admin { true }
       suspended { false }
       feature_switches { FactoryHelpers.max_serialized("featureN", 255) }
-      api_key { SecureRandom.hex(20) }
+      # api_key is set by Owner model
       stripe_customer_id { FactoryHelpers.max_string("cus_test123", 255) }
       stripe_plan_id { FactoryHelpers.max_string("plan_test", 255) }
       stripe_subscription_id { FactoryHelpers.max_string("sub_test123", 255) }
