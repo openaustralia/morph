@@ -11,12 +11,10 @@
 * Process isolation via [Docker](https://www.docker.com/)
 * Email alerts for broken scrapers
 
-A development environment is provided using docker compose for the main web development container
-as well as the following required services
-    * elasticsearch
-    * mitmproxy
-    * MySQL
-    * Redis
+## Dependencies
+
+Ruby, Docker, MySQL, SQLite 3, Redis, mitmproxy.
+(See below for more details about installing Docker)
 
 ## Provisioning using Ansible
 
@@ -114,9 +112,14 @@ Read [Docker Development Commands](doc/docker_development_commands.md) for a col
 
     cp config/database.yml.example config/database.yml
     cp env-example .env
+    cp env-staging-example .env.staging # if needed
+    cp env-staging-example .env.vagrant # if needed
 
-Edit `config/database.yml` with your database settings 
-and `.env` with your local environment
+Edit 
+* `config/database.yml` with your database settings 
+* `.env` with your local environment and vagrant development settings
+* `.env.staging` with staging environment settings that differ from `.env`
+* `.env.vagrant` with settings for provisioning vagrant that differ from `.env`
 
 Install gem requirements by running the following in the web container:
 
@@ -128,10 +131,15 @@ User-facing:
 
 * [openaustralia/morph](https://github.com/openaustralia/morph) - Main application
 * [openaustralia/morph-cli](https://github.com/openaustralia/morph-cli) - Command-line morph.io tool
-* [openaustralia/scraperwiki-python](https://github.com/openaustralia/scraperwiki-python) - Fork of [scraperwiki/scraperwiki-python](https://github.com/scraperwiki/scraperwiki-python) updated to use morph.io naming conventions
-* [openaustralia/scraperwiki-ruby](https://github.com/openaustralia/scraperwiki-ruby) - Fork of [scraperwiki/scraperwiki-ruby](https://github.com/scraperwiki/scraperwiki-ruby) updated to use morph.io naming conventions
+* [openaustralia/scraperwiki-python](https://github.com/openaustralia/scraperwiki-python) - Fork
+  of [scraperwiki/scraperwiki-python](https://github.com/scraperwiki/scraperwiki-python) updated to use morph.io naming
+  conventions
+* [openaustralia/scraperwiki-ruby](https://github.com/openaustralia/scraperwiki-ruby) - Fork
+  of [scraperwiki/scraperwiki-ruby](https://github.com/scraperwiki/scraperwiki-ruby) updated to use morph.io naming
+  conventions
 
 Docker images:
+
 * [openaustralia/buildstep](https://github.com/openaustralia/buildstep) - Base image for running scrapers in containers
 
 Note - morph builds a docker image using these buildstep images combined with the config files from the scraper to
@@ -139,8 +147,7 @@ build a separate docker image for each scraper with all the dependencies ready t
 
 ### Tunnel GitHub webhook traffic back to your local development machine
 
-We use "ngrok" a tool that makes tunnelling internet traffic to a local development machine easy. 
-
+We use "ngrok" a tool that makes tunnelling internet traffic to a local development machine easy.
 First [download ngrok](https://ngrok.com/download) if you don't have it already. Then,
 
     make share-web
@@ -160,14 +167,17 @@ We've pre-filled most of the important fields for a few different configurations
 * [Create GitHub application on the openaustralia organization for use in production](https://github.com/organizations/openaustralia/settings/apps/new?name=Morph.io&description=Get+structured+data+out+of+the+web&url=https://morph.io&callback_urls[]=https://morph.io/users/auth/github/callback&setup_url=https://morph.io&setup_on_update=true&public=true&webhook_active=false&webhook_url=https://morph.io/github/webhook&administration=write&contents=write&emails=read)
 
 You will need to add and change a few values manually:
+
 * Disable "Expire user authorization tokens"
 * Select "Any Account" if you are demoing with a team
 * Add extra callback urls:
   * http://0.0.0.0:3000/users/auth/github/callback  # if you click on the url puma lists on start up
   * <forwarding url noted above>/users/auth/github/callback
   * Change the port for the local urls if you are not using the default port 3000 for the rails app
-* Add an image - you can use the standard logo at `app/assets/images/logo.png` (you can add this after the app is created)
-* If the webhooks are active and being used in production (currently not the case) then you'll also need to 
+* Add an image - you can use the standard logo at `app/assets/images/logo.png` (you can add this after the app is
+  created)
+* If the webhooks are active and being used in production (currently not the case) then
+  you'll also need to add a "Webhook secret" for security.
   * add a "Webhook secret" for security.
   * add a "Webhook URL" - the ngrok url with `/github/webhook` on the end
 
@@ -178,6 +188,7 @@ Next you'll need to fill in some values in the `.env` file which come from the G
   It's essentially a url happy version of the name you gave the app.
 * `GITHUB_APP_CLIENT_ID` - Look for "Client ID" near the top of the page.
 * `GITHUB_APP_CLIENT_SECRET` - Go to "Generate a new client secret".
+* `GITHUB_APP_INSTALLED_BY` - A user that has installed the app (used by tests)
 
 Also, a private key for the GitHub app is needed. 
 This can be generated by clicking the "Generate a private key" button and will be automatically downloaded. 
@@ -199,20 +210,9 @@ access this, run the following to give your account admin rights:
 
     bundle exec rake app:promote_to_admin
 
-## Running tests
+## Testing
 
-If you're running guard (see above) the tests will also automatically run when you change a file.
-
-By default, RSpec will skip tests that have been tagged as being slow. 
-To change this behaviour, add the following to your `.env`:
-
-    RUN_SLOW_TESTS=1
-
-By default, RSpec will run certain tests against a running Docker server. 
-These tests are quite slow, but not have been tagged as slow. 
-To stop Rspec from running these tests, add the following to your `.env`:
-
-    DONT_RUN_DOCKER_TESTS=1
+See [TESTING.md](TESTING.md) for automated and manual testing instructions.
 
 ### Guard Livereload
 
@@ -244,7 +244,8 @@ set Environment variable: DISABLE_SPRING=1
 
 ## Deploying to production
 
-This section will not be relevant to most people. It will however be relevant if you're deploying to a production server.
+This section will not be relevant to most people. It will however be relevant if you're deploying to a production
+server.
 
 To deploy morph.io to production, normally you'll just want to deploy using Capistrano:
 

@@ -34,7 +34,7 @@ describe AlertMailer do
 
       context "when never alerted" do
         let(:user) { create(:user, name: "Matthew Landauer", email: "matthew@oaf.org.au", nickname: "mlandauer", alerted_at: nil) }
-        let(:welcome_text) { "Hello and welcome to your morph.io alert email." }
+        let(:welcome_text) { "Hello and welcome to your dev.morph.io alert email." }
 
         it { expect(email.text_part.body.to_s).to include(welcome_text) }
         it { expect(email.html_part.body.to_s).to include(welcome_text) }
@@ -49,7 +49,7 @@ describe AlertMailer do
 
       it do
         expect(email.text_part.body.to_s).to eq <<~EMAIL
-          morph.io is letting you know that
+          dev.morph.io is letting you know that
 
           32 scrapers you are watching have run successfully in the last 48 hours. These 2 have a problem:
 
@@ -69,13 +69,13 @@ describe AlertMailer do
 
           -----
           Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
-          morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
+          dev.morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
         EMAIL
       end
 
       it do
         expected = <<~EMAIL
-          <a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">morph.io</a>
+          <a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">dev.morph.io</a>
           is letting you know that
         EMAIL
         expect(email.html_part.body.to_s).to include(expected)
@@ -110,7 +110,7 @@ describe AlertMailer do
           Annoyed by these emails? Then
           <a href="http://dev.morph.io/users/mlandauer/watching?utm_medium=email&amp;utm_source=alerts">change what you&#39;re watching</a>
           </p>
-          <p><a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">morph.io</a></p>
+          <p><a href="http://dev.morph.io/?utm_medium=email&amp;utm_source=alerts">dev.morph.io</a></p>
         EMAIL
         expect(email.html_part.body.to_s).to include(expected)
       end
@@ -120,7 +120,7 @@ describe AlertMailer do
       it "trunctates the log output" do
         allow(run1).to receive(:error_text).and_return("This is line one of an error\nThis is line two\nLine three\nLine four\nLine five\nLine six\n")
         expect(described_class.alert_email(user, [scraper1], [scraper1] * 32).text_part.body.to_s).to eq <<~EMAIL
-          morph.io is letting you know that
+          dev.morph.io is letting you know that
 
           32 scrapers you are watching have run successfully in the last 48 hours. This 1 has a problem:
 
@@ -138,7 +138,7 @@ describe AlertMailer do
 
           -----
           Annoyed by these emails? Then change what you're watching - http://dev.morph.io/users/mlandauer/watching?utm_medium=email&utm_source=alerts
-          morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
+          dev.morph.io - http://dev.morph.io/?utm_medium=email&utm_source=alerts
         EMAIL
       end
     end

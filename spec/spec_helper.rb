@@ -41,6 +41,9 @@ VCR.configure do |c|
   c.cassette_library_dir = "spec/fixtures/vcr_cassettes"
   c.hook_into :webmock
   c.ignore_hosts "codeclimate.com"
+  c.ignore_request do |_request|
+    RSpec.current_example&.metadata&.fetch(:github_integration, false)
+  end
 end
 
 # We don't want webmock to get involved with the excon library at all
@@ -88,6 +91,7 @@ RSpec.configure do |config|
   config.before(:suite) do
     Searchkick.disable_callbacks
     DatabaseCleaner.start
+    # Check factories create valid records (then clean them out)
     FactoryBot.lint
   ensure
     DatabaseCleaner.clean
@@ -105,6 +109,9 @@ RSpec.configure do |config|
     end
   end
 
+  github_integration_possible = File.exist?(Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH)
+
+  config.filter_run_excluding github: true if ENV["DONT_RUN_GITHUB_TESTS"] && !github_integration_possible
   config.filter_run_excluding docker: true if ENV["DONT_RUN_DOCKER_TESTS"]
   config.filter_run_excluding slow: true unless ENV["RUN_SLOW_TESTS"]
 

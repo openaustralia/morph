@@ -2,7 +2,10 @@
 # frozen_string_literal: true
 
 module Morph
-  # Service layer for talking to the Github API. Acts on behalf of a user
+  # Service layer for talking to the Github API. Acts on behalf of a user (uses an OAuth token)
+  # All these methods require a valid user OAuth token and make real API calls.
+  # Requires dedicated integration tests with test user credentials.
+  # :nocov:
   class Github
     extend T::Sig
 
@@ -193,4 +196,5 @@ module Morph
       new_owner(octokit_client.user(nickname))
     end
   end
+  # :nocov:
 end

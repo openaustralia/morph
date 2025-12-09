@@ -50,7 +50,7 @@ Rails.application.configure do
 
   # CUSTOM CONFIGURATION
 
-  config.action_mailer.default_url_options = { :host => 'dev.morph.io' }
+  config.action_mailer.default_url_options = { protocol: 'http', host: 'dev.morph.io' }
 end
 
 # So that the same host setting is available outside the mailer

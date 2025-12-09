@@ -35,7 +35,7 @@
             %h3 Delete your scraper
             .danger-settings-action-body
               %p
-                Delete the entire scraper from morph.io,
+                Delete the entire scraper from #{hostname},
                 %em data and all.
                 This will leave the repository on GitHub untouched. If you want to delete the repository as well you will need to do that manually on GitHub.
               = button_to scraper, { class: "btn btn-danger", method: :delete, data: { confirm: "Scraper #{scraper.full_name} and its database will be deleted from morph.io. Are you sure you want to delete your scraper?" } } do

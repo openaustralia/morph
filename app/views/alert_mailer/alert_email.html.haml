@@ -206,8 +206,8 @@
                 %tr
                   %td{ align: "center" }
                     %p
-                      Hello and welcome to your morph.io alert email.
-                      You're getting this because you signed up for morph.io and a scraper you're watching has a problem that you might like to fix.
+                      Hello and welcome to your #{hostname} alert email.
+                      You're getting this because you signed up for #{hostname} and a scraper you're watching has a problem that you might like to fix.
                     %p
                       Rather not get these emails?
                       = link_to "You can unwatch scrapers anytime.", watching_user_url(@user, @analytics_params)
@@ -224,7 +224,7 @@
                   %h2
                     -# Hacky way to get full url in there
                     = image_tag attachments["logo_75x75.png"].url, size: "75x75"
-                    = link_to "morph.io", root_url(@analytics_params)
+                    = link_to hostname, root_url(@analytics_params)
                     is letting you know that
 
                   %h3= alert_scrapers_summary_sentence(@successful_scrapers.count, @broken_scrapers.count)
@@ -256,5 +256,5 @@
                   %p
                     Annoyed by these emails? Then
                     = link_to "change what you're watching", watching_user_url(@user, @analytics_params)
-                  %p= link_to "morph.io", root_url(@analytics_params)
+                  %p= link_to hostname, root_url(@analytics_params)
         %td
