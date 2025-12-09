@@ -1,3 +1,4 @@
+# Configuration for production and staging servers.
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -115,17 +116,15 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     :address => (ENV["CUTTLEFISH_SERVER"] || "cuttlefish.io"),
-    :port => 2525,
+    :port => (ENV["CUTTLEFISH_PORT"] || "2525").to_i,
     :user_name => ENV["CUTTLEFISH_USERNAME"],
     :password => ENV["CUTTLEFISH_PASSWORD"],
     :authentication => :plain
    }
 
-  config.action_mailer.default_url_options = { :host => 'morph.io', protocol: "https" }
-
-  # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
   host = ENV.fetch("SERVER_NAME", 'morph.io')
-  config.action_mailer.default_url_options = {  protocol: "https", host: host}
+  config.action_mailer.default_url_options = { :host => host, protocol: "https" }
+  # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 end
 
 # So that the same host setting is available outside the mailer
