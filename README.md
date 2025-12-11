@@ -13,10 +13,11 @@
 
 A development environment is provided using docker compose for the main web development container
 as well as the following required services
-    * elasticsearch
-    * mitmproxy
-    * MySQL
-    * Redis
+
+* elasticsearch
+* mitmproxy
+* MySQL
+* Redis
 
 ## Provisioning using Ansible
 
