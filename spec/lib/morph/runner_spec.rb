@@ -40,7 +40,7 @@ describe Morph::Runner do
       expect(run.database.no_rows).to eq 1
     end
 
-    it "magicallies handle a sidekiq queue restart" do
+    it "magicallies handle a sidekiq queue restart", slow: true do # 1.9 seconds
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
@@ -93,7 +93,7 @@ describe Morph::Runner do
       ]
     end
 
-    it "handles restarting from a stopped container" do
+    it "handles restarting from a stopped container", slow: true do # 2.9 seconds
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
@@ -155,7 +155,7 @@ describe Morph::Runner do
       ]
     end
 
-    it "is able to limit the number of lines of output" do
+    it "is able to limit the number of lines of output", slow: true do # 1.9 seconds
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
@@ -195,7 +195,7 @@ describe Morph::Runner do
     #   expect(subnet).to eq "192.168"
     # end
 
-    it "is able to correctly limit the number of lines even after a restart" do
+    it "is able to correctly limit the number of lines even after a restart", slow: true do # 1.9 seconds
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
@@ -233,7 +233,7 @@ describe Morph::Runner do
 
   # TODO: Test that we can stop the compile stage
   describe ".stop!", docker: true do
-    it "is able to stop a scraper running in a continuous loop" do
+    it "is able to stop a scraper running in a continuous loop", slow: true do # 1.1 seconds
       owner = User.create(nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
