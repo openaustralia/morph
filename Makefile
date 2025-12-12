@@ -119,7 +119,7 @@ rspec: ## Run all rspec tests (Optionally add DONT_RUN_SLOW_TESTS=1 or DONT_RUN_
 	RAILS_ENV=test bundle exec rspec
 
 test: quick-tests ## Run quick test then everything for a full coverage/index.html report
-    RUN_SLOW_TESTS=1 bundle exec rake
+	RUN_SLOW_TESTS=1 bundle exec rake
 	echo Passed all tests!
 
 quick-tests: ## Run quick rspec tests (excludes slow, docker and github tests)
