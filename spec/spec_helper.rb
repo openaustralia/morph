@@ -111,7 +111,7 @@ RSpec.configure do |config|
 
   github_integration_possible = File.exist?(Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH)
 
-  config.filter_run_excluding github: true if ENV["DONT_RUN_GITHUB_TESTS"] && !github_integration_possible
+  config.filter_run_excluding github: true if ENV["DONT_RUN_GITHUB_TESTS"] || !github_integration_possible
   config.filter_run_excluding docker: true if ENV["DONT_RUN_DOCKER_TESTS"]
   config.filter_run_excluding slow: true unless ENV["RUN_SLOW_TESTS"]
 
