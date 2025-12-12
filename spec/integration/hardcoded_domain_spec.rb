@@ -97,7 +97,7 @@ describe "Hardcoded domain references", type: :request do
     sign_in admin
   end
 
-  it "uses hostname helper instead of hardcoded morph.io" do
+  it "uses hostname helper instead of hardcoded morph.io", slow: true do
     routes = Rails.application.routes.routes
                   .select { |r| r.verb =~ /GET/ }
                   .reject { |r| r.path.spec.to_s.start_with?("/admin/jobs") } # sidekiq
@@ -140,12 +140,12 @@ describe "Hardcoded domain references", type: :request do
         html.gsub!(legit_reference, "")
       end
 
-      next unless html.include?("morph.io")
+      next unless html.include?("morph.io") || html.include?("hostname")
 
       # Find context around each occurrence
       matches = []
-      html.scan(/.{0,80}morph\.io.{0,80}/m) do |match|
-        matches << match.gsub(/\s+/, " ").strip
+      html.scan(/(.{0,80}(morph\.io|hostname).{0,80})/m) do |match|
+        matches << match[0].gsub(/\s+/, " ").strip
       end
 
       violations[path] = matches if matches.any?
