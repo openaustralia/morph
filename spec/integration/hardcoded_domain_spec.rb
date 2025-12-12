@@ -140,12 +140,12 @@ describe "Hardcoded domain references", type: :request do
         html.gsub!(legit_reference, "")
       end
 
-      next unless html.include?("morph.io")
+      next unless html.include?("morph.io") || html.include?("hostname")
 
       # Find context around each occurrence
       matches = []
-      html.scan(/.{0,80}morph\.io.{0,80}/m) do |match|
-        matches << match.gsub(/\s+/, " ").strip
+      html.scan(/(.{0,80}(morph\.io|hostname).{0,80})/m) do |match|
+        matches << match[0].gsub(/\s+/, " ").strip
       end
 
       violations[path] = matches if matches.any?
