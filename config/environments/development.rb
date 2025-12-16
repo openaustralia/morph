@@ -70,8 +70,8 @@ Rails.application.configure do
   # Send mail via Mailcatcher and raise an error if there is a problem
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-  config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
+  config.action_mailer.default_url_options = { protocol: "http", host: "localhost:3000" }
+  config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
   # To test sending via Gmail comment out line above and uncomment lines below
   # config.action_mailer.smtp_settings = {
   #   address: "smtp.gmail.com",

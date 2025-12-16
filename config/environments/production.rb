@@ -123,7 +123,8 @@ Rails.application.configure do
    }
 
   host = ENV.fetch("SERVER_NAME", 'morph.io')
-  config.action_mailer.default_url_options = { :host => host, protocol: "https" }
+  config.action_mailer.default_url_options = { host: host, protocol: "https" }
+  # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 end
 
 # So that the same host setting is available outside the mailer

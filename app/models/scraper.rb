@@ -40,6 +40,9 @@
 class Scraper < ApplicationRecord
   extend T::Sig
 
+  # Make skipping GitHub validations an explicit choice
+  class_attribute :skip_github_validations, default: -> { Rails.env.test? }
+
   include RenderSync::Actions
   # Using smaller batch_size than the default for the time being because
   # reindexing causes elasticsearch on the local VM to run out of memory
@@ -375,15 +378,15 @@ class Scraper < ApplicationRecord
 
   sig { void }
   def not_used_on_github
-    return if Rails.env.test?
-    return unless Octokit.client.repository?(full_name)
+    return if self.class.skip_github_validations ||
+              !Octokit.client.repository?(full_name)
 
     errors.add(:name, "is already taken on GitHub")
   end
 
   sig { void }
   def app_installed_on_owner
-    return if Rails.env.test?
+    return if self.class.skip_github_validations
 
     installation = Morph::GithubAppInstallation.new(T.must(T.must(owner).nickname))
     return if installation.installed?
@@ -402,8 +405,7 @@ class Scraper < ApplicationRecord
   # on creation and we need to check that the GitHub Morph application has access to the specific repository
   sig { void }
   def app_has_access_to_repo
-    return if Rails.env.test?
-    return if github_id.blank?
+    return if self.class.skip_github_validations || github_id.blank?
 
     installation = Morph::GithubAppInstallation.new(T.must(T.must(owner).nickname))
     error = installation.confirm_has_access_to(name)

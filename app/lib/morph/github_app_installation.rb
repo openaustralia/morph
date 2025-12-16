@@ -102,6 +102,10 @@ module Morph
       [result, nil]
     end
 
+    # :nocov:
+    # These methods mix GitHub API calls with Git filesystem operations and require
+    # dedicated integration tests with proper setup/teardown. Not suitable for unit tests.
+
     # TODO: Wouldn't it make sense to pass the base repo path, the repo name and instead work out the git_url_https from that?
     sig { params(repo_path: String, git_url_https: String).returns(T.nilable(T.any(NoAppInstallationForOwner, SynchroniseRepoError))) }
     def synchronise_repo(repo_path, git_url_https)
@@ -144,6 +148,9 @@ module Morph
              end
       [repo, nil]
     end
+
+    # End of coverage exclusion region
+    # :nocov:
 
     # Returns nicknames of github users who have contributed to a particular repo
     sig { params(repo_name: String).returns([T::Array[String], T.nilable(T.any(NoAccessToRepo, NoAppInstallationForOwner))]) }

@@ -2,6 +2,12 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+// Rails 6.0 needs explicit import of variables and mixins
+@import "variables";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "tablesaw.stackonly";
+
 .pricing {
   margin-top: 4em;
   margin-bottom: 2em;

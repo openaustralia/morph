@@ -1,6 +1,6 @@
 .container
   .sign_in
     %p
-      Everything on morph.io is hooked into GitHub. If you don't have a GitHub account you will need to register one.
+      Everything on #{hostname} is hooked into GitHub. If you don't have a GitHub account you will need to register one.
     %p
       = link_to "Sign in with GitHub", user_github_omniauth_authorize_path, class: "btn btn-primary btn-lg"
