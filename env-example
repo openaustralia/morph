@@ -56,12 +56,12 @@ MORPH_URL=http://localhost:3000
 # Ansible will set SERVER_NAME in the .env file for you
 
 # In development you can run elasticsearch on docker very easily which means
-# you don't have to install it.
-# Just use: docker-compose up
+# you don't have to install it. Use
+# SERVICES=elasticsearch make services-up
 # Then, point it at the right place. You can get the ip address of docker
 # by running: docker-machine ip
-# If you're on Linux you can probably comment the line below out
-ELASTICSEARCH_URL=http://192.168.99.100:9200
+# If you're on Linux you probably dont need the line below 
+# ELASTICSEARCH_URL=http://192.168.99.100:9200
 
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
