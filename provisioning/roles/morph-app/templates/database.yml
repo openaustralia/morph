@@ -1,6 +1,6 @@
 {{ rails_env }}:
   adapter: mysql2
-  database: morph
+  database: morph{% if rails_env != 'production' %}_{{ rails_env }}{% endif %}
   username: morph
   password: {{ mysql_password }}
   # This is required for sidekiq
