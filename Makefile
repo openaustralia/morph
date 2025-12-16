@@ -1,10 +1,13 @@
 .PHONY: all clean deploy help lint \
         production-deploy production-provision provision \
         roles services-down services-up \
+	staging-anible staging-deploy staging-provision \
         share-web test up vagrant-plugins venv
 VENV := .venv/bin
 SHELL := /bin/bash
 PYTHON_VERSION := $(shell cat .python-version 2>/dev/null || echo "python3")
+# So inventory uses .venv
+export PATH := $(CURDIR)/$(VENV):$(PATH)
 
 all: help
 
@@ -21,6 +24,29 @@ roles: provisioning/.roles-installed
 provisioning/.roles-installed: venv provisioning/requirements.yml
 	${VENV}/ansible-galaxy install -r provisioning/requirements.yml -p provisioning/roles
 	touch provisioning/.roles-installed
+
+ANSIBLE_TAGS := $(shell echo "$(TAGS)" | sed 's/[^A-Z0-9_]\+/,/gi' | sed 's/,\+/,/g' | sed 's/^,//' | sed 's/,$$//')
+ANSIBLE_SKIP_TAGS := $(shell echo "$(SKIP_TAGS)" | sed 's/[^A-Z0-9_]\+/,/gi' | sed 's/,\+/,/g' | sed 's/^,//' | sed 's/,$$//')
+ANSIBLE_START_TASK := $(if $(START_AT_TASK),*$(shell echo "$(START_AT_TASK)" | sed 's/[^A-Z0-9_]\+/*/gi')*,)
+
+# Build ansible-playbook options just like Vagrantfile
+ANSIBLE_OPTS :=
+ifdef ANSIBLE_TAGS
+ANSIBLE_OPTS += --tags "$(ANSIBLE_TAGS)"
+$(info INFO: Only running TAGS: $(ANSIBLE_TAGS))
+endif
+ifdef ANSIBLE_SKIP_TAGS
+ANSIBLE_OPTS += --skip-tags "$(ANSIBLE_SKIP_TAGS)"
+$(info INFO: Skipping TAGS: $(ANSIBLE_SKIP_TAGS))
+endif
+ifdef ANSIBLE_VERBOSE
+ANSIBLE_OPTS += -$(ANSIBLE_VERBOSE)
+$(info INFO: Setting verbose: -$(ANSIBLE_VERBOSE))
+endif
+ifdef ANSIBLE_START_TASK
+ANSIBLE_OPTS += --start-at-task "$(ANSIBLE_START_TASK)"
+$(info INFO: Starting at task matching: $(ANSIBLE_START_TASK))
+endif
 
 help: ## This help dialog.
 	@IFS=$$'\n' ; \
@@ -55,11 +81,17 @@ vagrant-up: venv roles vagrant-plugins ## launch local vagrant VM
 vagrant-provision: venv roles vagrant-plugins ## Provision local vagrant VM using ansible
 	vagrant provision local
 
+staging-provision: venv roles ## Provision staging using ansible
+	${VENV}/ansible-playbook --user=root $(ANSIBLE_OPTS) --inventory-file=provisioning/inventory/staging.py provisioning/playbook.yml
+
 production-provision: venv roles ## Provision production using ansible
-	${VENV}/ansible-playbook --user=root --inventory-file=provisioning/hosts provisioning/playbook.yml
+	${VENV}/ansible-playbook --user=root $(ANSIBLE_OPTS) --inventory-file=provisioning/inventory/production provisioning/playbook.yml
 
 vagrant-deploy: ## Deploy app to local vagrant VM
 	bundle exec cap local deploy
+
+staging-deploy: ## Deploy app to staging
+	bundle exec cap staging deploy
 
 production-deploy: ## Deploy app to production
 	bundle exec cap production deploy
@@ -103,3 +135,5 @@ docker-clean: services-down ## Remove all Docker resources INCLUDING databases i
 share-web: ## Share web server on port 3000 to the internet (use PORT=N to use an alternative port)
 	ngrok http ${PORT:-3000}
 
+mailcatcher: ## run mailcatcher to catch development emails
+	bundle exec mailcatcher

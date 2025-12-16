@@ -107,8 +107,10 @@
 - name: Create log directory
   file: path=/var/log/morph owner=deploy group=deploy state=directory
 
-- name: Ensure Procfile.production copied
-  copy: src=../Procfile.production dest=/home/deploy/Procfile.production
+- name: Ensure Procfile.RAILS_ENV is copied
+  copy:
+    src: "../Procfile.{{ rails_env }}"
+    dest: "/home/deploy/Procfile.{{ rails_env }}"
   notify: Export to systemd
 
 - name: Create sudoers ready for testing
@@ -155,15 +157,15 @@
 
 # TODO: Use special_time (or at least look at using it)
 - name: Setting daily cron job for 10:00am
-  cron: name="daily scraping" hour=10 minute=0 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:auto_run_scrapers RAILS_ENV=production"
+  cron: name="daily scraping" hour=10 minute=0 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:auto_run_scrapers RAILS_ENV={{ rails_env }}"
   when: cron_jobs
 
 - name: Setting cron job for sending out email alerts for 11:30am
-  cron: name="email alerts" hour=11 minute=30 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:send_alerts RAILS_ENV=production"
+  cron: name="email alerts" hour=11 minute=30 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:send_alerts RAILS_ENV={{ rails_env }}"
   when: cron_jobs
 
 - name: Cron job to generate xml sitemaps at 4pm
-  cron: name="xml sitemaps" hour=16 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake sitemap:refresh RAILS_ENV=production"
+  cron: name="xml sitemaps" hour=16 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake sitemap:refresh RAILS_ENV={{ rails_env }}"
   when: cron_jobs
 
 - name: Do daily reindex of elasticsearch at 6am in case things get out of sync
@@ -172,19 +174,19 @@
     hour: 6
     minute: 0
     user: deploy
-    job: "cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake searchkick:reindex:all RAILS_ENV=production"
+    job: "cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake searchkick:reindex:all RAILS_ENV={{ rails_env }}"
     state: present
   when: cron_jobs
 
 - name: Once an hour check whether to stop scraper containers that have been running too long
-  cron: name="stop long-running" minute="0" user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:stop_long_running_scrapers RAILS_ENV=production"
+  cron: name="stop long-running" minute="0" user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:stop_long_running_scrapers RAILS_ENV={{ rails_env }}"
   when: cron_jobs
 
 - name: Hourly tidy up of Docker images and containers
   cron:
     name: "Docker Tidy Up"
     user: deploy
-    job: "cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:docker_tidy_up RAILS_ENV=production"
+    job: "cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:docker_tidy_up RAILS_ENV={{ rails_env }}"
     special_time: hourly
   when: cron_jobs
 

@@ -1,3 +1,4 @@
+# provisioning/group_vars/all.yml
 ---
 github_users:
   - 'br3nda'
@@ -27,7 +28,7 @@ apt_packages:
   - zlib1g-dev
 
 bash_alias_lines:
-  - "alias cdmorph='if [ \"$USER\" = \"deploy\" ]; then cd /var/www/current; export RAILS_ENV=production; env | egrep RAILS_ENV; else cd /vagrant ; echo \"development. sudo -u deploy -i for production!\"; fi'"
+  - "alias cdmorph='if [ \"$USER\" = \"deploy\" ]; then cd /var/www/current; export RAILS_ENV={{ rails_env }}; env | egrep RAILS_ENV; else cd /vagrant ; echo \"development. sudo -u deploy -i for {{ rails_env }}!\"; fi'"
   - 'alias be="bundle exec"'
   - 'alias r="bundle exec rails"'
   - 'alias rk="bundle exec rake"'
@@ -49,3 +50,10 @@ backup_target_pass: !vault |
           36633564363330363263313533613732376331643266643162626163323539336266636133656234
           3763363366316632356436656661643434313239613731643436
 
+discourse_secret: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  35613134643166653739316537353561353863393561383162663638353334363839623832656233
+  3237353565336361373435363161303136623437363030390a356465623734353830363166623363
+  31646237356536386162316363373663366635666631373432326563663930656438653437653762
+  3035316137633564320a633833373264616239663162643365313565313265626135383265653037
+  32316538303439313962613362653734313837616364343530383265326438356639
