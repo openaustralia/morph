@@ -13,6 +13,13 @@ production:
   adapter: "Faye"
   async: true
 
+staging:
+  server: "http://localhost:9292/faye"
+  adapter_javascript_url: "http://localhost:9292/faye/faye.js"
+  auth_token: <%= ENV['SYNC_AUTH_TOKEN'] %>
+  adapter: "Faye"
+  async: true
+
 # Pusher
 # development:
 #   adapter_javascript_url: "http://js.pusher.com/2.0/pusher.min.js"

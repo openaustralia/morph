@@ -1,4 +1,4 @@
-production:
+{{ rails_env }}:
   adapter: mysql2
   database: morph
   username: morph
