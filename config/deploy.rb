@@ -2,6 +2,7 @@
 
 set :application, "morph"
 set :repo_url, "https://github.com/openaustralia/morph.git"
+set :rvm_ruby_version, File.read('.ruby-version').strip
 
 expected_repos = %w[git@github.com:openaustralia/morph.git https://github.com/openaustralia/morph.git]
 current_repo = `git config --get remote.origin.url`.strip

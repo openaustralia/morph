@@ -1,23 +1,18 @@
 require_relative 'boot'
 
-# require 'rails/all' # clean-up deprecation warnings by excluding unused modules with autoload in initialization issues
-
-require 'rails'
-
-# Loaded in the same order as rails/all
-require "active_record/railtie"  # ActiveRecord Used (18 files)
-# require "active_storage/engine"  # ActiveStorage Not used nor in schema.rb
-require "action_controller/railtie"  # ActionController Used (6 files)
-require "action_view/railtie"  # ActionView Used (13 files)
-require "action_mailer/railtie"  # ActionMailer Used (4 files)
-require "active_job/railtie"  # ActiveJob used by sidekiq
-# require "action_cable/engine"  # ActionCable Not used (faye/render_sync use their own)
-require "action_mailbox/engine"  # ActionMailbox Not directly referenced BUT required for tests to work
-# require "action_text/engine"  # ActionText Not used - excluding 
-# require "rails/test_unit/railtie"  # TestUnit Not used (we use spec instead) ####
-require "sprockets/railtie"  # Sprockets Used (1 files)
-
-# require "active_model/railtie"  # ActiveModel used for validations
+require "rails"
+# Pick the frameworks you want:
+require "active_model/railtie"
+require "active_job/railtie"
+require "active_record/railtie"
+# require "active_storage/engine"
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "action_mailbox/engine"
+# require "action_text/engine"
+require "action_view/railtie"
+# require "action_cable/engine"
+# require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -26,11 +21,18 @@ Bundler.require(*Rails.groups)
 module Morph
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 7.0
 
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration can go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded after loading
-    # the framework and any gems in your application.
+    # Configuration for the application, engines, and railties goes here.
+    #
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
+    #
+    # config.time_zone = "Central Time (US & Canada)"
+    # config.eager_load_paths << Rails.root.join("extras")
+
+    # TODO: Remove this when we're ready to test any ajax calls
+    # Don't generate system test files.
+    config.generators.system_tests = nil
   end
 end

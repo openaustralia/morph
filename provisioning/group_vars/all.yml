@@ -10,7 +10,7 @@ github_users:
   - 'benrfairless'
 ruby_version: "{{ lookup('file', '../.ruby-version') | trim }}"
 #python_version: "{{ lookup('file', '../.python-version') | trim }}"
-bundler_version: 2.1.4
+bundler_version: 2.2.33
 apt_packages:
   - cmake
   - language-pack-en

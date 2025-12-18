@@ -29,7 +29,7 @@ RSpec.describe Webhook, type: :model do
     it "requires a url" do
       webhook = described_class.new(scraper: scraper)
       expect(webhook).not_to be_valid
-      expect(webhook.errors.keys).to eq([:url])
+      expect(webhook.errors.attribute_names).to eq([:url])
     end
 
     it "does not allow duplicate webhooks for the same scraper" do
