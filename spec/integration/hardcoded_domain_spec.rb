@@ -97,7 +97,7 @@ describe "Hardcoded domain references", type: :request do
     sign_in admin
   end
 
-  it "uses hostname helper instead of hardcoded morph.io" do
+  it "uses hostname helper instead of hardcoded morph.io", slow: true do # 11.4 seconds
     routes = Rails.application.routes.routes
                   .select { |r| r.verb =~ /GET/ }
                   .reject { |r| r.path.spec.to_s.start_with?("/admin/jobs") } # sidekiq

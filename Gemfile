@@ -5,11 +5,12 @@
 
 source "https://rubygems.org"
 
-ruby "2.7.6"
+ruby "3.0.7"
 
 gem "dotenv-rails"
 
-gem "rails", "6.0.6.1"
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem "rails", "7.1.5.2"
 
 gem "mysql2"
 gem "sqlite3"
@@ -48,7 +49,7 @@ gem "sidekiq-limit_fetch"
 
 gem "simple_form"
 # gem 'jquery-turbolinks'
-gem "archive-tar-minitar"
+gem "minitar"
 
 # We're currently only supporting the plain text, markdown and textile
 # markups for the README. If we want more then we need to install some
@@ -65,7 +66,7 @@ gem "haml-coderay"
 gem "honeybadger"
 gem "kaminari"
 gem "kaminari-bootstrap", "~> 3.0.1"
-gem "meta-tags"
+gem 'meta-tags', '~> 2.18'
 gem "multiblock"
 gem "rails_autolink"
 gem "rails-timeago", "~> 2.0"
@@ -75,7 +76,7 @@ gem "sitemap_generator"
 gem "zeroclipboard-rails"
 
 # For the administration interface
-gem "activeadmin"
+gem "activeadmin", "~> 3.2"
 
 gem "faye"
 gem "puma"
@@ -194,8 +195,11 @@ gem "jquery-ui-rails", "~> 5"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder"
 
-# Force loading the latest security patch
+# We're only including sprockets here so we can lock it to an older version
+# For upgrading: https://github.com/rails/sprockets/blob/070fc01947c111d35bb4c836e9bb71962a8e0595/UPGRADING.md#manifestjs
+# TODO: Upgrade to sprockets version 4 and remove the line below
 gem "sprockets", "~> 4.0"
+gem "sprockets-rails"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

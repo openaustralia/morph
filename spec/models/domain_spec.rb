@@ -7,7 +7,7 @@
 #
 #  id         :integer          not null, primary key
 #  meta       :text(65535)
-#  name       :string(255)      default(""), not null
+#  name       :string(255)      not null
 #  title      :text(65535)
 #  created_at :datetime
 #  updated_at :datetime

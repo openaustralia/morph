@@ -28,7 +28,7 @@ describe Morph::DockerRunner do
       end
     end
 
-    it "lets me know that it can't select a buildpack" do
+    it "lets me know that it can't select a buildpack", slow: true do # 5.12 seconds
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end
@@ -46,7 +46,7 @@ describe Morph::DockerRunner do
         .to eq container_count
     end
 
-    it "stops if a python compile fails" do
+    it "stops if a python compile fails", slow: true do # 5.2 seconds
       copy_test_scraper("failing_compile_python")
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
         docker_output  << [stream, text]
@@ -100,7 +100,7 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run python example" do
+    it "is able to run python example", slow: true do # 7.2 seconds
       copy_example_scraper("python")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
@@ -197,7 +197,7 @@ describe Morph::DockerRunner do
       c.delete
     end
 
-    it "is not able to run hello world from a sub-directory" do
+    it "is not able to run hello world from a sub-directory", slow: true do
       copy_test_scraper("hello_world_subdirectory_js")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
