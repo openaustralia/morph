@@ -16,7 +16,7 @@ SimpleCov.start "rails" do
   track_files "**/*.rb"
   # Filter coverage to relevant files when running specific specs
   if ENV["SPEC"]
-    require 'active_support/inflector'
+    require "active_support/inflector"
 
     # Extract base names from spec files (strip _spec.rb and type suffixes)
     base_names = ENV["SPEC"].scan(%r{/([^/\s]+)_spec.*\.rb}).flatten.flat_map do |name|
