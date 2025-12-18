@@ -82,41 +82,42 @@ RSpec.describe OwnersController, type: :controller do
     end
 
     context "with scrapers in different states" do
+      let(:running_scraper) { create(:scraper, owner: user) }
+      let(:erroring_scraper) { create(:scraper, owner: user) }
+      let(:other_scraper) { create(:scraper, owner: user) }
+
       before do
         sign_in user
-        @running = create(:scraper, owner: user)
-        @erroring = create(:scraper, owner: user)
-        @other = create(:scraper, owner: user)
 
-        allow(@running).to receive(:running?).and_return(true)
-        allow(@running).to receive(:requires_attention?).and_return(false)
+        allow(running_scraper).to receive(:running?).and_return(true)
+        allow(running_scraper).to receive(:requires_attention?).and_return(false)
 
-        allow(@erroring).to receive(:running?).and_return(false)
-        allow(@erroring).to receive(:requires_attention?).and_return(true)
+        allow(erroring_scraper).to receive(:running?).and_return(false)
+        allow(erroring_scraper).to receive(:requires_attention?).and_return(true)
 
-        allow(@other).to receive(:running?).and_return(false)
-        allow(@other).to receive(:requires_attention?).and_return(false)
+        allow(other_scraper).to receive(:running?).and_return(false)
+        allow(other_scraper).to receive(:requires_attention?).and_return(false)
 
         allow(Scraper).to receive_message_chain(:accessible_by, :where)
-          .and_return([@running, @erroring, @other])
+                            .and_return([running_scraper, erroring_scraper, other_scraper])
       end
 
       it "separates running scrapers" do
         pending("FIXME: The view is broken, and has been for a while in production")
         get :show, params: { id: user.nickname }
-        expect(assigns(:running_scrapers)).to eq([@running])
+        expect(assigns(:running_scrapers)).to eq([running_scraper])
       end
 
       it "separates erroring scrapers" do
         pending("FIXME: The view is broken, and has been for a while in production")
         get :show, params: { id: user.nickname }
-        expect(assigns(:erroring_scrapers)).to eq([@erroring])
+        expect(assigns(:erroring_scrapers)).to eq([erroring_scraper])
       end
 
       it "separates other scrapers" do
         pending("FIXME: The view is broken, and has been for a while in production")
         get :show, params: { id: user.nickname }
-        expect(assigns(:other_scrapers)).to eq([@other])
+        expect(assigns(:other_scrapers)).to eq([other_scraper])
       end
     end
 
@@ -203,7 +204,7 @@ RSpec.describe OwnersController, type: :controller do
         expect do
           post :reset_key, params: { id: user.nickname }
           user.reload
-        end.to(change { user.api_key })
+        end.to change(user, :api_key)
       end
     end
 

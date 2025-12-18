@@ -286,7 +286,7 @@ RSpec.describe DiscourseSsoController, type: :controller do
       end
     end
 
-    context "signature validation" do
+    context "when validating signatures" do
       let(:user) { create(:user) }
 
       before { sign_in user }

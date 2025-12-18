@@ -113,7 +113,7 @@ RSpec.describe SearchController, type: :controller do
       end
     end
 
-    context "authorization filtering" do
+    context "when filtering by authorization" do
       before { sign_in user }
 
       it "only searches scrapers accessible by current ability" do
@@ -130,7 +130,7 @@ RSpec.describe SearchController, type: :controller do
       end
     end
 
-    context "search parameters" do
+    context "with search parameters" do
       before { sign_in user }
 
       it "configures owner search with correct highlight fields" do

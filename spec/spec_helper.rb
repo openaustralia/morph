@@ -26,7 +26,7 @@ SimpleCov.start "rails" do
 
     # Only show coverage for files matching these base names
     add_filter do |src|
-      base_names.none? { |name| src.filename.include?("#{name}") }
+      base_names.none? { |name| src.filename.include?(name.to_s) }
     end
   else
     SimpleCov.minimum_coverage 66 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
@@ -45,7 +45,7 @@ require "rspec/sorbet"
 # Commented out for the benefit of zeus
 # require 'rspec/autorun'
 
-# Requires supporting ruby files with custom matchers and macros, etc,
+# Requires supporting ruby files with custom matchers and macros, etc.
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 

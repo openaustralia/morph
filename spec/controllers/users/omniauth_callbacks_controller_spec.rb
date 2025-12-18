@@ -52,9 +52,9 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       allow(RefreshUserOrganizationsWorker).to receive(:perform_async)
 
       # Stub the flash partial rendering to avoid view rendering issues in controller tests
-      allow_any_instance_of(Users::OmniauthCallbacksController).to receive(:render_to_string)
-                                                                     .with(partial: "users/sign_in_message")
-                                                                     .and_return("Welcome! You have signed in successfully.")
+      allow_any_instance_of(described_class).to receive(:render_to_string)
+                                                  .with(partial: "users/sign_in_message")
+                                                  .and_return("Welcome! You have signed in successfully.")
     end
 
     after do
@@ -92,7 +92,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         get :github
 
         user = User.find_by(nickname: nickname)
-        # Verify user is watching themselves (watch_all_owners behavior)
+        # Verify a user is watching themselves (watch_all_owners behaviour)
         expect(user.watching?(user)).to be true
       end
 
@@ -257,7 +257,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       end
     end
 
-    context "edge cases" do
+    context "with edge cases" do
       it "handles user with minimal GitHub profile" do
         minimal_github_data = Morph::Github::Owner.new(
           login: nickname,
