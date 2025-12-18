@@ -14,7 +14,23 @@ SimpleCov.start "rails" do
     ]
   )
   track_files "**/*.rb"
-  SimpleCov.minimum_coverage 53 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
+  # Filter coverage to relevant files when running specific specs
+  if ENV["SPEC"]
+    require 'active_support/inflector'
+
+    # Extract base names from spec files (strip _spec.rb and type suffixes)
+    base_names = ENV["SPEC"].scan(%r{/([^/\s]+)_spec.*\.rb}).flatten.flat_map do |name|
+      base = name.sub(/_controller$/, "").sub(/_helper$/, "")
+      [base, base.singularize, base.pluralize].uniq
+    end
+
+    # Only show coverage for files matching these base names
+    add_filter do |src|
+      base_names.none? { |name| src.filename.include?("#{name}") }
+    end
+  else
+    SimpleCov.minimum_coverage 53 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
+  end
   add_filter %r{^/spec/}
   add_filter "/vendor/"
 end
