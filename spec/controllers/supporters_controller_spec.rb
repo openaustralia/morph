@@ -36,7 +36,7 @@ RSpec.describe SupportersController, type: :controller do
 
     it "loads the Stripe library" do
       get :index
-      expect(assigns(:load_stripe_library)).to eq(true)
+      expect(assigns(:load_stripe_library)).to be(true)
     end
   end
 
@@ -68,7 +68,7 @@ RSpec.describe SupportersController, type: :controller do
 
     it "loads the Stripe library" do
       get :new
-      expect(assigns(:load_stripe_library)).to eq(true)
+      expect(assigns(:load_stripe_library)).to be(true)
     end
   end
 
@@ -113,7 +113,7 @@ RSpec.describe SupportersController, type: :controller do
 
       it "sets new_supporter session flag" do
         post :create, params: valid_params
-        expect(session[:new_supporter]).to eq(true)
+        expect(session[:new_supporter]).to be(true)
       end
 
       it "redirects to user profile" do
@@ -196,7 +196,7 @@ RSpec.describe SupportersController, type: :controller do
 
       it "sets new_supporter session flag" do
         post :create_one_time, params: valid_params
-        expect(session[:new_supporter]).to eq(true)
+        expect(session[:new_supporter]).to be(true)
       end
 
       it "redirects to user profile" do
@@ -265,7 +265,7 @@ RSpec.describe SupportersController, type: :controller do
 
     it "sets new_supporter session flag" do
       patch :update, params: update_params
-      expect(session[:new_supporter]).to eq(true)
+      expect(session[:new_supporter]).to be(true)
     end
 
     it "redirects to user profile" do
@@ -285,7 +285,7 @@ RSpec.describe SupportersController, type: :controller do
       it "sets @load_stripe_library to true" do
         sign_in user
         get :index
-        expect(assigns(:load_stripe_library)).to eq(true)
+        expect(assigns(:load_stripe_library)).to be(true)
       end
     end
   end

@@ -117,7 +117,7 @@ RSpec.describe SearchController, type: :controller do
       before { sign_in user }
 
       it "only searches scrapers accessible by current ability" do
-        scraper2 = create(:scraper)
+        create(:scraper)
         accessible_scrapers = Scraper.where(id: [scraper.id])
         allow(Scraper).to receive(:accessible_by).and_return(accessible_scrapers)
 

@@ -47,7 +47,7 @@ RSpec.describe DiscourseSsoController, type: :controller do
       it "successfully redirects to Discourse" do
         params = create_valid_sso_payload
         get :sso, params: params
-        expect(response).to redirect_to(/discourse\.example\.com\/session\/sso_login/)
+        expect(response).to redirect_to(%r{discourse\.example\.com/session/sso_login})
       end
 
       it "returns redirect response" do

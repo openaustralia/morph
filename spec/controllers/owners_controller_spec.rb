@@ -37,14 +37,14 @@ RSpec.describe OwnersController, type: :controller do
         sign_in user
         session[:new_supporter] = true
         get :show, params: { id: user.nickname }
-        expect(assigns(:new_supporter)).to eq(true)
+        expect(assigns(:new_supporter)).to be(true)
       end
 
       it "clears new_supporter flag after showing" do
         sign_in user
         session[:new_supporter] = true
         get :show, params: { id: user.nickname }
-        expect(session[:new_supporter]).to eq(false)
+        expect(session[:new_supporter]).to be(false)
       end
 
       it "assigns other_scrapers_contributed_to for users" do
@@ -98,7 +98,7 @@ RSpec.describe OwnersController, type: :controller do
         allow(@other).to receive(:requires_attention?).and_return(false)
 
         allow(Scraper).to receive_message_chain(:accessible_by, :where)
-                            .and_return([@running, @erroring, @other])
+          .and_return([@running, @erroring, @other])
       end
 
       it "separates running scrapers" do
@@ -203,7 +203,7 @@ RSpec.describe OwnersController, type: :controller do
         expect do
           post :reset_key, params: { id: user.nickname }
           user.reload
-        end.to change { user.api_key }
+        end.to(change { user.api_key })
       end
     end
 
