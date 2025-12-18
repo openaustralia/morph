@@ -29,7 +29,7 @@ SimpleCov.start "rails" do
       base_names.none? { |name| src.filename.include?("#{name}") }
     end
   else
-    SimpleCov.minimum_coverage 53 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
+    SimpleCov.minimum_coverage 66 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
   end
   add_filter %r{^/spec/}
   add_filter "/vendor/"
