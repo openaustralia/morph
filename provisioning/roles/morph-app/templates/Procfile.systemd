@@ -1,0 +1,2 @@
+worker: bash -c "until [ -e config/sidekiq.yml ]; do sleep 5; done; exec rvm . do bundle exec sidekiq -C config/sidekiq.yml -e {{ rails_env }}"
+faye: bash -c "until [ -e sync.ru ]; do sleep 5; done; exec rvm . do bundle exec dotenv rackup sync.ru -E {{ rails_env }}"

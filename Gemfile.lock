@@ -730,6 +730,7 @@ DEPENDENCIES
   d3-rails (~> 3.5)
   dalli
   database_cleaner
+  date
   devise
   docker-api
   dotenv-rails

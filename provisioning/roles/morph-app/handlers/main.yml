@@ -2,16 +2,8 @@
 - name: restart nginx
   service: name=nginx state=restarted
 
-- name: Update timezone
-  command: dpkg-reconfigure --frontend noninteractive tzdata
-
 - name: Test sudoers and make it live
   shell: visudo -c -f /etc/sudoers.d/deploy.test && cp -f /etc/sudoers.d/deploy.test /etc/sudoers.d/deploy
-
-- name: Export to systemd
-  command: "foreman export --user deploy --app morph --procfile /home/deploy/Procfile.{{ rails_env }} --root /var/www/current --concurrency worker=2,faye=1 systemd /etc/systemd/system"
-  become: yes
-  notify: Restart morph service
 
 - name: Restart morph service
   systemd: name=morph.target daemon_reload=yes enabled=yes state=restarted

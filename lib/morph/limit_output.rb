@@ -19,7 +19,7 @@ OptionParser.new do |opts|
   if ARGV[0].nil?
     STDERR.puts "Please give me the maximum number of lines of output to show"
     puts opts
-    exit(1)
+    exit 1
   end
 
   command = ARGV[1]

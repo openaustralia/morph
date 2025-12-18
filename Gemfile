@@ -184,7 +184,7 @@ gem "coffee-rails"
 
 # Use jquery as the JavaScript library
 gem "jquery-rails"
-# Hold back jquery-ui-rails. We get Sprockets::FileNotFound with newer version
+# Hold back jquery-ui-rails. We get Sprockets::FileNotFound with a newer version
 gem "jquery-ui-rails", "~> 5"
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -201,6 +201,9 @@ group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem "sdoc", require: false
 end
+
+# Default gems that need explicit inclusion for deployment
+gem "date"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'

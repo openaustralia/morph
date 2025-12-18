@@ -143,9 +143,18 @@ Which names would you like to activate HTTPS for?
 
 Leave your answer your blank which will install the certificate for all of them
 
-### Installing certificates for local vagrant build
+### Installing certificates for local vagrant VM
+
+    vagrant ssh
 
     sudo certbot certonly --manual -d dev.morph.io --preferred-challenges dns -d api.dev.morph.io -d faye.dev.morph.io -d help.dev.morph.io
+
+You will need admin permission for the morph.io domain to add TXT entries for
+
+* _acme-challenge.api.dev.morph.io
+* _acme-challenge.dev.morph.io
+* _acme-challenge.faye.dev.morph.io
+* _acme-challenge.help.dev.morph.io
 
 ### Scraper<->mitmdump SSL
 

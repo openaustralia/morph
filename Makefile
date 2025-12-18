@@ -104,13 +104,13 @@ ci-services-up:
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml up --build -d redis elasticsearch
 
 services-up: ## Run up services with persistent data (use SERVICES="redis elasticsearch" to exclude mysql)
-	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml -f docker_images/persistent_services.yaml up --build -d ${SERVICES}
+	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml -f docker_images/persistent_services.yaml up --build -d $${SERVICES}
 
 services-down: ## Close down services required for CI / development
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml down --remove-orphans
 
 services-logs: ## View logs for services (use SERVICES=elasticsearch for specific service)
-	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml logs $(SERVICES)
+	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml logs $${SERVICES}
 
 services-status: ## Check status of services
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml ps
@@ -133,7 +133,7 @@ docker-clean: services-down ## Remove all Docker resources INCLUDING databases i
 	docker system prune -af --volumes
 
 share-web: ## Share web server on port 3000 to the internet (use PORT=N to use an alternative port)
-	ngrok http ${PORT:-3000}
+	ngrok http $${PORT:-3000}
 
 mailcatcher: ## run mailcatcher to catch development emails
 	bundle exec mailcatcher

@@ -5,6 +5,7 @@ server {
   error_log /var/log/nginx/morph.error.log;
   root /var/www/current/public;
   passenger_enabled on;
+  passenger_app_env "{{ rails_env }}";
   passenger_ruby /home/deploy/.rvm/gems/ruby-{{ ruby_version }}/wrappers/ruby;
   passenger_max_request_queue_size 300;
 

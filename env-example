@@ -9,9 +9,11 @@
 # Code Development and provisioning staging and development (vagrant)
 
 # We're using Cuttlefish to send mail in production and mailpit to catch mail on staging servers
+# (and mailcatcher locally on development systems which is hard coded)
 # Setting .env on the local machine affects the .env provisioned for vagrant or staging machines
 # but not production
 #CUTTLEFISH_SERVER=cuttlefish.oaf.org.au
+#CUTTLEFISH_SERVER=mailpit.your.domain
 #CUTTLEFISH_PORT=2525
 # Username and password is required by Cuttlefish but not mailpit
 # CUTTLEFISH_USERNAME=xxxxxxx
@@ -44,20 +46,22 @@ DISCOURSE_URL=http://discuss.dev.morph.io
 MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
 MORPH_URL=http://localhost:3000
 
-# Set if you are deploying to staging
-#STAGING_HOSTNAME=morph.your.domain
+# Used by capistrano for deployment and ansible playbook in provisioning
+# Required if you are deploying to staging
+#STAGING_HOSTNAME=morph-staging.your.domain
+
 # Required if STAGING_HOSTNAME points to a CDN: set to the actual ip address of the server
 #STAGING_DEPLOY_TO=server-ip-address
 
 # Ansible will set SERVER_NAME in the .env file for you
 
 # In development you can run elasticsearch on docker very easily which means
-# you don't have to install it.
-# Just use: docker-compose up
+# you don't have to install it. Use
+# SERVICES=elasticsearch make services-up
 # Then, point it at the right place. You can get the ip address of docker
 # by running: docker-machine ip
-# If you're on Linux you can probably comment the line below out
-ELASTICSEARCH_URL=http://192.168.99.100:9200
+# If you're on Linux you probably dont need the line below 
+# ELASTICSEARCH_URL=http://192.168.99.100:9200
 
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
