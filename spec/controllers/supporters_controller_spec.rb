@@ -24,12 +24,7 @@ RSpec.describe SupportersController, type: :controller do
   end
 
   describe "GET #index" do
-    it "returns http success" do
-      get :index
-      expect(response).to have_http_status(:success)
-    end
-
-    it "does not require authentication" do
+    it "returns http success and does not require authentication" do
       get :index
       expect(response).to have_http_status(:success)
     end
@@ -42,12 +37,7 @@ RSpec.describe SupportersController, type: :controller do
 
   describe "GET #new" do
     context "without plan_id parameter" do
-      it "returns http success" do
-        get :new
-        expect(response).to have_http_status(:success)
-      end
-
-      it "does not require authentication" do
+      it "returns http success and does not require authentication" do
         get :new
         expect(response).to have_http_status(:success)
       end
@@ -84,12 +74,13 @@ RSpec.describe SupportersController, type: :controller do
       end
 
       it "creates a Stripe customer" do
-        expect(Stripe::Customer).to receive(:create).with(
+        allow(Stripe::Customer).to receive(:create).and_return(stripe_customer)
+        post :create, params: valid_params
+        expect(Stripe::Customer).to have_received(:create).with(
           email: user.email,
           card: "tok_test123",
           description: "morph.io user @#{user.nickname}"
         )
-        post :create, params: valid_params
       end
 
       it "updates user with stripe_customer_id" do
@@ -100,8 +91,9 @@ RSpec.describe SupportersController, type: :controller do
       it "creates a subscription with the specified plan" do
         subscriptions = double
         allow(stripe_customer).to receive(:subscriptions).and_return(subscriptions)
-        expect(subscriptions).to receive(:create).with(plan: "plan_basic").and_return(stripe_subscription)
+        allow(subscriptions).to receive(:create).and_return(stripe_subscription)
         post :create, params: valid_params
+        expect(subscriptions).to have_received(:create).with(plan: "plan_basic")
       end
 
       it "updates user with stripe_plan_id and stripe_subscription_id" do
@@ -157,12 +149,13 @@ RSpec.describe SupportersController, type: :controller do
       end
 
       it "creates a Stripe customer" do
-        expect(Stripe::Customer).to receive(:create).with(
+        allow(Stripe::Customer).to receive(:create).and_return(stripe_customer)
+        post :create_one_time, params: valid_params
+        expect(Stripe::Customer).to have_received(:create).with(
           email: user.email,
           card: "tok_test123",
           description: "morph.io user @#{user.nickname}"
         )
-        post :create_one_time, params: valid_params
       end
 
       it "updates user with stripe_customer_id" do
@@ -171,27 +164,30 @@ RSpec.describe SupportersController, type: :controller do
       end
 
       it "creates a Stripe charge with correct amount" do
-        expect(Stripe::Charge).to receive(:create).with(
+        allow(Stripe::Charge).to receive(:create).and_return(double("Stripe::Charge"))
+        post :create_one_time, params: valid_params
+        expect(Stripe::Charge).to have_received(:create).with(
           customer: "cus_test123",
           amount: 2550, # 25.50 * 100
           description: "morph.io contribution",
           currency: "USD"
         )
-        post :create_one_time, params: valid_params
       end
 
       it "handles integer amounts" do
-        expect(Stripe::Charge).to receive(:create).with(
+        allow(Stripe::Charge).to receive(:create).and_return(double("Stripe::Charge"))
+        post :create_one_time, params: { stripeTokenOneTime: "tok_test123", amount: 25 }
+        expect(Stripe::Charge).to have_received(:create).with(
           hash_including(amount: 2500) # 25 * 100
         )
-        post :create_one_time, params: { stripeTokenOneTime: "tok_test123", amount: 25 }
       end
 
       it "handles string amounts with decimals" do
-        expect(Stripe::Charge).to receive(:create).with(
+        allow(Stripe::Charge).to receive(:create).and_return(double("Stripe::Charge"))
+        post :create_one_time, params: { stripeTokenOneTime: "tok_test123", amount: "10.99" }
+        expect(Stripe::Charge).to have_received(:create).with(
           hash_including(amount: 1099) # 10.99 * 100
         )
-        post :create_one_time, params: { stripeTokenOneTime: "tok_test123", amount: "10.99" }
       end
 
       it "sets new_supporter session flag" do
@@ -241,21 +237,25 @@ RSpec.describe SupportersController, type: :controller do
     let(:update_params) { { id: user.id, plan_id: "plan_new" } }
 
     it "retrieves the existing Stripe customer" do
-      expect(Stripe::Customer).to receive(:retrieve).with("cus_existing")
+      allow(Stripe::Customer).to receive(:retrieve).and_return(stripe_customer)
       patch :update, params: update_params
+      expect(Stripe::Customer).to have_received(:retrieve).with("cus_existing")
     end
 
     it "retrieves the existing subscription" do
       subscriptions = double
       allow(stripe_customer).to receive(:subscriptions).and_return(subscriptions)
-      expect(subscriptions).to receive(:retrieve).with("sub_existing").and_return(stripe_subscription)
+      allow(subscriptions).to receive(:retrieve).and_return(stripe_subscription)
       patch :update, params: update_params
+      expect(subscriptions).to have_received(:retrieve).with("sub_existing")
     end
 
     it "updates the subscription plan" do
-      expect(stripe_subscription).to receive(:plan=).with("plan_new")
-      expect(stripe_subscription).to receive(:save)
+      allow(stripe_subscription).to receive(:plan=)
+      allow(stripe_subscription).to receive(:save)
       patch :update, params: update_params
+      expect(stripe_subscription).to have_received(:plan=).with("plan_new")
+      expect(stripe_subscription).to have_received(:save)
     end
 
     it "updates user with new stripe_plan_id" do

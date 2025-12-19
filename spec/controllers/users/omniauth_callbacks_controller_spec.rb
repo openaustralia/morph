@@ -43,18 +43,21 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       request.env["devise.mapping"] = Devise.mappings[:user]
       request.env["omniauth.auth"] = omniauth_hash
 
+      # rubocop:disable RSpec/AnyInstance
+      # We can't easily inject dependencies into Devise internals without it becoming more fragile
       # Stub GitHub API calls
       allow_any_instance_of(Morph::Github).to receive(:user_from_github).and_return(github_user_data)
       allow_any_instance_of(Morph::Github).to receive(:primary_email).and_return("test@example.com")
       allow_any_instance_of(Morph::Github).to receive(:organizations).and_return([])
 
-      # Stub background job
-      allow(RefreshUserOrganizationsWorker).to receive(:perform_async)
-
       # Stub the flash partial rendering to avoid view rendering issues in controller tests
       allow_any_instance_of(described_class).to receive(:render_to_string)
                                                   .with(partial: "users/sign_in_message")
                                                   .and_return("Welcome! You have signed in successfully.")
+      # rubocop:enable RSpec/AnyInstance
+
+      # Stub background job
+      allow(RefreshUserOrganizationsWorker).to receive(:perform_async)
     end
 
     after do
@@ -110,8 +113,9 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       end
 
       it "queues background job to refresh organizations" do
-        expect(RefreshUserOrganizationsWorker).to receive(:perform_async)
+        allow(RefreshUserOrganizationsWorker).to receive(:perform_async)
         get :github
+        expect(RefreshUserOrganizationsWorker).to have_received(:perform_async)
       end
 
       it "sets remember_me cookie" do
@@ -155,8 +159,11 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       end
 
       it "does not call watch_all_owners for existing user" do
+        # rubocop:disable RSpec/AnyInstance
+        # We can't easily inject dependencies into Devise internals without it becoming more fragile
         # User already exists, so we shouldn't be watching again
         expect_any_instance_of(User).not_to receive(:watch_all_owners)
+        # rubocop:enable RSpec/AnyInstance
         get :github
       end
 
@@ -224,8 +231,11 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
     context "when GitHub API errors occur" do
       before do
+        # rubocop:disable RSpec/AnyInstance
+        # We can't easily inject dependencies into Devise internals without it becoming more fragile
         allow_any_instance_of(Morph::Github).to receive(:user_from_github)
                                                   .and_raise(Octokit::Unauthorized)
+        # rubocop:enable RSpec/AnyInstance
       end
 
       it "handles Octokit::Unauthorized gracefully" do
@@ -242,8 +252,11 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
     context "when GitHub API returns NotFound" do
       before do
+        # rubocop:disable RSpec/AnyInstance
+        # We can't easily inject dependencies into Devise internals without it becoming more fragile
         allow_any_instance_of(Morph::Github).to receive(:user_from_github)
                                                   .and_raise(Octokit::NotFound)
+        # rubocop:enable RSpec/AnyInstance
       end
 
       it "handles Octokit::NotFound gracefully" do
@@ -272,8 +285,11 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
           id: uid.to_i
         )
 
+        # rubocop:disable RSpec/AnyInstance
+        # We can't easily inject dependencies into Devise internals without it becoming more fragile
         allow_any_instance_of(Morph::Github).to receive(:user_from_github).and_return(minimal_github_data)
         allow_any_instance_of(Morph::Github).to receive(:primary_email).and_return(nil)
+        # rubocop:enable RSpec/AnyInstance
 
         get :github
 
