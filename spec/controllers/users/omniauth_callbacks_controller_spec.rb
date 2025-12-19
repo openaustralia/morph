@@ -52,8 +52,8 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
       # Stub the flash partial rendering to avoid view rendering issues in controller tests
       allow_any_instance_of(described_class).to receive(:render_to_string)
-                                                  .with(partial: "users/sign_in_message")
-                                                  .and_return("Welcome! You have signed in successfully.")
+        .with(partial: "users/sign_in_message")
+        .and_return("Welcome! You have signed in successfully.")
       # rubocop:enable RSpec/AnyInstance
 
       # Stub background job
@@ -234,7 +234,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         # rubocop:disable RSpec/AnyInstance
         # We can't easily inject dependencies into Devise internals without it becoming more fragile
         allow_any_instance_of(Morph::Github).to receive(:user_from_github)
-                                                  .and_raise(Octokit::Unauthorized)
+          .and_raise(Octokit::Unauthorized)
         # rubocop:enable RSpec/AnyInstance
       end
 
@@ -255,7 +255,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         # rubocop:disable RSpec/AnyInstance
         # We can't easily inject dependencies into Devise internals without it becoming more fragile
         allow_any_instance_of(Morph::Github).to receive(:user_from_github)
-                                                  .and_raise(Octokit::NotFound)
+          .and_raise(Octokit::NotFound)
         # rubocop:enable RSpec/AnyInstance
       end
 
