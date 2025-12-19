@@ -26,7 +26,9 @@ RSpec.describe OwnersController, type: :controller do
         sign_in user
         running_scraper = create(:scraper, owner: user)
         allow(running_scraper).to receive(:running?).and_return(true)
-        allow(Scraper).to receive_message_chain(:accessible_by, :where).and_return([running_scraper])
+        accessible_scrapers = double
+        allow(accessible_scrapers).to receive(:where).and_return([running_scraper])
+        allow(Scraper).to receive(:accessible_by).and_return(accessible_scrapers)
 
         pending("FIXME: The view is broken, and has been for a while in production")
         get :show, params: { id: user.nickname }
@@ -98,8 +100,10 @@ RSpec.describe OwnersController, type: :controller do
         allow(other_scraper).to receive(:running?).and_return(false)
         allow(other_scraper).to receive(:requires_attention?).and_return(false)
 
-        allow(Scraper).to receive_message_chain(:accessible_by, :where)
-                            .and_return([running_scraper, erroring_scraper, other_scraper])
+        accessible_scrapers = double
+        allow(accessible_scrapers).to receive(:where)
+                                        .and_return([running_scraper, erroring_scraper, other_scraper])
+        allow(Scraper).to receive(:accessible_by).and_return(accessible_scrapers)
       end
 
       it "separates running scrapers" do
@@ -232,8 +236,9 @@ RSpec.describe OwnersController, type: :controller do
 
       it "toggles watching another user" do
         pending("FIXME: The view is broken, and has been for a while in production")
-        expect(user).to receive(:toggle_watch).with(other_user)
+        allow(user).to receive(:toggle_watch)
         post :watch, params: { id: other_user.nickname }
+        expect(user).to have_received(:toggle_watch).with(other_user)
       end
 
       it "redirects back to referrer" do
@@ -249,9 +254,10 @@ RSpec.describe OwnersController, type: :controller do
 
       it "can watch an organization" do
         create(:organizations_user, user: user, organization: organization)
-        expect(user).to receive(:toggle_watch).with(organization)
+        allow(user).to receive(:toggle_watch)
         pending("FIXME: The view is broken, and has been for a while in production")
         post :watch, params: { id: organization.nickname }
+        expect(user).to have_received(:toggle_watch).with(organization)
       end
     end
 

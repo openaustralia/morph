@@ -22,13 +22,15 @@ RSpec.describe SearchController, type: :controller do
       end
 
       it "searches owners with query parameter" do
-        expect(Owner).to receive(:search).with("test", hash_including(page: nil, per_page: 10))
+        allow(Owner).to receive(:search)
         get :search, params: { q: "test" }
+        expect(Owner).to have_received(:search).with("test", hash_including(page: nil, per_page: 10))
       end
 
       it "searches scrapers respecting authorization" do
-        expect(Scraper).to receive(:accessible_by).and_return(Scraper.where(id: scraper.id))
+        allow(Scraper).to receive(:accessible_by).and_return(Scraper.where(id: scraper.id))
         get :search, params: { q: "test" }
+        expect(Scraper).to have_received(:accessible_by)
       end
 
       it "assigns instance variables correctly" do
@@ -48,18 +50,20 @@ RSpec.describe SearchController, type: :controller do
       end
 
       it "searches with pagination" do
-        expect(Owner).to receive(:search).with("query", hash_including(page: "2"))
+        allow(Owner).to receive(:search)
         get :search, params: { q: "query", page: "2" }
+        expect(Owner).to have_received(:search).with("query", hash_including(page: "2"))
       end
 
       it "uses ScraperAbility for authorization" do
-        expect(Scraper).to receive(:accessible_by)
+        allow(Scraper).to receive(:accessible_by).and_return(Scraper.where(id: scraper.id))
         get :search, params: { q: "test" }
+        expect(Scraper).to have_received(:accessible_by)
       end
 
       it "filters scrapers by default (data? = true)" do
         search_result = double(results: [])
-        expect(Scraper).to receive(:search).with(
+        allow(Scraper).to receive(:search).with(
           "test",
           hash_including(where: hash_including(data?: true))
         ).and_return(search_result)
@@ -99,8 +103,9 @@ RSpec.describe SearchController, type: :controller do
       before { sign_in user }
 
       it "handles nil query gracefully" do
-        expect(Owner).to receive(:search).with(nil, anything)
+        allow(Owner).to receive(:search)
         get :search
+        expect(Owner).to have_received(:search).with(nil, anything)
       end
     end
 
@@ -108,8 +113,9 @@ RSpec.describe SearchController, type: :controller do
       before { sign_in user }
 
       it "handles empty query" do
-        expect(Owner).to receive(:search).with("", anything)
+        allow(Owner).to receive(:search)
         get :search, params: { q: "" }
+        expect(Owner).to have_received(:search).with("", anything)
       end
     end
 
@@ -120,13 +126,14 @@ RSpec.describe SearchController, type: :controller do
         create(:scraper)
         accessible_scrapers = Scraper.where(id: [scraper.id])
         allow(Scraper).to receive(:accessible_by).and_return(accessible_scrapers)
+        allow(Scraper).to receive(:search).and_call_original
 
-        expect(Scraper).to receive(:search).with(
+        get :search, params: { q: "test" }
+
+        expect(Scraper).to have_received(:search).with(
           "test",
           hash_including(where: hash_including(id: [scraper.id]))
         ).at_least(:once)
-
-        get :search, params: { q: "test" }
       end
     end
 
@@ -134,22 +141,24 @@ RSpec.describe SearchController, type: :controller do
       before { sign_in user }
 
       it "configures owner search with correct highlight fields" do
-        expect(Owner).to receive(:search).with(
+        allow(Owner).to receive(:search)
+        get :search, params: { q: "test" }
+        expect(Owner).to have_received(:search).with(
           "test",
           hash_including(highlight: { fields: %i[nickname name company blog] })
         )
-        get :search, params: { q: "test" }
       end
 
       it "configures scraper search with correct fields" do
-        expect(Scraper).to receive(:search).with(
+        allow(Scraper).to receive(:search).and_call_original
+        get :search, params: { q: "test" }
+        expect(Scraper).to have_received(:search).with(
           "test",
           hash_including(
             fields: [{ full_name: :word_middle }, :description, { scraped_domain_names: :word_end }],
             highlight: true
           )
         ).at_least(:once)
-        get :search, params: { q: "test" }
       end
     end
   end

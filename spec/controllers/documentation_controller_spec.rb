@@ -22,8 +22,8 @@ RSpec.describe DocumentationController, type: :controller do
       end
 
       it "sets the query from the scraper database" do
-        allow_any_instance_of(Scraper).to receive_message_chain(:database, :select_first_ten)
-          .and_return("SELECT * FROM data LIMIT 10")
+        database = double(select_first_ten: "SELECT * FROM data LIMIT 10")
+        allow_any_instance_of(Scraper).to receive(:database).and_return(database)
         get :api
         expect(assigns(:query)).to eq("SELECT * FROM data LIMIT 10")
       end
@@ -43,8 +43,8 @@ RSpec.describe DocumentationController, type: :controller do
       end
 
       it "sets the query from the specified scraper" do
-        allow_any_instance_of(Scraper).to receive_message_chain(:database, :select_first_ten)
-          .and_return("SELECT * FROM custom LIMIT 10")
+        database = double(select_first_ten: "SELECT * FROM custom LIMIT 10")
+        allow_any_instance_of(Scraper).to receive(:database).and_return(database)
         get :api, params: { scraper: "test/example-scraper" }
         expect(assigns(:query)).to eq("SELECT * FROM custom LIMIT 10")
       end

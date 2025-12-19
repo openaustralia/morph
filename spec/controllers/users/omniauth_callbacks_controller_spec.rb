@@ -38,13 +38,13 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       )
     end
 
+    # rubocop:disable RSpec/AnyInstance
+    # We can't easily inject dependencies into Devise internals without it becoming more fragile
     before do
       OmniAuth.config.test_mode = true
       request.env["devise.mapping"] = Devise.mappings[:user]
       request.env["omniauth.auth"] = omniauth_hash
 
-      # rubocop:disable RSpec/AnyInstance
-      # We can't easily inject dependencies into Devise internals without it becoming more fragile
       # Stub GitHub API calls
       allow_any_instance_of(Morph::Github).to receive(:user_from_github).and_return(github_user_data)
       allow_any_instance_of(Morph::Github).to receive(:primary_email).and_return("test@example.com")
@@ -54,11 +54,11 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       allow_any_instance_of(described_class).to receive(:render_to_string)
         .with(partial: "users/sign_in_message")
         .and_return("Welcome! You have signed in successfully.")
-      # rubocop:enable RSpec/AnyInstance
 
       # Stub background job
       allow(RefreshUserOrganizationsWorker).to receive(:perform_async)
     end
+    # rubocop:enable RSpec/AnyInstance
 
     after do
       OmniAuth.config.test_mode = false
@@ -158,14 +158,14 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         expect(existing_user.access_token).not_to eq(old_token) unless old_token == access_token
       end
 
+      # rubocop:disable RSpec/AnyInstance
+      # We can't easily inject dependencies into Devise internals without it becoming more fragile
       it "does not call watch_all_owners for existing user" do
-        # rubocop:disable RSpec/AnyInstance
-        # We can't easily inject dependencies into Devise internals without it becoming more fragile
         # User already exists, so we shouldn't be watching again
         expect_any_instance_of(User).not_to receive(:watch_all_owners)
-        # rubocop:enable RSpec/AnyInstance
         get :github
       end
+      # rubocop:enable RSpec/AnyInstance
 
       it "refreshes user info from GitHub" do
         existing_user.update(name: "Old Name")
@@ -218,7 +218,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       end
 
       it "handles reconnecting same GitHub account" do
-        # If user already has this GitHub account connected
+        # The user already has this GitHub account connected
         current_user.update(provider: "github", uid: uid, nickname: nickname)
 
         expect do
@@ -229,13 +229,12 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       end
     end
 
+    # rubocop:disable RSpec/AnyInstance
+    # We can't easily inject dependencies into Devise internals without it becoming more fragile
     context "when GitHub API errors occur" do
       before do
-        # rubocop:disable RSpec/AnyInstance
-        # We can't easily inject dependencies into Devise internals without it becoming more fragile
         allow_any_instance_of(Morph::Github).to receive(:user_from_github)
           .and_raise(Octokit::Unauthorized)
-        # rubocop:enable RSpec/AnyInstance
       end
 
       it "handles Octokit::Unauthorized gracefully" do
@@ -244,7 +243,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         end.to change(User, :count).by(1)
 
         user = User.find_by(nickname: nickname)
-        # User is created but GitHub info is not updated (returns false)
+        # User is created, but GitHub info is not updated (returns false)
         expect(user).to be_present
         expect(user.name).to be_nil
       end
@@ -252,11 +251,8 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
     context "when GitHub API returns NotFound" do
       before do
-        # rubocop:disable RSpec/AnyInstance
-        # We can't easily inject dependencies into Devise internals without it becoming more fragile
         allow_any_instance_of(Morph::Github).to receive(:user_from_github)
           .and_raise(Octokit::NotFound)
-        # rubocop:enable RSpec/AnyInstance
       end
 
       it "handles Octokit::NotFound gracefully" do
@@ -285,11 +281,8 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
           id: uid.to_i
         )
 
-        # rubocop:disable RSpec/AnyInstance
-        # We can't easily inject dependencies into Devise internals without it becoming more fragile
         allow_any_instance_of(Morph::Github).to receive(:user_from_github).and_return(minimal_github_data)
         allow_any_instance_of(Morph::Github).to receive(:primary_email).and_return(nil)
-        # rubocop:enable RSpec/AnyInstance
 
         get :github
 
@@ -300,5 +293,6 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         expect(user.company).to be_nil
       end
     end
+    # rubocop:enable RSpec/AnyInstance
   end
 end

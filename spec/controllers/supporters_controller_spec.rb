@@ -24,7 +24,7 @@ RSpec.describe SupportersController, type: :controller do
   end
 
   describe "GET #index" do
-    it "returns http success and does not require authentication" do
+    it "returns http success without authentication" do
       get :index
       expect(response).to have_http_status(:success)
     end
@@ -37,7 +37,7 @@ RSpec.describe SupportersController, type: :controller do
 
   describe "GET #new" do
     context "without plan_id parameter" do
-      it "returns http success and does not require authentication" do
+      it "returns http success without authentication" do
         get :new
         expect(response).to have_http_status(:success)
       end
