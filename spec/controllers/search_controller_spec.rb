@@ -9,8 +9,12 @@ RSpec.describe SearchController, type: :controller do
 
   before do
     # Stub Searchkick methods to avoid actual search engine calls
+    # rubocop:disable RSpec/VerifiedDoubles
+    # Using unverified doubles for Searchkick::Results because it's an external gem class
+    # that doesn't implement methods in a way RSpec verifying doubles can validate
     allow(Owner).to receive(:search).and_return(double(results: []))
     allow(Scraper).to receive(:search).and_return(double(results: []))
+    # rubocop:enable RSpec/VerifiedDoubles
     allow(Scraper).to receive(:accessible_by).and_return(Scraper.where(id: scraper.id))
   end
 
@@ -62,7 +66,9 @@ RSpec.describe SearchController, type: :controller do
       end
 
       it "filters scrapers by default (data? = true)" do
+        # rubocop:disable RSpec/VerifiedDoubles
         search_result = double(results: [])
+        # rubocop:enable RSpec/VerifiedDoubles
         allow(Scraper).to receive(:search).with(
           "test",
           hash_including(where: hash_including(data?: true))
@@ -72,8 +78,10 @@ RSpec.describe SearchController, type: :controller do
       end
 
       it "shows all scrapers when show=all parameter is set" do
+        # rubocop:disable RSpec/VerifiedDoubles
         all_search = double(results: [])
         filtered_search = double(results: [])
+        # rubocop:enable RSpec/VerifiedDoubles
         allow(Scraper).to receive(:search).and_call_original
         allow(Scraper).to receive(:search).with(
           "test",

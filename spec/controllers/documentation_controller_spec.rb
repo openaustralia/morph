@@ -22,8 +22,16 @@ RSpec.describe DocumentationController, type: :controller do
       end
 
       it "sets the query from the scraper database" do
+        # rubocop:disable RSpec/VerifiedDoubles
+        # Using unverified double for Database because it's a dynamic object
+        # that doesn't have a fixed class interface we can verify against
         database = double(select_first_ten: "SELECT * FROM data LIMIT 10")
+        # rubocop:enable RSpec/VerifiedDoubles
+        # rubocop:disable RSpec/AnyInstance
+        # Using allow_any_instance_of here because the controller instantiates Scraper
+        # internally and we need to stub the database method for testing the query assignment
         allow_any_instance_of(Scraper).to receive(:database).and_return(database)
+        # rubocop:enable RSpec/AnyInstance
         get :api
         expect(assigns(:query)).to eq("SELECT * FROM data LIMIT 10")
       end
@@ -43,8 +51,16 @@ RSpec.describe DocumentationController, type: :controller do
       end
 
       it "sets the query from the specified scraper" do
+        # rubocop:disable RSpec/VerifiedDoubles
+        # Using unverified double for Database because it's a dynamic object
+        # that doesn't have a fixed class interface we can verify against
         database = double(select_first_ten: "SELECT * FROM custom LIMIT 10")
+        # rubocop:enable RSpec/VerifiedDoubles
+        # rubocop:disable RSpec/AnyInstance
+        # Using allow_any_instance_of here because the controller instantiates Scraper
+        # internally and we need to stub the database method for testing the query assignment
         allow_any_instance_of(Scraper).to receive(:database).and_return(database)
+        # rubocop:enable RSpec/AnyInstance
         get :api, params: { scraper: "test/example-scraper" }
         expect(assigns(:query)).to eq("SELECT * FROM custom LIMIT 10")
       end

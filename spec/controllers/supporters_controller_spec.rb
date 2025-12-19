@@ -5,6 +5,18 @@ require "spec_helper"
 
 RSpec.describe SupportersController, type: :controller do
   let(:user) { create(:user, email: "test@example.com") }
+
+  # ⚠️  CRITICAL WARNING - DO NOT CHANGE double() TO instance_double() ⚠️
+  #
+  # These Stripe classes MUST use double() not instance_double()!
+  #
+  # Stripe gem classes don't implement methods in a way that RSpec's verifying
+  # doubles can validate. Changing to instance_double() causes test failures:
+  # "the Stripe::Customer class does not implement the instance method: id"
+  #
+  # This is a known limitation when mocking external API client libraries.
+  # The rubocop violations are intentionally accepted here.
+  # rubocop:disable RSpec/VerifiedDoubles
   let(:stripe_customer) { double("Stripe::Customer", id: "cus_test123") }
   let(:stripe_subscription) do
     double("Stripe::Subscription", id: "sub_test123").tap do |sub|
@@ -19,9 +31,12 @@ RSpec.describe SupportersController, type: :controller do
     # Stub only external Stripe API calls
     allow(Stripe::Customer).to receive(:create).and_return(stripe_customer)
     allow(Stripe::Customer).to receive(:retrieve).and_return(stripe_customer)
-    allow(stripe_customer).to receive(:subscriptions).and_return(double(create: stripe_subscription, retrieve: stripe_subscription))
+    allow(stripe_customer).to receive(:subscriptions).and_return(
+      double(create: stripe_subscription, retrieve: stripe_subscription)
+    )
     allow(Stripe::Charge).to receive(:create).and_return(double("Stripe::Charge"))
   end
+  # rubocop:enable RSpec/VerifiedDoubles
 
   describe "GET #index" do
     it "returns http success without authentication" do
@@ -164,7 +179,9 @@ RSpec.describe SupportersController, type: :controller do
       end
 
       it "creates a Stripe charge with correct amount" do
+        # rubocop:disable RSpec/VerifiedDoubles
         allow(Stripe::Charge).to receive(:create).and_return(double("Stripe::Charge"))
+        # rubocop:enable RSpec/VerifiedDoubles
         post :create_one_time, params: valid_params
         expect(Stripe::Charge).to have_received(:create).with(
           customer: "cus_test123",
@@ -175,7 +192,9 @@ RSpec.describe SupportersController, type: :controller do
       end
 
       it "handles integer amounts" do
+        # rubocop:disable RSpec/VerifiedDoubles
         allow(Stripe::Charge).to receive(:create).and_return(double("Stripe::Charge"))
+        # rubocop:enable RSpec/VerifiedDoubles
         post :create_one_time, params: { stripeTokenOneTime: "tok_test123", amount: 25 }
         expect(Stripe::Charge).to have_received(:create).with(
           hash_including(amount: 2500) # 25 * 100
@@ -183,7 +202,9 @@ RSpec.describe SupportersController, type: :controller do
       end
 
       it "handles string amounts with decimals" do
+        # rubocop:disable RSpec/VerifiedDoubles
         allow(Stripe::Charge).to receive(:create).and_return(double("Stripe::Charge"))
+        # rubocop:enable RSpec/VerifiedDoubles
         post :create_one_time, params: { stripeTokenOneTime: "tok_test123", amount: "10.99" }
         expect(Stripe::Charge).to have_received(:create).with(
           hash_including(amount: 1099) # 10.99 * 100

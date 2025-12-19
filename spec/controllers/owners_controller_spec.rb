@@ -102,7 +102,7 @@ RSpec.describe OwnersController, type: :controller do
 
         accessible_scrapers = double
         allow(accessible_scrapers).to receive(:where)
-                                        .and_return([running_scraper, erroring_scraper, other_scraper])
+          .and_return([running_scraper, erroring_scraper, other_scraper])
         allow(Scraper).to receive(:accessible_by).and_return(accessible_scrapers)
       end
 
