@@ -78,6 +78,23 @@ FactoryBot.define do
     end
   end
 
+  factory :metric do
+    run factory: :run
+
+    trait :maximal do
+      wall_time { 45.67 }
+      utime { 1.23 }
+      stime { 0.54 }
+      maxrss { 18765 }
+      minflt { 34567 }
+      majflt { 65 }
+      inblock { 45678 }
+      oublock { 8765 }
+      nvcsw { 3210 }
+      nivcsw { 345 }
+    end
+  end
+
   factory :organization do
     trait :maximal do
       sequence(:nickname) { |n| FactoryHelpers.max_name("max-org#{n}", 127) }
