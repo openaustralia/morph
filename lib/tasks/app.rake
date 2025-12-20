@@ -40,7 +40,7 @@ class AppRake
     task auto_run_scrapers: :environment do
       # All the scrapers that need running in a random order
       scraper_ids = Scraper.where(auto_run: true).map(&:id).shuffle
-      interval = 24.hours / scraper_ids.count
+      interval = 24.hours / [1, scraper_ids.count].max
       time = 0
       scraper_ids.each do |scraper_id|
         ScraperAutoRunWorker.perform_in(time, T.must(scraper_id))
