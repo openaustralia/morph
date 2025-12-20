@@ -153,7 +153,7 @@ class AppRake
       Scraper.all.each do |scraper|
         puts "Removing old logs for #{scraper.full_name}..."
         runs = scraper.runs.order(queued_at: :desc)
-        # Remove the most recently run from the list
+        # Remove the most recent run from the list
         runs = runs[1..-1]
         # Now remove the logs connected to those runs
         LogLine.delete_all(run: runs)
