@@ -148,18 +148,6 @@ class AppRake
       # end
     end
 
-    desc "Remove log lines for old runs (not the latest ones)"
-    task clean_up_old_log_lines: :environment do
-      Scraper.all.each do |scraper|
-        puts "Removing old logs for #{scraper.full_name}..."
-        runs = scraper.runs.order(queued_at: :desc)
-        # Remove the most recent run from the list
-        runs = runs[1..-1]
-        # Now remove the logs connected to those runs
-        LogLine.delete_all(run: runs)
-      end
-    end
-
     sig { params(message: String).returns(T::Boolean) }
     def self.confirm(message)
       $stdout.puts "#{message} (y/n)"
