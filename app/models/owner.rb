@@ -100,17 +100,17 @@ class Owner < ApplicationRecord
 
   sig { returns(Float) }
   def wall_time
-    runs.sum(:wall_time)
+    runs.sum(:wall_time).to_f
   end
 
   sig { returns(Float) }
   def utime
-    scrapers.joins(:metrics).sum(:utime)
+    scrapers.joins(:metrics).sum(:utime).to_f
   end
 
   sig { returns(Float) }
   def stime
-    scrapers.joins(:metrics).sum(:stime)
+    scrapers.joins(:metrics).sum(:stime).to_f
   end
 
   sig { returns(Float) }
