@@ -87,5 +87,4 @@ module Morph
   end
 end
 
-exit Morph::LimitOutput.run(ARGV) if __FILE__ == $0
-
+exit(Morph::LimitOutput.run(ARGV) || 2) if __FILE__ == $0
