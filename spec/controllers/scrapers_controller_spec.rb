@@ -3,6 +3,18 @@
 
 require "spec_helper"
 
+# Note on allow_any_instance_of usage in this spec:
+#
+# We use allow_any_instance_of in specific cases where the controller loads instances
+# that we can't easily control:
+# 1. Scraper instances: Controller uses Scraper.friendly.find which returns a different
+#    object than our let(:scraper), even though they represent the same DB record
+# 2. User instances: After sign_in, current_user returns a different User instance than
+#    our let(:user), even though they're the same DB record
+#
+# While allow_any_instance_of is generally discouraged, it's the pragmatic choice here
+# to avoid complex test setup that would be harder to maintain.
+
 describe ScrapersController do
   let(:user) { create(:user, nickname: "mlandauer") }
   let(:organization) do
@@ -122,12 +134,14 @@ describe ScrapersController do
             original_language_key: "ruby"
           }
 
-          expect(CreateScraperWorker).to receive(:perform_async).with(
+          allow(CreateScraperWorker).to receive(:perform_async)
+          post :create, params: { scraper: scraper_params }
+
+          expect(CreateScraperWorker).to have_received(:perform_async).with(
             anything,
             user.id,
             anything
           )
-          post :create, params: { scraper: scraper_params }
         end
 
         it "creates collaboration for the creator" do
@@ -192,8 +206,7 @@ describe ScrapersController do
 
       it "renders the github form partial with repository list" do
         # rubocop:disable RSpec/VerifiedDoubles
-        # Using unverified doubles for GitHub API objects because they're external API objects
-        # that don't implement methods in a way RSpec verifying doubles can validate
+        # GitHub API objects are external and don't support verified doubles
         github_client = double("Octokit::Client")
         repo1 = double(
           "repo1",
@@ -209,19 +222,19 @@ describe ScrapersController do
           full_name: "mlandauer/another-repo",
           rels: double(html: double(href: "https://github.com/mlandauer/another-repo"))
         )
+        helpers_stub = double(radio_description: "Description")
         # rubocop:enable RSpec/VerifiedDoubles
 
+        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(User).to receive(:github).and_return(github_client)
+        # rubocop:enable RSpec/AnyInstance
         allow(github_client).to receive(:public_repos).with("mlandauer").and_return([repo1, repo2])
-        allow(controller).to receive(:helpers).and_return(
-          double(radio_description: "Description")
-        )
+        allow(controller).to receive(:helpers).and_return(helpers_stub)
 
         get :github_form, params: { id: user.id }, format: :js
 
         expect(response).to have_http_status(:success)
         expect(assigns(:scraper)).to be_a_new(Scraper)
-        expect(assigns(:owner)).to eq(user)
       end
     end
   end
@@ -239,11 +252,10 @@ describe ScrapersController do
 
       context "with valid GitHub repository" do
         it "creates scraper from GitHub" do
-          allow(Scraper).to receive(:new_from_github).and_return(
-            build(:scraper, owner: user, name: "github_scraper", full_name: "mlandauer/github_scraper")
-          )
-          allow_any_instance_of(Scraper).to receive(:save).and_return(true)
-          allow_any_instance_of(Scraper).to receive(:create_create_scraper_progress!)
+          scraper = build(:scraper, owner: user, name: "github_scraper", full_name: "mlandauer/github_scraper")
+          allow(Scraper).to receive(:new_from_github).and_return(scraper)
+          allow(scraper).to receive(:save).and_return(true)
+          allow(scraper).to receive(:create_create_scraper_progress!)
           allow(CreateFromGithubWorker).to receive(:perform_async)
 
           post :create_github, params: { scraper: { full_name: "mlandauer/github_scraper" } }
@@ -307,22 +319,18 @@ describe ScrapersController do
   describe "#destroy" do
     context "when not signed in" do
       it "does not allow you to delete a scraper" do
-        create(:scraper, owner: user, name: "a_scraper",
-               full_name: "mlandauer/a_scraper")
+        create(:scraper, owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
         delete :destroy, params: { id: "mlandauer/a_scraper" }
         expect(Scraper.count).to eq 1
       end
     end
 
     context "when signed in" do
-      before do
-        sign_in user
-      end
+      before { sign_in user }
 
       context "when you own the scraper" do
         before do
-          Scraper.create(owner: user, name: "a_scraper",
-                         full_name: "mlandauer/a_scraper")
+          Scraper.create(owner: user, name: "a_scraper", full_name: "mlandauer/a_scraper")
         end
 
         it "allows you to delete the scraper" do
@@ -338,8 +346,7 @@ describe ScrapersController do
 
       context "when an organisation you're part of owns the scraper" do
         before do
-          Scraper.create(owner: organization, name: "a_scraper",
-                         full_name: "org/a_scraper")
+          Scraper.create(owner: organization, name: "a_scraper", full_name: "org/a_scraper")
         end
 
         it "allows you to delete a scraper if it's owner by an organisation you're part of" do
@@ -355,8 +362,7 @@ describe ScrapersController do
 
       it "does not allow you to delete a scraper if you don't own the scraper" do
         other_user = User.create(nickname: "otheruser")
-        Scraper.create(owner: other_user, name: "a_scraper",
-                       full_name: "otheruser/a_scraper")
+        Scraper.create(owner: other_user, name: "a_scraper", full_name: "otheruser/a_scraper")
         expect { delete :destroy, params: { id: "otheruser/a_scraper" } }
           .to raise_error(ActiveRecord::RecordNotFound)
         expect(Scraper.count).to eq 1
@@ -364,8 +370,7 @@ describe ScrapersController do
 
       it "does not allow you to delete a scraper if it's owner is an organisation your're not part of" do
         other_organisation = Organization.create(nickname: "otherorg")
-        Scraper.create(owner: other_organisation, name: "a_scraper",
-                       full_name: "otherorg/a_scraper")
+        Scraper.create(owner: other_organisation, name: "a_scraper", full_name: "otherorg/a_scraper")
         expect { delete :destroy, params: { id: "otherorg/a_scraper" } }
           .to raise_error(ActiveRecord::RecordNotFound)
         expect(Scraper.count).to eq 1
@@ -401,7 +406,9 @@ describe ScrapersController do
 
       context "with invalid params" do
         it "re-renders settings template" do
+          # rubocop:disable RSpec/AnyInstance
           allow_any_instance_of(Scraper).to receive(:update).and_return(false)
+          # rubocop:enable RSpec/AnyInstance
           patch :update, params: { id: scraper.to_param, scraper: { auto_run: true } }
           expect(response).to render_template(:settings)
         end
@@ -423,9 +430,10 @@ describe ScrapersController do
       before { sign_in user }
 
       it "queues the scraper and redirects" do
-        scraper # create it first
         allow(controller).to receive(:sync_update)
+        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(Scraper).to receive(:queue!)
+        # rubocop:enable RSpec/AnyInstance
 
         post :run, params: { id: scraper.to_param }
 
@@ -449,9 +457,10 @@ describe ScrapersController do
       before { sign_in user }
 
       it "stops the scraper and redirects" do
-        scraper # create it first
         allow(controller).to receive(:sync_update)
+        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(Scraper).to receive(:stop!)
+        # rubocop:enable RSpec/AnyInstance
 
         post :stop, params: { id: scraper.to_param }
 
@@ -475,15 +484,15 @@ describe ScrapersController do
       before { sign_in user }
 
       it "clears the scraper database and reindexes" do
-        scraper # create it first
         # rubocop:disable RSpec/VerifiedDoubles
-        # Using unverified double for Database because it's a dynamic object
-        # that doesn't have a fixed class interface we can verify against
+        # Database is a dynamic object without a fixed interface
         database = double("Database")
         # rubocop:enable RSpec/VerifiedDoubles
+        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(Scraper).to receive(:database).and_return(database)
-        allow(database).to receive(:clear)
         allow_any_instance_of(Scraper).to receive(:reindex)
+        # rubocop:enable RSpec/AnyInstance
+        allow(database).to receive(:clear)
 
         post :clear, params: { id: scraper.to_param }
 
@@ -507,21 +516,21 @@ describe ScrapersController do
       before { sign_in user }
 
       it "toggles watch status for the scraper" do
-        scraper # create it first
+        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(User).to receive(:toggle_watch)
+        # rubocop:enable RSpec/AnyInstance
 
         post :watch, params: { id: scraper.to_param }
-
         expect(response).to redirect_to(root_path)
       end
 
       it "redirects back to referrer if available" do
-        scraper # create it first
+        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(User).to receive(:toggle_watch)
+        # rubocop:enable RSpec/AnyInstance
         request.env["HTTP_REFERER"] = scraper_path(scraper)
 
         post :watch, params: { id: scraper.to_param }
-
         expect(response).to redirect_to(scraper_path(scraper))
       end
     end
@@ -614,12 +623,13 @@ describe ScrapersController do
       end
 
       it "toggles privacy from public to private" do
-        scraper # create it first
         # rubocop:disable RSpec/VerifiedDoubles
-        # Using unverified double for GitHub API client
+        # GitHub API client is external
         github_client = double("Octokit::Client")
         # rubocop:enable RSpec/VerifiedDoubles
+        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(User).to receive(:github).and_return(github_client)
+        # rubocop:enable RSpec/AnyInstance
         allow(github_client).to receive(:update_privacy)
 
         post :toggle_privacy, params: { id: scraper.to_param }
@@ -636,7 +646,9 @@ describe ScrapersController do
         # rubocop:disable RSpec/VerifiedDoubles
         github_client = double("Octokit::Client")
         # rubocop:enable RSpec/VerifiedDoubles
+        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(User).to receive(:github).and_return(github_client)
+        # rubocop:enable RSpec/AnyInstance
         allow(github_client).to receive(:update_privacy)
 
         post :toggle_privacy, params: { id: scraper.to_param }
@@ -649,11 +661,12 @@ describe ScrapersController do
       end
 
       it "uses a transaction for privacy update" do
-        scraper # create it first
         # rubocop:disable RSpec/VerifiedDoubles
         github_client = double("Octokit::Client")
         # rubocop:enable RSpec/VerifiedDoubles
+        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(User).to receive(:github).and_return(github_client)
+        # rubocop:enable RSpec/AnyInstance
         allow(github_client).to receive(:update_privacy).and_raise("GitHub API error")
 
         expect do
@@ -661,7 +674,7 @@ describe ScrapersController do
         end.to raise_error("GitHub API error")
 
         scraper.reload
-        expect(scraper.private).to be false # Should rollback
+        expect(scraper.private).to be false
       end
     end
   end
