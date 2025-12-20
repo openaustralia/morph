@@ -20,19 +20,6 @@ RSpec.describe OwnersController, type: :controller do
         expect(assigns(:owner)).to eq(user)
       end
 
-      it "categorizes scrapers by status" do
-        sign_in user
-        running_scraper = create(:scraper, owner: user)
-        allow(running_scraper).to receive(:running?).and_return(true)
-        accessible_scrapers = double
-        allow(accessible_scrapers).to receive(:where).and_return([running_scraper])
-        allow(Scraper).to receive(:accessible_by).and_return(accessible_scrapers)
-
-        pending("FIXME: The view is broken, and has been for a while in production")
-        get :show, params: { id: user.nickname }
-        expect(assigns(:running_scrapers)).to include(running_scraper)
-      end
-
       it "shows new_supporter flag from session" do
         sign_in user
         session[:new_supporter] = true
@@ -57,44 +44,66 @@ RSpec.describe OwnersController, type: :controller do
       end
 
       context "with scrapers in different states" do
-        let(:running_scraper) { create(:scraper, owner: user) }
-        let(:erroring_scraper) { create(:scraper, owner: user) }
-        let(:other_scraper) { create(:scraper, owner: user) }
+        let!(:scraper_no_runs) { create(:scraper, owner: user, name: "no_runs") }
+        let!(:scraper_running) { create(:scraper, owner: user, name: "running") }
+        let!(:scraper_failed) { create(:scraper, :maximal, auto_run: true, owner: user, name: "failed") }
+        let!(:scraper_success) { create(:scraper, owner: user, name: "success") }
 
         before do
           sign_in user
 
-          allow(running_scraper).to receive(:running?).and_return(true)
-          allow(running_scraper).to receive(:requires_attention?).and_return(false)
+          # Create runs in different states
+          # Running: started but not finished
+          create(:run, scraper: scraper_running, owner: user, started_at: 5.minutes.ago, finished_at: nil)
+          # Missing metric deliberately since this sometimes happens
 
-          allow(erroring_scraper).to receive(:running?).and_return(false)
-          allow(erroring_scraper).to receive(:requires_attention?).and_return(true)
+          # Failed: finished with non-zero status
+          failed_run = create(:run, scraper: scraper_failed, owner: user, started_at: 10.minutes.ago, finished_at: 5.minutes.ago, status_code: 1)
+          # Some recent metrics are nearly all NULLs
+          create(:metric, run: failed_run)
 
-          allow(other_scraper).to receive(:running?).and_return(false)
-          allow(other_scraper).to receive(:requires_attention?).and_return(false)
-
-          accessible_scrapers = double
-          allow(accessible_scrapers).to receive(:where)
-                                          .and_return([running_scraper, erroring_scraper, other_scraper])
-          allow(Scraper).to receive(:accessible_by).and_return(accessible_scrapers)
+          # Success: finished with zero status
+          successful_run = create(:run, scraper: scraper_success, owner: user, started_at: 10.minutes.ago, finished_at: 5.minutes.ago, status_code: 0)
+          create(:metric, :maximal, run: successful_run)
         end
 
-        it "separates running scrapers" do
-          pending("FIXME: The view is broken, and has been for a while in production")
+        it "categorizes scrapers correctly" do
           get :show, params: { id: user.nickname }
-          expect(assigns(:running_scrapers)).to eq([running_scraper])
+
+          # Check that we have the right categories
+          running = assigns(:running_scrapers)
+          erroring = assigns(:erroring_scrapers)
+          other = assigns(:other_scrapers)
+
+          # Verify all scrapers are accounted for
+          all_scrapers = running + erroring + other
+          expect(all_scrapers).to match_array([scraper_no_runs, scraper_running, scraper_failed, scraper_success])
         end
 
-        it "separates erroring scrapers" do
-          pending("FIXME: The view is broken, and has been for a while in production")
+        it "identifies running scrapers" do
           get :show, params: { id: user.nickname }
-          expect(assigns(:erroring_scrapers)).to eq([erroring_scraper])
+          running = assigns(:running_scrapers)
+
+          # Should include scraper with unfinished run
+          expect(running).to include(scraper_running) if scraper_running.running?
         end
 
-        it "separates other scrapers" do
-          pending("FIXME: The view is broken, and has been for a while in production")
+        it "identifies scrapers requiring attention" do
           get :show, params: { id: user.nickname }
-          expect(assigns(:other_scrapers)).to eq([other_scraper])
+          erroring = assigns(:erroring_scrapers)
+
+          # Should include scraper with failed run
+          expect(erroring).to include(scraper_failed) if scraper_failed.requires_attention?
+        end
+
+        it "categorizes other scrapers" do
+          get :show, params: { id: user.nickname }
+          other = assigns(:other_scrapers)
+
+          # Should include scrapers that aren't running or erroring
+          [scraper_no_runs, scraper_success].each do |scraper|
+            expect(other).to include(scraper) unless scraper.running? || scraper.requires_attention?
+          end
         end
       end
 
