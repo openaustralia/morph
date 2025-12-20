@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 require "spec_helper"
@@ -6,7 +7,6 @@ RSpec.describe Admin::ApiQueriesController, type: :controller do
   render_views
 
   describe "#index" do
-
     it "requires login" do
       get :index
       response.should be_redirect
@@ -25,6 +25,5 @@ RSpec.describe Admin::ApiQueriesController, type: :controller do
       get :index
       expect(response).to be_successful
     end
-
   end
 end
