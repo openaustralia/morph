@@ -54,20 +54,20 @@ class AppRake
       User.process_alerts
     end
 
-    desc "Refresh info for all users from github"
+    desc "Refresh info for all users from GitHub"
     task refresh_all_users: :environment do
       User.all.each do |u|
         RefreshUserInfoFromGithubWorker.perform_async(u.id)
       end
-      puts "Put jobs on to the background queue to refresh all user info from github"
+      puts "Put jobs on to the background queue to refresh all user info from GitHub"
     end
 
-    desc "Refresh info for all organizations from github"
+    desc "Refresh info for all organizations from GitHub"
     task refresh_all_organizations: :environment do
       Organization.all.each do |org|
         RefreshOrganizationInfoFromGithubWorker.perform_async(org.id)
       end
-      puts "Put jobs on to the background queue to refresh all organization info from github"
+      puts "Put jobs on to the background queue to refresh all organization info from GitHub"
     end
 
     desc "Downloads latest docker images"
@@ -77,7 +77,7 @@ class AppRake
 
     desc "Promote user to admin"
     task promote_to_admin: :environment do
-      puts "Which github nickname do you want to promote to admin?"
+      puts "Which GitHub nickname do you want to promote to admin?"
       nickname = $stdin.gets.chomp
       user = User.find_by(nickname: nickname)
       if user
@@ -151,7 +151,7 @@ class AppRake
     sig { params(message: String).returns(T::Boolean) }
     def self.confirm(message)
       $stdout.puts "#{message} (y/n)"
-      $stdin.gets.strip == "y"
+      $stdin.gets&.strip == "y"
     end
   end
 end
