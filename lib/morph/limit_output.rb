@@ -46,8 +46,8 @@ module Morph
       line_count = 0
 
       exit_status = 1
-      Open3.popen3(command) do |_stdin, stdout, stderr, wait_thr|
-        streams = [stdout, stderr]
+      Open3.popen3(command) do |_stdin_pipe, stdout_pipe, stderr_pipe, wait_thr|
+        streams = [stdout_pipe, stderr_pipe]
         until streams.empty?
           IO.select(streams).flatten.compact.each do |io|
             if io.eof?
@@ -55,7 +55,7 @@ module Morph
               next
             end
 
-            on_stdout_stream = io.fileno == stdout.fileno
+            on_stdout_stream = io.fileno == stdout_pipe.fileno
             # Just send this stuff straight through
             buffer = on_stdout_stream ? stdout_buffer : stderr_buffer
             s = io.readpartial(1)
