@@ -199,8 +199,19 @@ describe Scraper do
     let(:scraper) { create(:scraper) }
 
     before do
-      scraper.runs.create!(owner: user, status_code: 0, finished_at: 2.days.ago)
-      scraper.runs.create!(owner: user, status_code: 255, finished_at: 1.day.ago)
+      # Create successful runs with log lines
+      3.times do |i|
+        run = scraper.runs.create!(owner: user, status_code: 0, finished_at: (i + 10).days.ago)
+        run.log_lines.create!(text: "Success log #{i}")
+      end
+
+      # Create unsuccessful runs with log lines
+      3.times do |i|
+        run = scraper.runs.create!(owner: user, status_code: 255, finished_at: (i + 10).days.ago)
+        run.log_lines.create!(text: "Error log #{i}")
+      end
+
+      # Recent runs that shouldn't be trimmed anyway
       scraper.runs.create!(owner: user, status_code: 0, finished_at: Time.zone.now)
       scraper.runs.create!(owner: user, started_at: Time.zone.now) # not finished
     end
@@ -208,12 +219,9 @@ describe Scraper do
     describe "#successful_runs" do
       it "returns only runs with status_code 0, ordered by finished_at desc" do
         successful = scraper.successful_runs
-        expect(successful.count).to eq(2)
+        expect(successful.count).to eq(4)
         expect(successful.map(&:status_code)).to all(eq(0))
-        expect(successful.first&.finished_at).to be.positive?
-        expect(LogLine.count).to be < initial_count
-        # Recent run logs should be kept
-        expect(recent_run.log_lines.count).to eq(3)
+        expect(successful.first.finished_at).to be > successful.last.finished_at
       end
 
       it "keeps at least KEEP_AT_LEAST_COUNT_PER_STATUS for successful runs" do

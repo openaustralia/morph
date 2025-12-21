@@ -25,7 +25,7 @@ describe Morph::GithubAppInstallation, :github_integration do
   describe "#installation_id" do
     it "returns installation id and no error" do
       id, error = installation.installation_id
-      expect(id).to be.positive?
+      expect(id).to be_positive
       expect(error).to be_nil
     end
   end
