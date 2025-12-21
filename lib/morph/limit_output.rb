@@ -3,16 +3,21 @@
 require "optparse"
 require "open3"
 
+# NOTE: This script MUST be compatible with ruby 1.9 through to current versions - do NOT modernize it!
+
 module Morph
 
   # This wrapper script runs a command and lets standard out and error flow
-  # through. However, it does limit the number of lines of output. This is
-  # used by morph as a wrapper around running scrapers to ensure that they
+  # through. However, it does limit the number of lines of output. Morph
+  # uses this as a wrapper around running scrapers to ensure that they
   # can't fill up the docker container log file (and hence the server disk)
+
   class LimitOutput
     USAGE = "Usage: ./limit_output.rb max_lines command_to_run"
 
-    def self.run(args, stdout_io: $stdout, stderr_io: $stderr)
+    def self.run(args, options = {})
+      stdout_io = options.fetch(:stdout_io, $stdout)
+      stderr_io = options.fetch(:stderr_io, $stderr)
       args = OptionParser.new do |opts|
         opts.banner = USAGE
         if args.length.zero?
@@ -22,7 +27,7 @@ module Morph
         elsif args.length > 2
           stderr_io.puts "Please give me the command to run as one argument"
         end
-        if args.length != 2
+        if args.length < 2
           stderr_io.puts opts
           return 1
         end
@@ -87,3 +92,4 @@ module Morph
 end
 
 exit Morph::LimitOutput.run(ARGV) if __FILE__ == $0
+
