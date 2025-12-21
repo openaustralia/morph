@@ -10,7 +10,7 @@ describe Scraper do
   # VALIDATIONS - GitHub Integration
   # ============================================================================
   # These tests require stubbing external GitHub API calls.
-  # All three validation methods run on create, so we stub ALL external calls
+  # The create method triggers all three validation methods, so we stub ALL external calls
   # in each test to prevent VCR errors.
   # ============================================================================
 
@@ -55,7 +55,7 @@ describe Scraper do
 
       it "skips validation when github_id is present" do
         scraper.github_id = 12345
-        # With github_id present, the not_used_on_github validation is skipped entirely
+        # With github_id present, the not_used_on_github validation is skipped entirely,
         # But app_has_access_to_repo will run, so we need to stub it
         allow(installation).to receive(:confirm_has_access_to).with(scraper.name).and_return(nil)
 
@@ -123,6 +123,7 @@ describe Scraper do
       it "is valid when app has access to the repository" do
         installation = instance_double(Morph::GithubAppInstallation)
         allow(Morph::GithubAppInstallation).to receive(:new).with("test_user").and_return(installation)
+        allow(installation).to receive(:installed?).and_return(true)
         allow(installation).to receive(:confirm_has_access_to).with("test_repo").and_return(nil)
 
         expect(scraper).to be_valid
@@ -131,6 +132,7 @@ describe Scraper do
       it "is invalid when app installation does not exist for owner" do
         installation = instance_double(Morph::GithubAppInstallation)
         allow(Morph::GithubAppInstallation).to receive(:new).with("test_user").and_return(installation)
+        allow(installation).to receive(:installed?).and_return(true)
         error = Morph::GithubAppInstallation::NoAppInstallationForOwner.new
         allow(installation).to receive(:confirm_has_access_to).with("test_repo").and_return(error)
 
@@ -141,6 +143,7 @@ describe Scraper do
       it "is invalid when app does not have access to repo" do
         installation = instance_double(Morph::GithubAppInstallation)
         allow(Morph::GithubAppInstallation).to receive(:new).with("test_user").and_return(installation)
+        allow(installation).to receive(:installed?).and_return(true)
         error = Morph::GithubAppInstallation::AppInstallationNoAccessToRepo.new
         allow(installation).to receive(:confirm_has_access_to).with("test_repo").and_return(error)
 
