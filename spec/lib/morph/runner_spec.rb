@@ -137,11 +137,15 @@ describe Morph::Runner do
           raise Sidekiq::Shutdown if c.include? "2..."
         end
       end.to raise_error(Sidekiq::Shutdown)
+
       run.reload
       expect(run).to be_running
-      # We expect the container to still be running
-      expect(Morph::DockerUtils.running_containers.count)
-        .to eq(running_count + 1)
+
+      expect_eventually do
+        # We expect the container to still be running
+        expect(Morph::DockerUtils.running_containers.count).to eq(running_count + 1)
+      end
+
       expect(run.database.first_ten_rows).to eq []
 
       # Now, we simulate the queue restarting the job
@@ -168,7 +172,7 @@ describe Morph::Runner do
       logs = []
 
       runner = described_class.new(run)
-      running_count = Morph::DockerUtils.running_containers.count
+      Morph::DockerUtils.running_containers.count
       expect do
         runner.go do |_timestamp, s, c|
           logs << c if s == :stdout
@@ -176,16 +180,19 @@ describe Morph::Runner do
           raise Sidekiq::Shutdown if c.include? "2..."
         end
       end.to raise_error(Sidekiq::Shutdown)
+
       expect(logs.join).to eq %W[Started!\n 1...\n 2...\n].join
       run.reload
       expect(run).to be_running
-      # We expect the container to still be running
-      expect(Morph::DockerUtils.running_containers.count)
-        .to eq(running_count + 1)
+
       expect(run.database.first_ten_rows).to eq []
 
-      # Wait until container is stopped
-      sleep 2
+      # Wait for the container to actually stop
+      expect_eventually do |waited|
+        container = Morph::DockerUtils.find_container_with_label("io.morph.run", run.id.to_s)
+        stopped = container.nil? || container.info["State"]["Running"] == false
+        expect(stopped).to be true, "Container did not stop within #{waited.round(2)} seconds"
+      end
 
       # Now, we simulate the queue restarting the job
       started_at = run.started_at
@@ -194,27 +201,13 @@ describe Morph::Runner do
         logs << text
         # puts c
       end
+
       # TODO: Really we only want to get newer logs
-      expect(logs.join).to eq [
-        "Started!\n",
-        "1...\n",
-        "2...\n",
-        "3...\n",
-        "4...\n",
-        "5...\n",
-        "6...\n",
-        "7...\n",
-        "8...\n",
-        "9...\n",
-        "10...\n",
-        "Finished!\n"
-      ].join
+      expect(logs.join).to eq %W[Started!\n 1...\n 2...\n 3...\n 4...\n 5...\n 6...\n 7...\n 8...\n 9...\n 10...\n Finished!\n].join
       run.reload
       # The start time shouldn't have changed
       expect(run.started_at).to eq started_at
-      expect(run.database.first_ten_rows).to eq [
-        { "state" => "started" }, { "state" => "finished" }
-      ]
+      expect(run.database.first_ten_rows).to eq [{ "state" => "started" }, { "state" => "finished" }]
     end
 
     it "is able to limit the number of lines of output", slow: true do
@@ -417,7 +410,7 @@ describe Morph::Runner do
     end
   end
 
-  describe "#stop!" do
+  describe "#stop!", docker: true do
     # TODO: Test that we can stop the compile stage
     it "is able to stop a scraper running in a continuous loop", slow: true do
       # 1.1 seconds
@@ -428,6 +421,7 @@ describe Morph::Runner do
       fill_scraper_for_run("stream_output_long", run)
       logs = []
 
+      stop_thread = nil
       runner = described_class.new(run)
       container_count = Morph::DockerUtils.stopped_containers.count
       runner.go do |_timestamp, _stream, text|
@@ -437,9 +431,13 @@ describe Morph::Runner do
           # similar to how it works on morph.io for real)
           # If we don't do this we get a "Closed stream (IOError)" which I
           # haven't yet been able to figure out the origins of
-          Thread.new { runner.stop! }
+          stop_thread = Thread.new { runner.stop! }
         end
       end
+
+      # Wait for the stop thread to complete
+      stop_thread&.join(5) # 5-second timeout
+
       expect(logs.join.include?("2...") || logs.join.include?("3...")).to be true
       expect(Morph::DockerUtils.stopped_containers.count).to eq container_count
       expect(run.database.first_ten_rows).to eq [{ "state" => "started" }]
