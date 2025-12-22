@@ -141,9 +141,9 @@ describe Morph::Runner do
       run.reload
       expect(run).to be_running
 
-      expect_eventually do
+      expect_eventually do |duration|
         # We expect the container to still be running
-        expect(Morph::DockerUtils.running_containers.count).to eq(running_count + 1)
+        expect(Morph::DockerUtils.running_containers.count).to eq(running_count + 1), "Expected container to still be running, timed out after #{duration.round(2)} seconds"
       end
 
       expect(run.database.first_ten_rows).to eq []
@@ -191,7 +191,7 @@ describe Morph::Runner do
       expect_eventually do |waited|
         container = Morph::DockerUtils.find_container_with_label("io.morph.run", run.id.to_s)
         stopped = container.nil? || container.info["State"]["Running"] == false
-        expect(stopped).to be true, "Container did not stop within #{waited.round(2)} seconds"
+        expect(stopped).to be(true), "Container did not stop within #{waited.round(2)} seconds"
       end
 
       # Now, we simulate the queue restarting the job
