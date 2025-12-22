@@ -124,6 +124,7 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include DockerImageHelper
+  config.include RetryHelper
 
   config.before(:suite) do
     Searchkick.disable_callbacks
