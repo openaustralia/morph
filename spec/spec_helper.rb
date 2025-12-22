@@ -5,6 +5,10 @@ require "simplecov"
 require "simplecov_json_formatter"
 require "simplecov-console"
 
+dont_run_github = ENV["DONT_RUN_GITHUB_TESTS"] || !File.exist?("config/morph-github-app.private-key.pem") # Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH
+dont_run_docker = ENV["DONT_RUN_DOCKER_TESTS"] || !system("docker -v > /dev/null 2>&1") || !system("docker info > /dev/null 2>&1")
+run_slow_tests = ENV.fetch("RUN_SLOW_TESTS", nil)
+
 SimpleCov.start "rails" do
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
     [
@@ -15,21 +19,38 @@ SimpleCov.start "rails" do
   )
   track_files "**/*.rb"
   # Filter coverage to relevant files when running specific specs
-  if ENV["SPEC"]
+  # Detect if this is a focused/targeted run
+  spec_files = ARGV.select { |arg| arg.match(/_spec\.rb$/) && arg.exclude?("*") }.to_a
+  spec_files += ENV["SPEC"].split(/\s+/) if ENV["SPEC"]
+  if spec_files.any?
     require "active_support/inflector"
 
     # Extract base names from spec files (strip _spec.rb and type suffixes)
-    base_names = ENV["SPEC"].scan(%r{/([^/\s]+)_spec.*\.rb}).flatten.flat_map do |name|
-      base = name.sub(/_controller$/, "").sub(/_helper$/, "")
-      [base, base.singularize, base.pluralize].uniq
-    end
+    puts "NOTE: Filtering coverage based on #{spec_files.size} spec files:"
+    base_names = spec_files.flat_map do |file|
+      name = File.basename(file, ".rb")
+      base = name.sub(/_spec$/, "").sub(/_(ability|controller|decorator|helper|job|mailer|policy|rake|serializer|service|worker)$/, "")
+      list = [base, base.singularize, base.pluralize].uniq
+      puts "  #{list.join(', ')}"
+      list
+    end.uniq
 
     # Only show coverage for files matching these base names
     add_filter do |src|
       base_names.none? { |name| src.filename.include?(name.to_s) }
     end
-  else
-    SimpleCov.minimum_coverage 66 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
+  elsif ARGV.none? { |arg| arg.include?("--example") }
+    expected_coverage = if run_slow_tests && !(dont_run_docker || dont_run_github)
+                          # `make all-tests` coverage when docker is installed and github app private keyfile exists
+                          86.32
+                        elsif run_slow_tests
+                          # `make ci-tests` coverage
+                          85.70
+                        else
+                          # `make quick-tests` coverage
+                          78.05
+                        end
+    SimpleCov.minimum_coverage expected_coverage - 0.01
   end
   add_filter %r{^/spec/}
   add_filter "/vendor/"
@@ -125,11 +146,9 @@ RSpec.configure do |config|
     end
   end
 
-  github_integration_possible = File.exist?(Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH)
-
-  config.filter_run_excluding github: true if ENV["DONT_RUN_GITHUB_TESTS"] || !github_integration_possible
-  config.filter_run_excluding docker: true if ENV["DONT_RUN_DOCKER_TESTS"]
-  config.filter_run_excluding slow: true unless ENV["RUN_SLOW_TESTS"]
+  config.filter_run_excluding github: true if dont_run_github
+  config.filter_run_excluding docker: true if dont_run_docker
+  config.filter_run_excluding slow: true unless run_slow_tests
 
   # Make sure sidekiq jobs don't linger between tests
   config.before do
