@@ -20,7 +20,7 @@ SimpleCov.start "rails" do
   track_files "**/*.rb"
   # Filter coverage to relevant files when running specific specs
   # Detect if this is a focused/targeted run
-  spec_files = ARGV.select { |arg| arg.match(/_spec\.rb$/) && arg.exclude?("*") }.to_a
+  spec_files = ARGV.select { |arg| arg.match(/\A[^*]+_spec\.rb\z/) }
   spec_files += ENV["SPEC"].split(/\s+/) if ENV["SPEC"]
   if spec_files.any?
     require "active_support/inflector"
