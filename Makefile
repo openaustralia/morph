@@ -125,6 +125,10 @@ quick-tests: ## Run quick rspec tests (excludes slow, docker and github tests)
 	DONT_RUN_GITHUB_TESTS=1 DONT_RUN_DOCKER_TESTS=1 bundle exec rake
 	echo "Passed quick tests!"
 
+ci-tests: ## Run the same rspec tests as CI (slow but not docker nor github app tests)
+	DONT_RUN_DOCKER_TESTS=1 RUN_SLOW_TESTS=1 DONT_RUN_GITHUB_TESTS=1 bundle exec rake
+	echo "Passed CI tests!"
+
 all-tests: ## Run all rspec tests
 	RUN_SLOW_TESTS=1 bundle exec rake
 	echo "Passed all tests!"
