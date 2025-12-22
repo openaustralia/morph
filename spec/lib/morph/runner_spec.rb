@@ -149,20 +149,7 @@ describe Morph::Runner do
       runner.go do |_timestamp, _stream, text|
         logs << text
       end
-      expect(logs.join).to eq [
-        "Started!\n",
-        "1...\n",
-        "2...\n",
-        "3...\n",
-        "4...\n",
-        "5...\n",
-        "6...\n",
-        "7...\n",
-        "8...\n",
-        "9...\n",
-        "10...\n",
-        "Finished!\n"
-      ].join
+      expect(logs.join).to eq %W[Started!\n 1...\n 2...\n 3...\n 4...\n 5...\n 6...\n 7...\n 8...\n 9...\n 10...\n Finished!\n].join
       run.reload
       # The start time shouldn't have changed
       expect(run.started_at).to eq started_at
@@ -189,11 +176,7 @@ describe Morph::Runner do
           raise Sidekiq::Shutdown if c.include? "2..."
         end
       end.to raise_error(Sidekiq::Shutdown)
-      expect(logs.join).to eq [
-        "Started!\n",
-        "1...\n",
-        "2...\n"
-      ].join
+      expect(logs.join).to eq %W[Started!\n 1...\n 2...\n].join
       run.reload
       expect(run).to be_running
       # We expect the container to still be running
@@ -348,9 +331,13 @@ describe Morph::Runner do
       FileUtils.touch(run.database.sqlite_db_path)
       FileUtils.touch(run.database.sqlite_db_backup_path)
 
+      # rubocop:disable RSpec/VerifiedDoubles
+      # Using unverified doubles here because these are dynamic objects with simple attribute access
+      # that don't have a well-defined class structure in the Morph::SqliteDiff module
       diffstat = instance_double(Morph::SqliteDiff::DiffStruct,
                                  tables: double(counts: double(added: 1, removed: 0, changed: 2, unchanged: 5)),
                                  records: double(added: 10, removed: 5, changed: 3, unchanged: 100))
+      # rubocop:enable RSpec/VerifiedDoubles
       allow(Morph::SqliteDiff).to receive(:diffstat_safe).and_return(diffstat)
 
       # Mock result to skip actual docker finish details
@@ -358,7 +345,7 @@ describe Morph::Runner do
       result = Morph::RunResult.new(0, { "data.sqlite" => Tempfile.new("data") }, time_params)
       allow(Morph::DockerRunner).to receive(:attach_to_run)
       allow(Morph::DockerRunner).to receive(:finish).and_return(result)
-      allow(Morph::Runner).to receive(:copy_sqlite_db_back)
+      allow(described_class).to receive(:copy_sqlite_db_back)
 
       # stub out external calls
       instance = described_class.new(run)
@@ -471,9 +458,7 @@ describe Morph::Runner do
       it do
         Dir.mktmpdir do |dir|
           described_class.add_config_defaults_to_directory("test", dir)
-          expect(Dir.entries(dir).sort).to eq [
-            ".", "..", "Procfile", "app.psgi", "cpanfile", "scraper.pl"
-          ]
+          expect(Dir.entries(dir).sort).to eq %w[. .. Procfile app.psgi cpanfile scraper.pl]
           perl = Morph::Language.new(:perl)
           expect(File.read(File.join(dir, "Procfile"))).to eq perl.procfile
           expect(File.read(File.join(dir, "app.psgi")))
@@ -497,9 +482,7 @@ describe Morph::Runner do
         it "alwayses use the template Procfile" do
           Dir.mktmpdir do |dir|
             described_class.add_config_defaults_to_directory("test", dir)
-            expect(Dir.entries(dir).sort).to eq [
-              ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
-            ]
+            expect(Dir.entries(dir).sort).to eq %w[. .. Gemfile Gemfile.lock Procfile scraper.rb]
             expect(File.read(File.join(dir, "Gemfile"))).to eq ""
             expect(File.read(File.join(dir, "Gemfile.lock"))).to eq ""
             ruby = Morph::Language.new(:ruby)
@@ -517,9 +500,7 @@ describe Morph::Runner do
         it "onlies provide a template Procfile" do
           Dir.mktmpdir do |dir|
             described_class.add_config_defaults_to_directory("test", dir)
-            expect(Dir.entries(dir).sort).to eq [
-              ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
-            ]
+            expect(Dir.entries(dir).sort).to eq %w[. .. Gemfile Gemfile.lock Procfile scraper.rb]
             expect(File.read(File.join(dir, "Gemfile"))).to eq ""
             expect(File.read(File.join(dir, "Gemfile.lock"))).to eq ""
             ruby = Morph::Language.new(:ruby)
@@ -532,9 +513,7 @@ describe Morph::Runner do
         it "provides a template Gemfile, Gemfile.lock and Procfile" do
           Dir.mktmpdir do |dir|
             described_class.add_config_defaults_to_directory("test", dir)
-            expect(Dir.entries(dir).sort).to eq [
-              ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
-            ]
+            expect(Dir.entries(dir).sort).to eq %w[. .. Gemfile Gemfile.lock Procfile scraper.rb]
             ruby = Morph::Language.new(:ruby)
             expect(File.read(File.join(dir, "Gemfile")))
               .to eq File.read(ruby.default_config_file_path("Gemfile"))
@@ -553,9 +532,7 @@ describe Morph::Runner do
         it "does not try to use the template Gemfile.lock" do
           Dir.mktmpdir do |dir|
             described_class.add_config_defaults_to_directory("test", dir)
-            expect(Dir.entries(dir).sort).to eq [
-              ".", "..", "Gemfile", "Procfile", "scraper.rb"
-            ]
+            expect(Dir.entries(dir).sort).to eq %w[. .. Gemfile Procfile scraper.rb]
             expect(File.read(File.join(dir, "Gemfile"))).to eq ""
             ruby = Morph::Language.new(:ruby)
             expect(File.read(File.join(dir, "Procfile"))).to eq ruby.procfile
@@ -590,10 +567,7 @@ describe Morph::Runner do
         Dir.mktmpdir do |dir|
           Morph::DockerUtils.copy_directory_contents("test", dir)
           described_class.remove_hidden_directories(dir)
-          expect(Dir.entries(dir).sort).to eq [
-            ".", "..", ".a_dot_file.cfg", "Gemfile", "Gemfile.lock",
-            "Procfile", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"
-          ]
+          expect(Dir.entries(dir).sort).to eq %w[. .. .a_dot_file.cfg Gemfile Gemfile.lock Procfile foo link.rb one.txt scraper.rb two.txt]
         end
       end
     end
@@ -616,10 +590,7 @@ describe Morph::Runner do
         Dir.mktmpdir do |dir|
           Morph::DockerUtils.copy_directory_contents("test", dir)
           described_class.remove_hidden_directories(dir)
-          expect(Dir.entries(dir).sort).to eq [
-            ".", "..", "Gemfile", "Gemfile.lock", "foo", "one.txt",
-            "scraper.rb"
-          ]
+          expect(Dir.entries(dir).sort).to eq %w[. .. Gemfile Gemfile.lock foo one.txt scraper.rb]
         end
       end
     end
@@ -639,9 +610,7 @@ describe Morph::Runner do
         Dir.mktmpdir do |dir|
           Morph::DockerUtils.copy_directory_contents("test", dir)
           described_class.remove_hidden_directories(dir)
-          expect(Dir.entries(dir).sort).to eq [
-            ".", "..", "Procfile", "scraper.rb"
-          ]
+          expect(Dir.entries(dir).sort).to eq %w[. .. Procfile scraper.rb]
         end
       end
     end
