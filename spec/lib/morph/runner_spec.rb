@@ -150,25 +150,25 @@ describe Morph::Runner do
         logs << text
       end
       expect(logs.join).to eq [
-                                "Started!\n",
-                                "1...\n",
-                                "2...\n",
-                                "3...\n",
-                                "4...\n",
-                                "5...\n",
-                                "6...\n",
-                                "7...\n",
-                                "8...\n",
-                                "9...\n",
-                                "10...\n",
-                                "Finished!\n"
-                              ].join
+        "Started!\n",
+        "1...\n",
+        "2...\n",
+        "3...\n",
+        "4...\n",
+        "5...\n",
+        "6...\n",
+        "7...\n",
+        "8...\n",
+        "9...\n",
+        "10...\n",
+        "Finished!\n"
+      ].join
       run.reload
       # The start time shouldn't have changed
       expect(run.started_at).to eq started_at
       expect(run.database.first_ten_rows).to eq [
-                                                  { "state" => "started" }, { "state" => "finished" }
-                                                ]
+        { "state" => "started" }, { "state" => "finished" }
+      ]
     end
 
     it "handles restarting from a stopped container", slow: true do
@@ -190,10 +190,10 @@ describe Morph::Runner do
         end
       end.to raise_error(Sidekiq::Shutdown)
       expect(logs.join).to eq [
-                                "Started!\n",
-                                "1...\n",
-                                "2...\n"
-                              ].join
+        "Started!\n",
+        "1...\n",
+        "2...\n"
+      ].join
       run.reload
       expect(run).to be_running
       # We expect the container to still be running
@@ -213,25 +213,25 @@ describe Morph::Runner do
       end
       # TODO: Really we only want to get newer logs
       expect(logs.join).to eq [
-                                "Started!\n",
-                                "1...\n",
-                                "2...\n",
-                                "3...\n",
-                                "4...\n",
-                                "5...\n",
-                                "6...\n",
-                                "7...\n",
-                                "8...\n",
-                                "9...\n",
-                                "10...\n",
-                                "Finished!\n"
-                              ].join
+        "Started!\n",
+        "1...\n",
+        "2...\n",
+        "3...\n",
+        "4...\n",
+        "5...\n",
+        "6...\n",
+        "7...\n",
+        "8...\n",
+        "9...\n",
+        "10...\n",
+        "Finished!\n"
+      ].join
       run.reload
       # The start time shouldn't have changed
       expect(run.started_at).to eq started_at
       expect(run.database.first_ten_rows).to eq [
-                                                  { "state" => "started" }, { "state" => "finished" }
-                                                ]
+        { "state" => "started" }, { "state" => "finished" }
+      ]
     end
 
     it "is able to limit the number of lines of output", slow: true do
@@ -250,13 +250,13 @@ describe Morph::Runner do
       end
       # TODO: Also test the creation of the correct number of log line records
       expect(logs[-6..-1]).to eq [
-                                   [:stdout, "Started!\n"],
-                                   [:stdout, "1...\n"],
-                                   [:stdout, "2...\n"],
-                                   [:stdout, "3...\n"],
-                                   [:stdout, "4...\n"],
-                                   [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
-                                 ]
+        [:stdout, "Started!\n"],
+        [:stdout, "1...\n"],
+        [:stdout, "2...\n"],
+        [:stdout, "3...\n"],
+        [:stdout, "4...\n"],
+        [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
+      ]
     end
 
     # Have to disable the test below for the time being because we can't
@@ -294,21 +294,21 @@ describe Morph::Runner do
         end
       end.to raise_error Sidekiq::Shutdown
       expect(logs[-3..-1]).to eq [
-                                   [:stdout, "Started!\n"],
-                                   [:stdout, "1...\n"],
-                                   [:stdout, "2...\n"]
-                                 ]
+        [:stdout, "Started!\n"],
+        [:stdout, "1...\n"],
+        [:stdout, "2...\n"]
+      ]
       runner.go_with_logging(5) do |_timestamp, s, c|
         logs << [s, c]
       end
       expect(logs[-6..-1]).to eq [
-                                   [:stdout, "Started!\n"],
-                                   [:stdout, "1...\n"],
-                                   [:stdout, "2...\n"],
-                                   [:stdout, "3...\n"],
-                                   [:stdout, "4...\n"],
-                                   [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
-                                 ]
+        [:stdout, "Started!\n"],
+        [:stdout, "1...\n"],
+        [:stdout, "2...\n"],
+        [:stdout, "3...\n"],
+        [:stdout, "4...\n"],
+        [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
+      ]
     end
 
     it "handles missing database file with status code zero" do
@@ -337,7 +337,7 @@ describe Morph::Runner do
 
       # Ensure the reop exists
       FileUtils.mkdir_p(run.repo_path)
-      FileUtils.cp_r(Rails.root.join('default_files/ruby/template/.'), run.repo_path)
+      FileUtils.cp_r(Rails.root.join("default_files/ruby/template/."), run.repo_path)
       Dir.chdir(run.repo_path) do
         system "git init -q ."
         system "git add ."
@@ -472,8 +472,8 @@ describe Morph::Runner do
         Dir.mktmpdir do |dir|
           described_class.add_config_defaults_to_directory("test", dir)
           expect(Dir.entries(dir).sort).to eq [
-                                                ".", "..", "Procfile", "app.psgi", "cpanfile", "scraper.pl"
-                                              ]
+            ".", "..", "Procfile", "app.psgi", "cpanfile", "scraper.pl"
+          ]
           perl = Morph::Language.new(:perl)
           expect(File.read(File.join(dir, "Procfile"))).to eq perl.procfile
           expect(File.read(File.join(dir, "app.psgi")))
@@ -498,8 +498,8 @@ describe Morph::Runner do
           Dir.mktmpdir do |dir|
             described_class.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
-                                                  ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
-                                                ]
+              ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
+            ]
             expect(File.read(File.join(dir, "Gemfile"))).to eq ""
             expect(File.read(File.join(dir, "Gemfile.lock"))).to eq ""
             ruby = Morph::Language.new(:ruby)
@@ -518,8 +518,8 @@ describe Morph::Runner do
           Dir.mktmpdir do |dir|
             described_class.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
-                                                  ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
-                                                ]
+              ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
+            ]
             expect(File.read(File.join(dir, "Gemfile"))).to eq ""
             expect(File.read(File.join(dir, "Gemfile.lock"))).to eq ""
             ruby = Morph::Language.new(:ruby)
@@ -533,8 +533,8 @@ describe Morph::Runner do
           Dir.mktmpdir do |dir|
             described_class.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
-                                                  ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
-                                                ]
+              ".", "..", "Gemfile", "Gemfile.lock", "Procfile", "scraper.rb"
+            ]
             ruby = Morph::Language.new(:ruby)
             expect(File.read(File.join(dir, "Gemfile")))
               .to eq File.read(ruby.default_config_file_path("Gemfile"))
@@ -554,8 +554,8 @@ describe Morph::Runner do
           Dir.mktmpdir do |dir|
             described_class.add_config_defaults_to_directory("test", dir)
             expect(Dir.entries(dir).sort).to eq [
-                                                  ".", "..", "Gemfile", "Procfile", "scraper.rb"
-                                                ]
+              ".", "..", "Gemfile", "Procfile", "scraper.rb"
+            ]
             expect(File.read(File.join(dir, "Gemfile"))).to eq ""
             ruby = Morph::Language.new(:ruby)
             expect(File.read(File.join(dir, "Procfile"))).to eq ruby.procfile
@@ -591,9 +591,9 @@ describe Morph::Runner do
           Morph::DockerUtils.copy_directory_contents("test", dir)
           described_class.remove_hidden_directories(dir)
           expect(Dir.entries(dir).sort).to eq [
-                                                ".", "..", ".a_dot_file.cfg", "Gemfile", "Gemfile.lock",
-                                                "Procfile", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"
-                                              ]
+            ".", "..", ".a_dot_file.cfg", "Gemfile", "Gemfile.lock",
+            "Procfile", "foo", "link.rb", "one.txt", "scraper.rb", "two.txt"
+          ]
         end
       end
     end
@@ -617,9 +617,9 @@ describe Morph::Runner do
           Morph::DockerUtils.copy_directory_contents("test", dir)
           described_class.remove_hidden_directories(dir)
           expect(Dir.entries(dir).sort).to eq [
-                                                ".", "..", "Gemfile", "Gemfile.lock", "foo", "one.txt",
-                                                "scraper.rb"
-                                              ]
+            ".", "..", "Gemfile", "Gemfile.lock", "foo", "one.txt",
+            "scraper.rb"
+          ]
         end
       end
     end
@@ -640,8 +640,8 @@ describe Morph::Runner do
           Morph::DockerUtils.copy_directory_contents("test", dir)
           described_class.remove_hidden_directories(dir)
           expect(Dir.entries(dir).sort).to eq [
-                                                ".", "..", "Procfile", "scraper.rb"
-                                              ]
+            ".", "..", "Procfile", "scraper.rb"
+          ]
         end
       end
     end
