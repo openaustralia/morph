@@ -41,7 +41,8 @@ SimpleCov.start "rails" do
     end
   elsif ARGV.none? { |arg| arg.include?("--example") }
     expected_coverage = if run_slow_tests && !(dont_run_docker || dont_run_github)
-                          # `make all-tests` coverage when docker is installed and github app private keyfile exists
+                          # `make all-tests` coverage when docker is installed and a GitHub app private key file exists
+                          # The log must NOT include a "Run options: exclude {<exclusions>}" line
                           86.32
                         elsif run_slow_tests
                           # `make ci-tests` coverage
