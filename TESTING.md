@@ -20,10 +20,15 @@ You can force the test to be excluded by setting
 
     DONT_RUN_GITHUB_TESTS=1
 
+For convenience, use the following command to run the quick tests first to see if something obviously broke, then run
+the full suite:
+
+    make test
+
 Manual Tests
 ------------    
 
-Tests that require a lot of setup have been left for manual testing. 
+Tests that require a lot of setup have been left for manual testing.
 Search for `# :nocov:` in the code to find code that needs manual testing.
 This includes:
 

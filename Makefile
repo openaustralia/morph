@@ -2,7 +2,8 @@
         production-deploy production-provision provision \
         roles services-down services-up \
 	staging-anible staging-deploy staging-provision \
-        share-web test up vagrant-plugins venv
+        share-web test up vagrant-plugins venv \
+	all-tests quick-tests
 VENV := .venv/bin
 SHELL := /bin/bash
 PYTHON_VERSION := $(shell cat .python-version 2>/dev/null || echo "python3")
@@ -115,8 +116,18 @@ services-logs: ## View logs for services (use SERVICES=elasticsearch for specifi
 services-status: ## Check status of services
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml ps
 
-test: ## Run rspec tests (Optionally add RUN_SLOW_TESTS=1 or DONT_RUN_DOCKER_TESTS=1)
+rspec: ## Run all rspec tests (Optionally add DONT_RUN_SLOW_TESTS=1 or DONT_RUN_DOCKER_TESTS=1 or DONT_RUN_GITHUB_TESTS=1)
 	RAILS_ENV=test bundle exec rspec
+
+test: quick-tests all-tests ## Run quick test then everything for a full coverage/index.html report
+
+quick-tests: ## Run quick rspec tests (excludes slow, docker and github tests)
+	DONT_RUN_GITHUB_TESTS=1 DONT_RUN_DOCKER_TESTS=1 bundle exec rake
+	echo "Passed quick tests!"
+
+all-tests: ## Run all rspec tests
+	RUN_SLOW_TESTS=1 bundle exec rake
+	echo "Passed all tests!"
 
 lint: ## Lint code
 	bundle exec rubocop
