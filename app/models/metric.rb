@@ -1,6 +1,34 @@
 # typed: strict
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: metrics
+#
+#  id         :integer          not null, primary key
+#  inblock    :integer
+#  majflt     :integer
+#  maxrss     :integer
+#  minflt     :integer
+#  nivcsw     :integer
+#  nvcsw      :integer
+#  oublock    :integer
+#  stime      :float(24)
+#  utime      :float(24)
+#  wall_time  :float(24)
+#  created_at :datetime
+#  updated_at :datetime
+#  run_id     :integer
+#
+# Indexes
+#
+#  index_metrics_on_run_id  (run_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (run_id => runs.id)
+#
+
 # Capture output of /usr/bin/time command (on Linux)
 # == Schema Information
 #

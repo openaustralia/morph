@@ -40,19 +40,19 @@ describe Morph::GithubAppInstallation, :github_integration do
   end
 
   describe "#confirm_has_access_to" do
-    it "returns nil when app has access to repo" do
+    it "returns nil when app has access to repo", slow: true do # 2 seconds
       error = installation.confirm_has_access_to("yarra")
       expect(error).to be_nil
     end
 
-    it "returns AppInstallationNoAccessToRepo when repo doesn't exist" do
+    it "returns AppInstallationNoAccessToRepo when repo doesn't exist", slow: true do # 2 seconds
       error = installation.confirm_has_access_to("no-such-scraper")
       expect(error).to be_a(Morph::GithubAppInstallation::AppInstallationNoAccessToRepo)
     end
   end
 
   describe "#repository_private?" do
-    it "returns false for public repo" do
+    it "returns false for public repo", slow: true do # 1.9 seconds
       result, error = installation.repository_private?("yarra")
       expect(error).to be_nil
       expect(result).to be false
@@ -60,7 +60,7 @@ describe Morph::GithubAppInstallation, :github_integration do
   end
 
   describe "#contributor_nicknames" do
-    it "returns array of contributor logins" do
+    it "returns array of contributor logins", slow: true do # 1.1 seconds
       contributors, error = installation.contributor_nicknames("yass")
       expect(error).to be_nil
       expect(contributors).to be_an(Array)
@@ -68,7 +68,7 @@ describe Morph::GithubAppInstallation, :github_integration do
       expect(contributors).not_to be_empty
     end
 
-    it "returns NoAccessToRepo error for nonexistent repo" do
+    it "returns NoAccessToRepo error for nonexistent repo", slow: true do # 1.0 seconds
       contributors, error = installation.contributor_nicknames("no-such-scraper")
       expect(contributors).to eq([])
       expect(error).to be_a(Morph::GithubAppInstallation::NoAccessToRepo)
@@ -76,7 +76,7 @@ describe Morph::GithubAppInstallation, :github_integration do
   end
 
   describe "#collaborators" do
-    it "returns array of collaborators with permissions" do
+    it "returns array of collaborators with permissions", slow: true do # 1.1 seconds
       collaborators, error = installation.collaborators("yarra")
       expect(error).to be_nil
       expect(collaborators).to be_an(Array)
@@ -84,7 +84,7 @@ describe Morph::GithubAppInstallation, :github_integration do
       expect(collaborators.first.permissions.admin).to be_in([true, false])
     end
 
-    it "returns NoAccessToRepo error for nonexistent repo" do
+    it "returns NoAccessToRepo error for nonexistent repo", slow: true do # 1.1 seconds
       collaborators, error = installation.collaborators("no-such-scraper")
       expect(collaborators).to eq([])
       expect(error).to be_a(Morph::GithubAppInstallation::NoAccessToRepo)
