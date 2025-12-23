@@ -20,6 +20,7 @@
 #
 #  fk_rails_...  (scraper_id => scrapers.id)
 #
+
 require "spec_helper"
 
 describe Variable do

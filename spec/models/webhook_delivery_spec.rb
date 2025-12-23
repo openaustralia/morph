@@ -23,6 +23,7 @@
 #  fk_rails_...  (run_id => runs.id)
 #  fk_rails_...  (webhook_id => webhooks.id)
 #
+
 require "spec_helper"
 
 RSpec.describe WebhookDelivery, type: :model do

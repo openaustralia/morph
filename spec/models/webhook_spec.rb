@@ -20,6 +20,7 @@
 #
 #  fk_rails_...  (scraper_id => scrapers.id)
 #
+
 require "spec_helper"
 
 RSpec.describe Webhook, type: :model do

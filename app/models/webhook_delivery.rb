@@ -23,6 +23,7 @@
 #  fk_rails_...  (run_id => runs.id)
 #  fk_rails_...  (webhook_id => webhooks.id)
 #
+
 class WebhookDelivery < ApplicationRecord
   extend T::Sig
   SUCCESSFUL_STATUSES = T.let((200..299).freeze, T::Range[Integer])
