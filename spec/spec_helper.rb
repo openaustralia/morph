@@ -127,6 +127,7 @@ RSpec.configure do |config|
   config.include DockerImageHelper
   config.include RetryHelper
   config.include CaptureHelper
+  config.include ToolAvailability
 
   config.before(:suite) do
     Searchkick.disable_callbacks
