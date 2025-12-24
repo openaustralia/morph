@@ -159,9 +159,9 @@ RSpec.configure do |config|
   config.filter_run_excluding slow: true unless run_slow_tests
 
   if ENV["DONT_RUN_GITHUB_TESTS"]
-    $stdout.puts "Skipping GitHub tests because DONT_RUN_GITHUB_TESTS is set"
+    $stdout.puts "Skipping GitHub app tests because DONT_RUN_GITHUB_TESTS is set"
   elsif dont_run_github
-    $stdout.puts "Skipping GitHub tests because of missing env vars / private key file"
+    $stdout.puts "Skipping GitHub app tests because of missing env vars / private key file"
   end
   if ENV["DONT_RUN_DOCKER_TESTS"]
     $stdout.puts "Skipping Docker tests because DONT_RUN_DOCKER_TESTS is set"
