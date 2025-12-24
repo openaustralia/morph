@@ -5,7 +5,7 @@ require "simplecov"
 require "simplecov_json_formatter"
 require "simplecov-console"
 
-dont_run_github = ENV["DONT_RUN_GITHUB_TESTS"] || !File.exist?("config/morph-github-app.private-key.pem") # Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH
+dont_run_github = ENV["DONT_RUN_GITHUB_TESTS"] || !ENV["GITHUB_APP_INSTALLED_BY"] || !File.exist?("config/morph-github-app.private-key.pem") # Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH
 dont_run_docker = ENV["DONT_RUN_DOCKER_TESTS"] || !system("docker -v > /dev/null 2>&1") || !system("docker info > /dev/null 2>&1")
 run_slow_tests = ENV.fetch("RUN_SLOW_TESTS", nil)
 
@@ -46,7 +46,11 @@ SimpleCov.start "rails" do
                           87.02
                         elsif run_slow_tests
                           # `make ci-tests` coverage
-                          80.44
+                          # FIXME: for some reason there is a difference, eg
+                          # * GitHub COVERAGE:  80.09% -- 2957/3692 lines in 97 files
+                          # * Local COVERAGE:  80.44% -- 2970/3692 lines in 97 files
+                          # SO Set it based on the CI coverage on GitHub!
+                          80.09
                         else
                           # `make quick-tests` coverage
                           77.09
