@@ -18,7 +18,7 @@ RSpec.describe Admin::SidekiqController, type: :controller do
       response.should be_redirect
     end
 
-    it "displays index for admin user" do
+    it "displays index for admin user", slow: true do # 1.6 seconds
       sign_in create(:user, admin: true)
       create(:api_query)
       create(:api_query, :maximal)
