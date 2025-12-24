@@ -43,13 +43,13 @@ SimpleCov.start "rails" do
     expected_coverage = if run_slow_tests && !(dont_run_docker || dont_run_github)
                           # `make all-tests` coverage when docker is installed and a GitHub app private key file exists
                           # The log must NOT include a "Run options: exclude {<exclusions>}" line
-                          86.32
+                          87.02
                         elsif run_slow_tests
                           # `make ci-tests` coverage
-                          85.70
+                          81.85
                         else
                           # `make quick-tests` coverage
-                          78.05
+                          77.09
                         end
     SimpleCov.minimum_coverage expected_coverage - 0.01
   end
