@@ -72,7 +72,7 @@ module Morph
     # Returns true if the container is running
     sig { params(container: Docker::Container).returns(T.nilable(T::Boolean)) }
     def self.running?(container)
-      container.info&.dig("State", "Running")
+      container.json&.dig("State", "Running")
     end
 
     sig { params(container: Docker::Container, key: String, value: String).returns(T::Boolean) }
