@@ -1,6 +1,50 @@
 # typed: strict
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: runs
+#
+#  id                    :integer          not null, primary key
+#  auto                  :boolean          default(FALSE), not null
+#  connection_logs_count :integer
+#  docker_image          :string(255)
+#  finished_at           :datetime
+#  git_revision          :string(255)
+#  ip_address            :string(255)
+#  queued_at             :datetime
+#  records_added         :integer
+#  records_changed       :integer
+#  records_removed       :integer
+#  records_unchanged     :integer
+#  started_at            :datetime
+#  status_code           :integer
+#  tables_added          :integer
+#  tables_changed        :integer
+#  tables_removed        :integer
+#  tables_unchanged      :integer
+#  wall_time             :float(24)        default(0.0), not null
+#  created_at            :datetime
+#  updated_at            :datetime
+#  owner_id              :integer          not null
+#  scraper_id            :integer
+#
+# Indexes
+#
+#  index_runs_on_created_at                                  (created_at)
+#  index_runs_on_docker_image                                (docker_image)
+#  index_runs_on_finished_at                                 (finished_at)
+#  index_runs_on_ip_address                                  (ip_address)
+#  index_runs_on_owner_id                                    (owner_id)
+#  index_runs_on_scraper_id                                  (scraper_id)
+#  index_runs_on_scraper_id_and_status_code_and_finished_at  (scraper_id,status_code,finished_at)
+#  index_runs_on_started_at                                  (started_at)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (scraper_id => scrapers.id)
+#
+
 # A run of a scraper
 # == Schema Information
 #

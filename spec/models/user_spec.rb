@@ -40,6 +40,7 @@
 #  index_owners_on_api_key   (api_key)
 #  index_owners_on_nickname  (nickname)
 #
+
 require "spec_helper"
 
 describe User do

@@ -21,6 +21,7 @@
 #  fk_rails_...  (domain_id => domains.id)
 #  fk_rails_...  (run_id => runs.id)
 #
+
 require "spec_helper"
 
 describe ConnectionLog do

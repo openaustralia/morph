@@ -10,6 +10,7 @@
 #  created_at :datetime
 #  updated_at :datetime
 #
+
 require "sorbet-runtime"
 
 # Settings that apply to the whole app and everybody on it

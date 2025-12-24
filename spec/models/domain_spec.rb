@@ -16,6 +16,7 @@
 #
 #  index_domains_on_name  (name) UNIQUE
 #
+
 require "spec_helper"
 
 describe Domain do

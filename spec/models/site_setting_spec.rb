@@ -10,6 +10,7 @@
 #  created_at :datetime
 #  updated_at :datetime
 #
+
 require "spec_helper"
 
 describe SiteSetting do
