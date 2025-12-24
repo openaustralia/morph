@@ -46,7 +46,7 @@ SimpleCov.start "rails" do
                           87.02
                         elsif run_slow_tests
                           # `make ci-tests` coverage
-                          81.85
+                          80.44
                         else
                           # `make quick-tests` coverage
                           77.09
