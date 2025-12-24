@@ -207,15 +207,15 @@ RSpec.describe Morph::VanityStats do
       run2 = create(:run, scraper: scraper2, owner: user2, finished_at: 3.days.ago,
                           records_added: 50, records_changed: 30)
 
-      # Currently, no connection logs are recorded.
-      # create(:connection_log, run: run1, created_at: 1.day.ago)
-      # create(:connection_log, run: run2, created_at: 3.days.ago)
+      create(:connection_log, run: run1, created_at: 1.day.ago)
+      create(:connection_log, run: run1, created_at: 1.day.ago)
+      create(:connection_log, run: run2, created_at: 3.days.ago)
 
       create(:api_query, scraper: scraper, owner: user, created_at: 2.days.ago)
       create(:api_query, scraper: scraper2, owner: user2, created_at: 4.days.ago)
 
       expect(described_class.total_database_rows_updated_in_last_week).to eq(200)
-      expect(described_class.total_pages_scraped_in_last_week).to eq(0)
+      expect(described_class.total_pages_scraped_in_last_week).to eq(3)
       expect(described_class.total_api_queries_in_last_week).to eq(2)
     end
   end
