@@ -8,11 +8,11 @@ module RetryHelper
   #     expect(Morph::DockerUtils.running_containers.count).to eq(running_count + 1)
   #   end
   def expect_eventually(timeout: 15, &block)
-    start = Time.now
+    start = Time.now.utc
     delay = 0.1
 
     loop do
-      dur = Time.now - start
+      dur = Time.now.utc - start
       begin
         return block.call(dur)
       rescue RSpec::Expectations::ExpectationNotMetError => e
