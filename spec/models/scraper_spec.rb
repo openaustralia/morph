@@ -36,7 +36,6 @@
 #
 #  fk_rails_...  (create_scraper_progress_id => create_scraper_progresses.id)
 
-
 require "spec_helper"
 
 def just_for_navigating
