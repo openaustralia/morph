@@ -9,6 +9,7 @@ describe Morph::GithubAppInstallation, :github_integration do
   let(:installation_no_app) { described_class.new("microsoft") }
 
   before do
+    skip "DONT_RUN_GITHUB_TESTS is set" if ENV["DONT_RUN_GITHUB_TESTS"]
     skip "GITHUB_APP_INSTALLED_BY not set" if installed_bv.nil?
   end
 
