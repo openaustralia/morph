@@ -303,5 +303,4 @@ FactoryBot.define do
       title { FactoryHelpers.max_string("A web page title", 65535) }
     end
   end
-
 end

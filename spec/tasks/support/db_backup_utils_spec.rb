@@ -23,21 +23,21 @@ RSpec.describe DbBackupUtils do
 
   describe ".mysqldump_cmd" do
     it "restores MYSQL_PWD environment variable after block execution" do
-      original_pwd = ENV["MYSQL_PWD"]
+      original_pwd = ENV.fetch("MYSQL_PWD", nil)
 
       described_class.mysqldump_cmd { |_cmd| nil }
 
-      expect(ENV["MYSQL_PWD"]).to eq(original_pwd)
+      expect(ENV.fetch("MYSQL_PWD", nil)).to eq(original_pwd)
     end
 
     it "restores MYSQL_PWD even when block raises error" do
-      original_pwd = ENV["MYSQL_PWD"]
+      original_pwd = ENV.fetch("MYSQL_PWD", nil)
 
       expect do
         described_class.mysqldump_cmd { raise "test error" }
       end.to raise_error("test error")
 
-      expect(ENV["MYSQL_PWD"]).to eq(original_pwd)
+      expect(ENV.fetch("MYSQL_PWD", nil)).to eq(original_pwd)
     end
   end
 

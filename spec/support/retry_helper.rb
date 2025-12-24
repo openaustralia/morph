@@ -16,7 +16,8 @@ module RetryHelper
       begin
         return block.call(dur)
       rescue RSpec::Expectations::ExpectationNotMetError => e
-        raise e unless (dur < timeout)
+        raise e unless dur < timeout
+
         sleep delay
         delay = [delay + 0.1, 0.5].min
       end

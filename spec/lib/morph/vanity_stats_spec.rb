@@ -203,9 +203,9 @@ RSpec.describe Morph::VanityStats do
       scraper2 = create(:scraper, owner: user2)
 
       run1 = create(:run, scraper: scraper, owner: user, finished_at: 1.day.ago,
-                    records_added: 100, records_changed: 20)
+                          records_added: 100, records_changed: 20)
       run2 = create(:run, scraper: scraper2, owner: user2, finished_at: 3.days.ago,
-                    records_added: 50, records_changed: 30)
+                          records_added: 50, records_changed: 30)
 
       # Currently, no connection logs are recorded.
       # create(:connection_log, run: run1, created_at: 1.day.ago)
