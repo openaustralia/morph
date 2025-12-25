@@ -33,6 +33,7 @@ describe Morph::GithubAppInstallation, :github_integration do
 
   describe "#access_token" do
     it "returns valid token" do
+      # Check your system time sync If you get an "401 - 'Expiration time' claim ('exp') is too far in the future" error
       token, error = installation.access_token
       expect(token).to be_a(String)
       expect(token.length).to be > 20
@@ -54,6 +55,7 @@ describe Morph::GithubAppInstallation, :github_integration do
 
   describe "#repository_private?" do
     it "returns false for public repo", slow: true do # 1.9 seconds
+      # Check your system time sync If you get an "401 - 'Expiration time' claim ('exp') is too far in the future" error
       result, error = installation.repository_private?("yarra")
       expect(error).to be_nil
       expect(result).to be false
