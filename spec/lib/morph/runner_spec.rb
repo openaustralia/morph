@@ -440,7 +440,9 @@ describe Morph::Runner do
       stop_thread&.join(5) # 5-second timeout
 
       expect(logs.join.include?("2...") || logs.join.include?("3...")).to be true
-      expect(Morph::DockerUtils.stopped_containers.count).to eq container_count
+      expect_eventually do |waited|
+        expect(Morph::DockerUtils.stopped_containers.count).to eq(container_count), "Expected #{container_count} stopped containers, still got #{Morph::DockerUtils.stopped_containers.count} after #{waited} seconds"
+      end
       expect(run.database.first_ten_rows).to eq [{ "state" => "started" }]
       expect(run.status_code).to eq 137
     end

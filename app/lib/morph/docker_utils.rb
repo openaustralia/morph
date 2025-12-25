@@ -158,7 +158,7 @@ module Morph
     sig { returns(T::Array[Docker::Container]) }
     def self.stopped_containers
       Docker::Container.all(all: true).reject do |c|
-        c.json["State"]["Running"]
+        running?(c)
       end
     end
 
