@@ -228,8 +228,8 @@ describe Morph::SqliteDiff do
       expect(described_class.diffstat_table("foo", db1, db2).serialize).to eq("added" => 0, "removed" => 0, "changed" => 1, "unchanged" => 0)
     end
 
-    it "is able to handle a large number of records", slow: true do
-      FileUtils.rm_f(["tmp_db1.sqlite", "tmp_db2.sqlite"])
+    it "is able to handle a large number of records", slow: true do # 14.2 seconds
+      FileUtils.rm_f(%w[tmp_db1.sqlite tmp_db2.sqlite])
       # Create an sqlite database
       db1 = SQLite3::Database.new("tmp_db1.sqlite")
       db1.execute("CREATE TABLE foo (v1 text, v2 real);")

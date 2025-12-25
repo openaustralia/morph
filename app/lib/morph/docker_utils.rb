@@ -69,6 +69,12 @@ module Morph
       container.info["Labels"][label_key] if container.info && container.info["Labels"]
     end
 
+    # Returns true if the container is running
+    sig { params(container: Docker::Container).returns(T.nilable(T::Boolean)) }
+    def self.running?(container)
+      container.json&.dig("State", "Running")
+    end
+
     sig { params(container: Docker::Container, key: String, value: String).returns(T::Boolean) }
     def self.container_has_label_value?(container, key, value)
       label_value(container, key) == value
@@ -152,7 +158,7 @@ module Morph
     sig { returns(T::Array[Docker::Container]) }
     def self.stopped_containers
       Docker::Container.all(all: true).reject do |c|
-        c.json["State"]["Running"]
+        running?(c)
       end
     end
 

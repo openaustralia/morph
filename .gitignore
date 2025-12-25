@@ -34,7 +34,6 @@
 # Used by direnv / dotenv library to load environment variables.
 /.env*
 
-# Project specific cache
 /db/scrapers
 
 # Ignore Vagrant artifacts
