@@ -40,7 +40,7 @@ class AppRake
     task auto_run_scrapers: :environment do
       # All the scrapers that need running in a random order
       scraper_ids = Scraper.where(auto_run: true).map(&:id).shuffle
-      interval = 24.hours / scraper_ids.count
+      interval = 24.hours / [1, scraper_ids.count].max
       time = 0
       scraper_ids.each do |scraper_id|
         ScraperAutoRunWorker.perform_in(time, T.must(scraper_id))
@@ -54,20 +54,20 @@ class AppRake
       User.process_alerts
     end
 
-    desc "Refresh info for all users from github"
+    desc "Refresh info for all users from GitHub"
     task refresh_all_users: :environment do
       User.all.each do |u|
         RefreshUserInfoFromGithubWorker.perform_async(u.id)
       end
-      puts "Put jobs on to the background queue to refresh all user info from github"
+      puts "Put jobs on to the background queue to refresh all user info from GitHub"
     end
 
-    desc "Refresh info for all organizations from github"
+    desc "Refresh info for all organizations from GitHub"
     task refresh_all_organizations: :environment do
       Organization.all.each do |org|
         RefreshOrganizationInfoFromGithubWorker.perform_async(org.id)
       end
-      puts "Put jobs on to the background queue to refresh all organization info from github"
+      puts "Put jobs on to the background queue to refresh all organization info from GitHub"
     end
 
     desc "Downloads latest docker images"
@@ -77,7 +77,7 @@ class AppRake
 
     desc "Promote user to admin"
     task promote_to_admin: :environment do
-      puts "Which github nickname do you want to promote to admin?"
+      puts "Which GitHub nickname do you want to promote to admin?"
       nickname = $stdin.gets.chomp
       user = User.find_by(nickname: nickname)
       if user
@@ -148,22 +148,10 @@ class AppRake
       # end
     end
 
-    desc "Remove log lines for old runs (not the latest ones)"
-    task clean_up_old_log_lines: :environment do
-      Scraper.all.each do |scraper|
-        puts "Removing old logs for #{scraper.full_name}..."
-        runs = scraper.runs.order(queued_at: :desc)
-        # Remove the most recently run from the list
-        runs = runs[1..-1]
-        # Now remove the logs connected to those runs
-        LogLine.delete_all(run: runs)
-      end
-    end
-
     sig { params(message: String).returns(T::Boolean) }
     def self.confirm(message)
       $stdout.puts "#{message} (y/n)"
-      $stdin.gets.strip == "y"
+      $stdin.gets&.strip == "y"
     end
   end
 end

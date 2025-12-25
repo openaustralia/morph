@@ -30,6 +30,18 @@ Read the [provisioning README](provisioning/README.md) for further details.
 * 8 GB of memory is the minimum, 16 GB is recommended
 * SSD Disk
 
+## Coding Standards
+
+* **Must pass RuboCop** (as configured in `.rubocop.yml`) to encourage good practices
+* **Must pass RSpec tests** – please write specs for any new code
+* **Be nice to other developers and future you:**
+  - **Clear, descriptive naming** - code should tell you what it's doing
+  - **Add comments to explain WHY** – when it's not obvious from the code itself
+  - **Keep methods small** – ideally one paragraph, definitely under one screen page
+  - **Split large files** – keep files <= 400 lines for readability and maintainability
+    - See `spec/models/scraper_spec.rb` as an example split file
+    - Consider splitting off concerns and domain logic into separate files when other files get too fat
+
 ### Support for Developers / CI
 
 Docker compose is used to provide redis, elasticsearch and mysql services as required for dev and CI

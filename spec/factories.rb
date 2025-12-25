@@ -1,6 +1,10 @@
 # typed: false
 # frozen_string_literal: true
 
+# Factories for everything in app/models apart from
+# * owner - an abstract model
+# * site_setting - a singleton created when accessed
+# The maximal trait is intended to have values for all attributes, with the largest possible values
 FactoryBot.define do
   factory :user do
     # Required in practice if you collaborate or own a scraper - only 6 users in Prod dont have nicknames
@@ -75,6 +79,23 @@ FactoryBot.define do
       ip_address { "203.0.113.42" }
       connection_logs_count { 25 }
       docker_image { FactoryHelpers.max_string("morph/ruby:latest", 255) }
+    end
+  end
+
+  factory :metric do
+    run factory: :run
+
+    trait :maximal do
+      wall_time { 45.67 }
+      utime { 1.23 }
+      stime { 0.54 }
+      maxrss { 18765 }
+      minflt { 34567 }
+      majflt { 65 }
+      inblock { 45678 }
+      oublock { 8765 }
+      nvcsw { 3210 }
+      nivcsw { 345 }
     end
   end
 
@@ -262,6 +283,24 @@ FactoryBot.define do
       heading { FactoryHelpers.max_string("New scraper", 255) }
       message { FactoryHelpers.max_string("Add scraper template", 255) }
       progress { 40 }
+    end
+  end
+
+  factory :connection_log do
+    domain
+    run
+    trait :maximal do
+      domain { association(:domain, :maximal) }
+      run { association(:run, :maximal) }
+    end
+  end
+
+  factory :domain do
+    sequence(:name) { |n| "host#{n}.example.com" }
+    trait :maximal do
+      sequence(:name) { |n| "host#{n}.llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch.co.uk" }
+      meta { FactoryHelpers.max_string("Some meta information", 65535) }
+      title { FactoryHelpers.max_string("A web page title", 65535) }
     end
   end
 end
