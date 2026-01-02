@@ -16,7 +16,7 @@ ActiveAdmin.register_page "Docker Containers" do
       info = container.json
       record = {
         container_id: info["Id"][0..11],
-        running: info["State"]["Running"] ? "yes" : "no",
+        running: Morph::DockerUtils.running?(container) ? "yes" : "no",
         started_at: Time.zone.parse(info["State"]["StartedAt"])
       }
       if record[:running] == "no"

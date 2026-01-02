@@ -78,7 +78,7 @@ describe ApiController do
       ]
     end
 
-    skip "should test streaming"
+    # TODO: "should test streaming"
   end
 
   describe "#data" do
