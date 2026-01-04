@@ -344,7 +344,7 @@ class Scraper < ApplicationRecord
     platform_file = "#{repo_path}/platform"
     platform = File.read(platform_file).chomp if File.exist?(platform_file)
     # TODO: We should remove support for early_release at some stage
-    platform = "heroku-18" if platform == "early_release"
+    platform = "heroku-24" if platform == "early_release"
     platform
   end
 
