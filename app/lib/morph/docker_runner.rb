@@ -21,7 +21,7 @@ module Morph
     BUILDSTEP_IMAGE = "openaustralia/buildstep"
     # Variants of the buildstep image that we're currently supporting. These
     # correspond to tags of the buildstep image
-    PLATFORMS = T.let(%w[cedar-14 heroku-18].freeze, T::Array[String])
+    PLATFORMS = T.let(%w[cedar-14 heroku-18 heroku-24].freeze, T::Array[String])
     DEFAULT_PLATFORM = "cedar-14"
     DOCKER_NETWORK = "morph"
     DOCKER_BRIDGE = "morph"
