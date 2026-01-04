@@ -133,7 +133,7 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run hello world js on heroku-18" do
+    it "is able to run hello world js on heroku-24" do
       copy_test_scraper("hello_world_js")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
