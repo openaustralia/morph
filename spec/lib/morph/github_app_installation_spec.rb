@@ -4,11 +4,12 @@
 require "spec_helper"
 
 describe Morph::GithubAppInstallation, :github_integration do
-  let(:installed_bv) { ENV.fetch("GITHUB_APP_INSTALLED_BY", nil) }
+  let(:installed_bv) { ENV["DONT_RUN_GITHUB_TESTS"] ? nil : ENV.fetch("GITHUB_APP_INSTALLED_BY", nil) }
   let(:installation) { described_class.new(installed_bv) }
   let(:installation_no_app) { described_class.new("microsoft") }
 
   before do
+    skip "DONT_RUN_GITHUB_TESTS is set" if ENV["DONT_RUN_GITHUB_TESTS"]
     skip "GITHUB_APP_INSTALLED_BY not set" if installed_bv.nil?
   end
 
@@ -25,13 +26,14 @@ describe Morph::GithubAppInstallation, :github_integration do
   describe "#installation_id" do
     it "returns installation id and no error" do
       id, error = installation.installation_id
-      expect(id).to be > 0
+      expect(id).to be_positive
       expect(error).to be_nil
     end
   end
 
   describe "#access_token" do
     it "returns valid token" do
+      # Check your system time sync If you get an "401 - 'Expiration time' claim ('exp') is too far in the future" error
       token, error = installation.access_token
       expect(token).to be_a(String)
       expect(token.length).to be > 20
@@ -53,6 +55,7 @@ describe Morph::GithubAppInstallation, :github_integration do
 
   describe "#repository_private?" do
     it "returns false for public repo", slow: true do # 1.9 seconds
+      # Check your system time sync If you get an "401 - 'Expiration time' claim ('exp') is too far in the future" error
       result, error = installation.repository_private?("yarra")
       expect(error).to be_nil
       expect(result).to be false

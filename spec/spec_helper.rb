@@ -5,6 +5,10 @@ require "simplecov"
 require "simplecov_json_formatter"
 require "simplecov-console"
 
+dont_run_github = ENV["DONT_RUN_GITHUB_TESTS"] || !ENV["GITHUB_APP_INSTALLED_BY"] || !File.exist?("config/morph-github-app.private-key.pem") # Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH
+dont_run_docker = ENV["DONT_RUN_DOCKER_TESTS"] || !system("docker -v > /dev/null 2>&1") || !system("docker info > /dev/null 2>&1")
+run_slow_tests = ENV.fetch("RUN_SLOW_TESTS", nil)
+
 SimpleCov.start "rails" do
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
     [
@@ -14,7 +18,45 @@ SimpleCov.start "rails" do
     ]
   )
   track_files "**/*.rb"
-  SimpleCov.minimum_coverage 53 - (ENV["DONT_RUN_DOCKER_TESTS"] ? 6 : 0)
+  # Filter coverage to relevant files when running specific specs
+  # Detect if this is a focused/targeted run
+  spec_files = ARGV.select { |arg| arg.match(/\A[^*]+_spec\.rb\z/) }
+  spec_files += ENV["SPEC"].split(/\s+/) if ENV["SPEC"]
+  if spec_files.any?
+    require "active_support/inflector"
+
+    # Extract base names from spec files (strip _spec.rb and type suffixes)
+    puts "NOTE: Filtering coverage based on #{spec_files.size} spec files:"
+    base_names = spec_files.flat_map do |file|
+      name = File.basename(file, ".rb")
+      base = name.sub(/_spec$/, "").sub(/_(ability|controller|decorator|helper|job|mailer|policy|rake|serializer|service|worker)$/, "")
+      list = [base, base.singularize, base.pluralize].uniq
+      puts "  #{list.join(', ')}"
+      list
+    end.uniq
+
+    # Only show coverage for files matching these base names
+    add_filter do |src|
+      base_names.none? { |name| src.filename.include?(name.to_s) }
+    end
+  elsif ARGV.none? { |arg| arg.include?("--example") }
+    expected_coverage = if run_slow_tests && !(dont_run_docker || dont_run_github)
+                          # `make all-tests` coverage when docker is installed and a GitHub app private key file exists
+                          # The log must NOT include a "Run options: exclude {<exclusions>}" line
+                          87.02
+                        elsif run_slow_tests
+                          # `make ci-tests` coverage
+                          # FIXME: for some reason there is a difference, eg
+                          # * GitHub COVERAGE:  80.09% -- 2957/3692 lines in 97 files
+                          # * Local COVERAGE:  80.44% -- 2970/3692 lines in 97 files
+                          # SO Set it based on the CI coverage on GitHub!
+                          80.09
+                        else
+                          # `make quick-tests` coverage
+                          77.09
+                        end
+    SimpleCov.minimum_coverage expected_coverage - 0.01
+  end
   add_filter %r{^/spec/}
   add_filter "/vendor/"
 end
@@ -29,7 +71,7 @@ require "rspec/sorbet"
 # Commented out for the benefit of zeus
 # require 'rspec/autorun'
 
-# Requires supporting ruby files with custom matchers and macros, etc,
+# Requires supporting ruby files with custom matchers and macros, etc.
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 
@@ -87,6 +129,9 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include DockerImageHelper
+  config.include RetryHelper
+  config.include CaptureHelper
+  config.include ToolAvailability
 
   config.before(:suite) do
     Searchkick.disable_callbacks
@@ -109,11 +154,9 @@ RSpec.configure do |config|
     end
   end
 
-  github_integration_possible = File.exist?(Morph::GithubAppInstallation::MORPH_GITHUB_APP_PRIVATE_KEY_PATH)
-
-  config.filter_run_excluding github: true if ENV["DONT_RUN_GITHUB_TESTS"] || !github_integration_possible
-  config.filter_run_excluding docker: true if ENV["DONT_RUN_DOCKER_TESTS"]
-  config.filter_run_excluding slow: true unless ENV["RUN_SLOW_TESTS"]
+  config.filter_run_excluding github: true if dont_run_github
+  config.filter_run_excluding docker: true if dont_run_docker
+  config.filter_run_excluding slow: true unless run_slow_tests
 
   # Make sure sidekiq jobs don't linger between tests
   config.before do
