@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+# History of Webhook calls
+#
 # == Schema Information
 #
 # Table name: webhook_deliveries
