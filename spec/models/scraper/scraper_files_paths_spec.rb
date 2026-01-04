@@ -182,13 +182,13 @@ describe Scraper do
     end
 
     it "returns the platform if the file is present" do
-      File.write(File.join(scraper.repo_path, "platform"), "heroku-18")
-      expect(scraper.platform).to eq "heroku-18"
+      File.write(File.join(scraper.repo_path, "platform"), "heroku-99")
+      expect(scraper.platform).to eq "heroku-99"
     end
 
-    it "converts early_release to heroku-18" do
+    it "converts early_release to heroku-24" do
       File.write(File.join(scraper.repo_path, "platform"), "early_release")
-      expect(scraper.platform).to eq "heroku-18"
+      expect(scraper.platform).to eq "heroku-24"
     end
   end
 
