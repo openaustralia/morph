@@ -69,7 +69,7 @@ describe Morph::DockerRunner do
       end
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 0
-      expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
+      expect(docker_output.select { |item| item[0] == :stdout }).to eq([[:stdout, "1: Example Domain\n"]])
     end
 
     it "is able to run perl example", slow: true do
@@ -79,7 +79,7 @@ describe Morph::DockerRunner do
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end
-      pending("FIXME: Fix perl example test - it works in production but not in test")
+      pending("FIXME: Fix perl example test - it works in production but test fails with 'Unable to select a buildpack'!?")
       expect(c).not_to be_nil
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -113,7 +113,6 @@ describe Morph::DockerRunner do
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end
-      pending("FIXME: Fix python example test - requires heroku-24 platform to be implemented")
       expect(c).not_to be_nil
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         docker_output << [stream, text]
