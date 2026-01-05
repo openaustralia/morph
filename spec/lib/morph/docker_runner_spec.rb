@@ -40,9 +40,9 @@ describe Morph::DockerRunner do
 
       expect(c).to be_nil
       expect(pruned_docker_output).to eq [
-                                           [:internalout, "Injecting configuration and compiling...\n"],
-                                           [:internalout, "\e[1G       \e[1G-----> Unable to select a buildpack\n"]
-                                         ]
+        [:internalout, "Injecting configuration and compiling...\n"],
+        [:internalout, "\e[1G       \e[1G-----> Unable to select a buildpack\n"]
+      ]
       expect(Morph::DockerUtils.stopped_containers.count)
         .to eq container_count
     end
@@ -287,9 +287,9 @@ describe Morph::DockerRunner do
       c.kill
       c.delete
       expect(logs).to eq [
-                           [:internalout, "Injecting configuration and compiling...\n"],
-                           [:internalout, "Injecting scraper and running...\n"]
-                         ]
+        [:internalout, "Injecting configuration and compiling...\n"],
+        [:internalout, "Injecting scraper and running...\n"]
+      ]
     end
 
     it "is able to run hello world of course" do
@@ -303,8 +303,8 @@ describe Morph::DockerRunner do
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 0
       expect(docker_output).to eq [
-                                    [:stdout, "Hello world!\n"]
-                                  ]
+        [:stdout, "Hello world!\n"]
+      ]
       expect(Morph::DockerUtils.stopped_containers.count)
         .to eq container_count
     end
@@ -337,8 +337,8 @@ describe Morph::DockerRunner do
       expect(result.status_code).to eq 0
       # These logs will actually be different if the compile isn't cached
       expect(docker_output).to eq [
-                                    [:stdout, "Hello world!\n"]
-                                  ]
+        [:stdout, "Hello world!\n"]
+      ]
     end
 
     it "has an env variable set for python requests library" do
@@ -379,11 +379,11 @@ describe Morph::DockerRunner do
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 1
       expect(docker_output).to eq [
-                                    [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
-                                    [:stderr, "This is not going to run as ruby code so should return an error\n"],
-                                    [:stderr, "                 ^\n"],
-                                    [:stderr, "scraper.rb:1: void value expression\n"]
-                                  ]
+        [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
+        [:stderr, "This is not going to run as ruby code so should return an error\n"],
+        [:stderr, "                 ^\n"],
+        [:stderr, "scraper.rb:1: void value expression\n"]
+      ]
     end
 
     it "streams output if the right things are set for the language", slow: true do
@@ -439,13 +439,13 @@ describe Morph::DockerRunner do
       end
       described_class.finish(c, [])
       expect(logs).to eq [
-                           [:stdout, "Started!\n"],
-                           [:stdout, "1...\n"],
-                           [:stdout, "2...\n"],
-                           [:stdout, "3...\n"],
-                           [:stdout, "4...\n"],
-                           [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
-                         ]
+        [:stdout, "Started!\n"],
+        [:stdout, "1...\n"],
+        [:stdout, "2...\n"],
+        [:stdout, "3...\n"],
+        [:stdout, "4...\n"],
+        [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
+      ]
     end
   end
 
@@ -474,8 +474,8 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, true)
           expect(Dir.entries(dir).sort).to eq [
-                                                ".", "..", "Gemfile", "Gemfile.lock", "Procfile"
-                                              ]
+            ".", "..", "Gemfile", "Gemfile.lock", "Procfile"
+          ]
           expect(File.read(File.join(dir, "Gemfile"))).to eq ""
           expect(File.read(File.join(dir, "Gemfile.lock"))).to eq ""
           expect(File.read(File.join(dir, "Procfile"))).to eq ""
@@ -486,15 +486,15 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, false)
           expect(Dir.entries(dir).sort).to eq [
-                                                ".", "..", ".a_dot_file.cfg", ".bar", "foo", "link.rb", "one.txt",
-                                                "scraper.rb", "two.txt"
-                                              ]
+            ".", "..", ".a_dot_file.cfg", ".bar", "foo", "link.rb", "one.txt",
+            "scraper.rb", "two.txt"
+          ]
           expect(Dir.entries(File.join(dir, ".bar")).sort).to eq [
-                                                                   ".", "..", "wibble.txt"
-                                                                 ]
+            ".", "..", "wibble.txt"
+          ]
           expect(Dir.entries(File.join(dir, "foo")).sort).to eq [
-                                                                  ".", "..", "three.txt"
-                                                                ]
+            ".", "..", "three.txt"
+          ]
           expect(File.read(File.join(dir, ".a_dot_file.cfg"))).to eq ""
           expect(File.read(File.join(dir, ".bar", "wibble.txt"))).to eq ""
           expect(File.read(File.join(dir, "foo/three.txt"))).to eq ""
@@ -526,8 +526,8 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, true)
           expect(Dir.entries(dir).sort).to eq [
-                                                ".", "..", "Gemfile", "Gemfile.lock"
-                                              ]
+            ".", "..", "Gemfile", "Gemfile.lock"
+          ]
           expect(File.read(File.join(dir, "Gemfile"))).to eq ""
           expect(File.read(File.join(dir, "Gemfile.lock"))).to eq ""
         end
@@ -537,11 +537,11 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, false)
           expect(Dir.entries(dir).sort).to eq [
-                                                ".", "..", "foo", "one.txt", "scraper.rb"
-                                              ]
+            ".", "..", "foo", "one.txt", "scraper.rb"
+          ]
           expect(Dir.entries(File.join(dir, "foo")).sort).to eq [
-                                                                  ".", "..", "three.txt"
-                                                                ]
+            ".", "..", "three.txt"
+          ]
           expect(File.read(File.join(dir, "foo/three.txt"))).to eq ""
           expect(File.read(File.join(dir, "one.txt"))).to eq ""
           expect(File.read(File.join(dir, "scraper.rb"))).to eq ""
