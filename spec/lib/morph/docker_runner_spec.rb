@@ -191,7 +191,7 @@ describe Morph::DockerRunner do
       end
       result = described_class.finish(c, [])
       expect(result.status_code).to eq(0), "Unexpected exit status, output was: #{logs.inspect}"
-      expect(logs).to eq [[:stderr, "NOTE: system ruby is unavailable, falling back to limit_output.py\n"], [:stdout, "Hello world!\n"]]
+      expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
     def with_smaller_chunk_size
@@ -323,8 +323,8 @@ describe Morph::DockerRunner do
         .to eq container_count
     end
 
-    it "is able to pass environment variables" do
-      copy_test_scraper("display_env_ruby")
+    it "is able to pass environment variables on heroku-24 with latest ruby" do
+      copy_test_scraper("display_env_ruby_24")
 
       docker_output = []
       c = described_class.compile_and_start_run(
@@ -342,7 +342,7 @@ describe Morph::DockerRunner do
     end
 
     it "has an env variable set for python requests library" do
-      copy_test_scraper("display_request_env_ruby")
+      copy_test_scraper("display_request_env_ruby_24")
 
       c = described_class.compile_and_start_run(
         repo_path: dir, platform: platform
