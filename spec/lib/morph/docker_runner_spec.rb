@@ -28,7 +28,7 @@ describe Morph::DockerRunner do
       end
     end
 
-    it "lets me know that it can't select a buildpack", slow: true do # 5.3 seconds
+    it "lets me know that it can't select a buildpack", slow: true do # 5.12 seconds
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end

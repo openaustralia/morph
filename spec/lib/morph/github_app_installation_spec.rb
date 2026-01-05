@@ -3,7 +3,7 @@
 
 require "spec_helper"
 
-describe Morph::GithubAppInstallation, :github_integration do
+describe Morph::GithubAppInstallation, :github do
   let(:installed_bv) { ENV["DONT_RUN_GITHUB_TESTS"] ? nil : ENV.fetch("GITHUB_APP_INSTALLED_BY", nil) }
   let(:installation) { described_class.new(installed_bv) }
   let(:installation_no_app) { described_class.new("microsoft") }

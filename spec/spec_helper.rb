@@ -84,7 +84,7 @@ VCR.configure do |c|
   c.hook_into :webmock
   c.ignore_hosts "codeclimate.com"
   c.ignore_request do |_request|
-    RSpec.current_example&.metadata&.fetch(:github_integration, false)
+    RSpec.current_example&.metadata&.fetch(:github, false)
   end
 end
 
@@ -157,6 +157,20 @@ RSpec.configure do |config|
   config.filter_run_excluding github: true if dont_run_github
   config.filter_run_excluding docker: true if dont_run_docker
   config.filter_run_excluding slow: true unless run_slow_tests
+
+  if ENV["DONT_RUN_GITHUB_TESTS"]
+    $stdout.puts "Skipping GitHub app tests because DONT_RUN_GITHUB_TESTS is set"
+  elsif dont_run_github
+    $stdout.puts "Skipping GitHub app tests because of missing env vars / private key file"
+  end
+  if ENV["DONT_RUN_DOCKER_TESTS"]
+    $stdout.puts "Skipping Docker tests because DONT_RUN_DOCKER_TESTS is set"
+  elsif dont_run_docker
+    $stdout.puts "Skipping Docker tests because docker is not available"
+  end
+  unless run_slow_tests
+    $stdout.puts "Skipping slow tests because RUN_SLOW_TESTS is not set"
+  end
 
   # Make sure sidekiq jobs don't linger between tests
   config.before do
