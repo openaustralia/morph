@@ -191,7 +191,7 @@ describe Morph::DockerRunner do
       end
       result = described_class.finish(c, [])
       expect(result.status_code).to eq(0), "Unexpected exit status, output was: #{logs.inspect}"
-      expect(logs).to eq [[:stderr, "NOTE: ruby is unavailable, falling back to limit_output.py\n"], [:stdout, "Hello world!\n"]]
+      expect(logs).to eq [[:stderr, "NOTE: system ruby is unavailable, falling back to limit_output.py\n"], [:stdout, "Hello world!\n"]]
     end
 
     def with_smaller_chunk_size
