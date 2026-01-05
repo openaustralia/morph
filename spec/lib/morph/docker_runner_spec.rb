@@ -356,8 +356,8 @@ describe Morph::DockerRunner do
       expect(docker_output).to eq [[:stdout, "/etc/ssl/certs/ca-certificates.crt\n"]]
     end
 
-    it "returns the ip address of the container" do
-      copy_test_scraper("ip_address_ruby")
+    it "returns the ip address of the container on heroku-24 with default ruby" do
+      copy_test_scraper("ip_address_ruby_24")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform)
       ip_address = Morph::DockerUtils.ip_address_of_container(c)
@@ -368,8 +368,8 @@ describe Morph::DockerRunner do
       expect(ip_address).to eq result.files["ip_address"].read
     end
 
-    it "returns a non-zero error code if the scraper fails" do
-      copy_test_scraper("failing_scraper_ruby")
+    it "returns a non-zero error code if the scraper fails on heroku-24 with ruby 3.2.9" do
+      copy_test_scraper("failing_scraper_ruby_24")
 
       docker_output = []
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform)
@@ -379,16 +379,19 @@ describe Morph::DockerRunner do
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 1
       expect(docker_output).to eq [
-        [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
-        [:stderr, "This is not going to run as ruby code so should return an error\n"],
-        [:stderr, "                 ^\n"],
-        [:stderr, "scraper.rb:1: void value expression\n"]
+        [:stderr, "scraper.rb: --> scraper.rb\n"],
+        [:stderr, "syntax error, unexpected local variable or method, expecting '('\n"],
+        [:stderr, "> 1  This is not going to run as ruby code so should return an error\n"],
+        [:stderr, "scraper.rb:1: syntax error, unexpected local variable or method, expecting '(' (SyntaxError)\n"],
+        [:stderr, "This is not going to run as ruby code so shoul...\n"],
+        [:stderr, "            ^~~~~\n"],
+        [:stderr, "\n"]
       ]
     end
 
-    it "streams output if the right things are set for the language", slow: true do
+    it "streams output if the right things are set for the language on heroku-24 with ruby 3.3.9", slow: true do
       # 1.6 seconds
-      copy_test_scraper("stream_output_ruby")
+      copy_test_scraper("stream_output_ruby_24")
 
       docker_output = []
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, _stream, text|
@@ -403,9 +406,9 @@ describe Morph::DockerRunner do
       expect(end_time - start_time).to be_within(0.1).of(1.0)
     end
 
-    it "is able to reconnect to a running container", slow: true do
+    it "is able to reconnect to a running container on heroku-24 with ruby 3.3.9", slow: true do
       # 1.6 seconds
-      copy_test_scraper("stream_output_ruby")
+      copy_test_scraper("stream_output_ruby_24")
 
       logs = []
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform)
@@ -428,9 +431,9 @@ describe Morph::DockerRunner do
       expect(logs).to eq ["Started!\n", "1...\n", "2...\n", "3...\n", "4...\n", "5...\n", "6...\n", "7...\n", "8...\n", "9...\n", "10...\n", "Finished!\n"]
     end
 
-    it "is able to limit the amount of log output", slow: true do
+    it "is able to limit the amount of log output on heroku-24 with ruby 3.3.9", slow: true do
       # 1.6 seconds
-      copy_test_scraper("stream_output_ruby")
+      copy_test_scraper("stream_output_ruby_24")
 
       c = described_class.compile_and_start_run(repo_path: dir, max_lines: 5, platform: platform)
       logs = []
