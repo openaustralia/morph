@@ -28,7 +28,8 @@ describe Morph::DockerRunner do
       end
     end
 
-    it "lets me know that it can't select a buildpack", slow: true do # 5.3 seconds
+    it "lets me know that it can't select a buildpack", slow: true do
+      # 5.3 seconds
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end
@@ -39,26 +40,28 @@ describe Morph::DockerRunner do
 
       expect(c).to be_nil
       expect(pruned_docker_output).to eq [
-        [:internalout, "Injecting configuration and compiling...\n"],
-        [:internalout, "\e[1G       \e[1G-----> Unable to select a buildpack\n"]
-      ]
+                                           [:internalout, "Injecting configuration and compiling...\n"],
+                                           [:internalout, "\e[1G       \e[1G-----> Unable to select a buildpack\n"]
+                                         ]
       expect(Morph::DockerUtils.stopped_containers.count)
         .to eq container_count
     end
 
-    it "stops if a python compile fails", slow: true do # 5.2 seconds
+    it "stops if a python compile fails", slow: true do
+      # 5.2 seconds
       copy_test_scraper("failing_compile_python")
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
-        docker_output  << [stream, text]
+        docker_output << [stream, text]
       end
       expect(c).to be_nil
     end
 
-    it "is able to run nodejs example", slow: true do # 1.6 seconds
+    it "is able to run nodejs example", slow: true do
+      # 1.6 seconds
       copy_example_scraper("nodejs")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output  << [stream, text]
+        docker_output << [stream, text]
       end
       expect(c).not_to be_nil
       described_class.attach_to_run(c) do |_timestamp, stream, text|
@@ -69,7 +72,8 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run perl example", slow: true do # 2.4 seconds
+    it "is able to run perl example", slow: true do
+      # 2.4 seconds
       copy_example_scraper("perl")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
@@ -85,7 +89,8 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run php example", slow: true do # > 1 second
+    it "is able to run php example", slow: true do
+      # > 1 second
       copy_example_scraper("php")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
@@ -100,7 +105,9 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run python example", slow: true do # 7.3 seconds
+    # FIXME: test python when we add heroku-24 as ceder-4 and heroku-18 can't find any python versions
+    it "is able to run python example", slow: true do
+      # 7.3 seconds
       copy_example_scraper("python")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
@@ -116,9 +123,8 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    # FIXME: test python when we add heroku-24 as ceder-4 and heroku-18 can't find any python versions
-
-    it "is able to run ruby example", slow: true do # 3.0 seconds
+    it "is able to run ruby example", slow: true do
+      # 3.0 seconds
       copy_example_scraper("ruby")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
@@ -133,8 +139,10 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run hello world js on heroku-24" do
-      copy_test_scraper("hello_world_js")
+    # NOTE: Node.js no longer runs on cedar-14 (misleading error about invalid semver)
+
+    it "is able to run hello world ruby on heroku-14" do
+      copy_test_scraper("hello_world_ruby_14")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -149,6 +157,43 @@ describe Morph::DockerRunner do
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
+    it "is able to run hello world js on heroku-18" do
+      copy_test_scraper("hello_world_js_18")
+
+      c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
+        docker_output << [stream, text]
+      end
+      expect(c).not_to be_nil
+      logs = []
+      described_class.attach_to_run(c) do |_timestamp, stream, text|
+        logs << [stream, text]
+      end
+      result = described_class.finish(c, [])
+      expect(result.status_code).to eq(0), "Unexpected exit status, output was: #{logs.inspect}"
+      expect(logs).to eq [[:stdout, "Hello world!\n"]]
+    end
+
+    # Supported versions:
+    # 22.x supported, note EOL Apr 2027
+    # 20.x supported (20.18.1), but EOL Apr 2026
+    # Note: "No matching version found for Node: 22.x"
+    it "is able to run hello world js on heroku-24" do
+      copy_test_scraper("hello_world_js_24")
+
+      c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
+        docker_output << [stream, text]
+      end
+      expect(c).not_to be_nil
+      logs = []
+      described_class.attach_to_run(c) do |_timestamp, stream, text|
+        # puts "DEBUG: #{_timestamp}: #{stream}: #{text}"
+        logs << [stream, text]
+      end
+      result = described_class.finish(c, [])
+      expect(result.status_code).to eq(0), "Unexpected exit status, output was: #{logs.inspect}"
+      expect(logs).to eq [[:stderr, "NOTE: ruby is unavailable, falling back to limit_output.py\n"], [:stdout, "Hello world!\n"]]
+    end
+
     def with_smaller_chunk_size
       chunk_size = Excon.defaults[:chunk_size]
       Excon.defaults[:chunk_size] = 1024
@@ -157,8 +202,9 @@ describe Morph::DockerRunner do
       result
     end
 
-    it "does not allocate and retain too much memory when running scraper", slow: true do # 1.3 seconds
-      copy_test_scraper("hello_world_js")
+    it "does not allocate and retain too much memory when running scraper", slow: true do
+      # 1.3 seconds
+      copy_test_scraper("hello_world_js_18")
 
       # Limit the buffer size just for testing
       report = MemoryProfiler.report do
@@ -180,10 +226,10 @@ describe Morph::DockerRunner do
     end
 
     it "attaches the container to a special morph-only docker network" do
-      copy_test_scraper("hello_world_js")
+      copy_test_scraper("hello_world_js_18")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output  << [stream, text]
+        docker_output << [stream, text]
       end
       expect(c).not_to be_nil
       expect(c.json["HostConfig"]["NetworkMode"]).to eq "morph"
@@ -197,11 +243,12 @@ describe Morph::DockerRunner do
       c.delete
     end
 
-    it "is not able to run hello world from a sub-directory", slow: true do # 32 seconds
-      copy_test_scraper("hello_world_subdirectory_js")
+    it "is not able to run hello world from a sub-directory", slow: true do
+      # 32 seconds
+      copy_test_scraper("hello_world_subdirectory_js_14")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output  << [stream, text]
+        docker_output << [stream, text]
       end
       expect(c).to be_nil
       # logs = []
@@ -215,11 +262,11 @@ describe Morph::DockerRunner do
     end
 
     it "caches the compile stage" do
-      copy_test_scraper("hello_world_js")
+      copy_test_scraper("hello_world_js_18")
 
       # Do the compile once to make sure the cache is primed
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output  << [stream, text]
+        docker_output << [stream, text]
       end
       expect(c).not_to be_nil
       logs = []
@@ -240,13 +287,13 @@ describe Morph::DockerRunner do
       c.kill
       c.delete
       expect(logs).to eq [
-        [:internalout, "Injecting configuration and compiling...\n"],
-        [:internalout, "Injecting scraper and running...\n"]
-      ]
+                           [:internalout, "Injecting configuration and compiling...\n"],
+                           [:internalout, "Injecting scraper and running...\n"]
+                         ]
     end
 
     it "is able to run hello world of course" do
-      copy_test_scraper("hello_world_ruby")
+      copy_test_scraper("hello_world_ruby_14")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform)
       docker_output = []
@@ -256,8 +303,8 @@ describe Morph::DockerRunner do
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 0
       expect(docker_output).to eq [
-        [:stdout, "Hello world!\n"]
-      ]
+                                    [:stdout, "Hello world!\n"]
+                                  ]
       expect(Morph::DockerUtils.stopped_containers.count)
         .to eq container_count
     end
@@ -290,8 +337,8 @@ describe Morph::DockerRunner do
       expect(result.status_code).to eq 0
       # These logs will actually be different if the compile isn't cached
       expect(docker_output).to eq [
-        [:stdout, "Hello world!\n"]
-      ]
+                                    [:stdout, "Hello world!\n"]
+                                  ]
     end
 
     it "has an env variable set for python requests library" do
@@ -332,14 +379,15 @@ describe Morph::DockerRunner do
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 1
       expect(docker_output).to eq [
-        [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
-        [:stderr, "This is not going to run as ruby code so should return an error\n"],
-        [:stderr, "                 ^\n"],
-        [:stderr, "scraper.rb:1: void value expression\n"]
-      ]
+                                    [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
+                                    [:stderr, "This is not going to run as ruby code so should return an error\n"],
+                                    [:stderr, "                 ^\n"],
+                                    [:stderr, "scraper.rb:1: void value expression\n"]
+                                  ]
     end
 
-    it "streams output if the right things are set for the language", slow: true do # 1.6 seconds
+    it "streams output if the right things are set for the language", slow: true do
+      # 1.6 seconds
       copy_test_scraper("stream_output_ruby")
 
       docker_output = []
@@ -355,7 +403,8 @@ describe Morph::DockerRunner do
       expect(end_time - start_time).to be_within(0.1).of(1.0)
     end
 
-    it "is able to reconnect to a running container", slow: true do # 1.6 seconds
+    it "is able to reconnect to a running container", slow: true do
+      # 1.6 seconds
       copy_test_scraper("stream_output_ruby")
 
       logs = []
@@ -379,7 +428,8 @@ describe Morph::DockerRunner do
       expect(logs).to eq ["Started!\n", "1...\n", "2...\n", "3...\n", "4...\n", "5...\n", "6...\n", "7...\n", "8...\n", "9...\n", "10...\n", "Finished!\n"]
     end
 
-    it "is able to limit the amount of log output", slow: true do # 1.6 seconds
+    it "is able to limit the amount of log output", slow: true do
+      # 1.6 seconds
       copy_test_scraper("stream_output_ruby")
 
       c = described_class.compile_and_start_run(repo_path: dir, max_lines: 5, platform: platform)
@@ -389,13 +439,13 @@ describe Morph::DockerRunner do
       end
       described_class.finish(c, [])
       expect(logs).to eq [
-        [:stdout, "Started!\n"],
-        [:stdout, "1...\n"],
-        [:stdout, "2...\n"],
-        [:stdout, "3...\n"],
-        [:stdout, "4...\n"],
-        [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
-      ]
+                           [:stdout, "Started!\n"],
+                           [:stdout, "1...\n"],
+                           [:stdout, "2...\n"],
+                           [:stdout, "3...\n"],
+                           [:stdout, "4...\n"],
+                           [:internalerr, "\nToo many lines of output! Your scraper will continue uninterrupted. There will just be no further output displayed\n"]
+                         ]
     end
   end
 
@@ -424,8 +474,8 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, true)
           expect(Dir.entries(dir).sort).to eq [
-            ".", "..", "Gemfile", "Gemfile.lock", "Procfile"
-          ]
+                                                ".", "..", "Gemfile", "Gemfile.lock", "Procfile"
+                                              ]
           expect(File.read(File.join(dir, "Gemfile"))).to eq ""
           expect(File.read(File.join(dir, "Gemfile.lock"))).to eq ""
           expect(File.read(File.join(dir, "Procfile"))).to eq ""
@@ -436,15 +486,15 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, false)
           expect(Dir.entries(dir).sort).to eq [
-            ".", "..", ".a_dot_file.cfg", ".bar", "foo", "link.rb", "one.txt",
-            "scraper.rb", "two.txt"
-          ]
+                                                ".", "..", ".a_dot_file.cfg", ".bar", "foo", "link.rb", "one.txt",
+                                                "scraper.rb", "two.txt"
+                                              ]
           expect(Dir.entries(File.join(dir, ".bar")).sort).to eq [
-            ".", "..", "wibble.txt"
-          ]
+                                                                   ".", "..", "wibble.txt"
+                                                                 ]
           expect(Dir.entries(File.join(dir, "foo")).sort).to eq [
-            ".", "..", "three.txt"
-          ]
+                                                                  ".", "..", "three.txt"
+                                                                ]
           expect(File.read(File.join(dir, ".a_dot_file.cfg"))).to eq ""
           expect(File.read(File.join(dir, ".bar", "wibble.txt"))).to eq ""
           expect(File.read(File.join(dir, "foo/three.txt"))).to eq ""
@@ -476,8 +526,8 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, true)
           expect(Dir.entries(dir).sort).to eq [
-            ".", "..", "Gemfile", "Gemfile.lock"
-          ]
+                                                ".", "..", "Gemfile", "Gemfile.lock"
+                                              ]
           expect(File.read(File.join(dir, "Gemfile"))).to eq ""
           expect(File.read(File.join(dir, "Gemfile.lock"))).to eq ""
         end
@@ -487,11 +537,11 @@ describe Morph::DockerRunner do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, false)
           expect(Dir.entries(dir).sort).to eq [
-            ".", "..", "foo", "one.txt", "scraper.rb"
-          ]
+                                                ".", "..", "foo", "one.txt", "scraper.rb"
+                                              ]
           expect(Dir.entries(File.join(dir, "foo")).sort).to eq [
-            ".", "..", "three.txt"
-          ]
+                                                                  ".", "..", "three.txt"
+                                                                ]
           expect(File.read(File.join(dir, "foo/three.txt"))).to eq ""
           expect(File.read(File.join(dir, "one.txt"))).to eq ""
           expect(File.read(File.join(dir, "scraper.rb"))).to eq ""
