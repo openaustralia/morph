@@ -341,7 +341,7 @@ describe Morph::DockerRunner do
       ]
     end
 
-    it "has an env variable set for python requests library" do
+    it "has an env variable set for python requests library on heroku-24 with default ruby" do
       copy_test_scraper("display_request_env_ruby_24")
 
       c = described_class.compile_and_start_run(
