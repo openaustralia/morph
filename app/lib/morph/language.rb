@@ -118,7 +118,8 @@ module Morph
       # We grab all the files in the template directory
       result = {}
       Dir.entries(default_template_directory).each do |file|
-        result[file] = File.read(File.join(default_template_directory, file)) if file != "." && file != ".."
+        path = File.join(default_template_directory, file)
+        result[file] = File.read(path) if File.file?(path)
       end
       result
     end
