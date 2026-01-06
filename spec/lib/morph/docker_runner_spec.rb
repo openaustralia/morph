@@ -56,9 +56,9 @@ describe Morph::DockerRunner do
       expect(c).to be_nil
     end
 
-    it "is able to run nodejs example", slow: true do
-      # 1.6 seconds
+    it "is able to run nodejs example on heroku-24", slow: true do # 1.6 seconds
       copy_example_scraper("nodejs")
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -72,14 +72,14 @@ describe Morph::DockerRunner do
       expect(docker_output.select { |item| item[0] == :stdout }).to eq([[:stdout, "1: Example Domain\n"]])
     end
 
-    it "is able to run perl example", slow: true do
-      # 2.4 seconds
+    it "is able to run perl example on heroku-24", slow: true do # 2.4 seconds
       copy_example_scraper("perl")
+      pending("FIXME: Update perl example / buildstep so the example runs on heroku-24") unless Morph::Language::LANGUAGES_SUPPORTED.include?(:perl)
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end
-      pending("FIXME: Fix perl example test - it works in production but test fails with 'Unable to select a buildpack'!?")
       expect(c).not_to be_nil
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -89,9 +89,9 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run php example", slow: true do
-      # > 1 second
+    it "is able to run php example on heroku-24", slow: true do # > 1 second
       copy_example_scraper("php")
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -106,9 +106,11 @@ describe Morph::DockerRunner do
     end
 
     # FIXME: test python when we add heroku-24 as ceder-4 and heroku-18 can't find any python versions
-    it "is able to run python example", slow: true do
-      # 7.3 seconds
+    it "is able to run python example on heroku-24", slow: true do # 7.3 seconds
       copy_example_scraper("python")
+      pending("FIXME: Update python example / buildstep so the example runs on heroku-24") unless Morph::Language::LANGUAGES_SUPPORTED.include?(:python)
+      expect(File).to exist(File.join(dir, "platform"))
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -122,9 +124,11 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run ruby example", slow: true do
-      # 3.0 seconds
+    # FIXME: test python when we add heroku-24 as ceder-4 and heroku-18 can't find any python versions
+
+    it "is able to run ruby example on heroku-24", slow: true do # 3.0 seconds
       copy_example_scraper("ruby")
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -140,8 +144,9 @@ describe Morph::DockerRunner do
 
     # NOTE: Node.js no longer runs on cedar-14 (misleading error about invalid semver)
 
-    it "is able to run hello world ruby on heroku-14" do
-      copy_test_scraper("hello_world_ruby_14")
+    it "is able to run hello world js on heroku-18" do
+      copy_test_scraper("hello_world_js")
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-18"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -576,7 +581,7 @@ describe Morph::DockerRunner do
       it do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, false)
-          expect(Dir.entries(dir).sort).to eq [".", "..", "scraper.rb"]
+          expect(Dir.entries(dir).sort).to eq %w[. .. scraper.rb]
           expect(File.read(File.join(dir, "scraper.rb"))).to eq ""
         end
       end
