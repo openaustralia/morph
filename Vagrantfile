@@ -6,6 +6,14 @@
 # This requires qemu on AMD64 systems, and Virtualbox or qemu on X86
 # As the VM must run as an x86_64
 
+# Test qemu on x86 systems:
+# sudo apt-get update
+# sudo apt-get install qemu-system-x86 qemu-utils
+# export VAGRANT_DEFAULT_PROVIDER=qemu
+# make vagrant-up
+# May need to retry with resized disk, eg:
+# qemu-img resize ~/.vagrant.d/boxes/cloud-image-VAGRANTSLASH-ubuntu-16.04/20211001.0.0/amd64/libvirt/box.img 20G
+
 def load_env_vars
   env_vagrant_path = ".env.vagrant"
   env_path = ".env"
@@ -51,13 +59,17 @@ Vagrant.configure("2") do |config|
 
   # Use UBUNTU_VERSION to try other versions of Ubuntu
   valid_ubuntu_versions = %w[16.04 18.04 20.04 22.04 24.04]
-  config.vm.box = if valid_ubuntu_versions.include? ENV["UBUNTU_VERSION"]
-                    "cloud-image/ubuntu-#{ENV['UBUNTU_VERSION']}"
-                  elsif ENV["UBUNTU_VERSION"]
-                    puts "ERROR: Invalid UBUNTU_VERSION! Must be one of: #{valid_ubuntu_versions.join(', ')}"
-                  else
-                    "ubuntu/xenial64"
-                  end
+  vm_box = if valid_ubuntu_versions.include? ENV["UBUNTU_VERSION"]
+             "cloud-image/ubuntu-#{ENV['UBUNTU_VERSION']}"
+           elsif ENV["UBUNTU_VERSION"]
+             puts "ERROR: Invalid UBUNTU_VERSION! Must be one of: #{valid_ubuntu_versions.join(', ')}"
+             exit 1
+           elsif ENV["VAGRANT_DEFAULT_PROVIDER"] == "qemu"
+             "cloud-image/ubuntu-16.04"
+           else
+             "ubuntu/xenial64"
+           end
+  config.vm.box = vm_box
 
   # This setting depends on installing the plugin https://github.com/sprotheroe/vagrant-disksize:
   # vagrant plugin install vagrant-disksize
@@ -66,7 +78,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "local" do |local|
     local.vm.network :private_network, ip: "192.168.56.2"
     local.vm.hostname = "dev.morph.io"
-    local.hostsupdater.aliases = ["faye.dev.morph.io", "api.dev.morph.io", "help.dev.morph.io"]
+    local.hostsupdater.aliases = %w[faye.dev.morph.io api.dev.morph.io help.dev.morph.io]
     local.vm.network :forwarded_port, guest: 22, host: 2200
     local.vm.network :forwarded_port, guest: 4443, host: 4443
     # faye.dev.morph.io, dev.morph.io, api.dev.morph.io
@@ -77,17 +89,32 @@ Vagrant.configure("2") do |config|
     # Virtualbox can't be used on arm64 systems as it
     local.vm.provider "virtualbox" do |v|
       # Discourse needs a LOT of memory to bootstrap!
-      v.memory = ENV.fetch('VAGRANT_MEMORY', 8192).to_i
+      v.memory = ENV.fetch("VAGRANT_MEMORY", 8192).to_i
     end
 
     # Mac will automatically use QEMU provider with emulation
     config.vm.provider "qemu" do |qe|
-      qe.arch = "x86_64"  # Emulate AMD64
+      qe.arch = "x86_64" # Emulate AMD64
       qe.machine = "q35"
-      qe.cpu = "max"      # CPU model/features
-      qe.memory = ENV.fetch('VAGRANT_MEMORY', 8192).to_i
+      qe.cpu = "max" # CPU model/features
+      qe.memory = ENV.fetch("VAGRANT_MEMORY", 8192).to_i
       qe.net_device = "virtio-net-pci"
+      # Set correct QEMU path based on OS
+      qe.qemu_dir = if RUBY_PLATFORM.include?("darwin")
+                      # macOS (Homebrew)
+                      "/opt/homebrew/share/qemu"
+                    else
+                      # Linux (system install)
+                      "/usr/share/qemu"
+                    end
+      # qe.extra_qemu_args = ["-drive", "file=#{ENV['HOME']}/.vagrant.d/boxes/#{vm_box.sub('/', '-VAGRANTSLASH-')}/disk.img,if=virtio,size=20G"]
     end
+
+    config.vm.provision "shell", inline: <<-SHELL
+      # Expand root partition to use disksize allocation
+      sudo growpart /dev/vda 1 2>/dev/null || sudo growpart /dev/sda 1 2>/dev/null || true
+      sudo resize2fs /dev/vda1 2>/dev/null || sudo resize2fs /dev/sda1 2>/dev/null || true
+    SHELL
 
     local.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/playbook.yml"
