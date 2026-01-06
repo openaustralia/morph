@@ -3,6 +3,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# This requires qemu on AMD64 systems, and Virtualbox or qemu on X86
+# As the VM must run as an x86_64
+
 def load_env_vars
   env_vagrant_path = ".env.vagrant"
   env_path = ".env"
