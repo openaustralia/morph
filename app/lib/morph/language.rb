@@ -5,7 +5,7 @@ module Morph
   # Special stuff for each scripting language supported by morph.io
   class Language
     extend T::Sig
-    # FIXME: get python and perl examples / buildstep working and add it back here
+    # FIXME: get php and perl examples / buildstep working and add it back here
     # heroku-18 had LANGUAGES_SUPPORTED = T.let(%i[ruby php python perl nodejs].freeze, T::Array[Symbol])
     LANGUAGES_SUPPORTED = T.let(%i[ruby python nodejs].freeze, T::Array[Symbol])
 
