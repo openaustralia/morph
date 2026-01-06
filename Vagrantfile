@@ -46,7 +46,16 @@ end
 Vagrant.configure("2") do |config|
   # local: A local machine that mimics a production deployment
 
-  config.vm.box = "ubuntu/xenial64"
+  # Use UBUNTU_VERSION to try other versions of Ubuntu
+  valid_ubuntu_versions = %w[16.04 18.04 20.04 22.04 24.04]
+  config.vm.box = if valid_ubuntu_versions.include? ENV["UBUNTU_VERSION"]
+                    "cloud-image/ubuntu-#{ENV['UBUNTU_VERSION']}"
+                  elsif ENV["UBUNTU_VERSION"]
+                    puts "ERROR: Invalid UBUNTU_VERSION! Must be one of: #{valid_ubuntu_versions.join(', ')}"
+                  else
+                    "ubuntu/xenial64"
+                  end
+
   # This setting depends on installing the plugin https://github.com/sprotheroe/vagrant-disksize:
   # vagrant plugin install vagrant-disksize
   config.disksize.size = "20GB"
@@ -62,9 +71,19 @@ Vagrant.configure("2") do |config|
     # Use vagrant as both staging AND development!
     # local.vm.synced_folder ".", "/vagrant", disabled: true
 
+    # Virtualbox can't be used on arm64 systems as it
     local.vm.provider "virtualbox" do |v|
       # Discourse needs a LOT of memory to bootstrap!
-      v.memory = 8192
+      v.memory = ENV.fetch('VAGRANT_MEMORY', 8192).to_i
+    end
+
+    # Mac will automatically use QEMU provider with emulation
+    config.vm.provider "qemu" do |qe|
+      qe.arch = "x86_64"  # Emulate AMD64
+      qe.machine = "q35"
+      qe.cpu = "max"      # CPU model/features
+      v.memory = ENV.fetch('VAGRANT_MEMORY', 8192).to_i
+      qe.net_device = "virtio-net-pci"
     end
 
     local.vm.provision :ansible do |ansible|
