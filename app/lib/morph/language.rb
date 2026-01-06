@@ -7,7 +7,7 @@ module Morph
     extend T::Sig
     # FIXME: get python and perl examples / buildstep working and add it back here
     # heroku-18 had LANGUAGES_SUPPORTED = T.let(%i[ruby php python perl nodejs].freeze, T::Array[Symbol])
-    LANGUAGES_SUPPORTED = T.let(%i[ruby php nodejs].freeze, T::Array[Symbol])
+    LANGUAGES_SUPPORTED = T.let(%i[ruby python nodejs].freeze, T::Array[Symbol])
 
     WEBSITES = T.let({
       ruby: "https://www.ruby-lang.org/en/",
