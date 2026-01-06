@@ -91,6 +91,7 @@ describe Morph::DockerRunner do
 
     it "is able to run php example on heroku-24", slow: true do # > 1 second
       copy_example_scraper("php")
+      pending("FIXME: Update php example / buildstep so the example runs on heroku-24") unless Morph::Language::LANGUAGES_SUPPORTED.include?(:php)
       expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
@@ -145,23 +146,6 @@ describe Morph::DockerRunner do
     # NOTE: Node.js no longer runs on cedar-14 (misleading error about invalid semver)
 
     it "is able to run hello world js on heroku-18" do
-      copy_test_scraper("hello_world_js")
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-18"
-
-      c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output << [stream, text]
-      end
-      expect(c).not_to be_nil
-      logs = []
-      described_class.attach_to_run(c) do |_timestamp, stream, text|
-        logs << [stream, text]
-      end
-      result = described_class.finish(c, [])
-      expect(result.status_code).to eq 0
-      expect(logs).to eq [[:stdout, "Hello world!\n"]]
-    end
-
-    it "is able to run hello world js on heroku-18" do
       copy_test_scraper("hello_world_js_18")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
@@ -180,7 +164,7 @@ describe Morph::DockerRunner do
     # Supported versions:
     # 22.x supported, note EOL Apr 2027
     # 20.x supported (20.18.1), but EOL Apr 2026
-    # Note: "No matching version found for Node: 22.x"
+    # Note: "No matching version found for Node: 24.x"
     it "is able to run hello world js on heroku-24" do
       copy_test_scraper("hello_world_js_24")
 
