@@ -39,6 +39,7 @@
 
 # Ignore Vagrant artifacts
 .vagrant
+.vagrant-plugins-installed
 vagrant_ansible_inventory_local
 vagrant_ansible_inventory_production
 vagrant_ansible_inventory_production2

@@ -20,11 +20,14 @@ venv: .venv/bin/activate
 	${VENV}/pip install -Ur provisioning/requirements.txt
 	touch .venv/bin/activate
 
-roles: provisioning/.roles-installed
-
-provisioning/.roles-installed: venv provisioning/requirements.yml
-	${VENV}/ansible-galaxy install --force -r provisioning/requirements.yml -p provisioning/roles
-	touch provisioning/.roles-installed
+roles: venv provisioning/requirements.yml
+	@if [ ! -f provisioning/.roles-installed ] || [ provisioning/requirements.yml -nt provisioning/.roles-installed ]; then \
+		echo "(Re)Installing roles ..."; \
+		${VENV}/ansible-galaxy install --force -r provisioning/requirements.yml -p provisioning/roles; \
+		touch provisioning/.roles-installed; \
+	else \
+		echo "Roles already installed and up to date"; \
+	fi
 
 ANSIBLE_TAGS := $(shell echo "$(TAGS)" | sed 's/[^A-Z0-9_]\+/,/gi' | sed 's/,\+/,/g' | sed 's/^,//' | sed 's/,$$//')
 ANSIBLE_SKIP_TAGS := $(shell echo "$(SKIP_TAGS)" | sed 's/[^A-Z0-9_]\+/,/gi' | sed 's/,\+/,/g' | sed 's/^,//' | sed 's/,$$//')
@@ -68,18 +71,24 @@ help: ## This help dialog.
  # Ensure required Vagrant plugins are installed
 vagrant-plugins:
 	@installed_plugins=$$(vagrant plugin list); \
-	if [[ "$$(uname -m)" == "arm64" || "$$(uname -m)" == "aarch64" ]]; then \
-		plugins="vagrant-hostsupdater vagrant-disksize vagrant-qemu"; \
-	else \
-		plugins="vagrant-hostsupdater vagrant-disksize vagrant-vbguest"; \
-	fi; \
-	for plugin in $$plugins; do \
-		if echo "$$installed_plugins" | grep -q $$plugin; then \
-			[ "$(MAKECMDGOALS)" != "vagrant-plugins" ] || echo "$$plugin plugin is already installed"; \
+	if [ ! -f .vagrant-plugins-installed ] || [ Vagrantfile -nt .vagrant-plugins-installed ]; then \
+		echo "Installing vagrant plugins ..."; \
+		if [[ "$$(uname -m)" == "arm64" || "$$(uname -m)" == "aarch64" || "$${VAGRANT_DEFAULT_PROVIDER}" == "qemu" ]]; then \
+			plugins="vagrant-hostsupdater vagrant-disksize vagrant-qemu"; \
 		else \
-			vagrant plugin install $$plugin; \
+			plugins="vagrant-hostsupdater vagrant-disksize vagrant-vbguest"; \
 		fi; \
-	done
+		for plugin in $$plugins; do \
+			if echo "$$installed_plugins" | grep -q $$plugin; then \
+				[ "$(MAKECMDGOALS)" != "vagrant-plugins" ] || echo "$$plugin plugin is already installed"; \
+			else \
+				vagrant plugin install $$plugin; \
+			fi; \
+		done; \
+		touch .vagrant-plugins-installed; \
+	else \
+		echo "vagrant plugins already installed and up to date"; \
+	fi
 
 vagrant-up: venv roles vagrant-plugins ## launch local vagrant VM
 	vagrant up local
@@ -144,10 +153,11 @@ lint: ## Lint code
 
 clean: ## Clean out venv, installed roles and rails tmp/cache
 	[ -f provisioning/requirements.yml ] && $(VENV)/ansible-galaxy remove -r provisioning/requirements.yml -p provisioning/roles || true
-	rm -rf .venv provisioning/.roles-installed tmp/cache
+	rm -rf .venv provisioning/.roles-installed .vagrant-plugins-installed tmp/cache
 
 clobber: clean ## Remove everything including logs
 	rm -f log/*.log
+	vagrant destroy
 
 docker-clean: services-down ## Remove all Docker resources INCLUDING databases in volumes
 	docker system prune -af --volumes
