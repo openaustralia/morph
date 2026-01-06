@@ -23,7 +23,7 @@ venv: .venv/bin/activate
 roles: provisioning/.roles-installed
 
 provisioning/.roles-installed: venv provisioning/requirements.yml
-	${VENV}/ansible-galaxy install -r provisioning/requirements.yml -p provisioning/roles
+	${VENV}/ansible-galaxy install --force -r provisioning/requirements.yml -p provisioning/roles
 	touch provisioning/.roles-installed
 
 ANSIBLE_TAGS := $(shell echo "$(TAGS)" | sed 's/[^A-Z0-9_]\+/,/gi' | sed 's/,\+/,/g' | sed 's/^,//' | sed 's/,$$//')
