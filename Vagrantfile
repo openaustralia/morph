@@ -85,7 +85,7 @@ Vagrant.configure("2") do |config|
       qe.arch = "x86_64"  # Emulate AMD64
       qe.machine = "q35"
       qe.cpu = "max"      # CPU model/features
-      v.memory = ENV.fetch('VAGRANT_MEMORY', 8192).to_i
+      qe.memory = ENV.fetch('VAGRANT_MEMORY', 8192).to_i
       qe.net_device = "virtio-net-pci"
     end
 
