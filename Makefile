@@ -68,7 +68,12 @@ help: ## This help dialog.
  # Ensure required Vagrant plugins are installed
 vagrant-plugins:
 	@installed_plugins=$$(vagrant plugin list); \
-	for plugin in vagrant-hostsupdater vagrant-disksize vagrant-vbguest; do \
+	if [[ "$$(uname -m)" == "arm64" || "$$(uname -m)" == "aarch64" ]]; then \
+		plugins="vagrant-hostsupdater vagrant-disksize vagrant-qemu"; \
+	else \
+		plugins="vagrant-hostsupdater vagrant-disksize vagrant-vbguest"; \
+	fi; \
+	for plugin in $$plugins; do \
 		if echo "$$installed_plugins" | grep -q $$plugin; then \
 			[ "$(MAKECMDGOALS)" != "vagrant-plugins" ] || echo "$$plugin plugin is already installed"; \
 		else \
