@@ -458,6 +458,7 @@ describe Morph::Runner do
 
       it do
         Dir.mktmpdir do |dir|
+          pending("FIXME: Update perl example / buildstep so the example runs on heroku-24") unless Morph::Language::LANGUAGES_SUPPORTED.include?(:perl)
           described_class.add_config_defaults_to_directory("test", dir)
           expect(Dir.entries(dir).sort).to eq %w[. .. Procfile app.psgi cpanfile scraper.pl]
           perl = Morph::Language.new(:perl)
@@ -472,6 +473,23 @@ describe Morph::Runner do
 
     context "with a ruby scraper" do
       before { FileUtils.touch("test/scraper.rb") }
+
+      context "with only empty scraper.rb" do
+        before { FileUtils.touch("test/scraper.rb") }
+
+        it do
+          Dir.mktmpdir do |dir|
+            described_class.add_config_defaults_to_directory("test", dir)
+            expect(Dir.entries(dir).sort).to eq %w[. .. Gemfile Gemfile.lock Procfile scraper.rb]
+            ruby = Morph::Language.new(:ruby)
+            expect(File.read(File.join(dir, "Procfile"))).to eq ruby.procfile
+            expect(File.read(File.join(dir, "Gemfile")))
+              .to eq File.read(ruby.default_config_file_path("Gemfile"))
+            expect(File.read(File.join(dir, "Gemfile.lock")))
+              .to eq File.read(ruby.default_config_file_path("Gemfile.lock"))
+          end
+        end
+      end
 
       context "when user tries to override Procfile" do
         before do
