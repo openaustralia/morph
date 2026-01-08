@@ -6,13 +6,12 @@
         }
     ],
     "require": {
-        "php": "^8.2",
         "openaustralia/scraperwiki": "dev-morph_defaults",
         "ext-sqlite3": "*",
         "ext-pdo_sqlite": "*",
         "ext-gd": "*",
         "ext-mbstring": "*",
         "byjg/pgbrowser" : "*",
-        "torann/dom-parser": "^2.0"
+        "torann/dom-parser": "*"
     }
 }

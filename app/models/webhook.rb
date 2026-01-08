@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-# Webhook to be called when a scraper runs
-#
 # == Schema Information
 #
 # Table name: webhooks

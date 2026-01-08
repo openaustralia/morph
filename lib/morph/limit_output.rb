@@ -92,3 +92,4 @@ module Morph
 end
 
 exit Morph::LimitOutput.run(ARGV) if __FILE__ == $0
+

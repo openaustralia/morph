@@ -5,9 +5,7 @@ module Morph
   # Special stuff for each scripting language supported by morph.io
   class Language
     extend T::Sig
-    # FIXME: get php and perl examples / buildstep working and add it back here
-    # heroku-18 had LANGUAGES_SUPPORTED = T.let(%i[ruby php python perl nodejs].freeze, T::Array[Symbol])
-    LANGUAGES_SUPPORTED = T.let(%i[ruby python nodejs].freeze, T::Array[Symbol])
+    LANGUAGES_SUPPORTED = T.let(%i[ruby php python perl nodejs].freeze, T::Array[Symbol])
 
     WEBSITES = T.let({
       ruby: "https://www.ruby-lang.org/en/",
@@ -120,8 +118,7 @@ module Morph
       # We grab all the files in the template directory
       result = {}
       Dir.entries(default_template_directory).each do |file|
-        path = File.join(default_template_directory, file)
-        result[file] = File.read(path) if File.file?(path)
+        result[file] = File.read(File.join(default_template_directory, file)) if file != "." && file != ".."
       end
       result
     end

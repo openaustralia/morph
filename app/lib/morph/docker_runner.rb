@@ -21,7 +21,7 @@ module Morph
     BUILDSTEP_IMAGE = "openaustralia/buildstep"
     # Variants of the buildstep image that we're currently supporting. These
     # correspond to tags of the buildstep image
-    PLATFORMS = T.let(%w[cedar-14 heroku-18 heroku-24].freeze, T::Array[String])
+    PLATFORMS = T.let(%w[cedar-14 heroku-18].freeze, T::Array[String])
     DEFAULT_PLATFORM = "cedar-14"
     DOCKER_NETWORK = "morph"
     DOCKER_BRIDGE = "morph"
@@ -76,7 +76,7 @@ module Morph
       create_morph_network
 
       command = Morph::TimeCommand.command(
-        ["/usr/local/bin/limit_output", max_lines.to_s, "/bin/herokuish procfile start scraper"],
+        ["/usr/local/bin/limit_output.rb", max_lines.to_s, "/bin/herokuish procfile start scraper"],
         time_file
       )
 
@@ -128,9 +128,8 @@ module Morph
         block.call(nil, :internalout, "Injecting scraper and running...\n") if block_given?
         # TODO: Combine two operations below into one
         Morph::DockerUtils.insert_contents_of_directory(c, dest, "/app")
-        Morph::DockerUtils.insert_file(c, "lib/morph/limit_output", "/usr/local/bin")
-        Morph::DockerUtils.insert_file(c, "lib/morph/limit_output.py", "/usr/local/bin")
-        Morph::DockerUtils.insert_file(c, "lib/morph/limit_output.rb", "/usr/local/bin")
+        Morph::DockerUtils.insert_file(c, "lib/morph/limit_output.rb",
+                                       "/usr/local/bin")
       end
 
       c.start
@@ -184,7 +183,7 @@ module Morph
         # There is a chance that we catch a log line that shouldn't
         # be included. So...
         if (since.nil? || timestamp > since) && block_given?
-          if s == :stderr && c =~ /limit_output[.a-z]*: Too many lines of output!/
+          if s == :stderr && c == "limit_output.rb: Too many lines of output!\n"
             block.call timestamp, :internalerr,
                        "\n" \
                        "Too many lines of output! " \

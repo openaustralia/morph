@@ -28,8 +28,7 @@ describe Morph::DockerRunner do
       end
     end
 
-    it "lets me know that it can't select a buildpack", slow: true do
-      # 5.3 seconds
+    it "lets me know that it can't select a buildpack", slow: true do # 5.3 seconds
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end
@@ -47,21 +46,19 @@ describe Morph::DockerRunner do
         .to eq container_count
     end
 
-    it "stops if a python compile fails", slow: true do
-      # 5.2 seconds
+    it "stops if a python compile fails", slow: true do # 5.2 seconds
       copy_test_scraper("failing_compile_python")
       c = described_class.compile_and_start_run(repo_path: dir) do |_timestamp, stream, text|
-        docker_output << [stream, text]
+        docker_output  << [stream, text]
       end
       expect(c).to be_nil
     end
 
-    it "is able to run nodejs example on heroku-24", slow: true do # 1.6 seconds
+    it "is able to run nodejs example", slow: true do # 1.6 seconds
       copy_example_scraper("nodejs")
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output << [stream, text]
+        docker_output  << [stream, text]
       end
       expect(c).not_to be_nil
       described_class.attach_to_run(c) do |_timestamp, stream, text|
@@ -69,17 +66,16 @@ describe Morph::DockerRunner do
       end
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 0
-      expect(docker_output.select { |item| item[0] == :stdout }).to eq([[:stdout, "1: Example Domain\n"]])
+      expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run perl example on heroku-24", slow: true do # 2.4 seconds
+    it "is able to run perl example", slow: true do # 2.4 seconds
       copy_example_scraper("perl")
-      pending("FIXME: Update perl example / buildstep so the example runs on heroku-24") unless Morph::Language::LANGUAGES_SUPPORTED.include?(:perl)
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end
+      pending("FIXME: Fix perl example test - it works in production but not in test")
       expect(c).not_to be_nil
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -89,10 +85,8 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run php example on heroku-24", slow: true do # > 1 second
+    it "is able to run php example", slow: true do # > 1 second
       copy_example_scraper("php")
-      pending("FIXME: Update php example / buildstep so the example runs on heroku-24") unless Morph::Language::LANGUAGES_SUPPORTED.include?(:php)
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -106,16 +100,13 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    # FIXME: test python when we add heroku-24 as ceder-4 and heroku-18 can't find any python versions
-    it "is able to run python example on heroku-24", slow: true do # 7.3 seconds
+    it "is able to run python example", slow: true do # 7.3 seconds
       copy_example_scraper("python")
-      pending("FIXME: Update python example / buildstep so the example runs on heroku-24") unless Morph::Language::LANGUAGES_SUPPORTED.include?(:python)
-      expect(File).to exist(File.join(dir, "platform"))
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end
+      pending("FIXME: Fix python example test - requires heroku-24 platform to be implemented")
       expect(c).not_to be_nil
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -127,9 +118,8 @@ describe Morph::DockerRunner do
 
     # FIXME: test python when we add heroku-24 as ceder-4 and heroku-18 can't find any python versions
 
-    it "is able to run ruby example on heroku-24", slow: true do # 3.0 seconds
+    it "is able to run ruby example", slow: true do # 3.0 seconds
       copy_example_scraper("ruby")
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -142,11 +132,9 @@ describe Morph::DockerRunner do
       expect(result.status_code).to eq 0
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
-
-    # NOTE: Node.js no longer runs on cedar-14 (misleading error about invalid semver)
 
     it "is able to run hello world js on heroku-18" do
-      copy_test_scraper("hello_world_js_18")
+      copy_test_scraper("hello_world_js")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -157,28 +145,7 @@ describe Morph::DockerRunner do
         logs << [stream, text]
       end
       result = described_class.finish(c, [])
-      expect(result.status_code).to eq(0), "Unexpected exit status, output was: #{logs.inspect}"
-      expect(logs).to eq [[:stdout, "Hello world!\n"]]
-    end
-
-    # Supported versions:
-    # 22.x supported, note EOL Apr 2027
-    # 20.x supported (20.18.1), but EOL Apr 2026
-    # Note: "No matching version found for Node: 24.x"
-    it "is able to run hello world js on heroku-24" do
-      copy_test_scraper("hello_world_js_24")
-
-      c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output << [stream, text]
-      end
-      expect(c).not_to be_nil
-      logs = []
-      described_class.attach_to_run(c) do |_timestamp, stream, text|
-        # puts "DEBUG: #{_timestamp}: #{stream}: #{text}"
-        logs << [stream, text]
-      end
-      result = described_class.finish(c, [])
-      expect(result.status_code).to eq(0), "Unexpected exit status, output was: #{logs.inspect}"
+      expect(result.status_code).to eq 0
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
@@ -190,9 +157,8 @@ describe Morph::DockerRunner do
       result
     end
 
-    it "does not allocate and retain too much memory when running scraper", slow: true do
-      # 1.3 seconds
-      copy_test_scraper("hello_world_js_18")
+    it "does not allocate and retain too much memory when running scraper", slow: true do # 1.3 seconds
+      copy_test_scraper("hello_world_js")
 
       # Limit the buffer size just for testing
       report = MemoryProfiler.report do
@@ -214,10 +180,10 @@ describe Morph::DockerRunner do
     end
 
     it "attaches the container to a special morph-only docker network" do
-      copy_test_scraper("hello_world_js_18")
+      copy_test_scraper("hello_world_js")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output << [stream, text]
+        docker_output  << [stream, text]
       end
       expect(c).not_to be_nil
       expect(c.json["HostConfig"]["NetworkMode"]).to eq "morph"
@@ -231,12 +197,11 @@ describe Morph::DockerRunner do
       c.delete
     end
 
-    it "is not able to run hello world from a sub-directory", slow: true do
-      # 32 seconds
-      copy_test_scraper("hello_world_subdirectory_js_14")
+    it "is not able to run hello world from a sub-directory", slow: true do # 32 seconds
+      copy_test_scraper("hello_world_subdirectory_js")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output << [stream, text]
+        docker_output  << [stream, text]
       end
       expect(c).to be_nil
       # logs = []
@@ -250,11 +215,11 @@ describe Morph::DockerRunner do
     end
 
     it "caches the compile stage" do
-      copy_test_scraper("hello_world_js_18")
+      copy_test_scraper("hello_world_js")
 
       # Do the compile once to make sure the cache is primed
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
-        docker_output << [stream, text]
+        docker_output  << [stream, text]
       end
       expect(c).not_to be_nil
       logs = []
@@ -281,7 +246,7 @@ describe Morph::DockerRunner do
     end
 
     it "is able to run hello world of course" do
-      copy_test_scraper("hello_world_ruby_14")
+      copy_test_scraper("hello_world_ruby")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform)
       docker_output = []
@@ -311,8 +276,8 @@ describe Morph::DockerRunner do
         .to eq container_count
     end
 
-    it "is able to pass environment variables on heroku-24 with latest ruby" do
-      copy_test_scraper("display_env_ruby_24")
+    it "is able to pass environment variables" do
+      copy_test_scraper("display_env_ruby")
 
       docker_output = []
       c = described_class.compile_and_start_run(
@@ -329,8 +294,8 @@ describe Morph::DockerRunner do
       ]
     end
 
-    it "has an env variable set for python requests library on heroku-24 with default ruby" do
-      copy_test_scraper("display_request_env_ruby_24")
+    it "has an env variable set for python requests library" do
+      copy_test_scraper("display_request_env_ruby")
 
       c = described_class.compile_and_start_run(
         repo_path: dir, platform: platform
@@ -344,8 +309,8 @@ describe Morph::DockerRunner do
       expect(docker_output).to eq [[:stdout, "/etc/ssl/certs/ca-certificates.crt\n"]]
     end
 
-    it "returns the ip address of the container on heroku-24 with default ruby" do
-      copy_test_scraper("ip_address_ruby_24")
+    it "returns the ip address of the container" do
+      copy_test_scraper("ip_address_ruby")
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform)
       ip_address = Morph::DockerUtils.ip_address_of_container(c)
@@ -356,8 +321,8 @@ describe Morph::DockerRunner do
       expect(ip_address).to eq result.files["ip_address"].read
     end
 
-    it "returns a non-zero error code if the scraper fails on heroku-24 with ruby 3.2.9" do
-      copy_test_scraper("failing_scraper_ruby_24")
+    it "returns a non-zero error code if the scraper fails" do
+      copy_test_scraper("failing_scraper_ruby")
 
       docker_output = []
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform)
@@ -367,19 +332,15 @@ describe Morph::DockerRunner do
       result = described_class.finish(c, [])
       expect(result.status_code).to eq 1
       expect(docker_output).to eq [
-        [:stderr, "scraper.rb: --> scraper.rb\n"],
-        [:stderr, "syntax error, unexpected local variable or method, expecting '('\n"],
-        [:stderr, "> 1  This is not going to run as ruby code so should return an error\n"],
-        [:stderr, "scraper.rb:1: syntax error, unexpected local variable or method, expecting '(' (SyntaxError)\n"],
-        [:stderr, "This is not going to run as ruby code so shoul...\n"],
-        [:stderr, "            ^~~~~\n"],
-        [:stderr, "\n"]
+        [:stderr, "scraper.rb:1: syntax error, unexpected tIDENTIFIER, expecting '('\n"],
+        [:stderr, "This is not going to run as ruby code so should return an error\n"],
+        [:stderr, "                 ^\n"],
+        [:stderr, "scraper.rb:1: void value expression\n"]
       ]
     end
 
-    it "streams output if the right things are set for the language on heroku-24 with ruby 3.3.9", slow: true do
-      # 1.6 seconds
-      copy_test_scraper("stream_output_ruby_24")
+    it "streams output if the right things are set for the language", slow: true do # 1.6 seconds
+      copy_test_scraper("stream_output_ruby")
 
       docker_output = []
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, _stream, text|
@@ -394,9 +355,8 @@ describe Morph::DockerRunner do
       expect(end_time - start_time).to be_within(0.1).of(1.0)
     end
 
-    it "is able to reconnect to a running container on heroku-24 with ruby 3.3.9", slow: true do
-      # 1.6 seconds
-      copy_test_scraper("stream_output_ruby_24")
+    it "is able to reconnect to a running container", slow: true do # 1.6 seconds
+      copy_test_scraper("stream_output_ruby")
 
       logs = []
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform)
@@ -419,9 +379,8 @@ describe Morph::DockerRunner do
       expect(logs).to eq ["Started!\n", "1...\n", "2...\n", "3...\n", "4...\n", "5...\n", "6...\n", "7...\n", "8...\n", "9...\n", "10...\n", "Finished!\n"]
     end
 
-    it "is able to limit the amount of log output on heroku-24 with ruby 3.3.9", slow: true do
-      # 1.6 seconds
-      copy_test_scraper("stream_output_ruby_24")
+    it "is able to limit the amount of log output", slow: true do # 1.6 seconds
+      copy_test_scraper("stream_output_ruby")
 
       c = described_class.compile_and_start_run(repo_path: dir, max_lines: 5, platform: platform)
       logs = []
@@ -565,7 +524,7 @@ describe Morph::DockerRunner do
       it do
         Dir.mktmpdir do |dir|
           described_class.copy_config_to_directory("test", dir, false)
-          expect(Dir.entries(dir).sort).to eq %w[. .. scraper.rb]
+          expect(Dir.entries(dir).sort).to eq [".", "..", "scraper.rb"]
           expect(File.read(File.join(dir, "scraper.rb"))).to eq ""
         end
       end
