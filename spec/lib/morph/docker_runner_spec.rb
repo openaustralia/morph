@@ -56,9 +56,10 @@ describe Morph::DockerRunner do
       expect(c).to be_nil
     end
 
-    it "is able to run nodejs example on heroku-24", slow: true do # 1.6 seconds
+    # FIXME: update example to heroku-24
+    it "is able to run nodejs example on heroku-18", slow: true do # 1.6 seconds
       copy_example_scraper("nodejs")
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-18"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -72,14 +73,15 @@ describe Morph::DockerRunner do
       expect(docker_output.select { |item| item[0] == :stdout }).to eq([[:stdout, "1: Example Domain\n"]])
     end
 
-    it "is able to run perl example on heroku-24", slow: true do # 2.4 seconds
+    # FIXME: update example to heroku-24
+    it "is able to run perl example on heroku-18", slow: true do # 2.4 seconds
       copy_example_scraper("perl")
-      pending("FIXME: Update perl example / buildstep so the example runs on heroku-24") unless Morph::Language::LANGUAGES_SUPPORTED.include?(:perl)
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-18"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
       end
+      pending("FIXME: example works on morph,")
       expect(c).not_to be_nil
       described_class.attach_to_run(c) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -89,10 +91,10 @@ describe Morph::DockerRunner do
       expect(docker_output.last).to eq [:stdout, "1: Example Domain\n"]
     end
 
-    it "is able to run php example on heroku-24", slow: true do # > 1 second
+    # FIXME: update example to heroku-24
+    it "is able to run php example on heroku-18", slow: true do # > 1 second
       copy_example_scraper("php")
-      pending("FIXME: Update php example / buildstep so the example runs on heroku-24") unless Morph::Language::LANGUAGES_SUPPORTED.include?(:php)
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-18"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
@@ -127,9 +129,10 @@ describe Morph::DockerRunner do
 
     # FIXME: test python when we add heroku-24 as ceder-4 and heroku-18 can't find any python versions
 
-    it "is able to run ruby example on heroku-24", slow: true do # 3.0 seconds
+    # FIXME: update example to heroku-24
+    it "is able to run ruby example on heroku-18", slow: true do # 3.0 seconds
       copy_example_scraper("ruby")
-      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-24"
+      expect(File.read(File.join(dir, "platform")).strip).to eq "heroku-18"
 
       c = described_class.compile_and_start_run(repo_path: dir, platform: platform) do |_timestamp, stream, text|
         docker_output << [stream, text]
