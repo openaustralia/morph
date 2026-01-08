@@ -1,43 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: scrapers
-#
-#  id                         :integer          not null, primary key
-#  auto_run                   :boolean          default(FALSE), not null
-#  description                :string(255)
-#  full_name                  :string(255)      not null
-#  git_url                    :string(255)
-#  github_url                 :string(255)
-#  memory_mb                  :integer
-#  name                       :string(255)      default(""), not null
-#  original_language_key      :string(255)
-#  private                    :boolean          default(FALSE), not null
-#  repo_size                  :integer          default(0), not null
-#  scraperwiki_url            :string(255)
-#  sqlite_db_size             :bigint           default(0), not null
-#  created_at                 :datetime
-#  updated_at                 :datetime
-#  create_scraper_progress_id :integer
-#  forked_by_id               :integer
-#  github_id                  :integer
-#  owner_id                   :integer          not null
-#
-# Indexes
-#
-#  fk_rails_44c3dd8af8                  (create_scraper_progress_id)
-#  index_scrapers_on_full_name          (full_name) UNIQUE
-#  index_scrapers_on_owner_id           (owner_id)
-#  index_scrapers_on_owner_id_and_name  (owner_id,name) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_...  (create_scraper_progress_id => create_scraper_progresses.id)
-#
-
 # A scraper is a script that runs that gets data from the web
+#
 # == Schema Information
 #
 # Table name: scrapers
@@ -344,7 +309,7 @@ class Scraper < ApplicationRecord
     platform_file = "#{repo_path}/platform"
     platform = File.read(platform_file).chomp if File.exist?(platform_file)
     # TODO: We should remove support for early_release at some stage
-    platform = "heroku-18" if platform == "early_release"
+    platform = "heroku-24" if platform == "early_release"
     platform
   end
 

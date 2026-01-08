@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+# Association between Organisations and Users
+#
 # == Schema Information
 #
 # Table name: organizations_users

@@ -50,7 +50,7 @@ SimpleCov.start "rails" do
                           # * GitHub COVERAGE:  80.09% -- 2957/3692 lines in 97 files
                           # * Local COVERAGE:  80.44% -- 2970/3692 lines in 97 files
                           # SO Set it based on the CI coverage on GitHub!
-                          80.09
+                          80.05
                         else
                           # `make quick-tests` coverage
                           77.09

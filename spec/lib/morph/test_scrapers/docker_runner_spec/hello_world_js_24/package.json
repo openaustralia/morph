@@ -1,0 +1,8 @@
+{
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  }
+}

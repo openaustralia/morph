@@ -2,12 +2,12 @@
   "version": "0.0.1",
   "main": "scraper.js",
   "engines": {
-    "node": "16.x"
+    "node": "22.x"
   },
   "dependencies": {
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "^1.0.0",
     "request": "^2.88.2",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.7"
   },
   "keywords": [
     "scraper",
