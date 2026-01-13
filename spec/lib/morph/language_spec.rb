@@ -4,6 +4,11 @@
 require "spec_helper"
 
 describe Morph::Language do
+  before do
+    # Clear any files from manual testing
+    Dir.glob("default_files/*/template/data.sqlite").each { |file| File.delete(file) }
+  end
+
   let(:ruby) { described_class.new(:ruby) }
   let(:python) { described_class.new(:python) }
   let(:php) { described_class.new(:php) }
