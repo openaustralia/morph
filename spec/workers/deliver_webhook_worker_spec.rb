@@ -16,25 +16,25 @@ describe DeliverWebhookWorker do
            auto: true)
   end
 
-  describe "test to actual site", :vcr do
+  describe "test to actual site" do
     it "works" do
       VCR.use_cassette("webhook_delivery") do
         webhook = Webhook.create!(scraper: scraper, url: "http://requestb.in/x3pcr8x3")
         webhook_delivery = webhook.deliveries.create!(run: run)
         described_class.new.perform(webhook_delivery.id)
         webhook_delivery.reload
-        expect(webhook_delivery.response_code).to be(200)
+        expect(webhook_delivery.response_code).to eq(200)
         expect(webhook_delivery.sent_at).to be_within(1.minute).of(DateTime.now)
       end
     end
   end
 
-  describe "error handling" do
+  describe "error handling", :webmock do
     it "records response code and time on success" do
-      webhook = Webhook.create!(scraper: scraper, url: "http://example.com/hook")
+      webhook = Webhook.create!(scraper: scraper, url: "https://example.com/hook")
       webhook_delivery = webhook.deliveries.create!(run: run)
 
-      stub_request(:post, "http://example.com/hook").to_return(status: 200)
+      stub_request(:post, "https://example.com/hook").to_return(status: 200)
 
       described_class.new.perform(webhook_delivery.id)
 
@@ -59,7 +59,7 @@ describe DeliverWebhookWorker do
     end
   end
 
-  describe "URL substitution" do
+  describe "URL substitution", :webmock do
     it "substitutes all placeholders correctly" do
       substitutions = {
         "ADDED" => run.records_added,
