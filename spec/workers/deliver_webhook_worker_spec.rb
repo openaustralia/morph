@@ -69,6 +69,7 @@ describe DeliverWebhookWorker do
         "REMOVED" => run.records_removed,
         "REVISION" => "c9fabbc7",
         "RUN_TIME" => run.wall_time.to_i,
+        "SCRAPER" => run.scraper.full_name,
         "STATUS_CODE" => run.status_code
       }
 
