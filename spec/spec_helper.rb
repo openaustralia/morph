@@ -67,7 +67,7 @@ require File.expand_path("../config/environment", __dir__)
 require "rspec/rails"
 require "capybara/rspec"
 require "rspec/sorbet"
-require "webmock/rspec"
+# require "webmock/rspec"
 
 # Commented out for the benefit of zeus
 # require 'rspec/autorun'
