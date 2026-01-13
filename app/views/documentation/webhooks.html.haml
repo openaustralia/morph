@@ -24,6 +24,17 @@
   You can send information through the request
   by putting it in the webhook URL,
   either as the path or as GET parameters.
+  The following UPPERCASE strings will be replaced with the current run details in the url:
+
+  * ADDED: Records added count
+  * AUTO: "true" if an automatic daily run, otherwise "false"
+  * COMMIT: Full git revision
+  * OUTCOME: "success" if run finished successfully, otherwise "failed"
+  * REMOVED: Records removed count
+  * REVISION: Abbreviated git revision (e.g. "c9fab2s7")
+  * RUN_TIME: Seconds taken to run (eg "603" is 10 minutes and 3 seconds)
+  * STATUS_CODE: Process exit code (0 means success)
+
   If there’s something specific you’d like included in the webhook payload
   then please [ask a question on our help forum](#{host_origin("help")}/).
 
