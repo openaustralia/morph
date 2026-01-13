@@ -67,10 +67,15 @@ require File.expand_path("../config/environment", __dir__)
 require "rspec/rails"
 require "capybara/rspec"
 require "rspec/sorbet"
-# require "webmock/rspec"
 
 # Commented out for the benefit of zeus
 # require 'rspec/autorun'
+
+# Commented out so we can run docker tests
+# require 'webmock/rspec'
+
+require "webmock"
+require "webmock/rspec/matchers"
 
 # Requires supporting ruby files with custom matchers and macros, etc.
 # in spec/support/ and its subdirectories.
@@ -133,6 +138,11 @@ RSpec.configure do |config|
   config.include RetryHelper
   config.include CaptureHelper
   config.include ToolAvailability
+  # Include helpers like 'webmock/rspec' does without WebMock.enable! / disable which breaks VCR
+  config.include WebMock::API
+  config.include WebMock::Matchers
+
+  WebMock::AssertionFailure.error_class = RSpec::Expectations::ExpectationNotMetError
 
   config.before(:suite) do
     Searchkick.disable_callbacks
@@ -146,11 +156,22 @@ RSpec.configure do |config|
   # For tests marked as :docker tests don't use VCR
   config.around do |ex|
     if ex.metadata.key?(:docker)
+      # Disable VCR and WebMock checks so docker can retrieve images
       VCR.turned_off do
-        WebMock.allow_net_connect!
+        WebMock.allow_net_connect! # Just to be sure!
         ex.run
       end
+    elsif ex.metadata.key?(:webmock)
+      # WebMock checks all requests have been stubbed, and
+      # clean up WebMock stubs afterwards
+      VCR.turned_off do
+        WebMock.disallow_net_connect!
+        # Do NOT surround with WebMock.enable! / disable as it breaks some docker and VCR specs!
+        ex.run
+        WebMock.reset!
+      end
     else
+      # VCR checks all requests are enclosed in a VCR.use_cassette call
       ex.run
     end
   end
