@@ -1,4 +1,4 @@
 ---
 dependencies:
   - role: deploy-user
-    tags: "deploy-user"
+    tags: "deploy_user"

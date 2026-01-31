@@ -1,7 +1,7 @@
 ---
 dependencies:
-  - { role: docker-server-linode, tags: "docker-server-linode" }
-  - { role: nginx-passenger, tags: "nginx-passenger" }
+  - { role: docker-server-linode, tags: "docker_server_linode" }
+  - { role: nginx-passenger, tags: "nginx_passenger" }
   - { role: ruby, tags: "ruby" }
   - { role: mysql, tags: "mysql" }
   - { role: backups, tags: "backups" }
