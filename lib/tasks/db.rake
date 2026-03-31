@@ -16,11 +16,12 @@ namespace :db do
     db_name = ActiveRecord::Base.connection.current_database
     conn    = ActiveRecord::Base.connection
 
-    table_stats = conn.exec_query(<<~SQL).rows.to_h { |name, rows, mb| [name, [rows, mb]] }
+    sql = <<~SQL.squish
       SELECT TABLE_NAME, TABLE_ROWS, (DATA_LENGTH + INDEX_LENGTH) / 1024.0 / 1024.0
       FROM information_schema.TABLES
       WHERE TABLE_SCHEMA = '#{db_name}'
     SQL
+    table_stats = conn.exec_query(sql).rows.to_h { |name, rows, mb| [name, [rows, mb]] }
 
     total_mb = 0.0
     total_count = 0
