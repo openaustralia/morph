@@ -10,8 +10,8 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.7)
-      public_suffix (>= 2.0.2, < 7.0)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     base64 (0.3.0)
     connection_pool (2.5.4)
@@ -48,7 +48,7 @@ GEM
       ast (~> 2.4.1)
       racc
     prism (1.5.1)
-    public_suffix (6.0.2)
+    public_suffix (7.0.5)
     racc (1.8.1)
     rainbow (3.1.1)
     regexp_parser (2.11.3)
