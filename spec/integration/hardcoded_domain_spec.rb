@@ -144,7 +144,7 @@ describe "Hardcoded domain references", type: :request do
 
       # Find context around each occurrence
       matches = []
-      html.scan(/(.{0,80}(morph\.io|hostname).{0,80})/m) do |match|
+      html.scan(/(.{0,80}(?<!support@)(morph\.io|hostname).{0,80})/m) do |match|
         matches << match[0].gsub(/\s+/, " ").strip
       end
 
