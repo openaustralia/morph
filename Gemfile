@@ -121,6 +121,7 @@ group :development do
   gem "bcrypt_pbkdf", "~> 1.1"
   gem "capistrano-rails"
   gem "capistrano-rvm"
+  gem "capistrano-tagging3"
   gem "ed25519", "~> 1.3"
 
   gem "growl"
