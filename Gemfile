@@ -119,8 +119,9 @@ group :development do
   gem "haml-lint"
 
   gem "bcrypt_pbkdf", "~> 1.1"
-  gem "capistrano-rails"
-  gem "capistrano-rvm"
+  gem "capistrano-rails", require: false
+  gem "capistrano-rvm", require: false
+  gem "capistrano-tagging3", require: false
   gem "ed25519", "~> 1.3"
 
   gem "growl"

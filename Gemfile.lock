@@ -120,6 +120,8 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
+    capistrano-tagging3 (2.0.0)
+      capistrano (~> 3.0)
     capybara (3.37.1)
       addressable
       matrix
@@ -724,6 +726,7 @@ DEPENDENCIES
   cancancan
   capistrano-rails
   capistrano-rvm
+  capistrano-tagging3
   capybara
   cocoon
   coffee-rails
