@@ -9,6 +9,8 @@ raise "Deploy from the openaustralia repo (#{expected_repos.join(', ')}) instead
 
 set :rvm_ruby_version, "2.7.6"
 
+set :tagging3_format, ':stage_:release'
+
 set :branch, lambda {
   branch = ENV["BRANCH"] || `git rev-parse --abbrev-ref HEAD`.strip
   warnings = []
