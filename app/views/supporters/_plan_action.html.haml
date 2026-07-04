@@ -1,18 +1,7 @@
-- if !user_signed_in?
-  = link_to plan_change_word(Plan.new(nil), plan), new_supporter_path(plan_id: plan.stripe_plan_id), class: "btn btn-default btn-lg"
-- elsif current_user.plan == plan
+- if user_signed_in? && current_user.plan == plan
   = button_tag class: "btn btn-default btn-lg", disabled: true do
     %i.fa.fa-check.text-success
     You're a
     = current_user.plan.name
 - else
-  = button_tag plan_change_word(current_user.plan, plan),
-               id: plan.stripe_plan_id,
-               class: "btn btn-default btn-lg",
-               data: { key: Rails.configuration.stripe[:publishable_key],
-                       description: plan.name,
-                       amount: plan.price_in_cents,
-                       email: current_user.email,
-                       plan_id: plan.stripe_plan_id,
-                       stripe: !current_user.supporter?,
-                       image: image_path(plan.image_name) }
+  = link_to plan.name, "https://donate.oaf.org.au/?frequency=month&amount=#{plan.price}", class: "btn btn-default btn-lg"
