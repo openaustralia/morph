@@ -4,4 +4,4 @@
     You're a
     = current_user.plan.name
 - else
-  = link_to plan.name, "https://donate.oaf.org.au/?frequency=month&amount=#{plan.price}", class: "btn btn-default btn-lg"
+  = link_to "Become a #{plan.name}", "https://donate.oaf.org.au/?frequency=month&amount=#{plan.price}", class: "btn btn-default btn-lg"
