@@ -42,6 +42,18 @@ Read the [provisioning README](provisioning/README.md) for further details.
     - See `spec/models/scraper_spec.rb` as an example split file
     - Consider splitting off concerns and domain logic into separate files when other files get too fat
 
+## To run style and coding checks
+
+    bundle exec rubocop
+
+## To check for security updates
+
+Either check [Dependabot alerts](https://github.com/openaustralia/morph/security/dependabot)
+for the main branch, taking note of when the last check was run, **or** run manually on current branch:
+
+    bundle exec ruby-audit
+    bundle exec bundle-audit
+
 ### Support for Developers / CI
 
 Docker compose is used to provide redis, elasticsearch and mysql services as required for dev and CI

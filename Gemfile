@@ -141,10 +141,12 @@ group :development do
   gem "spring", "~> 4.0"
   gem "spring-commands-rspec"
 
+  gem "bundle-audit", require: false
   gem "rubocop"
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
   gem "rubocop-sorbet", require: false
+  gem "ruby_audit", require: false
 
   gem "mailcatcher", require: false
 end

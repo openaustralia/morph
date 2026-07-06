@@ -106,6 +106,11 @@ GEM
       sassc (>= 2.0.0)
     bootstrap-select-rails (1.13.8)
     builder (3.3.0)
+    bundle-audit (0.2.0)
+      bundler-audit
+    bundler-audit (0.9.3)
+      bundler (>= 1.2.0)
+      thor (~> 1.0)
     cancancan (3.4.0)
     capistrano (3.17.0)
       airbrussh (>= 1.0.0)
@@ -561,6 +566,8 @@ GEM
       rubocop (>= 0.90.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
+    ruby_audit (2.3.1)
+      bundler-audit (~> 0.9.0)
     ruby_parser (3.19.1)
       sexp_processor (~> 4.16)
     rugged (1.5.0.1)
@@ -723,6 +730,7 @@ DEPENDENCIES
   bootsnap (~> 1.4)
   bootstrap-sass
   bootstrap-select-rails
+  bundle-audit
   cancancan
   capistrano-rails
   capistrano-rvm
@@ -792,6 +800,7 @@ DEPENDENCIES
   rubocop-rspec
   rubocop-sorbet
   ruby-progressbar
+  ruby_audit
   rugged
   sass-rails
   sdoc
