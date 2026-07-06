@@ -15,6 +15,7 @@ ActiveAdmin.register Owner do
     column :type
     column :nickname
     column :name
+    column :email
 
     column :scrapers do |owner|
       owner.scrapers.count
@@ -38,17 +39,18 @@ ActiveAdmin.register Owner do
   filter :type
   filter :nickname
   filter :name
+  filter :email
   filter :stripe_plan_id, as: :select, collection: Plan.all_stripe_plan_ids
 
-  form do
-    inputs "Permissions" do
-      input :admin
-      input :suspended
+  form do |f|
+    f.inputs "Permissions" do
+      f.input :admin
+      f.input :suspended
     end
-    inputs "Supporter" do
-      input :stripe_plan_id, as: :select, collection: Plan.all_stripe_plan_ids
+    f.inputs "Supporter" do
+      f.input :stripe_plan_id, as: :select, collection: Plan.all_stripe_plan_ids
     end
-    actions
+    f.actions
   end
 
   controller do
