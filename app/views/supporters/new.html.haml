@@ -25,7 +25,7 @@
 
       - Plan.all_stripe_plan_ids.each do |plan_id|
         = render partial: "plan", locals: { plan: Plan.new(plan_id) }
-          
+
   .row.one-time-contribution
     %p
       Monthly contribution not right for you?
