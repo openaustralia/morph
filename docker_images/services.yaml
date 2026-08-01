@@ -48,6 +48,8 @@ services:
       interval: 10s
       timeout: 10s
       retries: 12
+    networks:
+      - network
 
 networks:
   network: {}

@@ -26,6 +26,8 @@ x-ruby-service: &ruby-service
     MYSQL_USER: "root"
     REDIS_URL: "redis://redis:6379"
     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD must be set, preferably in the .env file}
+  networks:
+    - network
 
 services:
   web:
