@@ -43,11 +43,13 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-testrootpass}
       MYSQL_ROOT_HOST: '%'
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$$MYSQL_ROOT_PASSWORD\""]
       start_period: 2s
       interval: 10s
       timeout: 10s
       retries: 12
+    networks:
+      - network
 
 networks:
   network: {}
