@@ -211,22 +211,22 @@ gem "date"
 # --- Transitive dependency security floors ---
 # Not direct dependencies, but bundler-audit flags them; pinning floors
 # here prevents a future lockfile regen from resolving back down.
-gem "rack", ">= 2.2.23", "< 3" # fix 10 CVEs incl. GHSA-8vqr, GHSA-h2jq (High); staying on rack 2.x to match actionpack/sidekiq/sinatra's existing ~> 2.0 constraints
-gem "loofah", ">= 2.25.2" # fix GHSA-9wjq-cp2p-hrgf (via rails-html-sanitizer, actiontext)
-gem "rails-html-sanitizer", ">= 1.7.1" # fix GHSA-cj75-f6xr-r4g7 (via actionview)
-gem "crass", ">= 1.0.7" # fix 4 GHSAs, no CVEs assigned (via loofah)
 gem "addressable", ">= 2.9.0" # fix CVE-2026-35611 (via capybara, webmock, octokit chain)
-gem "concurrent-ruby", ">= 1.3.7" # fix CVE-2026-54904/54905/54906 (via activesupport, sprockets)
 gem "bcrypt", ">= 3.1.22" # fix CVE-2026-33306 (via devise)
+gem "concurrent-ruby", ">= 1.3.7" # fix CVE-2026-54904/54905/54906 (via activesupport, sprockets)
+gem "crass", ">= 1.0.7" # fix 4 GHSAs, no CVEs assigned (via loofah)
+gem "loofah", ">= 2.25.2" # fix GHSA-9wjq-cp2p-hrgf (via rails-html-sanitizer, actiontext)
 gem "msgpack", ">= 1.8.2" # fix CVE-2026-54522 (via bootsnap)
+gem "net-imap", ">= 0.4.24" # fix CVE-2026-42245/42256/42257/42258 (via mail); CVE-2026-47240/47241/47242 need 0.5.15+, tracked separately
+gem "oauth2", ">= 2.0.22" # fix GHSA-pp92-crg2-gfv9 (via omniauth-oauth2, octokit chain)
+gem "omniauth", ">= 1.9.2" # fix CVE-2020-36599 (via omniauth-github); CVE-2015-9284 CSRF fix needs omniauth 2.0, blocked by omniauth-github's ~> 1.5.0 pin, tracked separately
+gem "rack", ">= 2.2.23", "< 3" # fix 10 CVEs incl. GHSA-8vqr, GHSA-h2jq (High); staying on rack 2.x to match actionpack/sidekiq/sinatra's existing ~> 2.0 constraints
+gem "rails-html-sanitizer", ">= 1.7.1" # fix GHSA-cj75-f6xr-r4g7 (via actionview)
+gem "rdoc", ">= 6.3.4.1" # fix CVE-2024-27281 (RCE, via sdoc)
+gem "rexml", ">= 3.3.9" # fix CVE-2024-49761 and others (via rubocop, crack)
 gem "webrick", ">= 1.8.2" # fix CVE-2025-6442 (via yard, mailcatcher)
 gem "websocket-driver", ">= 0.8.2" # fix CVE-2026-54463/54464/54465/61666 (via faye, actioncable)
-gem "oauth2", ">= 2.0.22" # fix GHSA-pp92-crg2-gfv9 (via omniauth-oauth2, octokit chain)
-gem "rexml", ">= 3.3.9" # fix CVE-2024-49761 and others (via rubocop, crack)
-gem "rdoc", ">= 6.3.4.1" # fix CVE-2024-27281 (RCE, via sdoc)
 gem "yard", ">= 0.9.44" # fix CVE-2026-41493, CVE-2026-49342 (via tapioca)
-gem "net-imap", ">= 0.4.24" # fix CVE-2026-42245/42256/42257/42258 (via mail); CVE-2026-47240/47241/47242 need 0.5.15+, tracked separately
-gem "omniauth", ">= 1.9.2" # fix CVE-2020-36599 (via omniauth-github); CVE-2015-9284 CSRF fix needs omniauth 2.0, blocked by omniauth-github's ~> 1.5.0 pin, tracked separately
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
