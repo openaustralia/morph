@@ -64,6 +64,17 @@ env:
   DISCOURSE_SMTP_PASSWORD: '{{ cuttlefish_password }}'
 {% endif %}
   DISCOURSE_SMTP_ENABLE_START_TLS: true
+{% if backups | default(false) %}
+
+  ## Automatic daily backups to S3 (same credentials as the duply backups)
+  DISCOURSE_BACKUP_LOCATION: s3
+  DISCOURSE_S3_BACKUP_BUCKET: oaf-backups/morph/discourse
+  DISCOURSE_S3_REGION: us-east-1
+  DISCOURSE_S3_ACCESS_KEY_ID: '{{ backup_target_user }}'
+  DISCOURSE_S3_SECRET_ACCESS_KEY: '{{ backup_target_pass }}'
+  DISCOURSE_BACKUP_FREQUENCY: 1
+  DISCOURSE_MAXIMUM_BACKUPS: 14
+{% endif %}
 
   ## The CDN address for this Discourse instance (configured to pull)
   #DISCOURSE_CDN_URL: //discourse-cdn.example.com
