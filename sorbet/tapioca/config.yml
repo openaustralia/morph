@@ -3,6 +3,12 @@ gem:
   #
   exclude:
   - rdoc
+  # capistrano-tagging3's rake hooks reference deploy tasks that only exist
+  # during a real cap run, so requiring it crashes RBI generation
+  - capistrano-tagging3
+  typed_overrides:
+    # tapioca generates superclass redefinitions for net-imap that srb rejects
+    net-imap: "ignore"
   # doc: true
   # workers: 5
 dsl:
