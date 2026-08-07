@@ -1,0 +1,15 @@
+GPG_PW='{{ backup_gpg_pw }}'
+TARGET='s3://s3.amazonaws.com/oaf-backups/morph/repos'
+# See https://www.guyrutenberg.com/2017/10/12/duply-credential-error-when-using-amazon-s3/
+export AWS_ACCESS_KEY_ID='{{ backup_target_user }}'
+export AWS_SECRET_ACCESS_KEY='{{ backup_target_pass }}'
+SOURCE='/var/www/shared/db/scrapers/repos'
+# MAX_AGE wasn't effective, but its still required
+MAX_AGE=7M
+# Force new full backup every month
+MAX_FULLBKP_AGE=1M
+# Keep only 6 full backup chains
+MAX_FULL_BACKUPS=6
+
+# Use 500 GB chunks (typically 15 chunks taking around 30 sec each)
+DUPL_PARAMS="$DUPL_PARAMS --volsize 500"
