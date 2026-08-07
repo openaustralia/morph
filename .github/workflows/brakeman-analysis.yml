@@ -3,31 +3,33 @@
 
 name: Brakeman Scan
 
-# This section configures the trigger for the workflow. Feel free to customize depending on your convention
 on:
+  push:
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   brakeman-scan:
     name: Brakeman Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    # Customize the ruby version depending on your needs
+    # Brakeman statically analyses the code with its own parser, so it
+    # doesn't need to run under the same Ruby version as the application
     - name: Setup Ruby
-      uses: actions/setup-ruby@v1.1.3
+      uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '2.7'
+        ruby-version: '3.3'
 
     - name: Setup Brakeman
-      env:
-        BRAKEMAN_VERSION: '4.10' # SARIF support is provided in Brakeman version 4.10+
-      run: |
-        gem install brakeman --version $BRAKEMAN_VERSION
+      run: gem install brakeman
 
     # Execute Brakeman CLI and generate a SARIF output with the security issues identified during the analysis
     - name: Scan
@@ -37,6 +39,6 @@ jobs:
 
     # Upload the SARIF file generated in the previous step
     - name: Upload SARIF
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: output.sarif.json
