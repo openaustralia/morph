@@ -1,8 +1,10 @@
 inherit_from: .rubocop_todo.yml
 
-require:
+plugins:
   - rubocop-rails
   - rubocop-rspec
+
+require:
   - rubocop-sorbet
 
 AllCops:
