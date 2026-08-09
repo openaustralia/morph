@@ -20,7 +20,7 @@
                   label: "Language"
 
     .row
-      - if current_user.all_owners.count == 1
+      - if current_user.all_owners.one?
         = f.input :owner_id, as: "hidden", input_html: { value: current_user.id }
       - else
         .col-sm-2
@@ -30,11 +30,11 @@
 
       .col-sm-6
         -# Hacky: Also display errors on owner_id even when the field is hidden
-        - if current_user.all_owners.count == 1
+        - if current_user.all_owners.one?
           .has-error= f.error :owner_id
         = f.input :name do
           - name_input_field = f.input_field :name, class: "form-control", placeholder: "city_of_sydney_development_applications"
-          - if current_user.all_owners.count == 1
+          - if current_user.all_owners.one?
             = name_input_field
           - else
             .input-group
