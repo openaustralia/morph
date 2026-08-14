@@ -51,7 +51,7 @@ jobs:
     #     options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout this repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: configure rails database
         run: cp config/database-ci.yml config/database.yml
@@ -100,7 +100,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Install Ruby (version given by .ruby-version) and Bundler
         uses: ruby/setup-ruby@v1
