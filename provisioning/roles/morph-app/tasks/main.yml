@@ -208,11 +208,17 @@
 - name: Create directory for duply backup config for sqlite
   file: path=/root/.duply/sqlite state=directory
 
+- name: Create directory for duply backup config for scraper repos
+  file: path=/root/.duply/repos state=directory
+
 - name: Copy across duply backup config for mysql
-  template: src=duply_mysql_conf dest=/root/.duply/mysql/conf owner=root group=root mode=0400
+  template: src=duply_mysql_conf.j2 dest=/root/.duply/mysql/conf owner=root group=root mode=0400
 
 - name: Copy across duply backup config for sqlite
-  template: src=duply_sqlite_conf dest=/root/.duply/sqlite/conf owner=root group=root mode=0400
+  template: src=duply_sqlite_conf.j2 dest=/root/.duply/sqlite/conf owner=root group=root mode=0400
+
+- name: Copy across duply backup config for scraper repos
+  template: src=duply_repos_conf.j2 dest=/root/.duply/repos/conf owner=root group=root mode=0400
 
 - name: Do backups daily of mysql to S3 at 4:40AM
   cron: name="duply mysql" hour=4 minute=40 user=root job="ulimit -n 65536 && duply mysql backup"
@@ -220,6 +226,10 @@
 
 - name: Do backups daily of sqlite to S3 at 4:40AM
   cron: name="duply sqlite" hour=4 minute=40 user=root job="ulimit -n 65536 && duply sqlite backup"
+  when: backups
+
+- name: Do backups daily of scraper repos to S3 at 5:40AM
+  cron: name="duply repos" hour=5 minute=40 user=root job="ulimit -n 65536 && duply repos backup"
   when: backups
 
 - name: Sync configuration
