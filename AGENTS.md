@@ -106,7 +106,12 @@ bundle exec rspec spec/models/scraper_spec.rb -e "some description"
 ### Coverage thresholds are hardcoded per profile
 
 `spec/spec_helper.rb` sets a different `SimpleCov.minimum_coverage` for each
-profile: 77.09 for `quick-tests`, 80.05 for `ci-tests`, 87.02 for `all-tests`.
+profile: 77.09 for `quick-tests`, 80.05 for `ci-tests`, and 87.02 for
+`all-tests` but only when Docker and the GitHub App private key are both
+present. Because the Docker and GitHub exclusions switch themselves on when
+their prerequisites are missing, `make all-tests` on a machine without
+`config/morph-github-app.private-key.pem` is silently held to 80.05, not 87.02.
+
 If you add or remove code and coverage moves, the run fails on the threshold
 rather than on a spec, and you have to update the matching number by hand.
 Update only the one for the profile you actually ran, and say in the pull
@@ -238,4 +243,5 @@ about understanding the change together, not gatekeeping it.
   that migrations can run against a database without the table. Adding routes
   near that block needs care.
 - `.rubocop_todo.yml` is inherited by `.rubocop.yml` and holds a backlog of
-  accepted offences. Prefer fixing an offence over widening the todo file.
+  already accepted offences, so a clean `rubocop` run does not mean the file
+  is clean by the configured rules.
