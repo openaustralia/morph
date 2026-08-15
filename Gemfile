@@ -75,7 +75,7 @@ gem "sitemap_generator"
 gem "zeroclipboard-rails"
 
 # For the administration interface
-gem "activeadmin"
+gem "activeadmin", ">= 2.12.0" # fix CVE-2023-50448; CVE-2023-51763 and CVE-2024-37031 need >= 3.2.0, which needs Rails 6.1+, tracked separately
 
 gem "faye"
 gem "puma", ">= 5.6.9" # fix CVE-2023-40175, CVE-2024-21647, CVE-2024-45614; CVE-2026-47736/47737 need puma 7.2+/8.0+, tracked separately
