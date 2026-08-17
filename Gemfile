@@ -66,7 +66,6 @@ gem "honeybadger"
 gem "kaminari"
 gem "kaminari-bootstrap", "~> 3.0.1"
 gem "meta-tags"
-gem "multiblock"
 gem "rails_autolink"
 gem "rails-timeago", "~> 2.0"
 # For sidekiq ui
@@ -79,7 +78,6 @@ gem "activeadmin"
 
 gem "faye"
 gem "puma"
-gem "ruby-progressbar"
 # Using a fork here to include a fix caused by the renaming of the gem to render_sync
 # TODO: Move away from this unsupported gem
 gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"
