@@ -70,10 +70,4 @@ class Organization < Owner
   rescue Octokit::Unauthorized, Octokit::NotFound
     false
   end
-
-  # All organizations that have scrapers
-  sig { returns(ActiveRecord::Relation) }
-  def self.all_with_scrapers
-    Organization.joins(:scrapers).group(:owner_id)
-  end
 end

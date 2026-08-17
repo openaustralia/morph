@@ -56,12 +56,6 @@ class Plan
     PLAN_PRICES[s] if s
   end
 
-  sig { returns(T.nilable(Integer)) }
-  def price_in_cents
-    p = price
-    p * 100 if p
-  end
-
   sig { params(other: Plan).returns(T::Boolean) }
   def ==(other)
     stripe_plan_id == other.stripe_plan_id

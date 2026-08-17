@@ -144,10 +144,5 @@ module Morph
     def default_template_directory
       "default_files/#{key}/template"
     end
-
-    sig { params(file: String).returns(String) }
-    def default_template_file_path(file)
-      "#{default_template_directory}/#{file}"
-    end
   end
 end

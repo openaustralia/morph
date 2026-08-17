@@ -39,25 +39,6 @@ RSpec.describe "tasks" do # rubocop:disable RSpec/DescribeClass
       end
     end
 
-    #       desc "Get meta info for all domains in the connection logs"
-    describe "app:emergency:get_all_meta_info_for_connection_logs" do
-      let(:task) { "app:emergency:get_all_meta_info_for_connection_logs" }
-
-      it "gets meta info for domains in connection logs" do
-        group = instance_double(ActiveRecord::Relation)
-        allow(ConnectionLog).to receive(:group).with(:host).and_return(group)
-        allow(group).to receive(:pluck).with(:host).and_return(%w[example.com already_exists.com])
-        allow(Domain).to receive(:exists?).with(name: "example.com").and_return(false)
-        allow(Domain).to receive(:exists?).with(name: "already_exists.com").and_return(true)
-        allow(Domain).to receive(:create!).with(name: "example.com").and_return(instance_double(Domain, id: 123))
-        allow(UpdateDomainWorker).to receive(:perform_async)
-
-        Rake::Task[task].reenable
-        expect { Rake::Task[task].invoke }.to output(%r{Queueing 1/2 example.com\s+Skipping 2/2 already_exists.com}).to_stdout
-        expect(UpdateDomainWorker).to have_received(:perform_async).with(123)
-      end
-    end
-
     #       desc "Delete duplicate enqueued Sidekiq scraper jobs. Sidekiq should be stopped for this to be effective"
     describe "app:emergency:delete_duplicate_scraper_jobs" do
       let(:task) { "app:emergency:delete_duplicate_scraper_jobs" }

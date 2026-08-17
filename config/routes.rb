@@ -8,12 +8,6 @@ Rails.application.routes.draw do
   # TODO: Hmm would be nice if this could be tidier
 
   ActiveAdmin.routes(self)
-  namespace "admin" do
-    resource :site_settings, only: [] do
-      post "toggle_read_only_mode"
-      post "update_maximum_concurrent_scrapers"
-    end
-  end
 
   # Owner.table_exists? is workaround to allow migration to add STI Owner/User table to run
   begin
@@ -106,7 +100,7 @@ Rails.application.routes.draw do
   end
 
   # These routes with path: "/" need to be at the end
-  resources :owners, path: "/", only: [:show, :update]
+  resources :owners, path: "/", only: [:show]
   resources :users, path: "/", only: :show
   resources :organizations, path: "/", only: :show
 
