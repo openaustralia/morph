@@ -93,9 +93,11 @@ sets them itself when the prerequisites are missing:
   excluded automatically if `GITHUB_APP_INSTALLED_BY` is unset or
   `config/morph-github-app.private-key.pem` is missing.
 
-CI (`.github/workflows/ruby.yml`) runs with all three of
-`DONT_RUN_DOCKER_TESTS=1 RUN_SLOW_TESTS=1 DONT_RUN_GITHUB_TESTS=1`, which is
-what `make ci-tests` reproduces. A green `make quick-tests` therefore does not
+CI (`.github/workflows/ruby.yml`) runs `bundle exec rspec spec -fd` with all
+three of `DONT_RUN_DOCKER_TESTS=1 RUN_SLOW_TESTS=1 DONT_RUN_GITHUB_TESTS=1`.
+`make ci-tests` sets the same three variables but reaches the specs through
+`bundle exec rake`, so it selects the same specs by a different route rather
+than running CI's exact command. A green `make quick-tests` therefore does not
 mean CI will pass.
 
 To run one file or one example:
