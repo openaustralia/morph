@@ -86,31 +86,6 @@ Run `make roles` to install some required ansible roles.
 
 Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
 
-## Production devops development
-
-> This method defaults to creating a 4Gb VirtualBox VM, which can strain an 8Gb Mac.
-> We suggest tweaking the Vagrantfile to restrict ram usage to 2Gb at first, or using a machine with at least 12Gb ram.
-
-Install [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbox.org) and [Ansible](http://www.ansible.com/).
-
-Install a couple of Vagrant plugins: `vagrant plugin install vagrant-hostsupdater vagrant-disksize`
-
-Install a Ruby Version Manager, for example (from latest to oldest):
-- [mise](https://mise.jdx.dev/) - modern, polyglot and fast (includes language installer)
-- [chruby](https://github.com/postmodern/chruby) and [ruby-install](https://github.com/postmodern/ruby-install) - a lightweight alternative
-- [rbenv](https://github.com/rbenv/rbenv) and [ruby-build](https://github.com/rbenv/ruby-build#readme) - the leader between 2015 and 2020
-- [rvm](https://rvm.io/) - used on production and staging, the old faithful and well known ruby version manager
-
-If on Ubuntu, install libreadline-dev: `sudo apt install libreadline-dev libsqlite3-dev`
-
-Install the required ruby version: `rbenv install`
-
-Install capistrano: `gem install capistrano`
-
-Run `make roles` to install some required ansible roles.
-
-Run `vagrant up local`. This will build and provision a box that looks and acts like production at `dev.morph.io`.
-
 Once the box is created and provisioned, deploy the application to your Vagrant box:
 
     cap local deploy
@@ -121,7 +96,7 @@ Now visit https://dev.morph.io/
 
 When you've changed the Ansible playbooks to modify the infrastructure you'll want to run:
 
-    make ansible
+    make production-provision
 
 ## SSL certificates
 
