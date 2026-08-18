@@ -29,8 +29,10 @@ GITHUB_APP_INSTALLED_BY=xxxxxxxxxx
 # -------------------------------------------------------------------
 # Provisioning staging only
 
+# Used by capistrano for deployment and ansible playbook in provisioning
+# Required if you are deploying to staging
 # Ansible sets SERVER_NAME in deployed .env file from this value
-#STAGING_HOSTNAME=morph.your.domain
+#STAGING_HOSTNAME=morph-staging.your.domain
 
 # Required if STAGING_HOSTNAME points to a CDN: set to the actual ip address of the server
 #STAGING_DEPLOY_TO=server-ip-address
@@ -46,22 +48,15 @@ DISCOURSE_URL=http://discuss.dev.morph.io
 MITMPROXY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxx
 MORPH_URL=http://localhost:3000
 
-# Used by capistrano for deployment and ansible playbook in provisioning
-# Required if you are deploying to staging
-#STAGING_HOSTNAME=morph-staging.your.domain
-
-# Required if STAGING_HOSTNAME points to a CDN: set to the actual ip address of the server
-#STAGING_DEPLOY_TO=server-ip-address
-
-# Ansible will set SERVER_NAME in the .env file for you
+# See https://hub.docker.com/_/mysql
+MYSQL_ROOT_PASSWORD=password
 
 # In development you can run elasticsearch on docker very easily which means
 # you don't have to install it. Use
 # SERVICES=elasticsearch make services-up
-# Then, point it at the right place. You can get the ip address of docker
-# by running: docker-machine ip
-# If you're on Linux you probably dont need the line below 
-# ELASTICSEARCH_URL=http://192.168.99.100:9200
+# If elasticsearch isn't reachable on the default url, point ELASTICSEARCH_URL
+# at the right place
+#ELASTICSEARCH_URL=http://localhost:9200
 
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
@@ -79,26 +74,10 @@ SYNC_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DOCKER_GID=999
 
 # -------------------------------
-# Code Development Only
-
-# See https://hub.docker.com/_/mysql
-MYSQL_ROOT_PASSWORD=password
-
-# In development you can run elasticsearch on docker very easily which means
-# you don't have to install it.
-# Just use: docker-compose up
-# Then, point it at the right place. You can get the ip address of docker
-# by running: docker-machine ip
-# If you're on Linux you can probably comment the line below out
-ELASTICSEARCH_URL=http://192.168.99.100:9200
-
-# -------------------------------
 # Optional
 
-# If this is Linux then your docker daemon is likely running locally on a socket. In that case the DOCKER_URL
-# and DOCKER_TCP does not need to be set (comment the lines below out).
-# If this is OS X, then your docker daemon will be running inside a VM with a tunneled port (see instructions
-# in the README for how to set this up)
+# If your docker daemon is running locally on a socket (the usual case) then
+# DOCKER_URL and DOCKER_TCP do not need to be set (leave the lines below commented out).
 #DOCKER_URL=http://localhost:4243
 #DOCKER_TCP=localhost:4243
 

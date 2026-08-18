@@ -1,4 +1,4 @@
-# NOTE - copy  to docker-compose.override.yml if you want
+# NOTE - copy docker-compose.override.yml-example to docker-compose.override.yml if you want
 # fixed rather than random ports on the host for services below
 # or to override other configuration
 
