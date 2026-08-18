@@ -23,10 +23,7 @@
 //= require tablesaw.stackonly
 //= require jquery.waypoints
 //= require waypoints.inview
-//= require api
 //= require bootstrap
-//= require documentation
 //= require scrapers
 //= require static
 //= require supporters
-//= require users
