@@ -113,7 +113,9 @@ build-iPhoneSimulator/
 ## Documentation cache and generated files:
 /.yardoc/
 /_yardoc/
-/doc/
+/doc/*
+# ... but keep hand-written project documentation
+!/doc/UPGRADE_PATH.md
 /rdoc/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
