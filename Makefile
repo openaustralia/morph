@@ -1,8 +1,8 @@
-.PHONY: all clean deploy help lint \
-        production-deploy production-provision provision \
+.PHONY: all clean help lint \
+        production-deploy production-provision \
         roles services-down services-up \
-	staging-anible staging-deploy staging-provision \
-        share-web test up vagrant-plugins venv \
+	staging-deploy staging-provision \
+        share-web test vagrant-plugins venv \
 	all-tests quick-tests
 VENV := .venv/bin
 SHELL := /bin/bash

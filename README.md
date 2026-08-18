@@ -58,6 +58,8 @@ for the main branch, taking note of when the last check was run, **or** run manu
 
 Docker compose is used to provide redis, elasticsearch and mysql services as required for dev and CI
 (use SERVICES to specify which services to start if you don't want them all).
+You can customise the docker compose setup by copying `docker-compose.override.yml-example`
+to `docker-compose.override.yml`.
 
 vagrant is used to provide a local staging environment to test ansible provisioning and capistrano app deployment.
 
@@ -74,52 +76,25 @@ On Linux, Your user account should be able to manipulate Docker (just add your u
 
 ## Installing Vagrant
 
-Install [VirtualBox](https://www.virtualbox.org/) os other supported virtualization provider.
+Install [VirtualBox](https://www.virtualbox.org/) or other supported virtualization provider.
 
 Then install [Vagrant](https://developer.hashicorp.com/vagrant)
 
 ## Make targets
 
-Various make targets have been added to for developer convenience when developing on the local host:
+Various make targets have been added for developer convenience when developing on the local host.
+To see the current list of targets with descriptions, run
 
-* help - This help dialog.
-* vagrant-up - launch local vagrant VM
-* vagrant-provision - Provision local vagrant VM using ansible
-* vagrant-deploy - Deploy app to local vagrant VM
-* services-up - Run up services with persistent data (use SERVICES="redis elasticsearch" to exclude mysql)
-* services-down - Close down services required for CI / development
-* services-logs - View logs for services (use SERVICES='elasticsearch redis' for specific services)
-* services-status - Check status of services
-
-* test - Run rspec tests
-* lint - Lint code
-* share-web - Share web server on port 3000 to the internet
-* clean - Clean out venv, installed roles and rails tmp/cache
-* clobber - Remove everything including logs
-* docker-clean - Remove all Docker resources INCLUDING databases in volumes
-
-targets to use docker compose rather than vagrant for a full development environment (BETA):
-
-* docker-up - Full Docker environment including ruby containers (persistent data) BETA
-
-targets for production:
-
-* production-provision - Provision production using ansible
-* production-deploy - Deploy app to production
+    make help
 
 Morph needs various services to run. We've made things easier for development by using docker
 to run Elasticsearch and the other services.
 
-    make services-up 
+    make services-up
 
 To stop the services use
 
     make services-down
-
-To run tests use
-
-    bin/rake db:test:prepare
-    bin/rake
 
 To get a bash shell in the running web container if you are using the full docker environment:
 
@@ -128,9 +103,6 @@ To get a bash shell in the running web container if you are using the full docke
 To run commands in a temporary container rather than the currently running container, use instead
 
     docker compose run web --rm -it bash -i
-
-
-Read [Docker Development Commands](doc/docker_development_commands.md) for a collection of useful commands.
 
 ## Initial configuration of morph development environment
 
@@ -175,7 +147,7 @@ We use "ngrok" a tool that makes tunnelling internet traffic to a local developm
 First [download ngrok](https://ngrok.com/download) if you don't have it already. Then,
 
     make share-web
-    # rune: ngrok http 3000
+    # runs: ngrok http 3000
 
 Make note of the ngrok forwarding url (`*.ngrok-free.dev`).
 
@@ -201,17 +173,16 @@ You will need to add and change a few values manually:
   * Change the port for the local urls if you are not using the default port 3000 for the rails app
 * Add an image - you can use the standard logo at `app/assets/images/logo.png` (you can add this after the app is
   created)
-* If the webhooks are active and being used in production (currently not the case) then
-  you'll also need to add a "Webhook secret" for security.
+* If the webhooks are active and being used in production (currently not the case) then you'll also need to:
   * add a "Webhook secret" for security.
   * add a "Webhook URL" - the ngrok url with `/github/webhook` on the end
 
 For staging servers, you will need to add the callback url.
 * User settings switch context to Open Australia (if you have sufficient permissions), otherwise you will need to use 
   an app under your personal or an organisation you have permission for.
-* Navidate to Developer Settings
-* Under gitHub Apps you should have a Morph.io app
-* Click Edit and scoll down to the "Identifying and authorizing users" section
+* Navigate to Developer Settings
+* Under GitHub Apps you should have a Morph.io app
+* Click Edit and scroll down to the "Identifying and authorizing users" section
 * Click "Add Callback URL" if your url is not already present, eg:
   * `https://morph-staging.thesite.info/users/auth/github/callback`
 
@@ -262,13 +233,8 @@ It's a massive time saver when you're doing design or lots of work in the view. 
 
     bundle exec guard
 
-Guard will also run tests when needed. Some tests do integration tests against a
-running docker server. These particular tests are very slow. If you want to
-disable them,
-
-```
-DONT_RUN_DOCKER_TESTS=1 bundle exec guard
-```
+Guard will also run tests when files change. See [TESTING.md](TESTING.md) for
+how to control which tests are run.
 
 ### Mail in development
 
@@ -293,35 +259,6 @@ To deploy morph.io to production, normally you'll just want to deploy using Capi
     cap production deploy
 
 Read the [provisioning README](provisioning/README.md) for details of how to provision from updated ansible playbooks.
-
-# How to contribute
-
-If you find what looks like a bug:
-
-* Check the [GitHub issue tracker](http://github.com/openaustralia/morph/issues/)
-  to see if anyone else has reported issue.
-* If you don't see anything, create an issue with information on how to reproduce it.
-
-If you want to contribute an enhancement or a fix:
-
-* Fork the project on GitHub.
-* Make your changes with tests.
-* Commit the changes without making changes to any files that aren't related to your enhancement or fix.
-* Send a pull request.
-
-We maintain a list of [issues that are easy fixes](https://github.com/openaustralia/morph/issues?labels=easy+fix&milestone=&page=1&state=open). 
-Fixing one of these is a great way to get started while you get familiar with the codebase.
-
-## Branch naming
-
-To aid readbility, please use the following naming convention:
-
-* feature/: For developing new features.
-* bugfix/: For addressing bugs in the existing codebase.
-* hotfix/: For urgent bug fixes in the production environment, typically branched directly from the stable or main branch.
-* refactor/: For code refactoring efforts.
-* docs/: For changes related to documentation.
-* chore/: For maintenance, dependency updates, tooling changes, and other non-feature work.
 
 # Copyright & License
 
