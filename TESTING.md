@@ -1,7 +1,7 @@
 TESTING
 =======
 
-If you're running guard (see above) the tests will also automatically run when you change a file.
+If you're running guard (see the "Guard Livereload" section in `README.md`) the tests will also automatically run when you change a file.
 
 By default, RSpec will skip tests that have been tagged as being slow.
 To change this behaviour, add the following to your `.env`:
