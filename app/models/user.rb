@@ -237,16 +237,6 @@ class User < Owner
     false
   end
 
-  sig { params(nickname: String).returns(User) }
-  def self.find_or_create_by_nickname(nickname)
-    u = User.find_by(nickname: nickname)
-    if u.nil?
-      u = User.create(nickname: nickname)
-      u.refresh_info_from_github!
-    end
-    u
-  end
-
   sig { returns(T::Boolean) }
   def active_for_authentication?
     !suspended?

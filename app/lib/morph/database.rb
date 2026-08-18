@@ -205,12 +205,6 @@ module Morph
       FileUtils.rm_f sqlite_db_path
     end
 
-    sig { params(content: String).void }
-    def write_sqlite_database(content)
-      FileUtils.mkdir_p @data_path
-      File.binwrite(sqlite_db_path, content)
-    end
-
     # TODO: table should really NOT be nillable
     sig { params(table: T.nilable(String)).returns(String) }
     def select_first_ten(table = table_names.first)

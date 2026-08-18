@@ -43,21 +43,6 @@ class EmergencyRake
         runs.each { |id| RunWorker.perform_async(id) }
       end
 
-      desc "Get meta info for all domains in the connection logs"
-      task get_all_meta_info_for_connection_logs: :environment do
-        domains = ConnectionLog.group(:host).pluck(:host)
-        total = domains.count
-        domains.each_with_index do |domain, index|
-          if Domain.exists?(name: domain)
-            puts "Skipping #{index + 1}/#{total} #{domain}"
-          else
-            puts "Queueing #{index + 1}/#{total} #{domain}"
-            d = Domain.create!(name: domain)
-            UpdateDomainWorker.perform_async(T.must(d.id))
-          end
-        end
-      end
-
       desc "Delete duplicate enqueued Sidekiq scraper jobs. Sidekiq should be stopped for this to be effective"
       task delete_duplicate_scraper_jobs: :environment do
         queue = Sidekiq::Queue["scraper"].to_a
