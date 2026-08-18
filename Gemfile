@@ -66,7 +66,6 @@ gem "honeybadger"
 gem "kaminari"
 gem "kaminari-bootstrap", "~> 3.0.1"
 gem "meta-tags"
-gem "multiblock"
 gem "rails_autolink"
 gem "rails-timeago", "~> 2.0"
 # For sidekiq ui
@@ -79,7 +78,6 @@ gem "activeadmin", ">= 2.12.0" # fix CVE-2023-50448; CVE-2023-51763 and CVE-2024
 
 gem "faye"
 gem "puma", ">= 5.6.9" # fix CVE-2023-40175, CVE-2024-21647, CVE-2024-45614; CVE-2026-47736/47737 need puma 7.2+/8.0+, tracked separately
-gem "ruby-progressbar"
 # Using a fork here to include a fix caused by the renaming of the gem to render_sync
 # TODO: Move away from this unsupported gem
 gem "render_sync", git: "https://github.com/openaustralia/render_sync.git"

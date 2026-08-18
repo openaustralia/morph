@@ -383,7 +383,6 @@ GEM
     msgpack (1.8.4)
     multi_json (1.15.0)
     multi_xml (0.6.0)
-    multiblock (0.2.1)
     mustermann (3.1.1)
     mutex_m (0.3.0)
     mysql2 (0.5.7)
@@ -805,7 +804,6 @@ DEPENDENCIES
   memory_profiler
   meta-tags
   msgpack (>= 1.8.2)
-  multiblock
   mysql2
   net-imap (>= 0.4.24)
   nokogiri (~> 1.15.7)
@@ -839,7 +837,6 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   rubocop-sorbet
-  ruby-progressbar
   ruby_audit
   rugged
   sass-rails
