@@ -116,7 +116,7 @@ services-logs: ## View logs for services (use SERVICES=elasticsearch for specifi
 services-status: ## Check status of services
 	COMPOSE_PROJECT_NAME=morph-services docker compose -f docker_images/services.yaml ps
 
-rspec: ## Run all rspec tests (Optionally add DONT_RUN_SLOW_TESTS=1 or DONT_RUN_DOCKER_TESTS=1 or DONT_RUN_GITHUB_TESTS=1)
+rspec: ## Run all rspec tests (Optionally add DONT_RUN_DOCKER_TESTS=1 or DONT_RUN_GITHUB_TESTS=1)
 	RAILS_ENV=test bundle exec rspec
 
 test: quick-tests all-tests ## Run quick test then everything for a full coverage/index.html report

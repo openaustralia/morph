@@ -67,8 +67,16 @@ The pieces that make this more than a CRUD app all live in `app/lib/morph/`:
 - `Morph::Language` maps a scraper repo to a supported language (Ruby, Python,
   PHP, Perl, JavaScript) and to the right default files.
 
+One more piece sits outside that directory. `SynchroniseRepoService`
+(`app/services/`) is what `Morph::Runner` calls to fetch the latest scraper
+code, and is where the GitHub App failures that reach the user as a failed run
+come from.
+
 Background work runs through Sidekiq (`app/workers/`, queues `default` and
-`scraper` per `config/sidekiq.yml`). Search is Elasticsearch via searchkick.
+`scraper` per `config/sidekiq.yml`), plus scheduled rake tasks in
+`lib/tasks/app.rake` whose descriptions say they are called from cron:
+`auto_run_scrapers`, `send_alerts`, `stop_long_running_scrapers` and the refresh
+tasks. Search is Elasticsearch via searchkick.
 Live log streaming is faye plus render_sync (`sync.ru`, the `faye` process in
 `Procfile`). The admin interface is ActiveAdmin under `/admin`.
 
@@ -103,6 +111,25 @@ make services-down
 make services-status
 ```
 
+Then install the gems, create the schema, and start the app:
+
+```sh
+bundle install
+bundle exec dotenv rake db:setup
+bundle exec dotenv foreman start        # http://127.0.0.1:3000
+bundle exec rake app:promote_to_admin   # gives your account access to /admin
+```
+
+The `dotenv` prefix is load bearing, because without it the process does not see
+`.env`. `foreman` starts the `web`, `worker` and `faye` processes in `Procfile`
+together, where `rails s` on its own gives you the web process without Sidekiq
+or live log streaming.
+
+Those commands, and every other command in this file, run on the host. The
+alternative is the full Docker environment including the Ruby containers, which
+is `make docker-up`, marked BETA in the `Makefile`. With that running, get a
+shell in the web container with `docker compose exec web bash -i`.
+
 `README.md` has the full walkthrough for creating the GitHub App and filling in
 the `GITHUB_APP_*` values in `.env`. The private key it tells you to save to
 `config/morph-github-app.private-key.pem` is what gates the GitHub-integration
@@ -120,6 +147,9 @@ make all-tests     # everything, including the slow Docker integration specs.
 make test          # quick-tests then all-tests
 ```
 
+`make help` lists all 24 targets. This file covers only the ones whose behaviour
+is not obvious from the name.
+
 Three environment variables control what gets skipped, and `spec/spec_helper.rb`
 sets them itself when the prerequisites are missing:
 
@@ -130,6 +160,10 @@ sets them itself when the prerequisites are missing:
 - `DONT_RUN_GITHUB_TESTS=1` excludes specs tagged `:github`. These are also
   excluded automatically if `GITHUB_APP_INSTALLED_BY` is unset or
   `config/morph-github-app.private-key.pem` is missing.
+
+`make rspec` is a fourth entry point, running `RAILS_ENV=test bundle exec rspec`
+and setting none of those variables itself, so slow specs stay excluded unless
+you pass `RUN_SLOW_TESTS=1` yourself.
 
 CI (`.github/workflows/ruby.yml`) runs `bundle exec rspec spec -fd` with all
 three of `DONT_RUN_DOCKER_TESTS=1 RUN_SLOW_TESTS=1 DONT_RUN_GITHUB_TESTS=1`.
