@@ -22,13 +22,11 @@ CLI for all operations. Run it inside the clone and it infers the repo from
 
 - The issue and pull request templates are inherited from
   [`openaustralia/.github`](https://github.com/openaustralia/.github), not held
-  locally, so `gh issue create` will not offer a template to fill in. Follow
-  the org template's structure by hand.
-- Assign every pull request you open to yourself
-  (`gh pr create --assignee @me`), per the org `CONTRIBUTING.md`.
-- Disclose AI involvement as that guide asks: an
-  `Assisted-by: <agent-name>:<model-id>` trailer on each commit and a note in
-  the pull request description.
+  locally, so `gh issue create` will not offer a template to fill in. Fetch the
+  org template and follow its structure by hand.
+- How to open a pull request, who to assign it to, the DCO sign-off and AI
+  disclosure all come from the org standards. `AGENTS.md` links them at the top,
+  under "Org-wide standards". Read those rather than a copy here.
 
 ## Pull requests as a triage surface
 

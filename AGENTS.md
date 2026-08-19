@@ -5,6 +5,38 @@ and others) when working with code in this repository. `CLAUDE.md` and
 `.github/copilot-instructions.md` point here so the guidance lives in one
 place.
 
+## Org-wide standards
+
+OAF keeps its shared standards in the `openaustralia/.github` repository. They
+are referenced here rather than restated, because copies drift. Read them before
+you start. Where this file disagrees with them, they win and this file is what
+needs fixing.
+
+- [`AGENTS.md`](https://github.com/openaustralia/.github/blob/main/AGENTS.md).
+  Its "Working as an agent in any OAF repository" section covers scoping
+  standing approvals and Bash allow-patterns, staging commits instead of making
+  them, opening pull requests as drafts assigned to the human driving the
+  change, leaving issue creation to a human unless asked, and handling secrets
+  and personal details. Its conventions section covers how OAF writes:
+  non-partisan, Australian English, no em dashes, AI disclosure, citing sources
+  and licences, replacement code in review comments, and not hard-wrapping pull
+  request or issue bodies.
+- [`.github/CONTRIBUTING.md`](https://github.com/openaustralia/.github/blob/main/.github/CONTRIBUTING.md).
+  The authority on GitHub Flow, branch naming, pull requests, the DCO sign-off
+  and AI disclosure. This repository has no local `CONTRIBUTING.md`, so that one
+  applies in full.
+- The issue and pull request templates there are inherited by this repository,
+  so they are not found locally and `gh issue create` will not offer one to
+  fill in.
+
+Fetch the current version of any of them whichever way your tools allow, for
+example:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/openaustralia/.github/main/AGENTS.md
+gh api repos/openaustralia/.github/contents/AGENTS.md --jq .content | base64 -d
+```
+
 ## What this repository is
 
 `openaustralia/morph` is the Rails application behind [morph.io](https://morph.io),
@@ -208,31 +240,16 @@ services-down` unless you actually mean to lose the databases.
 
 ## Contributing
 
-This repository has no `CONTRIBUTING.md`, so the org-wide one applies:
-[`openaustralia/.github/.github/CONTRIBUTING.md`](https://github.com/openaustralia/.github/blob/main/.github/CONTRIBUTING.md).
-It is the authority on branching, pull requests, sign-off and AI disclosure.
-The pull request and issue templates are inherited from that repository too,
-so they will not be found locally.
+Branching, pull requests, the DCO sign-off, AI disclosure and OAF's writing
+conventions all come from the org-wide standards linked at the top of this file.
+Read those rather than looking for a local copy of them here.
 
-In short: branch off `main` using the
-[Conventional Branch](https://conventionalbranch.org/#summary) form
-`type/issue-number-short-description`, open the pull request as a draft early,
-assign it to yourself, take it out of draft only once the checks in
-`.github/workflows/` pass, and sign off every commit with `git commit -s`.
+Specific to this repository:
 
-`.github/CODEOWNERS` in this repository requests reviews. Note that a review is
-about understanding the change together, not gatekeeping it.
-
-## Conventions specific to this org
-
-- Non-partisan: nothing in this repository should imply endorsement or
-  criticism of any party, candidate or position.
-- Australian English throughout.
-- No em dashes. Use a hyphen, a comma or a full stop.
-- Disclose AI involvement in both places the org `CONTRIBUTING.md` asks for: an
-  `Assisted-by: <agent-name>:<model-id>` trailer on each commit, and a note in
-  the pull request description. Report the model actually used, not a
-  remembered default. A human, not an agent, signs off the commit.
+- `.github/CODEOWNERS` requests reviews. A review is about understanding the
+  change together, not gatekeeping it.
+- Checks live in `.github/workflows/`, so those are the ones that have to pass
+  before a pull request comes out of draft.
 - `README.md` sets coding standards worth honouring beyond RuboCop: keep
   methods short, keep files under about 400 lines, and comment why rather than
   what. `spec/models/scraper_spec.rb` is the worked example of splitting a file
