@@ -38,9 +38,15 @@ The pieces that make this more than a CRUD app all live in `app/lib/morph/`:
 Background work runs through Sidekiq (`app/workers/`, queues `default` and
 `scraper` per `config/sidekiq.yml`). Search is Elasticsearch via searchkick.
 Live log streaming is faye plus render_sync (`sync.ru`, the `faye` process in
-`Procfile`). Outbound scraper traffic is logged by a mitmproxy container
-(`docker_images/morph-mitmdump/`) which calls back into the API. The admin
-interface is ActiveAdmin under `/admin`.
+`Procfile`). The admin interface is ActiveAdmin under `/admin`.
+
+Outbound scraper traffic was logged by a mitmproxy container
+(`docker_images/morph-mitmdump/`) calling back into the API, but that path is
+switched off: `Morph::Runner` passes `disable_proxy: true` unconditionally, so a
+run never joins the proxy network. The container, the `connection_logs`
+endpoint, and the code that displays and searches scraped domains all remain, on
+historical data only. Issue #1506 records this half-live state as needing a
+product decision, so leave both halves alone rather than tidying either away.
 
 Scraper git repos and their SQLite databases live under `db/scrapers/`, which
 is gitignored and is a Capistrano `linked_dir` in production. It is live data,
@@ -214,11 +220,6 @@ In short: branch off `main` using the
 assign it to yourself, take it out of draft only once the checks in
 `.github/workflows/` pass, and sign off every commit with `git commit -s`.
 
-**`README.md` contradicts the org guide in two places, and the org guide wins.**
-Its "How to contribute" section describes a fork-and-pull-request flow rather
-than branching off `main`, and its "Branch naming" section uses `docs/` where
-the org guide uses `doc/`. Neither README section mentions the DCO sign-off.
-
 `.github/CODEOWNERS` in this repository requests reviews. Note that a review is
 about understanding the change together, not gatekeeping it.
 
@@ -265,8 +266,6 @@ are no ADRs yet. See `docs/agents/domain.md`.
 
 ## Known rough edges
 
-- `README.md` links to `doc/docker_development_commands.md`, which does not
-  exist in this repository.
 - `config/routes.rb` wraps `devise_for` in a `Owner.table_exists?` check so
   that migrations can run against a database without the table. Adding routes
   near that block needs care.

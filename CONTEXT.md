@@ -125,12 +125,12 @@ _Avoid_: notification, digest, warning
 ### Traffic
 
 **Domain**:
-A site a Scraper made requests to, recorded so people can see what a Scraper
-scrapes and find scrapers by the sites they cover. Never morph.io's own domain,
-and unrelated to "domain" in the domain-modelling sense.
+A site a Scraper made requests to. Shown on the Scraper's page and indexed for
+search, so people can find scrapers by the sites they cover. Never morph.io's
+own domain, and unrelated to "domain" in the domain-modelling sense.
 _Avoid_: site, host, target
 
 **Connection log**:
-A record that a Run made a request to a Domain, captured from the proxy the
-Run's traffic passes through.
+A record that a Run made a request to a Domain. Historical only, since the proxy
+that captured these is switched off.
 _Avoid_: request log, access log
