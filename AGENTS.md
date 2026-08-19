@@ -239,6 +239,30 @@ about understanding the change together, not gatekeeping it.
 - Code that cannot be covered automatically is marked `# :nocov:` and listed in
   `TESTING.md` as a manual test. If you add such code, add it there too.
 
+## Agent skills
+
+Per-repo configuration for the `mattpocock-skills` engineering skills,
+scaffolded by `/setup-matt-pocock-skills`. The details live in `docs/agents/`
+and this section is a summary. Edit those files directly rather than re-running
+the setup skill.
+
+### Issue tracker
+
+GitHub issues on `openaustralia/morph`, via the `gh` CLI. See
+`docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical triage labels, unchanged: `needs-triage`, `needs-info`,
+`ready-for-agent`, `ready-for-human` and `wontfix`. All already exist on the
+repo. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context. [`CONTEXT.md`](CONTEXT.md) at the repo root is the glossary of
+morph.io's domain terms, and is opinionated about which words to avoid. There
+are no ADRs yet. See `docs/agents/domain.md`.
+
 ## Known rough edges
 
 - `README.md` links to `doc/docker_development_commands.md`, which does not
