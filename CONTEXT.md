@@ -51,6 +51,12 @@ The one supported language a Scraper is written in: Ruby, Python, PHP, Perl or
 JavaScript. Determined by which scraper file the repository contains.
 _Avoid_: runtime, stack
 
+**Platform**:
+The base system image a Scraper's container is built on: cedar-14, heroku-18
+or heroku-24. A Scraper can pin one; otherwise it gets the default.
+_Avoid_: stack, which is Heroku's word for the same thing, base image,
+buildstep image
+
 **Variable**:
 A named secret value morph.io passes into a Scraper's environment when it runs.
 Every name begins `MORPH_`.
@@ -134,3 +140,11 @@ _Avoid_: site, host, target
 A record that a Run made a request to a Domain. Historical only, since the proxy
 that captured these is switched off.
 _Avoid_: request log, access log
+
+### Environments
+
+**Rehearsal server**:
+The server built ahead of the production migration to rehearse provisioning,
+the data move and cutover before anything depends on it. Becomes the staging
+environment once it exists; morph.io has none until then.
+_Avoid_: staging box, new server, dev.morph.io, which no longer exists
