@@ -17,24 +17,72 @@ describe ApplicationController do
   end
 
   describe "#after_sign_out_path_for" do
+    def stub_referer(referer)
+      allow(controller).to receive(:request).and_return(
+        instance_double(ActionDispatch::Request, referer: referer, host: "morph.io")
+      )
+    end
+
+    def after_sign_out_path
+      controller.send(:after_sign_out_path_for, :any_scope)
+    end
+
     before do
       allow(controller).to receive(:root_path).and_return(root_path)
     end
 
-    # FIXME: This is not safe to do!
-    it "returns referer path" do
-      referer = "/some_user/some_scraper"
-      allow(controller).to receive(:request).and_return(instance_double(ActionDispatch::Request, referer: referer))
+    it "returns the referer path when the referer is on our own host" do
+      stub_referer("https://morph.io/some_user/some_scraper")
 
-      path = controller.send(:after_sign_out_path_for, :any_scope)
-      expect(path).to eq referer
+      expect(after_sign_out_path).to eq "/some_user/some_scraper"
     end
 
-    it "defaults to root path" do
-      allow(controller).to receive(:request).and_return(instance_double(ActionDispatch::Request, referer: nil))
+    it "defaults to root path when there is no referer" do
+      stub_referer(nil)
 
-      path = controller.send(:after_sign_out_path_for, :any_scope)
-      expect(path).to eq root_path
+      expect(after_sign_out_path).to eq root_path
+    end
+
+    it "does not redirect to a referer on another host" do
+      stub_referer("https://evil.example.com/signed_out")
+
+      expect(after_sign_out_path).to eq root_path
+    end
+
+    it "defaults to root path for a relative referer" do
+      stub_referer("/some_user/some_scraper")
+
+      expect(after_sign_out_path).to eq root_path
+    end
+
+    it "does not produce a protocol-relative redirect from a doubled slash" do
+      stub_referer("https://morph.io//evil.example.com/signed_out")
+
+      expect(after_sign_out_path).to eq root_path
+    end
+
+    it "does not redirect to a referer with a query string" do
+      stub_referer("https://morph.io/some_user/some_scraper?evil=1")
+
+      expect(after_sign_out_path).to eq root_path
+    end
+
+    it "does not redirect to a referer with a fragment" do
+      stub_referer("https://morph.io/some_user/some_scraper#evil")
+
+      expect(after_sign_out_path).to eq root_path
+    end
+
+    it "does not redirect to a deeply nested path" do
+      stub_referer("https://morph.io/a/b/c")
+
+      expect(after_sign_out_path).to eq root_path
+    end
+
+    it "defaults to root path when the referer is not a valid URI" do
+      stub_referer("https://morph.io/some path with spaces")
+
+      expect(after_sign_out_path).to eq root_path
     end
   end
 
