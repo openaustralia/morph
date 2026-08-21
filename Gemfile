@@ -62,12 +62,18 @@ gem "backstretch-rails"
 gem "cancancan"
 gem "d3-rails", "~> 3.5"
 gem "haml-coderay"
+# Running Honeybadger and Sentry side by side while we verify Sentry (#1474).
+# Honeybadger removal is planned once Sentry has proven itself.
 gem "honeybadger"
 gem "kaminari"
 gem "kaminari-bootstrap", "~> 3.0.1"
 gem "meta-tags"
 gem "rails_autolink"
 gem "rails-timeago", "~> 2.0"
+# Error reporting to Sentry, alongside Honeybadger for now (#1474)
+gem "sentry-rails"
+gem "sentry-ruby"
+gem "sentry-sidekiq"
 # For sidekiq ui
 gem "sinatra", ">= 2.2.3", require: nil # fix CVE-2022-45442; CVE-2024-21510 and CVE-2025-61921 need sinatra 4.x, tracked separately
 gem "sitemap_generator"

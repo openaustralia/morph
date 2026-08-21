@@ -610,6 +610,16 @@ GEM
     searchkick (5.0.5)
       activemodel (>= 5.2)
       hashie
+    sentry-rails (6.7.0)
+      railties (>= 5.2.0)
+      sentry-ruby (~> 6.7.0)
+    sentry-ruby (6.7.0)
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      logger
+    sentry-sidekiq (6.7.0)
+      sentry-ruby (~> 6.7.0)
+      sidekiq (>= 5.0)
     sexp_processor (4.16.1)
     shellany (0.0.1)
     sidekiq (5.2.10)
@@ -842,6 +852,9 @@ DEPENDENCIES
   sass-rails
   sdoc
   searchkick (~> 5)
+  sentry-rails
+  sentry-ruby
+  sentry-sidekiq
   sidekiq (~> 5)
   sidekiq-limit_fetch
   simple_form
