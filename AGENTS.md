@@ -5,6 +5,38 @@ and others) when working with code in this repository. `CLAUDE.md` and
 `.github/copilot-instructions.md` point here so the guidance lives in one
 place.
 
+## Org-wide standards
+
+OAF keeps its shared standards in the `openaustralia/.github` repository. They
+are referenced here rather than restated, because copies drift. Read them before
+you start. Where this file disagrees with them, they win and this file is what
+needs fixing.
+
+- [`AGENTS.md`](https://github.com/openaustralia/.github/blob/main/AGENTS.md).
+  Its "Working as an agent in any OAF repository" section covers scoping
+  standing approvals and Bash allow-patterns, staging commits instead of making
+  them, opening pull requests as drafts assigned to the human driving the
+  change, leaving issue creation to a human unless asked, and handling secrets
+  and personal details. Its conventions section covers how OAF writes:
+  non-partisan, Australian English, no em dashes, AI disclosure, citing sources
+  and licences, replacement code in review comments, and not hard-wrapping pull
+  request or issue bodies.
+- [`.github/CONTRIBUTING.md`](https://github.com/openaustralia/.github/blob/main/.github/CONTRIBUTING.md).
+  The authority on GitHub Flow, branch naming, pull requests, the DCO sign-off
+  and AI disclosure. This repository has no local `CONTRIBUTING.md`, so that one
+  applies in full.
+- The issue and pull request templates there are inherited by this repository,
+  so they are not found locally and `gh issue create` will not offer one to
+  fill in.
+
+Fetch the current version of any of them whichever way your tools allow, for
+example:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/openaustralia/.github/main/AGENTS.md
+gh api repos/openaustralia/.github/contents/AGENTS.md --jq .content | base64 -d
+```
+
 ## What this repository is
 
 `openaustralia/morph` is the Rails application behind [morph.io](https://morph.io),
@@ -35,12 +67,26 @@ The pieces that make this more than a CRUD app all live in `app/lib/morph/`:
 - `Morph::Language` maps a scraper repo to a supported language (Ruby, Python,
   PHP, Perl, JavaScript) and to the right default files.
 
+One more piece sits outside that directory. `SynchroniseRepoService`
+(`app/services/`) is what `Morph::Runner` calls to fetch the latest scraper
+code, and is where the GitHub App failures that reach the user as a failed run
+come from.
+
 Background work runs through Sidekiq (`app/workers/`, queues `default` and
-`scraper` per `config/sidekiq.yml`). Search is Elasticsearch via searchkick.
+`scraper` per `config/sidekiq.yml`), plus scheduled rake tasks in
+`lib/tasks/app.rake` whose descriptions say they are called from cron:
+`auto_run_scrapers`, `send_alerts`, `stop_long_running_scrapers` and the refresh
+tasks. Search is Elasticsearch via searchkick.
 Live log streaming is faye plus render_sync (`sync.ru`, the `faye` process in
-`Procfile`). Outbound scraper traffic is logged by a mitmproxy container
-(`docker_images/morph-mitmdump/`) which calls back into the API. The admin
-interface is ActiveAdmin under `/admin`.
+`Procfile`). The admin interface is ActiveAdmin under `/admin`.
+
+Outbound scraper traffic was logged by a mitmproxy container
+(`docker_images/morph-mitmdump/`) calling back into the API, but that path is
+switched off: `Morph::Runner` passes `disable_proxy: true` unconditionally, so a
+run never joins the proxy network. The container, the `connection_logs`
+endpoint, and the code that displays and searches scraped domains all remain, on
+historical data only. Issue #1506 records this half-live state as needing a
+product decision, so leave both halves alone rather than tidying either away.
 
 Scraper git repos and their SQLite databases live under `db/scrapers/`, which
 is gitignored and is a Capistrano `linked_dir` in production. It is live data,
@@ -65,6 +111,25 @@ make services-down
 make services-status
 ```
 
+Then install the gems, create the schema, and start the app:
+
+```sh
+bundle install
+bundle exec dotenv rake db:setup
+bundle exec dotenv foreman start        # http://127.0.0.1:3000
+bundle exec rake app:promote_to_admin   # gives your account access to /admin
+```
+
+The `dotenv` prefix is load bearing, because without it the process does not see
+`.env`. `foreman` starts the `web`, `worker` and `faye` processes in `Procfile`
+together, where `rails s` on its own gives you the web process without Sidekiq
+or live log streaming.
+
+Those commands, and every other command in this file, run on the host. The
+alternative is the full Docker environment including the Ruby containers, which
+is `make docker-up`, marked BETA in the `Makefile`. With that running, get a
+shell in the web container with `docker compose exec web bash -i`.
+
 `README.md` has the full walkthrough for creating the GitHub App and filling in
 the `GITHUB_APP_*` values in `.env`. The private key it tells you to save to
 `config/morph-github-app.private-key.pem` is what gates the GitHub-integration
@@ -82,6 +147,9 @@ make all-tests     # everything, including the slow Docker integration specs.
 make test          # quick-tests then all-tests
 ```
 
+`make help` lists all 24 targets. This file covers only the ones whose behaviour
+is not obvious from the name.
+
 Three environment variables control what gets skipped, and `spec/spec_helper.rb`
 sets them itself when the prerequisites are missing:
 
@@ -92,6 +160,10 @@ sets them itself when the prerequisites are missing:
 - `DONT_RUN_GITHUB_TESTS=1` excludes specs tagged `:github`. These are also
   excluded automatically if `GITHUB_APP_INSTALLED_BY` is unset or
   `config/morph-github-app.private-key.pem` is missing.
+
+`make rspec` is a fourth entry point, running `RAILS_ENV=test bundle exec rspec`
+and setting none of those variables itself, so slow specs stay excluded unless
+you pass `RUN_SLOW_TESTS=1` yourself.
 
 CI (`.github/workflows/ruby.yml`) runs `bundle exec rspec spec -fd` with all
 three of `DONT_RUN_DOCKER_TESTS=1 RUN_SLOW_TESTS=1 DONT_RUN_GITHUB_TESTS=1`.
@@ -202,36 +274,16 @@ services-down` unless you actually mean to lose the databases.
 
 ## Contributing
 
-This repository has no `CONTRIBUTING.md`, so the org-wide one applies:
-[`openaustralia/.github/.github/CONTRIBUTING.md`](https://github.com/openaustralia/.github/blob/main/.github/CONTRIBUTING.md).
-It is the authority on branching, pull requests, sign-off and AI disclosure.
-The pull request and issue templates are inherited from that repository too,
-so they will not be found locally.
+Branching, pull requests, the DCO sign-off, AI disclosure and OAF's writing
+conventions all come from the org-wide standards linked at the top of this file.
+Read those rather than looking for a local copy of them here.
 
-In short: branch off `main` using the
-[Conventional Branch](https://conventionalbranch.org/#summary) form
-`type/issue-number-short-description`, open the pull request as a draft early,
-assign it to yourself, take it out of draft only once the checks in
-`.github/workflows/` pass, and sign off every commit with `git commit -s`.
+Specific to this repository:
 
-**`README.md` contradicts the org guide in two places, and the org guide wins.**
-Its "How to contribute" section describes a fork-and-pull-request flow rather
-than branching off `main`, and its "Branch naming" section uses `docs/` where
-the org guide uses `doc/`. Neither README section mentions the DCO sign-off.
-
-`.github/CODEOWNERS` in this repository requests reviews. Note that a review is
-about understanding the change together, not gatekeeping it.
-
-## Conventions specific to this org
-
-- Non-partisan: nothing in this repository should imply endorsement or
-  criticism of any party, candidate or position.
-- Australian English throughout.
-- No em dashes. Use a hyphen, a comma or a full stop.
-- Disclose AI involvement in both places the org `CONTRIBUTING.md` asks for: an
-  `Assisted-by: <agent-name>:<model-id>` trailer on each commit, and a note in
-  the pull request description. Report the model actually used, not a
-  remembered default. A human, not an agent, signs off the commit.
+- `.github/CODEOWNERS` requests reviews. A review is about understanding the
+  change together, not gatekeeping it.
+- Checks live in `.github/workflows/`, so those are the ones that have to pass
+  before a pull request comes out of draft.
 - `README.md` sets coding standards worth honouring beyond RuboCop: keep
   methods short, keep files under about 400 lines, and comment why rather than
   what. `spec/models/scraper_spec.rb` is the worked example of splitting a file
@@ -239,10 +291,32 @@ about understanding the change together, not gatekeeping it.
 - Code that cannot be covered automatically is marked `# :nocov:` and listed in
   `TESTING.md` as a manual test. If you add such code, add it there too.
 
+## Agent skills
+
+Per-repo configuration for the `mattpocock-skills` engineering skills,
+scaffolded by `/setup-matt-pocock-skills`. The details live in `docs/agents/`
+and this section is a summary. Edit those files directly rather than re-running
+the setup skill.
+
+### Issue tracker
+
+GitHub issues on `openaustralia/morph`, via the `gh` CLI. See
+`docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical triage labels, unchanged: `needs-triage`, `needs-info`,
+`ready-for-agent`, `ready-for-human` and `wontfix`. All already exist on the
+repo. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context. [`CONTEXT.md`](CONTEXT.md) at the repo root is the glossary of
+morph.io's domain terms, and is opinionated about which words to avoid. There
+are no ADRs yet. See `docs/agents/domain.md`.
+
 ## Known rough edges
 
-- `README.md` links to `doc/docker_development_commands.md`, which does not
-  exist in this repository.
 - `config/routes.rb` wraps `devise_for` in a `Owner.table_exists?` check so
   that migrations can run against a database without the table. Adding routes
   near that block needs care.
