@@ -9,7 +9,11 @@ module Morph
 
     sig { params(name: String).returns(Docker::Image) }
     def self.pull_docker_image(name)
-      Docker::Image.create("fromImage" => name) do |chunk|
+      # Scraper images (buildstep and friends) are published for amd64 only,
+      # so ask for that architecture explicitly. Without this a pull on an
+      # ARM64 daemon (Apple silicon under Rosetta - see ADR 0006) fails with
+      # "no matching manifest for linux/arm64/v8".
+      Docker::Image.create("fromImage" => name, "platform" => "linux/amd64") do |chunk|
         chunk.split("\n").each do |c|
           data = JSON.parse(c)
           Rails.logger.info "#{data['status']} #{data['id']} #{data['progress']}"
@@ -199,7 +203,10 @@ module Morph
       temp = create_tar_file(dir)
       buffer = +""
       Docker::Image.build_from_tar(
-        temp, { "forcerm" => 1 }, connection
+        # platform for the same reason as pull_docker_image: scraper images
+        # are amd64 only, and without it a build on an ARM64 daemon refuses
+        # the base image
+        temp, { "forcerm" => 1, "platform" => "linux/amd64" }, connection
       ) do |chunk|
         buffer += chunk
         texts, buffer = process_json_stream_chunk(buffer)

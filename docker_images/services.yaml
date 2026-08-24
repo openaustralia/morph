@@ -33,8 +33,8 @@ services:
   mysql:
     # Same version as used in production
     image: mysql:5.7.33
-    # There isn't yet a linux/arm64 build of postgis on docker
-    # See https://github.com/postgis/docker-postgis/issues/216
+    # There is no linux/arm64 build of mysql:5.7, so force amd64
+    # (runs under Rosetta on Apple silicon)
     platform: linux/amd64
     ports:
       - "3306:3306"

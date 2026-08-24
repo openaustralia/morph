@@ -8,7 +8,19 @@ RUN echo "Install a javascript runtime and other gem dependencies ..." \
        pkg-config \
        libgit2-dev \
        sudo \
-       tini
+       tini \
+       # mysqldump and zstd are needed by the db backup tasks and their specs
+       default-mysql-client \
+       zstd
+
+# The docker CLI (client only, no daemon) is needed so spec_helper.rb can
+# detect the daemon ("docker info") and enable the :docker specs; the app
+# itself talks to the daemon through the mounted socket via the docker-api
+# gem. amd64 is correct here because this image is always built amd64 (see
+# docker-compose.yml).
+RUN echo "Install the docker CLI ..." \
+    && curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-26.1.4.tgz \
+       | tar -xz --strip-components=1 -C /usr/local/bin docker/docker
 
 ARG UID=1000
 ARG GID=1000

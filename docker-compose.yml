@@ -20,7 +20,7 @@ x-ruby-service: &ruby-service
     - /var/run/docker.sock:/var/run/docker.sock
   environment:
     DISABLE_SPRING: "1"
-    ELASTICSEARCH_URL: "http://elasticsearch:9288"
+    ELASTICSEARCH_URL: "http://elasticsearch:9200"
     # FIXME: Pass url for mitmdump2
     MYSQL_HOST: "mysql"
     MYSQL_USER: "root"
@@ -40,8 +40,6 @@ services:
         condition: service_healthy
       # mailcatcher:
       #   condition: service_started
-      mitmdump2:
-        condition: service_started
       mysql:
         condition: service_healthy
       redis:
@@ -85,8 +83,15 @@ services:
 #    ports:
 #      - "31080:1080"
 
+  # The proxy path this container serves is switched off in production
+  # (Morph::Runner passes disable_proxy: true unconditionally - see issue #1506),
+  # and the image is amd64-only, so it is behind a profile rather than being a
+  # startup dependency of the development environment.
+  # Start it with: docker compose --profile proxy up
   mitmdump2:
     image: openaustralia/morph-mitmdump
+    profiles:
+      - proxy
     ports:
       - "8080"
     network_mode: host

@@ -1,0 +1,30 @@
+// Devcontainer wrapping the existing Docker Compose development environment.
+// The web container (built amd64, run under Rosetta on Apple silicon - see
+// docker-compose.yml) is the container you attach to; worker, faye and the
+// backing services come up alongside it.
+//
+// Use via "Reopen in Container" in VS Code/Cursor, or from a terminal with
+// `make devcontainer-up` / `make devcontainer-shell`.
+//
+// Your local SSH agent is forwarded into the container automatically (as long
+// as SSH_AUTH_SOCK is set on the host), which is what lets you run Capistrano
+// deploys (e.g. `bundle exec cap staging deploy`) from inside the container
+// without copying keys into it.
+{
+  "name": "morph",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "../docker_images/persistent_services.yaml"
+  ],
+  "service": "web",
+  "runServices": ["web", "worker", "faye"],
+  "workspaceFolder": "/app",
+  "remoteUser": "deploy",
+  // Keep the compose command (rails server via bin/docker-entrypoint, which
+  // also creates/migrates the database) rather than idling the container.
+  "overrideCommand": false,
+  "forwardPorts": [3000],
+  // Gems are installed at image build time, but the gem cache lives in a
+  // volume; this keeps it in step with the Gemfile after rebuilds/pulls.
+  "postCreateCommand": "bundle install"
+}
