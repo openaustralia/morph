@@ -17,6 +17,20 @@ describe ApiController do
 
       Rack::Test::UploadedFile.new(temp.path, nil, true)
     end
+    let(:gzipped_code) do
+      # Is there a chance the temp file will get garbage collected?
+      tar = Dir.mktmpdir do |dir|
+        File.open(File.join(dir, "scraper.rb"), "w") do |f|
+          f << "puts 'Hello!'\n"
+        end
+        Morph::DockerUtils.create_tar_file(dir)
+      end
+      temp = Tempfile.new(["morph_tar", ".tar.gz"])
+      temp.close
+      Zlib::GzipWriter.open(temp.path) { |gz| gz.write(File.binread(tar.path)) }
+
+      Rack::Test::UploadedFile.new(temp.path, "application/gzip", true)
+    end
 
     before { user }
 
@@ -76,6 +90,42 @@ describe ApiController do
           "text" => "Hello!\n"
         }
       ]
+    end
+
+    it "unpacks a plain tar upload into the run's repository" do
+      unpacked = nil
+      run = nil
+      runner = instance_double(Morph::Runner)
+      allow(Morph::Runner).to receive(:new) do |r|
+        run = r
+        runner
+      end
+      allow(runner).to receive(:go) do
+        unpacked = File.read(File.join(run.repo_path, "scraper.rb"))
+      end
+      allow(runner).to receive(:container_for_run).and_return(nil)
+
+      post :run_remote, params: { api_key: user.api_key, code: code }
+
+      expect(unpacked).to eq "puts 'Hello!'\n"
+    end
+
+    it "unpacks a gzip-compressed upload into the run's repository" do
+      unpacked = nil
+      run = nil
+      runner = instance_double(Morph::Runner)
+      allow(Morph::Runner).to receive(:new) do |r|
+        run = r
+        runner
+      end
+      allow(runner).to receive(:go) do
+        unpacked = File.read(File.join(run.repo_path, "scraper.rb"))
+      end
+      allow(runner).to receive(:container_for_run).and_return(nil)
+
+      post :run_remote, params: { api_key: user.api_key, code: gzipped_code }
+
+      expect(unpacked).to eq "puts 'Hello!'\n"
     end
 
     # TODO: "should test streaming"
