@@ -50,7 +50,7 @@ sync_auth_token: !vault |
           66393961643935333835
 
 # Vagrantfile sets the following from .env:
-# cuttlefish_server, cuttlefish_port, cuttlefish_username, cuttlefish_password
+# smtp_server, smtp_port, smtp_username, smtp_password
 
 # FIXME: Set to a stripe sandbox! See https://docs.stripe.com/testing
 stripe_publishable_key: pk_xxxxxxxxxxxxx

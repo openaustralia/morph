@@ -22,10 +22,10 @@ variables = [
     ('GITHUB_APP_NAME', 'TODO-SET-IN-.env'),
     ('GITHUB_APP_CLIENT_ID', 'TODO-SET-IN-.env'),
     ('GITHUB_APP_CLIENT_SECRET', 'TODO-SET-IN-.env'),
-    ('CUTTLEFISH_SERVER', 'plannies-mate.thesite.info'),
-    ('CUTTLEFISH_PORT', '2525'),
-    ('CUTTLEFISH_USERNAME', None),
-    ('CUTTLEFISH_PASSWORD', None),
+    ('SMTP_SERVER', 'plannies-mate.thesite.info'),
+    ('SMTP_PORT', '2525'),
+    ('SMTP_USERNAME', None),
+    ('SMTP_PASSWORD', None),
 ]
 
 hostvars = {}

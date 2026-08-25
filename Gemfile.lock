@@ -157,6 +157,8 @@ GEM
       bigdecimal
       rexml
     crass (1.0.7)
+    css_parser (1.17.1)
+      addressable
     d3-rails (3.5.17)
       railties (>= 3.1)
     daemons (1.4.1)
@@ -303,6 +305,7 @@ GEM
       haml (>= 4.0, < 6)
       nokogiri (>= 1.6.0)
       ruby_parser (~> 3.5)
+    htmlentities (4.4.2)
     http-accept (1.7.0)
     http-cookie (1.0.8)
       domain_name (~> 0.5)
@@ -436,6 +439,14 @@ GEM
       racc
     powerbar (1.0.18)
       hashie (>= 1.1.0)
+    premailer (1.22.0)
+      addressable
+      css_parser (>= 1.12.0)
+      htmlentities (>= 4.0.0)
+    premailer-rails (1.12.0)
+      actionmailer (>= 3)
+      net-smtp
+      premailer (~> 1.7, >= 1.7.9)
     prism (1.9.0)
     pry (0.14.2)
       coderay (~> 1.1)
@@ -811,6 +822,7 @@ DEPENDENCIES
   octokit (~> 4.0)
   omniauth (>= 1.9.2)
   omniauth-github (~> 1.4.0)
+  premailer-rails
   pry-rails
   pry-remote
   pry-rescue

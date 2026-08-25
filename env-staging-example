@@ -6,9 +6,9 @@
 # Use mailpit to catch mail on staging servers
 # Setting .env on the local machine affects the .env provisioned for vagrant or staging machines
 # but not production
-CUTTLEFISH_SERVER=mailpit.server # plannies-mate.thesite.info
-CUTTLEFISH_PORT=2525
+SMTP_SERVER=mailpit.server # plannies-mate.thesite.info
+SMTP_PORT=2525
 
 # Username and password is not required by mailpit
-# CUTTLEFISH_USERNAME=xxxxxxx
-# CUTTLEFISH_PASSWORD=xxxxxxxxxxxxxxxxxxxx
+# SMTP_USERNAME=xxxxxxx
+# SMTP_PASSWORD=xxxxxxxxxxxxxxxxxxxx
