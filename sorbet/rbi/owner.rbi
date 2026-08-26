@@ -1,4 +1,3 @@
-class Scraper
-  def reindex; end
+class Owner
   def self.search(term = nil, **options, &block); end
 end

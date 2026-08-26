@@ -48,6 +48,13 @@ This includes:
 
 Testing restore is too hard to automate. 
 
+### Error reporting to Sentry
+
+Automated tests only cover the SDK staying quiet when `SENTRY_DSN` is unset.
+That an event actually arrives needs a real DSN: with `SENTRY_DSN` set, run
+`bundle exec rails runner 'Sentry.capture_message("morph.io Sentry test")'`
+and check the event appears in the Sentry project.
+
 
 
 
