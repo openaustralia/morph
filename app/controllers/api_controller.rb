@@ -24,7 +24,9 @@ class ApiController < ApplicationController
     response.headers["Content-Type"] = "text/event-stream"
     run = Run.create(queued_at: Time.zone.now, auto: false, owner: current_user)
     # TODO: Shouldn't need to untar here because it just gets retarred
-    Archive::Tar::Minitar.unpack(params_code.tempfile, run.repo_path)
+    tempfile = params_code.tempfile
+    code_io = gzipped?(tempfile) ? Zlib::GzipReader.new(tempfile) : tempfile
+    Archive::Tar::Minitar.unpack(code_io, run.repo_path)
     runner = Morph::Runner.new(run)
     runner.go { |_timestamp, s, text| stream_message(s, text) }
   ensure
@@ -88,6 +90,16 @@ class ApiController < ApplicationController
   end
 
   private
+
+  # Newer versions of the morph CLI gzip-compress the tarred code before
+  # uploading it. Sniff for the gzip magic number rather than trusting the
+  # declared content type so plain tars from older CLI versions still work.
+  sig { params(tempfile: Tempfile).returns(T::Boolean) }
+  def gzipped?(tempfile)
+    magic = tempfile.read(2)
+    tempfile.rewind
+    magic == "\x1F\x8B".b
+  end
 
   # Overriding the default ability class name used because we've split them out. See
   # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/split_ability.md
