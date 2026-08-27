@@ -5,14 +5,14 @@
 # Set to production or staging
 RAILS_ENV={{ rails_env }}
 
-# We're using Cuttlefish to send mail in production and mailpit to catch mail on staging servers
+# We're using postal to send mail in production and mailpit to catch mail on staging servers
 # Setting .env on the local machine affects the .env provisioned for vagrant or staging machines
 # but not production
-CUTTLEFISH_SERVER={{ cuttlefish_server }}
-CUTTLEFISH_PORT={{ cuttlefish_port }}
-{% if cuttlefish_username is defined %}
-CUTTLEFISH_USERNAME={{ cuttlefish_username }}
-CUTTLEFISH_PASSWORD={{ cuttlefish_password }}
+SMTP_SERVER={{ smtp_server }}
+SMTP_PORT={{ smtp_port }}
+{% if smtp_username is defined %}
+SMTP_USERNAME={{ smtp_username }}
+SMTP_PASSWORD={{ smtp_password }}
 {% endif %}
 
 # Secret for Discourse to use morph for single sign on authentication

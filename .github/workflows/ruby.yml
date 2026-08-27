@@ -29,9 +29,9 @@ jobs:
       MORPH_URL: http://localhost:5100
       # Error reporting to Honeybadger
       HONEYBADGER_API_KEY: xxxxxxxx
-      # We're using Cuttlefish to send mail
-      CUTTLEFISH_USERNAME: xxxxxxx
-      CUTTLEFISH_PASSWORD: xxxxxxxxxxxxxxxxxxxx
+      # We're using postal to send mail
+      SMTP_USERNAME: xxxxxxx
+      SMTP_PASSWORD: xxxxxxxxxxxxxxxxxxxx
       # Stripe payment processor
       STRIPE_PUBLISHABLE_KEY: pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
       STRIPE_SECRET_KEY: sk_test_xxxxxxxxxxxxxxxxxxxxxxxx

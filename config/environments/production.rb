@@ -109,13 +109,13 @@ Rails.application.configure do
 
   # CUSTOM CONFIGURATION
 
-  # Send morph.io mails to Cuttlefish (see http://cuttlefish.io)
+  # Send morph.io mails to postal (see https://github.com/openaustralia/infrastructure/blob/main/docs/POSTAL.md)
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address => (ENV["CUTTLEFISH_SERVER"] || "cuttlefish.io"),
-    :port => (ENV["CUTTLEFISH_PORT"] || "2525").to_i,
-    :user_name => ENV["CUTTLEFISH_USERNAME"],
-    :password => ENV["CUTTLEFISH_PASSWORD"],
+    :address => (ENV["SMTP_SERVER"] || "postal.oaf.org.au"),
+    :port => (ENV["SMTP_PORT"] || "2525").to_i,
+    :user_name => ENV["SMTP_USERNAME"],
+    :password => ENV["SMTP_PASSWORD"],
     :authentication => :plain
    }
 

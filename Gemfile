@@ -68,6 +68,8 @@ gem "honeybadger"
 gem "kaminari"
 gem "kaminari-bootstrap", "~> 3.0.1"
 gem "meta-tags"
+# Our previous mail relay inlined the CSS in our emails for us. Postal does not, so we do it here.
+gem "premailer-rails"
 gem "rails_autolink"
 gem "rails-timeago", "~> 2.0"
 # Error reporting to Sentry, alongside Honeybadger for now (#1474)

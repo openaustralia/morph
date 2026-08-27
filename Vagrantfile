@@ -28,10 +28,10 @@ def load_env_vars
     %w[GITHUB_APP_NAME TODO-SET-IN-.env],
     %w[GITHUB_APP_CLIENT_ID TODO-SET-IN-.env],
     %w[GITHUB_APP_CLIENT_SECRET TODO-SET-IN-.env],
-    %w[CUTTLEFISH_SERVER plannies-mate.thesite.info],
-    %w[CUTTLEFISH_PORT 2525],
-    ["CUTTLEFISH_USERNAME", nil],
-    ["CUTTLEFISH_PASSWORD", nil]
+    %w[SMTP_SERVER plannies-mate.thesite.info],
+    %w[SMTP_PORT 2525],
+    ["SMTP_USERNAME", nil],
+    ["SMTP_PASSWORD", nil]
   ]
 
   extra_vars = {}
