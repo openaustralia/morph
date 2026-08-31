@@ -74,6 +74,44 @@ which includes Docker Engine.
 
 On Linux, Your user account should be able to manipulate Docker (just add your user to the `docker` group).
 
+## Developing on macOS (Apple silicon)
+
+Native development on the macOS host is not supported: `Gemfile.lock` only
+locks Linux platforms, and `sorbet-static` has no build for current macOS
+versions (see
+[ADR 0006](docs/adr/0006-containerised-dev-environment-via-devcontainer.md)).
+Instead, develop inside the containerised dev environment, which runs the Ruby
+containers as linux/amd64 under Rosetta.
+
+1. Install [Docker Desktop](https://docs.docker.com/desktop/) and switch on
+   "Use Rosetta for x86/amd64 emulation on Apple Silicon" in its settings.
+2. Do the initial configuration below (`config/database.yml`, `.env`).
+3. Open the repository in the devcontainer, either with "Reopen in Container"
+   in an editor that supports devcontainers, or from a terminal with the
+   [devcontainer CLI](https://github.com/devcontainers/cli):
+
+       make devcontainer-up
+       make devcontainer-shell
+
+This starts the `web`, `worker` and `faye` containers plus MySQL, Redis and
+Elasticsearch with persistent volumes (the same stack as `make docker-up`),
+with the Rails server on http://localhost:3000.
+
+Your local SSH agent is forwarded into the container, so Capistrano
+deployments run from a devcontainer shell without copying keys into the
+container:
+
+    bundle exec cap staging deploy
+
+To run scrapers locally (including the `:docker` specs), pull the scraper
+base images and create the scraper network first, from the host:
+
+    make dev-scraper-images
+    make dev-scraper-network
+
+Because everything runs under emulation, expect containers to be noticeably
+slower than on amd64 hardware.
+
 ## Installing Vagrant
 
 Install [VirtualBox](https://www.virtualbox.org/) or other supported virtualization provider.

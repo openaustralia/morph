@@ -126,9 +126,13 @@ together, where `rails s` on its own gives you the web process without Sidekiq
 or live log streaming.
 
 Those commands, and every other command in this file, run on the host. The
-alternative is the full Docker environment including the Ruby containers, which
-is `make docker-up`, marked BETA in the `Makefile`. With that running, get a
-shell in the web container with `docker compose exec web bash -i`.
+alternative is the containerised dev environment including the Ruby containers:
+either `make docker-up`, or the devcontainer in `.devcontainer/` which wraps
+the same compose files (attach with "Reopen in Container" or
+`make devcontainer-up` / `make devcontainer-shell`). With that running, get a
+shell in the web container with `docker compose exec web bash -i`. On macOS
+the containerised environment is the only supported route (see the Apple
+Silicon section below and ADR 0006).
 
 `README.md` has the full walkthrough for creating the GitHub App and filling in
 the `GITHUB_APP_*` values in `.env`. The private key it tells you to save to
@@ -182,7 +186,9 @@ bundle exec rspec spec/models/scraper_spec.rb -e "some description"
 ### Coverage thresholds are hardcoded per profile
 
 `spec/spec_helper.rb` sets a different `SimpleCov.minimum_coverage` for each
-profile: 77.09 for `quick-tests`, 80.05 for `ci-tests`, and 87.02 for
+profile: 76.67 for `quick-tests` (calibrated in the containerised dev
+environment; native Linux runs measure slightly higher), 80.05 for `ci-tests`,
+and 87.02 for
 `all-tests` but only when Docker and the GitHub App private key are both
 present. Because the Docker and GitHub exclusions switch themselves on when
 their prerequisites are missing, `make all-tests` on a machine without
@@ -263,10 +269,30 @@ Check for security updates with `bundle exec ruby-audit` and
 
 ## Apple Silicon
 
-`docker-compose.yml` forces `platform: linux/amd64` for the Ruby containers
-because Sorbet has no Linux ARM64 build. On Apple silicon you must switch on
-"Use Rosetta for x86/amd64 emulation on Apple Silicon" in Docker Desktop, and
-containers will be slow.
+Native macOS development is unsupported, and the containerised dev environment
+(the devcontainer, or `make docker-up`) is the supported route. The reasons and
+trade-offs are recorded in
+`docs/adr/0006-containerised-dev-environment-via-devcontainer.md`; the short
+version is that `Gemfile.lock` locks only `x86_64-linux` and `sorbet-static`
+ships no build for current macOS versions, while Sorbet also has no Linux ARM64
+build, so `docker-compose.yml` forces `platform: linux/amd64` for the Ruby
+containers. On Apple silicon you must switch on "Use Rosetta for x86/amd64
+emulation on Apple Silicon" in Docker Desktop, and containers will be slow.
+
+Terminology: architecture (amd64/arm64) is never called "platform" in this
+repository, because Platform already means a buildstep image tag (see
+`CONTEXT.md`).
+
+Running scrapers locally (and the `:docker` specs) needs two host-side setup
+steps first: `make dev-scraper-images` (pulls the buildstep tags in a form
+the containerd image store can build from) and `make dev-scraper-network`
+(pre-creates the `morph` network with an auto-allocated subnet). ADR 0006
+records why.
+
+Capistrano deployments run from inside the devcontainer, which forwards the
+host's SSH agent. `make vagrant-up` does not work on Apple silicon at all
+(VirtualBox with an amd64 box), and Ansible provisioning from macOS is
+untested.
 
 `make docker-clean` runs `docker system prune -af --volumes`, which destroys
 the MySQL and Elasticsearch volumes as well as the images. Use `make

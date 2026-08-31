@@ -314,7 +314,15 @@ module Morph
             # In development to debug what the buildpacks are doing it can be useful to turn on
             # the TRACE environment variable below by uncommenting the line
             ENV["TRACE_BUILD"] ? "ENV TRACE true" : "",
-            "RUN /bin/herokuish buildpack build"
+            # The "||" recovery handles a Rosetta emulation race on Apple silicon dev
+            # machines (see ADR 0006): Rosetta writes its AOT cache to $HOME/.cache, and
+            # HOME is /app during the herokuish build, so herokuish's final
+            # "mv /tmp/build/.cache /app/.cache" can find a freshly recreated /app/.cache
+            # and fail after an otherwise successful build. The guard only recovers when
+            # .cache is the sole leftover in /tmp/build (the build finished and only that
+            # mv failed); a genuine compile failure still fails the build. On native
+            # amd64 (production) the recovery never triggers.
+            'RUN /bin/herokuish buildpack build || { [ "$(ls -A /tmp/build)" = ".cache" ] && rm -rf /app/.cache && mv /tmp/build/.cache /app/.cache; }'
           ],
           dir, &block
         )

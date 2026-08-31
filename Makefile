@@ -3,7 +3,9 @@
         roles services-down services-up \
 	staging-deploy staging-provision \
         share-web test vagrant-plugins venv \
-	all-tests quick-tests
+	all-tests quick-tests \
+	devcontainer-up devcontainer-shell docker-up \
+	dev-scraper-images dev-scraper-network
 VENV := .venv/bin
 SHELL := /bin/bash
 PYTHON_VERSION := $(shell cat .python-version 2>/dev/null || echo "python3")
@@ -97,8 +99,40 @@ staging-deploy: ## Deploy app to staging
 production-deploy: ## Deploy app to production
 	bundle exec cap production deploy
 
-docker-up: ## Full Docker environment including ruby containers (persistent data) BETA
+docker-up: ## Full Docker environment including ruby containers (persistent data)
 	docker compose -f docker-compose.yml -f docker_images/persistent_services.yaml up
+
+devcontainer-up: ## Build and start the containerised dev environment via the devcontainer CLI
+	devcontainer up --workspace-folder .
+
+devcontainer-shell: ## Open a shell in the running devcontainer (SSH agent forwarded)
+	devcontainer exec --workspace-folder . bash
+
+# On Apple silicon (containerd image store) the buildstep tags that are
+# manifest lists must be pulled by their amd64 manifest digest, or the
+# legacy builder used for scraper compiles fails with "no match for
+# platform in manifest" (see ADR 0006).
+dev-scraper-images: ## Pull the buildstep scraper base images in a form that works in the containerised dev environment
+	for tag in cedar-14 heroku-18 heroku-24; do \
+		digest=$$(docker buildx imagetools inspect openaustralia/buildstep:$$tag --format '{{ if .Manifest.Manifests }}{{ range .Manifest.Manifests }}{{ if and (eq .Platform.Architecture "amd64") (eq .Platform.OS "linux") }}{{ .Digest }}{{ end }}{{ end }}{{ end }}'); \
+		if [ -n "$$digest" ]; then \
+			docker pull openaustralia/buildstep@$$digest && \
+			docker tag openaustralia/buildstep@$$digest openaustralia/buildstep:$$tag; \
+		else \
+			docker pull --platform linux/amd64 openaustralia/buildstep:$$tag; \
+		fi; \
+	done
+
+# Morph::DockerRunner creates this network with subnet 192.168.0.0/16, which
+# fails on a dev machine where any other Docker network already sits in that
+# range. Pre-creating it without a fixed subnet lets Docker pick a free one;
+# the app uses the network if it already exists.
+dev-scraper-network: ## Create the "morph" scraper network with an auto-allocated subnet (dev machines only)
+	docker network inspect morph >/dev/null 2>&1 || \
+		docker network create --driver bridge \
+			-o com.docker.network.bridge.name=morph \
+			-o com.docker.network.bridge.enable_icc=false \
+			morph
 
 # Run up services required for CI (no persistence)
 ci-services-up:
