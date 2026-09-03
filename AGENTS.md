@@ -289,8 +289,14 @@ the containerd image store can build from) and `make dev-scraper-network`
 (pre-creates the `morph` network with an auto-allocated subnet). ADR 0006
 records why.
 
-Capistrano deployments run from inside the devcontainer, which forwards the
-host's SSH agent. `make vagrant-up` does not work on Apple silicon at all
+Capistrano deployments run from inside the devcontainer, which reaches the
+host's SSH agent through the socket `docker-compose.yml` mounts at
+`/tmp/ssh-agent.sock`. Docker Desktop bridges the host agent to a fixed path
+inside its VM; on native Linux set `SSH_AGENT_SOCK` to your own
+`$SSH_AUTH_SOCK` instead. That socket arrives root-owned, so
+`bin/docker-entrypoint` claims it for the `deploy` user, and
+`~/.ssh/known_hosts` is mounted so host keys stay pinned rather than being
+accepted on first sight. `make vagrant-up` does not work on Apple silicon at all
 (VirtualBox with an amd64 box), and Ansible provisioning from macOS is
 untested.
 

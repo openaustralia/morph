@@ -6,10 +6,12 @@
 // Use via "Reopen in Container" in VS Code/Cursor, or from a terminal with
 // `make devcontainer-up` / `make devcontainer-shell`.
 //
-// Your local SSH agent is forwarded into the container automatically (as long
-// as SSH_AUTH_SOCK is set on the host), which is what lets you run Capistrano
-// deploys (e.g. `bundle exec cap staging deploy`) from inside the container
-// without copying keys into it.
+// Your local SSH agent reaches the container through the socket
+// docker-compose.yml mounts (it sets SSH_AUTH_SOCK there too), which is what
+// lets you run Capistrano deploys (e.g. `bundle exec cap staging deploy`) from
+// inside the container without copying keys into it. That holds for this path
+// and for `make devcontainer-shell` alike, rather than depending on VS Code's
+// own agent forwarding, which the devcontainer CLI does not provide.
 {
   "name": "morph",
   "dockerComposeFile": [
