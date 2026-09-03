@@ -23,11 +23,27 @@ x-ruby-service: &ruby-service
     # Desktop bridges the host agent to this fixed path; on native Linux set
     # SSH_AGENT_SOCK=$SSH_AUTH_SOCK instead. The socket arrives root-owned, so
     # bin/docker-entrypoint hands it to deploy.
-    - ${SSH_AGENT_SOCK:-/run/host-services/ssh-auth.sock}:/tmp/ssh-agent.sock
+    #
+    # Both SSH mounts turn create_host_path off, and so are spelled long-hand.
+    # Docker's default is to invent a missing source as an empty *directory*,
+    # which then mounts over the target and leaves ssh failing with no hint as
+    # to why. Off, the daemon refuses to start and names the path it wanted,
+    # which is the difference between "set SSH_AGENT_SOCK" and an afternoon.
+    - type: bind
+      source: ${SSH_AGENT_SOCK:-/run/host-services/ssh-auth.sock}
+      target: /tmp/ssh-agent.sock
+      bind:
+        create_host_path: false
     # Without this net-ssh silently trusts whatever key a host first presents
     # (its default is accept-new), which would drop the pinning you already
     # have on the host. Mounted read-write so new hosts still get appended.
-    - ${HOME}/.ssh/known_hosts:/home/deploy/.ssh/known_hosts
+    # `make docker-up` and the devcontainer create the file first if the host
+    # has never used ssh, so this only bites when driving compose by hand.
+    - type: bind
+      source: ${HOME}/.ssh/known_hosts
+      target: /home/deploy/.ssh/known_hosts
+      bind:
+        create_host_path: false
   environment:
     DISABLE_SPRING: "1"
     # Set here rather than in the entrypoint so that exec'd shells

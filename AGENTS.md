@@ -296,7 +296,12 @@ inside its VM; on native Linux set `SSH_AGENT_SOCK` to your own
 `$SSH_AUTH_SOCK` instead. That socket arrives root-owned, so
 `bin/docker-entrypoint` claims it for the `deploy` user, and
 `~/.ssh/known_hosts` is mounted so host keys stay pinned rather than being
-accepted on first sight. `make vagrant-up` does not work on Apple silicon at all
+accepted on first sight. Neither mount lets Docker invent a missing source,
+because the default there is to create it as an empty directory that mounts
+over the target and breaks ssh silently. So a container that refuses to start
+naming one of those two paths is telling you the host is missing it: set
+`SSH_AGENT_SOCK`, or let `make docker-up` or the devcontainer create
+`known_hosts` for you. `make vagrant-up` does not work on Apple silicon at all
 (VirtualBox with an amd64 box), and Ansible provisioning from macOS is
 untested.
 

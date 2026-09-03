@@ -26,6 +26,10 @@
   // also creates/migrates the database) rather than idling the container.
   "overrideCommand": false,
   "forwardPorts": [3000],
+  // Runs on the host before the containers are created. docker-compose.yml
+  // bind-mounts ~/.ssh/known_hosts and tells compose not to invent a missing
+  // source, so a host that has never used ssh needs the file creating first.
+  "initializeCommand": "[ -d ~/.ssh ] || mkdir -m 700 ~/.ssh; touch ~/.ssh/known_hosts",
   // Gems are installed at image build time, but the gem cache lives in a
   // volume; this keeps it in step with the Gemfile after rebuilds/pulls.
   "postCreateCommand": "bundle install"
