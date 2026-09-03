@@ -5,7 +5,7 @@
         share-web test vagrant-plugins venv \
 	all-tests quick-tests \
 	devcontainer-up devcontainer-shell docker-up \
-	dev-scraper-images dev-scraper-network
+	dev-scraper-images dev-scraper-network ssh-known-hosts
 VENV := .venv/bin
 SHELL := /bin/bash
 PYTHON_VERSION := $(shell cat .python-version 2>/dev/null || echo "python3")
@@ -99,7 +99,15 @@ staging-deploy: ## Deploy app to staging
 production-deploy: ## Deploy app to production
 	bundle exec cap production deploy
 
-docker-up: ## Full Docker environment including ruby containers (persistent data)
+# The ruby containers bind-mount this file, and compose is told not to invent a
+# missing source (see docker-compose.yml), so a host that has never used ssh
+# needs it created before anything starts. The devcontainer does this for itself
+# through initializeCommand.
+ssh-known-hosts:
+	@[ -d "$${HOME}/.ssh" ] || mkdir -m 700 "$${HOME}/.ssh"
+	@touch "$${HOME}/.ssh/known_hosts"
+
+docker-up: ssh-known-hosts ## Full Docker environment including ruby containers (persistent data)
 	docker compose -f docker-compose.yml -f docker_images/persistent_services.yaml up
 
 devcontainer-up: ## Build and start the containerised dev environment via the devcontainer CLI
