@@ -18,8 +18,21 @@ x-ruby-service: &ruby-service
     - .:/app
     - gem_cache:/usr/local/bundle/gems
     - /var/run/docker.sock:/var/run/docker.sock
+    # Capistrano (net-ssh) authenticates through the host's SSH agent, so
+    # deploys run from the container without copying keys into it. Docker
+    # Desktop bridges the host agent to this fixed path; on native Linux set
+    # SSH_AGENT_SOCK=$SSH_AUTH_SOCK instead. The socket arrives root-owned, so
+    # bin/docker-entrypoint hands it to deploy.
+    - ${SSH_AGENT_SOCK:-/run/host-services/ssh-auth.sock}:/tmp/ssh-agent.sock
+    # Without this net-ssh silently trusts whatever key a host first presents
+    # (its default is accept-new), which would drop the pinning you already
+    # have on the host. Mounted read-write so new hosts still get appended.
+    - ${HOME}/.ssh/known_hosts:/home/deploy/.ssh/known_hosts
   environment:
     DISABLE_SPRING: "1"
+    # Set here rather than in the entrypoint so that exec'd shells
+    # (make devcontainer-shell) get it too, not just the container's main process.
+    SSH_AUTH_SOCK: "/tmp/ssh-agent.sock"
     ELASTICSEARCH_URL: "http://elasticsearch:9200"
     # FIXME: Pass url for mitmdump2
     MYSQL_HOST: "mysql"

@@ -23,6 +23,12 @@ if [ "${1}" == "bin/rails" ] && [ "${2}" == "server" ]; then
     # FIXME: later rails equivalent: bin/rails db:prepare
 fi
 
+# Docker Desktop hands the forwarded host SSH agent socket over root-owned, so
+# claim it for deploy or Capistrano can't authenticate (see docker-compose.yml).
+if [ -S /tmp/ssh-agent.sock ] && [ ! -O /tmp/ssh-agent.sock ]; then
+    sudo chown deploy /tmp/ssh-agent.sock
+fi
+
 if [ "$(stat -c %G /var/run/docker.sock)" != "docker" ]; then
     echo "WARNING: Docker socket not owned by docker group"
     ls -ld /var/run/docker.sock
