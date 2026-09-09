@@ -16,6 +16,15 @@
     - /var/www/shared/config
     - /var/www/placeholder
 
+- name: Check whether /var/www/current exists (deployed or placeholder)
+  stat:
+    path: /var/www/current
+  register: var_www_current
+  check_mode: false
+
+# Guarded by the stat above because the file module would happily repoint an
+# existing /var/www/current (a live deploy) at the placeholder - force: no
+# only stops it replacing non-link files.
 - name: Link current to placeholder if not deployed so systemd export works
   file:
     src: /var/www/placeholder
@@ -23,6 +32,7 @@
     state: link
     owner: deploy
     force: no
+  when: not var_www_current.stat.exists
 
 - name: Copy across 2048-bit certificate for Diffie Hellman Ephemeral Parameters
   copy: src=ssl/dhparam.pem dest=/etc/nginx/dhparam.pem
