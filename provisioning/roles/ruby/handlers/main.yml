@@ -3,6 +3,7 @@
   command: /bin/bash -lc 'rvm alias create default ruby-{{ ruby_version }}'
   become_user: "{{ item }}"
   loop: "{{ rvm_users }}"
-  # Disable use of PTY as it sometimes hangs
-  async: 600
+  # Disable use of PTY as it sometimes hangs (async dropped in check mode,
+  # which can't be combined with it)
+  async: "{{ 0 if ansible_check_mode else 600 }}"
   poll: 2
