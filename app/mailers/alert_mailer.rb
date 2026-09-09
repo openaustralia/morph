@@ -6,8 +6,8 @@ class AlertMailer < ApplicationMailer
 
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::AssetUrlHelper
-  add_template_helper UsersHelper
-  add_template_helper SiteHelper
+  helper UsersHelper
+  helper SiteHelper
   default from: "morph.io <contact@morph.io>"
 
   sig { params(user: User, broken_scrapers: T::Array[Scraper], successful_scrapers: T::Array[Scraper]).void }
