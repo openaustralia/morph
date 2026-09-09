@@ -6,7 +6,7 @@
 
 # Define some basic Sprockets error classes
 #
-# source://sprockets-4.2.2/lib/sprockets/version.rb:2
+# source://sprockets-4.4.1/lib/sprockets/version.rb:2
 module Sprockets
   extend ::Sprockets::Utils
   extend ::Sprockets::URIUtils
@@ -47,18 +47,18 @@ end
 # with it's full fingerprint. This is done and then
 # added to the original asset as a comment at the bottom.
 #
-# source://sprockets-4.2.2/lib/sprockets/add_source_map_comment_to_asset_processor.rb:28
+# source://sprockets-4.4.1/lib/sprockets/add_source_map_comment_to_asset_processor.rb:28
 class Sprockets::AddSourceMapCommentToAssetProcessor
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/add_source_map_comment_to_asset_processor.rb:29
+    # source://sprockets-4.4.1/lib/sprockets/add_source_map_comment_to_asset_processor.rb:29
     def call(input); end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/errors.rb:5
+# source://sprockets-4.4.1/lib/sprockets/errors.rb:5
 class Sprockets::ArgumentError < ::Sprockets::Error; end
 
-# source://sprockets-4.2.2/lib/sprockets/asset.rb:6
+# source://sprockets-4.4.1/lib/sprockets/asset.rb:6
 class Sprockets::Asset
   # Private: Initialize Asset wrapper from attributes Hash.
   #
@@ -71,7 +71,7 @@ class Sprockets::Asset
   #
   # @return [Asset] a new instance of Asset
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:17
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:17
   def initialize(attributes = T.unsafe(nil)); end
 
   # Public: Compare assets.
@@ -82,34 +82,34 @@ class Sprockets::Asset
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:207
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:207
   def ==(other); end
 
   # Public: Returns String base64 digest of source.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:152
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:152
   def base64digest; end
 
   # Public: Returns Integer length of source.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:120
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:120
   def bytesize; end
 
   # Public: Get charset of source.
   #
   # Returns a String charset name or nil if binary.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:115
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:115
   def charset; end
 
   # Public: Returns String MIME type of asset. Returns nil if type is unknown.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:82
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:82
   def content_type; end
 
   # Public: Returns String byte digest of source.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:126
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:126
   def digest; end
 
   # Public: Return logical path with digest spliced in.
@@ -118,7 +118,7 @@ class Sprockets::Asset
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:66
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:66
   def digest_path; end
 
   # Public: Add enumerator to allow `Asset` instances to be used as Rack
@@ -131,12 +131,12 @@ class Sprockets::Asset
   #
   # @yield [to_s]
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:168
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:168
   def each; end
 
   # Private: Return the version of the environment where the asset was generated.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:131
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:131
   def environment_version; end
 
   # Public: Compare assets.
@@ -147,24 +147,24 @@ class Sprockets::Asset
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:207
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:207
   def eql?(other); end
 
   # Public: ETag String of Asset.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:141
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:141
   def etag; end
 
   # Public: Returns String path of asset.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:47
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:47
   def filename; end
 
   # Public: Return load path + logical path with digest spliced in.
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:77
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:77
   def full_digest_path; end
 
   # Public: Implements Object#hash so Assets can be used as a Hash key or
@@ -172,36 +172,36 @@ class Sprockets::Asset
   #
   # Returns Integer hash of the id.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:198
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:198
   def hash; end
 
   # Public: Returns String hexdigest of source.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:136
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:136
   def hexdigest; end
 
   # Internal: Unique asset object ID.
   #
   # Returns a String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:52
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:52
   def id; end
 
   # Public: Pretty inspect
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:190
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:190
   def inspect; end
 
   # Public: A "named information" URL for subresource integrity.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:157
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:157
   def integrity; end
 
   # Public: Returns Integer length of source.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:120
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:120
   def length; end
 
   # Public: Get all externally linked asset filenames from asset.
@@ -210,12 +210,12 @@ class Sprockets::Asset
   #
   # Returns Set of String asset URIs.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:89
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:89
   def links; end
 
   # Returns the value of attribute logical_path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:7
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:7
   def logical_path; end
 
   # Public: Metadata accumulated from pipeline process.
@@ -226,28 +226,28 @@ class Sprockets::Asset
   #
   # Returns Hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:44
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:44
   def metadata; end
 
   # Public: Return `String` of concatenated source.
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:96
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:96
   def source; end
 
   # Internal: Return all internal instance variables as a hash.
   #
   # Returns a Hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:33
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:33
   def to_hash; end
 
   # Public: Alias for #source.
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:108
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:108
   def to_s; end
 
   # Public: Internal URI to lookup asset by.
@@ -256,7 +256,7 @@ class Sprockets::Asset
   #
   # Returns URI.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:59
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:59
   def uri; end
 
   # Deprecated: Save asset to disk.
@@ -265,55 +265,55 @@ class Sprockets::Asset
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/asset.rb:177
+  # source://sprockets-4.4.1/lib/sprockets/asset.rb:177
   def write_to(filename); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/autoload.rb:3
+# source://sprockets-4.4.1/lib/sprockets/autoload.rb:3
 module Sprockets::Autoload; end
 
-# source://sprockets-4.2.2/lib/sprockets/autoload/coffee_script.rb:6
+# source://sprockets-4.4.1/lib/sprockets/autoload/coffee_script.rb:6
 Sprockets::Autoload::CoffeeScript = CoffeeScript
 
-# source://sprockets-4.2.2/lib/sprockets/autoload/sassc.rb:6
+# source://sprockets-4.4.1/lib/sprockets/autoload/sassc.rb:6
 Sprockets::Autoload::SassC = SassC
 
-# source://sprockets-4.2.2/lib/sprockets/autoload/uglifier.rb:6
+# source://sprockets-4.4.1/lib/sprockets/autoload/uglifier.rb:6
 Sprockets::Autoload::Uglifier = Uglifier
 
-# source://sprockets-4.2.2/lib/sprockets/babel_processor.rb:8
+# source://sprockets-4.4.1/lib/sprockets/babel_processor.rb:8
 class Sprockets::BabelProcessor
   # @return [BabelProcessor] a new instance of BabelProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/babel_processor.rb:25
+  # source://sprockets-4.4.1/lib/sprockets/babel_processor.rb:25
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
   #
-  # source://sprockets-4.2.2/lib/sprockets/babel_processor.rb:23
+  # source://sprockets-4.4.1/lib/sprockets/babel_processor.rb:23
   def cache_key; end
 
-  # source://sprockets-4.2.2/lib/sprockets/babel_processor.rb:40
+  # source://sprockets-4.4.1/lib/sprockets/babel_processor.rb:40
   def call(input); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/babel_processor.rb:19
+    # source://sprockets-4.4.1/lib/sprockets/babel_processor.rb:19
     def cache_key; end
 
-    # source://sprockets-4.2.2/lib/sprockets/babel_processor.rb:15
+    # source://sprockets-4.4.1/lib/sprockets/babel_processor.rb:15
     def call(input); end
 
-    # source://sprockets-4.2.2/lib/sprockets/babel_processor.rb:11
+    # source://sprockets-4.4.1/lib/sprockets/babel_processor.rb:11
     def instance; end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/babel_processor.rb:9
+# source://sprockets-4.4.1/lib/sprockets/babel_processor.rb:9
 Sprockets::BabelProcessor::VERSION = T.let(T.unsafe(nil), String)
 
 # `Base` class for `Environment` and `CachedEnvironment`.
 #
-# source://sprockets-4.2.2/lib/sprockets/base.rb:32
+# source://sprockets-4.4.1/lib/sprockets/base.rb:32
 class Sprockets::Base
   include ::Sprockets::SourceMapUtils
   include ::Sprockets::Utils
@@ -342,12 +342,12 @@ class Sprockets::Base
   #
   #     environment['application.js']
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:118
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:122
   def [](*args, **options); end
 
   # Get persistent cache store
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:41
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:41
   def cache; end
 
   # Set persistent cache store
@@ -356,20 +356,20 @@ class Sprockets::Base
   # setters. Either `get(key)`/`set(key, value)`,
   # `[key]`/`[key]=value`, `read(key)`/`write(key, value)`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:48
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:48
   def cache=(cache); end
 
   # Return an `CachedEnvironment`. Must be implemented by the subclass.
   #
   # @raise [NotImplementedError]
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:53
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:53
   def cached; end
 
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:139
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:143
   def compress_from_root(uri); end
 
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:143
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:147
   def expand_from_root(uri); end
 
   # Internal: Compute digest for path.
@@ -378,40 +378,40 @@ class Sprockets::Base
   #
   # Returns a String digest or nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:63
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:63
   def file_digest(path); end
 
   # @yield [asset]
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:85
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:89
   def find_all_linked_assets(*args); end
 
   # Find asset by logical path or expanded path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:78
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:82
   def find_asset(*args, **options); end
 
   # Find asset by logical path or expanded path.
   #
   # If the asset is not found an error will be raised.
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:125
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:129
   def find_asset!(*args); end
 
   # Return an `CachedEnvironment`. Must be implemented by the subclass.
   #
   # @raise [NotImplementedError]
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:53
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:53
   def index; end
 
   # Pretty inspect
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:133
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:137
   def inspect; end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/bower.rb:5
+# source://sprockets-4.4.1/lib/sprockets/bower.rb:5
 module Sprockets::Bower
   # Internal: Read bower.json's main directive.
   #
@@ -420,7 +420,7 @@ module Sprockets::Bower
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/bower.rb:48
+  # source://sprockets-4.4.1/lib/sprockets/bower.rb:48
   def read_bower_main(dirname, filename); end
 
   # Internal: Override resolve_alternates to install bower.json behavior.
@@ -430,7 +430,7 @@ module Sprockets::Bower
   #
   # Returns candidate filenames.
   #
-  # source://sprockets-4.2.2/lib/sprockets/bower.rb:17
+  # source://sprockets-4.4.1/lib/sprockets/bower.rb:17
   def resolve_alternates(load_path, logical_path); end
 end
 
@@ -438,7 +438,7 @@ end
 #
 # https://github.com/bower/json/blob/0.4.0/lib/json.js#L7
 #
-# source://sprockets-4.2.2/lib/sprockets/bower.rb:9
+# source://sprockets-4.4.1/lib/sprockets/bower.rb:9
 Sprockets::Bower::POSSIBLE_BOWER_JSONS = T.let(T.unsafe(nil), Array)
 
 # Internal: Bundle processor takes a single file asset and prepends all the
@@ -451,10 +451,10 @@ Sprockets::Bower::POSSIBLE_BOWER_JSONS = T.let(T.unsafe(nil), Array)
 #
 # Also see DirectiveProcessor.
 #
-# source://sprockets-4.2.2/lib/sprockets/bundle.rb:16
+# source://sprockets-4.4.1/lib/sprockets/bundle.rb:16
 class Sprockets::Bundle
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/bundle.rb:17
+    # source://sprockets-4.4.1/lib/sprockets/bundle.rb:17
     def call(input); end
 
     # Internal: Removes uri from required if it's already included as an alias.
@@ -463,7 +463,7 @@ class Sprockets::Bundle
     #
     # Returns deduped set of uris
     #
-    # source://sprockets-4.2.2/lib/sprockets/bundle.rb:61
+    # source://sprockets-4.4.1/lib/sprockets/bundle.rb:61
     def dedup(required); end
 
     # Internal: Run bundle reducers on set of Assets producing a reduced
@@ -475,7 +475,7 @@ class Sprockets::Bundle
     #
     # Returns reduced asset metadata Hash.
     #
-    # source://sprockets-4.2.2/lib/sprockets/bundle.rb:80
+    # source://sprockets-4.4.1/lib/sprockets/bundle.rb:80
     def process_bundle_reducers(input, assets, reducers); end
   end
 end
@@ -520,7 +520,7 @@ end
 #
 #   The options hash is passed to the underlying cache implementation.
 #
-# source://sprockets-4.2.2/lib/sprockets/cache.rb:45
+# source://sprockets-4.4.1/lib/sprockets/cache.rb:45
 class Sprockets::Cache
   # Internal: Wrap a backend cache store.
   #
@@ -531,14 +531,14 @@ class Sprockets::Cache
   #
   # @return [Cache] a new instance of Cache
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:68
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:68
   def initialize(cache = T.unsafe(nil), logger = T.unsafe(nil)); end
 
   # Public: Clear cache
   #
   # Returns truthy on success, potentially raises exception on failure
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:156
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:156
   def clear(options = T.unsafe(nil)); end
 
   # Public: Prefer API to retrieve and set values in the cache store.
@@ -553,7 +553,7 @@ class Sprockets::Cache
   #
   # Returns a JSON serializable object.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:85
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:85
   def fetch(key); end
 
   # Public: Low level API to retrieve item directly from the backend cache
@@ -568,14 +568,14 @@ class Sprockets::Cache
   #
   # Returns a JSON serializable object or nil if there was a cache miss.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:115
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:115
   def get(key, local = T.unsafe(nil)); end
 
   # Public: Pretty inspect
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:149
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:149
   def inspect; end
 
   # Public: Low level API to set item directly to the backend cache store.
@@ -591,7 +591,7 @@ class Sprockets::Cache
   #
   # Returns the value argument.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:140
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:140
   def set(key, value, local = T.unsafe(nil)); end
 
   private
@@ -605,21 +605,21 @@ class Sprockets::Cache
   #
   # Returns a String with a length less than 250 characters.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:170
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:170
   def expand_key(key); end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:196
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:196
   def get_cache_wrapper(cache); end
 
   # Internal: Show first 100 characters of cache key for logging purposes.
   #
   # Returns a String with a length less than 100 characters.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:181
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:181
   def peek_key(key); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/cache.rb:56
+    # source://sprockets-4.4.1/lib/sprockets/cache.rb:56
     def default_logger; end
   end
 end
@@ -634,19 +634,19 @@ end
 #
 #   ActiveSupport::Cache::FileStore
 #
-# source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:20
+# source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:20
 class Sprockets::Cache::FileStore
   # Public: Initialize the cache store.
   #
   # root     - A String path to a directory to persist cached values to.
   # max_size - A Integer of the maximum size the store will hold (in bytes).
-  #            (default: 25MB).
+  #            (default: 25MB). Can be set to +false+ for no limit.
   # logger   - The logger to which some info will be printed.
   #            (default logger level is FATAL and won't output anything).
   #
   # @return [FileStore] a new instance of FileStore
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:42
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:42
   def initialize(root, max_size = T.unsafe(nil), logger = T.unsafe(nil)); end
 
   # Public: Clear the cache
@@ -659,7 +659,7 @@ class Sprockets::Cache::FileStore
   #
   # Returns true
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:139
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:141
   def clear(options = T.unsafe(nil)); end
 
   # Public: Retrieve value from cache.
@@ -670,14 +670,14 @@ class Sprockets::Cache::FileStore
   #
   # Returns Object or nil or the value is not set.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:56
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:56
   def get(key); end
 
   # Public: Pretty inspect
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:126
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:128
   def inspect; end
 
   # Public: Set a key and value in the cache.
@@ -689,12 +689,12 @@ class Sprockets::Cache::FileStore
   #
   # Returns Object value.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:85
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:85
   def set(key, value); end
 
   private
 
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:166
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:168
   def compute_size(caches); end
 
   # Internal: Get all cache files along with stats.
@@ -702,19 +702,19 @@ class Sprockets::Cache::FileStore
   # Returns an Array of [String filename, File::Stat] pairs sorted by
   # mtime.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:152
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:154
   def find_caches; end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:183
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:185
   def gc!; end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:176
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:178
   def safe_open(path, &block); end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:170
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:172
   def safe_stat(fn); end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:162
+  # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:164
   def size; end
 
   class << self
@@ -722,43 +722,43 @@ class Sprockets::Cache::FileStore
     #
     # Returns a Logger.
     #
-    # source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:29
+    # source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:29
     def default_logger; end
   end
 end
 
 # Internal: Default key limit for store.
 #
-# source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:22
+# source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:22
 Sprockets::Cache::FileStore::DEFAULT_MAX_SIZE = T.let(T.unsafe(nil), Integer)
 
-# source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:23
+# source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:23
 Sprockets::Cache::FileStore::EXCLUDED_DIRS = T.let(T.unsafe(nil), Array)
 
-# source://sprockets-4.2.2/lib/sprockets/cache/file_store.rb:24
+# source://sprockets-4.4.1/lib/sprockets/cache/file_store.rb:24
 Sprockets::Cache::FileStore::GITKEEP_FILES = T.let(T.unsafe(nil), Array)
 
-# source://sprockets-4.2.2/lib/sprockets/cache.rb:221
+# source://sprockets-4.4.1/lib/sprockets/cache.rb:221
 class Sprockets::Cache::GetWrapper < ::Sprockets::Cache::Wrapper
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:230
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:230
   def clear(options = T.unsafe(nil)); end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:222
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:222
   def get(key); end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:226
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:226
   def set(key, value); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/cache.rb:241
+# source://sprockets-4.4.1/lib/sprockets/cache.rb:241
 class Sprockets::Cache::HashWrapper < ::Sprockets::Cache::Wrapper
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:250
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:250
   def clear(options = T.unsafe(nil)); end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:242
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:242
   def get(key); end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:246
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:246
   def set(key, value); end
 end
 
@@ -772,23 +772,23 @@ end
 #
 #   ActiveSupport::Cache::MemoryStore
 #
-# source://sprockets-4.2.2/lib/sprockets/cache/memory_store.rb:14
+# source://sprockets-4.4.1/lib/sprockets/cache/memory_store.rb:14
 class Sprockets::Cache::MemoryStore
   # Public: Initialize the cache store.
   #
   # max_size - A Integer of the maximum number of keys the store will hold.
-  #            (default: 1000).
+  #            (default: 1000). Can be set to +false+ for no limit.
   #
   # @return [MemoryStore] a new instance of MemoryStore
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/memory_store.rb:22
+  # source://sprockets-4.4.1/lib/sprockets/cache/memory_store.rb:22
   def initialize(max_size = T.unsafe(nil)); end
 
   # Public: Clear the cache
   #
   # Returns true
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/memory_store.rb:76
+  # source://sprockets-4.4.1/lib/sprockets/cache/memory_store.rb:76
   def clear(options = T.unsafe(nil)); end
 
   # Public: Retrieve value from cache.
@@ -799,14 +799,14 @@ class Sprockets::Cache::MemoryStore
   #
   # Returns Object or nil or the value is not set.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/memory_store.rb:35
+  # source://sprockets-4.4.1/lib/sprockets/cache/memory_store.rb:35
   def get(key); end
 
   # Public: Pretty inspect
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/memory_store.rb:67
+  # source://sprockets-4.4.1/lib/sprockets/cache/memory_store.rb:67
   def inspect; end
 
   # Public: Set a key and value in the cache.
@@ -818,13 +818,13 @@ class Sprockets::Cache::MemoryStore
   #
   # Returns Object value.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/memory_store.rb:55
+  # source://sprockets-4.4.1/lib/sprockets/cache/memory_store.rb:55
   def set(key, value); end
 end
 
 # Internal: Default key limit for store.
 #
-# source://sprockets-4.2.2/lib/sprockets/cache/memory_store.rb:16
+# source://sprockets-4.4.1/lib/sprockets/cache/memory_store.rb:16
 Sprockets::Cache::MemoryStore::DEFAULT_MAX_SIZE = T.let(T.unsafe(nil), Integer)
 
 # Public: A compatible cache store that doesn't store anything. Used by
@@ -838,13 +838,13 @@ Sprockets::Cache::MemoryStore::DEFAULT_MAX_SIZE = T.let(T.unsafe(nil), Integer)
 #
 #   ActiveSupport::Cache::NullStore
 #
-# source://sprockets-4.2.2/lib/sprockets/cache/null_store.rb:15
+# source://sprockets-4.4.1/lib/sprockets/cache/null_store.rb:15
 class Sprockets::Cache::NullStore
   # Public: Simulate clearing the cache
   #
   # Returns true
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/null_store.rb:49
+  # source://sprockets-4.4.1/lib/sprockets/cache/null_store.rb:49
   def clear(options = T.unsafe(nil)); end
 
   # Public: Simulate a cache miss.
@@ -855,14 +855,14 @@ class Sprockets::Cache::NullStore
   #
   # Returns nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/null_store.rb:23
+  # source://sprockets-4.4.1/lib/sprockets/cache/null_store.rb:23
   def get(key); end
 
   # Public: Pretty inspect
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/null_store.rb:42
+  # source://sprockets-4.4.1/lib/sprockets/cache/null_store.rb:42
   def inspect; end
 
   # Public: Simulate setting a value in the cache.
@@ -874,22 +874,22 @@ class Sprockets::Cache::NullStore
   #
   # Returns Object value.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cache/null_store.rb:35
+  # source://sprockets-4.4.1/lib/sprockets/cache/null_store.rb:35
   def set(key, value); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/cache.rb:176
+# source://sprockets-4.4.1/lib/sprockets/cache.rb:176
 Sprockets::Cache::PEEK_SIZE = T.let(T.unsafe(nil), Integer)
 
-# source://sprockets-4.2.2/lib/sprockets/cache.rb:256
+# source://sprockets-4.4.1/lib/sprockets/cache.rb:256
 class Sprockets::Cache::ReadWriteWrapper < ::Sprockets::Cache::Wrapper
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:265
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:265
   def clear(options = T.unsafe(nil)); end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:257
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:257
   def get(key); end
 
-  # source://sprockets-4.2.2/lib/sprockets/cache.rb:261
+  # source://sprockets-4.4.1/lib/sprockets/cache.rb:261
   def set(key, value); end
 end
 
@@ -897,10 +897,10 @@ end
 # unless the cache format radically changes. Will be bump on major version
 # releases though.
 #
-# source://sprockets-4.2.2/lib/sprockets/cache.rb:54
+# source://sprockets-4.4.1/lib/sprockets/cache.rb:54
 Sprockets::Cache::VERSION = T.let(T.unsafe(nil), String)
 
-# source://sprockets-4.2.2/lib/sprockets/cache.rb:218
+# source://sprockets-4.4.1/lib/sprockets/cache.rb:218
 class Sprockets::Cache::Wrapper < ::Struct; end
 
 # `CachedEnvironment` is a special cached version of `Environment`.
@@ -913,46 +913,46 @@ class Sprockets::Cache::Wrapper < ::Struct; end
 # `CachedEnvironment` should not be initialized directly. Instead use
 # `Environment#cached`.
 #
-# source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:14
+# source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:14
 class Sprockets::CachedEnvironment < ::Sprockets::Base
   # @return [CachedEnvironment] a new instance of CachedEnvironment
   #
-  # source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:15
+  # source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:15
   def initialize(environment); end
 
   # No-op return self as cached environment.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:27
+  # source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:27
   def cached; end
 
   # Internal: Cache Environment#entries
   #
-  # source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:33
+  # source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:33
   def entries(path); end
 
   # No-op return self as cached environment.
   #
-  # source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:27
+  # source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:27
   def index; end
 
   # Internal: Cache Environment#load
   #
-  # source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:43
+  # source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:43
   def load(uri); end
 
   # Internal: Cache Environment#processor_cache_key
   #
-  # source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:48
+  # source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:48
   def processor_cache_key(str); end
 
   # Internal: Cache Environment#resolve_dependency
   #
-  # source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:53
+  # source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:53
   def resolve_dependency(str); end
 
   # Internal: Cache Environment#stat
   #
-  # source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:38
+  # source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:38
   def stat(path); end
 
   private
@@ -962,7 +962,7 @@ class Sprockets::CachedEnvironment < ::Sprockets::Base
   #
   # @raise [RuntimeError]
   #
-  # source://sprockets-4.2.2/lib/sprockets/cached_environment.rb:60
+  # source://sprockets-4.4.1/lib/sprockets/cached_environment.rb:60
   def config=(config); end
 end
 
@@ -978,38 +978,38 @@ end
 #     environment.register_bundle_processor 'application/javascript',
 #       Sprockets::ClosureCompressor.new({ ... })
 #
-# source://sprockets-4.2.2/lib/sprockets/closure_compressor.rb:18
+# source://sprockets-4.4.1/lib/sprockets/closure_compressor.rb:18
 class Sprockets::ClosureCompressor
   # @return [ClosureCompressor] a new instance of ClosureCompressor
   #
-  # source://sprockets-4.2.2/lib/sprockets/closure_compressor.rb:38
+  # source://sprockets-4.4.1/lib/sprockets/closure_compressor.rb:38
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
   #
-  # source://sprockets-4.2.2/lib/sprockets/closure_compressor.rb:36
+  # source://sprockets-4.4.1/lib/sprockets/closure_compressor.rb:36
   def cache_key; end
 
-  # source://sprockets-4.2.2/lib/sprockets/closure_compressor.rb:43
+  # source://sprockets-4.4.1/lib/sprockets/closure_compressor.rb:43
   def call(input); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/closure_compressor.rb:32
+    # source://sprockets-4.4.1/lib/sprockets/closure_compressor.rb:32
     def cache_key; end
 
-    # source://sprockets-4.2.2/lib/sprockets/closure_compressor.rb:28
+    # source://sprockets-4.4.1/lib/sprockets/closure_compressor.rb:28
     def call(input); end
 
     # Public: Return singleton instance with default options.
     #
     # Returns ClosureCompressor object.
     #
-    # source://sprockets-4.2.2/lib/sprockets/closure_compressor.rb:24
+    # source://sprockets-4.4.1/lib/sprockets/closure_compressor.rb:24
     def instance; end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/closure_compressor.rb:19
+# source://sprockets-4.4.1/lib/sprockets/closure_compressor.rb:19
 Sprockets::ClosureCompressor::VERSION = T.let(T.unsafe(nil), String)
 
 # Processor engine class for the CoffeeScript compiler.
@@ -1019,40 +1019,40 @@ Sprockets::ClosureCompressor::VERSION = T.let(T.unsafe(nil), String)
 #
 #   https://github.com/rails/ruby-coffee-script
 #
-# source://sprockets-4.2.2/lib/sprockets/coffee_script_processor.rb:13
+# source://sprockets-4.4.1/lib/sprockets/coffee_script_processor.rb:13
 module Sprockets::CoffeeScriptProcessor
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/coffee_script_processor.rb:16
+    # source://sprockets-4.4.1/lib/sprockets/coffee_script_processor.rb:16
     def cache_key; end
 
-    # source://sprockets-4.2.2/lib/sprockets/coffee_script_processor.rb:20
+    # source://sprockets-4.4.1/lib/sprockets/coffee_script_processor.rb:20
     def call(input); end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/coffee_script_processor.rb:14
+# source://sprockets-4.4.1/lib/sprockets/coffee_script_processor.rb:14
 Sprockets::CoffeeScriptProcessor::VERSION = T.let(T.unsafe(nil), String)
 
 # `Compressing` is an internal mixin whose public methods are exposed on
 # the `Environment` and `CachedEnvironment` classes.
 #
-# source://sprockets-4.2.2/lib/sprockets/compressing.rb:7
+# source://sprockets-4.4.1/lib/sprockets/compressing.rb:7
 module Sprockets::Compressing
   include ::Sprockets::Utils
 
-  # source://sprockets-4.2.2/lib/sprockets/compressing.rb:10
+  # source://sprockets-4.4.1/lib/sprockets/compressing.rb:10
   def compressors; end
 
   # Return CSS compressor or nil if none is set
   #
-  # source://sprockets-4.2.2/lib/sprockets/compressing.rb:40
+  # source://sprockets-4.4.1/lib/sprockets/compressing.rb:40
   def css_compressor; end
 
   # Assign a compressor to run on `text/css` assets.
   #
   # The compressor object must respond to `compress`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/compressing.rb:49
+  # source://sprockets-4.4.1/lib/sprockets/compressing.rb:49
   def css_compressor=(compressor); end
 
   # Public: Enable or disable the creation of Gzip files.
@@ -1061,33 +1061,33 @@ module Sprockets::Compressing
   #
   #     environment.gzip = false
   #
-  # To enable set to a truthy value. By default zlib wil
+  # To enable set to a truthy value. By default zlib will
   # be used to gzip assets. If you have the Zopfli gem
   # installed you can specify the zopfli algorithm to be used
   # instead:
   #
   #     environment.gzip = :zopfli
   #
-  # source://sprockets-4.2.2/lib/sprockets/compressing.rb:116
+  # source://sprockets-4.4.1/lib/sprockets/compressing.rb:116
   def gzip=(gzip); end
 
   # Public: Checks if Gzip is enabled.
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/compressing.rb:94
+  # source://sprockets-4.4.1/lib/sprockets/compressing.rb:94
   def gzip?; end
 
   # Return JS compressor or nil if none is set
   #
-  # source://sprockets-4.2.2/lib/sprockets/compressing.rb:67
+  # source://sprockets-4.4.1/lib/sprockets/compressing.rb:67
   def js_compressor; end
 
   # Assign a compressor to run on `application/javascript` assets.
   #
   # The compressor object must respond to `compress`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/compressing.rb:76
+  # source://sprockets-4.4.1/lib/sprockets/compressing.rb:76
   def js_compressor=(compressor); end
 
   # Public: Register a new compressor `klass` at `sym` for `mime_type`.
@@ -1109,18 +1109,18 @@ module Sprockets::Compressing
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/compressing.rb:32
+  # source://sprockets-4.4.1/lib/sprockets/compressing.rb:32
   def register_compressor(mime_type, sym, klass); end
 
   # Public: Checks if Gzip is disabled.
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/compressing.rb:99
+  # source://sprockets-4.4.1/lib/sprockets/compressing.rb:99
   def skip_gzip?; end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/configuration.rb:12
+# source://sprockets-4.4.1/lib/sprockets/configuration.rb:12
 module Sprockets::Configuration
   include ::Sprockets::Utils
   include ::Sprockets::URIUtils
@@ -1139,12 +1139,12 @@ module Sprockets::Configuration
 
   # Returns the value of attribute config.
   #
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:21
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:21
   def config; end
 
   # @raise [TypeError]
   #
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:23
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:23
   def config=(config); end
 
   # This class maybe mutated and mixed in with custom helpers.
@@ -1154,14 +1154,14 @@ module Sprockets::Configuration
   #       def asset_url; end
   #     end
   #
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:77
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:90
   def context_class; end
 
   # Public: Returns a `Digest` implementation class.
   #
   # Defaults to `Digest::SHA256`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:56
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:56
   def digest_class; end
 
   # Deprecated: Assign a `Digest` implementation class. This maybe any Ruby
@@ -1170,20 +1170,32 @@ module Sprockets::Configuration
   #
   #     environment.digest_class = Digest::SHA512
   #
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:66
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:66
   def digest_class=(klass); end
 
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:15
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:70
+  def ignore_mtime; end
+
+  # By default sprockets tries to quickly revalidate the cache for a source file
+  # by comparing its last modified time.
+  # This is efficient in development, but in some CI or producton environments
+  # where the source files are restored from version control, the last modified time
+  # tend to be somewhat random, and checking it is just needless overhead.
+  #
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:79
+  def ignore_mtime=(ignore_mtime); end
+
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:15
   def initialize_configuration(parent); end
 
   # Get and set `Logger` instance.
   #
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:29
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:29
   def logger; end
 
   # Get and set `Logger` instance.
   #
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:29
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:29
   def logger=(_arg0); end
 
   # The `Environment#version` is a custom value used for manually
@@ -1197,18 +1209,18 @@ module Sprockets::Configuration
   # It would be wise to increment this value anytime you make a
   # configuration change to the `Environment` object.
   #
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:41
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:41
   def version; end
 
   # Assign an environment version.
   #
   #     environment.version = '2.0'
   #
-  # source://sprockets-4.2.2/lib/sprockets/configuration.rb:49
+  # source://sprockets-4.4.1/lib/sprockets/configuration.rb:49
   def version=(version); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/errors.rb:6
+# source://sprockets-4.4.1/lib/sprockets/errors.rb:6
 class Sprockets::ContentTypeMismatch < ::Sprockets::Error; end
 
 # They are typically accessed by ERB templates. You can mix in custom helpers
@@ -1225,11 +1237,11 @@ class Sprockets::ContentTypeMismatch < ::Sprockets::Error; end
 # The `Context` also collects dependencies declared by
 # assets. See `DirectiveProcessor` for an example of this.
 #
-# source://sprockets-4.2.2/lib/sprockets/context.rb:21
+# source://sprockets-4.4.1/lib/sprockets/context.rb:21
 class Sprockets::Context
   # @return [Context] a new instance of Context
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:42
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:42
   def initialize(input); end
 
   # Returns a `data:` URI with the contents of the asset at the specified
@@ -1243,7 +1255,7 @@ class Sprockets::Context
   #
   #     $('<img>').attr('src', '<%= asset_data_uri 'avatar.jpg' %>')
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:201
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:201
   def asset_data_uri(path); end
 
   # Expands logical path to full url to asset.
@@ -1255,12 +1267,12 @@ class Sprockets::Context
   #
   # @raise [NotImplementedError]
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:216
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:216
   def asset_path(path, options = T.unsafe(nil)); end
 
   # Expand logical audio asset path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:241
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:241
   def audio_path(path); end
 
   # Returns content type of file
@@ -1268,7 +1280,7 @@ class Sprockets::Context
   #     'application/javascript'
   #     'text/css'
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:88
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:88
   def content_type; end
 
   # `depend_on` allows you to state a dependency on a file without
@@ -1278,7 +1290,7 @@ class Sprockets::Context
   # the dependency file will invalidate the cache of the
   # source file.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:128
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:128
   def depend_on(path); end
 
   # `depend_on_asset` allows you to state an asset dependency
@@ -1289,7 +1301,7 @@ class Sprockets::Context
   # file. Unlike `depend_on`, this will recursively include
   # the target asset's dependencies.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:144
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:144
   def depend_on_asset(path); end
 
   # `depend_on_env` allows you to state a dependency on an environment
@@ -1298,35 +1310,35 @@ class Sprockets::Context
   # This is used for caching purposes. Any changes in the value of the
   # environment variable will invalidate the cache of the source file.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:153
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:153
   def depend_on_env(key); end
 
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:64
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:64
   def env_proxy; end
 
   # Returns the value of attribute environment.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:40
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:40
   def environment; end
 
   # Returns the value of attribute filename.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:40
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:40
   def filename; end
 
   # Expand logical font asset path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:246
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:246
   def font_path(path); end
 
   # Expand logical image asset path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:231
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:231
   def image_path(path); end
 
   # Expand logical javascript asset path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:251
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:251
   def javascript_path(path); end
 
   # `link_asset` declares an external dependency on an asset without directly
@@ -1335,7 +1347,7 @@ class Sprockets::Context
   #
   # Returns an Asset or nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:184
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:184
   def link_asset(path); end
 
   # Public: Load Asset by AssetURI and track it as a dependency.
@@ -1344,7 +1356,7 @@ class Sprockets::Context
   #
   # Returns Asset.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:116
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:116
   def load(uri); end
 
   # Returns the environment path that contains the file.
@@ -1353,7 +1365,7 @@ class Sprockets::Context
   # current file is `app/javascripts/foo/bar.js`, `load_path` would
   # return `app/javascripts`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:73
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:73
   def load_path; end
 
   # Returns logical path without any file extensions.
@@ -1361,10 +1373,10 @@ class Sprockets::Context
   #     'app/javascripts/application.js'
   #     # => 'application'
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:81
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:81
   def logical_path; end
 
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:57
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:57
   def metadata; end
 
   # `require_asset` declares `path` as a dependency of the file. The
@@ -1376,7 +1388,7 @@ class Sprockets::Context
   #
   #     <%= require_asset "#{framework}.js" %>
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:166
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:166
   def require_asset(path); end
 
   # Public: Given a logical path, `resolve` will find and return an Asset URI.
@@ -1394,7 +1406,7 @@ class Sprockets::Context
   #
   # Returns an Asset URI String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:104
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:104
   def resolve(path, **kargs); end
 
   # Returns the environment path that contains the file.
@@ -1403,37 +1415,37 @@ class Sprockets::Context
   # current file is `app/javascripts/foo/bar.js`, `load_path` would
   # return `app/javascripts`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:73
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:73
   def root_path; end
 
   # `stub_asset` blacklists `path` from being included in the bundle.
   # `path` must be an asset which may or may not already be included
   # in the bundle.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:174
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:174
   def stub_asset(path); end
 
   # Expand logical stylesheet asset path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:256
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:256
   def stylesheet_path(path); end
 
   # Expand logical video asset path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:236
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:236
   def video_path(path); end
 
   protected
 
   # Returns a Base64-encoded data URI.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:272
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:272
   def base64_asset_data_uri(asset); end
 
   # Un-escapes characters in the given URI-escaped string that do not need
   # escaping in "-quoted data URIs.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:297
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:297
   def optimize_quoted_uri_escapes!(escaped); end
 
   # Optimizes an SVG for being URI-escaped.
@@ -1443,38 +1455,38 @@ class Sprockets::Context
   # * Removes comments, meta, doctype, and newlines.
   # * Collapses whitespace.
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:283
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:283
   def optimize_svg_for_uri_escaping!(svg); end
 
   # Returns a URI-encoded data URI (always "-quoted).
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:263
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:263
   def svg_asset_data_uri(asset); end
 end
 
 # Internal: Proxy for ENV that keeps track of the environment variables used
 #
-# source://sprockets-4.2.2/lib/sprockets/context.rb:23
+# source://sprockets-4.4.1/lib/sprockets/context.rb:23
 class Sprockets::Context::ENVProxy < ::SimpleDelegator
   # @return [ENVProxy] a new instance of ENVProxy
   #
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:24
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:24
   def initialize(context); end
 
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:29
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:29
   def [](key); end
 
-  # source://sprockets-4.2.2/lib/sprockets/context.rb:34
+  # source://sprockets-4.4.1/lib/sprockets/context.rb:34
   def fetch(key, *_arg1); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/errors.rb:9
+# source://sprockets-4.4.1/lib/sprockets/errors.rb:9
 class Sprockets::ConversionError < ::Sprockets::NotFound; end
 
 # `Dependencies` is an internal mixin whose public methods are exposed on the
 # `Environment` and `CachedEnvironment` classes.
 #
-# source://sprockets-4.2.2/lib/sprockets/dependencies.rb:9
+# source://sprockets-4.4.1/lib/sprockets/dependencies.rb:9
 module Sprockets::Dependencies
   include ::Sprockets::URIUtils
   include ::Sprockets::PathUtils
@@ -1487,7 +1499,7 @@ module Sprockets::Dependencies
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/dependencies.rb:48
+  # source://sprockets-4.4.1/lib/sprockets/dependencies.rb:48
   def add_dependency(uri); end
 
   # Public: Add environmental dependency inherited by all assets.
@@ -1496,14 +1508,14 @@ module Sprockets::Dependencies
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/dependencies.rb:48
+  # source://sprockets-4.4.1/lib/sprockets/dependencies.rb:48
   def depend_on(uri); end
 
   # Public: Default set of dependency URIs for assets.
   #
   # Returns Set of String URIs.
   #
-  # source://sprockets-4.2.2/lib/sprockets/dependencies.rb:25
+  # source://sprockets-4.4.1/lib/sprockets/dependencies.rb:25
   def dependencies; end
 
   # Public: Mapping dependency schemes to resolver functions.
@@ -1513,7 +1525,7 @@ module Sprockets::Dependencies
   #
   # Returns Hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/dependencies.rb:18
+  # source://sprockets-4.4.1/lib/sprockets/dependencies.rb:18
   def dependency_resolvers; end
 
   # Public: Register new dependency URI resolver.
@@ -1525,21 +1537,21 @@ module Sprockets::Dependencies
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/dependencies.rb:37
+  # source://sprockets-4.4.1/lib/sprockets/dependencies.rb:37
   def register_dependency_resolver(scheme, &block); end
 
   # Internal: Resolve dependency URIs.
   #
   # Returns resolved Object.
   #
-  # source://sprockets-4.2.2/lib/sprockets/dependencies.rb:58
+  # source://sprockets-4.4.1/lib/sprockets/dependencies.rb:58
   def resolve_dependency(str); end
 end
 
 # Internal: Hash functions and digest related utilities. Mixed into
 # Environment.
 #
-# source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:9
+# source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:9
 module Sprockets::DigestUtils
   extend ::Sprockets::DigestUtils
 
@@ -1551,7 +1563,7 @@ module Sprockets::DigestUtils
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:185
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:185
   def already_digested?(name); end
 
   # Internal: Detect digest class hash algorithm for digest bytes.
@@ -1560,7 +1572,7 @@ module Sprockets::DigestUtils
   #
   # Returns Digest::Base or nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:32
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:32
   def detect_digest_class(bytes); end
 
   # Internal: Generate a hexdigest for a nested JSON serializable object.
@@ -1572,14 +1584,14 @@ module Sprockets::DigestUtils
   #
   # Returns a String digest of the object.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:87
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:87
   def digest(obj); end
 
   # Internal: Default digest class.
   #
   # Returns a Digest::Base subclass.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:15
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:15
   def digest_class; end
 
   # Internal: Generate a hexdigest for a nested JSON serializable object.
@@ -1590,7 +1602,7 @@ module Sprockets::DigestUtils
   #
   # Returns a String digest of the object.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:98
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:98
   def hexdigest(obj); end
 
   # Public: Generate hash for use in the `integrity` attribute of an asset tag
@@ -1600,7 +1612,7 @@ module Sprockets::DigestUtils
   #
   # Returns a String or nil if hash algorithm is incompatible.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:176
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:176
   def hexdigest_integrity_uri(hexdigest); end
 
   # Public: Generate hash for use in the `integrity` attribute of an asset tag
@@ -1610,7 +1622,7 @@ module Sprockets::DigestUtils
   #
   # Returns a String or nil if hash algorithm is incompatible.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:154
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:154
   def integrity_uri(digest); end
 
   # Internal: Pack a binary digest to a base64 encoded string.
@@ -1619,7 +1631,7 @@ module Sprockets::DigestUtils
   #
   # Returns base64 String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:125
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:125
   def pack_base64digest(bin); end
 
   # Internal: Pack a binary digest to a hex encoded string.
@@ -1628,7 +1640,7 @@ module Sprockets::DigestUtils
   #
   # Returns hex String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:107
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:107
   def pack_hexdigest(bin); end
 
   # Internal: Pack a binary digest to a urlsafe base64 encoded string.
@@ -1637,7 +1649,7 @@ module Sprockets::DigestUtils
   #
   # Returns urlsafe base64 String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:134
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:134
   def pack_urlsafe_base64digest(bin); end
 
   # Internal: Unpack a hex encoded digest string into binary bytes.
@@ -1646,26 +1658,26 @@ module Sprockets::DigestUtils
   #
   # Returns binary String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:116
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:116
   def unpack_hexdigest(hex); end
 
   private
 
-  # source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:190
+  # source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:190
   def build_digest(obj); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:36
+# source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:36
 Sprockets::DigestUtils::ADD_VALUE_TO_DIGEST = T.let(T.unsafe(nil), Hash)
 
 # Internal: Maps digest bytesize to the digest class.
 #
-# source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:20
+# source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:20
 Sprockets::DigestUtils::DIGEST_SIZES = T.let(T.unsafe(nil), Hash)
 
 # Internal: Maps digest class to the CSP hash algorithm name.
 #
-# source://sprockets-4.2.2/lib/sprockets/digest_utils.rb:142
+# source://sprockets-4.4.1/lib/sprockets/digest_utils.rb:142
 Sprockets::DigestUtils::HASH_ALGORITHMS = T.let(T.unsafe(nil), Hash)
 
 # The `DirectiveProcessor` is responsible for parsing and evaluating
@@ -1699,17 +1711,17 @@ Sprockets::DigestUtils::HASH_ALGORITHMS = T.let(T.unsafe(nil), Hash)
 #
 #     env.register_processor('text/css', MyProcessor)
 #
-# source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:37
+# source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:37
 class Sprockets::DirectiveProcessor
   # @return [DirectiveProcessor] a new instance of DirectiveProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:60
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:60
   def initialize(comments: T.unsafe(nil)); end
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:68
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:68
   def _call(input); end
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:64
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:64
   def call(input); end
 
   protected
@@ -1721,7 +1733,7 @@ class Sprockets::DirectiveProcessor
   # Directives in comments after the first non-whitespace line
   # of code will not be processed.
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:104
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:104
   def compile_header_pattern(comments); end
 
   # Returns an Array of directive structures. Each structure
@@ -1731,7 +1743,7 @@ class Sprockets::DirectiveProcessor
   #
   #     [[1, "require", "foo"], [2, "require", "bar"]]
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:141
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:141
   def extract_directives(header); end
 
   # Allows you to state a dependency on an asset without including
@@ -1745,7 +1757,7 @@ class Sprockets::DirectiveProcessor
   #
   #     //= depend_on_asset "bar.js"
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:284
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:284
   def process_depend_on_asset_directive(path); end
 
   # Allows you to state a dependency on a file without
@@ -1760,7 +1772,7 @@ class Sprockets::DirectiveProcessor
   #
   #     //= depend_on "foo.png"
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:269
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:269
   def process_depend_on_directive(path); end
 
   # Allows you to state a dependency on a relative directory
@@ -1775,7 +1787,7 @@ class Sprockets::DirectiveProcessor
   #
   #     //= depend_on_directory ./data
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:300
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:300
   def process_depend_on_directory_directive(path = T.unsafe(nil), accept = T.unsafe(nil)); end
 
   # Gathers comment directives in the source and processes them.
@@ -1800,7 +1812,7 @@ class Sprockets::DirectiveProcessor
   #     env.unregister_processor('text/css', Sprockets::DirectiveProcessor)
   #     env.register_processor('text/css', DirectiveProcessor)
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:186
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:186
   def process_directives(directives); end
 
   # Declares a linked dependency on the target asset.
@@ -1811,7 +1823,7 @@ class Sprockets::DirectiveProcessor
   #
   #   /*= link "logo.png" */
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:326
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:326
   def process_link_directive(path); end
 
   # `link_directory` links all the files inside a single
@@ -1825,7 +1837,7 @@ class Sprockets::DirectiveProcessor
   #
   #     //= link_directory "./scripts" .js
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:342
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:342
   def process_link_directory_directive(path = T.unsafe(nil), accept = T.unsafe(nil)); end
 
   # `link_tree` links all the nested files in a directory.
@@ -1838,7 +1850,7 @@ class Sprockets::DirectiveProcessor
   #
   #     //= link_tree "./styles" .css
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:358
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:358
   def process_link_tree_directive(path = T.unsafe(nil), accept = T.unsafe(nil)); end
 
   # The `require` directive functions similar to Ruby's own `require`.
@@ -1859,7 +1871,7 @@ class Sprockets::DirectiveProcessor
   #
   #     //= require "./bar"
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:215
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:215
   def process_require_directive(path); end
 
   # `require_directory` requires all the files inside a single
@@ -1868,7 +1880,7 @@ class Sprockets::DirectiveProcessor
   #
   #     //= require_directory "./javascripts"
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:242
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:242
   def process_require_directory_directive(path = T.unsafe(nil)); end
 
   # `require_self` causes the body of the current file to be inserted
@@ -1881,7 +1893,7 @@ class Sprockets::DirectiveProcessor
   #      *= require_tree .
   #      */
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:229
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:229
   def process_require_self_directive; end
 
   # `require_tree` requires all the nested files in a directory.
@@ -1889,10 +1901,10 @@ class Sprockets::DirectiveProcessor
   #
   #     //= require_tree "./public"
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:252
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:252
   def process_require_tree_directive(path = T.unsafe(nil)); end
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:118
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:118
   def process_source(source); end
 
   # Allows dependency to be excluded from the asset bundle.
@@ -1903,37 +1915,37 @@ class Sprockets::DirectiveProcessor
   #
   #     //= stub "jquery"
   #
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:314
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:314
   def process_stub_directive(path); end
 
   private
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:365
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:365
   def expand_accept_shorthand(accept); end
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:399
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:399
   def expand_relative_dirname(directive, path); end
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:383
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:383
   def link_paths(paths, deps, accept); end
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:377
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:377
   def require_paths(paths, deps); end
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:420
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:420
   def resolve(path, **kargs); end
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:389
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:389
   def resolve_paths(paths, deps, **kargs); end
 
-  # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:415
+  # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:415
   def to_load(uri); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:56
+    # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:56
     def call(input); end
 
-    # source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:51
+    # source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:51
     def instance; end
   end
 end
@@ -1947,43 +1959,43 @@ end
 #     //= require foo
 #     //= require "foo"
 #
-# source://sprockets-4.2.2/lib/sprockets/directive_processor.rb:47
+# source://sprockets-4.4.1/lib/sprockets/directive_processor.rb:47
 Sprockets::DirectiveProcessor::DIRECTIVE_PATTERN = T.let(T.unsafe(nil), Regexp)
 
-# source://sprockets-4.2.2/lib/sprockets/base.rb:20
+# source://sprockets-4.4.1/lib/sprockets/base.rb:20
 class Sprockets::DoubleLinkError < ::Sprockets::Error
   # @return [DoubleLinkError] a new instance of DoubleLinkError
   #
-  # source://sprockets-4.2.2/lib/sprockets/base.rb:21
+  # source://sprockets-4.4.1/lib/sprockets/base.rb:21
   def initialize(parent_filename:, logical_path:, last_filename:, filename:); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/erb_processor.rb:4
+# source://sprockets-4.4.1/lib/sprockets/erb_processor.rb:4
 class Sprockets::ERBProcessor
   # @return [ERBProcessor] a new instance of ERBProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/erb_processor.rb:16
+  # source://sprockets-4.4.1/lib/sprockets/erb_processor.rb:16
   def initialize(&block); end
 
-  # source://sprockets-4.2.2/lib/sprockets/erb_processor.rb:20
+  # source://sprockets-4.4.1/lib/sprockets/erb_processor.rb:20
   def call(input); end
 
   private
 
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/erb_processor.rb:39
+  # source://sprockets-4.4.1/lib/sprockets/erb_processor.rb:39
   def keyword_constructor?; end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/erb_processor.rb:12
+    # source://sprockets-4.4.1/lib/sprockets/erb_processor.rb:12
     def call(input); end
 
     # Public: Return singleton instance with default options.
     #
     # Returns ERBProcessor object.
     #
-    # source://sprockets-4.2.2/lib/sprockets/erb_processor.rb:8
+    # source://sprockets-4.4.1/lib/sprockets/erb_processor.rb:8
     def instance; end
   end
 end
@@ -1995,10 +2007,10 @@ end
 #   https://github.com/sstephenson/ruby-eco
 #   https://github.com/sstephenson/eco
 #
-# source://sprockets-4.2.2/lib/sprockets/eco_processor.rb:12
+# source://sprockets-4.4.1/lib/sprockets/eco_processor.rb:12
 module Sprockets::EcoProcessor
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/eco_processor.rb:15
+    # source://sprockets-4.4.1/lib/sprockets/eco_processor.rb:15
     def cache_key; end
 
     # Compile template data with Eco compiler.
@@ -2008,12 +2020,12 @@ module Sprockets::EcoProcessor
     #
     #     # => "function(...) {...}"
     #
-    # source://sprockets-4.2.2/lib/sprockets/eco_processor.rb:26
+    # source://sprockets-4.4.1/lib/sprockets/eco_processor.rb:26
     def call(input); end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/eco_processor.rb:13
+# source://sprockets-4.4.1/lib/sprockets/eco_processor.rb:13
 Sprockets::EcoProcessor::VERSION = T.let(T.unsafe(nil), String)
 
 # Processor engine class for the EJS compiler. Depends on the `ejs` gem.
@@ -2022,10 +2034,10 @@ Sprockets::EcoProcessor::VERSION = T.let(T.unsafe(nil), String)
 #
 #   https://github.com/sstephenson/ruby-ejs
 #
-# source://sprockets-4.2.2/lib/sprockets/ejs_processor.rb:11
+# source://sprockets-4.4.1/lib/sprockets/ejs_processor.rb:11
 module Sprockets::EjsProcessor
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/ejs_processor.rb:14
+    # source://sprockets-4.4.1/lib/sprockets/ejs_processor.rb:14
     def cache_key; end
 
     # Compile template data with EJS compiler.
@@ -2035,18 +2047,18 @@ module Sprockets::EjsProcessor
     #
     #     # => "function(obj){...}"
     #
-    # source://sprockets-4.2.2/lib/sprockets/ejs_processor.rb:25
+    # source://sprockets-4.4.1/lib/sprockets/ejs_processor.rb:25
     def call(input); end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/ejs_processor.rb:12
+# source://sprockets-4.4.1/lib/sprockets/ejs_processor.rb:12
 Sprockets::EjsProcessor::VERSION = T.let(T.unsafe(nil), String)
 
 # Internal: HTTP transport encoding and charset detecting related functions.
 # Mixed into Environment.
 #
-# source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:8
+# source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:8
 module Sprockets::EncodingUtils
   extend ::Sprockets::EncodingUtils
 
@@ -2056,7 +2068,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a encoded String
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:72
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:74
   def base64(str); end
 
   # Internal: Use Charlock Holmes to detect encoding.
@@ -2065,7 +2077,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoded String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:121
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:123
   def charlock_detect(str); end
 
   # Public: Use deflate to compress data.
@@ -2074,7 +2086,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a compressed String
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:18
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:18
   def deflate(str); end
 
   # Public: Basic string detecter.
@@ -2086,7 +2098,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoded String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:99
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:101
   def detect(str); end
 
   # Public: Detect and strip @charset from CSS style sheet.
@@ -2095,7 +2107,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a encoded String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:177
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:179
   def detect_css(str); end
 
   # Public: Detect charset from HTML document.
@@ -2107,7 +2119,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a encoded String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:244
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:246
   def detect_html(str); end
 
   # Public: Detect Unicode string.
@@ -2118,7 +2130,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoded String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:138
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:140
   def detect_unicode(str); end
 
   # Public: Detect and strip BOM from possible unicode string.
@@ -2128,7 +2140,7 @@ module Sprockets::EncodingUtils
   # Returns UTF 8/16/32 encoded String without BOM or the original String if
   # no BOM was present.
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:156
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:158
   def detect_unicode_bom(str); end
 
   # Public: Use gzip to compress data.
@@ -2137,7 +2149,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a compressed String
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:58
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:60
   def gzip(str); end
 
   # Internal: Scan binary CSS string for @charset encoding name.
@@ -2146,7 +2158,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoding String name or nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:207
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:209
   def scan_css_charset(str); end
 
   # Internal: Unmarshal optionally deflated data.
@@ -2159,29 +2171,32 @@ module Sprockets::EncodingUtils
   #
   # Returns unmarshaled Object or raises an Exception.
   #
-  # source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:38
+  # source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:38
   def unmarshaled_deflated(str, window_bits = T.unsafe(nil)); end
 end
 
 # Internal: Mapping unicode encodings to byte order markers.
 #
-# source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:83
+# source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:85
 Sprockets::EncodingUtils::BOM = T.let(T.unsafe(nil), Hash)
 
 # Internal: Shorthand aliases for detecter functions.
 #
-# source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:80
+# source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:82
 Sprockets::EncodingUtils::CHARSET_DETECT = T.let(T.unsafe(nil), Hash)
 
-# source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:200
+# source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:202
 Sprockets::EncodingUtils::CHARSET_SIZE = T.let(T.unsafe(nil), Integer)
 
 # Internal: @charset bytes
 #
-# source://sprockets-4.2.2/lib/sprockets/encoding_utils.rb:199
+# source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:201
 Sprockets::EncodingUtils::CHARSET_START = T.let(T.unsafe(nil), Array)
 
-# source://sprockets-4.2.2/lib/sprockets/environment.rb:12
+# source://sprockets-4.4.1/lib/sprockets/encoding_utils.rb:53
+Sprockets::EncodingUtils::GZIP_MTIME = T.let(T.unsafe(nil), Integer)
+
+# source://sprockets-4.4.1/lib/sprockets/environment.rb:12
 class Sprockets::Environment < ::Sprockets::Base
   # `Environment` should be initialized with your application's root
   # directory. This should be the same as your Rails or Rack root.
@@ -2192,7 +2207,7 @@ class Sprockets::Environment < ::Sprockets::Base
   # @yield [_self]
   # @yieldparam _self [Sprockets::Environment] the object that the method was called on
   #
-  # source://sprockets-4.2.2/lib/sprockets/environment.rb:13
+  # source://sprockets-4.4.1/lib/sprockets/environment.rb:13
   def initialize(root = T.unsafe(nil)); end
 
   # Returns a cached version of the environment.
@@ -2201,16 +2216,16 @@ class Sprockets::Environment < ::Sprockets::Base
   # faster. This behavior is ideal in production since the file
   # system only changes between deploys.
   #
-  # source://sprockets-4.2.2/lib/sprockets/environment.rb:25
+  # source://sprockets-4.4.1/lib/sprockets/environment.rb:25
   def cached; end
 
-  # source://sprockets-4.2.2/lib/sprockets/environment.rb:38
+  # source://sprockets-4.4.1/lib/sprockets/environment.rb:38
   def find_all_linked_assets(*args, &block); end
 
-  # source://sprockets-4.2.2/lib/sprockets/environment.rb:30
+  # source://sprockets-4.4.1/lib/sprockets/environment.rb:30
   def find_asset(*args, **options); end
 
-  # source://sprockets-4.2.2/lib/sprockets/environment.rb:34
+  # source://sprockets-4.4.1/lib/sprockets/environment.rb:34
   def find_asset!(*args); end
 
   # Returns a cached version of the environment.
@@ -2219,17 +2234,17 @@ class Sprockets::Environment < ::Sprockets::Base
   # faster. This behavior is ideal in production since the file
   # system only changes between deploys.
   #
-  # source://sprockets-4.2.2/lib/sprockets/environment.rb:25
+  # source://sprockets-4.4.1/lib/sprockets/environment.rb:25
   def index; end
 
-  # source://sprockets-4.2.2/lib/sprockets/environment.rb:42
+  # source://sprockets-4.4.1/lib/sprockets/environment.rb:42
   def load(*args); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/errors.rb:4
+# source://sprockets-4.4.1/lib/sprockets/errors.rb:4
 class Sprockets::Error < ::StandardError; end
 
-# source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:2
+# source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:2
 module Sprockets::Exporters; end
 
 # Convenience class for all exporters to inherit from
@@ -2239,7 +2254,7 @@ module Sprockets::Exporters; end
 # writes the asset to it's destination. The Exporters::Zlib class
 # writes a gzip copy of the asset to disk.
 #
-# source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:9
+# source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:9
 class Sprockets::Exporters::Base
   # Public: Creates new instance
   #
@@ -2256,12 +2271,12 @@ class Sprockets::Exporters::Base
   #
   # @return [Base] a new instance of Base
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:24
+  # source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:24
   def initialize(asset: T.unsafe(nil), environment: T.unsafe(nil), directory: T.unsafe(nil)); end
 
   # Returns the value of attribute asset.
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:10
+  # source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:10
   def asset; end
 
   # Public: Contains logic for writing "exporting" asset to disk
@@ -2270,17 +2285,17 @@ class Sprockets::Exporters::Base
   # `call` method. This method takes no arguments and should only use
   # elements passed in via initialize or stored in `setup`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:55
+  # source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:55
   def call; end
 
   # Returns the value of attribute directory.
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:10
+  # source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:10
   def directory; end
 
   # Returns the value of attribute environment.
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:10
+  # source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:10
   def environment; end
 
   # Public: Callback that is executed after initialization
@@ -2288,7 +2303,7 @@ class Sprockets::Exporters::Base
   # Any setup that needs to be done can be performed in the +setup+
   # method. It will be called immediately after initialization.
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:36
+  # source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:36
   def setup; end
 
   # Public: Handles logic for skipping exporter and notifying logger
@@ -2301,12 +2316,12 @@ class Sprockets::Exporters::Base
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:46
+  # source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:46
   def skip?(logger); end
 
   # Returns the value of attribute target.
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:10
+  # source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:10
   def target; end
 
   # Public: Yields a file that can be written to with the input
@@ -2314,57 +2329,57 @@ class Sprockets::Exporters::Base
   # `filename`. Defaults to the `target`. Method
   # is safe to use in forked or threaded environments.
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/base.rb:63
+  # source://sprockets-4.4.1/lib/sprockets/exporters/base.rb:63
   def write(filename = T.unsafe(nil)); end
 end
 
 # Writes a an asset file to disk
 #
-# source://sprockets-4.2.2/lib/sprockets/exporters/file_exporter.rb:6
+# source://sprockets-4.4.1/lib/sprockets/exporters/file_exporter.rb:6
 class Sprockets::Exporters::FileExporter < ::Sprockets::Exporters::Base
-  # source://sprockets-4.2.2/lib/sprockets/exporters/file_exporter.rb:17
+  # source://sprockets-4.4.1/lib/sprockets/exporters/file_exporter.rb:17
   def call; end
 
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/file_exporter.rb:7
+  # source://sprockets-4.4.1/lib/sprockets/exporters/file_exporter.rb:7
   def skip?(logger); end
 end
 
 # Generates a `.gz` file using the zlib algorithm built into
 # Ruby's standard library.
 #
-# source://sprockets-4.2.2/lib/sprockets/exporters/zlib_exporter.rb:8
+# source://sprockets-4.4.1/lib/sprockets/exporters/zlib_exporter.rb:8
 class Sprockets::Exporters::ZlibExporter < ::Sprockets::Exporters::Base
-  # source://sprockets-4.2.2/lib/sprockets/exporters/zlib_exporter.rb:26
+  # source://sprockets-4.4.1/lib/sprockets/exporters/zlib_exporter.rb:26
   def call; end
 
-  # source://sprockets-4.2.2/lib/sprockets/exporters/zlib_exporter.rb:9
+  # source://sprockets-4.4.1/lib/sprockets/exporters/zlib_exporter.rb:9
   def setup; end
 
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporters/zlib_exporter.rb:14
+  # source://sprockets-4.4.1/lib/sprockets/exporters/zlib_exporter.rb:14
   def skip?(logger); end
 end
 
 # Generates a `.gz` file using the zopfli algorithm from the
 # Zopfli gem.
 #
-# source://sprockets-4.2.2/lib/sprockets/exporters/zopfli_exporter.rb:7
+# source://sprockets-4.4.1/lib/sprockets/exporters/zopfli_exporter.rb:7
 class Sprockets::Exporters::ZopfliExporter < ::Sprockets::Exporters::ZlibExporter
-  # source://sprockets-4.2.2/lib/sprockets/exporters/zopfli_exporter.rb:8
+  # source://sprockets-4.4.1/lib/sprockets/exporters/zopfli_exporter.rb:8
   def setup; end
 end
 
 # `Exporting` is an internal mixin whose public methods are exposed on
 # the `Environment` and `CachedEnvironment` classes.
 #
-# source://sprockets-4.2.2/lib/sprockets/exporting.rb:4
+# source://sprockets-4.4.1/lib/sprockets/exporting.rb:4
 module Sprockets::Exporting
   # Public: Checks if concurrent exporting is allowed
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporting.rb:59
+  # source://sprockets-4.4.1/lib/sprockets/exporting.rb:59
   def export_concurrent; end
 
   # Public: Enable or disable the concurrently exporting files
@@ -2373,12 +2388,12 @@ module Sprockets::Exporting
   #
   #     environment.export_concurrent = false
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporting.rb:69
+  # source://sprockets-4.4.1/lib/sprockets/exporting.rb:69
   def export_concurrent=(export_concurrent); end
 
   # Exporters are ran on the assets:precompile task
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporting.rb:6
+  # source://sprockets-4.4.1/lib/sprockets/exporting.rb:6
   def exporters; end
 
   # Public: Registers a new Exporter `klass` for `mime_type`.
@@ -2391,7 +2406,7 @@ module Sprockets::Exporting
   # This ensures that `Sprockets::Exporters::File` will always execute before
   # `Sprockets::Exporters::Zlib`
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporting.rb:19
+  # source://sprockets-4.4.1/lib/sprockets/exporting.rb:19
   def register_exporter(mime_types, klass = T.unsafe(nil)); end
 
   # Public: Remove Exporting processor `klass` for `mime_type`.
@@ -2404,23 +2419,23 @@ module Sprockets::Exporting
   #
   # Does not remove any exporters that depend on `klass`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/exporting.rb:38
+  # source://sprockets-4.4.1/lib/sprockets/exporting.rb:38
   def unregister_exporter(mime_types, exporter = T.unsafe(nil)); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/errors.rb:10
+# source://sprockets-4.4.1/lib/sprockets/errors.rb:10
 class Sprockets::FileNotFound < ::Sprockets::NotFound; end
 
-# source://sprockets-4.2.2/lib/sprockets/errors.rb:11
+# source://sprockets-4.4.1/lib/sprockets/errors.rb:11
 class Sprockets::FileOutsidePaths < ::Sprockets::NotFound; end
 
 # Internal: The first processor in the pipeline that reads the file into
 # memory and passes it along as `input[:data]`.
 #
-# source://sprockets-4.2.2/lib/sprockets/file_reader.rb:7
+# source://sprockets-4.4.1/lib/sprockets/file_reader.rb:7
 class Sprockets::FileReader
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/file_reader.rb:8
+    # source://sprockets-4.4.1/lib/sprockets/file_reader.rb:8
     def call(input); end
   end
 end
@@ -2428,7 +2443,7 @@ end
 # Internal: HTTP URI utilities. Many adapted from Rack::Utils. Mixed into
 # Environment.
 #
-# source://sprockets-4.2.2/lib/sprockets/http_utils.rb:5
+# source://sprockets-4.4.1/lib/sprockets/http_utils.rb:5
 module Sprockets::HTTPUtils
   extend ::Sprockets::HTTPUtils
 
@@ -2439,7 +2454,7 @@ module Sprockets::HTTPUtils
   #
   # Returns the matched mime type String from available Array or nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/http_utils.rb:129
+  # source://sprockets-4.4.1/lib/sprockets/http_utils.rb:129
   def find_best_mime_type_match(q_value_header, available); end
 
   # Internal: Find the best qvalue match from an Array of available options.
@@ -2448,7 +2463,7 @@ module Sprockets::HTTPUtils
   #
   # Returns the matched String from available Array or nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/http_utils.rb:107
+  # source://sprockets-4.4.1/lib/sprockets/http_utils.rb:107
   def find_best_q_match(q_values, available, &matcher); end
 
   # Internal: Find the all qvalue match from an Array of available mime type
@@ -2458,7 +2473,7 @@ module Sprockets::HTTPUtils
   #
   # Returns Array of matched mime type Strings from available Array or [].
   #
-  # source://sprockets-4.2.2/lib/sprockets/http_utils.rb:117
+  # source://sprockets-4.4.1/lib/sprockets/http_utils.rb:117
   def find_mime_type_matches(q_value_header, available); end
 
   # Internal: Find all qvalue matches from an Array of available options.
@@ -2467,7 +2482,7 @@ module Sprockets::HTTPUtils
   #
   # Returns Array of matched Strings from available Array or [].
   #
-  # source://sprockets-4.2.2/lib/sprockets/http_utils.rb:74
+  # source://sprockets-4.4.1/lib/sprockets/http_utils.rb:74
   def find_q_matches(q_values, available, &matcher); end
 
   # Public: Test mime type against mime range.
@@ -2481,7 +2496,7 @@ module Sprockets::HTTPUtils
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/http_utils.rb:16
+  # source://sprockets-4.4.1/lib/sprockets/http_utils.rb:16
   def match_mime_type?(value, matcher); end
 
   # Public: Return values from Hash where the key matches the mime type.
@@ -2491,7 +2506,7 @@ module Sprockets::HTTPUtils
   #
   # Returns Array of Object values.
   #
-  # source://sprockets-4.2.2/lib/sprockets/http_utils.rb:28
+  # source://sprockets-4.4.1/lib/sprockets/http_utils.rb:28
   def match_mime_type_keys(hash, mime_type); end
 
   # Internal: Parse Accept header quality values.
@@ -2515,38 +2530,38 @@ module Sprockets::HTTPUtils
   #
   # Returns an Array of [String, Float].
   #
-  # source://sprockets-4.2.2/lib/sprockets/http_utils.rb:58
+  # source://sprockets-4.4.1/lib/sprockets/http_utils.rb:58
   def parse_q_values(values); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/jsminc_compressor.rb:6
+# source://sprockets-4.4.1/lib/sprockets/jsminc_compressor.rb:6
 class Sprockets::JSMincCompressor
   # @return [JSMincCompressor] a new instance of JSMincCompressor
   #
-  # source://sprockets-4.2.2/lib/sprockets/jsminc_compressor.rb:23
+  # source://sprockets-4.4.1/lib/sprockets/jsminc_compressor.rb:23
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
   #
-  # source://sprockets-4.2.2/lib/sprockets/jsminc_compressor.rb:21
+  # source://sprockets-4.4.1/lib/sprockets/jsminc_compressor.rb:21
   def cache_key; end
 
-  # source://sprockets-4.2.2/lib/sprockets/jsminc_compressor.rb:28
+  # source://sprockets-4.4.1/lib/sprockets/jsminc_compressor.rb:28
   def call(input); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/jsminc_compressor.rb:17
+    # source://sprockets-4.4.1/lib/sprockets/jsminc_compressor.rb:17
     def cache_key; end
 
-    # source://sprockets-4.2.2/lib/sprockets/jsminc_compressor.rb:13
+    # source://sprockets-4.4.1/lib/sprockets/jsminc_compressor.rb:13
     def call(input); end
 
-    # source://sprockets-4.2.2/lib/sprockets/jsminc_compressor.rb:9
+    # source://sprockets-4.4.1/lib/sprockets/jsminc_compressor.rb:9
     def instance; end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/jsminc_compressor.rb:7
+# source://sprockets-4.4.1/lib/sprockets/jsminc_compressor.rb:7
 Sprockets::JSMincCompressor::VERSION = T.let(T.unsafe(nil), String)
 
 # Public: JST transformer.
@@ -2567,28 +2582,28 @@ Sprockets::JSMincCompressor::VERSION = T.let(T.unsafe(nil), String)
 #       'application/javascript+function',
 #       'application/javascript', JstProcessor.new(namespace: 'App.templates')
 #
-# source://sprockets-4.2.2/lib/sprockets/jst_processor.rb:21
+# source://sprockets-4.4.1/lib/sprockets/jst_processor.rb:21
 class Sprockets::JstProcessor
   # @return [JstProcessor] a new instance of JstProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/jst_processor.rb:37
+  # source://sprockets-4.4.1/lib/sprockets/jst_processor.rb:37
   def initialize(namespace: T.unsafe(nil)); end
 
-  # source://sprockets-4.2.2/lib/sprockets/jst_processor.rb:41
+  # source://sprockets-4.4.1/lib/sprockets/jst_processor.rb:41
   def call(input); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/jst_processor.rb:33
+    # source://sprockets-4.4.1/lib/sprockets/jst_processor.rb:33
     def call(input); end
 
-    # source://sprockets-4.2.2/lib/sprockets/jst_processor.rb:22
+    # source://sprockets-4.4.1/lib/sprockets/jst_processor.rb:22
     def default_namespace; end
 
     # Public: Return singleton instance with default options.
     #
     # Returns JstProcessor object.
     #
-    # source://sprockets-4.2.2/lib/sprockets/jst_processor.rb:29
+    # source://sprockets-4.4.1/lib/sprockets/jst_processor.rb:29
     def instance; end
   end
 end
@@ -2596,7 +2611,7 @@ end
 # The loader phase takes a asset URI location and returns a constructed Asset
 # object.
 #
-# source://sprockets-4.2.2/lib/sprockets/loader.rb:19
+# source://sprockets-4.4.1/lib/sprockets/loader.rb:19
 module Sprockets::Loader
   include ::Sprockets::URIUtils
   include ::Sprockets::Utils
@@ -2618,7 +2633,7 @@ module Sprockets::Loader
   #
   # Returns Asset.
   #
-  # source://sprockets-4.2.2/lib/sprockets/loader.rb:31
+  # source://sprockets-4.4.1/lib/sprockets/loader.rb:31
   def load(uri); end
 
   private
@@ -2630,13 +2645,13 @@ module Sprockets::Loader
   # This method converts all "compressed" paths to absolute paths.
   # Returns a hash of values representing an asset
   #
-  # source://sprockets-4.2.2/lib/sprockets/loader.rb:111
+  # source://sprockets-4.4.1/lib/sprockets/loader.rb:111
   def asset_from_cache(key); end
 
-  # source://sprockets-4.2.2/lib/sprockets/loader.rb:67
+  # source://sprockets-4.4.1/lib/sprockets/loader.rb:67
   def compress_key_from_hash(hash, key); end
 
-  # source://sprockets-4.2.2/lib/sprockets/loader.rb:87
+  # source://sprockets-4.4.1/lib/sprockets/loader.rb:87
   def expand_key_from_hash(hash, key); end
 
   # Internal: Retrieves an asset based on its digest
@@ -2672,7 +2687,7 @@ module Sprockets::Loader
   # When this happens the dependencies for the returned asset are added to the "history", and older
   # entries are removed if the "history" is above `limit`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/loader.rb:325
+  # source://sprockets-4.4.1/lib/sprockets/loader.rb:325
   def fetch_asset_from_dependency_cache(unloaded, limit = T.unsafe(nil)); end
 
   # Internal: Loads an asset and saves it to cache
@@ -2682,7 +2697,7 @@ module Sprockets::Loader
   # This method is only called when the given unloaded asset could not be
   # successfully pulled from cache.
   #
-  # source://sprockets-4.2.2/lib/sprockets/loader.rb:139
+  # source://sprockets-4.4.1/lib/sprockets/loader.rb:139
   def load_from_unloaded(unloaded); end
 
   # Internal: Resolve set of dependency URIs.
@@ -2703,7 +2718,7 @@ module Sprockets::Loader
   #
   # Returns array of resolved dependencies
   #
-  # source://sprockets-4.2.2/lib/sprockets/loader.rb:289
+  # source://sprockets-4.4.1/lib/sprockets/loader.rb:289
   def resolve_dependencies(uris); end
 
   # Internal: Save a given asset to the cache
@@ -2714,7 +2729,7 @@ module Sprockets::Loader
   # This method converts all absolute paths to "compressed" paths
   # which are relative if they're in the root.
   #
-  # source://sprockets-4.2.2/lib/sprockets/loader.rb:239
+  # source://sprockets-4.4.1/lib/sprockets/loader.rb:239
   def store_asset(asset, unloaded); end
 end
 
@@ -2728,7 +2743,7 @@ end
 # that don't have sprockets loaded. See `#assets` and `#files` for more
 # information about the structure.
 #
-# source://sprockets-4.2.2/lib/sprockets/manifest.rb:19
+# source://sprockets-4.4.1/lib/sprockets/manifest.rb:19
 class Sprockets::Manifest
   include ::Sprockets::ManifestUtils
 
@@ -2742,7 +2757,7 @@ class Sprockets::Manifest
   #
   # @return [Manifest] a new instance of Manifest
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:32
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:32
   def initialize(*args); end
 
   # Returns internal assets mapping. Keys are logical paths which
@@ -2753,7 +2768,7 @@ class Sprockets::Manifest
   #   { "application.js" => "application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js",
   #     "jquery.js"      => "jquery-ae0908555a245f8266f77df5a8edca2e.js" }
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:91
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:91
   def assets; end
 
   # Cleanup old assets in the compile directory. By default it will
@@ -2766,12 +2781,12 @@ class Sprockets::Manifest
   #   To only keep files created within the last 10 minutes, set count=0 and
   #   age=600.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:246
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:246
   def clean(count = T.unsafe(nil), age = T.unsafe(nil)); end
 
   # Wipe directive
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:269
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:269
   def clobber; end
 
   # Compile asset to directory. The asset is written to a
@@ -2781,27 +2796,27 @@ class Sprockets::Manifest
   #
   #   compile("application.js")
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:161
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:161
   def compile(*args); end
 
   # Returns the value of attribute directory.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:80
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:80
   def dir; end
 
   # Returns the value of attribute directory.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:80
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:80
   def directory; end
 
   # Returns the value of attribute environment.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:22
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:22
   def environment; end
 
   # Returns String path to manifest.json file.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:77
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:77
   def filename; end
 
   # Returns internal file directory listing. Keys are filenames
@@ -2817,26 +2832,26 @@ class Sprockets::Manifest
   #        'mtime' => "2011-12-13T21:47:08-06:00",
   #        'digest' => "2e8e9a7c6b0aafa0c9bdeec90ea30213" } }
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:108
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:108
   def files; end
 
   # Public: Find all assets matching pattern set in environment.
   #
   # Returns Enumerator of Assets.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:115
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:115
   def find(*args, &block); end
 
   # Public: Find the source of assets by paths.
   #
   # Returns Enumerator of assets file content.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:139
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:139
   def find_sources(*args); end
 
   # Returns String path to manifest.json file.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:77
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:77
   def path; end
 
   # Removes file from directory and from manifest. `filename` must
@@ -2844,17 +2859,17 @@ class Sprockets::Manifest
   #
   #   manifest.remove("application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js")
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:216
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:216
   def remove(filename); end
 
   # Persist manifest back to FS
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:278
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:278
   def save; end
 
   private
 
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:335
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:335
   def executor; end
 
   # Given an asset, finds all exporters that
@@ -2869,22 +2884,22 @@ class Sprockets::Manifest
   #     end
   #     # puts array => [Exporters::FileExporter, Exporters::ZlibExporter]
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:299
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:299
   def exporters_for_asset(asset); end
 
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:317
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:317
   def json_decode(obj); end
 
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:321
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:321
   def json_encode(obj); end
 
-  # source://sprockets-4.2.2/lib/sprockets/manifest.rb:325
+  # source://sprockets-4.4.1/lib/sprockets/manifest.rb:325
   def logger; end
 end
 
 # Public: Manifest utilities.
 #
-# source://sprockets-4.2.2/lib/sprockets/manifest_utils.rb:7
+# source://sprockets-4.4.1/lib/sprockets/manifest_utils.rb:7
 module Sprockets::ManifestUtils
   extend ::Sprockets::ManifestUtils
 
@@ -2899,7 +2914,7 @@ module Sprockets::ManifestUtils
   #
   # Returns String filename.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest_utils.rb:37
+  # source://sprockets-4.4.1/lib/sprockets/manifest_utils.rb:37
   def find_directory_manifest(dirname, logger = T.unsafe(nil)); end
 
   # Public: Generate a new random manifest path.
@@ -2914,14 +2929,14 @@ module Sprockets::ManifestUtils
   #
   # Return String path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/manifest_utils.rb:23
+  # source://sprockets-4.4.1/lib/sprockets/manifest_utils.rb:23
   def generate_manifest_path; end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/manifest_utils.rb:10
+# source://sprockets-4.4.1/lib/sprockets/manifest_utils.rb:10
 Sprockets::ManifestUtils::MANIFEST_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://sprockets-4.2.2/lib/sprockets/mime.rb:7
+# source://sprockets-4.4.1/lib/sprockets/mime.rb:7
 module Sprockets::Mime
   include ::Sprockets::Utils
   include ::Sprockets::HTTPUtils
@@ -2939,7 +2954,7 @@ module Sprockets::Mime
   #
   # Returns Hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/mime.rb:34
+  # source://sprockets-4.4.1/lib/sprockets/mime.rb:34
   def mime_exts; end
 
   # Internal: Get detecter function for MIME type.
@@ -2948,7 +2963,7 @@ module Sprockets::Mime
   #
   # Returns Proc detector or nil if none is available.
   #
-  # source://sprockets-4.2.2/lib/sprockets/mime.rb:71
+  # source://sprockets-4.4.1/lib/sprockets/mime.rb:71
   def mime_type_charset_detecter(mime_type); end
 
   # Public: Mapping of MIME type Strings to properties Hash.
@@ -2960,7 +2975,7 @@ module Sprockets::Mime
   #
   # Returns Hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/mime.rb:18
+  # source://sprockets-4.4.1/lib/sprockets/mime.rb:18
   def mime_types; end
 
   # Public: Read file on disk with MIME type specific encoding.
@@ -2971,7 +2986,7 @@ module Sprockets::Mime
   # Returns String file contents transcoded to UTF-8 or in its external
   # encoding.
   #
-  # source://sprockets-4.2.2/lib/sprockets/mime.rb:86
+  # source://sprockets-4.4.1/lib/sprockets/mime.rb:86
   def read_file(filename, content_type = T.unsafe(nil)); end
 
   # Public: Register a new mime type.
@@ -2983,17 +2998,17 @@ module Sprockets::Mime
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/mime.rb:46
+  # source://sprockets-4.4.1/lib/sprockets/mime.rb:46
   def register_mime_type(mime_type, extensions: T.unsafe(nil), charset: T.unsafe(nil)); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/errors.rb:8
+# source://sprockets-4.4.1/lib/sprockets/errors.rb:8
 class Sprockets::NotFound < ::Sprockets::Error; end
 
-# source://sprockets-4.2.2/lib/sprockets/errors.rb:7
+# source://sprockets-4.4.1/lib/sprockets/errors.rb:7
 class Sprockets::NotImplementedError < ::Sprockets::Error; end
 
-# source://sprockets-4.2.2/lib/sprockets/npm.rb:5
+# source://sprockets-4.4.1/lib/sprockets/npm.rb:5
 module Sprockets::Npm
   # Internal: Read package.json's main and style directives.
   #
@@ -3004,7 +3019,7 @@ module Sprockets::Npm
   #
   # @yield [File.expand_path(package['style'], dirname)]
   #
-  # source://sprockets-4.2.2/lib/sprockets/npm.rb:39
+  # source://sprockets-4.4.1/lib/sprockets/npm.rb:39
   def read_package_directives(dirname, filename); end
 
   # Internal: Override resolve_alternates to install package.json behavior.
@@ -3014,7 +3029,7 @@ module Sprockets::Npm
   #
   # Returns candidate filenames.
   #
-  # source://sprockets-4.2.2/lib/sprockets/npm.rb:12
+  # source://sprockets-4.4.1/lib/sprockets/npm.rb:12
   def resolve_alternates(load_path, logical_path); end
 end
 
@@ -3032,7 +3047,7 @@ end
 # The returned dependency set can be passed to resolve_dependencies(deps)
 # to check if the returned result is still fresh. In this case, entry always
 # returns a single path, but multiple calls should accumulate dependencies
-# into a single set thats saved off and checked later.
+# into a single set that's saved off and checked later.
 #
 #     resolve_dependencies(deps)
 #     # => "\x01\x02\x03"
@@ -3043,7 +3058,7 @@ end
 #     resolve_dependencies(deps)
 #     # => "\x03\x04\x05"
 #
-# source://sprockets-4.2.2/lib/sprockets/path_dependency_utils.rb:32
+# source://sprockets-4.4.1/lib/sprockets/path_dependency_utils.rb:32
 module Sprockets::PathDependencyUtils
   include ::Sprockets::PathUtils
   include ::Sprockets::URIUtils
@@ -3057,7 +3072,7 @@ module Sprockets::PathDependencyUtils
   #
   # Returns an Array of entry names and a Set of dependency URIs.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_dependency_utils.rb:44
+  # source://sprockets-4.4.1/lib/sprockets/path_dependency_utils.rb:44
   def entries_with_dependencies(path); end
 
   # Internal: List directory filenames and associated Stats under a
@@ -3069,7 +3084,7 @@ module Sprockets::PathDependencyUtils
   #
   # Returns an Array of filenames and a Set of dependency URIs.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_dependency_utils.rb:56
+  # source://sprockets-4.4.1/lib/sprockets/path_dependency_utils.rb:56
   def stat_directory_with_dependencies(dir); end
 
   # Internal: List directory filenames and associated Stats under an entire
@@ -3081,13 +3096,13 @@ module Sprockets::PathDependencyUtils
   #
   # Returns an Array of filenames and a Set of dependency URIs.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_dependency_utils.rb:68
+  # source://sprockets-4.4.1/lib/sprockets/path_dependency_utils.rb:68
   def stat_sorted_tree_with_dependencies(dir); end
 end
 
 # Internal: Crossover of path and digest utilities functions.
 #
-# source://sprockets-4.2.2/lib/sprockets/path_digest_utils.rb:7
+# source://sprockets-4.4.1/lib/sprockets/path_digest_utils.rb:7
 module Sprockets::PathDigestUtils
   include ::Sprockets::PathUtils
   include ::Sprockets::DigestUtils
@@ -3098,7 +3113,7 @@ module Sprockets::PathDigestUtils
   #
   # Returns String digest bytes or nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_digest_utils.rb:33
+  # source://sprockets-4.4.1/lib/sprockets/path_digest_utils.rb:33
   def file_digest(path); end
 
   # Internal: Compute digest for a set of paths.
@@ -3107,7 +3122,7 @@ module Sprockets::PathDigestUtils
   #
   # Returns String digest bytes.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_digest_utils.rb:44
+  # source://sprockets-4.4.1/lib/sprockets/path_digest_utils.rb:44
   def files_digest(paths); end
 
   # Internal: Compute digest for file stat.
@@ -3117,7 +3132,7 @@ module Sprockets::PathDigestUtils
   #
   # Returns String digest bytes.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_digest_utils.rb:16
+  # source://sprockets-4.4.1/lib/sprockets/path_digest_utils.rb:16
   def stat_digest(path, stat); end
 end
 
@@ -3126,7 +3141,7 @@ end
 # Probably would be called FileUtils, but that causes namespace annoyances
 # when code actually wants to reference ::FileUtils.
 #
-# source://sprockets-4.2.2/lib/sprockets/path_utils.rb:7
+# source://sprockets-4.4.1/lib/sprockets/path_utils.rb:7
 module Sprockets::PathUtils
   extend ::Sprockets::PathUtils
 
@@ -3135,7 +3150,7 @@ module Sprockets::PathUtils
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:83
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:83
   def absolute_path?(path); end
 
   # Public: Write to a file atomically. Useful for situations where you
@@ -3147,7 +3162,7 @@ module Sprockets::PathUtils
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:348
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:350
   def atomic_write(filename); end
 
   # Public: Like `File.directory?`.
@@ -3158,7 +3173,7 @@ module Sprockets::PathUtils
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:42
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:42
   def directory?(path); end
 
   # Public: A version of `Dir.entries` that filters out `.` files and `~`
@@ -3168,7 +3183,7 @@ module Sprockets::PathUtils
   #
   # Returns an empty `Array` if the directory does not exist.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:56
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:56
   def entries(path); end
 
   # Public: Like `File.file?`.
@@ -3179,7 +3194,7 @@ module Sprockets::PathUtils
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:29
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:29
   def file?(path); end
 
   # Internal: Match paths in a directory against available extensions.
@@ -3196,7 +3211,7 @@ module Sprockets::PathUtils
   #
   # Returns an Array of [String path, Object value] matches.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:231
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:233
   def find_matching_path_for_extensions(path, basename, extensions); end
 
   # Internal: Find target basename checking upwards from path.
@@ -3207,7 +3222,7 @@ module Sprockets::PathUtils
   #
   # Returns String filename or nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:273
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:275
   def find_upwards(basename, path, root = T.unsafe(nil)); end
 
   # Public: Joins path to base path.
@@ -3222,7 +3237,7 @@ module Sprockets::PathUtils
   #
   # Returns string path starting from base and ending at path
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:127
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:129
   def join(base, path); end
 
   # Internal: Match path extnames against available extensions.
@@ -3232,7 +3247,7 @@ module Sprockets::PathUtils
   #
   # Returns [String extname, Object value] or nil nothing matched.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:202
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:204
   def match_path_extname(path, extensions); end
 
   # Internal: Get path's extensions.
@@ -3241,7 +3256,7 @@ module Sprockets::PathUtils
   #
   # Returns an Array of String extnames.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:192
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:194
   def path_extnames(path); end
 
   # Internal: Returns all parents for path
@@ -3251,7 +3266,7 @@ module Sprockets::PathUtils
   #
   # Returns an Array of String paths.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:252
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:254
   def path_parents(path, root = T.unsafe(nil)); end
 
   # Internal: Detect root path and base for file in a set of paths.
@@ -3261,7 +3276,7 @@ module Sprockets::PathUtils
   #
   # Returns [String root, String path]
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:178
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:180
   def paths_split(paths, filename); end
 
   # Public: Check if path is explicitly relative.
@@ -3273,7 +3288,7 @@ module Sprockets::PathUtils
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:100
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:102
   def relative_path?(path); end
 
   # Public: Get relative path from `start` to `dest`.
@@ -3283,7 +3298,7 @@ module Sprockets::PathUtils
   #
   # Returns relative String path from `start` to `dest`
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:110
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:112
   def relative_path_from(start, dest); end
 
   # Public: Sets pipeline for path
@@ -3302,7 +3317,7 @@ module Sprockets::PathUtils
   #
   # Returns string path with pipeline parsed in
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:146
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:148
   def set_pipeline(path, mime_exts, pipeline_exts, pipeline); end
 
   # Internal: Get relative path for root path and subpath.
@@ -3313,7 +3328,7 @@ module Sprockets::PathUtils
   # Returns relative String path if subpath is a subpath of path, or nil if
   # subpath is outside of path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:162
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:164
   def split_subpath(path, subpath); end
 
   # Public: Like `File.stat`.
@@ -3322,7 +3337,7 @@ module Sprockets::PathUtils
   #
   # Returns nil if the file does not exist.
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:16
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:16
   def stat(path); end
 
   # Public: Stat all the files under a directory.
@@ -3331,7 +3346,7 @@ module Sprockets::PathUtils
   #
   # Returns an Enumerator of [path, stat].
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:286
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:288
   def stat_directory(dir); end
 
   # Public: Recursive stat all the files under a directory in alphabetical
@@ -3341,7 +3356,7 @@ module Sprockets::PathUtils
   #
   # Returns an Enumerator of [path, stat].
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:324
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:326
   def stat_sorted_tree(dir, &block); end
 
   # Public: Recursive stat all the files under a directory.
@@ -3350,14 +3365,17 @@ module Sprockets::PathUtils
   #
   # Returns an Enumerator of [path, stat].
   #
-  # source://sprockets-4.2.2/lib/sprockets/path_utils.rb:304
+  # source://sprockets-4.4.1/lib/sprockets/path_utils.rb:306
   def stat_tree(dir, &block); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/path_utils.rb:91
+# source://sprockets-4.4.1/lib/sprockets/path_utils.rb:94
+Sprockets::PathUtils::RELATIVE_PATH_PATTERN = T.let(T.unsafe(nil), Regexp)
+
+# source://sprockets-4.4.1/lib/sprockets/path_utils.rb:91
 Sprockets::PathUtils::SEPARATOR_PATTERN = T.let(T.unsafe(nil), String)
 
-# source://sprockets-4.2.2/lib/sprockets/paths.rb:6
+# source://sprockets-4.4.1/lib/sprockets/paths.rb:6
 module Sprockets::Paths
   include ::Sprockets::Utils
   include ::Sprockets::PathUtils
@@ -3366,7 +3384,7 @@ module Sprockets::Paths
   #
   # Paths at the beginning of the `Array` have a higher priority.
   #
-  # source://sprockets-4.2.2/lib/sprockets/paths.rb:47
+  # source://sprockets-4.4.1/lib/sprockets/paths.rb:47
   def append_path(path); end
 
   # Clear all paths and start fresh.
@@ -3375,28 +3393,28 @@ module Sprockets::Paths
   # completely wipe the paths list and reappend them in the order
   # you want.
   #
-  # source://sprockets-4.2.2/lib/sprockets/paths.rb:59
+  # source://sprockets-4.4.1/lib/sprockets/paths.rb:59
   def clear_paths; end
 
   # Public: Iterate over every file under all load paths.
   #
   # Returns Enumerator if no block is given.
   #
-  # source://sprockets-4.2.2/lib/sprockets/paths.rb:68
+  # source://sprockets-4.4.1/lib/sprockets/paths.rb:68
   def each_file; end
 
   # Returns an `Array` of path `String`s.
   #
   # These paths will be used for asset logical path lookups.
   #
-  # source://sprockets-4.2.2/lib/sprockets/paths.rb:30
+  # source://sprockets-4.4.1/lib/sprockets/paths.rb:30
   def paths; end
 
   # Prepend a `path` to the `paths` list.
   #
   # Paths at the end of the `Array` have the least priority.
   #
-  # source://sprockets-4.2.2/lib/sprockets/paths.rb:37
+  # source://sprockets-4.4.1/lib/sprockets/paths.rb:37
   def prepend_path(path); end
 
   # Returns `Environment` root.
@@ -3404,7 +3422,7 @@ module Sprockets::Paths
   # All relative paths are expanded with root as its base. To be
   # useful set this to your applications root directory. (`Rails.root`)
   #
-  # source://sprockets-4.2.2/lib/sprockets/paths.rb:13
+  # source://sprockets-4.4.1/lib/sprockets/paths.rb:13
   def root; end
 
   private
@@ -3413,11 +3431,11 @@ module Sprockets::Paths
   #
   # Only the initializer should change the root.
   #
-  # source://sprockets-4.2.2/lib/sprockets/paths.rb:20
+  # source://sprockets-4.4.1/lib/sprockets/paths.rb:20
   def root=(path); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/preprocessors/default_source_map.rb:3
+# source://sprockets-4.4.1/lib/sprockets/preprocessors/default_source_map.rb:3
 module Sprockets::Preprocessors; end
 
 # Private: Adds a default map to assets when one is not present
@@ -3427,21 +3445,21 @@ module Sprockets::Preprocessors; end
 # Because other generators run after might depend on having a valid source map
 # available.
 #
-# source://sprockets-4.2.2/lib/sprockets/preprocessors/default_source_map.rb:10
+# source://sprockets-4.4.1/lib/sprockets/preprocessors/default_source_map.rb:10
 class Sprockets::Preprocessors::DefaultSourceMap
-  # source://sprockets-4.2.2/lib/sprockets/preprocessors/default_source_map.rb:11
+  # source://sprockets-4.4.1/lib/sprockets/preprocessors/default_source_map.rb:11
   def call(input); end
 
   private
 
-  # source://sprockets-4.2.2/lib/sprockets/preprocessors/default_source_map.rb:38
+  # source://sprockets-4.4.1/lib/sprockets/preprocessors/default_source_map.rb:38
   def default_mappings(lines); end
 end
 
 # `Processing` is an internal mixin whose public methods are exposed on
 # the `Environment` and `CachedEnvironment` classes.
 #
-# source://sprockets-4.2.2/lib/sprockets/processing.rb:11
+# source://sprockets-4.4.1/lib/sprockets/processing.rb:11
 module Sprockets::Processing
   include ::Sprockets::Utils
   include ::Sprockets::URIUtils
@@ -3450,27 +3468,27 @@ module Sprockets::Processing
   # Bundle Processors are ran on concatenated assets rather than
   # individual files.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:95
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:95
   def bundle_processors; end
 
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:14
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:14
   def pipelines; end
 
   # Postprocessors are ran after Preprocessors and Engine processors.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:39
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:39
   def postprocessors; end
 
   # Preprocessors are ran before Postprocessors and Engine
   # processors.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:33
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:33
   def preprocessors; end
 
   # Preprocessors are ran before Postprocessors and Engine
   # processors.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:33
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:33
   def processors; end
 
   # Public: Register bundle metadata reducer function.
@@ -3490,7 +3508,7 @@ module Sprockets::Processing
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:137
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:137
   def register_bundle_metadata_reducer(mime_type, key, *args, &block); end
 
   # Registers a new Bundle Processor `klass` for `mime_type`.
@@ -3503,12 +3521,12 @@ module Sprockets::Processing
   #       input[:data].gsub(...)
   #     end
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:109
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:109
   def register_bundle_processor(*args, &block); end
 
   # Registers a pipeline that will be called by `call_processor` method.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:19
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:19
   def register_pipeline(name, proc = T.unsafe(nil), &block); end
 
   # Registers a new Postprocessor `klass` for `mime_type`.
@@ -3521,7 +3539,7 @@ module Sprockets::Processing
   #       input[:data].gsub(...)
   #     end
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:69
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:69
   def register_postprocessor(*args, &block); end
 
   # Registers a new Preprocessor `klass` for `mime_type`.
@@ -3534,7 +3552,7 @@ module Sprockets::Processing
   #       input[:data].gsub(...)
   #     end
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:53
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:53
   def register_preprocessor(*args, &block); end
 
   # Registers a new Preprocessor `klass` for `mime_type`.
@@ -3547,60 +3565,60 @@ module Sprockets::Processing
   #       input[:data].gsub(...)
   #     end
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:53
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:53
   def register_processor(*args, &block); end
 
   # Remove Bundle Processor `klass` for `mime_type`.
   #
   #     unregister_bundle_processor 'application/javascript', Sprockets::DirectiveProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:117
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:117
   def unregister_bundle_processor(*args); end
 
   # Remove Postprocessor `klass` for `mime_type`.
   #
   #     unregister_postprocessor 'text/css', Sprockets::DirectiveProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:88
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:88
   def unregister_postprocessor(*args); end
 
   # Remove Preprocessor `klass` for `mime_type`.
   #
   #     unregister_preprocessor 'text/css', Sprockets::DirectiveProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:78
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:78
   def unregister_preprocessor(*args); end
 
   # Remove Preprocessor `klass` for `mime_type`.
   #
   #     unregister_preprocessor 'text/css', Sprockets::DirectiveProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:78
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:78
   def unregister_processor(*args); end
 
   protected
 
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:168
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:168
   def build_processors_uri(type, file_type, pipeline); end
 
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:186
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:186
   def default_processors_for(type, file_type); end
 
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:177
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:177
   def processors_for(type, file_type, pipeline); end
 
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:162
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:162
   def resolve_processors_cache_key_uri(uri); end
 
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:195
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:195
   def self_processors_for(type, file_type); end
 
   private
 
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:212
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:212
   def register_config_processor(type, mime_type, processor = T.unsafe(nil), &block); end
 
-  # source://sprockets-4.2.2/lib/sprockets/processing.rb:221
+  # source://sprockets-4.4.1/lib/sprockets/processing.rb:221
   def unregister_config_processor(type, mime_type, processor); end
 end
 
@@ -3617,7 +3635,7 @@ end
 # Unfortunately, this means that processors can not compose via ordinary
 # function composition. The composition helpers here can help.
 #
-# source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:17
+# source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:17
 module Sprockets::ProcessorUtils
   extend ::Sprockets::ProcessorUtils
 
@@ -3628,7 +3646,7 @@ module Sprockets::ProcessorUtils
   #
   # Returns a Hash with :data and other processor metadata key/values.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:80
+  # source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:80
   def call_processor(processor, input); end
 
   # Public: Invoke list of processors in right to left order.
@@ -3643,7 +3661,7 @@ module Sprockets::ProcessorUtils
   #
   # Returns a Hash with :data and other processor metadata key/values.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:61
+  # source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:61
   def call_processors(processors, input); end
 
   # Public: Compose processors in right to left order.
@@ -3652,7 +3670,7 @@ module Sprockets::ProcessorUtils
   #
   # Returns a composed Proc.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:46
+  # source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:46
   def compose_processors(*processors); end
 
   # Internal: Get processor defined cached key.
@@ -3661,7 +3679,7 @@ module Sprockets::ProcessorUtils
   #
   # Returns JSON serializable key or nil.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:101
+  # source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:101
   def processor_cache_key(processor); end
 
   # Internal: Get combined cache keys for set of processors.
@@ -3670,7 +3688,7 @@ module Sprockets::ProcessorUtils
   #
   # Returns Array of JSON serializable keys.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:110
+  # source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:110
   def processors_cache_keys(processors); end
 
   # Internal: Validate returned result of calling a processor pipeline and
@@ -3680,58 +3698,58 @@ module Sprockets::ProcessorUtils
   #
   # Returns result or raises a TypeError.
   #
-  # source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:152
+  # source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:152
   def validate_processor_result!(result); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:20
+# source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:20
 class Sprockets::ProcessorUtils::CompositeProcessor < ::Struct
-  # source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:36
+  # source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:36
   def cache_key; end
 
-  # source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:32
+  # source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:32
   def call(input); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:24
+    # source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:24
     def create(processors); end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:22
+# source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:22
 Sprockets::ProcessorUtils::CompositeProcessor::PLURAL = T.let(T.unsafe(nil), Proc)
 
-# source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:21
+# source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:21
 Sprockets::ProcessorUtils::CompositeProcessor::SINGULAR = T.let(T.unsafe(nil), Proc)
 
 # Internal: Set of all nested compound metadata types that can nest values.
 #
-# source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:126
+# source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:126
 Sprockets::ProcessorUtils::VALID_METADATA_COMPOUND_TYPES = T.let(T.unsafe(nil), Set)
 
 # Internal: Hash of all nested compound metadata types that can nest values.
 #
-# source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:139
+# source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:139
 Sprockets::ProcessorUtils::VALID_METADATA_COMPOUND_TYPES_HASH = T.let(T.unsafe(nil), Hash)
 
 # Internal: Set of all allowed metadata types.
 #
-# source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:144
+# source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:144
 Sprockets::ProcessorUtils::VALID_METADATA_TYPES = T.let(T.unsafe(nil), Set)
 
 # Internal: Set of all "simple" value types allowed to be returned in
 # processor metadata.
 #
-# source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:116
+# source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:116
 Sprockets::ProcessorUtils::VALID_METADATA_VALUE_TYPES = T.let(T.unsafe(nil), Set)
 
 # Internal: Hash of all "simple" value types allowed to be returned in
 # processor metadata.
 #
-# source://sprockets-4.2.2/lib/sprockets/processor_utils.rb:134
+# source://sprockets-4.4.1/lib/sprockets/processor_utils.rb:134
 Sprockets::ProcessorUtils::VALID_METADATA_VALUE_TYPES_HASH = T.let(T.unsafe(nil), Hash)
 
-# source://sprockets-4.2.2/lib/sprockets/resolve.rb:8
+# source://sprockets-4.4.1/lib/sprockets/resolve.rb:8
 module Sprockets::Resolve
   include ::Sprockets::PathUtils
   include ::Sprockets::URIUtils
@@ -3752,13 +3770,13 @@ module Sprockets::Resolve
   #
   # The String Asset URI is returned or nil if no results are found.
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:24
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:24
   def resolve(path, load_paths: T.unsafe(nil), accept: T.unsafe(nil), pipeline: T.unsafe(nil), base_path: T.unsafe(nil)); end
 
   # Public: Same as resolve() but raises a FileNotFound exception instead of
   # nil if no assets are found.
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:46
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:46
   def resolve!(path, **kargs); end
 
   protected
@@ -3777,7 +3795,7 @@ module Sprockets::Resolve
   #     [["*/*", 1.0]]
   #     []
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:279
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:279
   def parse_accept_options(mime_type, explicit_type); end
 
   # Internal: Finds a file in a set of given paths
@@ -3791,13 +3809,13 @@ module Sprockets::Resolve
   #
   # Returns Array. Filename, type, path_pipeline, deps, index_alias
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:92
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:92
   def resolve_absolute_path(paths, filename, accept); end
 
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:291
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:291
   def resolve_alternates(load_path, logical_name); end
 
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:257
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:257
   def resolve_alts_under_path(load_path, logical_name, mime_exts); end
 
   # Internal: Finds an asset given a URI
@@ -3808,7 +3826,7 @@ module Sprockets::Resolve
   #
   # Returns Array. Contains a String uri and Set of dependencies
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:77
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:77
   def resolve_asset_uri(uri); end
 
   # Internal: Finds candidate index files in a given path
@@ -3824,7 +3842,7 @@ module Sprockets::Resolve
   #
   # Returns Array. First element is an Array of hashes or empty, second is a String
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:239
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:239
   def resolve_index_under_path(load_path, logical_name, mime_exts); end
 
   # Internal: Finds a file in a set of given paths
@@ -3840,7 +3858,7 @@ module Sprockets::Resolve
   #
   # Returns Array. Filename, type, path_pipeline, deps, index_alias
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:142
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:142
   def resolve_logical_path(paths, logical_path, accept); end
 
   # Internal: Finds candidate files on a given path
@@ -3856,7 +3874,7 @@ module Sprockets::Resolve
   #
   # Returns Array. First element is an Array of hashes or empty, second is a String
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:217
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:217
   def resolve_main_under_path(load_path, logical_name, mime_exts); end
 
   # Internal: Finds a relative file in a set of given paths
@@ -3871,7 +3889,7 @@ module Sprockets::Resolve
   #
   # Returns Array. Filename, type, path_pipeline, deps, index_alias
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:120
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:120
   def resolve_relative_path(paths, path, dirname, accept); end
 
   # Internal: Finds a file in a set of given paths
@@ -3888,7 +3906,7 @@ module Sprockets::Resolve
   #
   # Returns Array. Filename, type, dependencies, and index_alias
   #
-  # source://sprockets-4.2.2/lib/sprockets/resolve.rb:176
+  # source://sprockets-4.4.1/lib/sprockets/resolve.rb:176
   def resolve_under_paths(paths, logical_name, accepts); end
 end
 
@@ -3904,7 +3922,7 @@ end
 #     environment.register_bundle_processor 'text/css',
 #       Sprockets::SassCompressor.new({ ... })
 #
-# source://sprockets-4.2.2/lib/sprockets/sass_compressor.rb:19
+# source://sprockets-4.4.1/lib/sprockets/sass_compressor.rb:19
 class Sprockets::SassCompressor
   # @return [SassCompressor] a new instance of SassCompressor
   #
@@ -3913,7 +3931,7 @@ class Sprockets::SassCompressor
 
   # Returns the value of attribute cache_key.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_compressor.rb:37
+  # source://sprockets-4.4.1/lib/sprockets/sass_compressor.rb:37
   def cache_key; end
 
   # source://sassc-rails-2.1.2/lib/sassc/rails/compressor.rb:17
@@ -3923,27 +3941,27 @@ class Sprockets::SassCompressor
   def evaluate(*args); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/sass_compressor.rb:33
+    # source://sprockets-4.4.1/lib/sprockets/sass_compressor.rb:33
     def cache_key; end
 
-    # source://sprockets-4.2.2/lib/sprockets/sass_compressor.rb:29
+    # source://sprockets-4.4.1/lib/sprockets/sass_compressor.rb:29
     def call(input); end
 
     # Public: Return singleton instance with default options.
     #
     # Returns SassCompressor object.
     #
-    # source://sprockets-4.2.2/lib/sprockets/sass_compressor.rb:25
+    # source://sprockets-4.4.1/lib/sprockets/sass_compressor.rb:25
     def instance; end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/sass_compressor.rb:20
+# source://sprockets-4.4.1/lib/sprockets/sass_compressor.rb:20
 Sprockets::SassCompressor::VERSION = T.let(T.unsafe(nil), String)
 
 # Deprecated: Use Sprockets::SassProcessor::Functions instead.
 #
-# source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:312
+# source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:312
 Sprockets::SassFunctions = Sprockets::SassProcessor::Functions
 
 # Processor engine class for the SASS/SCSS compiler. Depends on the `sass` gem.
@@ -3953,7 +3971,7 @@ Sprockets::SassFunctions = Sprockets::SassProcessor::Functions
 #   https://github.com/sass/sass
 #   https://github.com/rails/sass-rails
 #
-# source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:15
+# source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:15
 class Sprockets::SassProcessor
   # Public: Initialize template with custom options.
   #
@@ -3963,15 +3981,15 @@ class Sprockets::SassProcessor
   #
   # @return [SassProcessor] a new instance of SassProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:47
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:47
   def initialize(options = T.unsafe(nil), &block); end
 
   # Returns the value of attribute cache_key.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:39
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:39
   def cache_key; end
 
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:59
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:59
   def call(input); end
 
   private
@@ -3984,30 +4002,30 @@ class Sprockets::SassProcessor
   # Override this method if you need to use a different cache than the
   # Sprockets cache.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:105
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:105
   def build_cache_store(input, version); end
 
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:109
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:109
   def merge_options(options); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:35
+    # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:35
     def cache_key; end
 
-    # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:31
+    # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:31
     def call(input); end
 
     # Public: Return singleton instance with default options.
     #
     # Returns SassProcessor object.
     #
-    # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:27
+    # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:27
     def instance; end
 
     # Internal: Defines default sass syntax to use. Exposed so the ScssProcessor
     # may override it.
     #
-    # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:20
+    # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:20
     def syntax; end
   end
 end
@@ -4023,7 +4041,7 @@ end
 #   end
 # end
 #
-# source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:131
+# source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:131
 module Sprockets::SassProcessor::Functions
   # Public: Generate a data URI for asset path.
   #
@@ -4044,7 +4062,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:141
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:141
   def asset_path(path, options = T.unsafe(nil)); end
 
   # Public: Generate a asset url() link.
@@ -4053,7 +4071,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:157
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:157
   def asset_url(path, options = T.unsafe(nil)); end
 
   # Public: Generate url for audio path.
@@ -4062,7 +4080,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:202
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:202
   def audio_path(path); end
 
   # Public: Generate a audio url() link.
@@ -4071,7 +4089,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:211
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:211
   def audio_url(path); end
 
   # Public: Generate url for font path.
@@ -4080,7 +4098,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:220
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:220
   def font_path(path); end
 
   # Public: Generate a font url() link.
@@ -4089,7 +4107,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:229
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:229
   def font_url(path); end
 
   # Public: Generate url for image path.
@@ -4098,7 +4116,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:166
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:166
   def image_path(path); end
 
   # Public: Generate a image url() link.
@@ -4107,7 +4125,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:175
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:175
   def image_url(path); end
 
   # Public: Generate url for javascript path.
@@ -4116,7 +4134,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:238
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:238
   def javascript_path(path); end
 
   # Public: Generate a javascript url() link.
@@ -4125,7 +4143,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:247
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:247
   def javascript_url(path); end
 
   # Public: Generate url for stylesheet path.
@@ -4134,7 +4152,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:256
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:256
   def stylesheet_path(path); end
 
   # Public: Generate a stylesheet url() link.
@@ -4143,7 +4161,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:265
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:265
   def stylesheet_url(path); end
 
   # Public: Generate url for video path.
@@ -4152,7 +4170,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:184
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:184
   def video_path(path); end
 
   # Public: Generate a video url() link.
@@ -4161,7 +4179,7 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Sass::Script::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:193
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:193
   def video_url(path); end
 
   protected
@@ -4171,21 +4189,21 @@ module Sprockets::SassProcessor::Functions
   #
   # Returns a Context instance.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:298
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:298
   def sprockets_context; end
 
   # Public: Mutatable set of dependencies.
   #
   # Returns a Set.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:290
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:290
   def sprockets_dependencies; end
 
   # Public: The Environment.
   #
   # Returns Sprockets::Environment.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:283
+  # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:283
   def sprockets_environment; end
 end
 
@@ -4201,25 +4219,25 @@ end
 #     environment.register_bundle_processor 'text/css',
 #       Sprockets::SasscCompressor.new({ ... })
 #
-# source://sprockets-4.2.2/lib/sprockets/sassc_compressor.rb:18
+# source://sprockets-4.4.1/lib/sprockets/sassc_compressor.rb:18
 class Sprockets::SasscCompressor
   # @return [SasscCompressor] a new instance of SasscCompressor
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_compressor.rb:30
+  # source://sprockets-4.4.1/lib/sprockets/sassc_compressor.rb:30
   def initialize(options = T.unsafe(nil)); end
 
-  # source://sprockets-4.2.2/lib/sprockets/sassc_compressor.rb:39
+  # source://sprockets-4.4.1/lib/sprockets/sassc_compressor.rb:39
   def call(input); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/sassc_compressor.rb:26
+    # source://sprockets-4.4.1/lib/sprockets/sassc_compressor.rb:26
     def call(input); end
 
     # Public: Return singleton instance with default options.
     #
     # Returns SasscCompressor object.
     #
-    # source://sprockets-4.2.2/lib/sprockets/sassc_compressor.rb:22
+    # source://sprockets-4.4.1/lib/sprockets/sassc_compressor.rb:22
     def instance; end
   end
 end
@@ -4231,47 +4249,47 @@ end
 #   https://github.com/sass/sassc-ruby
 #   https://github.com/sass/sassc-rails
 #
-# source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:15
+# source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:15
 class Sprockets::SasscProcessor
   # @return [SasscProcessor] a new instance of SasscProcessor
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:40
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:40
   def initialize(options = T.unsafe(nil), &block); end
 
   # Returns the value of attribute cache_key.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:38
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:38
   def cache_key; end
 
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:52
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:52
   def call(input); end
 
   private
 
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:273
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:273
   def engine_options(input, context); end
 
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:78
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:78
   def merge_options(options); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:34
+    # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:34
     def cache_key; end
 
-    # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:30
+    # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:30
     def call(input); end
 
     # Public: Return singleton instance with default options.
     #
     # Returns SasscProcessor object.
     #
-    # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:26
+    # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:26
     def instance; end
 
     # Internal: Defines default sass syntax to use. Exposed so the ScsscProcessor
     # may override it.
     #
-    # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:19
+    # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:19
     def syntax; end
   end
 end
@@ -4287,7 +4305,7 @@ end
 #   end
 # end
 #
-# source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:100
+# source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:100
 module Sprockets::SasscProcessor::Functions
   # Public: Generate a data URI for asset path.
   #
@@ -4295,7 +4313,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:243
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:243
   def asset_data_url(path); end
 
   # Public: Generate a url for asset path.
@@ -4308,7 +4326,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:110
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:110
   def asset_path(path, options = T.unsafe(nil)); end
 
   # Public: Generate a asset url() link.
@@ -4317,7 +4335,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:126
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:126
   def asset_url(path, options = T.unsafe(nil)); end
 
   # Public: Generate url for audio path.
@@ -4326,7 +4344,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:171
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:171
   def audio_path(path); end
 
   # Public: Generate a audio url() link.
@@ -4335,7 +4353,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:180
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:180
   def audio_url(path); end
 
   # Public: Generate url for font path.
@@ -4344,7 +4362,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:189
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:189
   def font_path(path); end
 
   # Public: Generate a font url() link.
@@ -4353,7 +4371,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:198
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:198
   def font_url(path); end
 
   # Public: Generate url for image path.
@@ -4362,7 +4380,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:135
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:135
   def image_path(path); end
 
   # Public: Generate a image url() link.
@@ -4371,7 +4389,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:144
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:144
   def image_url(path); end
 
   # Public: Generate url for javascript path.
@@ -4380,7 +4398,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:207
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:207
   def javascript_path(path); end
 
   # Public: Generate a javascript url() link.
@@ -4389,7 +4407,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:216
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:216
   def javascript_url(path); end
 
   # Public: Generate url for stylesheet path.
@@ -4398,7 +4416,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:225
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:225
   def stylesheet_path(path); end
 
   # Public: Generate a stylesheet url() link.
@@ -4407,7 +4425,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:234
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:234
   def stylesheet_url(path); end
 
   # Public: Generate url for video path.
@@ -4416,7 +4434,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:153
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:153
   def video_path(path); end
 
   # Public: Generate a video url() link.
@@ -4425,7 +4443,7 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a SassC::Script::Value::String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:162
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:162
   def video_url(path); end
 
   protected
@@ -4435,36 +4453,36 @@ module Sprockets::SasscProcessor::Functions
   #
   # Returns a Context instance.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:267
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:267
   def sprockets_context; end
 
   # Public: Mutatable set of dependencies.
   #
   # Returns a Set.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:259
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:259
   def sprockets_dependencies; end
 
   # Public: The Environment.
   #
   # Returns Sprockets::Environment.
   #
-  # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:252
+  # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:252
   def sprockets_environment; end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:305
+# source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:305
 class Sprockets::ScssProcessor < ::Sprockets::SassProcessor
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/sass_processor.rb:306
+    # source://sprockets-4.4.1/lib/sprockets/sass_processor.rb:306
     def syntax; end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:292
+# source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:292
 class Sprockets::ScsscProcessor < ::Sprockets::SasscProcessor
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/sassc_processor.rb:293
+    # source://sprockets-4.4.1/lib/sprockets/sassc_processor.rb:293
     def syntax; end
   end
 end
@@ -4473,7 +4491,7 @@ end
 # `CachedEnvironment` that provides a Rack compatible `call`
 # interface and url generation helpers.
 #
-# source://sprockets-4.2.2/lib/sprockets/server.rb:10
+# source://sprockets-4.4.1/lib/sprockets/server.rb:10
 module Sprockets::Server
   # `call` implements the Rack 1.x specification which accepts an
   # `env` Hash and returns a three item tuple with the status code,
@@ -4489,70 +4507,70 @@ module Sprockets::Server
   # A request for `"/assets/foo/bar.js"` will search your
   # environment for `"foo/bar.js"`.
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:37
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:37
   def call(env); end
 
   private
 
   # Returns a 400 Forbidden response tuple
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:159
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:159
   def bad_request_response(env); end
 
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:267
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:267
   def cache_headers(env, etag); end
 
   # Returns a CSS response that hides all elements on the page and
   # displays the exception
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:207
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:207
   def css_exception_response(exception); end
 
   # Escape special characters for use inside a CSS content("...") string
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:259
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:259
   def escape_css_content(content); end
 
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:132
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:132
   def forbidden_request?(path); end
 
   # Returns a 403 Forbidden response tuple
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:168
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:168
   def forbidden_response(env); end
 
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:140
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:140
   def head_request?(env); end
 
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:288
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:288
   def headers(env, asset, length); end
 
   # Returns a JavaScript response that re-throws a Ruby exception
   # in the browser
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:199
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:199
   def javascript_exception_response(exception); end
 
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:185
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:185
   def method_not_allowed_response; end
 
   # Returns a 404 Not Found response tuple
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:177
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:177
   def not_found_response(env); end
 
   # Returns a 304 Not Modified response tuple
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:154
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:154
   def not_modified_response(env, etag); end
 
   # Returns a 200 OK response tuple
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:145
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:145
   def ok_response(asset, env); end
 
   # Gets ETag fingerprint.
@@ -4560,22 +4578,22 @@ module Sprockets::Server
   #     "foo-0aa2105d29558f3eb790d411d7d8fb66.js"
   #     # => "0aa2105d29558f3eb790d411d7d8fb66"
   #
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:311
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:311
   def path_fingerprint(path); end
 
-  # source://sprockets-4.2.2/lib/sprockets/server.rb:189
+  # source://sprockets-4.4.1/lib/sprockets/server.rb:189
   def precondition_failed_response(env); end
 end
 
 # Supported HTTP request methods.
 #
-# source://sprockets-4.2.2/lib/sprockets/server.rb:12
+# source://sprockets-4.4.1/lib/sprockets/server.rb:12
 Sprockets::Server::ALLOWED_REQUEST_METHODS = T.let(T.unsafe(nil), Set)
 
-# source://sprockets-4.2.2/lib/sprockets/server.rb:17
+# source://sprockets-4.4.1/lib/sprockets/server.rb:17
 Sprockets::Server::VARY = T.let(T.unsafe(nil), String)
 
-# source://sprockets-4.2.2/lib/sprockets/server.rb:16
+# source://sprockets-4.4.1/lib/sprockets/server.rb:16
 Sprockets::Server::X_CASCADE = T.let(T.unsafe(nil), String)
 
 # The purpose of this class is to generate a source map file
@@ -4597,18 +4615,18 @@ Sprockets::Server::X_CASCADE = T.let(T.unsafe(nil), String)
 #     "mappings": "AAAA,GAAIA"
 #   }
 #
-# source://sprockets-4.2.2/lib/sprockets/source_map_processor.rb:25
+# source://sprockets-4.4.1/lib/sprockets/source_map_processor.rb:25
 class Sprockets::SourceMapProcessor
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/source_map_processor.rb:26
+    # source://sprockets-4.4.1/lib/sprockets/source_map_processor.rb:26
     def call(input); end
 
-    # source://sprockets-4.2.2/lib/sprockets/source_map_processor.rb:54
+    # source://sprockets-4.4.1/lib/sprockets/source_map_processor.rb:54
     def original_content_type(source_map_content_type, error_when_not_found: T.unsafe(nil)); end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:6
+# source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:6
 module Sprockets::SourceMapUtils
   extend ::Sprockets::SourceMapUtils
 
@@ -4619,7 +4637,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns mapping Hash object.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:273
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:273
   def bsearch_mappings(mappings, offset, from = T.unsafe(nil), to = T.unsafe(nil)); end
 
   # Public: Combine two separate source map transformations into a single
@@ -4636,7 +4654,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns a source map hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:156
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:156
   def combine_source_maps(first, second); end
 
   # Public: Compare two source map offsets.
@@ -4648,7 +4666,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns -1 if a < b, 0 if a == b and 1 if a > b.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:254
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:254
   def compare_source_offsets(a, b); end
 
   # Public: Concatenate two source maps.
@@ -4666,7 +4684,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns a new source map hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:73
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:73
   def concat_source_maps(a, b); end
 
   # Public: Decompress source map
@@ -4688,7 +4706,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns an uncompressed source map hash
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:192
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:192
   def decode_source_map(map); end
 
   # Public: Decode VLQ mappings and match up sources and symbol names.
@@ -4699,7 +4717,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns an Array of Mappings.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:297
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:297
   def decode_vlq_mappings(str, sources: T.unsafe(nil), names: T.unsafe(nil)); end
 
   # Public: Compress source map
@@ -4719,7 +4737,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns a compressed source map hash according to source map spec v3
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:235
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:235
   def encode_source_map(map); end
 
   # Public: Encode mappings Hash into a VLQ encoded String.
@@ -4730,7 +4748,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns a VLQ encoded String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:346
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:346
   def encode_vlq_mappings(mappings, sources: T.unsafe(nil), names: T.unsafe(nil)); end
 
   # Public: Transpose source maps into a standard format
@@ -4762,7 +4780,7 @@ module Sprockets::SourceMapUtils
   #     #  "names"          => [..],
   #     #}
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:37
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:37
   def format_source_map(map, input); end
 
   # Public: Converts source map to index map
@@ -4795,7 +4813,7 @@ module Sprockets::SourceMapUtils
   #       ]
   #     }
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:129
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:129
   def make_index_map(map); end
 
   # Public: Decode a VLQ string.
@@ -4804,7 +4822,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns an Array of Integers.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:429
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:429
   def vlq_decode(str); end
 
   # Public: Decode a VLQ string into mapping numbers.
@@ -4813,7 +4831,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns an two dimensional Array of Integers.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:470
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:470
   def vlq_decode_mappings(str); end
 
   # Public: Encode a list of numbers into a compact VLQ string.
@@ -4822,7 +4840,7 @@ module Sprockets::SourceMapUtils
   #
   # Returns a VLQ String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:408
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:408
   def vlq_encode(ary); end
 
   # Public: Encode a mapping array into a compact VLQ string.
@@ -4831,20 +4849,20 @@ module Sprockets::SourceMapUtils
   #
   # Returns a VLQ encoded String separated by , and ;.
   #
-  # source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:457
+  # source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:457
   def vlq_encode_mappings(ary); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:400
+# source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:400
 Sprockets::SourceMapUtils::BASE64_DIGITS = T.let(T.unsafe(nil), Array)
 
-# source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:401
+# source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:401
 Sprockets::SourceMapUtils::BASE64_VALUES = T.let(T.unsafe(nil), Hash)
 
-# source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:396
+# source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:396
 Sprockets::SourceMapUtils::VLQ_BASE = T.let(T.unsafe(nil), Integer)
 
-# source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:397
+# source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:397
 Sprockets::SourceMapUtils::VLQ_BASE_MASK = T.let(T.unsafe(nil), Integer)
 
 # Public: Base64 VLQ encoding
@@ -4858,13 +4876,13 @@ Sprockets::SourceMapUtils::VLQ_BASE_MASK = T.let(T.unsafe(nil), Integer)
 #   https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/edit
 #   https://github.com/mozilla/source-map/blob/master/lib/source-map/base64-vlq.js
 #
-# source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:395
+# source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:395
 Sprockets::SourceMapUtils::VLQ_BASE_SHIFT = T.let(T.unsafe(nil), Integer)
 
-# source://sprockets-4.2.2/lib/sprockets/source_map_utils.rb:398
+# source://sprockets-4.4.1/lib/sprockets/source_map_utils.rb:398
 Sprockets::SourceMapUtils::VLQ_CONTINUATION_BIT = T.let(T.unsafe(nil), Integer)
 
-# source://sprockets-4.2.2/lib/sprockets/transformers.rb:7
+# source://sprockets-4.4.1/lib/sprockets/transformers.rb:7
 module Sprockets::Transformers
   include ::Sprockets::Utils
   include ::Sprockets::ProcessorUtils
@@ -4878,7 +4896,7 @@ module Sprockets::Transformers
   #
   # Returns Processor.
   #
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:115
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:115
   def compose_transformers(transformers, types, preprocessors, postprocessors); end
 
   # Internal: Expand accept type list to include possible transformed types.
@@ -4892,7 +4910,7 @@ module Sprockets::Transformers
   #
   # Returns an expanded Array of q values.
   #
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:97
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:97
   def expand_transform_accepts(parsed_accepts); end
 
   # Public: Register a transformer from and to a mime type.
@@ -4910,7 +4928,7 @@ module Sprockets::Transformers
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:38
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:38
   def register_transformer(from, to, proc); end
 
   # Internal: Register transformer for existing type adding a suffix.
@@ -4922,7 +4940,7 @@ module Sprockets::Transformers
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:53
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:53
   def register_transformer_suffix(types, type_format, extname, processor); end
 
   # Internal: Resolve target mime type that the source type should be
@@ -4944,7 +4962,7 @@ module Sprockets::Transformers
   #
   # Returns String mime type or nil is no type satisfied the accept value.
   #
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:83
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:83
   def resolve_transform_type(type, accept); end
 
   # Public: Two level mapping of a source mime type to a target mime type.
@@ -4955,19 +4973,19 @@ module Sprockets::Transformers
   #          }
   #        }
   #
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:18
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:18
   def transformers; end
 
   private
 
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:131
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:131
   def compose_transformer_list(transformers, preprocessors, postprocessors); end
 
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:147
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:147
   def compute_transformers!(registered_transformers); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/transformers.rb:22
+# source://sprockets-4.4.1/lib/sprockets/transformers.rb:22
 class Sprockets::Transformers::Transformer < ::Struct
   # Returns the value of attribute from
   #
@@ -4979,7 +4997,7 @@ class Sprockets::Transformers::Transformer < ::Struct
   # @param value [Object] the value to set the attribute from to.
   # @return [Object] the newly set value
   #
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:22
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:22
   def from=(_); end
 
   # Returns the value of attribute proc
@@ -4992,7 +5010,7 @@ class Sprockets::Transformers::Transformer < ::Struct
   # @param value [Object] the value to set the attribute proc to.
   # @return [Object] the newly set value
   #
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:22
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:22
   def proc=(_); end
 
   # Returns the value of attribute to
@@ -5005,7 +5023,7 @@ class Sprockets::Transformers::Transformer < ::Struct
   # @param value [Object] the value to set the attribute to to.
   # @return [Object] the newly set value
   #
-  # source://sprockets-4.2.2/lib/sprockets/transformers.rb:22
+  # source://sprockets-4.4.1/lib/sprockets/transformers.rb:22
   def to=(_); end
 
   class << self
@@ -5018,7 +5036,7 @@ end
 
 # Internal: used to "expand" and "compress" values for storage
 #
-# source://sprockets-4.2.2/lib/sprockets/uri_tar.rb:6
+# source://sprockets-4.4.1/lib/sprockets/uri_tar.rb:6
 class Sprockets::URITar
   # Internal: Initialize object for compression or expansion
   #
@@ -5027,7 +5045,7 @@ class Sprockets::URITar
   #
   # @return [URITar] a new instance of URITar
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_tar.rb:13
+  # source://sprockets-4.4.1/lib/sprockets/uri_tar.rb:13
   def initialize(uri, env); end
 
   # Internal: Tells us if we are using an absolute path
@@ -5038,7 +5056,7 @@ class Sprockets::URITar
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_tar.rb:44
+  # source://sprockets-4.4.1/lib/sprockets/uri_tar.rb:44
   def absolute_path?; end
 
   # Internal: Converts full uri to a "compressed" uri
@@ -5051,7 +5069,7 @@ class Sprockets::URITar
   #
   # Returns String
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_tar.rb:35
+  # source://sprockets-4.4.1/lib/sprockets/uri_tar.rb:35
   def compress; end
 
   # Internal: Returns "compressed" path
@@ -5064,7 +5082,7 @@ class Sprockets::URITar
   #
   # Returns String
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_tar.rb:84
+  # source://sprockets-4.4.1/lib/sprockets/uri_tar.rb:84
   def compressed_path; end
 
   # Internal: Convert a "compressed" uri to an absolute path
@@ -5080,22 +5098,22 @@ class Sprockets::URITar
   #
   # Returns String
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_tar.rb:60
+  # source://sprockets-4.4.1/lib/sprockets/uri_tar.rb:60
   def expand; end
 
   # Returns the value of attribute path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_tar.rb:7
+  # source://sprockets-4.4.1/lib/sprockets/uri_tar.rb:7
   def path; end
 
   # Returns the value of attribute root.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_tar.rb:7
+  # source://sprockets-4.4.1/lib/sprockets/uri_tar.rb:7
   def root; end
 
   # Returns the value of attribute scheme.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_tar.rb:7
+  # source://sprockets-4.4.1/lib/sprockets/uri_tar.rb:7
   def scheme; end
 end
 
@@ -5115,7 +5133,7 @@ end
 #
 # pipeline - String name of pipeline.
 #
-# source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:21
+# source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:21
 module Sprockets::URIUtils
   extend ::Sprockets::URIUtils
 
@@ -5131,7 +5149,7 @@ module Sprockets::URIUtils
   #
   # Returns String URI.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:117
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:117
   def build_asset_uri(path, params = T.unsafe(nil)); end
 
   # Internal: Build file-digest dependency URI.
@@ -5145,7 +5163,7 @@ module Sprockets::URIUtils
   #
   # Returns String URI.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:151
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:151
   def build_file_digest_uri(path); end
 
   # Internal: Serialize hash of params into query string.
@@ -5154,21 +5172,21 @@ module Sprockets::URIUtils
   #
   # Returns String query or nil if empty.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:160
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:160
   def encode_uri_query_params(params); end
 
   # Internal: Join file: URI component parts into String.
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:65
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:65
   def join_file_uri(scheme, host, path, query); end
 
   # Internal: Join URI component parts into String.
   #
   # Returns String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:39
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:39
   def join_uri(scheme, userinfo, host, port, registry, path, opaque, query, fragment); end
 
   # Internal: Parse Asset URI.
@@ -5182,7 +5200,7 @@ module Sprockets::URIUtils
   #
   # Returns String path and Hash of symbolized parameters.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:96
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:96
   def parse_asset_uri(uri); end
 
   # Internal: Parse file-digest dependency URI.
@@ -5196,7 +5214,7 @@ module Sprockets::URIUtils
   #
   # Returns String path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:131
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:131
   def parse_file_digest_uri(uri); end
 
   # Internal: Parse query string into hash of params
@@ -5205,7 +5223,7 @@ module Sprockets::URIUtils
   #
   # Return Hash of params.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:185
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:185
   def parse_uri_query_params(query); end
 
   # Internal: Parse file: URI into component parts.
@@ -5214,7 +5232,7 @@ module Sprockets::URIUtils
   #
   # Returns [scheme, host, path, query].
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:48
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:48
   def split_file_uri(uri); end
 
   # Internal: Parse URI into component parts.
@@ -5223,7 +5241,7 @@ module Sprockets::URIUtils
   #
   # Returns Array of components.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:32
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:32
   def split_uri(uri); end
 
   # Internal: Check if String is a valid Asset URI.
@@ -5234,51 +5252,51 @@ module Sprockets::URIUtils
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:79
+  # source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:79
   def valid_asset_uri?(str); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/uri_utils.rb:24
+# source://sprockets-4.4.1/lib/sprockets/uri_utils.rb:24
 Sprockets::URIUtils::URI_PARSER = T.let(T.unsafe(nil), URI::RFC2396_Parser)
 
-# source://sprockets-4.2.2/lib/sprockets/uglifier_compressor.rb:19
+# source://sprockets-4.4.1/lib/sprockets/uglifier_compressor.rb:19
 class Sprockets::UglifierCompressor
   # @return [UglifierCompressor] a new instance of UglifierCompressor
   #
-  # source://sprockets-4.2.2/lib/sprockets/uglifier_compressor.rb:39
+  # source://sprockets-4.4.1/lib/sprockets/uglifier_compressor.rb:39
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
   #
-  # source://sprockets-4.2.2/lib/sprockets/uglifier_compressor.rb:37
+  # source://sprockets-4.4.1/lib/sprockets/uglifier_compressor.rb:37
   def cache_key; end
 
-  # source://sprockets-4.2.2/lib/sprockets/uglifier_compressor.rb:46
+  # source://sprockets-4.4.1/lib/sprockets/uglifier_compressor.rb:46
   def call(input); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/uglifier_compressor.rb:33
+    # source://sprockets-4.4.1/lib/sprockets/uglifier_compressor.rb:33
     def cache_key; end
 
-    # source://sprockets-4.2.2/lib/sprockets/uglifier_compressor.rb:29
+    # source://sprockets-4.4.1/lib/sprockets/uglifier_compressor.rb:29
     def call(input); end
 
     # Public: Return singleton instance with default options.
     #
     # Returns UglifierCompressor object.
     #
-    # source://sprockets-4.2.2/lib/sprockets/uglifier_compressor.rb:25
+    # source://sprockets-4.4.1/lib/sprockets/uglifier_compressor.rb:25
     def instance; end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/uglifier_compressor.rb:20
+# source://sprockets-4.4.1/lib/sprockets/uglifier_compressor.rb:20
 Sprockets::UglifierCompressor::VERSION = T.let(T.unsafe(nil), String)
 
 # Internal: Used to parse and store the URI to an unloaded asset
 # Generates keys used to store and retrieve items from cache
 #
-# source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:8
+# source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:8
 class Sprockets::UnloadedAsset
   # Internal: Initialize object for generating cache keys
   #
@@ -5295,7 +5313,7 @@ class Sprockets::UnloadedAsset
   #
   # @return [UnloadedAsset] a new instance of UnloadedAsset
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:22
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:22
   def initialize(uri, env); end
 
   # Internal: Key of asset
@@ -5306,12 +5324,12 @@ class Sprockets::UnloadedAsset
   #
   # Returns a String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:77
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:77
   def asset_key; end
 
   # Returns the value of attribute compressed_path.
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:29
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:29
   def compressed_path; end
 
   # Public: Dependency History key
@@ -5338,7 +5356,7 @@ class Sprockets::UnloadedAsset
   #
   # Returns a String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:104
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:104
   def dependency_history_key; end
 
   # Internal: Digest key
@@ -5351,7 +5369,7 @@ class Sprockets::UnloadedAsset
   #
   # Returns a String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:117
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:117
   def digest_key(digest); end
 
   # Internal: File digest key
@@ -5361,7 +5379,7 @@ class Sprockets::UnloadedAsset
   #
   # Returns a String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:127
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:127
   def file_digest_key(stat); end
 
   # Internal: Full file path without schema
@@ -5377,7 +5395,7 @@ class Sprockets::UnloadedAsset
   #
   # Returns a String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:43
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:43
   def filename; end
 
   # Internal: Hash of param values
@@ -5394,12 +5412,12 @@ class Sprockets::UnloadedAsset
   #
   # Returns a Hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:63
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:63
   def params; end
 
   # Returns the value of attribute uri.
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:29
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:29
   def uri; end
 
   private
@@ -5408,14 +5426,14 @@ class Sprockets::UnloadedAsset
   #
   # Returns Array with filename and params hash
   #
-  # source://sprockets-4.2.2/lib/sprockets/unloaded_asset.rb:135
+  # source://sprockets-4.4.1/lib/sprockets/unloaded_asset.rb:135
   def load_file_params; end
 end
 
 # Internal: Utils, we didn't know where else to put it! Functions may
 # eventually be shuffled into more specific drawers.
 #
-# source://sprockets-4.2.2/lib/sprockets/utils.rb:7
+# source://sprockets-4.4.1/lib/sprockets/utils.rb:7
 module Sprockets::Utils
   extend ::Sprockets::Utils
 
@@ -5427,7 +5445,7 @@ module Sprockets::Utils
   #
   # Returns buf String.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils.rb:100
+  # source://sprockets-4.4.1/lib/sprockets/utils.rb:100
   def concat_javascript_sources(buf, source); end
 
   # Internal: Post-order Depth-First search algorithm.
@@ -5440,7 +5458,7 @@ module Sprockets::Utils
   #
   # Returns a Set of nodes.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils.rb:165
+  # source://sprockets-4.4.1/lib/sprockets/utils.rb:165
   def dfs(initial); end
 
   # Internal: Post-order Depth-First search algorithm that gathers all paths
@@ -5454,7 +5472,7 @@ module Sprockets::Utils
   #
   # Returns an Array of node Arrays.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils.rb:192
+  # source://sprockets-4.4.1/lib/sprockets/utils.rb:192
   def dfs_paths(path); end
 
   # Internal: Check if object can safely be .dup'd.
@@ -5467,7 +5485,7 @@ module Sprockets::Utils
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils.rb:17
+  # source://sprockets-4.4.1/lib/sprockets/utils.rb:17
   def duplicable?(obj); end
 
   # Internal: Duplicate and store key/value on new frozen hash.
@@ -5488,7 +5506,7 @@ module Sprockets::Utils
   #
   # Returns duplicated frozen Hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils.rb:61
+  # source://sprockets-4.4.1/lib/sprockets/utils.rb:61
   def hash_reassoc(hash, key_a, key_b = T.unsafe(nil), &block); end
 
   # Internal: Duplicate and store key/value on new frozen hash.
@@ -5500,7 +5518,7 @@ module Sprockets::Utils
   #
   # Returns Hash.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils.rb:34
+  # source://sprockets-4.4.1/lib/sprockets/utils.rb:34
   def hash_reassoc1(hash, key); end
 
   # Internal: Inject into target module for the duration of the block.
@@ -5509,7 +5527,7 @@ module Sprockets::Utils
   #
   # Returns result of block.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils.rb:129
+  # source://sprockets-4.4.1/lib/sprockets/utils.rb:129
   def module_include(base, mod); end
 
   # Internal: Check if string has a trailing semicolon.
@@ -5520,22 +5538,22 @@ module Sprockets::Utils
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils.rb:79
+  # source://sprockets-4.4.1/lib/sprockets/utils.rb:79
   def string_end_with_semicolon?(str); end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:4
+# source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:4
 class Sprockets::Utils::Gzip
   # Private: Generates a gzipped file based off of reference file.
   #
   # @return [Gzip] a new instance of Gzip
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:43
+  # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:45
   def initialize(asset, archiver: T.unsafe(nil)); end
 
   # Returns the value of attribute archiver.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:40
+  # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:42
   def archiver; end
 
   # Private: Returns whether or not an asset can be compressed.
@@ -5549,7 +5567,7 @@ class Sprockets::Utils::Gzip
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:68
+  # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:70
   def can_compress?; end
 
   # Private: Opposite of `can_compress?`.
@@ -5558,12 +5576,12 @@ class Sprockets::Utils::Gzip
   #
   # @return [Boolean]
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:80
+  # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:82
   def cannot_compress?; end
 
   # Returns the value of attribute charset.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:40
+  # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:42
   def charset; end
 
   # Private: Generates a gzipped file based off of reference asset.
@@ -5574,25 +5592,25 @@ class Sprockets::Utils::Gzip
   #
   # Returns nothing.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:91
+  # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:93
   def compress(file, target); end
 
   # Returns the value of attribute content_type.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:40
+  # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:42
   def content_type; end
 
   # Returns the value of attribute source.
   #
-  # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:40
+  # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:42
   def source; end
 end
 
 # What non-text mime types should we compress? This list comes from:
 # https://www.fastly.com/blog/new-gzip-settings-and-deciding-what-compress
 #
-# source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:52
-Sprockets::Utils::Gzip::COMPRESSABLE_MIME_TYPES = T.let(T.unsafe(nil), Hash)
+# source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:54
+Sprockets::Utils::Gzip::COMPRESSIBLE_MIME_TYPES = T.let(T.unsafe(nil), Hash)
 
 # Private: Generates a gzipped file based off of reference asset.
 #
@@ -5602,13 +5620,16 @@ Sprockets::Utils::Gzip::COMPRESSABLE_MIME_TYPES = T.let(T.unsafe(nil), Hash)
 # writes contents to the `file` passed in. Sets `mtime` of
 # written file to passed in `mtime`
 #
-# source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:12
+# source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:12
 module Sprockets::Utils::Gzip::ZlibArchiver
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:13
-    def call(file, source, mtime); end
+    # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:15
+    def call(file, source); end
   end
 end
+
+# source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:13
+Sprockets::Utils::Gzip::ZlibArchiver::MTIME = T.let(T.unsafe(nil), Integer)
 
 # Private: Generates a gzipped file based off of reference asset.
 #
@@ -5618,21 +5639,21 @@ end
 # writes contents to the `file` passed in. Sets `mtime` of
 # written file to passed in `mtime`
 #
-# source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:30
+# source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:32
 module Sprockets::Utils::Gzip::ZopfliArchiver
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/utils/gzip.rb:31
-    def call(file, source, mtime); end
+    # source://sprockets-4.4.1/lib/sprockets/utils/gzip.rb:33
+    def call(file, source); end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/utils.rb:121
+# source://sprockets-4.4.1/lib/sprockets/utils.rb:121
 Sprockets::Utils::MODULE_INCLUDE_MUTEX = T.let(T.unsafe(nil), Thread::Mutex)
 
-# source://sprockets-4.2.2/lib/sprockets/utils.rb:71
+# source://sprockets-4.4.1/lib/sprockets/utils.rb:71
 Sprockets::Utils::WHITESPACE_ORDINALS = T.let(T.unsafe(nil), Hash)
 
-# source://sprockets-4.2.2/lib/sprockets/version.rb:3
+# source://sprockets-4.4.1/lib/sprockets/version.rb:3
 Sprockets::VERSION = T.let(T.unsafe(nil), String)
 
 # Public: YUI compressor.
@@ -5647,36 +5668,36 @@ Sprockets::VERSION = T.let(T.unsafe(nil), String)
 #     environment.register_bundle_processor 'application/javascript',
 #       Sprockets::YUICompressor.new(munge: true)
 #
-# source://sprockets-4.2.2/lib/sprockets/yui_compressor.rb:18
+# source://sprockets-4.4.1/lib/sprockets/yui_compressor.rb:18
 class Sprockets::YUICompressor
   # @return [YUICompressor] a new instance of YUICompressor
   #
-  # source://sprockets-4.2.2/lib/sprockets/yui_compressor.rb:38
+  # source://sprockets-4.4.1/lib/sprockets/yui_compressor.rb:38
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
   #
-  # source://sprockets-4.2.2/lib/sprockets/yui_compressor.rb:36
+  # source://sprockets-4.4.1/lib/sprockets/yui_compressor.rb:36
   def cache_key; end
 
-  # source://sprockets-4.2.2/lib/sprockets/yui_compressor.rb:43
+  # source://sprockets-4.4.1/lib/sprockets/yui_compressor.rb:43
   def call(input); end
 
   class << self
-    # source://sprockets-4.2.2/lib/sprockets/yui_compressor.rb:32
+    # source://sprockets-4.4.1/lib/sprockets/yui_compressor.rb:32
     def cache_key; end
 
-    # source://sprockets-4.2.2/lib/sprockets/yui_compressor.rb:28
+    # source://sprockets-4.4.1/lib/sprockets/yui_compressor.rb:28
     def call(input); end
 
     # Public: Return singleton instance with default options.
     #
     # Returns YUICompressor object.
     #
-    # source://sprockets-4.2.2/lib/sprockets/yui_compressor.rb:24
+    # source://sprockets-4.4.1/lib/sprockets/yui_compressor.rb:24
     def instance; end
   end
 end
 
-# source://sprockets-4.2.2/lib/sprockets/yui_compressor.rb:19
+# source://sprockets-4.4.1/lib/sprockets/yui_compressor.rb:19
 Sprockets::YUICompressor::VERSION = T.let(T.unsafe(nil), String)

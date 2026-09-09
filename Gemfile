@@ -9,7 +9,7 @@ ruby "2.7.6"
 
 gem "dotenv-rails"
 
-gem "rails", "6.0.6.1"
+gem "rails", "6.1.7.10"
 
 gem "mysql2"
 gem "sqlite3"
@@ -104,10 +104,10 @@ gem "bootsnap", "~> 1.4", require: false
 # For type checking
 gem "sorbet-static-and-runtime"
 
-# Psych 4 introduced breaking changes by changing default to safe mode.
-#   Rails 6.1 has fix: https://github.com/rails/rails/commit/255b5ff9af57f9b54dee7ec884b12a1ad16f0321
-# TODO: Change to ">= 5.2.4" when we upgrade to Rails 6.1 to pick up security fixes
-gem "psych", ">= 3.3.4", "< 4"
+# Rails 6.1 handles Psych 4's safe-mode default:
+#   https://github.com/rails/rails/commit/255b5ff9af57f9b54dee7ec884b12a1ad16f0321
+# Keep a floor for security fixes only.
+gem "psych", ">= 5.2.4"
 
 # For making JSON Web Tokens used by Github API
 gem "jwt", ">= 2.10.3" # fix CVE-2026-45363
