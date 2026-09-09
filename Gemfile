@@ -144,8 +144,6 @@ group :development do
   gem "binding_of_caller"
   gem "memory_profiler"
   gem "pry-rails"
-  gem "spring", "~> 4.0"
-  gem "spring-commands-rspec"
 
   gem "bundle-audit", require: false
   gem "rubocop"
