@@ -153,21 +153,17 @@ describe Run do
     end
 
     context "when the run has no scraper (e.g. an api-triggered run from morph-cli)" do
+      let(:repo_path) { Dir.mktmpdir("run_spec") }
       let(:run) { described_class.new }
 
-      around do |example|
-        Dir.mktmpdir("run_spec") do |dir|
-          @repo_path = dir
-          example.run
-        end
+      before do
+        allow(run).to receive(:repo_path).and_return(repo_path)
       end
 
-      before do
-        allow(run).to receive(:repo_path).and_return(@repo_path)
-      end
+      after { FileUtils.rm_rf(repo_path) }
 
       it "falls back to reading the platform file directly out of the uploaded code" do
-        File.write("#{@repo_path}/platform", "heroku-24\n")
+        File.write("#{repo_path}/platform", "heroku-24\n")
         expect(run.platform).to eq "heroku-24"
       end
 
