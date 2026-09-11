@@ -45,7 +45,7 @@ Rails.application.config.active_record.legacy_connection_handling = false
 Rails.application.config.action_view.form_with_generates_remote_forms = false
 
 # Set the default queue name for the incineration job to the queue adapter default.
-# Rails.application.config.action_mailbox.queues.incineration = nil
+Rails.application.config.action_mailbox.queues.incineration = nil
 
 # Set the default queue name for the routing job to the queue adapter default.
 # Rails.application.config.action_mailbox.queues.routing = nil
