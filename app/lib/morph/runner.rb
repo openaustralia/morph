@@ -165,7 +165,7 @@ module Morph
         return
       end
 
-      platform = run.scraper&.platform
+      platform = run.platform
       unless platform.nil? || Morph::DockerRunner::PLATFORMS.include?(platform)
         error(text: "Platform set to an invalid value. Valid values are #{Morph::DockerRunner::PLATFORMS.join(', ')}.", status_code: 999, &block)
         return
