@@ -48,7 +48,7 @@ Rails.application.config.action_view.form_with_generates_remote_forms = false
 Rails.application.config.action_mailbox.queues.incineration = nil
 
 # Set the default queue name for the routing job to the queue adapter default.
-# Rails.application.config.action_mailbox.queues.routing = nil
+Rails.application.config.action_mailbox.queues.routing = nil
 
 # Set the default queue name for the mail deliver job to the queue adapter default.
 # Rails.application.config.action_mailer.deliver_later_queue_name = nil
