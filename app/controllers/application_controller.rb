@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   # Only redirect back to simple one- or two-segment paths like "/documentation"
   # or "/some_user/some_scraper" after sign out
-  SAFE_SIGN_OUT_PATH_REGEXP = T.let(%r{\A(/[^/?#]+){1,2}\z}.freeze, Regexp)
+  SAFE_SIGN_OUT_PATH_REGEXP = T.let(%r{\A(/[^/?#]+){1,2}\z}, Regexp)
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.

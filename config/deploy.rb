@@ -7,7 +7,7 @@ expected_repos = %w[git@github.com:openaustralia/morph.git https://github.com/op
 current_repo = `git config --get remote.origin.url`.strip
 raise "Deploy from the openaustralia repo (#{expected_repos.join(', ')}) instead of a fork (#{current_repo})" unless expected_repos.include?(current_repo)
 
-set :rvm_ruby_version, "2.7.6"
+set :rvm_ruby_version, "3.0.7"
 
 set :tagging3_format, ':stage_:release'
 

@@ -1,4 +1,4 @@
-FROM ruby:2.7.6
+FROM ruby:3.0.7
 
 # The ruby images this Dockerfile builds on are Debian bullseye based, and
 # bullseye has moved to archive.debian.org now its LTS has ended: the main
