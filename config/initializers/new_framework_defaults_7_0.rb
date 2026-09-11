@@ -95,7 +95,7 @@ Rails.application.config.action_dispatch.default_headers = {
 # :hybrid rewrote Marshal cookies as JSON from November 2025).
 
 # Change the return value of `ActionDispatch::Request#content_type` to the Content-Type header without modification.
-# Rails.application.config.action_dispatch.return_only_request_media_type_on_content_type = false
+Rails.application.config.action_dispatch.return_only_request_media_type_on_content_type = false
 
 # ** Please read carefully, this must be configured in config/application.rb (NOT this file) **
 # Disables the deprecated #to_s override in some Ruby core classes
