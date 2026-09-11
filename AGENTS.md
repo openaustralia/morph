@@ -258,7 +258,6 @@ and bumping them without dealing with the underlying cause will break
 production:
 
 - `sidekiq "~> 5"`, because production is still on redis 3.x.
-- `annotaterb "~> 4.15.0"`, because 4.16 requires Ruby 3.0.
 - `foreman "0.63.0"`, to match the system foreman package on production.
 - `jquery-ui-rails "~> 5"`, because newer versions raise
   `Sprockets::FileNotFound`.
