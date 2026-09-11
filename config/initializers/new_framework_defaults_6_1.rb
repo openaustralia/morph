@@ -7,7 +7,7 @@
 # Read the Guide for Upgrading Ruby on Rails for more info on each option.
 
 # Support for inversing belongs_to -> has_many Active Record associations.
-# Rails.application.config.active_record.has_many_inversing = true
+Rails.application.config.active_record.has_many_inversing = true
 
 # Apply random variation to the delay when retrying failed jobs.
 # Rails.application.config.active_job.retry_jitter = 0.15
