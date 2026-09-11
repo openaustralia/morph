@@ -43,12 +43,6 @@
 # Set both the `:open_timeout` and `:read_timeout` values for `:smtp` delivery method.
 # Rails.application.config.action_mailer.smtp_timeout = 5
 
-# The ActiveStorage video previewer will now use scene change detection to generate
-# better preview images (rather than the previous default of using the first frame
-# of the video).
-# Rails.application.config.active_storage.video_preview_arguments =
-#   "-vf 'select=eq(n\\,0)+eq(key\\,1)+gt(scene\\,0.015),loop=loop=-1:size=2,trim=start_frame=1' -frames:v 1 -f image2"
-
 # Automatically infer `inverse_of` for associations with a scope.
 # Rails.application.config.active_record.automatic_scope_inversing = true
 
@@ -62,13 +56,6 @@
 
 # Protect from open redirect attacks in `redirect_back_or_to` and `redirect_to`.
 # Rails.application.config.action_controller.raise_on_open_redirects = true
-
-# Change the variant processor for Active Storage.
-# Changing this default means updating all places in your code that
-# generate variants to use image processing macros and ruby-vips
-# operations. See the upgrading guide for detail on the changes required.
-# The `:mini_magick` option is not deprecated; it's fine to keep using it.
-# Rails.application.config.active_storage.variant_processor = :vips
 
 # Enable parameter wrapping for JSON.
 # Previously this was set in an initializer. It's fine to keep using that initializer if you've customized it.
@@ -131,11 +118,6 @@
 
 # Change the return value of `ActionDispatch::Request#content_type` to the Content-Type header without modification.
 # Rails.application.config.action_dispatch.return_only_request_media_type_on_content_type = false
-
-# Active Storage `has_many_attached` relationships will default to replacing the current collection instead of appending to it.
-# Thus, to support submitting an empty collection, the `file_field` helper will render an hidden field `include_hidden` by default when `multiple_file_field_include_hidden` is set to `true`.
-# See https://guides.rubyonrails.org/configuring.html#config-active-storage-multiple-file-field-include-hidden for more information.
-# Rails.application.config.active_storage.multiple_file_field_include_hidden = true
 
 # ** Please read carefully, this must be configured in config/application.rb (NOT this file) **
 # Disables the deprecated #to_s override in some Ruby core classes
