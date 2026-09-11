@@ -251,7 +251,7 @@ comment blocks in the diff and commit them.
 
 ## Version pins that look stale but are not
 
-The application runs Ruby 3.0.7 and Rails 6.1.7.10, so do not reach for Ruby
+The application runs Ruby 3.0.7 and Rails 7.0.8.7, so do not reach for Ruby
 3.1+ syntax (hash literal value omission, `Data.define`, anonymous block
 arguments). Several gems are pinned for reasons recorded in `Gemfile` comments,
 and bumping them without dealing with the underlying cause will break

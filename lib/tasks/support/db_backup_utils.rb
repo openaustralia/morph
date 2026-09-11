@@ -66,7 +66,7 @@ module DbBackupUtils
   def self.puts_help(backup_file)
     size_bytes = File.size(backup_file)
     human_size = begin
-      size_bytes.to_s(:human_size)
+      ActiveSupport::NumberHelper.number_to_human_size(size_bytes)
     rescue StandardError => e
       Rails.logger.error("Failed to convert #{size_bytes} to human size: #{e}")
       "#{size_bytes} bytes"
