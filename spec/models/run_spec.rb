@@ -141,4 +141,39 @@ describe Run do
       end
     end
   end
+
+  describe "#platform" do
+    context "when the run has a scraper" do
+      let(:scraper) { mock_model(Scraper, platform: "heroku-18") }
+      let(:run) { described_class.new(scraper: scraper) }
+
+      it "uses the scraper's own platform" do
+        expect(run.platform).to eq "heroku-18"
+      end
+    end
+
+    context "when the run has no scraper (e.g. an api-triggered run from morph-cli)" do
+      let(:run) { described_class.new }
+
+      around do |example|
+        Dir.mktmpdir("run_spec") do |dir|
+          @repo_path = dir
+          example.run
+        end
+      end
+
+      before do
+        allow(run).to receive(:repo_path).and_return(@repo_path)
+      end
+
+      it "falls back to reading the platform file directly out of the uploaded code" do
+        File.write("#{@repo_path}/platform", "heroku-24\n")
+        expect(run.platform).to eq "heroku-24"
+      end
+
+      it "returns nil when the uploaded code has no platform file" do
+        expect(run.platform).to be_nil
+      end
+    end
+  end
 end

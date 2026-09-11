@@ -122,6 +122,18 @@ class Run < ApplicationRecord
     "#{owner&.repo_root}/#{name}"
   end
 
+  # Which buildstep platform to build this run against. For a normal run this is just the
+  # associated scraper's own choice - but api-triggered runs (e.g. `morph execute` from
+  # morph-cli) aren't associated with a Scraper record at all, since the code was uploaded
+  # directly rather than synced from a git repo (see ApiController#run_remote). The uploaded
+  # code still includes the scraper's own `platform` file if it has one, so fall back to
+  # reading it straight from disk rather than silently defaulting every api-triggered run to
+  # Morph::DockerRunner::DEFAULT_PLATFORM regardless of what the scraper actually asks for.
+  sig { returns(T.nilable(String)) }
+  def platform
+    scraper&.platform || Morph::PlatformFile.read(repo_path)
+  end
+
   sig { void }
   def stop!
     Morph::Runner.new(self).stop!
