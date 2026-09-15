@@ -52,7 +52,13 @@
       tags: ['upgrade'] 
   roles:
     - { role: swapfile, tags: ['swapfile', 'swap'] }
-    - { role: ansible-yarn, tags: ['yarn'] }
+    # Disabled: since 2026-01-28 the Yarn apt repository is signed only with
+    # an Ed25519 key, which gpg 1.4 on Ubuntu 16.04 can neither import nor
+    # verify, so the repository is unusable on xenial. Nothing in morph
+    # currently needs yarn (assets are sprockets; no package.json). Re-enable
+    # with -e install_yarn=true once the host runs a newer Ubuntu, or replace
+    # with a tarball install when the Rails asset pipeline work needs it.
+    - { role: ansible-yarn, tags: ['yarn'], when: install_yarn | default(false) }
     - { role: morph-app, tags: ['morph'] }
     - { role: discourse, tags: ['discourse'] }
   # The default behaviour is for handlers not to get called if a playbook fails

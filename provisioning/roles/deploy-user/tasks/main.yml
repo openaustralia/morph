@@ -17,6 +17,9 @@
     dest: "/tmp/{{ item }}.github_authorized_keys"
   delegate_to: localhost
   become: false
+  # Download for real even in check mode, so the file lookups below can read
+  # the result. It only writes to /tmp on the machine running Ansible.
+  check_mode: false
   with_items: "{{ github_users }}"
 
 - name: Create authorized_keys for deploy from the file that just downloaded
