@@ -1,5 +1,5 @@
 .PHONY: all clean help lint \
-        production-deploy production-provision \
+        production-check production-deploy production-provision \
         roles services-down services-up \
 	staging-deploy staging-provision \
         share-web test vagrant-plugins venv \
@@ -89,6 +89,9 @@ staging-provision: venv roles ## Provision staging using ansible
 
 production-provision: venv roles ## Provision production using ansible
 	${VENV}/ansible-playbook --user=root $(ANSIBLE_OPTS) --inventory-file=provisioning/inventory/production provisioning/playbook.yml
+
+production-check: venv roles ## Dry-run the ansible playbook against production (--check --diff, makes no changes)
+	${VENV}/ansible-playbook --user=root $(ANSIBLE_OPTS) --check --diff --inventory-file=provisioning/inventory/production provisioning/playbook.yml
 
 vagrant-deploy: ## Deploy app to local vagrant VM
 	bundle exec cap local deploy
