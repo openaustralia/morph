@@ -31,6 +31,24 @@
                   = button_to toggle_privacy_scraper_path(scraper), class: "btn btn-danger" do
                     Make
                     = privacy_in_words(!scraper.private)
+          - other_forges = Morph::Forge.available.select { |forge| current_user.forge_identity(forge.key) && scraper.owner.forge_identity(forge.key) }
+          - unless other_forges.empty?
+            %li.list-group-item
+              %h3 Change repository
+              .danger-settings-action-body
+                %p
+                  Point this scraper at a different repository, on #{scraper.forge.name} or another forge, keeping its address on #{hostname},
+                  its data, its history of runs and its watchers. The repository must belong to #{scraper.owner.nickname} there.
+                  The current clone is discarded and the code fetched afresh.
+                - other_forges.each do |forge|
+                  = form_tag change_repository_scraper_path(scraper), class: "form-inline change-repository" do
+                    = hidden_field_tag :forge_key, forge.key
+                    .form-group
+                      %label.sr-only{ for: "full_name_#{forge.key}" } Repository on #{forge.name}
+                      = text_field_tag :full_name, "#{scraper.owner.forge_identity(forge.key).login}/#{scraper.name}", id: "full_name_#{forge.key}", class: "form-control", placeholder: "owner/repository"
+                    = button_tag class: "btn btn-danger", data: { confirm: "Move #{scraper.full_name} to that repository on #{forge.name}? The current clone will be discarded." } do
+                      Move to #{forge.name}
+                      %i.fa{ class: "fa-#{forge.key}" }
           %li.list-group-item
             %h3 Delete your scraper
             .danger-settings-action-body

@@ -15,7 +15,7 @@ class ScrapersController < ApplicationController
   ]
   before_action :load_resource, only: %i[
     settings show destroy update run stop clear watch
-    watchers history toggle_privacy
+    watchers history toggle_privacy change_repository
   ]
 
   # All methods
@@ -254,6 +254,22 @@ class ScrapersController < ApplicationController
       scraper.forge.person_client(identity).set_visibility(scraper.forge_repository, private: new_privacy)
     end
     redirect_to @scraper, notice: "#{scraper.full_name} is now #{helpers.privacy_in_words(scraper.private)} on morph.io"
+  end
+
+  # Re-points the scraper at a repository on another forge, keeping its URL,
+  # data, runs and watchers (ADR 0008).
+  sig { void }
+  def change_repository
+    scraper = T.must(@scraper)
+    authorize! :destroy, scraper
+    forge = available_forge
+    result = ChangeRepositoryService.call(scraper, forge, T.cast(params[:full_name], String), T.must(current_user))
+    if result.is_a?(String)
+      flash[:alert] = result
+      redirect_to settings_scraper_path(scraper)
+    else
+      redirect_to scraper, notice: "#{scraper.full_name} now runs from #{forge.name}. Fetching the code from there now."
+    end
   end
 
   private
