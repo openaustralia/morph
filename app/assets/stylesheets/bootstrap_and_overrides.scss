@@ -29,6 +29,26 @@ body {
   text-align: center;
 }
 
+// Sign-in controls are POST forms (see ApplicationHelper#sign_in_with_github_button)
+// but should sit in the flow like the links they replaced.
+form.sign-in {
+  display: inline;
+}
+
+// In the navbar the submit button is dressed as a nav link.
+.navbar-nav form.sign-in input[type="submit"] {
+  background: none;
+  border: none;
+  padding: 15px;
+  line-height: 20px;
+  color: #777;
+
+  &:hover,
+  &:focus {
+    color: #333;
+  }
+}
+
 .alert {
   margin-top: 20px;
 }

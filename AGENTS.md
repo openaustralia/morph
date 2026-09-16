@@ -261,8 +261,12 @@ production:
 - `foreman "0.63.0"`, to match the system foreman package on production.
 - `jquery-ui-rails "~> 5"`, because newer versions raise
   `Sprockets::FileNotFound`.
-- `omniauth-github "~> 1.4.0"` and a fork of `render_sync`, both pinned to
-  carry fixes.
+- A fork of `render_sync`, pinned to carry fixes.
+
+Sign-in controls are `button_to` forms, not links: OmniAuth 2 only starts the
+OAuth flow on a POST (CVE-2015-9284), and `omniauth-rails_csrf_protection`
+checks the CSRF token on that POST. Use `sign_in_with_github_button` in views
+rather than linking to the authorize path.
 
 Check for security updates with `bundle exec ruby-audit` and
 `bundle exec bundle-audit`, or via the repository's Dependabot alerts.

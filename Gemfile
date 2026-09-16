@@ -37,9 +37,11 @@ gem "rugged"
 
 gem "haml-rails"
 gem "octokit", "~> 4.0"
-# Because we need the fix
-# https://github.com/omniauth/omniauth-github/pull/84/commits/f367321bcf14a57cc9d501375ffebaba8062f449
-gem "omniauth-github", "~> 1.4.0"
+gem "omniauth", "~> 2.1"
+gem "omniauth-github", "~> 2.0"
+# OmniAuth 2 only starts the OAuth flow on a POST (CVE-2015-9284); this gem
+# adds the CSRF token check that makes those POSTs safe.
+gem "omniauth-rails_csrf_protection", "~> 1.0"
 
 # We're still on redis 3.x in production so we can't yet upgrade sidekiq to version 6
 # TODO: Upgrade sidekiq as soon as we can
@@ -223,7 +225,6 @@ gem "loofah", ">= 2.25.2" # fix GHSA-9wjq-cp2p-hrgf (via rails-html-sanitizer, a
 gem "msgpack", ">= 1.8.2" # fix CVE-2026-54522 (via bootsnap)
 gem "net-imap", ">= 0.4.24" # fix CVE-2026-42245/42256/42257/42258 (via mail); CVE-2026-47240/47241/47242 need 0.5.15+, tracked separately
 gem "oauth2", ">= 2.0.22" # fix GHSA-pp92-crg2-gfv9 (via omniauth-oauth2, octokit chain)
-gem "omniauth", ">= 1.9.2" # fix CVE-2020-36599 (via omniauth-github); CVE-2015-9284 CSRF fix needs omniauth 2.0, blocked by omniauth-github's ~> 1.5.0 pin, tracked separately
 gem "rack", ">= 2.2.23", "< 3" # fix 10 CVEs incl. GHSA-8vqr, GHSA-h2jq (High); staying on rack 2.x to match actionpack/sidekiq/sinatra's existing ~> 2.0 constraints
 gem "rails-html-sanitizer", ">= 1.7.1" # fix GHSA-cj75-f6xr-r4g7 (via actionview)
 gem "rdoc", ">= 6.3.4.1" # fix CVE-2024-27281 (RCE, via sdoc)
