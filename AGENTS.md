@@ -353,8 +353,8 @@ repo. See `docs/agents/triage-labels.md`.
 ### Domain docs
 
 Single-context. [`CONTEXT.md`](CONTEXT.md) at the repo root is the glossary of
-morph.io's domain terms, and is opinionated about which words to avoid. There
-are no ADRs yet. See `docs/agents/domain.md`.
+morph.io's domain terms, and is opinionated about which words to avoid.
+Decisions live in `docs/adr/`. See `docs/agents/domain.md`.
 
 ## Known rough edges
 

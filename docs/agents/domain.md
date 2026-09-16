@@ -8,7 +8,7 @@ exploring the codebase.
 - **`CONTEXT.md`** at the repo root. This exists. It is the glossary of
   morph.io's domain terms, and it is opinionated about which words to avoid.
 - **`docs/adr/`**, reading the ADRs that touch the area you are about to work
-  in. This does not exist yet.
+  in.
 
 If a file is not there, **proceed silently**. Do not flag its absence and do not
 suggest creating it upfront. The `/domain-modeling`
@@ -28,9 +28,9 @@ workspaces:
 ├── AGENTS.md          ← standing agent guidance (exists)
 ├── CONTEXT.md         ← glossary of domain terms (exists)
 ├── docs/
-│   ├── adr/           ← not created yet
-│   │   ├── 0001-some-decision.md
-│   │   └── 0002-another-decision.md
+│   ├── adr/           ← architecture decision records
+│   │   ├── 0001-upgrade-morph-in-place.md
+│   │   └── ...
 │   └── agents/        ← this directory
 ├── app/
 │   └── lib/morph/     ← the scraping, Docker and SQLite domain logic

@@ -1,20 +1,31 @@
 # morph.io
 
-morph.io runs scrapers for people. A scraper is a program in someone's GitHub
-repository. morph.io builds it into a container, runs it on a schedule or on
-demand, and serves whatever it writes back out through a web UI and an API.
+morph.io runs scrapers for people. A scraper is a program in someone's git
+repository on a Forge. morph.io builds it into a container, runs it on a schedule
+or on demand, and serves whatever it writes back out through a web UI and an API.
 
 This file is a glossary and nothing else. Standing guidance for working in the
 repository is in [`AGENTS.md`](./AGENTS.md).
 
 ## Language
 
-### People and accounts
+### Forges and accounts
+
+**Forge**:
+A service that hosts git repositories and authenticates the people who own
+them: GitHub or GitLab. A Scraper's repository lives on exactly one Forge.
+_Avoid_: host, provider, platform, service, VCS, git host
+
+**Forge identity**:
+One Owner's account on one Forge. An Owner may hold one per Forge, so a person
+on both GitHub and GitLab is still one Owner.
+_Avoid_: login, credential, connection, linked account
 
 **Owner**:
-A GitHub account morph.io knows about, either a User or an Organization. Named
-for owning scrapers, but used wherever an account is referenced, including
-collaborators, so an Owner does not necessarily own anything.
+Someone morph.io knows about through at least one Forge identity, either a User
+or an Organization. Named for owning scrapers, but used wherever an account is
+referenced, including collaborators, so an Owner does not necessarily own
+anything.
 _Avoid_: account, profile
 
 **User**:
@@ -22,16 +33,18 @@ An Owner that is a person, and the only kind of Owner that can sign in.
 _Avoid_: member
 
 **Organization**:
-An Owner that is a GitHub organisation. Holds scrapers but never signs in.
-_Avoid_: org, team, group
+An Owner that is a group of people on a Forge: a GitHub organisation or a
+top-level GitLab group. Holds scrapers but never signs in.
+_Avoid_: org, team, group, namespace
 
 **Collaborator**:
-An Owner granted permissions on a Scraper's repository, mirrored from GitHub.
-_Avoid_: contributor, which is a different thing
+An Owner granted permissions on a Scraper's repository, mirrored from its
+Forge.
+_Avoid_: contributor, which is a different thing, member
 
 **Contributor**:
 A User who appears in the commit history of a Scraper's repository, taken from
-GitHub.
+its Forge. Only some Forges can say who that is.
 _Avoid_: collaborator, author
 
 **Supporter**:
@@ -41,8 +54,8 @@ _Avoid_: customer, subscriber, sponsor
 ### Scrapers
 
 **Scraper**:
-A program in a GitHub repository that morph.io runs, together with everything
-morph.io keeps about it. Refers to the repository and the record
+A program in a git repository on a Forge that morph.io runs, together with
+everything morph.io keeps about it. Refers to the repository and the record
 interchangeably.
 _Avoid_: crawler, bot, job, spider
 
