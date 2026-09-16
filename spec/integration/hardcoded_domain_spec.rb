@@ -48,6 +48,8 @@ describe "Hardcoded domain references", type: :request do
       "/supporters/new",
       "/users/auth/github",
       "/users/auth/github/callback",
+      "/users/auth/gitlab",
+      "/users/auth/gitlab/callback",
       "/admin/comments/:id", # No active admin comments!
       "/admin/owners", # FIXME: Nil location provided. Can't build URI
       "/admin/owners/:id/edit", # FIXME: undefined method `inputs' for #<ActiveAdmin::ResourceDSL:0x000060e57f6c4d80>
