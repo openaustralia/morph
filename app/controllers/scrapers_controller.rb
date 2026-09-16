@@ -77,47 +77,73 @@ class ScrapersController < ApplicationController
 
   sig { void }
   def github
+    @forge = T.let(Morph::Forge.for("github"), T.nilable(Morph::Forge::Base))
+    forge
+  end
+
+  # The page for adding a scraper from a repository that already exists on a forge
+  sig { void }
+  def forge
+    @forge ||= available_forge
     @scraper = Scraper.new
     authorize! :new, @scraper
+    render :github
   end
 
   # For rendering ajax partial in github action
   sig { void }
   def github_form
+    @forge = Morph::Forge.for("github")
+    forge_form
+  end
+
+  # For rendering the per-owner repository list in the forge page
+  sig { void }
+  def forge_form
+    @forge ||= available_forge
     authorize! :new, Scraper
     @scraper = Scraper.new
     owner = Owner.find(params[:id])
-    morph_scraper_full_names = owner.scrapers.pluck(:full_name)
-    collection = T.must(current_user).github.public_repos(owner.nickname).map do |r|
-      exists_on_morph = morph_scraper_full_names.include?(r.full_name)
+    morph_scraper_full_names = owner.scrapers.where(forge_key: T.must(@forge).key).pluck(:full_name)
+    collection = repositories_for(T.must(@forge), owner).map do |r|
+      exists_on_morph = morph_scraper_full_names.include?("#{owner.to_param}/#{r.name}")
       description = helpers.radio_description(
         name: r.name,
         description: r.description,
-        url: r.rels.html.href,
-        exists_on_morph: exists_on_morph
+        url: r.web_url,
+        exists_on_morph: exists_on_morph,
+        forge_name: T.must(@forge).name
       )
 
       [description, r.full_name, { disabled: exists_on_morph }]
     end
-    render partial: "github_form", locals: { scraper: @scraper, owner: owner, collection: collection }
+    render partial: "github_form", locals: { scraper: @scraper, owner: owner, collection: collection, forge: T.must(@forge) }
   end
 
   sig { void }
   def create_github
+    @forge = Morph::Forge.for("github")
+    create_from_forge
+  end
+
+  sig { void }
+  def create_from_forge
+    @forge ||= available_forge
+    forge = T.must(@forge)
     params_scraper = T.cast(params[:scraper], ActionController::Parameters)
     full_name = T.cast(params_scraper[:full_name], String)
     authenticated_user = T.must(current_user)
 
-    scraper = Scraper.new_from_github(full_name, authenticated_user)
+    scraper = Scraper.new_from_forge(forge, full_name, authenticated_user)
     authorize! :create, scraper
     if scraper.save
       scraper.create_create_scraper_progress!(
-        heading: "Adding from GitHub",
+        heading: "Adding from #{forge.name}",
         message: "Queuing",
         progress: 5
       )
       scraper.save!
-      CreateFromGithubWorker.perform_async(T.must(scraper.id))
+      CreateFromForgeWorker.perform_async(T.must(scraper.id))
       redirect_to scraper
     else
       @scraper = scraper
@@ -224,7 +250,8 @@ class ScrapersController < ApplicationController
     new_privacy = !scraper.private
     scraper.transaction do
       scraper.update!(private: new_privacy)
-      T.must(current_user).github.update_privacy(scraper.full_name, new_privacy)
+      identity = T.must(T.must(current_user).forge_identity(scraper.forge_key))
+      scraper.forge.person_client(identity).set_visibility(scraper.forge_repository, private: new_privacy)
     end
     redirect_to @scraper, notice: "#{scraper.full_name} is now #{helpers.privacy_in_words(scraper.private)} on morph.io"
   end
@@ -262,6 +289,24 @@ class ScrapersController < ApplicationController
     s = T.cast(params.require(:scraper), ActionController::Parameters)
     permitted_attributes = %i[original_language_key owner_id name description]
     permitted_attributes << :private if can? :create_private, Scraper
+    permitted_attributes << :forge_key if Morph::Forge.available.size > 1
     s.permit(*permitted_attributes)
+  end
+
+  # The forge named in the route, if this deployment offers it.
+  sig { returns(Morph::Forge::Base) }
+  def available_forge
+    key = T.cast(params[:forge_key], String)
+    Morph::Forge.available.find { |f| f.key == key } || raise(ActionController::RoutingError, "No forge #{key}")
+  end
+
+  # The repositories `owner` has on `forge` that the current user can see,
+  # through the current user's own account there.
+  sig { params(forge: Morph::Forge::Base, owner: Owner).returns(T::Array[Morph::Forge::Repository]) }
+  def repositories_for(forge, owner)
+    identity = T.must(current_user).forge_identity(forge.key)
+    return [] if identity.nil? || owner.forge_identity(forge.key).nil?
+
+    forge.person_client(identity).repositories(owner)
   end
 end

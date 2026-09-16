@@ -32,28 +32,17 @@ describe Scraper do
 
   describe ".new_from_github" do
     let(:user) { create(:user) }
-    # Octokit::Client is an external gem
-    # rubocop:disable RSpec/VerifiedDoubles
-    let(:github_client) { double("Octokit::Client") }
+    let(:person) { instance_double(Morph::Forge::PersonClient) }
     let(:repo) do
-      double(
-        "Repository",
-        name: "test_repo",
-        full_name: "test_owner/test_repo",
-        description: "A test repository",
-        id: 12345,
-        owner: double("Owner", login: "test_owner"),
-        rels: double("Rels",
-                     html: double("HtmlRel", href: "https://github.com/test_owner/test_repo"),
-                     git: double("GitRel", href: "git://github.com/test_owner/test_repo.git"))
-      )
+      Morph::Forge::Repository.new(id: 12345, name: "test_repo", full_name: "test_owner/test_repo", description: "A test repository",
+                                   private: false, default_branch: "main", web_url: "https://github.com/test_owner/test_repo",
+                                   clone_url: "git://github.com/test_owner/test_repo.git", owner_login: "test_owner")
     end
-    # rubocop:enable RSpec/VerifiedDoubles
     let!(:repo_owner) { create(:user, nickname: "test_owner") }
 
     before do
-      allow(user).to receive(:github).and_return(github_client)
-      allow(github_client).to receive(:repository).with("test_owner/test_repo").and_return(repo)
+      allow_any_instance_of(Morph::Forge::Github).to receive(:person_client).and_return(person) # rubocop:disable RSpec/AnyInstance
+      allow(person).to receive(:repository).with("test_owner/test_repo").and_return(repo)
     end
 
     it "creates new scraper with repository information" do

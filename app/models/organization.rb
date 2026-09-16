@@ -60,25 +60,44 @@ class Organization < Owner
   # organisation can be renamed and its login is then someone else's to take.
   sig { params(uid: String, login: String).returns(Organization) }
   def self.find_or_create_from_github!(uid:, login:)
-    existing = ForgeIdentity.owner_for("github", uid)
+    profile = Morph::Forge::Profile.new(uid: uid, login: login, name: nil, email: nil, avatar_url: nil, blog: nil, company: nil, location: nil)
+    find_or_create_from_forge!(Morph::Forge.for("github"), profile)
+  end
+
+  # Recognised by its id on the forge, since a group can be renamed and its
+  # path is then someone else's to take. A new one gets the path as its
+  # nickname unless another Owner already answers to it (ADR 0008).
+  sig { params(forge: Morph::Forge::Base, profile: Morph::Forge::Profile).returns(Organization) }
+  def self.find_or_create_from_forge!(forge, profile)
+    existing = ForgeIdentity.owner_for(forge.key, profile.uid)
     return T.cast(existing, Organization) if existing
 
     transaction do
-      org = Organization.create!(nickname: login)
-      org.forge_identities.create!(forge_key: "github", uid: uid, login: login)
+      org = Organization.create!(nickname: Owner.available_nickname(profile.login, forge.key))
+      org.forge_identities.create!(forge_key: forge.key, uid: profile.uid, login: profile.login)
       org
     end
   end
 
+  sig { params(profile: Morph::Forge::Profile).void }
+  def refresh_info_from_profile!(profile)
+    update(name: profile.name, blog: profile.blog, company: profile.company, location: profile.location,
+           email: profile.email, gravatar_url: profile.avatar_url)
+  end
+
+  # Refreshes from whichever forge the organisation is on, through a member's
+  # account there. Quietly does nothing if no member can reach it.
   sig { params(user: User).void }
   def refresh_info_from_github!(user)
-    data = user.github.organization(T.must(nickname))
-    update(
-      nickname: data.login, name: data.name, blog: data.blog,
-      company: data.company, location: data.location, email: data.email,
-      gravatar_url: data.rels.avatar.href
-    )
-  rescue Octokit::Unauthorized, Octokit::NotFound
+    forge_identities.each do |org_identity|
+      forge = org_identity.forge
+      member_identity = user.forge_identity(forge.key)
+      next if member_identity.nil? || member_identity.access_token.blank?
+
+      profile = forge.person_client(member_identity).organization(org_identity.login)
+      refresh_info_from_profile!(profile) if profile
+    end
+  rescue Octokit::Unauthorized, Octokit::NotFound, Morph::GitlabClient::Unauthorized
     false
   end
 end

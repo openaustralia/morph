@@ -95,6 +95,8 @@ module Morph
       const :description, T.nilable(String)
       const :id, Integer
       const :rels, RepoRels
+      const :private, T::Boolean, default: false
+      const :default_branch, T.nilable(String), default: nil
     end
 
     sig { params(owner: T.untyped).returns(Owner) }
@@ -139,7 +141,9 @@ module Morph
         full_name: repo.full_name,
         description: repo.description,
         id: repo.id,
-        rels: new_repo_rels(repo.rels)
+        rels: new_repo_rels(repo.rels),
+        private: repo.private == true,
+        default_branch: repo.default_branch
       )
     end
 
@@ -159,8 +163,8 @@ module Morph
 
     # Overwrites whatever there was before in that repo
     # Obviously use with great care
-    sig { params(repo_full_name: String, files: T::Hash[String, String], message: String).void }
-    def add_commit_to_root(repo_full_name, files, message)
+    sig { params(repo_full_name: String, files: T::Hash[String, String], message: String, branch: String).void }
+    def add_commit_to_root(repo_full_name, files, message, branch: "main")
       client = octokit_client
       blobs = files.map do |filename, content|
         {
@@ -172,7 +176,7 @@ module Morph
       end
       tree = client.create_tree(repo_full_name, blobs)
       commit = client.create_commit(repo_full_name, message, tree.sha)
-      client.update_ref(repo_full_name, "heads/main", commit.sha)
+      client.update_ref(repo_full_name, "heads/#{branch}", commit.sha)
     end
 
     sig { params(repo_full_name: String, url: String).void }

@@ -43,7 +43,7 @@ describe ForgeIdentity do
 
   before do
     # Profile refresh talks to GitHub, which is not the seam under test here.
-    allow_any_instance_of(User).to receive(:refresh_info_from_github!) # rubocop:disable RSpec/AnyInstance
+    allow_any_instance_of(User).to receive(:refresh_info_from_forge!) # rubocop:disable RSpec/AnyInstance
     allow(RefreshUserOrganizationsWorker).to receive(:perform_async)
   end
 
@@ -57,8 +57,7 @@ describe ForgeIdentity do
     end
 
     it "finds an existing User by GitHub uid even after they renamed themselves on GitHub" do
-      existing = create(:user, nickname: "alice")
-      existing.forge_identities.create!(forge_key: "github", uid: "42", login: "alice", access_token: "old")
+      existing = create(:user, nickname: "alice", github_uid: "42")
 
       user = User.find_or_create_from_oauth(Morph::Forge.for("github"), github_auth(uid: "42", nickname: "alice-renamed", token: "new"))
 
@@ -68,7 +67,7 @@ describe ForgeIdentity do
     end
 
     it "does not confuse two forges that happen to issue the same uid" do
-      other = create(:user, nickname: "bob")
+      other = create(:user, :forgeless, nickname: "bob")
       other.forge_identities.create!(forge_key: "gitlab", uid: "42", login: "bob")
 
       user = User.find_or_create_from_oauth(Morph::Forge.for("github"), github_auth(uid: "42", nickname: "alice"))
@@ -79,7 +78,7 @@ describe ForgeIdentity do
 
   describe "User#github" do
     it "authenticates as the user's GitHub identity" do
-      user = create(:user)
+      user = create(:user, :forgeless)
       user.forge_identities.create!(forge_key: "github", uid: "1", login: user.nickname, access_token: "tok")
 
       allow(Morph::Github).to receive(:new).and_call_original
@@ -110,16 +109,15 @@ describe ForgeIdentity do
   describe "uniqueness" do
     it "refuses a second identity on the same forge for one Owner" do
       user = create(:user)
-      user.forge_identities.create!(forge_key: "github", uid: "1", login: "a")
 
       expect { user.forge_identities.create!(forge_key: "github", uid: "2", login: "b") }
         .to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "refuses the same forge account being attached to two Owners" do
-      create(:user).forge_identities.create!(forge_key: "github", uid: "1", login: "a")
+      create(:user, github_uid: "1")
 
-      expect { create(:user).forge_identities.create!(forge_key: "github", uid: "1", login: "a") }
+      expect { create(:user, :forgeless).forge_identities.create!(forge_key: "github", uid: "1", login: "a") }
         .to raise_error(ActiveRecord::RecordInvalid)
     end
   end

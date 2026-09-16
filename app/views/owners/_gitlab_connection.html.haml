@@ -1,0 +1,27 @@
+-# How morph.io reaches this Organization's GitLab repositories (ADR 0007), for members only
+- tier = Morph::Forge::Gitlab::GroupConnection.new(organization, current_user).tier
+.panel.panel-default#gitlab-connection
+  .panel-heading
+    %h4.panel-title
+      %i.fa.fa-gitlab
+      GitLab access
+  .panel-body
+    - case tier
+    - when :group_access_token
+      %p
+        %strong Group access token.
+        morph.io reaches this group's repositories in its own right, so scrapers keep running when people leave.
+    - when :deploy_token
+      %p
+        %strong Group deploy token.
+        Repositories can always be cloned. Collaborators and visibility are refreshed through a member's GitLab sign-in, so if nobody who is signed in remains a member, permissions go stale (the scraper is flagged rather than stopped).
+      %p.text-muted.small A group access token would remove that dependency; it needs the group to be on GitLab Premium or Ultimate and you to hold Owner on it.
+    - when :oauth
+      %p
+        %strong Your GitLab sign-in.
+        Scrapers stop syncing if everyone who signed in with GitLab leaves the group or disconnects.
+      %p.text-muted.small Connecting the group creates a token morph.io holds itself: a group access token if the plan allows it, otherwise a deploy token for cloning. Either needs you to hold Owner on the group.
+    - else
+      %p No member of this Organization has a working GitLab sign-in on morph.io.
+    - if tier != :group_access_token && tier != :none
+      = button_to "Connect GitLab group", connect_gitlab_owner_path(organization), class: "btn btn-default"

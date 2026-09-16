@@ -195,7 +195,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     end
 
     context "when current_user is already signed in" do
-      let(:current_user) { create(:user) }
+      let(:current_user) { create(:user, :forgeless) }
 
       before do
         sign_in current_user

@@ -69,6 +69,21 @@ class OwnersController < ApplicationController
     redirect_to settings_owner_url(owner)
   end
 
+  # Creates morph.io's own credential for the Organization's GitLab group,
+  # the most durable one the plan allows (ADR 0007).
+  sig { void }
+  def connect_gitlab
+    org = T.cast(@owner, Organization)
+    tier = Morph::Forge::Gitlab::GroupConnection.new(org, T.must(current_user)).connect!
+    flash[:notice] = case tier
+                     when :group_access_token then "Connected #{org.nickname} with a group access token. morph.io can reach its repositories without depending on anyone's sign-in."
+                     when :deploy_token then "Connected #{org.nickname} with a group deploy token. Repositories can be cloned durably; members and visibility still need a member's GitLab sign-in."
+                     when :oauth then "Could not create a group token (you may need Owner on the group). morph.io will use your GitLab sign-in."
+                     else "You have no working GitLab sign-in. Connect GitLab from your settings first."
+                     end
+    redirect_to owner_url(org)
+  end
+
   sig { void }
   def watch
     user = T.must(current_user)

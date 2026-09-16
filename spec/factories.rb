@@ -7,7 +7,8 @@
 # The maximal trait is intended to have values for all attributes, with the largest possible values
 FactoryBot.define do
   factory :forge_identity do
-    owner factory: :user
+    # The owner's default GitHub identity would collide with this one
+    owner factory: %i[user forgeless]
     forge_key { "github" }
     sequence(:uid) { |n| "github_#{n}" }
     login { owner.nickname }
@@ -26,19 +27,27 @@ FactoryBot.define do
     # Required in practice if you collaborate or own a scraper - only 6 users in Prod dont have nicknames
     sequence(:nickname) { |n| "user#{n}" }
 
-    # Pass github_uid: to control the GitHub account this user is known by.
+    # Every real user signed in through a forge, so they get a GitHub identity
+    # unless told otherwise. Pass github_uid: to control which account, or
+    # use the :forgeless trait for a user with no identity at all.
     transient do
       github_uid { nil }
+      forges { ["github"] }
+    end
+
+    after(:create) do |user, evaluator|
+      create(:forge_identity, owner: user, uid: evaluator.github_uid || "github_#{user.id}") if evaluator.forges.include?("github")
     end
 
     trait :on_github do
-      after(:create) do |user, evaluator|
-        create(:forge_identity, owner: user, uid: evaluator.github_uid || "github_#{user.id}")
-      end
+      forges { ["github"] }
+    end
+
+    trait :forgeless do
+      forges { [] }
     end
 
     trait :maximal do
-      on_github
       sequence(:nickname) { |n| FactoryHelpers.max_name("full-user#{n}", 127) }
       sequence(:email) { |n| "full-user#{n}@example.com" }
       name { FactoryHelpers.max_string("User name", 255) }
@@ -129,14 +138,23 @@ FactoryBot.define do
   factory :organization do
     sequence(:nickname) { |n| "org#{n}" }
 
+    transient do
+      forges { ["github"] }
+    end
+
+    after(:create) do |org, evaluator|
+      create(:forge_identity, owner: org, uid: "github_org_#{org.id}", access_token: nil) if evaluator.forges.include?("github")
+    end
+
     trait :on_github do
-      after(:create) do |org|
-        create(:forge_identity, owner: org, uid: "github_org_#{org.id}", access_token: nil)
-      end
+      forges { ["github"] }
+    end
+
+    trait :forgeless do
+      forges { [] }
     end
 
     trait :maximal do
-      on_github
       sequence(:nickname) { |n| FactoryHelpers.max_name("max-org#{n}", 127) }
       sequence(:email) { |n| "max-org#{n}@example.com" }
       name { FactoryHelpers.max_string("Organization Name", 255) }

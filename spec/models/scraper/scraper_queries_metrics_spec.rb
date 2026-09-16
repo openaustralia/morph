@@ -45,8 +45,8 @@ describe Scraper do
 
   context "with a scraper with some downloads" do
     let(:scraper) { described_class.create!(name: "scraper", owner: owner1, full_name: "") }
-    let(:owner1) { User.create }
-    let(:owner2) { User.create }
+    let(:owner1) { create(:user) }
+    let(:owner2) { create(:user) }
 
     before do
       scraper.api_queries.create(owner: owner1, created_at: Date.new(2015, 5, 8))

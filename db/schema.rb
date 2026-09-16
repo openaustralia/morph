@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_16_000003) do
+ActiveRecord::Schema.define(version: 2026_09_16_000005) do
 
   create_table "active_admin_comments", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "namespace"
@@ -102,6 +102,23 @@ ActiveRecord::Schema.define(version: 2026_09_16_000003) do
     t.datetime "updated_at"
     t.text "title"
     t.index ["name"], name: "index_domains_on_name", unique: true
+  end
+
+  create_table "forge_credentials", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "owner_id"
+    t.integer "scraper_id"
+    t.string "forge_key", default: "gitlab", null: false
+    t.string "kind", null: false
+    t.string "username"
+    t.string "token", null: false
+    t.datetime "expires_at"
+    t.string "forge_token_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["owner_id", "kind"], name: "index_forge_credentials_on_owner_id_and_kind"
+    t.index ["owner_id"], name: "index_forge_credentials_on_owner_id"
+    t.index ["scraper_id", "kind"], name: "index_forge_credentials_on_scraper_id_and_kind"
+    t.index ["scraper_id"], name: "index_forge_credentials_on_scraper_id"
   end
 
   create_table "forge_identities", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
@@ -238,6 +255,7 @@ ActiveRecord::Schema.define(version: 2026_09_16_000003) do
     t.integer "memory_mb"
     t.boolean "private", default: false, null: false
     t.string "forge_key", default: "github", null: false
+    t.datetime "permissions_stale_since"
     t.index ["create_scraper_progress_id"], name: "fk_rails_44c3dd8af8"
     t.index ["full_name"], name: "index_scrapers_on_full_name", unique: true
     t.index ["owner_id", "name"], name: "index_scrapers_on_owner_id_and_name", unique: true
@@ -279,6 +297,8 @@ ActiveRecord::Schema.define(version: 2026_09_16_000003) do
     t.index ["scraper_id"], name: "index_webhooks_on_scraper_id"
   end
 
+  add_foreign_key "forge_credentials", "owners"
+  add_foreign_key "forge_credentials", "scrapers"
   add_foreign_key "forge_identities", "owners"
   add_foreign_key "log_lines", "runs"
   add_foreign_key "metrics", "runs"

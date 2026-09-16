@@ -12,12 +12,17 @@ class CreateScraperWorker
     scraper = Scraper.find(scraper_id)
     current_user = User.find(current_user_id)
 
+    forge = scraper.forge
+    person = forge.person_client(T.must(current_user.forge_identity(forge.key)))
+    owner = T.must(scraper.owner)
+    repo_full_name = "#{T.must(owner.forge_identity(forge.key)).login}/#{scraper.name}"
+
     # Checking progress here as a crude way to see if this background process previously
     # failed part of the way through.
     # TODO: Do this in a less hacky and more general way
     if scraper.create_scraper_progress.progress <= 20
-      scraper.create_scraper_progress.update_progress("Creating GitHub repository", 20)
-      current_user.github.create_repository(owner_nickname: scraper.owner.nickname, name: scraper.name, description: scraper.description, private: scraper.private)
+      scraper.create_scraper_progress.update_progress("Creating #{forge.name} repository", 20)
+      person.create_repository(owner: owner, name: scraper.name, description: scraper.description, private: scraper.private)
     end
 
     # This block should happily run several times (after failures)
@@ -28,16 +33,16 @@ class CreateScraperWorker
       "README.md" => "This is a scraper that runs on [Morph](https://morph.io). To get started [see the documentation](https://morph.io/documentation)"
     )
 
-    current_user.github.add_commit_to_root(scraper.full_name, files, "Add template for morph.io scraper")
+    repository = T.must(person.repository(repo_full_name))
+    person.commit_files(repository, files, "Add template for morph.io scraper")
 
     # This block should happily run several times (after failures)
     scraper.create_scraper_progress.update_progress("Get repository info", 60)
-    scraper2 = Scraper.new_from_github(scraper.full_name, current_user)
-    # Copy the new data across
-    scraper.update(description: scraper2.description, forge_repo_id: scraper2.forge_repo_id,
-                   owner_id: scraper2.owner_id, repo_url: scraper2.repo_url, git_url: scraper2.git_url)
+    repository = T.must(person.repository(repo_full_name))
+    scraper.update(description: repository.description, forge_repo_id: repository.id,
+                   repo_url: repository.web_url, git_url: repository.clone_url)
 
-    current_user.github.update_repo_homepage(scraper.full_name, scraper_url)
+    person.set_homepage(repository, scraper_url)
 
     # This block should happily run several times (after failures)
     scraper.create_scraper_progress.update_progress("Synching repository", 80)

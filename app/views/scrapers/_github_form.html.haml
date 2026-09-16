@@ -1,4 +1,4 @@
-= simple_form_for scraper, url: github_scrapers_path do |f|
+= simple_form_for scraper, url: create_from_forge_path(forge) do |f|
   = f.input :full_name,
             as: :radio_buttons,
             collection: collection,

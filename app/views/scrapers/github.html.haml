@@ -1,4 +1,5 @@
-- title "Add scraper from your GitHub repository"
+- forge = @forge
+- title "Add scraper from your #{forge.name} repository"
 
 .container
   %h1= title
@@ -6,24 +7,28 @@
   = render "documentation/languages"
   = render "documentation/format_intro"
 
-  %ul.nav.nav-tabs
-    %li.active
-      = link_to "#owner_#{current_user.nickname}", data: { toggle: "tab" } do
-        = owner_image(current_user, size: 30)
-        = current_user.nickname
-    - current_user.organizations.each do |org|
-      %li
-        = link_to "#owner_#{org.nickname}", data: { toggle: "tab" } do
-          = owner_image(org, size: 30)
-          = org.nickname
+  - owners = current_user.owners_on(forge)
+  - if owners.empty?
+    .alert.alert-info
+      You have not connected a #{forge.name} account yet.
+      = sign_in_with_forge_button forge, "Connect #{forge.name}", class: "btn btn-default btn-sm"
+  - else
+    - if forge.key == "gitlab"
+      %p.text-muted
+        Projects in a top-level group show under that group. Projects in subgroups cannot be added yet.
 
-  -# This form is only here to show a possible error message
-  = simple_form_for @scraper do |f|
-    .has-error= f.error :full_name
+    %ul.nav.nav-tabs
+      - owners.each_with_index do |owner, i|
+        %li{ class: ("active" if i.zero?) }
+          = link_to "#owner_#{owner.nickname}", data: { toggle: "tab" } do
+            = owner_image(owner, size: 30)
+            = owner.nickname
 
-  .tab-content
-    .tab-pane.active{ id: "owner_#{current_user.nickname}" }
-      = render partial: "github_form_loader", locals: { owner: current_user }
-    - current_user.organizations.each do |org|
-      .tab-pane{ id: "owner_#{org.nickname}" }
-        = render partial: "github_form_loader", locals: { owner: org }
+    -# This form is only here to show a possible error message
+    = simple_form_for @scraper do |f|
+      .has-error= f.error :full_name
+
+    .tab-content
+      - owners.each_with_index do |owner, i|
+        .tab-pane{ id: "owner_#{owner.nickname}", class: ("active" if i.zero?) }
+          = render partial: "github_form_loader", locals: { owner: owner, forge: forge }

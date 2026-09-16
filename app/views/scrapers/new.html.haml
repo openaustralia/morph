@@ -4,13 +4,24 @@
   %h1= title
 
   %p
-    Already have a repository on Github? Then,
-    #{link_to 'add the scraper from Github', github_new_scraper_path}.
+    Already have a repository?
+    - Morph::Forge.available.each_with_index do |forge, i|
+      = i.zero? ? "Then" : "or"
+      = link_to "add the scraper from #{forge.name}", add_from_forge_path(forge)
+    \.
   %p
     It's easier to start here though. We'll create a template scraper for you
     in your preferred language.
 
   = simple_form_for @scraper do |f|
+    - if Morph::Forge.available.size > 1
+      .row
+        .col-sm-6
+          = f.input :forge_key,
+                    as: :radio_buttons,
+                    collection: Morph::Forge.available.map { |forge| [forge.name, forge.key] },
+                    label: "Where should the repository be created?",
+                    hint: "You need to have connected an account on that forge, and the owner you pick below needs to exist there."
     .row
       .col-sm-6
         = f.input :original_language_key,
@@ -40,7 +51,7 @@
             .input-group
               %span.input-group-addon /
               = name_input_field
-          %span.help-block Name to give the scraper here and on GitHub
+          %span.help-block Name to give the scraper here and in the repository
 
     .row
       .col-sm-10.col-md-8

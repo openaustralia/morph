@@ -195,6 +195,10 @@
     state: present
   when: cron_jobs
 
+- name: Daily rotation of GitLab group access tokens that are about to expire (see ADR 0007)
+  cron: name="rotate forge credentials" hour=5 minute=0 user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:rotate_forge_credentials RAILS_ENV={{ rails_env }}"
+  when: cron_jobs
+
 - name: Once an hour check whether to stop scraper containers that have been running too long
   cron: name="stop long-running" minute="0" user=deploy job="cd /var/www/current && /home/deploy/.rvm/bin/rvm . do bundle exec rake app:stop_long_running_scrapers RAILS_ENV={{ rails_env }}"
   when: cron_jobs

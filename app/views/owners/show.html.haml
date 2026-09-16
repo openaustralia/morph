@@ -41,6 +41,8 @@
           .pull-right= button_link_to "Settings", settings_owner_path(@owner)
 
 .container
+  - if @owner.organization? && @owner.forge_identity("gitlab") && can?(:connect_gitlab, @owner)
+    = render partial: "gitlab_connection", locals: { organization: @owner }
   - unless @owner.organization? || @owner.organizations.empty?
     %h3 Public Organizations
     %p

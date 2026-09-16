@@ -44,8 +44,9 @@ module Morph
         "#{scraper.repo_url}/-/commit/#{revision}"
       end
 
-      # Until repository access lands, connecting GitLab means signing in with
-      # it, which is what stores the identity morph.io will act as.
+      # Connecting GitLab means signing in with it (which stores the identity
+      # morph.io can act as) and, for an Organization, someone with Owner on
+      # the group creating morph.io's own tokens from the Organization page.
       sig { override.params(owner: Owner, scraper: T.nilable(Scraper)).returns(String) }
       def connect_url(owner, scraper = nil) # rubocop:disable Lint/UnusedMethodArgument
         Rails.application.routes.url_helpers.user_gitlab_omniauth_authorize_url
@@ -56,14 +57,32 @@ module Morph
         owner.forge_identity(key).present?
       end
 
+      # Unauthenticated lookups only see public projects, which is the same
+      # limit GitHub's unauthenticated check has.
       sig { override.params(full_name: String).returns(T::Boolean) }
-      def repository_exists?(full_name) # rubocop:disable Lint/UnusedMethodArgument
+      def repository_exists?(full_name)
+        !Morph::GitlabClient.new(access_token: "").project(full_name).nil?
+      rescue Morph::GitlabClient::Unauthorized
         false
       end
 
       sig { override.params(scraper: Scraper).returns(Forge::RepositoryAccess) }
       def repository_access(scraper)
-        NotYetSupported.new(self, scraper)
+        RepositoryAccess.new(self, scraper)
+      end
+
+      # GitLab's cumulative roles onto the five permissions morph.io stores.
+      # Maintainer maps to admin because on GitLab a Maintainer can change a
+      # project's visibility and delete it, which is what admin gates here.
+      sig { params(access_level: Integer).returns(Permissions) }
+      def self.permissions_for(access_level)
+        Permissions.new(
+          pull: access_level >= Morph::GitlabClient::REPORTER,
+          triage: access_level >= Morph::GitlabClient::DEVELOPER,
+          push: access_level >= Morph::GitlabClient::DEVELOPER,
+          maintain: access_level >= Morph::GitlabClient::MAINTAINER,
+          admin: access_level >= Morph::GitlabClient::MAINTAINER
+        )
       end
 
       sig { override.params(kind: Symbol, scraper: Scraper).returns(Error) }
@@ -97,46 +116,95 @@ module Morph
         Tokens.new(access_token: token.token, refresh_token: token.refresh_token, expires_at: token.expires_at ? Time.zone.at(token.expires_at) : nil)
       end
 
+      sig { override.params(identity: ForgeIdentity).returns(Forge::PersonClient) }
+      def person_client(identity)
+        PersonClient.new(identity)
+      end
+
       sig { params(owner: Owner).returns(String) }
       def login_of(owner)
         T.must(owner.forge_identity(key)).login
       end
 
-      # Repository access on GitLab is not built yet. A scraper cannot be put on
-      # GitLab until it is, so this is only reached if something has gone wrong.
-      class NotYetSupported < Forge::RepositoryAccess
+      sig { params(group: Morph::GitlabClient::Group).returns(Profile) }
+      def self.profile_from_group(group)
+        Profile.new(uid: group.id.to_s, login: group.path, name: group.name, email: nil, avatar_url: group.avatar_url,
+                    blog: group.web_url, company: nil, location: nil)
+      end
+
+      sig { params(project: Morph::GitlabClient::Project).returns(Repository) }
+      def self.repository_from(project)
+        Repository.new(
+          id: project.id, name: project.path, full_name: project.full_path, description: project.description,
+          private: project.private, default_branch: project.default_branch,
+          web_url: project.web_url, clone_url: project.http_url_to_repo, owner_login: project.namespace.path
+        )
+      end
+
+      # Morph::GitlabClient with one person's OAuth token, refreshed as needed.
+      class PersonClient < Forge::PersonClient
         extend T::Sig
 
-        sig { params(forge: Gitlab, scraper: Scraper).void }
-        def initialize(forge, scraper)
+        sig { params(identity: ForgeIdentity).void }
+        def initialize(identity)
           super()
-          @forge = forge
-          @scraper = scraper
+          @identity = identity
         end
 
-        sig { override.returns(T.nilable(Error)) }
-        def confirm_has_access
-          @forge.error(:not_connected, @scraper)
+        sig { override.params(owner: Owner).returns(T::Array[Repository]) }
+        def repositories(owner)
+          namespace = T.must(owner.forge_identity("gitlab"))
+          projects = owner.is_a?(Organization) ? client.group_projects(namespace.uid.to_i) : client.user_projects(namespace.uid.to_i)
+          projects.map { |project| Gitlab.repository_from(project) }
         end
 
-        sig { override.returns([T::Boolean, T.nilable(Error)]) }
-        def private_repository
-          [false, confirm_has_access]
+        sig { override.params(full_name: String).returns(T.nilable(Repository)) }
+        def repository(full_name)
+          project = client.project(full_name)
+          project && Gitlab.repository_from(project)
         end
 
-        sig { override.returns(T.nilable(Error)) }
-        def synchronise_repo
-          confirm_has_access
+        sig { override.params(owner: Owner, name: String, description: T.nilable(String), private: T::Boolean).returns(Repository) }
+        def create_repository(owner:, name:, description:, private:)
+          namespace_id = owner.is_a?(Organization) ? T.must(owner.forge_identity("gitlab")).uid.to_i : nil
+          Gitlab.repository_from(client.create_project(path: name, description: description, private: private, namespace_id: namespace_id))
         end
 
-        sig { override.returns([T::Array[Collaborator], T.nilable(Error)]) }
-        def collaborators
-          [[], confirm_has_access]
+        sig { override.params(repository: Repository, files: T::Hash[String, String], message: String).void }
+        def commit_files(repository, files, message)
+          client.commit_files(repository.id, branch: repository.default_branch || "main", message: message, files: files)
         end
 
-        sig { override.returns([T.nilable(T::Array[String]), T.nilable(Error)]) }
-        def contributor_logins
-          [nil, confirm_has_access]
+        sig { override.params(repository: Repository, private: T::Boolean).void }
+        def set_visibility(repository, private:)
+          client.set_visibility(repository.id, private: private)
+        end
+
+        sig { override.returns(Profile) }
+        def profile
+          u = client.current_user
+          Profile.new(uid: u.id.to_s, login: u.username, name: u.name, email: u.email, avatar_url: u.avatar_url,
+                      blog: u.website_url, company: u.organization, location: u.location)
+        end
+
+        sig { override.returns(T::Array[Profile]) }
+        def organizations
+          client.groups.map { |g| Gitlab.profile_from_group(g) }
+        end
+
+        sig { override.params(login: String).returns(T.nilable(Profile)) }
+        def organization(login)
+          group = client.group(login)
+          group && Gitlab.profile_from_group(group)
+        rescue Morph::GitlabClient::Unauthorized, Morph::GitlabClient::Forbidden
+          nil
+        end
+
+        private
+
+        sig { returns(Morph::GitlabClient) }
+        def client
+          Morph::GitlabClient.new(access_token: T.must(@identity.fresh_access_token))
         end
       end
     end

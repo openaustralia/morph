@@ -79,17 +79,25 @@ Rails.application.routes.draw do
       get 'settings'
       post 'settings/reset_key', as: 'reset_key', action: 'reset_key'
       delete 'settings/forge_identities/:forge_key', as: 'forge_identity', action: 'disconnect_forge'
+      post 'connect_gitlab'
       post 'watch'
     end
   end
 
   # TODO: Don't allow a user to be called "scrapers"
+  # Adding a scraper from a repository that already exists on a forge. The
+  # GitHub routes keep their historical names; GitLab (and any later forge)
+  # goes through the forge_key ones.
+  forge_keys = /gitlab/
   resources :scrapers, only: [:new, :create, :index] do
     get 'github', on: :new
+    get ':forge_key', on: :new, action: :forge, as: :forge, constraints: { forge_key: forge_keys }
     collection do
       get 'page/:page', :action => :index
       post 'github', to: "scrapers#create_github"
       get 'github_form'
+      post ':forge_key', action: :create_from_forge, as: :create_from_forge, constraints: { forge_key: forge_keys }
+      get ':forge_key/form', action: :forge_form, as: :forge_form, constraints: { forge_key: forge_keys }
       get 'running'
     end
   end
@@ -103,7 +111,9 @@ Rails.application.routes.draw do
   # These routes with path: "/" need to be at the end
   resources :owners, path: "/", only: [:show]
   resources :users, path: "/", only: :show
-  resources :organizations, path: "/", only: :show
+  resources :organizations, path: "/", only: :show do
+    post 'connect_gitlab', on: :member, to: "owners#connect_gitlab"
+  end
 
   # We have to do this very verbosily because we're using a wildcard (*) for the
   # id because we don't want rails to escape the slashes in the id when generating

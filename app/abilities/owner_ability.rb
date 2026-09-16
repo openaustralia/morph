@@ -25,6 +25,8 @@ class OwnerAbility < Ability
     user.organizations.each do |org|
       can :settings, Owner, id: org.id
       can :reset_key, Owner, id: org.id unless SiteSetting.read_only_mode
+      # and connect the organisation's GitLab group, if their role there allows it
+      can :connect_gitlab, Owner, id: org.id unless SiteSetting.read_only_mode
     end
 
     return unless user.admin?

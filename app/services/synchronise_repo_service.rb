@@ -21,6 +21,9 @@ class SynchroniseRepoService
     # unless morph.io has been given access to its repository the same way as a
     # private one would need. It keeps the experience consistent.
     error = access.confirm_has_access
+    # A durable clone credential with nobody left to ask the API: run anyway on
+    # last-known permissions and flag it, rather than throw the clone away (ADR 0007).
+    return synchronise_on_stale_permissions(access, scraper) if error && access.api_credential_missing?
     return error if error
 
     error = check_repository_visibility(access, scraper)
@@ -33,7 +36,21 @@ class SynchroniseRepoService
     error = update_contributors(access, scraper)
     return error if error
 
-    update_collaborators(access, scraper)
+    error = update_collaborators(access, scraper)
+    return error if error
+
+    scraper.update!(permissions_stale_since: nil) if scraper.permissions_stale_since
+    nil
+  end
+
+  sig { params(access: Morph::Forge::RepositoryAccess, scraper: Scraper).returns(T.nilable(Morph::Forge::Error)) }
+  def self.synchronise_on_stale_permissions(access, scraper)
+    error = access.synchronise_repo
+    return error if error
+
+    update_repo_size(scraper)
+    scraper.update!(permissions_stale_since: Time.zone.now) if scraper.permissions_stale_since.nil?
+    nil
   end
 
   sig { params(access: Morph::Forge::RepositoryAccess, scraper: Scraper).returns(T.nilable(T.any(RepoNeedsToBePublic, RepoNeedsToBePrivate, Morph::Forge::Error))) }

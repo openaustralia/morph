@@ -94,6 +94,22 @@ RSpec.describe "tasks" do # rubocop:disable RSpec/DescribeClass
       end
     end
 
+    # desc "Rotate forge credentials that are about to expire"
+    describe "#rotate_forge_credentials" do
+      it "queues a rotation for each group access token expiring within the month, and no others" do
+        org = create(:organization)
+        soon = org.forge_credentials.create!(kind: "group_access_token", token: "a", expires_at: 2.weeks.from_now)
+        org.forge_credentials.create!(kind: "group_access_token", token: "b", expires_at: 6.months.from_now)
+        org.forge_credentials.create!(kind: "deploy_token", token: "c", username: "u")
+
+        task = "app:rotate_forge_credentials"
+        Rake::Task[task].reenable
+        expect { Rake::Task[task].invoke }.to output(/Queued 1 forge credential/).to_stdout
+
+        expect(RotateForgeCredentialWorker.jobs.pluck("args")).to eq([[soon.id]])
+      end
+    end
+
     # desc "Downloads latest docker images"
     describe "#update_docker_images" do
       it "calls Morph::DockerRunner.update_docker_images!" do

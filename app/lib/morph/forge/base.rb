@@ -64,6 +64,11 @@ module Morph
       sig { abstract.params(refresh_token: String).returns(Tokens) }
       def refresh_tokens(refresh_token); end
 
+      # Acts on the forge as one person, with their identity's token: listing
+      # and creating repositories, committing, changing visibility.
+      sig { abstract.params(identity: ForgeIdentity).returns(PersonClient) }
+      def person_client(identity); end
+
       # What an OmniAuth callback hands us, in the shape ForgeIdentity stores.
       sig { params(auth: T.untyped).returns(Tokens) }
       def tokens_from_omniauth(auth)
@@ -78,52 +83,6 @@ module Morph
       def login_from_omniauth(auth)
         auth.info.nickname || auth.info.username
       end
-    end
-
-    # The credentials a forge issues for one identity.
-    class Tokens < T::Struct
-      const :access_token, String
-      const :refresh_token, T.nilable(String)
-      const :expires_at, T.nilable(Time)
-    end
-
-    # A permission set on one repository, in GitHub's five-level shape, which
-    # is what the collaborations table stores. Other forges map onto it.
-    class Permissions < T::Struct
-      const :pull, T::Boolean
-      const :triage, T::Boolean
-      const :push, T::Boolean
-      const :maintain, T::Boolean
-      const :admin, T::Boolean
-    end
-
-    class Collaborator < T::Struct
-      const :login, String
-      const :permissions, Permissions
-    end
-
-    # What a forge adapter returns from #repository_access.
-    class RepositoryAccess
-      extend T::Sig
-      extend T::Helpers
-      abstract!
-
-      sig { abstract.returns(T.nilable(Error)) }
-      def confirm_has_access; end
-
-      sig { abstract.returns([T::Boolean, T.nilable(Error)]) }
-      def private_repository; end
-
-      sig { abstract.returns(T.nilable(Error)) }
-      def synchronise_repo; end
-
-      sig { abstract.returns([T::Array[Collaborator], T.nilable(Error)]) }
-      def collaborators; end
-
-      # Logins of everyone in the commit history, or nil when this forge
-      # cannot say (see Contributor in CONTEXT.md).
-      sig { abstract.returns([T.nilable(T::Array[String]), T.nilable(Error)]) }
-      def contributor_logins; end
     end
   end
 end

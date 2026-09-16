@@ -70,6 +70,13 @@ class AppRake
       puts "Put jobs on to the background queue to refresh all organization info from GitHub"
     end
 
+    desc "Rotate forge credentials that are about to expire (run daily from cron)"
+    task rotate_forge_credentials: :environment do
+      due = ForgeCredential.group_access_tokens.where(expires_at: ..RotateForgeCredentialWorker::ROTATE_AHEAD.from_now)
+      due.find_each { |credential| RotateForgeCredentialWorker.perform_async(credential.id) }
+      puts "Queued #{due.count} forge credential#{'s' unless due.one?} for rotation"
+    end
+
     desc "Downloads latest docker images"
     task update_docker_images: :environment do
       Morph::DockerRunner.update_docker_images!

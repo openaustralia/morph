@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-class CreateFromGithubWorker
+class CreateFromForgeWorker
   extend T::Sig
 
   include Sidekiq::Worker

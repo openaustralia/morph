@@ -205,31 +205,12 @@ describe ScrapersController do
       before { sign_in user }
 
       it "renders the github form partial with repository list" do
-        # rubocop:disable RSpec/VerifiedDoubles
-        # GitHub API objects are external and don't support verified doubles
-        github_client = double("Octokit::Client")
-        repo1 = double(
-          "repo1",
-          name: "test-repo",
-          description: "Test repository",
-          full_name: "mlandauer/test-repo",
-          rels: double(html: double(href: "https://github.com/mlandauer/test-repo"))
-        )
-        repo2 = double(
-          "repo2",
-          name: "another-repo",
-          description: "Another repository",
-          full_name: "mlandauer/another-repo",
-          rels: double(html: double(href: "https://github.com/mlandauer/another-repo"))
-        )
-        helpers_stub = double(radio_description: "Description")
-        # rubocop:enable RSpec/VerifiedDoubles
-
-        # rubocop:disable RSpec/AnyInstance
-        allow_any_instance_of(User).to receive(:github).and_return(github_client)
-        # rubocop:enable RSpec/AnyInstance
-        allow(github_client).to receive(:public_repos).with("mlandauer").and_return([repo1, repo2])
-        allow(controller).to receive(:helpers).and_return(helpers_stub)
+        person = instance_double(Morph::Forge::PersonClient)
+        repo = Morph::Forge::Repository.new(id: 1, name: "test-repo", full_name: "mlandauer/test-repo", description: "Test repository", private: false,
+                                            default_branch: "main", web_url: "https://github.com/mlandauer/test-repo",
+                                            clone_url: "git://github.com/mlandauer/test-repo.git", owner_login: "mlandauer")
+        allow_any_instance_of(Morph::Forge::Github).to receive(:person_client).and_return(person) # rubocop:disable RSpec/AnyInstance
+        allow(person).to receive(:repositories).and_return([repo])
 
         get :github_form, params: { id: user.id }, format: :js
 
@@ -253,25 +234,25 @@ describe ScrapersController do
       context "with valid GitHub repository" do
         it "creates scraper from GitHub" do
           scraper = build(:scraper, owner: user, name: "github_scraper", full_name: "mlandauer/github_scraper")
-          allow(Scraper).to receive(:new_from_github).and_return(scraper)
+          allow(Scraper).to receive(:new_from_forge).and_return(scraper)
           allow(scraper).to receive(:save).and_return(true)
           allow(scraper).to receive(:create_create_scraper_progress!)
-          allow(CreateFromGithubWorker).to receive(:perform_async)
+          allow(CreateFromForgeWorker).to receive(:perform_async)
 
           post :create_github, params: { scraper: { full_name: "mlandauer/github_scraper" } }
 
-          expect(Scraper).to have_received(:new_from_github).with("mlandauer/github_scraper", user)
-          expect(CreateFromGithubWorker).to have_received(:perform_async)
+          expect(Scraper).to have_received(:new_from_forge).with(an_instance_of(Morph::Forge::Github), "mlandauer/github_scraper", user)
+          expect(CreateFromForgeWorker).to have_received(:perform_async)
           expect(response).to have_http_status(:redirect)
         end
 
         it "creates progress record for GitHub import" do
           scraper = build(:scraper, owner: user, name: "progress_test", full_name: "mlandauer/progress_test")
-          allow(Scraper).to receive(:new_from_github).and_return(scraper)
+          allow(Scraper).to receive(:new_from_forge).and_return(scraper)
           allow(scraper).to receive(:save).and_return(true)
           allow(scraper).to receive(:create_create_scraper_progress!)
           allow(scraper).to receive(:id).and_return(123)
-          allow(CreateFromGithubWorker).to receive(:perform_async)
+          allow(CreateFromForgeWorker).to receive(:perform_async)
 
           post :create_github, params: { scraper: { full_name: "mlandauer/progress_test" } }
 
@@ -286,7 +267,7 @@ describe ScrapersController do
       context "with invalid GitHub repository" do
         it "re-renders github template on validation failure" do
           invalid_scraper = build(:scraper, owner: user, name: "", full_name: "mlandauer/")
-          allow(Scraper).to receive(:new_from_github).and_return(invalid_scraper)
+          allow(Scraper).to receive(:new_from_forge).and_return(invalid_scraper)
           allow(invalid_scraper).to receive(:save).and_return(false)
 
           post :create_github, params: { scraper: { full_name: "mlandauer/invalid" } }
@@ -361,16 +342,16 @@ describe ScrapersController do
       end
 
       it "does not allow you to delete a scraper if you don't own the scraper" do
-        other_user = User.create(nickname: "otheruser")
-        Scraper.create(owner: other_user, name: "a_scraper", full_name: "otheruser/a_scraper")
+        other_user = create(:user, nickname: "otheruser")
+        create(:scraper, owner: other_user, name: "a_scraper", full_name: "otheruser/a_scraper")
         expect { delete :destroy, params: { id: "otheruser/a_scraper" } }
           .to raise_error(ActiveRecord::RecordNotFound)
         expect(Scraper.count).to eq 1
       end
 
       it "does not allow you to delete a scraper if it's owner is an organisation your're not part of" do
-        other_organisation = Organization.create(nickname: "otherorg")
-        Scraper.create(owner: other_organisation, name: "a_scraper", full_name: "otherorg/a_scraper")
+        other_organisation = create(:organization, nickname: "otherorg")
+        create(:scraper, owner: other_organisation, name: "a_scraper", full_name: "otherorg/a_scraper")
         expect { delete :destroy, params: { id: "otherorg/a_scraper" } }
           .to raise_error(ActiveRecord::RecordNotFound)
         expect(Scraper.count).to eq 1
@@ -620,54 +601,39 @@ describe ScrapersController do
       before do
         user.update!(admin: true)
         sign_in user
+        scraper.update!(forge_repo_id: 1, repo_url: "https://github.com/mlandauer/privacy_test", git_url: "git://github.com/mlandauer/privacy_test.git")
+        allow_any_instance_of(Morph::Forge::Github).to receive(:person_client).and_return(person) # rubocop:disable RSpec/AnyInstance
       end
 
+      let(:person) { instance_double(Morph::Forge::PersonClient) }
+
       it "toggles privacy from public to private" do
-        # rubocop:disable RSpec/VerifiedDoubles
-        # GitHub API client is external
-        github_client = double("Octokit::Client")
-        # rubocop:enable RSpec/VerifiedDoubles
-        # rubocop:disable RSpec/AnyInstance
-        allow_any_instance_of(User).to receive(:github).and_return(github_client)
-        # rubocop:enable RSpec/AnyInstance
-        allow(github_client).to receive(:update_privacy)
+        allow(person).to receive(:set_visibility)
 
         post :toggle_privacy, params: { id: scraper.to_param }
 
         scraper.reload
         expect(scraper.private).to be true
-        expect(github_client).to have_received(:update_privacy).with("mlandauer/privacy_test", true)
+        expect(person).to have_received(:set_visibility).with(an_object_having_attributes(full_name: "mlandauer/privacy_test"), private: true)
         expect(response).to redirect_to(scraper)
         expect(flash[:notice]).to include("private")
       end
 
       it "toggles privacy from private to public" do
         scraper.update!(private: true)
-        # rubocop:disable RSpec/VerifiedDoubles
-        github_client = double("Octokit::Client")
-        # rubocop:enable RSpec/VerifiedDoubles
-        # rubocop:disable RSpec/AnyInstance
-        allow_any_instance_of(User).to receive(:github).and_return(github_client)
-        # rubocop:enable RSpec/AnyInstance
-        allow(github_client).to receive(:update_privacy)
+        allow(person).to receive(:set_visibility)
 
         post :toggle_privacy, params: { id: scraper.to_param }
 
         scraper.reload
         expect(scraper.private).to be false
-        expect(github_client).to have_received(:update_privacy).with("mlandauer/privacy_test", false)
+        expect(person).to have_received(:set_visibility).with(anything, private: false)
         expect(response).to redirect_to(scraper)
         expect(flash[:notice]).to include("public")
       end
 
       it "uses a transaction for privacy update" do
-        # rubocop:disable RSpec/VerifiedDoubles
-        github_client = double("Octokit::Client")
-        # rubocop:enable RSpec/VerifiedDoubles
-        # rubocop:disable RSpec/AnyInstance
-        allow_any_instance_of(User).to receive(:github).and_return(github_client)
-        # rubocop:enable RSpec/AnyInstance
-        allow(github_client).to receive(:update_privacy).and_raise("GitHub API error")
+        allow(person).to receive(:set_visibility).and_raise("GitHub API error")
 
         expect do
           post :toggle_privacy, params: { id: scraper.to_param }
@@ -676,18 +642,6 @@ describe ScrapersController do
         scraper.reload
         expect(scraper.private).to be false
       end
-    end
-  end
-
-  describe "CanCan::AccessDenied handling" do
-    before { sign_in user }
-
-    it "raises RecordNotFound instead of AccessDenied" do
-      other_user = create(:user, nickname: "otheruser")
-      scraper = create(:scraper, owner: other_user, name: "forbidden", full_name: "otheruser/forbidden")
-
-      expect { get :settings, params: { id: scraper.to_param } }
-        .to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

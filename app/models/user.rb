@@ -193,20 +193,35 @@ class User < Owner
     alerts.map(&:watch).include? object
   end
 
+  # The owners (this user and their Organizations) that have an account on
+  # `forge`, so a scraper there can be put under them.
+  sig { params(forge: Morph::Forge::Base).returns(T::Array[Owner]) }
+  def owners_on(forge)
+    all_owners.select { |owner| owner.forge_identity(forge.key) }
+  end
+
+  # Refreshes which Organizations this user belongs to, from every forge they
+  # have a working identity on. Membership from a forge the user cannot
+  # currently reach is left as it was.
   sig { void }
   def refresh_organizations!
-    refreshed_organizations = github.organizations(T.must(nickname)).map do |data|
-      org = Organization.find_or_create_from_github!(uid: data.id.to_s, login: data.login)
-      org.refresh_info_from_github!(self)
-      org
+    refreshed = organizations.to_a
+    forge_identities.select { |identity| identity.access_token.present? }.each do |identity|
+      forge = identity.forge
+      refreshed.reject! { |org| org.forge_identity(forge.key) }
+      refreshed.concat(forge.person_client(identity).organizations.map do |profile|
+        org = Organization.find_or_create_from_forge!(forge, profile)
+        org.refresh_info_from_profile!(profile)
+        org
+      end)
     end
 
     # Watch any new organizations
-    (refreshed_organizations - organizations.to_a).each do |o|
+    (refreshed - organizations.to_a).each do |o|
       watch o
     end
 
-    self.organizations = refreshed_organizations
+    self.organizations = refreshed.uniq
   end
 
   # Someone has just come back from a forge's OAuth flow with nobody signed in.
@@ -236,31 +251,31 @@ class User < Owner
 
   sig { params(forge: Morph::Forge::Base, auth: T.untyped).void }
   def refresh_info_after_sign_in(forge, auth)
-    case forge
-    when Morph::Forge::Github
-      refresh_info_from_github!
-      # Also every time you login it should update the list of organizations that
-      # the user is attached to but do this in a background job
-      RefreshUserOrganizationsWorker.perform_async(T.must(id))
-    else
-      # What the forge told OmniAuth is enough for a profile until a fuller
-      # refresh exists for it.
-      info = auth.info
-      update!(name: info.name, email: info.email, gravatar_url: info.image)
-    end
+    # What the forge told OmniAuth is enough to be going on with; the full
+    # profile and the organisations follow in the background.
+    info = auth.info
+    update!(name: info.name, email: info.email, gravatar_url: info.image) if forge.key == "gitlab"
+    refresh_info_from_forge!(forge) if forge.key == "github"
+    RefreshUserOrganizationsWorker.perform_async(T.must(id))
+  end
+
+  # Profile fields from the user's own account on `forge`. Quietly does
+  # nothing if the identity's token no longer works.
+  sig { params(forge: Morph::Forge::Base).returns(T::Boolean) }
+  def refresh_info_from_forge!(forge)
+    identity = forge_identity(forge.key)
+    return false if identity.nil? || identity.access_token.blank?
+
+    profile = forge.person_client(identity).profile
+    update(name: profile.name, gravatar_url: profile.avatar_url, blog: profile.blog,
+           company: profile.company, location: profile.location, email: profile.email)
+  rescue Octokit::Unauthorized, Octokit::NotFound, Morph::GitlabClient::Unauthorized, Morph::GitlabClient::NotFound
+    false
   end
 
   sig { void }
   def refresh_info_from_github!
-    user = github.user_from_github(T.must(nickname))
-    update(name: user.name,
-           gravatar_url: user.rels.avatar.href,
-           blog: user.blog,
-           company: user.company,
-           location: user.location,
-           email: github.primary_email)
-  rescue Octokit::Unauthorized, Octokit::NotFound
-    false
+    refresh_info_from_forge!(Morph::Forge.for("github"))
   end
 
   sig { returns(T::Boolean) }

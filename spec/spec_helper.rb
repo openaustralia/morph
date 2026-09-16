@@ -92,7 +92,8 @@ VCR.configure do |c|
   c.hook_into :webmock
   c.ignore_hosts "codeclimate.com"
   c.ignore_request do |_request|
-    RSpec.current_example&.metadata&.fetch(:github_integration, false)
+    metadata = RSpec.current_example&.metadata
+    metadata&.fetch(:github_integration, false) || metadata&.fetch(:gitlab_integration, false)
   end
 end
 

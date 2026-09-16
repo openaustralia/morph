@@ -100,9 +100,92 @@ module Morph
         raise NotImplementedError, "GitHub tokens do not expire"
       end
 
+      sig { override.params(identity: ForgeIdentity).returns(Forge::PersonClient) }
+      def person_client(identity)
+        PersonClient.new(Morph::Github.new(user_nickname: identity.login, user_access_token: T.must(identity.access_token)))
+      end
+
       sig { params(owner: Owner).returns(String) }
       def login_of(owner)
         owner.github_identity&.login || T.must(owner.nickname)
+      end
+
+      # Morph::Github (Octokit as the signed-in user) in the forge-neutral shape.
+      class PersonClient < Forge::PersonClient
+        extend T::Sig
+
+        sig { params(github: Morph::Github).void }
+        def initialize(github)
+          super()
+          @github = github
+        end
+
+        sig { override.params(owner: Owner).returns(T::Array[Repository]) }
+        def repositories(owner)
+          @github.public_repos(T.must(owner.nickname)).map { |repo| translate(repo) }
+        end
+
+        sig { override.params(full_name: String).returns(T.nilable(Repository)) }
+        def repository(full_name)
+          translate(@github.repository(full_name))
+        rescue Octokit::NotFound
+          nil
+        end
+
+        sig { override.params(owner: Owner, name: String, description: T.nilable(String), private: T::Boolean).returns(Repository) }
+        def create_repository(owner:, name:, description:, private:)
+          @github.create_repository(owner_nickname: T.must(owner.nickname), name: name, description: description, private: private)
+          T.must(repository("#{owner.nickname}/#{name}"))
+        end
+
+        sig { override.params(repository: Repository, files: T::Hash[String, String], message: String).void }
+        def commit_files(repository, files, message)
+          @github.add_commit_to_root(repository.full_name, files, message, branch: repository.default_branch || "main")
+        end
+
+        sig { override.params(repository: Repository, private: T::Boolean).void }
+        def set_visibility(repository, private:)
+          @github.update_privacy(repository.full_name, private)
+        end
+
+        sig { override.params(repository: Repository, url: String).void }
+        def set_homepage(repository, url)
+          @github.update_repo_homepage(repository.full_name, url)
+        end
+
+        sig { override.returns(Profile) }
+        def profile
+          profile_from(@github.user_from_github(@github.user_nickname), email: @github.primary_email)
+        end
+
+        sig { override.returns(T::Array[Profile]) }
+        def organizations
+          @github.organizations(@github.user_nickname).map { |o| profile_from(o) }
+        end
+
+        sig { override.params(login: String).returns(T.nilable(Profile)) }
+        def organization(login)
+          profile_from(@github.organization(login))
+        rescue Octokit::NotFound, Octokit::Unauthorized
+          nil
+        end
+
+        private
+
+        sig { params(owner: Morph::Github::Owner, email: T.nilable(String)).returns(Profile) }
+        def profile_from(owner, email: owner.email)
+          Profile.new(uid: owner.id.to_s, login: owner.login, name: owner.name, email: email, avatar_url: owner.rels.avatar.href,
+                      blog: owner.blog, company: owner.company, location: owner.location)
+        end
+
+        sig { params(repo: Morph::Github::Repo).returns(Repository) }
+        def translate(repo)
+          Repository.new(
+            id: repo.id, name: repo.name, full_name: repo.full_name, description: repo.description,
+            private: repo.private, default_branch: repo.default_branch,
+            web_url: repo.rels.html.href, clone_url: repo.rels.git.href, owner_login: repo.owner.login
+          )
+        end
       end
 
       # Translates Morph::GithubAppInstallation's results into the forge-neutral shape.

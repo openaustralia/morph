@@ -9,8 +9,8 @@ module ScrapersHelper
   include ActionView::Helpers::UrlHelper
   include RunsHelper
 
-  sig { params(name: String, description: T.nilable(String), url: String, exists_on_morph: T::Boolean).returns(String) }
-  def radio_description(name:, description:, url:, exists_on_morph:)
+  sig { params(name: String, description: T.nilable(String), url: String, exists_on_morph: T::Boolean, forge_name: String).returns(String) }
+  def radio_description(name:, description:, url:, exists_on_morph:, forge_name: "GitHub")
     a = []
     a << content_tag(:strong, name)
     if description.present?
@@ -20,12 +20,29 @@ module ScrapersHelper
     if exists_on_morph
       content_tag(:span, safe_join(a), class: "text-muted")
     else
-      link = link_to("on GitHub", url, target: "_blank", rel: "noopener")
+      link = link_to("on #{forge_name}", url, target: "_blank", rel: "noopener")
       a << " ("
       a << link
       a << ")"
       safe_join(a)
     end
+  end
+
+  # Route helpers for the add-from-forge pages: GitHub keeps its historical
+  # route names, everything else goes through the forge_key routes.
+  sig { params(forge: Morph::Forge::Base, owner: Owner).returns(String) }
+  def forge_form_path(forge, owner)
+    forge.key == "github" ? github_form_scrapers_path(id: owner.id) : forge_form_scrapers_path(forge_key: forge.key, id: owner.id)
+  end
+
+  sig { params(forge: Morph::Forge::Base).returns(String) }
+  def create_from_forge_path(forge)
+    forge.key == "github" ? github_scrapers_path : create_from_forge_scrapers_path(forge_key: forge.key)
+  end
+
+  sig { params(forge: Morph::Forge::Base).returns(String) }
+  def add_from_forge_path(forge)
+    forge.key == "github" ? github_new_scraper_path : forge_new_scraper_path(forge_key: forge.key)
   end
 
   sig { params(scraper: Scraper).returns(String) }

@@ -25,6 +25,12 @@
         %blockquote
           %p= scraper.scraped_domains.first.meta_or_title
 
+    - if scraper.permissions_stale_since && can?(:update, scraper)
+      .alert.alert-warning
+        Runs are going ahead but morph.io has not been able to refresh who can see this scraper since
+        #{timeago_tag(scraper.permissions_stale_since, force: true)}: nobody with access to it has a working
+        #{scraper.forge.name} sign-in here. Sign in with #{scraper.forge.name} again, or ask a collaborator to.
+
     - if can? :update, scraper
       #scraper-run
         = render partial: "scrapers/run_button", locals: { scraper: scraper }

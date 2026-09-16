@@ -24,7 +24,7 @@ describe Morph::Runner do
     # TODO: Hmmm.. When do the callbacks get reenabled?
     before { Searchkick.disable_callbacks }
 
-    let(:owner) { User.create(nickname: "mlandauer") }
+    let(:owner) { create(:user, nickname: "mlandauer") }
     let(:run) { Run.create(owner: owner) }
     let(:runner) { described_class.new(run) }
 
@@ -42,7 +42,7 @@ describe Morph::Runner do
   end
 
   describe "#synch_and_go!" do
-    let(:run) { Run.create(owner: User.create(nickname: "testuser")) }
+    let(:run) { Run.create(owner: create(:user, nickname: "testuser")) }
     let(:runner) { described_class.new(run) }
 
     it "returns early if scraper is nil" do
@@ -106,7 +106,7 @@ describe Morph::Runner do
 
   describe ".go", docker: true do
     it "runs without an associated scraper" do
-      owner = User.create(nickname: "mlandauer")
+      owner = create(:user, nickname: "mlandauer")
       run = Run.create(owner: owner)
       run.database.clear
       expect(run.database.no_rows).to eq 0
@@ -120,7 +120,7 @@ describe Morph::Runner do
     # FIXME: Sometimes fails!
     # it "magicallies handle a sidekiq queue restart", slow: true do
     #   # 1.9 seconds
-    #   owner = User.create(nickname: "mlandauer")
+    #   owner = create(:user, nickname: "mlandauer")
     #   run = Run.create(owner: owner)
     #   FileUtils.rm_rf(run.data_path)
     #   FileUtils.rm_rf(run.repo_path)
@@ -165,7 +165,7 @@ describe Morph::Runner do
 
     it "handles restarting from a stopped container", slow: true do
       # 2.9 seconds
-      owner = User.create(nickname: "mlandauer")
+      owner = create(:user, nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
       FileUtils.rm_rf(run.repo_path)
@@ -213,7 +213,7 @@ describe Morph::Runner do
 
     it "is able to limit the number of lines of output", slow: true do
       # 1.9 seconds
-      owner = User.create(nickname: "mlandauer")
+      owner = create(:user, nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
       FileUtils.rm_rf(run.repo_path)
@@ -254,7 +254,7 @@ describe Morph::Runner do
 
     it "is able to correctly limit the number of lines even after a restart", slow: true do
       # 1.9 seconds
-      owner = User.create(nickname: "mlandauer")
+      owner = create(:user, nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
       FileUtils.rm_rf(run.repo_path)
@@ -289,7 +289,7 @@ describe Morph::Runner do
     end
 
     it "handles missing database file with status code zero" do
-      owner = User.create(nickname: "mlandauer")
+      owner = create(:user, nickname: "mlandauer")
       run = Run.create(owner: owner)
       fill_scraper_for_run("save_to_database", run) # Just to pass compile
 
@@ -307,7 +307,7 @@ describe Morph::Runner do
     end
 
     it "updates database diff information if database exists", faye: true do
-      owner = User.create(nickname: "mlandauer")
+      owner = create(:user, nickname: "mlandauer")
       run = Run.create(owner: owner)
       scraper = create(:scraper, name: "test", owner: owner)
       run.update(scraper: scraper)
@@ -370,7 +370,7 @@ describe Morph::Runner do
     # end
 
     it "generates correct docker container labels" do
-      owner = User.create(nickname: "mlandauer")
+      owner = create(:user, nickname: "mlandauer")
       scraper = create(:scraper, name: "myscraper", owner: owner)
       run = Run.create(id: 456, scraper: scraper)
       runner = described_class.new(run)
@@ -415,7 +415,7 @@ describe Morph::Runner do
     # TODO: Test that we can stop the compile stage
     it "is able to stop a scraper running in a continuous loop", slow: true do
       # 1.1 seconds
-      owner = User.create(nickname: "mlandauer")
+      owner = create(:user, nickname: "mlandauer")
       run = Run.create(owner: owner)
       FileUtils.rm_rf(run.data_path)
       FileUtils.rm_rf(run.repo_path)

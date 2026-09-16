@@ -1,8 +1,8 @@
 %div{ id: "owner_#{owner.nickname}_content" }
   %p
-    %i.fa.fa-github.fa-2x.fa-spin
-    Hang on. Getting your repositories from GitHub&hellip;
+    %i.fa.fa-2x.fa-spin{ class: "fa-#{forge.key}" }
+    Hang on. Getting your repositories from #{forge.name}&hellip;
 :javascript
   $(document).ready(function(){
-    $("#owner_#{owner.nickname}_content").load("#{github_form_scrapers_path(id: owner.id)}")
+    $("#owner_#{owner.nickname}_content").load("#{forge_form_path(forge, owner)}")
   });
