@@ -7,6 +7,10 @@ source "https://rubygems.org"
 
 ruby "3.0.7"
 
+# Pinned to match the default gem bundled inside ruby-3.0.7 on our 16.04 production servers. This is to avoid a CVE-2026-54297 vulnerability in base64 0.2.0, which requires Ruby >= 3.1.
+# can be removed once we upgrade to Ruby >= 3.1 and base64 >= 0.2.0
+gem "base64", "0.1.0"
+
 gem "dotenv-rails"
 
 gem "rails", "6.1.7.10"

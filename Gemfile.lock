@@ -100,7 +100,7 @@ GEM
       execjs (~> 2)
     backstretch-rails (2.0.4)
       railties (> 3.1)
-    base64 (0.3.0)
+    base64 (0.1.0)
     bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.2)
     better_errors (2.9.1)
@@ -778,6 +778,7 @@ DEPENDENCIES
   annotaterb
   archive-tar-minitar
   backstretch-rails
+  base64 (= 0.1.0)
   bcrypt (>= 3.1.22)
   bcrypt_pbkdf (~> 1.1)
   better_errors

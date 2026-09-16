@@ -9,6 +9,11 @@ raise "Deploy from the openaustralia repo (#{expected_repos.join(', ')}) instead
 
 set :rvm_ruby_version, "ruby-3.0.7"
 
+# capistrano-bundler doesn't install the Bundler version pinned in
+# Gemfile.lock, so bundler:install silently runs under whatever (older)
+# Bundler happens to already be installed on the server.
+set :bundler_version, File.read("Gemfile.lock")[/BUNDLED WITH\n\s+(\S+)/, 1]
+
 set :tagging3_format, ':stage_:release'
 
 set :branch, lambda {
