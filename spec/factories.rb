@@ -127,6 +127,8 @@ FactoryBot.define do
   end
 
   factory :organization do
+    sequence(:nickname) { |n| "org#{n}" }
+
     trait :on_github do
       after(:create) do |org|
         create(:forge_identity, owner: org, uid: "github_org_#{org.id}", access_token: nil)
