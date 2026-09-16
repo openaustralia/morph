@@ -23,6 +23,7 @@ cron_jobs: true
 
 # inventory/staging.py sets the following from .env.staging or .env:
 #   github_app_id, github_app_name, github_app_client_id, github_app_client_secret
+#   gitlab_app_id, gitlab_app_secret, gitlab_url (all optional)
 secret_key_base: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           31656161336230343966383038656237636233623664653437656234343732323265616634333166

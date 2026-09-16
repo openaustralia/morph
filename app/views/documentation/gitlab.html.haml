@@ -1,0 +1,52 @@
+- title "GitLab"
+
+%h1= title
+
+%h2 Signing in and connecting
+%p
+  Sign in with GitLab from the sign-in page, or, if you already sign in with GitHub, connect GitLab from
+  your settings page. Either way you are one person on #{hostname} with an account on each forge.
+%p
+  Your top-level GitLab groups become organisations here, the way GitHub organisations do. Projects in
+  subgroups cannot be added yet.
+
+%h2 How morph.io reaches your repositories
+%p
+  On GitHub, morph.io reaches repositories through an App you install. GitLab has no equivalent that every
+  plan offers, so morph.io uses the most durable credential your plan and your role allow, and falls through
+  to weaker ones. The "GitLab access" panel on an organisation's page shows which is in force.
+%dl
+  %dt Group access token
+  %dd
+    A token morph.io holds itself, as a Reporter-level member of the group. Scrapers keep running when people
+    leave. Needs the group to be on GitLab Premium or Ultimate, and someone with Owner on the group to click
+    "Connect GitLab group".
+  %dt Group deploy token plus your sign-in
+  %dd
+    Available on every plan. The deploy token lets morph.io clone the code durably; who may see and run each
+    scraper is refreshed through the GitLab sign-in of any collaborator. If everyone who signed in with GitLab
+    leaves the group, runs go ahead on the permissions last seen and the scraper shows a warning until someone
+    signs in again.
+  %dt Your sign-in alone
+  %dd
+    What a scraper under your own account uses. If you disconnect GitLab, or your token stops working, its
+    runs fail with a message saying so.
+
+%h2 What is different from GitHub
+%ul
+  %li
+    Contributors are not listed for GitLab scrapers. GitLab's API reports the people in a repository's history by
+    name and email rather than username, and morph.io does not look people up by email.
+  %li
+    New repositories created from #{hostname} do not link back to their scraper page, because GitLab projects have
+    no homepage field.
+  %li
+    Roles map onto GitHub's permissions: Reporter and above can see a private scraper; Developer and above can
+    change and run it; Maintainer and Owner can change its settings and delete it.
+
+%h2#moving Moving a scraper between forges
+%p
+  A scraper's admin can point it at a different repository from the Danger Zone on its settings page: on
+  another forge or the same one. The scraper keeps its address on #{hostname}, its data, its history of runs
+  and its watchers. The repository has to belong to the scraper's owner on the new forge, so a scraper cannot
+  quietly change hands. The old clone is discarded and the code fetched afresh.

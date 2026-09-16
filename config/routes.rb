@@ -55,6 +55,7 @@ Rails.application.routes.draw do
       get 'language_version'
       get 'webhooks'
       get "github_app"
+      get "gitlab"
     end
   end
 

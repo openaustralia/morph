@@ -21,6 +21,7 @@ cron_jobs: false
 
 # Vagrantfile sets the following from .env:
 #   github_app_id, github_app_name, github_app_client_id, github_app_client_secret
+#   gitlab_app_id, gitlab_app_secret, gitlab_url (all optional)
 
 secret_key_base: !vault |
           $ANSIBLE_VAULT;1.1;AES256

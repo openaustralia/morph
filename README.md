@@ -244,6 +244,30 @@ You may have to add write perms to this file first using
 `chmod +w /var/www/shared/config/morph-github-app.private-key.pem`,
 if the staging server is a clone of production as otherwise you won't be able to update it.
 
+### Creating a GitLab application (optional)
+
+GitLab sign-in is optional: without these values the GitLab buttons are simply not shown, and everything else
+works as before. To offer it:
+
+1. On gitlab.com (or your own instance), go to your group's or user's **Settings → Applications** and add one.
+   For OAF the application lives under the openaustralia group.
+2. Name it, say, `morph.io (development)`.
+3. Redirect URI: `http://127.0.0.1:3000/users/auth/gitlab/callback` (add one per host you use, as for GitHub).
+4. Leave **Confidential** ticked.
+5. Scopes: `api` and `read_user`. `api` is needed to create repositories, change their visibility and create the
+   group tokens described in `docs/adr/0007-layered-repository-credentials-for-gitlab.md`. GitLab has no
+   incremental consent, so it is asked for once at sign-in.
+
+Then in `.env`:
+
+* `GITLAB_APP_ID` - the Application ID shown after saving.
+* `GITLAB_APP_SECRET` - the Secret shown once after saving.
+* `GITLAB_URL` - only for a self-hosted instance; defaults to `https://gitlab.com`.
+
+There is no private key or App installation on GitLab. How morph.io reaches repositories there is a preference
+order of credentials created when an Organization connects its group; ADR 0007 has the reasoning, and the
+"GitLab access" panel on an Organization's page shows which is in force.
+
 Now setup the databases:
 
     bundle exec dotenv rake db:setup

@@ -25,6 +25,18 @@ GITHUB_APP_NAME={{ github_app_name }}
 GITHUB_APP_CLIENT_ID={{ github_app_client_id }}
 GITHUB_APP_CLIENT_SECRET={{ github_app_client_secret }}
 
+# GitLab OAuth application (optional: unset and GitLab sign-in is not offered)
+{% if gitlab_app_id is defined and gitlab_app_secret is defined %}
+GITLAB_APP_ID={{ gitlab_app_id }}
+GITLAB_APP_SECRET={{ gitlab_app_secret }}
+{% if gitlab_url is defined %}
+GITLAB_URL={{ gitlab_url }}
+{% endif %}
+{% else %}
+#GITLAB_APP_ID=
+#GITLAB_APP_SECRET=
+{% endif %}
+
 # Used by mitmproxy to communicate via the api back to morph
 MITMPROXY_SECRET={{ mitmproxy_secret }}
 MORPH_URL={{ morph_url }}

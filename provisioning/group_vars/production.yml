@@ -20,6 +20,10 @@ cron_jobs: true
 github_app_id: 245783
 github_app_name: morph-io
 github_app_client_id: Iv1.93381e1d14f773bb
+# GitLab sign-in is off in production until an OAuth application is registered
+# under the OAF gitlab.com group and these are set (gitlab_app_secret vaulted):
+# gitlab_app_id:
+# gitlab_app_secret:
 github_app_client_secret: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           66313666346137366539663466663738653832363563363235373936343736613762626461623836
