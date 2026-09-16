@@ -18,6 +18,10 @@ module Morph
       sig { abstract.returns(String) }
       def name; end
 
+      # Whether this deployment is set up to talk to the forge at all.
+      sig { abstract.returns(T::Boolean) }
+      def available?; end
+
       sig { abstract.params(owner: Owner).returns(String) }
       def owner_url(owner); end
 
@@ -50,6 +54,37 @@ module Morph
       # The user-facing explanation of one kind of access failure for one scraper.
       sig { abstract.params(kind: Symbol, scraper: Scraper).returns(Error) }
       def error(kind, scraper); end
+
+      # Whether this forge's access tokens run out and need refreshing.
+      sig { abstract.returns(T::Boolean) }
+      def tokens_expire?; end
+
+      # Trades a refresh token for new tokens. Only called on forges whose
+      # tokens expire.
+      sig { abstract.params(refresh_token: String).returns(Tokens) }
+      def refresh_tokens(refresh_token); end
+
+      # What an OmniAuth callback hands us, in the shape ForgeIdentity stores.
+      sig { params(auth: T.untyped).returns(Tokens) }
+      def tokens_from_omniauth(auth)
+        credentials = auth.credentials
+        expires_at = credentials.expires_at ? Time.zone.at(credentials.expires_at) : nil
+        Tokens.new(access_token: credentials.token, refresh_token: credentials.refresh_token, expires_at: expires_at)
+      end
+
+      # The login OmniAuth reports for this forge. GitHub calls it nickname,
+      # GitLab username.
+      sig { params(auth: T.untyped).returns(String) }
+      def login_from_omniauth(auth)
+        auth.info.nickname || auth.info.username
+      end
+    end
+
+    # The credentials a forge issues for one identity.
+    class Tokens < T::Struct
+      const :access_token, String
+      const :refresh_token, T.nilable(String)
+      const :expires_at, T.nilable(Time)
     end
 
     # A permission set on one repository, in GitHub's five-level shape, which

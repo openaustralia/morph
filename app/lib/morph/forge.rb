@@ -23,7 +23,13 @@ module Morph
 
     sig { returns(T::Array[Base]) }
     def self.all
-      [Github.new]
+      [Github.new, Gitlab.new]
+    end
+
+    # The forges a person can sign in with here, given what is configured.
+    sig { returns(T::Array[Base]) }
+    def self.available
+      all.select(&:available?)
     end
 
     sig { params(key: String).returns(Base) }

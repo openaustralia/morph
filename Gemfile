@@ -39,6 +39,7 @@ gem "haml-rails"
 gem "octokit", "~> 4.0"
 gem "omniauth", "~> 2.1"
 gem "omniauth-github", "~> 2.0"
+gem "omniauth-gitlab", "~> 4.1"
 # OmniAuth 2 only starts the OAuth flow on a POST (CVE-2015-9284); this gem
 # adds the CSRF token check that makes those POSTs safe.
 gem "omniauth-rails_csrf_protection", "~> 1.0"

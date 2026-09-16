@@ -25,6 +25,29 @@ module Morph
       get_required_env_string("GITHUB_APP_NAME")
     end
 
+    # GitLab sign-in is optional: without an OAuth application configured the
+    # buttons are not shown, and a GitLab-hosted scraper cannot be added.
+    sig { returns(T::Boolean) }
+    def self.gitlab_configured?
+      ENV["GITLAB_APP_ID"].present? && ENV["GITLAB_APP_SECRET"].present?
+    end
+
+    sig { returns(String) }
+    def self.gitlab_app_id
+      ENV.fetch("GITLAB_APP_ID", "")
+    end
+
+    sig { returns(String) }
+    def self.gitlab_app_secret
+      ENV.fetch("GITLAB_APP_SECRET", "")
+    end
+
+    # The instance to talk to. gitlab.com unless a self-hosted one is named.
+    sig { returns(String) }
+    def self.gitlab_url
+      ENV.fetch("GITLAB_URL", "https://gitlab.com").chomp("/")
+    end
+
     sig { params(env: String).returns(Integer) }
     def self.get_required_env_integer(env)
       v = get_required_env_string(env)

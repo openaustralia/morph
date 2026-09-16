@@ -35,7 +35,8 @@
                   %li= link_to "Admin dashboard", admin_dashboard_path
                   %li= link_to "Running scrapers", running_scrapers_path
           - else
-            %li= sign_in_with_github_button
+            - Morph::Forge.available.each do |forge|
+              %li= sign_in_with_forge_button forge
 
       = form_tag search_path, method: "get", role: "search", class: "navbar-form navbar-right" do
         .input-group

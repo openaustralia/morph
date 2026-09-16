@@ -47,6 +47,10 @@ class Owner < ApplicationRecord
   extend FriendlyId
   friendly_id :nickname
 
+  # nickname is the one slug behind every owner URL (ADR 0008). The database
+  # index is the guarantee; this is the friendly error.
+  validates :nickname, uniqueness: { case_sensitive: false }, allow_nil: true
+
   # Using smaller batch_size than the default for the time being because
   # reindexing causes elasticsearch on the local VM to run out of memory
   searchkick batch_size: 100 # defaults to 1000
@@ -138,6 +142,18 @@ class Owner < ApplicationRecord
       Digest::MD5.base64digest(id.to_s + rand.to_s + Time.zone.now.to_s)[0...20]
   end
 
+  # The nickname a login on a forge gets on morph.io: the login itself unless
+  # another Owner already answers to it, in which case it is suffixed with the
+  # forge (ADR 0008). `except` is the Owner asking, whose own nickname is fine.
+  sig { params(login: String, forge_key: String, except: T.nilable(Owner)).returns(String) }
+  def self.available_nickname(login, forge_key, except: nil)
+    taken = Owner.where.not(id: except&.id)
+    return login unless taken.exists?(nickname: login)
+
+    candidates = ["#{login}-#{forge_key}"] + (2..99).map { |n| "#{login}-#{forge_key}-#{n}" }
+    candidates.find { |candidate| !taken.exists?(nickname: candidate) } || raise("No free nickname for #{login}")
+  end
+
   sig { params(forge_key: String).returns(T.nilable(ForgeIdentity)) }
   def forge_identity(forge_key)
     forge_identities.find { |identity| identity.forge_key == forge_key }
@@ -146,6 +162,22 @@ class Owner < ApplicationRecord
   sig { returns(T.nilable(ForgeIdentity)) }
   def github_identity
     forge_identity("github")
+  end
+
+  sig { returns(T.nilable(ForgeIdentity)) }
+  def gitlab_identity
+    forge_identity("gitlab")
+  end
+
+  # An identity cannot go if it is the last way this owner has of signing in,
+  # or if any of their scrapers live on that forge.
+  sig { params(identity: ForgeIdentity).returns(T.nilable(String)) }
+  def reason_not_to_disconnect(identity)
+    if forge_identities.size <= 1
+      "It is the only account you can sign in with"
+    elsif scrapers.exists?(forge_key: identity.forge_key)
+      "You still have scrapers on #{identity.forge.name}"
+    end
   end
 
   # Organizations and users store their gravatar in different ways

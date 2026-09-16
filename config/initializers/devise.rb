@@ -233,6 +233,12 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   config.omniauth :github, Morph::Environment.github_app_client_id, Morph::Environment.github_app_client_secret, scope: "user:email,public_repo"
+  # Registered whether or not GITLAB_APP_ID is set, so the routes and the OmniAuth test
+  # mode exist everywhere; the sign-in buttons are only shown when it is configured.
+  # `api` is needed to create repositories, change visibility and create tokens on
+  # the user's behalf; GitLab has no incremental consent, so it is asked for once.
+  config.omniauth :gitlab, Morph::Environment.gitlab_app_id, Morph::Environment.gitlab_app_secret,
+                  scope: "api read_user", client_options: { site: Morph::Environment.gitlab_url }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

@@ -56,6 +56,20 @@ class OwnersController < ApplicationController
 
   # Toggle whether we're watching this user / organization
   sig { void }
+  def disconnect_forge
+    owner = T.must(@owner)
+    identity = owner.forge_identities.find_by!(forge_key: params[:forge_key])
+    reason = owner.reason_not_to_disconnect(identity)
+    if reason
+      flash[:alert] = "#{identity.forge.name} cannot be disconnected. #{reason}."
+    else
+      identity.destroy!
+      flash[:notice] = "Disconnected #{identity.forge.name} account #{identity.login}."
+    end
+    redirect_to settings_owner_url(owner)
+  end
+
+  sig { void }
   def watch
     user = T.must(current_user)
     user.toggle_watch(T.must(@owner))

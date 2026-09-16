@@ -16,6 +16,8 @@ class OwnerAbility < Ability
     can :settings, Owner, id: user.id
     can :settings_redirect, Owner
     can :reset_key, Owner, id: user.id unless SiteSetting.read_only_mode
+    # Only you can change which forge accounts are yours
+    can :disconnect_forge, Owner, id: user.id unless SiteSetting.read_only_mode
     # Can watch any owner of repos
     can :watch, Owner unless SiteSetting.read_only_mode
 

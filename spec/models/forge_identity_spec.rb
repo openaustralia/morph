@@ -47,9 +47,9 @@ describe ForgeIdentity do
     allow(RefreshUserOrganizationsWorker).to receive(:perform_async)
   end
 
-  describe "User.find_for_github_oauth" do
+  describe "User.find_or_create_from_oauth with GitHub" do
     it "creates a User with a GitHub identity holding the uid, login and token" do
-      user = User.find_for_github_oauth(github_auth(uid: "42", nickname: "alice", token: "tok"))
+      user = User.find_or_create_from_oauth(Morph::Forge.for("github"), github_auth(uid: "42", nickname: "alice", token: "tok"))
 
       identity = user.forge_identity("github")
       expect(user.nickname).to eq("alice")
@@ -60,7 +60,7 @@ describe ForgeIdentity do
       existing = create(:user, nickname: "alice")
       existing.forge_identities.create!(forge_key: "github", uid: "42", login: "alice", access_token: "old")
 
-      user = User.find_for_github_oauth(github_auth(uid: "42", nickname: "alice-renamed", token: "new"))
+      user = User.find_or_create_from_oauth(Morph::Forge.for("github"), github_auth(uid: "42", nickname: "alice-renamed", token: "new"))
 
       expect(user).to eq(existing)
       expect(user.nickname).to eq("alice-renamed")
@@ -71,7 +71,7 @@ describe ForgeIdentity do
       other = create(:user, nickname: "bob")
       other.forge_identities.create!(forge_key: "gitlab", uid: "42", login: "bob")
 
-      user = User.find_for_github_oauth(github_auth(uid: "42", nickname: "alice"))
+      user = User.find_or_create_from_oauth(Morph::Forge.for("github"), github_auth(uid: "42", nickname: "alice"))
 
       expect(user).not_to eq(other)
     end

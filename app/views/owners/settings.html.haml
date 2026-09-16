@@ -30,3 +30,22 @@
 
   - if can? :reset_key, @owner
     = button_to "Reset key", reset_key_owner_path(@owner), class: "btn btn-danger"
+
+  - if @owner == current_user
+    %h2 Connected accounts
+    %p
+      The accounts on GitHub and GitLab that morph.io knows are yours. Signing in with any of them signs you in here.
+    %ul.list-unstyled
+      - @owner.forge_identities.each do |identity|
+        %li.forge-identity
+          %i.fa.fa-fw{ class: "fa-#{identity.forge_key}" }
+          %strong= identity.forge.name
+          = link_to identity.login, identity.forge.owner_url(@owner), target: "_blank", rel: "noopener"
+          - if can? :disconnect_forge, @owner
+            - reason = @owner.reason_not_to_disconnect(identity)
+            - if reason
+              %span.text-muted.small (cannot be disconnected: #{reason.downcase})
+            - else
+              = button_to "Disconnect", forge_identity_owner_path(@owner, forge_key: identity.forge_key), method: :delete, class: "btn btn-xs btn-default", form_class: "button_to sign-in", data: { confirm: "Disconnect #{identity.forge.name}? You will no longer be able to sign in with it." }
+    - Morph::Forge.available.reject { |forge| @owner.forge_identity(forge.key) }.each do |forge|
+      %p= sign_in_with_forge_button forge, "Connect #{forge.name}", class: "btn btn-default"

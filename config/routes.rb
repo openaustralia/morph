@@ -78,6 +78,7 @@ Rails.application.routes.draw do
     member do
       get 'settings'
       post 'settings/reset_key', as: 'reset_key', action: 'reset_key'
+      delete 'settings/forge_identities/:forge_key', as: 'forge_identity', action: 'disconnect_forge'
       post 'watch'
     end
   end

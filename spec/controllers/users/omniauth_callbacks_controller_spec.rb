@@ -201,17 +201,12 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         sign_in current_user
       end
 
-      it "updates the current user's GitHub connection if they authorize a different account" do
-        # This is the actual Devise behavior - it finds or creates based on omniauth data
-        # and signs in that user, effectively switching accounts
-        expect do
-          get :github
-        end.to change(User, :count).by(1)
+      it "links the GitHub account to them rather than switching accounts (ADR 0008)" do
+        expect { get :github }.not_to change(User, :count)
 
-        new_user = User.find_by(nickname: nickname)
-        expect(new_user).to be_present
-        pending("FIXME: This is not working as expected.")
-        expect(controller.current_user).to eq(new_user)
+        expect(current_user.reload.github_identity).to have_attributes(uid: uid, login: nickname, access_token: access_token)
+        expect(controller.current_user).to eq(current_user)
+        expect(response).to redirect_to(settings_owner_path(current_user))
       end
 
       it "handles reconnecting same GitHub account" do
@@ -224,6 +219,15 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         end.not_to change(User, :count)
 
         expect(controller.current_user).to eq(current_user)
+      end
+
+      it "refuses to link a GitHub account that already belongs to another Owner" do
+        create(:user, :on_github, nickname: nickname, github_uid: uid)
+
+        get :github
+
+        expect(current_user.reload.github_identity).to be_nil
+        expect(flash[:alert]).to include("already connected to #{nickname}")
       end
     end
 

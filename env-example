@@ -26,6 +26,14 @@ GITHUB_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
 GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 GITHUB_APP_INSTALLED_BY=xxxxxxxxxx
 
+# GitLab OAuth application (optional: leave unset and GitLab sign-in is not offered).
+# Create one under your GitLab group or user with the "api" and "read_user" scopes and
+# a redirect URI of <your host>/users/auth/gitlab/callback
+#GITLAB_APP_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#GITLAB_APP_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# Only for a self-hosted GitLab; defaults to https://gitlab.com
+#GITLAB_URL=https://gitlab.example.org
+
 # -------------------------------------------------------------------
 # Provisioning staging only
 

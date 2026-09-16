@@ -41,8 +41,43 @@ class ForgeIdentity < ApplicationRecord
   validates :login, presence: true
   validates :owner_id, uniqueness: { scope: :forge_key }
 
+  # How long before expiry a token is treated as already expired, so a Run
+  # that starts with a token about to lapse does not fail half way through.
+  REFRESH_MARGIN = T.let(5.minutes, ActiveSupport::Duration)
+
   sig { params(forge_key: String, uid: String).returns(T.nilable(Owner)) }
   def self.owner_for(forge_key, uid)
     find_by(forge_key: forge_key, uid: uid)&.owner
+  end
+
+  sig { returns(Morph::Forge::Base) }
+  def forge
+    Morph::Forge.for(forge_key)
+  end
+
+  sig { params(tokens: Morph::Forge::Tokens).void }
+  def store_tokens!(tokens)
+    update!(access_token: tokens.access_token, refresh_token: tokens.refresh_token, token_expires_at: tokens.expires_at)
+  end
+
+  # An access token good for at least REFRESH_MARGIN, refreshing it first if
+  # need be. The refresh happens under a row lock because the forge
+  # invalidates the old refresh token on use: two workers refreshing at once
+  # would leave the loser holding a dead token (ADR 0007). Re-checked after
+  # taking the lock, since the other worker may already have done the work.
+  sig { returns(T.nilable(String)) }
+  def fresh_access_token
+    return access_token unless expiring_soon?
+
+    with_lock do
+      store_tokens!(forge.refresh_tokens(T.must(refresh_token))) if expiring_soon?
+    end
+    access_token
+  end
+
+  sig { returns(T::Boolean) }
+  def expiring_soon?
+    expires_at = token_expires_at
+    !expires_at.nil? && expires_at <= REFRESH_MARGIN.from_now
   end
 end

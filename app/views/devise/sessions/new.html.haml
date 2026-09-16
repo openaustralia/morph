@@ -1,6 +1,10 @@
 .container
   .sign_in
     %p
-      Everything on #{hostname} is hooked into GitHub. If you don't have a GitHub account you will need to register one.
+      - if Morph::Forge.available.size > 1
+        Your scrapers live in git repositories on GitHub or GitLab, so that is how you sign in to #{hostname}.
+        If you don't have an account on either you will need to register one.
+      - else
+        Everything on #{hostname} is hooked into GitHub. If you don't have a GitHub account you will need to register one.
     %p
-      = sign_in_with_github_button "Sign in with GitHub", class: "btn btn-primary btn-lg"
+      = sign_in_buttons class: "btn btn-primary btn-lg"

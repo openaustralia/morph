@@ -271,8 +271,10 @@ production:
 
 Sign-in controls are `button_to` forms, not links: OmniAuth 2 only starts the
 OAuth flow on a POST (CVE-2015-9284), and `omniauth-rails_csrf_protection`
-checks the CSRF token on that POST. Use `sign_in_with_github_button` in views
-rather than linking to the authorize path.
+checks the CSRF token on that POST. Use `sign_in_buttons` (one per configured
+forge) or `sign_in_with_forge_button` in views rather than linking to the
+authorize path. GitLab sign-in is optional per deployment: it appears only when
+`GITLAB_APP_ID` and `GITLAB_APP_SECRET` are set (`Morph::Forge.available`).
 
 Check for security updates with `bundle exec ruby-audit` and
 `bundle exec bundle-audit`, or via the repository's Dependabot alerts.

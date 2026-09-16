@@ -19,6 +19,11 @@ module Morph
         "GitHub"
       end
 
+      sig { override.returns(T::Boolean) }
+      def available?
+        true
+      end
+
       sig { override.params(owner: Owner).returns(String) }
       def owner_url(owner)
         "https://github.com/#{login_of(owner)}"
@@ -82,6 +87,17 @@ module Morph
         else
           raise ArgumentError, "Unknown error kind #{kind.inspect}"
         end
+      end
+
+      # GitHub OAuth tokens do not expire (unless the App opts in, which morph.io's does not).
+      sig { override.returns(T::Boolean) }
+      def tokens_expire?
+        false
+      end
+
+      sig { override.params(refresh_token: String).returns(Tokens) }
+      def refresh_tokens(refresh_token)
+        raise NotImplementedError, "GitHub tokens do not expire"
       end
 
       sig { params(owner: Owner).returns(String) }

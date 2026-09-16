@@ -42,9 +42,21 @@ module ApplicationHelper
   # OmniAuth 2 only starts the OAuth flow on a POST (CVE-2015-9284), so a
   # sign-in control has to be a form rather than a link. The form is
   # `display: inline` so it can sit where the link used to.
+  sig { params(forge: Morph::Forge::Base, text: T.nilable(String), html_options: T::Hash[Symbol, T.untyped]).returns(String) }
+  def sign_in_with_forge_button(forge, text = nil, html_options = {})
+    path = public_send("user_#{forge.key}_omniauth_authorize_path")
+    button_to(text || "Sign in with #{forge.name}", path, html_options.merge(form_class: "button_to sign-in"))
+  end
+
   sig { params(text: String, html_options: T::Hash[Symbol, T.untyped]).returns(String) }
   def sign_in_with_github_button(text = "Sign in with GitHub", html_options = {})
-    button_to(text, user_github_omniauth_authorize_path, html_options.merge(form_class: "button_to sign-in"))
+    sign_in_with_forge_button(Morph::Forge.for("github"), text, html_options)
+  end
+
+  # One button per forge this deployment can sign people in with.
+  sig { params(html_options: T::Hash[Symbol, T.untyped]).returns(String) }
+  def sign_in_buttons(html_options = {})
+    safe_join(Morph::Forge.available.map { |forge| sign_in_with_forge_button(forge, nil, html_options.dup) }, " ")
   end
 
   sig { params(key: Symbol, options: T::Hash[T.untyped, T.untyped]).returns(String) }

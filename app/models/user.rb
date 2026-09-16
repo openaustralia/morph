@@ -42,7 +42,7 @@
 class User < Owner
   extend T::Sig
 
-  devise :trackable, :rememberable, :omniauthable, omniauth_providers: [:github]
+  devise :trackable, :rememberable, :omniauthable, omniauth_providers: %i[github gitlab]
   has_many :organizations_users, dependent: :destroy
   has_many :organizations, through: :organizations_users
   has_many :alerts, dependent: :destroy
@@ -209,20 +209,45 @@ class User < Owner
     self.organizations = refreshed_organizations
   end
 
-  sig { params(auth: T.untyped, _signed_in_resource: T.nilable(User)).returns(User) }
-  def self.find_for_github_oauth(auth, _signed_in_resource = nil)
+  # Someone has just come back from a forge's OAuth flow with nobody signed in.
+  # Finds them by their account on that forge or creates them, and freshens the
+  # identity's login and tokens.
+  sig { params(forge: Morph::Forge::Base, auth: T.untyped).returns(User) }
+  def self.find_or_create_from_oauth(forge, auth)
     uid = auth.uid.to_s
-    login = auth.info.nickname
-    user = T.cast(ForgeIdentity.owner_for("github", uid) || User.create!(nickname: login), User)
-    user.update(nickname: login)
-    identity = user.github_identity || user.forge_identities.build(forge_key: "github", uid: uid)
-    identity.update!(login: login, access_token: auth.credentials.token)
-    user.forge_identities.reset
-    user.refresh_info_from_github!
-    # Also every time you login it should update the list of organizations that
-    # the user is attached to but do this in a background job
-    RefreshUserOrganizationsWorker.perform_async(T.must(user.id))
+    login = forge.login_from_omniauth(auth)
+    user = T.cast(ForgeIdentity.owner_for(forge.key, uid), T.nilable(User))
+    user ||= User.create!(nickname: Owner.available_nickname(login, forge.key))
+    user.update!(nickname: Owner.available_nickname(login, forge.key, except: user))
+    user.attach_forge_identity!(forge, auth)
+    user.refresh_info_after_sign_in(forge, auth)
     user
+  end
+
+  # Records or freshens this user's account on a forge from an OmniAuth callback.
+  sig { params(forge: Morph::Forge::Base, auth: T.untyped).returns(ForgeIdentity) }
+  def attach_forge_identity!(forge, auth)
+    identity = forge_identity(forge.key) || forge_identities.build(forge_key: forge.key, uid: auth.uid.to_s)
+    identity.login = forge.login_from_omniauth(auth)
+    identity.store_tokens!(forge.tokens_from_omniauth(auth))
+    forge_identities.reset
+    identity
+  end
+
+  sig { params(forge: Morph::Forge::Base, auth: T.untyped).void }
+  def refresh_info_after_sign_in(forge, auth)
+    case forge
+    when Morph::Forge::Github
+      refresh_info_from_github!
+      # Also every time you login it should update the list of organizations that
+      # the user is attached to but do this in a background job
+      RefreshUserOrganizationsWorker.perform_async(T.must(id))
+    else
+      # What the forge told OmniAuth is enough for a profile until a fuller
+      # refresh exists for it.
+      info = auth.info
+      update!(name: info.name, email: info.email, gravatar_url: info.image)
+    end
   end
 
   sig { void }
