@@ -86,7 +86,7 @@ describe Scraper do
     end
   end
 
-  describe "#github_url_readme" do
+  describe "#readme_url" do
     let(:scraper) { build(:scraper, repo_url: "https://github.com/owner/repo") }
 
     before do
@@ -99,7 +99,7 @@ describe Scraper do
     end
 
     it "returns GitHub URL for the README file" do
-      expect(scraper.github_url_readme).to eq("https://github.com/owner/repo/blob/main/README.md")
+      expect(scraper.readme_url).to eq("https://github.com/owner/repo/blob/main/README.md")
     end
   end
 
@@ -133,26 +133,26 @@ describe Scraper do
     end
   end
 
-  describe "#github_url_for_file" do
+  describe "#file_url" do
     let(:scraper) { build(:scraper, repo_url: "https://github.com/owner/repo") }
 
     it "returns GitHub blob URL for given file" do
-      url = scraper.github_url_for_file("scraper.rb")
+      url = scraper.file_url("scraper.rb")
       expect(url).to eq("https://github.com/owner/repo/blob/main/scraper.rb")
     end
   end
 
-  describe "#github_url_main_scraper_file" do
+  describe "#main_scraper_file_url" do
     let(:scraper) { build(:scraper, repo_url: "https://github.com/owner/repo") }
 
     it "returns GitHub URL for main scraper file" do
       allow(scraper).to receive(:main_scraper_filename).and_return("scraper.py")
-      expect(scraper.github_url_main_scraper_file).to eq("https://github.com/owner/repo/blob/main/scraper.py")
+      expect(scraper.main_scraper_file_url).to eq("https://github.com/owner/repo/blob/main/scraper.py")
     end
 
     it "returns nil when no main scraper filename" do
       allow(scraper).to receive(:main_scraper_filename).and_return(nil)
-      expect(scraper.github_url_main_scraper_file).to be_nil
+      expect(scraper.main_scraper_file_url).to be_nil
     end
   end
 
@@ -197,26 +197,36 @@ describe Scraper do
   # ============================================================================
 
   describe "#git_url_https" do
-    let(:scraper) { build(:scraper, git_url: "git://github.com/owner/repo.git") }
-
     it "converts git protocol to https" do
+      scraper = build(:scraper, git_url: "git://github.com/owner/repo.git")
       expect(scraper.git_url_https).to eq("https://github.com/owner/repo.git")
+    end
+
+    it "converts an ssh clone url to https" do
+      scraper = build(:scraper, git_url: "git@github.com:owner/repo.git")
+      expect(scraper.git_url_https).to eq("https://github.com/owner/repo.git")
+    end
+
+    it "leaves an https clone url alone" do
+      scraper = build(:scraper, git_url: "https://gitlab.com/owner/repo.git")
+      expect(scraper.git_url_https).to eq("https://gitlab.com/owner/repo.git")
     end
   end
 
-  describe "#app_install_url" do
-    let(:owner) { create(:user, :on_github, github_uid: "67890") }
-    let(:scraper) { build(:scraper, owner: owner, forge_repo_id: 12345) }
+  describe "#default_branch" do
+    let(:scraper) { build(:scraper) }
 
-    before do
-      allow(Morph::Environment).to receive(:github_app_name).and_return("morph-app")
+    after { FileUtils.rm_rf(scraper.repo_path) }
+
+    it "is main until the repository has been cloned" do
+      expect(scraper.default_branch).to eq("main")
     end
 
-    it "returns GitHub app installation URL with correct parameters" do
-      url = scraper.app_install_url
-      expect(url).to include("https://github.com/apps/morph-app/installations/new/permissions")
-      expect(url).to include("suggested_target_id=67890")
-      expect(url).to include("repository_ids=12345")
+    it "is whatever the local clone has checked out" do
+      Rugged::Repository.init_at(scraper.repo_path)
+      File.write(File.join(scraper.repo_path, ".git", "HEAD"), "ref: refs/heads/trunk\n")
+
+      expect(scraper.default_branch).to eq("trunk")
     end
   end
 

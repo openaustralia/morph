@@ -29,9 +29,10 @@
             %li
               %i.fa.fa-link.fa-fw.text-muted
               = link_to @owner.blog, @owner.blog
-        %p
-          %i.fa.fa-github-alt.fa-fw.text-muted
-          = link_to "#{@owner.nickname} on GitHub", @owner.github_url, target: "_blank", rel: "noopener"
+        - @owner.forge_profiles.each do |forge, url|
+          %p
+            %i.fa.fa-fw.text-muted{ class: "fa-#{forge.key}" }
+            = link_to "#{@owner.nickname} on #{forge.name}", url, target: "_blank", rel: "noopener"
 
       .col-md-2.owner-box
         - if signed_in?

@@ -42,8 +42,8 @@
 class Scraper < ApplicationRecord
   extend T::Sig
 
-  # Make skipping GitHub validations an explicit choice
-  class_attribute :skip_github_validations, default: -> { Rails.env.test? }
+  # Make skipping the validations that call out to the forge an explicit choice
+  class_attribute :skip_forge_validations, default: -> { Rails.env.test? }
 
   include RenderSync::Actions
   # Using smaller batch_size than the default for the time being because
@@ -76,9 +76,9 @@ class Scraper < ApplicationRecord
 
   validates :name, presence: true, format: { with: /\A[a-zA-Z0-9_-]+\z/ }
   validates :name, uniqueness: { scope: :owner, case_sensitive: false }
-  validate :not_used_on_github, on: :create, if: proc { |s| s.forge_repo_id.blank? && s.name.present? }
-  validate :app_installed_on_owner, on: :create
-  validate :app_has_access_to_repo, on: :create
+  validate :not_used_on_forge, on: :create, if: proc { |s| s.forge_repo_id.blank? && s.name.present? }
+  validate :forge_connected_to_owner, on: :create
+  validate :forge_has_access_to_repo, on: :create
 
   extend FriendlyId
   friendly_id :full_name
@@ -257,8 +257,8 @@ class Scraper < ApplicationRecord
   end
 
   sig { returns(String) }
-  def github_url_readme
-    github_url_for_file(readme_filename)
+  def readme_url
+    file_url(readme_filename)
   end
 
   sig { returns(T::Boolean) }
@@ -277,11 +277,25 @@ class Scraper < ApplicationRecord
     RunWorker.perform_async(T.must(run.id))
   end
 
-  # If repo is still using the old "master" branch name then the url below will
-  # just redirect to master, because it's the default branch
+  sig { returns(Morph::Forge::Base) }
+  def forge
+    Morph::Forge.for(forge_key)
+  end
+
+  # The branch the forge shows by default, read from the local clone so no
+  # API call is needed. "main" until the repository has been cloned.
+  sig { returns(String) }
+  def default_branch
+    return "main" unless File.exist?(File.join(repo_path, ".git"))
+
+    Rugged::Repository.new(repo_path).references["HEAD"].target_id.delete_prefix("refs/heads/")
+  rescue Rugged::Error, Rugged::ReferenceError
+    "main"
+  end
+
   sig { params(file: String).returns(String) }
-  def github_url_for_file(file)
-    "#{repo_url}/blob/main/#{file}"
+  def file_url(file)
+    forge.file_url(self, file)
   end
 
   sig { returns(T.nilable(Morph::Language)) }
@@ -295,9 +309,9 @@ class Scraper < ApplicationRecord
   end
 
   sig { returns(T.nilable(String)) }
-  def github_url_main_scraper_file
+  def main_scraper_file_url
     m = main_scraper_filename
-    github_url_for_file(m) if m
+    file_url(m) if m
   end
 
   sig { returns(Morph::Database) }
@@ -314,11 +328,16 @@ class Scraper < ApplicationRecord
     platform
   end
 
-  # Return the https version of the git clone url (git_url)
+  # The https clone URL, whatever form the forge handed us the clone URL in:
+  # GitHub's API gives git://, older records hold git@host:path, GitLab gives https.
   sig { returns(String) }
   def git_url_https
     url = T.must(git_url)
-    "https#{url[3..-1]}"
+    case url
+    when %r{\Agit://} then url.sub("git://", "https://")
+    when /\Agit@([^:]+):(.+)\z/ then "https://#{Regexp.last_match(1)}/#{Regexp.last_match(2)}"
+    else url
+    end
   end
 
   sig { params(run: Run).void }
@@ -327,13 +346,6 @@ class Scraper < ApplicationRecord
       webhook_delivery = webhook.deliveries.create!(run: run)
       DeliverWebhookWorker.perform_async(webhook_delivery.id)
     end
-  end
-
-  # A link just to install the GitHub Morph app for the repo associated with this scraper
-  sig { returns(String) }
-  def app_install_url
-    params = { suggested_target_id: T.must(owner).github_identity&.uid, repository_ids: forge_repo_id }
-    "https://github.com/apps/#{Morph::Environment.github_app_name}/installations/new/permissions?#{params.to_query}"
   end
 
   # Trims log lines older than DISCARD_AFTER_DAYS, keeping at least KEEP_AT_LEAST_COUNT_PER_STATUS log lines for
@@ -379,58 +391,33 @@ class Scraper < ApplicationRecord
   private
 
   sig { void }
-  def not_used_on_github
-    return if self.class.skip_github_validations ||
-              !Octokit.client.repository?(full_name)
+  def not_used_on_forge
+    return if self.class.skip_forge_validations || !forge.repository_exists?(full_name)
 
-    errors.add(:name, "is already taken on GitHub")
+    errors.add(:name, "is already taken on #{forge.name}")
   end
 
   sig { void }
-  def app_installed_on_owner
-    return if self.class.skip_github_validations
+  def forge_connected_to_owner
+    return if self.class.skip_forge_validations || forge.connected?(T.must(owner))
 
-    installation = Morph::GithubAppInstallation.new(T.must(T.must(owner).nickname))
-    return if installation.installed?
-
-    # I think I18n.t doesn't support the _html suffix to make the string automatically html safe. So we're doing it by hand
-    message = I18n.t("activerecord.errors.models.scraper.no_app_installation_for_owner",
-                     install_url: T.must(owner).app_install_url,
-                     why_url: Rails.application.routes.url_helpers.github_app_documentation_index_path,
-                     owner: T.must(owner).nickname)
+    # I18n.t doesn't support the _html suffix to make the string automatically html safe, so it is done by hand
     # rubocop:disable Rails/OutputSafety
-    errors.add(:owner_id, message.html_safe)
+    errors.add(:owner_id, forge.error(:not_connected, self).message_html.html_safe)
     # rubocop:enable Rails/OutputSafety
   end
 
-  # In the case where a scraper is created from an already existing repository on github then the "forge_repo_id" is populated
-  # on creation and we need to check that the GitHub Morph application has access to the specific repository
+  # When a scraper is created from a repository that already exists on the forge, forge_repo_id is populated
+  # on creation and we check that morph.io can reach that specific repository
   sig { void }
-  def app_has_access_to_repo
-    return if self.class.skip_github_validations || forge_repo_id.blank?
+  def forge_has_access_to_repo
+    return if self.class.skip_forge_validations || forge_repo_id.blank?
 
-    installation = Morph::GithubAppInstallation.new(T.must(T.must(owner).nickname))
-    error = installation.confirm_has_access_to(name)
+    error = forge.repository_access(self).confirm_has_access
     return if error.nil?
 
-    # I think I18n.t doesn't support the _html suffix to make the string automatically html safe. So we're doing it by hand
-    message = case error
-              when Morph::GithubAppInstallation::NoAppInstallationForOwner
-                I18n.t("activerecord.errors.models.scraper.no_app_installation_for_owner",
-                       install_url: app_install_url,
-                       why_url: Rails.application.routes.url_helpers.github_app_documentation_index_path,
-                       owner: T.must(owner).nickname)
-              when Morph::GithubAppInstallation::AppInstallationNoAccessToRepo
-                I18n.t("activerecord.errors.models.scraper.app_installation_no_access_to_repo",
-                       install_url: app_install_url,
-                       why_url: Rails.application.routes.url_helpers.github_app_documentation_index_path,
-                       owner: T.must(owner).nickname,
-                       repo: name)
-              else
-                T.absurd(error)
-              end
     # rubocop:disable Rails/OutputSafety
-    errors.add(:full_name, message.html_safe)
+    errors.add(:full_name, error.message_html.html_safe)
     # rubocop:enable Rails/OutputSafety
   end
 end

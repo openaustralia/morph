@@ -62,15 +62,21 @@ The pieces that make this more than a CRUD app all live in `app/lib/morph/`:
 - `Morph::Database` and `Morph::SqliteDiff` own the per-scraper SQLite file.
   Scraper output is a SQLite database on disk, not rows in the main MySQL
   database.
-- `Morph::Github` and `Morph::GithubAppInstallation` wrap the GitHub App used
-  for authentication, repo access and repo creation.
+- `Morph::Forge` is the seam between morph.io and the forges (GitHub, GitLab)
+  that host scraper repositories. `Morph::Forge::Base` is the contract, one
+  adapter per forge sits beside it, and `scraper.forge` picks the right one.
+  Everything forge-specific (URLs, access checks, error wording) goes through
+  an adapter; `spec/support/shared_examples/forge.rb` is the contract as
+  tests. `Morph::Github` and `Morph::GithubAppInstallation` are what the
+  GitHub adapter wraps: the signed-in user's OAuth client and the GitHub App
+  installation used for repo access.
 - `Morph::Language` maps a scraper repo to a supported language (Ruby, Python,
   PHP, Perl, JavaScript) and to the right default files.
 
 One more piece sits outside that directory. `SynchroniseRepoService`
 (`app/services/`) is what `Morph::Runner` calls to fetch the latest scraper
-code, and is where the GitHub App failures that reach the user as a failed run
-come from.
+code, and is where the forge failures that reach the user as a failed run come
+from.
 
 Background work runs through Sidekiq (`app/workers/`, queues `default` and
 `scraper` per `config/sidekiq.yml`), plus scheduled rake tasks in

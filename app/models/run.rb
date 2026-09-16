@@ -170,8 +170,9 @@ class Run < ApplicationRecord
   end
 
   sig { returns(String) }
-  def git_revision_github_url
-    "https://github.com/#{full_name}/commit/#{git_revision}"
+  def git_revision_url
+    s = T.must(scraper)
+    s.forge.commit_url(s, T.must(git_revision))
   end
 
   sig { returns(T.any(ActiveRecord::Associations::CollectionProxy, [])) }

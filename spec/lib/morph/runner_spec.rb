@@ -59,49 +59,49 @@ describe Morph::Runner do
       expect(SynchroniseRepoService).not_to have_received(:call)
     end
 
-    # FIXME: Fix spec causes code to unexpectedly reach T.absurd(error)
-    # it "handles NoAppInstallationForOwner error" do
-    #   scraper = create(:scraper, name: "test-scraper", owner: run.owner)
-    #   run.update(scraper: scraper)
-    #   allow(SynchroniseRepoService).to receive(:call).and_return(Morph::GithubAppInstallation::NoAppInstallationForOwner)
-    #   allow(runner).to receive(:error)
-    #
-    #   runner.synch_and_go!
-    #   expect(runner).to have_received(:error).with(hash_including(status_code: 999, text: /Please install the Morph Github App/))
-    # end
+    context "when the repository cannot be synchronised" do
+      let(:scraper) { create(:scraper, name: "test-scraper", owner: run.owner) }
 
-    # FIXME: Fix spec causes code to unexpectedly reach T.absurd(error)
-    # it "handles AppInstallationNoAccessToRepo error" do
-    #   scraper = create(:scraper, name: "test-scraper", owner: run.owner)
-    #   run.update(scraper: scraper)
-    #   allow(SynchroniseRepoService).to receive(:call).and_return(Morph::GithubAppInstallation::AppInstallationNoAccessToRepo)
-    #   allow(runner).to receive(:error)
-    #
-    #   runner.synch_and_go!
-    #   expect(runner).to have_received(:error).with(hash_including(status_code: 999, text: /needs access to the repository/))
-    # end
+      before do
+        run.update(scraper: scraper)
+        allow(runner).to receive(:error)
+        allow(runner).to receive(:go)
+      end
 
-    # FIXME: Fix spec causes code to unexpectedly reach T.absurd(error)
-    # it "handles RepoNeedsToBePublic error" do
-    #   scraper = create(:scraper, name: "test-scraper", owner: run.owner)
-    #   run.update(scraper: scraper)
-    #   allow(SynchroniseRepoService).to receive(:call).and_return(SynchroniseRepoService::RepoNeedsToBePublic)
-    #   allow(runner).to receive(:error)
-    #
-    #   runner.synch_and_go!
-    #   expect(runner).to have_received(:error).with(hash_including(status_code: 999, text: /needs to be made public/))
-    # end
+      it "fails the run with the forge's explanation when the forge could not be reached" do
+        forge_error = Morph::Forge::Error.new(kind: :not_connected, message: "Please connect Example Forge", message_html: "Please connect")
+        allow(SynchroniseRepoService).to receive(:call).and_return(forge_error)
 
-    # FIXME: Fix spec causes code to unexpectedly reach T.absurd(error)
-    # it "handles RepoNeedsToBePrivate error" do
-    #   scraper = create(:scraper, name: "test-scraper", owner: run.owner)
-    #   run.update(scraper: scraper)
-    #   allow(SynchroniseRepoService).to receive(:call).and_return(SynchroniseRepoService::RepoNeedsToBePrivate)
-    #   allow(runner).to receive(:error)
-    #
-    #   runner.synch_and_go!
-    #   expect(runner).to have_received(:error).with(hash_including(status_code: 999, text: /needs to be made private/))
-    # end
+        runner.synch_and_go!
+
+        expect(runner).to have_received(:error).with(status_code: 999, text: "Please connect Example Forge")
+        expect(runner).not_to have_received(:go)
+      end
+
+      it "fails the run when the repository needs to be made public" do
+        allow(SynchroniseRepoService).to receive(:call).and_return(SynchroniseRepoService::RepoNeedsToBePublic.new)
+
+        runner.synch_and_go!
+
+        expect(runner).to have_received(:error).with(hash_including(status_code: 999, text: /needs to be made public/))
+      end
+
+      it "fails the run when the repository needs to be made private" do
+        allow(SynchroniseRepoService).to receive(:call).and_return(SynchroniseRepoService::RepoNeedsToBePrivate.new)
+
+        runner.synch_and_go!
+
+        expect(runner).to have_received(:error).with(hash_including(status_code: 999, text: /needs to be made private/))
+      end
+
+      it "goes ahead when there is nothing wrong" do
+        allow(SynchroniseRepoService).to receive(:call).and_return(nil)
+
+        runner.synch_and_go!
+
+        expect(runner).to have_received(:go)
+      end
+    end
   end
 
   describe ".go", docker: true do

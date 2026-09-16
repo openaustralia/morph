@@ -1,6 +1,10 @@
 # typed: strict
 # frozen_string_literal: true
 
+# Brings a Scraper's local clone up to date with its repository on the forge,
+# and mirrors what the forge knows about the repository: size, contributors,
+# collaborators. Returns an error object rather than raising, so the Runner
+# can turn it into a failed Run with a message the user can act on.
 class SynchroniseRepoService
   extend T::Sig
 
@@ -9,36 +13,32 @@ class SynchroniseRepoService
   class RepoNeedsToBePrivate; end
   # rubocop:enable Lint/EmptyClass
 
-  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAppInstallationForOwner, Morph::GithubAppInstallation::NoAccessToRepo, Morph::GithubAppInstallation::AppInstallationNoAccessToRepo, Morph::GithubAppInstallation::SynchroniseRepoError, RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
+  sig { params(scraper: Scraper).returns(T.nilable(T.any(Morph::Forge::Error, RepoNeedsToBePublic, RepoNeedsToBePrivate))) }
   def self.call(scraper)
-    # First check that the GitHub Morph app has access to the repository
-    # We're doing this so that we have consistent behaviour for the user with public repos. Otherwise
-    # the user could run a public scraper even without the Github Morph app having access to the repo
-    # connected with the scraper
-    installation = Morph::GithubAppInstallation.new(T.must(T.must(scraper.owner).nickname))
+    access = scraper.forge.repository_access(scraper)
 
-    error = installation.confirm_has_access_to(scraper.name)
+    # Checked even for public repositories, so that a public scraper cannot be run
+    # unless morph.io has been given access to its repository the same way as a
+    # private one would need. It keeps the experience consistent.
+    error = access.confirm_has_access
     return error if error
 
-    error = check_repository_visibility(installation, scraper)
+    error = check_repository_visibility(access, scraper)
     return error if error
 
-    error = installation.synchronise_repo(scraper.repo_path, scraper.git_url_https)
+    error = access.synchronise_repo
     return error if error
 
     update_repo_size(scraper)
-    error = update_contributors(installation, scraper)
+    error = update_contributors(access, scraper)
     return error if error
 
-    error = update_collaborators(installation, scraper)
-    return error if error
-
-    nil
+    update_collaborators(access, scraper)
   end
 
-  sig { params(installation: Morph::GithubAppInstallation, scraper: Scraper).returns(T.nilable(T.any(RepoNeedsToBePublic, RepoNeedsToBePrivate, Morph::GithubAppInstallation::NoAppInstallationForOwner))) }
-  def self.check_repository_visibility(installation, scraper)
-    repository_private, error = installation.repository_private?(scraper.name)
+  sig { params(access: Morph::Forge::RepositoryAccess, scraper: Scraper).returns(T.nilable(T.any(RepoNeedsToBePublic, RepoNeedsToBePrivate, Morph::Forge::Error))) }
+  def self.check_repository_visibility(access, scraper)
+    repository_private, error = access.private_repository
     return error if error
 
     # No problem if the visibility of the scraper and the repository match
@@ -52,31 +52,28 @@ class SynchroniseRepoService
     scraper.update!(repo_size: directory_size(scraper.repo_path))
   end
 
-  sig { params(installation: Morph::GithubAppInstallation, scraper: Scraper).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAccessToRepo, Morph::GithubAppInstallation::NoAppInstallationForOwner))) }
-  def self.update_contributors(installation, scraper)
-    nicknames, error = installation.contributor_nicknames(scraper.name)
+  # Contributors are left as they were when the forge cannot say who they are
+  # (see Contributor in CONTEXT.md).
+  sig { params(access: Morph::Forge::RepositoryAccess, scraper: Scraper).returns(T.nilable(Morph::Forge::Error)) }
+  def self.update_contributors(access, scraper)
+    logins, error = access.contributor_logins
     return error if error
+    return nil if logins.nil?
 
-    contributors = nicknames.map { |n| User.find_or_create_by!(nickname: n) }
+    contributors = logins.map { |n| User.find_or_create_by!(nickname: n) }
     scraper.update!(contributors: contributors)
     nil
   end
 
-  sig { params(installation: Morph::GithubAppInstallation, scraper: Scraper).returns(T.nilable(T.any(Morph::GithubAppInstallation::NoAccessToRepo, Morph::GithubAppInstallation::NoAppInstallationForOwner))) }
-  def self.update_collaborators(installation, scraper)
-    collaborators, error = installation.collaborators(scraper.name)
+  sig { params(access: Morph::Forge::RepositoryAccess, scraper: Scraper).returns(T.nilable(Morph::Forge::Error)) }
+  def self.update_collaborators(access, scraper)
+    collaborators, error = access.collaborators
     return error if error
 
     collaborations = collaborators.map do |c|
       u = User.find_or_create_by!(nickname: c.login)
       collaboration = scraper.collaborations.find_or_initialize_by(owner: u)
-      collaboration.update!(
-        admin: c.permissions.admin,
-        maintain: c.permissions.maintain,
-        pull: c.permissions.pull,
-        push: c.permissions.push,
-        triage: c.permissions.triage
-      )
+      collaboration.update!(c.permissions.serialize)
       collaboration
     end
     scraper.update!(collaborations: collaborations)

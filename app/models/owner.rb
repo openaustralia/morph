@@ -148,11 +148,6 @@ class Owner < ApplicationRecord
     forge_identity("github")
   end
 
-  sig { returns(String) }
-  def github_url
-    "https://github.com/#{nickname}"
-  end
-
   # Organizations and users store their gravatar in different ways
   # TODO: Fix this
   # TODO: Move this out of the model
@@ -189,11 +184,12 @@ class Owner < ApplicationRecord
     Plan.new(s) if s
   end
 
-  # This returns a url to install the Morph Github app for this owner. It also suggests the repos to select based on
-  # the scrapers that this owner already has
-  sig { returns(String) }
-  def app_install_url
-    params = { suggested_target_id: github_identity&.uid, repository_ids: scrapers.map(&:forge_repo_id) }
-    "https://github.com/apps/#{Morph::Environment.github_app_name}/installations/new/permissions?#{params.to_query}"
+  # Every forge this owner is known on, each with the URL of their page there.
+  sig { returns(T::Array[[Morph::Forge::Base, String]]) }
+  def forge_profiles
+    forge_identities.map do |identity|
+      forge = Morph::Forge.for(identity.forge_key)
+      [forge, forge.owner_url(self)]
+    end
   end
 end

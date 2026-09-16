@@ -29,7 +29,7 @@ RSpec.describe "tasks" do # rubocop:disable RSpec/DescribeClass
         allow(Rake::Task["db:reset"]).to receive(:invoke)
         allow(Rake::Task["db:stats"]).to receive(:invoke)
         allow(Searchkick).to receive(:disable_callbacks)
-        allow(Scraper).to receive(:skip_github_validations=)
+        allow(Scraper).to receive(:skip_forge_validations=)
         allow(FactoryBot).to receive(:lint)
         allow(SiteSetting).to receive(:maximum_concurrent_scrapers)
         # User might be used in the task
@@ -47,7 +47,7 @@ RSpec.describe "tasks" do # rubocop:disable RSpec/DescribeClass
         Rake::Task[task].reenable
         Rake::Task[task].invoke
         expect(Searchkick).to have_received(:disable_callbacks)
-        expect(Scraper).to have_received(:skip_github_validations=).with(true)
+        expect(Scraper).to have_received(:skip_forge_validations=).with(true)
       end
 
       it "runs FactoryBot linting" do

@@ -25,8 +25,8 @@ describe Scraper do
       let(:installation) { instance_double(Morph::GithubAppInstallation, installed?: true) }
 
       before do
-        # Need to turn off the default skip_github_validations for these tests
-        described_class.skip_github_validations = false
+        # Need to turn off the default skip_forge_validations for these tests
+        described_class.skip_forge_validations = false
 
         # Stub the GithubAppInstallation check that runs in app_installed_on_owner
         allow(Morph::GithubAppInstallation).to receive(:new).with(owner.nickname).and_return(installation)
@@ -37,7 +37,7 @@ describe Scraper do
 
       after do
         # Restore default behavior
-        described_class.skip_github_validations = true
+        described_class.skip_forge_validations = true
       end
 
       it "is valid when repository does not exist on GitHub" do
@@ -72,7 +72,7 @@ describe Scraper do
       # rubocop:enable RSpec/VerifiedDoubles
 
       before do
-        described_class.skip_github_validations = false
+        described_class.skip_forge_validations = false
 
         # Stub the Octokit check that runs in not_used_on_github
         allow(Octokit).to receive(:client).and_return(octokit_client)
@@ -80,7 +80,7 @@ describe Scraper do
       end
 
       after do
-        described_class.skip_github_validations = true
+        described_class.skip_forge_validations = true
       end
 
       it "is valid when GitHub app is installed for owner" do
@@ -108,7 +108,7 @@ describe Scraper do
       # rubocop:enable RSpec/VerifiedDoubles
 
       before do
-        described_class.skip_github_validations = false
+        described_class.skip_forge_validations = false
 
         # Stub the Octokit check - not_used_on_github is skipped when forge_repo_id is present,
         # but we still need to provide the stub in case it's called
@@ -117,7 +117,7 @@ describe Scraper do
       end
 
       after do
-        described_class.skip_github_validations = true
+        described_class.skip_forge_validations = true
       end
 
       it "is valid when app has access to the repository" do

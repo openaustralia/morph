@@ -38,7 +38,7 @@
     - if scraper.readme
       .panel.panel-default
         .panel-heading
-          %h4.panel-title= link_to scraper.readme_filename, scraper.github_url_readme
+          %h4.panel-title= link_to scraper.readme_filename, scraper.readme_url
         .panel-body
           = scraper.readme
     - unless scraper.contributors.empty?
@@ -62,7 +62,7 @@
 
     #scraper-code
       %h4
-        %i.fa.fa-github-square.fa-lg
+        %i.fa.fa-lg{ class: "fa-#{scraper.forge_key}" }
         Scraper code
       - if scraper.language.present?
         %strong.scraper-lang= scraper.language.human
@@ -72,7 +72,7 @@
             = scraper.name
           - if scraper.main_scraper_filename
             \/
-            = link_to scraper.main_scraper_filename, scraper.github_url_main_scraper_file, target: "_blank", rel: "noopener"
+            = link_to scraper.main_scraper_filename, scraper.main_scraper_file_url, target: "_blank", rel: "noopener"
     %p
       .form-group
         %label{ for: "git_url" } git clone URL

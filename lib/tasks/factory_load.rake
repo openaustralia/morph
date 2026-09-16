@@ -14,7 +14,7 @@ namespace :db do
       Searchkick.disable_callbacks
 
       $stdout.puts "Disabling github validations as we are loading fake scrapers ..."
-      Scraper.skip_github_validations = true
+      Scraper.skip_forge_validations = true
 
       $stdout.puts "Loading test data..."
       require "factory_bot_rails"
