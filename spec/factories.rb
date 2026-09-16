@@ -6,15 +6,42 @@
 # * site_setting - a singleton created when accessed
 # The maximal trait is intended to have values for all attributes, with the largest possible values
 FactoryBot.define do
+  factory :forge_identity do
+    owner factory: :user
+    forge_key { "github" }
+    sequence(:uid) { |n| "github_#{n}" }
+    login { owner.nickname }
+    access_token { "github_access_token" }
+
+    trait :maximal do
+      sequence(:uid) { |n| FactoryHelpers.max_string("github_#{n}", 255) }
+      access_token { FactoryHelpers.max_string("github_access_token", 255) }
+      refresh_token { FactoryHelpers.max_string("github_refresh_token", 255) }
+      token_expires_at { 2.hours.from_now }
+      scopes { FactoryHelpers.max_string("user:email,public_repo", 255) }
+    end
+  end
+
   factory :user do
     # Required in practice if you collaborate or own a scraper - only 6 users in Prod dont have nicknames
     sequence(:nickname) { |n| "user#{n}" }
+
+    # Pass github_uid: to control the GitHub account this user is known by.
+    transient do
+      github_uid { nil }
+    end
+
+    trait :on_github do
+      after(:create) do |user, evaluator|
+        create(:forge_identity, owner: user, uid: evaluator.github_uid || "github_#{user.id}")
+      end
+    end
+
     trait :maximal do
+      on_github
       sequence(:nickname) { |n| FactoryHelpers.max_name("full-user#{n}", 127) }
       sequence(:email) { |n| "full-user#{n}@example.com" }
       name { FactoryHelpers.max_string("User name", 255) }
-      provider { "github" }
-      sequence(:uid) { |n| "github_#{n}" }
       blog { FactoryHelpers.max_string("https://example.com/blog", 255) }
       company { FactoryHelpers.max_string("Acme Corporation", 255) }
       location { FactoryHelpers.max_string("Sydney, Australia", 255) }
@@ -42,8 +69,8 @@ FactoryBot.define do
     trait :maximal do
       sequence(:name) { |n| FactoryHelpers.max_name("my_max_scraper#{n}", 127) }
       description { FactoryHelpers.max_string("Comprehensive scraper description", 255) }
-      sequence(:github_id) { |n| 1000000 + n }
-      sequence(:github_url) { |n| FactoryHelpers.max_string("https://github.com/owner/scraper#{n}", 255) }
+      sequence(:forge_repo_id) { |n| 1000000 + n }
+      sequence(:repo_url) { |n| FactoryHelpers.max_string("https://github.com/owner/scraper#{n}", 255) }
       sequence(:git_url) { |n| FactoryHelpers.max_string("git@github.com:owner/scraper#{n}.git", 255) }
       auto_run { true }
       scraperwiki_url { FactoryHelpers.max_string("https://classic.scraperwiki.com/scrapers/test", 255) }
@@ -100,12 +127,17 @@ FactoryBot.define do
   end
 
   factory :organization do
+    trait :on_github do
+      after(:create) do |org|
+        create(:forge_identity, owner: org, uid: "github_org_#{org.id}", access_token: nil)
+      end
+    end
+
     trait :maximal do
+      on_github
       sequence(:nickname) { |n| FactoryHelpers.max_name("max-org#{n}", 127) }
       sequence(:email) { |n| "max-org#{n}@example.com" }
       name { FactoryHelpers.max_string("Organization Name", 255) }
-      provider { "github" }
-      sequence(:uid) { |n| "github_org_#{n}" }
       company { FactoryHelpers.max_string("Big Company Inc", 255) }
       blog { FactoryHelpers.max_name("https://example.com/blog", 255) }
       location { FactoryHelpers.max_string("Melbourne, Australia", 255) }
@@ -245,9 +277,9 @@ FactoryBot.define do
       owner { association(:user, :maximal) }
       full_name { "#{owner.nickname}/#{name}" }
       description { FactoryHelpers.max_string("Active scraper description", 255) }
-      # Don't set github_id as it causes validation to github to fail!
-      # sequence(:github_id) { |n| 1000000 + n }
-      github_url { FactoryHelpers.max_name("https://github.com/active/scraper", 255) }
+      # Don't set forge_repo_id as it causes validation to github to fail!
+      # sequence(:forge_repo_id) { |n| 1000000 + n }
+      repo_url { FactoryHelpers.max_name("https://github.com/active/scraper", 255) }
       git_url { FactoryHelpers.max_name("git@github.com:active/scraper.git", 255) }
       auto_run { true }
       scraperwiki_url { FactoryHelpers.max_name("https://classic.scraperwiki.com/scrapers/active", 255) }

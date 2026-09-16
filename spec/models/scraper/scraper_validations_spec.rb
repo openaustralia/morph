@@ -53,9 +53,9 @@ describe Scraper do
         expect(scraper.errors[:name]).to include("is already taken on GitHub")
       end
 
-      it "skips validation when github_id is present" do
-        scraper.github_id = 12345
-        # With github_id present, the not_used_on_github validation is skipped entirely,
+      it "skips validation when forge_repo_id is present" do
+        scraper.forge_repo_id = 12345
+        # With forge_repo_id present, the not_used_on_github validation is skipped entirely,
         # But app_has_access_to_repo will run, so we need to stub it
         allow(installation).to receive(:confirm_has_access_to).with(scraper.name).and_return(nil)
 
@@ -101,7 +101,7 @@ describe Scraper do
 
     describe "#app_has_access_to_repo" do
       let(:owner) { create(:user, nickname: "test_user") }
-      let(:scraper) { build(:scraper, owner: owner, name: "test_repo", github_id: 12345) }
+      let(:scraper) { build(:scraper, owner: owner, name: "test_repo", forge_repo_id: 12345) }
       # Octokit is external gem
       # rubocop:disable RSpec/VerifiedDoubles
       let(:octokit_client) { double("Octokit::Client") }
@@ -110,7 +110,7 @@ describe Scraper do
       before do
         described_class.skip_github_validations = false
 
-        # Stub the Octokit check - not_used_on_github is skipped when github_id is present,
+        # Stub the Octokit check - not_used_on_github is skipped when forge_repo_id is present,
         # but we still need to provide the stub in case it's called
         allow(Octokit).to receive(:client).and_return(octokit_client)
         allow(octokit_client).to receive(:repository?).and_return(false)
@@ -151,8 +151,8 @@ describe Scraper do
         expect(scraper.errors[:full_name]).to be_present
       end
 
-      it "skips validation when github_id is blank" do
-        scraper.github_id = nil
+      it "skips validation when forge_repo_id is blank" do
+        scraper.forge_repo_id = nil
         installation = instance_double(Morph::GithubAppInstallation, installed?: true)
         allow(Morph::GithubAppInstallation).to receive(:new).with("test_user").and_return(installation)
 

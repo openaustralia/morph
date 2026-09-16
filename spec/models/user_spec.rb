@@ -6,7 +6,6 @@
 # Table name: owners
 #
 #  id                     :integer          not null, primary key
-#  access_token           :string(255)
 #  admin                  :boolean          default(FALSE), not null
 #  alerted_at             :datetime
 #  api_key                :string(255)
@@ -22,13 +21,11 @@
 #  location               :string(255)
 #  name                   :string(255)
 #  nickname               :string(255)
-#  provider               :string(255)
 #  remember_created_at    :datetime
 #  remember_token         :string(255)
 #  sign_in_count          :integer          default(0), not null
 #  suspended              :boolean          default(FALSE), not null
 #  type                   :string(255)
-#  uid                    :string(255)
 #  created_at             :datetime
 #  updated_at             :datetime
 #  stripe_customer_id     :string(255)
@@ -38,7 +35,7 @@
 # Indexes
 #
 #  index_owners_on_api_key   (api_key)
-#  index_owners_on_nickname  (nickname)
+#  index_owners_on_nickname  (nickname) UNIQUE
 #
 
 require "spec_helper"

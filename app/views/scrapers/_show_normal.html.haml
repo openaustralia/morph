@@ -66,9 +66,9 @@
         Scraper code
       - if scraper.language.present?
         %strong.scraper-lang= scraper.language.human
-      - if scraper.github_url
+      - if scraper.repo_url
         %p
-          = link_to scraper.github_url, target: "_blank", rel: "noopener" do
+          = link_to scraper.repo_url, target: "_blank", rel: "noopener" do
             = scraper.name
           - if scraper.main_scraper_filename
             \/

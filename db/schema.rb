@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_13_051602) do
+ActiveRecord::Schema.define(version: 2026_09_16_000003) do
 
   create_table "active_admin_comments", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "namespace"
@@ -104,6 +104,22 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["name"], name: "index_domains_on_name", unique: true
   end
 
+  create_table "forge_identities", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "owner_id", null: false
+    t.string "forge_key", null: false
+    t.string "uid", null: false
+    t.string "login", null: false
+    t.string "access_token"
+    t.string "refresh_token"
+    t.datetime "token_expires_at"
+    t.string "scopes"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["forge_key", "uid"], name: "index_forge_identities_on_forge_key_and_uid", unique: true
+    t.index ["owner_id", "forge_key"], name: "index_forge_identities_on_owner_id_and_forge_key", unique: true
+    t.index ["owner_id"], name: "index_forge_identities_on_owner_id"
+  end
+
   create_table "log_lines", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "run_id"
     t.string "stream"
@@ -147,11 +163,8 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.string "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "provider"
-    t.string "uid"
     t.string "name"
     t.string "nickname"
-    t.string "access_token"
     t.string "blog"
     t.string "company"
     t.string "email"
@@ -169,7 +182,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.string "location"
     t.datetime "alerted_at"
     t.index ["api_key"], name: "index_owners_on_api_key"
-    t.index ["nickname"], name: "index_owners_on_nickname"
+    t.index ["nickname"], name: "index_owners_on_nickname", unique: true
   end
 
   create_table "runs", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
@@ -208,12 +221,12 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
   create_table "scrapers", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "description"
-    t.integer "github_id"
+    t.integer "forge_repo_id"
     t.integer "owner_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "full_name", null: false
-    t.string "github_url"
+    t.string "repo_url"
     t.string "git_url"
     t.boolean "auto_run", default: false, null: false
     t.string "scraperwiki_url"
@@ -224,6 +237,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.integer "create_scraper_progress_id"
     t.integer "memory_mb"
     t.boolean "private", default: false, null: false
+    t.string "forge_key", default: "github", null: false
     t.index ["create_scraper_progress_id"], name: "fk_rails_44c3dd8af8"
     t.index ["full_name"], name: "index_scrapers_on_full_name", unique: true
     t.index ["owner_id", "name"], name: "index_scrapers_on_owner_id_and_name", unique: true
@@ -265,12 +279,7 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.index ["scraper_id"], name: "index_webhooks_on_scraper_id"
   end
 
-  add_foreign_key "api_queries", "scrapers"
-  add_foreign_key "collaborations", "owners"
-  add_foreign_key "collaborations", "scrapers"
-  add_foreign_key "connection_logs", "domains"
-  add_foreign_key "connection_logs", "runs"
-  add_foreign_key "contributions", "scrapers"
+  add_foreign_key "forge_identities", "owners"
   add_foreign_key "log_lines", "runs"
   add_foreign_key "metrics", "runs"
   add_foreign_key "runs", "scrapers"

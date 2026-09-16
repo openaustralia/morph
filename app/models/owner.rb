@@ -8,7 +8,6 @@
 # Table name: owners
 #
 #  id                     :integer          not null, primary key
-#  access_token           :string(255)
 #  admin                  :boolean          default(FALSE), not null
 #  alerted_at             :datetime
 #  api_key                :string(255)
@@ -24,13 +23,11 @@
 #  location               :string(255)
 #  name                   :string(255)
 #  nickname               :string(255)
-#  provider               :string(255)
 #  remember_created_at    :datetime
 #  remember_token         :string(255)
 #  sign_in_count          :integer          default(0), not null
 #  suspended              :boolean          default(FALSE), not null
 #  type                   :string(255)
-#  uid                    :string(255)
 #  created_at             :datetime
 #  updated_at             :datetime
 #  stripe_customer_id     :string(255)
@@ -40,7 +37,7 @@
 # Indexes
 #
 #  index_owners_on_api_key   (api_key)
-#  index_owners_on_nickname  (nickname)
+#  index_owners_on_nickname  (nickname) UNIQUE
 #
 class Owner < ApplicationRecord
   extend T::Sig
@@ -56,6 +53,7 @@ class Owner < ApplicationRecord
 
   has_many :scrapers, inverse_of: :owner, dependent: :restrict_with_exception
   has_many :runs, dependent: :restrict_with_exception
+  has_many :forge_identities, dependent: :destroy
   before_create :set_api_key
   has_many :watches, class_name: "Alert", foreign_key: :watch_id, dependent: :destroy, inverse_of: :watch
   has_many :watchers, through: :watches, source: :user
@@ -140,6 +138,16 @@ class Owner < ApplicationRecord
       Digest::MD5.base64digest(id.to_s + rand.to_s + Time.zone.now.to_s)[0...20]
   end
 
+  sig { params(forge_key: String).returns(T.nilable(ForgeIdentity)) }
+  def forge_identity(forge_key)
+    forge_identities.find { |identity| identity.forge_key == forge_key }
+  end
+
+  sig { returns(T.nilable(ForgeIdentity)) }
+  def github_identity
+    forge_identity("github")
+  end
+
   sig { returns(String) }
   def github_url
     "https://github.com/#{nickname}"
@@ -185,7 +193,7 @@ class Owner < ApplicationRecord
   # the scrapers that this owner already has
   sig { returns(String) }
   def app_install_url
-    params = { suggested_target_id: uid, repository_ids: scrapers.map(&:github_id) }
+    params = { suggested_target_id: github_identity&.uid, repository_ids: scrapers.map(&:forge_repo_id) }
     "https://github.com/apps/#{Morph::Environment.github_app_name}/installations/new/permissions?#{params.to_query}"
   end
 end

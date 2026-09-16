@@ -8,7 +8,6 @@
 # Table name: owners
 #
 #  id                     :integer          not null, primary key
-#  access_token           :string(255)
 #  admin                  :boolean          default(FALSE), not null
 #  alerted_at             :datetime
 #  api_key                :string(255)
@@ -24,13 +23,11 @@
 #  location               :string(255)
 #  name                   :string(255)
 #  nickname               :string(255)
-#  provider               :string(255)
 #  remember_created_at    :datetime
 #  remember_token         :string(255)
 #  sign_in_count          :integer          default(0), not null
 #  suspended              :boolean          default(FALSE), not null
 #  type                   :string(255)
-#  uid                    :string(255)
 #  created_at             :datetime
 #  updated_at             :datetime
 #  stripe_customer_id     :string(255)
@@ -40,7 +37,7 @@
 # Indexes
 #
 #  index_owners_on_api_key   (api_key)
-#  index_owners_on_nickname  (nickname)
+#  index_owners_on_nickname  (nickname) UNIQUE
 #
 class Organization < Owner
   extend T::Sig
@@ -57,6 +54,20 @@ class Organization < Owner
   sig { override.returns(T::Boolean) }
   def organization?
     true
+  end
+
+  # Organizations are recognised by their GitHub id, because a GitHub
+  # organisation can be renamed and its login is then someone else's to take.
+  sig { params(uid: String, login: String).returns(Organization) }
+  def self.find_or_create_from_github!(uid:, login:)
+    existing = ForgeIdentity.owner_for("github", uid)
+    return T.cast(existing, Organization) if existing
+
+    transaction do
+      org = Organization.create!(nickname: login)
+      org.forge_identities.create!(forge_key: "github", uid: uid, login: login)
+      org
+    end
   end
 
   sig { params(user: User).void }

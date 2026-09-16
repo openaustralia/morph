@@ -87,7 +87,7 @@ describe Scraper do
   end
 
   describe "#github_url_readme" do
-    let(:scraper) { build(:scraper, github_url: "https://github.com/owner/repo") }
+    let(:scraper) { build(:scraper, repo_url: "https://github.com/owner/repo") }
 
     before do
       FileUtils.mkdir_p(scraper.repo_path)
@@ -134,7 +134,7 @@ describe Scraper do
   end
 
   describe "#github_url_for_file" do
-    let(:scraper) { build(:scraper, github_url: "https://github.com/owner/repo") }
+    let(:scraper) { build(:scraper, repo_url: "https://github.com/owner/repo") }
 
     it "returns GitHub blob URL for given file" do
       url = scraper.github_url_for_file("scraper.rb")
@@ -143,7 +143,7 @@ describe Scraper do
   end
 
   describe "#github_url_main_scraper_file" do
-    let(:scraper) { build(:scraper, github_url: "https://github.com/owner/repo") }
+    let(:scraper) { build(:scraper, repo_url: "https://github.com/owner/repo") }
 
     it "returns GitHub URL for main scraper file" do
       allow(scraper).to receive(:main_scraper_filename).and_return("scraper.py")
@@ -205,12 +205,11 @@ describe Scraper do
   end
 
   describe "#app_install_url" do
-    let(:owner) { create(:user) }
-    let(:scraper) { build(:scraper, owner: owner, github_id: 12345) }
+    let(:owner) { create(:user, :on_github, github_uid: "67890") }
+    let(:scraper) { build(:scraper, owner: owner, forge_repo_id: 12345) }
 
     before do
       allow(Morph::Environment).to receive(:github_app_name).and_return("morph-app")
-      allow(owner).to receive(:uid).and_return("67890")
     end
 
     it "returns GitHub app installation URL with correct parameters" do

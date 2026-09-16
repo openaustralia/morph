@@ -72,8 +72,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
         user = User.find_by(nickname: nickname)
         expect(user).to be_present
-        expect(user.uid).to eq(uid)
-        expect(user.access_token).to eq(access_token)
+        expect(user.github_identity).to have_attributes(uid: uid, access_token: access_token)
         expect(response).to have_http_status(:redirect)
       end
 
@@ -126,7 +125,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     end
 
     context "when existing user signs in" do
-      let!(:existing_user) { create(:user, nickname: nickname, uid: uid, provider: "github") }
+      let!(:existing_user) { create(:user, :on_github, nickname: nickname, github_uid: uid) }
 
       it "does not create a new user" do
         expect do
@@ -150,12 +149,10 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       end
 
       it "updates access token" do
-        old_token = existing_user.access_token
         get :github
 
         existing_user.reload
-        expect(existing_user.access_token).to eq(access_token)
-        expect(existing_user.access_token).not_to eq(old_token) unless old_token == access_token
+        expect(existing_user.github_identity.access_token).to eq(access_token)
       end
 
       # rubocop:disable RSpec/AnyInstance
@@ -177,7 +174,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     end
 
     context "when user with maximal attributes signs in" do
-      let!(:maximal_user) { create(:user, :maximal, nickname: nickname, uid: uid, provider: "github") }
+      let!(:maximal_user) { create(:user, :maximal, nickname: nickname, github_uid: uid) }
 
       it "handles user with maximal attributes" do
         expect do
@@ -192,7 +189,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         get :github
 
         maximal_user.reload
-        expect(maximal_user.access_token).to eq(access_token)
+        expect(maximal_user.github_identity.access_token).to eq(access_token)
         expect(maximal_user.name).to eq("Test User")
       end
     end
@@ -219,7 +216,8 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
       it "handles reconnecting same GitHub account" do
         # The user already has this GitHub account connected
-        current_user.update(provider: "github", uid: uid, nickname: nickname)
+        current_user.update(nickname: nickname)
+        current_user.forge_identities.create!(forge_key: "github", uid: uid, login: nickname)
 
         expect do
           get :github

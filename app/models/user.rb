@@ -8,7 +8,6 @@
 # Table name: owners
 #
 #  id                     :integer          not null, primary key
-#  access_token           :string(255)
 #  admin                  :boolean          default(FALSE), not null
 #  alerted_at             :datetime
 #  api_key                :string(255)
@@ -24,13 +23,11 @@
 #  location               :string(255)
 #  name                   :string(255)
 #  nickname               :string(255)
-#  provider               :string(255)
 #  remember_created_at    :datetime
 #  remember_token         :string(255)
 #  sign_in_count          :integer          default(0), not null
 #  suspended              :boolean          default(FALSE), not null
 #  type                   :string(255)
-#  uid                    :string(255)
 #  created_at             :datetime
 #  updated_at             :datetime
 #  stripe_customer_id     :string(255)
@@ -40,7 +37,7 @@
 # Indexes
 #
 #  index_owners_on_api_key   (api_key)
-#  index_owners_on_nickname  (nickname)
+#  index_owners_on_nickname  (nickname) UNIQUE
 #
 class User < Owner
   extend T::Sig
@@ -199,7 +196,7 @@ class User < Owner
   sig { void }
   def refresh_organizations!
     refreshed_organizations = github.organizations(T.must(nickname)).map do |data|
-      org = Organization.find_or_create_by!(uid: data.id.to_s, nickname: data.login)
+      org = Organization.find_or_create_from_github!(uid: data.id.to_s, login: data.login)
       org.refresh_info_from_github!(self)
       org
     end
@@ -214,9 +211,13 @@ class User < Owner
 
   sig { params(auth: T.untyped, _signed_in_resource: T.nilable(User)).returns(User) }
   def self.find_for_github_oauth(auth, _signed_in_resource = nil)
-    user = User.find_or_create_by(provider: auth.provider, uid: auth.uid)
-    user.update(nickname: auth.info.nickname,
-                access_token: auth.credentials.token)
+    uid = auth.uid.to_s
+    login = auth.info.nickname
+    user = T.cast(ForgeIdentity.owner_for("github", uid) || User.create!(nickname: login), User)
+    user.update(nickname: login)
+    identity = user.github_identity || user.forge_identities.build(forge_key: "github", uid: uid)
+    identity.update!(login: login, access_token: auth.credentials.token)
+    user.forge_identities.reset
     user.refresh_info_from_github!
     # Also every time you login it should update the list of organizations that
     # the user is attached to but do this in a background job
@@ -254,10 +255,11 @@ class User < Owner
     alerted_at.blank?
   end
 
-  # Note that calling this method will fail if the user has no access_token. This will be
-  # the case if the user has not yet logged since the switch-over of the week of Oct 10 2022.
+  # Note that calling this method will fail if the user's GitHub identity has no access
+  # token. This will be the case if the user has not yet logged in since the switch-over
+  # of the week of Oct 10 2022.
   sig { returns(Morph::Github) }
   def github
-    Morph::Github.new(user_nickname: T.must(nickname), user_access_token: T.must(access_token))
+    Morph::Github.new(user_nickname: T.must(nickname), user_access_token: T.must(T.must(github_identity).access_token))
   end
 end

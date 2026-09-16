@@ -10,21 +10,22 @@
 #  id                         :integer          not null, primary key
 #  auto_run                   :boolean          default(FALSE), not null
 #  description                :string(255)
+#  forge_key                  :string(255)      default("github"), not null
 #  full_name                  :string(255)      not null
 #  git_url                    :string(255)
-#  github_url                 :string(255)
 #  memory_mb                  :integer
 #  name                       :string(255)      default(""), not null
 #  original_language_key      :string(255)
 #  private                    :boolean          default(FALSE), not null
 #  repo_size                  :integer          default(0), not null
+#  repo_url                   :string(255)
 #  scraperwiki_url            :string(255)
 #  sqlite_db_size             :bigint           default(0), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  create_scraper_progress_id :integer
+#  forge_repo_id              :integer
 #  forked_by_id               :integer
-#  github_id                  :integer
 #  owner_id                   :integer          not null
 #
 # Indexes
@@ -75,7 +76,7 @@ class Scraper < ApplicationRecord
 
   validates :name, presence: true, format: { with: /\A[a-zA-Z0-9_-]+\z/ }
   validates :name, uniqueness: { scope: :owner, case_sensitive: false }
-  validate :not_used_on_github, on: :create, if: proc { |s| s.github_id.blank? && s.name.present? }
+  validate :not_used_on_github, on: :create, if: proc { |s| s.forge_repo_id.blank? && s.name.present? }
   validate :app_installed_on_owner, on: :create
   validate :app_has_access_to_repo, on: :create
 
@@ -149,8 +150,8 @@ class Scraper < ApplicationRecord
     # Populate a new scraper with information from the repo
     Scraper.new(
       name: repo.name, full_name: repo.full_name, description: repo.description,
-      github_id: repo.id, owner_id: repo_owner.id,
-      github_url: repo.rels.html.href, git_url: repo.rels.git.href
+      forge_repo_id: repo.id, owner_id: repo_owner.id,
+      repo_url: repo.rels.html.href, git_url: repo.rels.git.href
     )
   end
 
@@ -280,7 +281,7 @@ class Scraper < ApplicationRecord
   # just redirect to master, because it's the default branch
   sig { params(file: String).returns(String) }
   def github_url_for_file(file)
-    "#{github_url}/blob/main/#{file}"
+    "#{repo_url}/blob/main/#{file}"
   end
 
   sig { returns(T.nilable(Morph::Language)) }
@@ -331,7 +332,7 @@ class Scraper < ApplicationRecord
   # A link just to install the GitHub Morph app for the repo associated with this scraper
   sig { returns(String) }
   def app_install_url
-    params = { suggested_target_id: T.must(owner).uid, repository_ids: github_id }
+    params = { suggested_target_id: T.must(owner).github_identity&.uid, repository_ids: forge_repo_id }
     "https://github.com/apps/#{Morph::Environment.github_app_name}/installations/new/permissions?#{params.to_query}"
   end
 
@@ -402,11 +403,11 @@ class Scraper < ApplicationRecord
     # rubocop:enable Rails/OutputSafety
   end
 
-  # In the case where a scraper is created from an already existing repository on github then the "github_id" is populated
+  # In the case where a scraper is created from an already existing repository on github then the "forge_repo_id" is populated
   # on creation and we need to check that the GitHub Morph application has access to the specific repository
   sig { void }
   def app_has_access_to_repo
-    return if self.class.skip_github_validations || github_id.blank?
+    return if self.class.skip_github_validations || forge_repo_id.blank?
 
     installation = Morph::GithubAppInstallation.new(T.must(T.must(owner).nickname))
     error = installation.confirm_has_access_to(name)

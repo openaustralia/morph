@@ -8,21 +8,22 @@
 #  id                         :integer          not null, primary key
 #  auto_run                   :boolean          default(FALSE), not null
 #  description                :string(255)
+#  forge_key                  :string(255)      default("github"), not null
 #  full_name                  :string(255)      not null
 #  git_url                    :string(255)
-#  github_url                 :string(255)
 #  memory_mb                  :integer
 #  name                       :string(255)      default(""), not null
 #  original_language_key      :string(255)
 #  private                    :boolean          default(FALSE), not null
 #  repo_size                  :integer          default(0), not null
+#  repo_url                   :string(255)
 #  scraperwiki_url            :string(255)
 #  sqlite_db_size             :bigint           default(0), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  create_scraper_progress_id :integer
+#  forge_repo_id              :integer
 #  forked_by_id               :integer
-#  github_id                  :integer
 #  owner_id                   :integer          not null
 #
 # Indexes

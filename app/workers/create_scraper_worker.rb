@@ -34,8 +34,8 @@ class CreateScraperWorker
     scraper.create_scraper_progress.update_progress("Get repository info", 60)
     scraper2 = Scraper.new_from_github(scraper.full_name, current_user)
     # Copy the new data across
-    scraper.update(description: scraper2.description, github_id: scraper2.github_id,
-                   owner_id: scraper2.owner_id, github_url: scraper2.github_url, git_url: scraper2.git_url)
+    scraper.update(description: scraper2.description, forge_repo_id: scraper2.forge_repo_id,
+                   owner_id: scraper2.owner_id, repo_url: scraper2.repo_url, git_url: scraper2.git_url)
 
     current_user.github.update_repo_homepage(scraper.full_name, scraper_url)
 

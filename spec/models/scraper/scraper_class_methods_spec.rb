@@ -63,9 +63,9 @@ describe Scraper do
       expect(scraper.name).to eq("test_repo")
       expect(scraper.full_name).to eq("test_owner/test_repo")
       expect(scraper.description).to eq("A test repository")
-      expect(scraper.github_id).to eq(12345)
+      expect(scraper.forge_repo_id).to eq(12345)
       expect(scraper.owner_id).to eq(repo_owner.id)
-      expect(scraper.github_url).to eq("https://github.com/test_owner/test_repo")
+      expect(scraper.repo_url).to eq("https://github.com/test_owner/test_repo")
       expect(scraper.git_url).to eq("git://github.com/test_owner/test_repo.git")
     end
 
