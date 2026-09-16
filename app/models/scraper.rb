@@ -282,15 +282,15 @@ class Scraper < ApplicationRecord
     Morph::Forge.for(forge_key)
   end
 
-  # The branch the forge shows by default, read from the local clone so no
-  # API call is needed. "main" until the repository has been cloned.
+  # The branch the forge shows by default, read from the local clone's HEAD
+  # so no API call is needed. "main" until the repository has been cloned,
+  # or if HEAD is detached.
   sig { returns(String) }
   def default_branch
-    return "main" unless File.exist?(File.join(repo_path, ".git"))
+    head = File.join(repo_path, ".git", "HEAD")
+    return "main" unless File.exist?(head)
 
-    Rugged::Repository.new(repo_path).references["HEAD"].target_id.delete_prefix("refs/heads/")
-  rescue Rugged::Error, Rugged::ReferenceError
-    "main"
+    File.read(head).strip[%r{\Aref: refs/heads/(.+)\z}, 1] || "main"
   end
 
   sig { params(file: String).returns(String) }

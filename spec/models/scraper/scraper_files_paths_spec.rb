@@ -223,10 +223,17 @@ describe Scraper do
     end
 
     it "is whatever the local clone has checked out" do
-      Rugged::Repository.init_at(scraper.repo_path)
+      FileUtils.mkdir_p(File.join(scraper.repo_path, ".git"))
       File.write(File.join(scraper.repo_path, ".git", "HEAD"), "ref: refs/heads/trunk\n")
 
       expect(scraper.default_branch).to eq("trunk")
+    end
+
+    it "is main when HEAD is detached" do
+      FileUtils.mkdir_p(File.join(scraper.repo_path, ".git"))
+      File.write(File.join(scraper.repo_path, ".git", "HEAD"), "0123456789abcdef0123456789abcdef01234567\n")
+
+      expect(scraper.default_branch).to eq("main")
     end
   end
 
