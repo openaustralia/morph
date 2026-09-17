@@ -1,7 +1,16 @@
-FROM ruby:2.7.6
+FROM ruby:3.0.7
+
+# The ruby images this Dockerfile builds on are Debian bullseye based, and
+# bullseye has moved to archive.debian.org now its LTS has ended: the main
+# mirrors 404, and the archive's Release files are frozen, so apt has to be
+# pointed at the archive and told not to reject its Release files as expired.
+# bullseye-security is dropped: it is not on archive.debian.org yet and the
+# live mirror's pool has been pruned. This is a development-only image.
+RUN echo "deb http://archive.debian.org/debian bullseye main" > /etc/apt/sources.list \
+    && echo "deb http://archive.debian.org/debian bullseye-updates main" >> /etc/apt/sources.list
 
 RUN echo "Install a javascript runtime and other gem dependencies ..." \
-    && apt-get update  \
+    && apt-get -o Acquire::Check-Valid-Until=false update  \
     && apt-get install -y \
        nodejs \
        cmake \

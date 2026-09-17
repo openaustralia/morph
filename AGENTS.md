@@ -251,13 +251,13 @@ comment blocks in the diff and commit them.
 
 ## Version pins that look stale but are not
 
-The application runs Ruby 2.7.6 and Rails 6.0.6.1, so do not reach for Ruby 3.x
-syntax. Several gems are pinned for reasons recorded in `Gemfile` comments, and
-bumping them without dealing with the underlying cause will break production:
+The application runs Ruby 3.0.7 and Rails 6.1.7.10, so do not reach for Ruby
+3.1+ syntax (hash literal value omission, `Data.define`, anonymous block
+arguments). Several gems are pinned for reasons recorded in `Gemfile` comments,
+and bumping them without dealing with the underlying cause will break
+production:
 
 - `sidekiq "~> 5"`, because production is still on redis 3.x.
-- `psych >= 3.3.4, < 4`, until the Rails 6.1 upgrade lands.
-- `annotaterb "~> 4.15.0"`, because 4.16 requires Ruby 3.0.
 - `foreman "0.63.0"`, to match the system foreman package on production.
 - `jquery-ui-rails "~> 5"`, because newer versions raise
   `Sprockets::FileNotFound`.

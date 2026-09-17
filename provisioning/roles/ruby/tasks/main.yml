@@ -13,6 +13,27 @@
   become_user: "{{ item }}"
   loop: "{{ rvm_users }}"
 
+# An old rvm keeps a stale ruby-build definition that can point at a source
+# tarball extension the upstream mirror has since stopped publishing (e.g.
+# ruby-lang.org dropping .tar.bz2 for a release while keeping .tar.gz/.tar.xz),
+# making `rvm install` fail with a 404 that looks like the version itself is
+# unavailable. Keeping rvm itself current avoids that.
+#
+# Deliberately NOT `rvm get stable`: that runs the *already-installed* rvm's
+# own internal self-update, which on an old enough rvm still points at a dead
+# bitbucket.org URL and silently does nothing (confirmed on production). The
+# external installer below is a different code path (the current script
+# served live from get.rvm.io, fetching from GitHub) and upgrades an existing
+# install in place just as well as it performs a first install above.
+- name: "Ensure rvm is up to date for rvm_users"
+  shell: "curl -sSL https://get.rvm.io | bash -s stable"
+  become_user: "{{ item }}"
+  loop: "{{ rvm_users }}"
+  # async can't be combined with check mode, so drop it there
+  async: "{{ 0 if ansible_check_mode else 300 }}"
+  poll: 5
+  ignore_errors: yes
+
 - name: "Ensure ruby dependencies are installed"
   apt:
     pkg:
@@ -36,7 +57,8 @@
     creates: "/home/{{ item }}/.rvm/rubies/ruby-{{ ruby_version }}"
   become_user: "{{ item }}"
   loop: "{{ rvm_users }}"
-  async: 300
+  # async can't be combined with check mode, so drop it there
+  async: "{{ 0 if ansible_check_mode else 300 }}"
   poll: 5
   register: rvm_install
   ignore_errors: yes
@@ -48,7 +70,8 @@
     creates: "/home/{{ item.item }}/.rvm/rubies/ruby-{{ ruby_version }}"
   become_user: "{{ item.item }}"
   loop: "{{ rvm_install.results }}"
-  async: 1800
+  # async can't be combined with check mode, so drop it there
+  async: "{{ 0 if ansible_check_mode else 1800 }}"
   poll: 5
   when: item.failed | default(false)
   notify: "Set default ruby version"
@@ -59,6 +82,8 @@
   register: bundler_check
   failed_when: false
   changed_when: false
+  # Read-only, so run it even in check mode to give the next task a real rc
+  check_mode: false
   loop: "{{ rvm_users }}"
   # Disable use of PTY as it sometimes hangs
   async: 60
@@ -69,8 +94,9 @@
   become_user: "{{ item.item }}"
   when: item.rc != 0
   loop: "{{ bundler_check.results }}"
-  # Disable use of PTY as it sometimes hangs
-  async: 300
+  # Disable use of PTY as it sometimes hangs (async dropped in check mode,
+  # which can't be combined with it)
+  async: "{{ 0 if ansible_check_mode else 300 }}"
   poll: 2
 
 - name: Create .bash_aliases for rvm_users
