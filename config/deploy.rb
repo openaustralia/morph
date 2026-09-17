@@ -63,6 +63,17 @@ set :linked_dirs, %w[db/scrapers public/sitemaps tmp/pids log]
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 # set :keep_releases, 5
 
+namespace :bundler do
+  desc "Install the Bundler version pinned in Gemfile.lock"
+  task :install_pinned_version do
+    on roles(:app) do
+      execute :gem, "install bundler --version #{fetch(:bundler_version)}"
+    end
+  end
+end
+
+before "bundler:install", "bundler:install_pinned_version"
+
 namespace :deploy do
   desc "Restart application"
   task :restart do
