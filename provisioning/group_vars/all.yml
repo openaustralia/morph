@@ -10,7 +10,12 @@ github_users:
   - 'benrfairless'
 ruby_version: "{{ lookup('file', '../.ruby-version') | trim }}"
 #python_version: "{{ lookup('file', '../.python-version') | trim }}"
-bundler_version: 2.3.27
+# Deliberately not matching Gemfile.lock's BUNDLED WITH (2.3.27): that
+# version enforces a strict default-gem activation check that turns a
+# harmless Ruby-bundled-vs-Gemfile.lock version skew (e.g. base64, stringio,
+# net-protocol) into a fatal boot crash under Phusion Passenger. 2.2.33
+# treats the same skew as a harmless warning. See the incident write-up.
+bundler_version: 2.2.33
 apt_packages:
   - cmake
   - language-pack-en
