@@ -28,7 +28,7 @@ gem "docker-api", require: "docker"
 # We're using Faraday directly in one place (to workaround an octokit problem) and that
 # depends on version 2.
 # For some reason elasticsearch 7.4.0 uses faraday 2, while later 7.x uses faraday 1.
-gem "faraday", "~> 2" # CVE-2026-25765, CVE-2026-33637, CVE-2026-54297 need >= 2.14.1, which needs Ruby >= 3.0; blocked on Ruby upgrade
+gem "faraday", ">= 2.14.1", "< 3" # fix CVE-2026-25765, CVE-2026-33637, CVE-2026-54297
 gem "faraday-retry"
 
 gem "font-awesome-rails"
@@ -170,7 +170,7 @@ group :test do
   gem "capybara"
   gem "database_cleaner"
   gem "factory_bot_rails"
-  gem "nokogiri", "~> 1.15.7" # last version supporting Ruby 2.7; GHSAs need >= 1.16 (Ruby >= 3.0), blocked on Ruby upgrade
+  gem "nokogiri", ">= 1.16.5" # fix GHSAs blocked on Ruby 2.7; 1.18+ needs Ruby 3.1
   gem "rails-controller-testing"
   gem "rspec-activemodel-mocks"
   gem "simplecov", require: false
