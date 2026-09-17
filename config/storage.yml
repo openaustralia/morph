@@ -1,0 +1,14 @@
+test:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage") %>
+
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
+
+# Not actually used by the app (removed in c353d2ca as presumed-dead config),
+# but Rails 6.1's ActiveStorage::Engine initializer hard-requires this file
+# to have a production entry regardless, or the app fails to boot.
+production:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
