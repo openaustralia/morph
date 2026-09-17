@@ -9,11 +9,6 @@ raise "Deploy from the openaustralia repo (#{expected_repos.join(', ')}) instead
 
 set :rvm_ruby_version, "ruby-3.0.7"
 
-# capistrano-bundler doesn't install the Bundler version pinned in
-# Gemfile.lock, so bundler:install silently runs under whatever (older)
-# Bundler happens to already be installed on the server.
-set :bundler_version, File.read("Gemfile.lock")[/BUNDLED WITH\n\s+(\S+)/, 1]
-
 set :tagging3_format, ':stage_:release'
 
 set :branch, lambda {
@@ -62,21 +57,6 @@ set :linked_dirs, %w[db/scrapers public/sitemaps tmp/pids log]
 
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 # set :keep_releases, 5
-
-namespace :bundler do
-  desc "Install the Bundler version pinned in Gemfile.lock"
-  task :install_pinned_version do
-    on roles(:app) do
-      # Deliberately execute :rvm directly rather than :gem: capistrano-bundler
-      # remaps :gem through "bundle exec", which can't work here (there's no
-      # resolvable Bundler yet, and it also runs outside release_path, so
-      # there's no Gemfile for bundle exec to find in the first place).
-      execute :rvm, fetch(:rvm_ruby_version), "do", "gem", "install", "bundler", "--version", fetch(:bundler_version)
-    end
-  end
-end
-
-before "bundler:install", "bundler:install_pinned_version"
 
 namespace :deploy do
   desc "Restart application"
