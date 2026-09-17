@@ -67,7 +67,11 @@ namespace :bundler do
   desc "Install the Bundler version pinned in Gemfile.lock"
   task :install_pinned_version do
     on roles(:app) do
-      execute :gem, "install bundler --version #{fetch(:bundler_version)}"
+      # Deliberately execute :rvm directly rather than :gem: capistrano-bundler
+      # remaps :gem through "bundle exec", which can't work here (there's no
+      # resolvable Bundler yet, and it also runs outside release_path, so
+      # there's no Gemfile for bundle exec to find in the first place).
+      execute :rvm, fetch(:rvm_ruby_version), "do", "gem", "install", "bundler", "--version", fetch(:bundler_version)
     end
   end
 end
