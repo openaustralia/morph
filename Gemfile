@@ -5,11 +5,20 @@
 
 source "https://rubygems.org"
 
-ruby "2.7.6"
+ruby "3.0.7"
+
+# Pinned to match the default gem bundled inside ruby-3.0.7 on our 16.04 production servers. This is to avoid a CVE-2026-54297 vulnerability in base64 0.2.0, which requires Ruby >= 3.1.
+# can be removed once we upgrade to Ruby >= 3.1 and base64 >= 0.2.0
+gem "base64", "0.1.0"
+
+# Same reasoning as base64 above: nothing needs a newer stringio, and letting
+# Bundler resolve to the latest causes the identical Gem::LoadError boot
+# crash under Passenger. Pinned to match what ruby-3.0.7 bundles.
+gem "stringio", "3.0.1.1"
 
 gem "dotenv-rails"
 
-gem "rails", "6.0.6.1"
+gem "rails", "6.1.7.10"
 
 gem "mysql2"
 gem "sqlite3"
@@ -104,10 +113,10 @@ gem "bootsnap", "~> 1.4", require: false
 # For type checking
 gem "sorbet-static-and-runtime"
 
-# Psych 4 introduced breaking changes by changing default to safe mode.
-#   Rails 6.1 has fix: https://github.com/rails/rails/commit/255b5ff9af57f9b54dee7ec884b12a1ad16f0321
-# TODO: Change to ">= 5.2.4" when we upgrade to Rails 6.1 to pick up security fixes
-gem "psych", ">= 3.3.4", "< 4"
+# Rails 6.1 handles Psych 4's safe-mode default:
+#   https://github.com/rails/rails/commit/255b5ff9af57f9b54dee7ec884b12a1ad16f0321
+# Keep a floor for security fixes only.
+gem "psych", ">= 5.2.4"
 
 # For making JSON Web Tokens used by Github API
 gem "jwt", ">= 2.10.3" # fix CVE-2026-45363
@@ -139,13 +148,11 @@ group :development do
   gem "rack-mini-profiler"
   # gem "flamegraph"
 
-  gem "annotaterb", "~> 4.15.0" # 4.16+ requires ruby 3.0
+  gem "annotaterb"
   gem "better_errors"
   gem "binding_of_caller"
   gem "memory_profiler"
   gem "pry-rails"
-  gem "spring", "~> 4.0"
-  gem "spring-commands-rspec"
 
   gem "bundle-audit", require: false
   gem "rubocop"

@@ -7,7 +7,7 @@ module DbBackupUtils
   # Returns a string containing the mysqldump command to run
   # with password in ENV if a block is given, otherwise in the string
   def self.mysqldump_cmd(options = "")
-    config = ActiveRecord::Base.connection_config
+    config = ActiveRecord::Base.connection_db_config.configuration_hash
     cmd = "mysqldump --no-tablespaces --single-transaction"
     cmd += " -u#{config[:username]}" if config[:username]
     cmd += " -p#{config[:password]}" if config[:password] && !block_given?

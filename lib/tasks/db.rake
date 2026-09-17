@@ -187,8 +187,7 @@ namespace :db do
 
     desc "Remove orphaned domains with no connection logs"
     task domains: :environment do
-      orphaned_domain_ids = Domain.left_joins(:connection_logs)
-                                  .where(connection_logs: { id: nil })
+      orphaned_domain_ids = Domain.where.missing(:connection_logs)
                                   .pluck(:id)
       count = orphaned_domain_ids.count
       puts "Found #{count} orphaned domains"
