@@ -11,6 +11,11 @@ ruby "3.0.7"
 # can be removed once we upgrade to Ruby >= 3.1 and base64 >= 0.2.0
 gem "base64", "0.1.0"
 
+# Same reasoning as base64 above: nothing needs a newer stringio, and letting
+# Bundler resolve to the latest causes the identical Gem::LoadError boot
+# crash under Passenger. Pinned to match what ruby-3.0.7 bundles.
+gem "stringio", "3.0.1.1"
+
 gem "dotenv-rails"
 
 gem "rails", "6.1.7.10"

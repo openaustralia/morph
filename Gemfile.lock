@@ -704,7 +704,7 @@ GEM
       mutex_m
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stringio (3.2.0)
+    stringio (3.0.1.1)
     stripe (7.0.0)
     sysexits (1.2.0)
     tapioca (0.9.2)
@@ -886,6 +886,7 @@ DEPENDENCIES
   spoom
   sprockets (~> 4.0)
   sqlite3
+  stringio (= 3.0.1.1)
   stripe
   tapioca
   timecop
