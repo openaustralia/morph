@@ -18,6 +18,8 @@ class DiscourseSsoController < ApplicationController
     sso.external_id = user.id # unique to your application
     sso.sso_secret = T.must(secret)
 
-    redirect_to sso.to_url("#{ENV.fetch('DISCOURSE_URL', nil)}/session/sso_login")
+    # Sending the user to Discourse (help.morph.io) is the whole point of
+    # this endpoint, so this cross-host redirect is intended.
+    redirect_to sso.to_url("#{ENV.fetch('DISCOURSE_URL', nil)}/session/sso_login"), allow_other_host: true
   end
 end
