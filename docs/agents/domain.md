@@ -5,15 +5,10 @@ exploring the codebase.
 
 ## Before exploring, read these
 
-- **`GLOSSARY.md`** at the repo root. This exists. It is the glossary of
-  morph.io's domain terms, and it is opinionated about which words to avoid.
+- **`GLOSSARY.md`** at the repo root. It is the glossary of morph.io's domain
+  terms, and it is opinionated about which words to avoid.
 - **`docs/adr/`**, reading the ADRs that touch the area you are about to work
-  in. This exists.
-
-If a file is not there, **proceed silently**. Do not flag its absence and do not
-suggest creating it upfront. The `/domain-modeling`
-skill (reached via `/grill-with-docs` and `/improve-codebase-architecture`)
-creates them lazily when terms or decisions actually get resolved.
+  in.
 
 `AGENTS.md` at the repo root is the standing guidance for this repository and
 is separate from all of this. Read it regardless.
@@ -25,12 +20,10 @@ workspaces:
 
 ```
 /
-├── AGENTS.md          ← standing agent guidance (exists)
-├── GLOSSARY.md        ← glossary of domain terms (exists)
+├── AGENTS.md          ← standing agent guidance
+├── GLOSSARY.md        ← glossary of domain terms
 ├── docs/
-│   ├── adr/           ← architecture decision records (exists)
-│   │   ├── 0001-upgrade-morph-in-place.md
-│   │   └── ...
+│   ├── adr/           ← architecture decision records
 │   └── agents/        ← this directory
 ├── app/
 │   └── lib/morph/     ← the scraping, Docker and SQLite domain logic
