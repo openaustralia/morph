@@ -5,15 +5,10 @@ exploring the codebase.
 
 ## Before exploring, read these
 
-- **`CONTEXT.md`** at the repo root. This exists. It is the glossary of
-  morph.io's domain terms, and it is opinionated about which words to avoid.
+- **`GLOSSARY.md`** at the repo root. It is the glossary of morph.io's domain
+  terms, and it is opinionated about which words to avoid.
 - **`docs/adr/`**, reading the ADRs that touch the area you are about to work
-  in. This does not exist yet.
-
-If a file is not there, **proceed silently**. Do not flag its absence and do not
-suggest creating it upfront. The `/domain-modeling`
-skill (reached via `/grill-with-docs` and `/improve-codebase-architecture`)
-creates them lazily when terms or decisions actually get resolved.
+  in.
 
 `AGENTS.md` at the repo root is the standing guidance for this repository and
 is separate from all of this. Read it regardless.
@@ -25,12 +20,10 @@ workspaces:
 
 ```
 /
-├── AGENTS.md          ← standing agent guidance (exists)
-├── CONTEXT.md         ← glossary of domain terms (exists)
+├── AGENTS.md          ← standing agent guidance
+├── GLOSSARY.md        ← glossary of domain terms
 ├── docs/
-│   ├── adr/           ← not created yet
-│   │   ├── 0001-some-decision.md
-│   │   └── 0002-another-decision.md
+│   ├── adr/           ← architecture decision records
 │   └── agents/        ← this directory
 ├── app/
 │   └── lib/morph/     ← the scraping, Docker and SQLite domain logic
@@ -38,8 +31,8 @@ workspaces:
 ```
 
 If morph.io ever splits into separately deployed packages, the multi-context
-form applies instead: a root `CONTEXT-MAP.md` pointing at one `CONTEXT.md` per
-context, with context-scoped ADRs beside each.
+form applies instead: a root `GLOSSARY-MAP.md` pointing at one `GLOSSARY.md`
+per context, with context-scoped ADRs beside each.
 
 Note the repo already has a `doc/` directory holding
 [`doc/UPGRADE_PATH.md`](../../doc/UPGRADE_PATH.md), which is the Rails
@@ -49,8 +42,8 @@ convention and is not the same place. Agent-facing docs and ADRs go under
 ## Use the glossary's vocabulary
 
 When your output names a domain concept, whether in an issue title, a refactor
-proposal, a hypothesis or a test name, use the term as defined in `CONTEXT.md`.
-Do not drift to synonyms the glossary explicitly avoids.
+proposal, a hypothesis or a test name, use the term as defined in
+`GLOSSARY.md`. Do not drift to synonyms the glossary explicitly avoids.
 
 If the concept you need is not in the glossary yet, that is a signal. Either
 you are inventing language the project does not use, in which case reconsider,
