@@ -281,7 +281,7 @@ emulation on Apple Silicon" in Docker Desktop, and containers will be slow.
 
 Terminology: architecture (amd64/arm64) is never called "platform" in this
 repository, because Platform already means a buildstep image tag (see
-`CONTEXT.md`).
+`GLOSSARY.md`).
 
 Running scrapers locally (and the `:docker` specs) needs two host-side setup
 steps first: `make dev-scraper-images` (pulls the buildstep tags in a form
@@ -348,9 +348,9 @@ repo. See `docs/agents/triage-labels.md`.
 
 ### Domain docs
 
-Single-context. [`CONTEXT.md`](CONTEXT.md) at the repo root is the glossary of
-morph.io's domain terms, and is opinionated about which words to avoid. There
-are no ADRs yet. See `docs/agents/domain.md`.
+Single-context. [`GLOSSARY.md`](GLOSSARY.md) at the repo root is the glossary
+of morph.io's domain terms, and is opinionated about which words to avoid.
+There are no ADRs yet. See `docs/agents/domain.md`.
 
 ## Known rough edges
 
