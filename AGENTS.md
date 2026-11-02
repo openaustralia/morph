@@ -350,7 +350,7 @@ repo. See `docs/agents/triage-labels.md`.
 
 Single-context. [`GLOSSARY.md`](GLOSSARY.md) at the repo root is the glossary
 of morph.io's domain terms, and is opinionated about which words to avoid.
-There are no ADRs yet. See `docs/agents/domain.md`.
+Decisions are recorded as ADRs in `docs/adr/`. See `docs/agents/domain.md`.
 
 ## Known rough edges
 
