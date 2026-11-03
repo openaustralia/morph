@@ -19,15 +19,19 @@ class RunWorker
     return if run.nil?
 
     runner = Morph::Runner.new(run)
-    # The container count is the only enforcement of the concurrency cap. When
-    # there's no free slot, try again later rather than raising, so the retry
-    # and dead sets don't fill. Two workers can race past this check by a slot
-    # or so and that is accepted.
-    if Morph::Runner.available_slots <= 0 && runner.container_for_run.nil?
+    # The container count is the only enforcement of the concurrency cap, and
+    # SlotClaims covers the gap before a run's container exists. When there's no
+    # free slot, try again later rather than raising, so the retry and dead
+    # sets don't fill.
+    unless Morph::SlotClaims.claim(run_id, has_container: !runner.container_for_run.nil?)
       self.class.perform_in(RETRY_DELAY, run_id)
       return
     end
 
-    runner.synch_and_go_with_logging!
+    begin
+      runner.synch_and_go_with_logging!
+    ensure
+      Morph::SlotClaims.release(run_id)
+    end
   end
 end

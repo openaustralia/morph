@@ -6,14 +6,28 @@ require "spec_helper"
 describe RunWorker do
   let(:user) { create(:user) }
 
+  before { Sidekiq.redis(&:flushdb) }
+
   it "calls the runner" do
     run = Run.create!(owner: user)
-    runner = instance_double(Morph::Runner, synch_and_go_with_logging!: nil)
+    runner = instance_double(Morph::Runner, container_for_run: nil, synch_and_go_with_logging!: nil)
     allow(Morph::Runner).to receive(:new).with(run).and_return(runner)
+    allow(Morph::Runner).to receive(:available_slots).and_return(1)
 
     described_class.new.perform(run.id)
 
     expect(runner).to have_received(:synch_and_go_with_logging!)
+  end
+
+  it "releases its claim even if the run raises" do
+    run = Run.create!(owner: user)
+    runner = instance_double(Morph::Runner, container_for_run: nil)
+    allow(runner).to receive(:synch_and_go_with_logging!).and_raise("boom")
+    allow(Morph::Runner).to receive(:new).with(run).and_return(runner)
+    allow(Morph::Runner).to receive(:available_slots).and_return(1)
+
+    expect { described_class.new.perform(run.id) }.to raise_error("boom")
+    expect(Sidekiq.redis { |r| r.zcard(Morph::SlotClaims::KEY) }).to eq 0
   end
 
   it "does nothing if the run does not exist anymore" do
