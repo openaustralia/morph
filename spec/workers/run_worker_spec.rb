@@ -69,6 +69,23 @@ describe RunWorker do
       end
     end
 
+    context "when the cap has been lowered below the number of running containers" do
+      let(:run) { Run.create!(owner: user, id: 123456) }
+
+      before do
+        allow(Morph::Runner).to receive(:available_slots).and_return(-2)
+        described_class.jobs.clear
+      end
+
+      it "does not start the run and tries again shortly" do
+        runner = instance_double(Morph::Runner, container_for_run: nil, synch_and_go_with_logging!: nil)
+        allow(Morph::Runner).to receive(:new).with(run).and_return(runner)
+        described_class.new.perform(run.id)
+        expect(runner).not_to have_received(:synch_and_go_with_logging!)
+        expect(described_class.jobs.pluck("args")).to eq [[run.id]]
+      end
+    end
+
     it "does not raise an exception if we are finishing off an already running container", docker: true do
       run = Run.create!(owner: user, id: 123456)
       allow(Morph::Runner).to receive(:available_slots).and_return(0)

@@ -23,7 +23,7 @@ class RunWorker
     # there's no free slot, try again later rather than raising, so the retry
     # and dead sets don't fill. Two workers can race past this check by a slot
     # or so and that is accepted.
-    if Morph::Runner.available_slots.zero? && runner.container_for_run.nil?
+    if Morph::Runner.available_slots <= 0 && runner.container_for_run.nil?
       self.class.perform_in(RETRY_DELAY, run_id)
       return
     end
