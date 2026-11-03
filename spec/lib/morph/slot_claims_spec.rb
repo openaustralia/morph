@@ -35,6 +35,14 @@ describe Morph::SlotClaims do
       expect(described_class.claim(1, has_container: true)).to be true
     end
 
+    it "does not count a run that already has its container against the free slots twice" do
+      # The container is already reflected in available_slots, so one slot is free
+      allow(Morph::Runner).to receive(:available_slots).and_return(1)
+      described_class.claim(1, has_container: true)
+
+      expect(described_class.claim(2, has_container: false)).to be true
+    end
+
     it "refuses when the cap has been lowered below the running containers" do
       allow(Morph::Runner).to receive(:available_slots).and_return(-2)
 

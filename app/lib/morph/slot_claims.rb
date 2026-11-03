@@ -25,8 +25,11 @@ module Morph
         now = Time.now.to_f
         redis.zremrangebyscore(KEY, "-inf", now)
         pending = redis.zrange(KEY, 0, -1).reject { |id| id == run_id.to_s }.count
-        # A run that already has its container has already taken its slot
-        if has_container || (Morph::Runner.available_slots - pending).positive?
+        # A run that already has its container has already taken its slot, which
+        # available_slots counts, so holding a claim as well would count it twice
+        next true if has_container
+
+        if (Morph::Runner.available_slots - pending).positive?
           redis.zadd(KEY, now + CLAIM_TTL, run_id.to_s)
           true
         else
