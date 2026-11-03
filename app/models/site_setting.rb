@@ -33,6 +33,21 @@ class SiteSetting < ApplicationRecord
     self.read_only_mode = !read_only_mode
   end
 
+  sig { returns(T::Boolean) }
+  def self.maintenance_mode
+    read_setting("maintenance_mode")
+  end
+
+  sig { params(mode: T::Boolean).void }
+  def self.maintenance_mode=(mode)
+    write_setting("maintenance_mode", mode)
+  end
+
+  sig { void }
+  def self.toggle_maintenance_mode!
+    self.maintenance_mode = !maintenance_mode
+  end
+
   sig { returns(Integer) }
   def self.maximum_concurrent_scrapers
     read_setting("maximum_concurrent_scrapers").to_i
@@ -66,7 +81,7 @@ class SiteSetting < ApplicationRecord
 
   sig { returns(T::Hash[String, T.any(Integer, T::Boolean)]) }
   def self.defaults
-    { "read_only_mode" => false, "maximum_concurrent_scrapers" => 20 }
+    { "read_only_mode" => false, "maintenance_mode" => false, "maximum_concurrent_scrapers" => 20 }
   end
 
   private_class_method :record, :read_setting, :write_setting, :defaults

@@ -10,6 +10,12 @@ ActiveAdmin.register_page "Dashboard" do
     redirect_to admin_dashboard_url
   end
 
+  page_action :toggle_maintenance_mode, method: :post do
+    SiteSetting.toggle_maintenance_mode!
+    flash[:notice] = "Maintenance mode is now #{SiteSetting.maintenance_mode ? 'on' : 'off'}"
+    redirect_to admin_dashboard_url
+  end
+
   page_action :update_maximum_concurrent_scrapers, method: :post do
     params_maximum_concurrent_scrapers = T.cast(params[:maximum_concurrent_scrapers], T.any(String, Numeric))
 
@@ -41,6 +47,13 @@ ActiveAdmin.register_page "Dashboard" do
           button_to "Switch off site-wide read-only mode", admin_dashboard_toggle_read_only_mode_path
         else
           button_to "Go into site-wide read-only mode", admin_dashboard_toggle_read_only_mode_path
+        end
+      end
+      para do
+        if SiteSetting.maintenance_mode
+          button_to "Hide the site-wide maintenance notice", admin_dashboard_toggle_maintenance_mode_path
+        else
+          button_to "Show the site-wide maintenance notice", admin_dashboard_toggle_maintenance_mode_path
         end
       end
       para do
