@@ -7,7 +7,7 @@ ActiveAdmin.register_page "Docker Containers" do
     active_sidekiq_jobs = workers.collect do |_process_id, _thread_id, work|
       work["payload"]["args"].first if work["queue"] == "scraper"
     end.compact
-    retrying_sidekiq_jobs = Sidekiq::RetrySet.new.collect do |job|
+    retrying_sidekiq_jobs = (Sidekiq::RetrySet.new.to_a + Sidekiq::ScheduledSet.new.to_a).collect do |job|
       job.args.first if job.klass == "RunWorker"
     end.compact
 

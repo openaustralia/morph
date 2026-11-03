@@ -461,9 +461,8 @@ in Phase 4d/5),
    removals called out in #1351 (`bin/rake stats`, SQLite3 `:retries`,
    MySQL unsigned column helpers, query-string parsing changes).
 5. **Gem unblocks along the way:**
-   - `sidekiq` 5 → 7/8 (Redis 7 now available); review
-     `sidekiq-limit_fetch` compatibility or replace with native queue
-     limits.
+   - `sidekiq` 5 → 7/8 (Redis 7 now available). `sidekiq-limit_fetch` has
+     already gone (#1580); `RunWorker` enforces the scraper cap itself.
    - `omniauth`/`omniauth-github` → 2.x (CSRF-safe request phase; update
      Devise integration).
    - `octokit` → current major; drop the direct `faraday` workaround if the

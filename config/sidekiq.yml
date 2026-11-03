@@ -3,5 +3,6 @@
 :queues:
   - default
   - scraper
-# Limit of number of concurrent scrapers can now be changed dynamically from
-# the admin console. So, no need to set it here
+# The limit on concurrent scrapers is changed from the admin console and
+# enforced by RunWorker, which counts Docker containers. Keep :concurrency
+# above that limit, with room left for the default queue.

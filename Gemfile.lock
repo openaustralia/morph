@@ -647,8 +647,6 @@ GEM
       rack (~> 2.0)
       rack-protection (>= 1.5.0)
       redis (~> 4.5, < 4.6.0)
-    sidekiq-limit_fetch (3.4.0)
-      sidekiq (>= 4)
     simple_form (5.1.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
@@ -875,7 +873,6 @@ DEPENDENCIES
   sentry-ruby
   sentry-sidekiq
   sidekiq (~> 5)
-  sidekiq-limit_fetch
   simple_form
   simplecov
   simplecov-console
