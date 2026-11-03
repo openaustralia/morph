@@ -65,7 +65,8 @@ module Morph
         begin
           block.call(redis)
         ensure
-          redis.eval(UNLOCK_SCRIPT, keys: [LOCK_KEY], argv: [token])
+          # Sidekiq 7 hands out a redis-client connection, which takes EVAL as a raw command
+          redis.call("EVAL", UNLOCK_SCRIPT, 1, LOCK_KEY, token)
         end
       end
     end
