@@ -17,6 +17,15 @@ module Morph
     CLAIM_TTL = T.let(15 * 60, Integer)
     LOCK_TTL_MS = T.let(10_000, Integer)
     LOCK_WAIT = T.let(15, Integer)
+    # Deletes the lock only if it still holds our token. Done as one script so
+    # that the lock cannot expire and be re-acquired by another worker between
+    # the check and the delete. EVAL is available from Redis 2.6.
+    UNLOCK_SCRIPT = T.let(<<~LUA, String)
+      if redis.call("get", KEYS[1]) == ARGV[1] then
+        return redis.call("del", KEYS[1])
+      end
+      return 0
+    LUA
 
     # Claims a slot for the run if one is free. Returns false if none is.
     sig { params(run_id: Integer, has_container: T::Boolean).returns(T::Boolean) }
@@ -56,7 +65,7 @@ module Morph
         begin
           block.call(redis)
         ensure
-          redis.del(LOCK_KEY) if redis.get(LOCK_KEY) == token
+          redis.eval(UNLOCK_SCRIPT, keys: [LOCK_KEY], argv: [token])
         end
       end
     end

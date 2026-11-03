@@ -57,6 +57,47 @@ describe Morph::SlotClaims do
     end
   end
 
+  describe ".with_lock" do
+    def lock_value
+      Sidekiq.redis { |r| r.get(described_class::LOCK_KEY) }
+    end
+
+    it "holds the lock while the block runs" do
+      described_class.with_lock { |redis| expect(redis.get(described_class::LOCK_KEY)).not_to be_nil }
+    end
+
+    it "releases the lock when the block finishes" do
+      described_class.with_lock { nil }
+
+      expect(lock_value).to be_nil
+    end
+
+    it "releases the lock when the block raises" do
+      expect { described_class.with_lock { raise "boom" } }.to raise_error("boom")
+
+      expect(lock_value).to be_nil
+    end
+
+    it "does not delete a lock that another worker acquired after ours expired" do
+      described_class.with_lock do |redis|
+        # Our lock's TTL runs out and a second worker takes the lock in the gap
+        # right after the first command of our unlock
+        client = redis._client
+        taken = false
+        allow(client).to receive(:call).and_wrap_original do |original, *args, &block|
+          result = original.call(*args, &block)
+          unless taken
+            taken = true
+            redis.dup.set(described_class::LOCK_KEY, "another-workers-token")
+          end
+          result
+        end
+      end
+
+      expect(lock_value).to eq "another-workers-token"
+    end
+  end
+
   describe ".release" do
     it "frees the slot for another run" do
       allow(Morph::Runner).to receive(:available_slots).and_return(1)
