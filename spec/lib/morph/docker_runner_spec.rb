@@ -185,6 +185,20 @@ describe Morph::DockerRunner do
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
+    it "applies the memory and cpu limits to the container" do
+      copy_test_scraper("hello_world_js_24")
+
+      memory = 300 * 1024 * 1024
+      c = described_class.compile_and_start_run(repo_path: dir, platform: platform, memory: memory) do |_timestamp, stream, text|
+        docker_output << [stream, text]
+      end
+      host_config = c.json["HostConfig"]
+      expect(host_config["Memory"]).to eq(memory)
+      expect(host_config["CpuShares"]).to eq(307)
+      described_class.attach_to_run(c)
+      described_class.finish(c, [])
+    end
+
     def with_smaller_chunk_size
       chunk_size = Excon.defaults[:chunk_size]
       Excon.defaults[:chunk_size] = 1024
