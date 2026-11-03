@@ -5,23 +5,19 @@
 
 source "https://rubygems.org"
 
-ruby "3.0.7"
+ruby "3.4.12"
 
-# Pinned to match the default gem bundled inside ruby-3.0.7 on our 16.04 production servers. This is to avoid a CVE-2026-54297 vulnerability in base64 0.2.0, which requires Ruby >= 3.1.
-# can be removed once we upgrade to Ruby >= 3.1 and base64 >= 0.2.0
-gem "base64", "0.1.0"
-
-# Same reasoning as base64 above: nothing needs a newer stringio, and letting
-# Bundler resolve to the latest causes the identical Gem::LoadError boot
-# crash under Passenger. Pinned to match what ruby-3.0.7 bundles.
-gem "stringio", "3.0.1.1"
+# Ruby 3.4 no longer ships csv as a default gem (ActiveAdmin and ApiController require it).
+gem "csv"
 
 gem "dotenv-rails"
 
-gem "rails", "6.1.7.10"
+gem "rails", "7.0.10"
 
 gem "mysql2"
-gem "sqlite3"
+# Morph::Database relies on the type translation API that sqlite3 2.0 removed,
+# so stay on 1.7 for now (#1584). 1.7 has no precompiled gem for Ruby 3.4, so it builds from source.
+gem "sqlite3", "~> 1.7"
 
 gem "bootstrap-sass"
 # Used to put images inside pulldowns
@@ -37,8 +33,6 @@ gem "faraday", "~> 2" # CVE-2026-25765, CVE-2026-33637, CVE-2026-54297 need >= 2
 gem "faraday-retry"
 
 gem "font-awesome-rails"
-# Use same version as ruby-foreman package as Production uses system foreman
-gem "foreman", "0.63.0"
 gem "friendly_id"
 
 # For accessing git from ruby
@@ -50,9 +44,9 @@ gem "octokit", "~> 4.0"
 # https://github.com/omniauth/omniauth-github/pull/84/commits/f367321bcf14a57cc9d501375ffebaba8062f449
 gem "omniauth-github", "~> 1.4.0"
 
-# We're still on redis 3.x in production so we can't yet upgrade sidekiq to version 6
-# TODO: Upgrade sidekiq as soon as we can
-gem "sidekiq", "~> 5"
+# 7.3.6 is the first release with Ruby 3.4 fixes and the last line that allows Rails 7.0
+# (Sidekiq 8 needs rack 3). It needs Redis 6.2 or later (#1559, #1564).
+gem "sidekiq", "~> 7.3", ">= 7.3.6"
 
 gem "simple_form"
 # gem 'jquery-turbolinks'
@@ -138,6 +132,9 @@ group :development do
   gem "capistrano-tagging3", require: false
   gem "ed25519", "~> 1.3"
 
+  # The 0.63.0 pin only matched the Ubuntu 16.04 system package, which calls
+  # File.exists? (removed in Ruby 3.2). Needed only for `foreman start` in development (#1559).
+  gem "foreman"
   gem "growl"
   gem "guard"
   gem "guard-livereload", require: false
@@ -157,7 +154,8 @@ group :development do
   gem "rubocop"
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
-  gem "rubocop-sorbet", require: false
+  # Held at the 0.8 line: later releases add cops (BlockMethodDefinition and others) that flag existing code
+  gem "rubocop-sorbet", "~> 0.8.0", require: false
   gem "ruby_audit", require: false
 
   gem "mailcatcher", require: false
@@ -173,8 +171,13 @@ end
 group :test do
   gem "capybara"
   gem "database_cleaner"
-  gem "factory_bot_rails"
-  gem "nokogiri", "~> 1.15.7" # last version supporting Ruby 2.7; GHSAs need >= 1.16 (Ruby >= 3.0), blocked on Ruby upgrade
+  # factory_bot 6.6 (the first release that loads on Ruby 3.4 without `observer`) rolls back
+  # what FactoryBot.lint creates, but hardcoded_domain_spec and factory_load.rake rely on those
+  # records staying. Stay on 6.2 and add the observer gem Ruby 3.4 no longer ships (#1584).
+  gem "factory_bot", "~> 6.2.1"
+  gem "factory_bot_rails", "~> 6.2.0"
+  gem "nokogiri", ">= 1.18" # first release with a Ruby 3.4 native build (#1559)
+  gem "observer"
   gem "rails-controller-testing"
   gem "rspec-activemodel-mocks"
   gem "simplecov", require: false
