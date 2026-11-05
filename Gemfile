@@ -18,7 +18,7 @@ gem "stringio", "3.0.1.1"
 
 gem "dotenv-rails"
 
-gem "rails", "6.1.7.10"
+gem "rails", "7.0.8.7"
 
 gem "mysql2"
 gem "sqlite3"
@@ -91,7 +91,7 @@ gem "sitemap_generator"
 gem "zeroclipboard-rails"
 
 # For the administration interface
-gem "activeadmin", ">= 2.12.0" # fix CVE-2023-50448; CVE-2023-51763 and CVE-2024-37031 need >= 3.2.0, which needs Rails 6.1+, tracked separately
+gem "activeadmin", ">= 3.2.0" # fix CVE-2023-50448, CVE-2023-51763 and CVE-2024-37031
 
 gem "faye"
 gem "puma", ">= 5.6.9" # fix CVE-2023-40175, CVE-2024-21647, CVE-2024-45614; CVE-2026-47736/47737 need puma 7.2+/8.0+, tracked separately
@@ -212,6 +212,9 @@ gem "jbuilder"
 
 # Force loading the latest security patch
 gem "sprockets", "~> 4.0"
+# Rails 7.0 no longer depends on sprockets-rails itself; we keep the
+# Sprockets asset pipeline (no Propshaft migration in this hop)
+gem "sprockets-rails"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
