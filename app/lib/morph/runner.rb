@@ -129,6 +129,8 @@ module Morph
       c = container_for_run
       if c.nil?
         c = compile_and_start_run(max_lines, &block)
+        # The container now counts towards the cap in its own right
+        SlotClaims.release(T.must(run.id))
         since = nil
       else
         # The timestamp of the last log line we've already captured

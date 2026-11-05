@@ -41,12 +41,6 @@ class SiteSetting < ApplicationRecord
   sig { params(number: Integer).void }
   def self.maximum_concurrent_scrapers=(number)
     write_setting("maximum_concurrent_scrapers", number)
-    update_maximum_concurrent_scrapers!
-  end
-
-  sig { void }
-  def self.update_maximum_concurrent_scrapers!
-    Sidekiq::Queue["scraper"].limit = maximum_concurrent_scrapers
   end
 
   sig { returns(SiteSetting) }

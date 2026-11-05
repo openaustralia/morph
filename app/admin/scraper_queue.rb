@@ -48,7 +48,8 @@ ActiveAdmin.register_page "Scraper Queue" do
       end
     end
 
-    enqueued_runs = Sidekiq::Queue["scraper"].collect do |j|
+    scraper_queue = Sidekiq::Queue.new("scraper")
+    enqueued_runs = scraper_queue.collect do |j|
       {
         run: Run.find(j.item["args"].first),
         enqueued_at: Time.zone.at(j.item["enqueued_at"])
@@ -56,7 +57,7 @@ ActiveAdmin.register_page "Scraper Queue" do
     end
     enqueued_runs.sort! { |a, b| b[:enqueued_at] <=> a[:enqueued_at] }
 
-    h1 "#{Sidekiq::Queue['scraper'].size} enqueued"
+    h1 "#{scraper_queue.size} enqueued"
     para "Scrapers with an enqueued Sidekiq job."
     unless enqueued_runs.empty?
       table do
