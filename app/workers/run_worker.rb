@@ -17,6 +17,9 @@ class RunWorker
     # If the run has been deleted (the scraper has been deleted) then just
     # skip over this and don't do anything
     return if run.nil?
+    # A run that was stopped while waiting for a slot still has its scheduled
+    # job. Nothing will run it, so don't keep polling Docker and Redis for it.
+    return if run.finished?
 
     runner = Morph::Runner.new(run)
     # The container count is the only enforcement of the concurrency cap, and
