@@ -26,7 +26,15 @@ Bundler.require(*Rails.groups)
 module Morph
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.1
+    config.load_defaults 7.0
+
+    # Held back from the 7.0 defaults: Rails 6.1 cannot read 7.0-format
+    # cache entries, and production memcached outlives a
+    # `cap production deploy:rollback`, so adopting the new format would
+    # break rollback to the previous release. Flip to 7.0 once this hop
+    # has soaked in production (or in the Rails 7.1 upgrade, where 7.0
+    # becomes the floor anyway).
+    config.active_support.cache_format_version = 6.1
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
