@@ -34,6 +34,18 @@ describe RunWorker do
     described_class.new.perform(123456)
   end
 
+  it "does not start or reschedule a run that has already finished" do
+    run = Run.create!(owner: user, finished_at: Time.zone.now)
+    allow(Morph::Runner).to receive(:new)
+    allow(Morph::Runner).to receive(:available_slots).and_return(0)
+    described_class.jobs.clear
+
+    described_class.new.perform(run.id)
+
+    expect(Morph::Runner).not_to have_received(:new)
+    expect(described_class.jobs).to be_empty
+  end
+
   it "starts the run and does not re-enqueue it when one slot is free" do
     run = Run.create!(owner: user)
     runner = instance_double(Morph::Runner, container_for_run: nil, synch_and_go_with_logging!: nil)
