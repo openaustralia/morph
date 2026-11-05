@@ -116,8 +116,9 @@ Phase 5, but final verification needs the new Docker host.
 - Deployment: Capistrano + rvm (`config/deploy.rb` pins
   `rvm_ruby_version 2.7.6`), system foreman 0.63 (gem pinned to match),
   nginx + Passenger, Faye for live updates, Sidekiq for background jobs.
-- Local development: `docker-compose.yml` (MySQL 5.7.33, Redis 3.2,
-  Elasticsearch 7.17.7 in `docker_images/services.yaml`), forced
+- Local development: `docker-compose.yml` (MySQL 5.7.33, Redis 8.0 on the
+  `ruby-3.4` branch and 3.2 on `main`, Elasticsearch 7.17.7 in
+  `docker_images/services.yaml`), forced
   `linux/amd64` because Sorbet has no Linux ARM64 build.
 
 Gems pinned by out-of-date infrastructure or Rails, to be unpinned at the
