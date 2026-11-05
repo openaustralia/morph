@@ -92,13 +92,14 @@ describe Morph::SlotClaims do
       described_class.with_lock do |redis|
         # Our lock's TTL runs out and a second worker takes the lock in the gap
         # right after the first command of our unlock
-        client = redis._client
+        # Sidekiq 7 wraps a redis-client connection, so hook that inner client
+        client = redis.instance_variable_get(:@client)
         taken = false
-        allow(client).to receive(:call).and_wrap_original do |original, *args, &block|
-          result = original.call(*args, &block)
+        allow(client).to receive(:call).and_wrap_original do |original, *args, **kwargs, &block|
+          result = original.call(*args, **kwargs, &block)
           unless taken
             taken = true
-            redis.dup.set(described_class::LOCK_KEY, "another-workers-token")
+            original.call("SET", described_class::LOCK_KEY, "another-workers-token")
           end
           result
         end

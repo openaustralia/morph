@@ -1,0 +1,23 @@
+# Throwaway image for the Ruby 3.4 / Rails 7.0 hop (issue #1584).
+# Not used by docker-compose.yml. See docker-compose.ruby34.yml.
+FROM ruby:3.4
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       nodejs cmake pkg-config libgit2-dev sudo tini \
+       default-mysql-client zstd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Debian 13's MariaDB client verifies server certificates by default, and the
+# throwaway MySQL 5.7 service has a self-signed one, so mysqldump would fail.
+RUN printf '[client]\nskip-ssl-verify-server-cert\n' > /etc/mysql/conf.d/skip-verify.cnf
+
+ARG UID=1000
+ARG GID=1000
+RUN groupadd --gid $GID deploy \
+    && useradd --uid $UID --gid deploy -m deploy \
+    && mkdir -p /usr/local/bundle && chown -R deploy:deploy /usr/local/bundle
+
+WORKDIR /app
+USER deploy
+CMD ["bash"]

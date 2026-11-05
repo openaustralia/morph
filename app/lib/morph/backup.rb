@@ -52,8 +52,8 @@ module Morph
       FileUtils.rm_f "db/backups/redis_backup.rdb"
       FileUtils.rm_f "db/backups/redis_backup.rdb.bz2"
       Rails.logger.info "Redis taking snapshot..."
-      redis = Redis.new
-      redis.save
+      # The redis gem came in with Sidekiq 5. Sidekiq 7 uses redis-client, so go through that.
+      Sidekiq.redis { |redis| redis.call("SAVE") }
       Rails.logger.info "Backing up Redis..."
       system "cp #{redis_directory}/dump.rdb db/backups/redis_backup.rdb"
       Rails.logger.info "Compressing Redis backup..."

@@ -107,3 +107,11 @@ Metrics/PerceivedComplexity:
 # false positives — easier to disable
 Style/SlicingWithRange:
   Enabled: false
+
+# Sorbet sigs name the block parameter (`block:`), and sorbet-runtime raises if the
+# method declares an anonymous `&` instead. Keep the named block, as before Ruby 3.4 (#1584).
+Style/ArgumentsForwarding:
+  Enabled: false
+
+Naming/BlockForwarding:
+  Enabled: false
