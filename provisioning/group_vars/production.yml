@@ -96,6 +96,9 @@ stripe_secret_key: !vault |
           34636637613635376531373566303431346332636430363830383663646563386266343735333835
           6331353636363630353337653135306162306637663836396565
 discourse_server_name: help.{{ server_name }}
+# Temporary: redirect help.morph.io to the OAF contact page until Discourse is
+# upgraded. Delete this line to put the forum back.
+discourse_maintenance_redirect_url: https://www.openaustraliafoundation.org.au/contact/
 mysql_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           65616563616236376366613137623565336230663531346132306636636433666334353734383730
