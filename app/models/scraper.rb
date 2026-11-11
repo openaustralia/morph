@@ -306,11 +306,7 @@ class Scraper < ApplicationRecord
 
   sig { returns(T.nilable(String)) }
   def platform
-    platform_file = "#{repo_path}/platform"
-    platform = File.read(platform_file).chomp if File.exist?(platform_file)
-    # TODO: We should remove support for early_release at some stage
-    platform = "heroku-24" if platform == "early_release"
-    platform
+    Morph::PlatformFile.read(repo_path)
   end
 
   # Return the https version of the git clone url (git_url)
