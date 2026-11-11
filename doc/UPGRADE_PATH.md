@@ -213,6 +213,9 @@ re-evaluated once the host is upgraded (§Phase 7).
   (PR #1424, 241 behind), `chore/rails_71` (PR #1425, 241 behind). These
   contain substantial completed work and should be **mined, not rebased**
   (see Phase 1 for why); delete each branch once its phase has mined it.
+  `chore/rails_61` was mined by PRs #1528/#1529 and
+  `chore/rails_70_and_ruby_30` by PRs #1534–#1537; both branches can be
+  deleted once those PRs merge.
 - **Open buildstep PRs #5 and #7** — hold until Phase 7 decision.
 - Remaining CVEs needing Ruby/Rails upgrades are tracked in
   oaf-internal#316.
@@ -617,8 +620,8 @@ Every phase must pass before the next begins:
 | Phase | Closes / advances |
 |---|---|
 | 0 | morph PR #1489; parts of oaf-internal#316 |
-| 1 | epic #1351 (6.1 step); #1438; advances #1474 (Sentry gems); supersedes PR #1423 branch |
-| 2 | #1355, #1356; supersedes PR #1424 branch |
+| 1 | epic #1351 (6.1 step); #1438; advances #1474 (Sentry gems); supersedes PR #1423 branch (PRs #1528, #1529) |
+| 2 | #1355, #1356; supersedes PR #1424 branch (PRs #1534, #1535, #1536, #1537) |
 | 3 | #1358; supersedes PR #1425 branch |
 | 4 | #1374, #1362, #1352, #1361, #1382, #1459 (with 5), #1359 (with 5), #1210; infrastructure#341, advances infrastructure#574/#580; parts of #1340 |
 | 5 | #1453, #1494, #1357, #1392 (verify), #1403; infrastructure#266 |

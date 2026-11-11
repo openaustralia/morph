@@ -7,191 +7,191 @@
 # The top-level module for this gem. Its purpose is to hold global
 # configuration variables that are used as defaults in other classes.
 #
-# source://docker-api-2.2.0/lib/docker.rb:21
+# source://docker-api-2.4.0/lib/docker.rb:23
 module Docker
   private
 
   # Login to the Docker registry.
   #
-  # source://docker-api-2.2.0/lib/docker.rb:133
+  # source://docker-api-2.4.0/lib/docker.rb:135
   def authenticate!(options = T.unsafe(nil), connection = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker.rb:93
+  # source://docker-api-2.4.0/lib/docker.rb:95
   def connection; end
 
   # Returns the value of attribute creds.
   #
-  # source://docker-api-2.2.0/lib/docker.rb:22
+  # source://docker-api-2.4.0/lib/docker.rb:24
   def creds; end
 
   # Sets the attribute creds
   #
   # @param value the value to set the attribute creds to.
   #
-  # source://docker-api-2.2.0/lib/docker.rb:22
+  # source://docker-api-2.4.0/lib/docker.rb:24
   def creds=(_arg0); end
 
-  # source://docker-api-2.2.0/lib/docker.rb:39
+  # source://docker-api-2.4.0/lib/docker.rb:41
   def default_socket_url; end
 
-  # source://docker-api-2.2.0/lib/docker.rb:47
+  # source://docker-api-2.4.0/lib/docker.rb:49
   def env_options; end
 
-  # source://docker-api-2.2.0/lib/docker.rb:43
+  # source://docker-api-2.4.0/lib/docker.rb:45
   def env_url; end
 
   # Get more information about the Docker server.
   #
-  # source://docker-api-2.2.0/lib/docker.rb:113
+  # source://docker-api-2.4.0/lib/docker.rb:115
   def info(connection = T.unsafe(nil)); end
 
   # Returns the value of attribute logger.
   #
-  # source://docker-api-2.2.0/lib/docker.rb:22
+  # source://docker-api-2.4.0/lib/docker.rb:24
   def logger; end
 
   # Sets the attribute logger
   #
   # @param value the value to set the attribute logger to.
   #
-  # source://docker-api-2.2.0/lib/docker.rb:22
+  # source://docker-api-2.4.0/lib/docker.rb:24
   def logger=(_arg0); end
 
-  # source://docker-api-2.2.0/lib/docker.rb:79
+  # source://docker-api-2.4.0/lib/docker.rb:81
   def options; end
 
-  # source://docker-api-2.2.0/lib/docker.rb:88
+  # source://docker-api-2.4.0/lib/docker.rb:90
   def options=(new_options); end
 
   # Ping the Docker server.
   #
-  # source://docker-api-2.2.0/lib/docker.rb:118
+  # source://docker-api-2.4.0/lib/docker.rb:120
   def ping(connection = T.unsafe(nil)); end
 
   # Determine if the server is podman or docker.
   #
   # @return [Boolean]
   #
-  # source://docker-api-2.2.0/lib/docker.rb:123
+  # source://docker-api-2.4.0/lib/docker.rb:125
   def podman?(connection = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker.rb:97
+  # source://docker-api-2.4.0/lib/docker.rb:99
   def reset!; end
 
-  # source://docker-api-2.2.0/lib/docker.rb:103
+  # source://docker-api-2.4.0/lib/docker.rb:105
   def reset_connection!; end
 
   # Determine if the session is rootless.
   #
   # @return [Boolean]
   #
-  # source://docker-api-2.2.0/lib/docker.rb:128
+  # source://docker-api-2.4.0/lib/docker.rb:130
   def rootless?(connection = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker.rb:60
+  # source://docker-api-2.4.0/lib/docker.rb:62
   def ssl_options; end
 
-  # source://docker-api-2.2.0/lib/docker.rb:70
+  # source://docker-api-2.4.0/lib/docker.rb:72
   def url; end
 
-  # source://docker-api-2.2.0/lib/docker.rb:83
+  # source://docker-api-2.4.0/lib/docker.rb:85
   def url=(new_url); end
 
   # Get the version of Go, Docker, and optionally the Git commit.
   #
-  # source://docker-api-2.2.0/lib/docker.rb:108
+  # source://docker-api-2.4.0/lib/docker.rb:110
   def version(connection = T.unsafe(nil)); end
 
   class << self
     # Login to the Docker registry.
     #
-    # source://docker-api-2.2.0/lib/docker.rb:133
+    # source://docker-api-2.4.0/lib/docker.rb:135
     def authenticate!(options = T.unsafe(nil), connection = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker.rb:93
+    # source://docker-api-2.4.0/lib/docker.rb:95
     def connection; end
 
     # Returns the value of attribute creds.
     #
-    # source://docker-api-2.2.0/lib/docker.rb:22
+    # source://docker-api-2.4.0/lib/docker.rb:24
     def creds; end
 
     # Sets the attribute creds
     #
     # @param value the value to set the attribute creds to.
     #
-    # source://docker-api-2.2.0/lib/docker.rb:22
+    # source://docker-api-2.4.0/lib/docker.rb:24
     def creds=(_arg0); end
 
-    # source://docker-api-2.2.0/lib/docker.rb:39
+    # source://docker-api-2.4.0/lib/docker.rb:41
     def default_socket_url; end
 
-    # source://docker-api-2.2.0/lib/docker.rb:47
+    # source://docker-api-2.4.0/lib/docker.rb:49
     def env_options; end
 
-    # source://docker-api-2.2.0/lib/docker.rb:43
+    # source://docker-api-2.4.0/lib/docker.rb:45
     def env_url; end
 
     # Get more information about the Docker server.
     #
-    # source://docker-api-2.2.0/lib/docker.rb:113
+    # source://docker-api-2.4.0/lib/docker.rb:115
     def info(connection = T.unsafe(nil)); end
 
     # Returns the value of attribute logger.
     #
-    # source://docker-api-2.2.0/lib/docker.rb:22
+    # source://docker-api-2.4.0/lib/docker.rb:24
     def logger; end
 
     # Sets the attribute logger
     #
     # @param value the value to set the attribute logger to.
     #
-    # source://docker-api-2.2.0/lib/docker.rb:22
+    # source://docker-api-2.4.0/lib/docker.rb:24
     def logger=(_arg0); end
 
-    # source://docker-api-2.2.0/lib/docker.rb:79
+    # source://docker-api-2.4.0/lib/docker.rb:81
     def options; end
 
-    # source://docker-api-2.2.0/lib/docker.rb:88
+    # source://docker-api-2.4.0/lib/docker.rb:90
     def options=(new_options); end
 
     # Ping the Docker server.
     #
-    # source://docker-api-2.2.0/lib/docker.rb:118
+    # source://docker-api-2.4.0/lib/docker.rb:120
     def ping(connection = T.unsafe(nil)); end
 
     # Determine if the server is podman or docker.
     #
     # @return [Boolean]
     #
-    # source://docker-api-2.2.0/lib/docker.rb:123
+    # source://docker-api-2.4.0/lib/docker.rb:125
     def podman?(connection = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker.rb:97
+    # source://docker-api-2.4.0/lib/docker.rb:99
     def reset!; end
 
-    # source://docker-api-2.2.0/lib/docker.rb:103
+    # source://docker-api-2.4.0/lib/docker.rb:105
     def reset_connection!; end
 
     # Determine if the session is rootless.
     #
     # @return [Boolean]
     #
-    # source://docker-api-2.2.0/lib/docker.rb:128
+    # source://docker-api-2.4.0/lib/docker.rb:130
     def rootless?(connection = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker.rb:60
+    # source://docker-api-2.4.0/lib/docker.rb:62
     def ssl_options; end
 
-    # source://docker-api-2.2.0/lib/docker.rb:70
+    # source://docker-api-2.4.0/lib/docker.rb:72
     def url; end
 
-    # source://docker-api-2.2.0/lib/docker.rb:83
+    # source://docker-api-2.4.0/lib/docker.rb:85
     def url=(new_url); end
 
     # Get the version of Go, Docker, and optionally the Git commit.
     #
-    # source://docker-api-2.2.0/lib/docker.rb:108
+    # source://docker-api-2.4.0/lib/docker.rb:110
     def version(connection = T.unsafe(nil)); end
   end
 end
@@ -199,7 +199,7 @@ end
 # This class is a base class for Docker Container and Image.
 # It is implementing accessor methods for the models attributes.
 #
-# source://docker-api-2.2.0/lib/docker/base.rb:3
+# source://docker-api-2.4.0/lib/docker/base.rb:5
 module Docker::Base
   include ::Docker::Error
 
@@ -207,50 +207,50 @@ module Docker::Base
   #
   # @raise [ArgumentError]
   #
-  # source://docker-api-2.2.0/lib/docker/base.rb:10
+  # source://docker-api-2.4.0/lib/docker/base.rb:12
   def initialize(connection, hash = T.unsafe(nil)); end
 
   # Returns the value of attribute connection.
   #
-  # source://docker-api-2.2.0/lib/docker/base.rb:6
+  # source://docker-api-2.4.0/lib/docker/base.rb:8
   def connection; end
 
   # Sets the attribute connection
   #
   # @param value the value to set the attribute connection to.
   #
-  # source://docker-api-2.2.0/lib/docker/base.rb:6
+  # source://docker-api-2.4.0/lib/docker/base.rb:8
   def connection=(_arg0); end
 
   # Returns the value of attribute id.
   #
-  # source://docker-api-2.2.0/lib/docker/base.rb:7
+  # source://docker-api-2.4.0/lib/docker/base.rb:9
   def id; end
 
   # Returns the value of attribute info.
   #
-  # source://docker-api-2.2.0/lib/docker/base.rb:6
+  # source://docker-api-2.4.0/lib/docker/base.rb:8
   def info; end
 
   # Sets the attribute info
   #
   # @param value the value to set the attribute info to.
   #
-  # source://docker-api-2.2.0/lib/docker/base.rb:6
+  # source://docker-api-2.4.0/lib/docker/base.rb:8
   def info=(_arg0); end
 
   # The docker-api will some time return "ID" other times it will return "Id"
   # and other times it will return "id". This method normalize it to "id"
   # The volumes endpoint returns Name instead of ID, added in the normalize function
   #
-  # source://docker-api-2.2.0/lib/docker/base.rb:22
+  # source://docker-api-2.4.0/lib/docker/base.rb:24
   def normalize_hash(hash); end
 end
 
 # This class represents a Connection to a Docker server. The Connection is
 # immutable in that once the url and options is set they cannot be changed.
 #
-# source://docker-api-2.2.0/lib/docker/connection.rb:3
+# source://docker-api-2.4.0/lib/docker/connection.rb:5
 class Docker::Connection
   include ::Docker::Error
 
@@ -260,61 +260,61 @@ class Docker::Connection
   #
   # @return [Connection] a new instance of Connection
   #
-  # source://docker-api-2.2.0/lib/docker/connection.rb:14
+  # source://docker-api-2.4.0/lib/docker/connection.rb:16
   def initialize(url, opts); end
 
-  # source://docker-api-2.2.0/lib/docker/connection.rb:109
+  # source://docker-api-2.4.0/lib/docker/connection.rb:111
   def delete(*args, &block); end
 
-  # source://docker-api-2.2.0/lib/docker/connection.rb:109
+  # source://docker-api-2.4.0/lib/docker/connection.rb:111
   def get(*args, &block); end
 
   # Common attribute requests
   #
-  # source://docker-api-2.2.0/lib/docker/connection.rb:113
+  # source://docker-api-2.4.0/lib/docker/connection.rb:115
   def info; end
 
-  # source://docker-api-2.2.0/lib/docker/connection.rb:95
+  # source://docker-api-2.4.0/lib/docker/connection.rb:97
   def log_request(request); end
 
   # Returns the value of attribute options.
   #
-  # source://docker-api-2.2.0/lib/docker/connection.rb:9
+  # source://docker-api-2.4.0/lib/docker/connection.rb:11
   def options; end
 
-  # source://docker-api-2.2.0/lib/docker/connection.rb:117
+  # source://docker-api-2.4.0/lib/docker/connection.rb:119
   def ping; end
 
   # @return [Boolean]
   #
-  # source://docker-api-2.2.0/lib/docker/connection.rb:121
+  # source://docker-api-2.4.0/lib/docker/connection.rb:123
   def podman?; end
 
-  # source://docker-api-2.2.0/lib/docker/connection.rb:109
+  # source://docker-api-2.4.0/lib/docker/connection.rb:111
   def post(*args, &block); end
 
-  # source://docker-api-2.2.0/lib/docker/connection.rb:109
+  # source://docker-api-2.4.0/lib/docker/connection.rb:111
   def put(*args, &block); end
 
   # Send a request to the server with the `
   #
-  # source://docker-api-2.2.0/lib/docker/connection.rb:40
+  # source://docker-api-2.4.0/lib/docker/connection.rb:42
   def request(*args, &block); end
 
   # @return [Boolean]
   #
-  # source://docker-api-2.2.0/lib/docker/connection.rb:129
+  # source://docker-api-2.4.0/lib/docker/connection.rb:131
   def rootless?; end
 
-  # source://docker-api-2.2.0/lib/docker/connection.rb:103
+  # source://docker-api-2.4.0/lib/docker/connection.rb:105
   def to_s; end
 
   # Returns the value of attribute url.
   #
-  # source://docker-api-2.2.0/lib/docker/connection.rb:9
+  # source://docker-api-2.4.0/lib/docker/connection.rb:11
   def url; end
 
-  # source://docker-api-2.2.0/lib/docker/connection.rb:133
+  # source://docker-api-2.4.0/lib/docker/connection.rb:135
   def version; end
 
   private
@@ -322,49 +322,49 @@ class Docker::Connection
   # Given an HTTP method, path, optional query, extra options, and block,
   # compiles a request.
   #
-  # source://docker-api-2.2.0/lib/docker/connection.rb:140
+  # source://docker-api-2.4.0/lib/docker/connection.rb:142
   def compile_request_params(http_method, path, query = T.unsafe(nil), opts = T.unsafe(nil), &block); end
 
   # The actual client that sends HTTP methods to the Docker server. This value
   # is not cached, since doing so may cause socket errors after bad requests.
   #
-  # source://docker-api-2.2.0/lib/docker/connection.rb:34
+  # source://docker-api-2.4.0/lib/docker/connection.rb:36
   def resource; end
 end
 
 # This class represents a Docker Container. It's important to note that nothing
 # is cached so that the information is always up to date.
 #
-# source://docker-api-2.2.0/lib/docker/container.rb:3
+# source://docker-api-2.4.0/lib/docker/container.rb:5
 class Docker::Container
   include ::Docker::Error
   include ::Docker::Base
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:278
+  # source://docker-api-2.4.0/lib/docker/container.rb:280
   def archive_in(inputs, output_path, opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:286
+  # source://docker-api-2.4.0/lib/docker/container.rb:288
   def archive_in_stream(output_path, opts = T.unsafe(nil), &block); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:269
+  # source://docker-api-2.4.0/lib/docker/container.rb:271
   def archive_out(path, &block); end
 
   # Attach to a container's standard streams / logs.
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:103
+  # source://docker-api-2.4.0/lib/docker/container.rb:105
   def attach(options = T.unsafe(nil), excon_params = T.unsafe(nil), &block); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:153
+  # source://docker-api-2.4.0/lib/docker/container.rb:155
   def changes(opts = T.unsafe(nil)); end
 
   # Create an Image from a Container's change.s
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:132
+  # source://docker-api-2.4.0/lib/docker/container.rb:134
   def commit(options = T.unsafe(nil)); end
 
   # remove container
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:248
+  # source://docker-api-2.4.0/lib/docker/container.rb:250
   def delete(options = T.unsafe(nil)); end
 
   # Create an Exec instance inside the container
@@ -373,53 +373,53 @@ class Docker::Container
   # @param options [Hash] The options to pass to Docker::Exec
   # @return [Docker::Exec] The Exec instance
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:55
+  # source://docker-api-2.4.0/lib/docker/container.rb:57
   def exec(command, options = T.unsafe(nil), &block); end
 
   # Export the Container as a tar.
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:97
+  # source://docker-api-2.4.0/lib/docker/container.rb:99
   def export(&block); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:153
+  # source://docker-api-2.4.0/lib/docker/container.rb:155
   def json(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:215
+  # source://docker-api-2.4.0/lib/docker/container.rb:217
   def kill(*args); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:206
+  # source://docker-api-2.4.0/lib/docker/container.rb:208
   def kill!(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:158
+  # source://docker-api-2.4.0/lib/docker/container.rb:160
   def logs(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:264
+  # source://docker-api-2.4.0/lib/docker/container.rb:266
   def pause; end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:259
+  # source://docker-api-2.4.0/lib/docker/container.rb:261
   def pause!; end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:300
+  # source://docker-api-2.4.0/lib/docker/container.rb:302
   def read_file(path); end
 
   # Update the @info hash, which is the only mutable state in this object.
   #   e.g. if you would like a live status from the #info hash, call #refresh! first.
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:8
+  # source://docker-api-2.4.0/lib/docker/container.rb:10
   def refresh!; end
 
   # remove container
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:248
+  # source://docker-api-2.4.0/lib/docker/container.rb:250
   def remove(options = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:181
+  # source://docker-api-2.4.0/lib/docker/container.rb:183
   def rename(new_name); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:242
+  # source://docker-api-2.4.0/lib/docker/container.rb:244
   def restart(*args); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:224
+  # source://docker-api-2.4.0/lib/docker/container.rb:226
   def restart!(opts = T.unsafe(nil)); end
 
   # Given a command and an optional number of seconds to wait for the currently
@@ -427,342 +427,342 @@ class Docker::Container
   # the command that is currently executing does not return a 0 status code, an
   # UnexpectedResponseError is raised.
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:41
+  # source://docker-api-2.4.0/lib/docker/container.rb:43
   def run(cmd, time = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:215
+  # source://docker-api-2.4.0/lib/docker/container.rb:217
   def start(*args); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:201
+  # source://docker-api-2.4.0/lib/docker/container.rb:203
   def start!(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:162
+  # source://docker-api-2.4.0/lib/docker/container.rb:164
   def stats(options = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:242
+  # source://docker-api-2.4.0/lib/docker/container.rb:244
   def stop(*args); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:224
+  # source://docker-api-2.4.0/lib/docker/container.rb:226
   def stop!(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:315
+  # source://docker-api-2.4.0/lib/docker/container.rb:317
   def store_file(path, file_content); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:191
+  # source://docker-api-2.4.0/lib/docker/container.rb:193
   def streaming_logs(opts = T.unsafe(nil), &block); end
 
   # Return a String representation of the Container.
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:146
+  # source://docker-api-2.4.0/lib/docker/container.rb:148
   def to_s; end
 
   # Return a List of Hashes that represents the top running processes.
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:19
+  # source://docker-api-2.4.0/lib/docker/container.rb:21
   def top(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:264
+  # source://docker-api-2.4.0/lib/docker/container.rb:266
   def unpause; end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:259
+  # source://docker-api-2.4.0/lib/docker/container.rb:261
   def unpause!; end
 
-  # source://docker-api-2.2.0/lib/docker/container.rb:187
+  # source://docker-api-2.4.0/lib/docker/container.rb:189
   def update(opts); end
 
   # Wait for the current command to finish executing. Default wait time is
   # `Excon.options[:read_timeout]`.
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:31
+  # source://docker-api-2.4.0/lib/docker/container.rb:33
   def wait(time = T.unsafe(nil)); end
 
   private
 
   # Convenience method to return the path for a particular resource.
   #
-  # source://docker-api-2.2.0/lib/docker/container.rb:354
+  # source://docker-api-2.4.0/lib/docker/container.rb:356
   def path_for(resource); end
 
   class << self
     # Return all of the Containers.
     #
-    # source://docker-api-2.2.0/lib/docker/container.rb:342
+    # source://docker-api-2.4.0/lib/docker/container.rb:344
     def all(opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # Create a new Container.
     #
-    # source://docker-api-2.2.0/lib/docker/container.rb:326
+    # source://docker-api-2.4.0/lib/docker/container.rb:328
     def create(opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # Return the container with specified ID
     #
-    # source://docker-api-2.2.0/lib/docker/container.rb:335
+    # source://docker-api-2.4.0/lib/docker/container.rb:337
     def get(id, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # Prune images
     #
-    # source://docker-api-2.2.0/lib/docker/container.rb:348
+    # source://docker-api-2.4.0/lib/docker/container.rb:350
     def prune(conn = T.unsafe(nil)); end
   end
 end
 
 # This module holds the Errors for the gem.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:2
+# source://docker-api-2.4.0/lib/docker/error.rb:4
 module Docker::Error; end
 
 # Raised when invalid arguments are passed to a method.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:9
+# source://docker-api-2.4.0/lib/docker/error.rb:11
 class Docker::Error::ArgumentError < ::Docker::Error::DockerError; end
 
 # Raised when login fails.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:36
+# source://docker-api-2.4.0/lib/docker/error.rb:38
 class Docker::Error::AuthenticationError < ::Docker::Error::DockerError; end
 
 # Raised when a request returns a 400.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:12
+# source://docker-api-2.4.0/lib/docker/error.rb:14
 class Docker::Error::ClientError < ::Docker::Error::DockerError; end
 
 # Raised when a request returns a 409.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:21
+# source://docker-api-2.4.0/lib/docker/error.rb:23
 class Docker::Error::ConflictError < ::Docker::Error::DockerError; end
 
 # The default error. It's never actually raised, but can be used to catch all
 # gem-specific errors that are thrown as they all subclass from this.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:6
+# source://docker-api-2.4.0/lib/docker/error.rb:8
 class Docker::Error::DockerError < ::StandardError; end
 
 # Raised when an IO action fails.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:39
+# source://docker-api-2.4.0/lib/docker/error.rb:41
 class Docker::Error::IOError < ::Docker::Error::DockerError; end
 
 # Raised when a request returns a 404.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:18
+# source://docker-api-2.4.0/lib/docker/error.rb:20
 class Docker::Error::NotFoundError < ::Docker::Error::DockerError; end
 
 # Raised when a request returns a 500.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:24
+# source://docker-api-2.4.0/lib/docker/error.rb:26
 class Docker::Error::ServerError < ::Docker::Error::DockerError; end
 
 # Raised when a request times out.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:33
+# source://docker-api-2.4.0/lib/docker/error.rb:35
 class Docker::Error::TimeoutError < ::Docker::Error::DockerError; end
 
 # Raised when a request returns a 401.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:15
+# source://docker-api-2.4.0/lib/docker/error.rb:17
 class Docker::Error::UnauthorizedError < ::Docker::Error::DockerError; end
 
 # Raised when there is an unexpected response code / body.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:27
+# source://docker-api-2.4.0/lib/docker/error.rb:29
 class Docker::Error::UnexpectedResponseError < ::Docker::Error::DockerError; end
 
 # Raised when there is an incompatible version of Docker.
 #
-# source://docker-api-2.2.0/lib/docker/error.rb:30
+# source://docker-api-2.4.0/lib/docker/error.rb:32
 class Docker::Error::VersionError < ::Docker::Error::DockerError; end
 
 # This class represents a Docker Event.
 #
-# source://docker-api-2.2.0/lib/docker/event.rb:2
+# source://docker-api-2.4.0/lib/docker/event.rb:4
 class Docker::Event
   include ::Docker::Error
   extend ::Docker::Error
 
   # @return [Event] a new instance of Event
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:54
+  # source://docker-api-2.4.0/lib/docker/event.rb:56
   def initialize(event_attributes = T.unsafe(nil)); end
 
   # Returns the value of attribute Action.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def Action; end
 
   # Sets the attribute Action
   #
   # @param value the value to set the attribute Action to.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def Action=(_arg0); end
 
   # Returns the value of attribute Actor.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:50
+  # source://docker-api-2.4.0/lib/docker/event.rb:52
   def Actor; end
 
-  # source://docker-api-2.2.0/lib/docker/event.rb:76
+  # source://docker-api-2.4.0/lib/docker/event.rb:78
   def Actor=(actor); end
 
-  # source://docker-api-2.2.0/lib/docker/event.rb:72
+  # source://docker-api-2.4.0/lib/docker/event.rb:74
   def ID; end
 
   # Returns the value of attribute Type.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def Type; end
 
   # Sets the attribute Type
   #
   # @param value the value to set the attribute Type to.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def Type=(_arg0); end
 
   # Returns the value of attribute Action.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def action; end
 
   # Returns the value of attribute Actor.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:50
+  # source://docker-api-2.4.0/lib/docker/event.rb:52
   def actor; end
 
   # Deprecated interface
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:52
+  # source://docker-api-2.4.0/lib/docker/event.rb:54
   def from; end
 
   # Deprecated interface
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:52
+  # source://docker-api-2.4.0/lib/docker/event.rb:54
   def from=(_arg0); end
 
-  # source://docker-api-2.2.0/lib/docker/event.rb:72
+  # source://docker-api-2.4.0/lib/docker/event.rb:74
   def id; end
 
   # Deprecated interface
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:52
+  # source://docker-api-2.4.0/lib/docker/event.rb:54
   def status; end
 
   # Deprecated interface
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:52
+  # source://docker-api-2.4.0/lib/docker/event.rb:54
   def status=(_arg0); end
 
   # Returns the value of attribute time.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def time; end
 
   # Sets the attribute time
   #
   # @param value the value to set the attribute time to.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def time=(_arg0); end
 
   # Returns the value of attribute timeNano.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def timeNano; end
 
   # Sets the attribute timeNano
   #
   # @param value the value to set the attribute timeNano to.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def timeNano=(_arg0); end
 
   # Returns the value of attribute timeNano.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def time_nano; end
 
-  # source://docker-api-2.2.0/lib/docker/event.rb:91
+  # source://docker-api-2.4.0/lib/docker/event.rb:93
   def to_s; end
 
   # Returns the value of attribute Type.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:49
+  # source://docker-api-2.4.0/lib/docker/event.rb:51
   def type; end
 
   private
 
-  # source://docker-api-2.2.0/lib/docker/event.rb:112
+  # source://docker-api-2.4.0/lib/docker/event.rb:114
   def to_s_actor_style; end
 
-  # source://docker-api-2.2.0/lib/docker/event.rb:101
+  # source://docker-api-2.4.0/lib/docker/event.rb:103
   def to_s_legacy; end
 
   class << self
-    # source://docker-api-2.2.0/lib/docker/event.rb:42
+    # source://docker-api-2.4.0/lib/docker/event.rb:44
     def new_event(body, remaining, total); end
 
-    # source://docker-api-2.2.0/lib/docker/event.rb:38
+    # source://docker-api-2.4.0/lib/docker/event.rb:40
     def since(since, opts = T.unsafe(nil), conn = T.unsafe(nil), &block); end
 
-    # source://docker-api-2.2.0/lib/docker/event.rb:30
+    # source://docker-api-2.4.0/lib/docker/event.rb:32
     def stream(opts = T.unsafe(nil), conn = T.unsafe(nil), &block); end
   end
 end
 
 # Represents the actor object nested within an event
 #
-# source://docker-api-2.2.0/lib/docker/event.rb:6
+# source://docker-api-2.4.0/lib/docker/event.rb:8
 class Docker::Event::Actor
   # @return [Actor] a new instance of Actor
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:9
+  # source://docker-api-2.4.0/lib/docker/event.rb:11
   def initialize(actor_attributes = T.unsafe(nil)); end
 
   # Returns the value of attribute Attributes.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:7
+  # source://docker-api-2.4.0/lib/docker/event.rb:9
   def Attributes; end
 
   # Sets the attribute Attributes
   #
   # @param value the value to set the attribute Attributes to.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:7
+  # source://docker-api-2.4.0/lib/docker/event.rb:9
   def Attributes=(_arg0); end
 
   # Returns the value of attribute ID.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:7
+  # source://docker-api-2.4.0/lib/docker/event.rb:9
   def ID; end
 
   # Sets the attribute ID
   #
   # @param value the value to set the attribute ID to.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:7
+  # source://docker-api-2.4.0/lib/docker/event.rb:9
   def ID=(_arg0); end
 
   # Returns the value of attribute Attributes.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:7
+  # source://docker-api-2.4.0/lib/docker/event.rb:9
   def attributes; end
 
   # Returns the value of attribute ID.
   #
-  # source://docker-api-2.2.0/lib/docker/event.rb:7
+  # source://docker-api-2.4.0/lib/docker/event.rb:9
   def id; end
 end
 
 # This class represents a Docker Exec Instance.
 #
-# source://docker-api-2.2.0/lib/docker/exec.rb:2
+# source://docker-api-2.4.0/lib/docker/exec.rb:4
 class Docker::Exec
   include ::Docker::Error
   include ::Docker::Base
 
   # Get info about the Exec instance
   #
-  # source://docker-api-2.2.0/lib/docker/exec.rb:37
+  # source://docker-api-2.4.0/lib/docker/exec.rb:39
   def json; end
 
   # Resize the TTY associated with the Exec instance
@@ -772,10 +772,10 @@ class Docker::Exec
   # @param query [Hash] API query parameters
   # @return [Docker::Exec] self
   #
-  # source://docker-api-2.2.0/lib/docker/exec.rb:99
+  # source://docker-api-2.4.0/lib/docker/exec.rb:101
   def resize(query = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/exec.rb:87
+  # source://docker-api-2.4.0/lib/docker/exec.rb:89
   def start(*args); end
 
   # Start the Exec instance. The Exec instance is deleted after this so this
@@ -787,14 +787,14 @@ class Docker::Exec
   # @param options [Hash] Options to dictate behavior of the instance
   # @return [Array, Array, Int] The STDOUT, STDERR and exit code
   #
-  # source://docker-api-2.2.0/lib/docker/exec.rb:52
+  # source://docker-api-2.4.0/lib/docker/exec.rb:54
   def start!(options = T.unsafe(nil), &block); end
 
   # Convert details about the object into a string
   #
   # @return [String] String representation of the Exec instance object
   #
-  # source://docker-api-2.2.0/lib/docker/exec.rb:8
+  # source://docker-api-2.4.0/lib/docker/exec.rb:10
   def to_s; end
 
   private
@@ -804,7 +804,7 @@ class Docker::Exec
   # @param endpoint [Symbol] The endpoint to grab
   # @return [String] The full Remote API endpoint with ID
   #
-  # source://docker-api-2.2.0/lib/docker/exec.rb:108
+  # source://docker-api-2.4.0/lib/docker/exec.rb:110
   def path_for(endpoint); end
 
   class << self
@@ -816,50 +816,50 @@ class Docker::Exec
     # @param conn [Docker::Connection] Connection to Docker Remote API
     # @return [Docker::Exec] self
     #
-    # source://docker-api-2.2.0/lib/docker/exec.rb:20
+    # source://docker-api-2.4.0/lib/docker/exec.rb:22
     def create(options = T.unsafe(nil), conn = T.unsafe(nil)); end
   end
 end
 
 # This class represents a Docker Image.
 #
-# source://docker-api-2.2.0/lib/docker/image.rb:2
+# source://docker-api-2.4.0/lib/docker/image.rb:4
 class Docker::Image
   include ::Docker::Error
   include ::Docker::Base
 
   # Remove the Image from the server.
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:67
+  # source://docker-api-2.4.0/lib/docker/image.rb:69
   def delete(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/image.rb:91
+  # source://docker-api-2.4.0/lib/docker/image.rb:93
   def history(opts = T.unsafe(nil)); end
 
   # Given a path of a local file and the path it should be inserted, creates
   # a new Image that has that file.
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:51
+  # source://docker-api-2.4.0/lib/docker/image.rb:53
   def insert_local(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/image.rb:91
+  # source://docker-api-2.4.0/lib/docker/image.rb:93
   def json(opts = T.unsafe(nil)); end
 
   # Push the Image to the Docker registry.
   #
   # @raise [ArgumentError]
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:25
+  # source://docker-api-2.4.0/lib/docker/image.rb:27
   def push(creds = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Update the @info hash, which is the only mutable state in this object.
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:107
+  # source://docker-api-2.4.0/lib/docker/image.rb:109
   def refresh!; end
 
   # Remove the Image from the server.
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:67
+  # source://docker-api-2.4.0/lib/docker/image.rb:69
   def remove(opts = T.unsafe(nil)); end
 
   # Given a command and optional list of streams to attach to, run a command on
@@ -867,27 +867,27 @@ class Docker::Image
   # to run the Image. If the image has an embedded config, no command is
   # necessary, but it will fail with 500 if no config is saved with the image
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:9
+  # source://docker-api-2.4.0/lib/docker/image.rb:11
   def run(cmd = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Save the image as a tarball
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:97
+  # source://docker-api-2.4.0/lib/docker/image.rb:99
   def save(filename = T.unsafe(nil)); end
 
   # Save the image as a tarball to an IO object.
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:102
+  # source://docker-api-2.4.0/lib/docker/image.rb:104
   def save_stream(opts = T.unsafe(nil), &block); end
 
   # Tag the Image.
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:41
+  # source://docker-api-2.4.0/lib/docker/image.rb:43
   def tag(opts = T.unsafe(nil)); end
 
   # Return a String representation of the Image.
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:83
+  # source://docker-api-2.4.0/lib/docker/image.rb:85
   def to_s; end
 
   private
@@ -895,26 +895,26 @@ class Docker::Image
   # Convience method to get the Dockerfile for a file hash and a path to
   # output to.
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:342
+  # source://docker-api-2.4.0/lib/docker/image.rb:344
   def dockerfile_for(file_hash, output_path); end
 
-  # source://docker-api-2.2.0/lib/docker/image.rb:352
+  # source://docker-api-2.4.0/lib/docker/image.rb:354
   def ensure_repo_tags; end
 
   # Convenience method to return the path for a particular resource.
   #
-  # source://docker-api-2.2.0/lib/docker/image.rb:335
+  # source://docker-api-2.4.0/lib/docker/image.rb:337
   def path_for(resource); end
 
   class << self
     # Return every Image.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:217
+    # source://docker-api-2.4.0/lib/docker/image.rb:219
     def all(opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # Given a Dockerfile as a string, builds an Image.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:269
+    # source://docker-api-2.4.0/lib/docker/image.rb:271
     def build(commands, opts = T.unsafe(nil), connection = T.unsafe(nil), &block); end
 
     # Given a directory that contains a Dockerfile, builds an Image.
@@ -922,7 +922,7 @@ class Docker::Image
     # If a block is passed, chunks of output produced by Docker will be passed
     # to that block.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:307
+    # source://docker-api-2.4.0/lib/docker/image.rb:309
     def build_from_dir(dir, opts = T.unsafe(nil), connection = T.unsafe(nil), creds = T.unsafe(nil), &block); end
 
     # Given File like object containing a tar file, builds an Image.
@@ -930,72 +930,72 @@ class Docker::Image
     # If a block is passed, chunks of output produced by Docker will be passed
     # to that block.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:285
+    # source://docker-api-2.4.0/lib/docker/image.rb:287
     def build_from_tar(tar, opts = T.unsafe(nil), connection = T.unsafe(nil), creds = T.unsafe(nil), &block); end
 
     # A method to build the config header and merge it into the
     # headers sent by build_from_dir.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:324
+    # source://docker-api-2.4.0/lib/docker/image.rb:326
     def build_headers(creds = T.unsafe(nil)); end
 
     # Create a new Image.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:119
+    # source://docker-api-2.4.0/lib/docker/image.rb:121
     def create(opts = T.unsafe(nil), creds = T.unsafe(nil), conn = T.unsafe(nil), &block); end
 
     # Delete a specific image
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:144
+    # source://docker-api-2.4.0/lib/docker/image.rb:146
     def delete(id, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # Check if an image exists.
     #
     # @return [Boolean]
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:209
+    # source://docker-api-2.4.0/lib/docker/image.rb:211
     def exist?(id, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # Return a specific image.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:137
+    # source://docker-api-2.4.0/lib/docker/image.rb:139
     def get(id, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # Import an Image from the output of Docker::Container#export. The first
     # argument may either be a File or URI.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:238
+    # source://docker-api-2.4.0/lib/docker/image.rb:240
     def import(imp, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker/image.rb:257
+    # source://docker-api-2.4.0/lib/docker/image.rb:259
     def import_stream(options = T.unsafe(nil), connection = T.unsafe(nil), &block); end
 
     # Load a tar Image
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:196
+    # source://docker-api-2.4.0/lib/docker/image.rb:198
     def load(tar, opts = T.unsafe(nil), conn = T.unsafe(nil), creds = T.unsafe(nil), &block); end
 
     # Prune images
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:150
+    # source://docker-api-2.4.0/lib/docker/image.rb:152
     def prune(conn = T.unsafe(nil)); end
 
     # Delete a specific image
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:144
+    # source://docker-api-2.4.0/lib/docker/image.rb:146
     def remove(id, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # Generates the block to be passed as a reponse block to Excon. The returned
     # lambda will append Docker output to the first argument, and yield output to
     # the passed block, if a block is given.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:360
+    # source://docker-api-2.4.0/lib/docker/image.rb:362
     def response_block(body); end
 
     # Generates the block to be passed in to the save request. This lambda will
     # append the streaming data to the file provided.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:369
+    # source://docker-api-2.4.0/lib/docker/image.rb:371
     def response_block_for_save(file); end
 
     # Save the raw binary representation or one or more Docker images
@@ -1008,7 +1008,7 @@ class Docker::Image
     # @param conn [Docker::Connection] The Docker connection to use
     # @return [NilClass, String] If filename is nil, return the string
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:164
+    # source://docker-api-2.4.0/lib/docker/image.rb:166
     def save(names, filename = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # Stream the contents of Docker image(s) to a block.
@@ -1016,176 +1016,176 @@ class Docker::Image
     # @param names [String, Array#String] The image(s) you wish to save
     # @param conn [Docker::Connection] The Docker connection to use
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:182
+    # source://docker-api-2.4.0/lib/docker/image.rb:184
     def save_stream(names, opts = T.unsafe(nil), conn = T.unsafe(nil), &block); end
 
     # Given a query like `{ :term => 'sshd' }`, queries the Docker Registry for
     # a corresponding Image.
     #
-    # source://docker-api-2.2.0/lib/docker/image.rb:224
+    # source://docker-api-2.4.0/lib/docker/image.rb:226
     def search(query = T.unsafe(nil), connection = T.unsafe(nil), creds = T.unsafe(nil)); end
   end
 end
 
 # This class represents all the messages either received by chunks from attach
 #
-# source://docker-api-2.2.0/lib/docker/messages.rb:2
+# source://docker-api-2.4.0/lib/docker/messages.rb:4
 class Docker::Messages
   # @return [Messages] a new instance of Messages
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:6
+  # source://docker-api-2.4.0/lib/docker/messages.rb:8
   def initialize(stdout_messages = T.unsafe(nil), stderr_messages = T.unsafe(nil), all_messages = T.unsafe(nil), buffer = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/messages.rb:16
+  # source://docker-api-2.4.0/lib/docker/messages.rb:18
   def add_message(source, message); end
 
   # Returns the value of attribute all_messages.
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages.rb:6
   def all_messages; end
 
   # Sets the attribute all_messages
   #
   # @param value the value to set the attribute all_messages to.
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages.rb:6
   def all_messages=(_arg0); end
 
-  # source://docker-api-2.2.0/lib/docker/messages.rb:42
+  # source://docker-api-2.4.0/lib/docker/messages.rb:44
   def append(messages); end
 
   # Returns the value of attribute buffer.
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages.rb:6
   def buffer; end
 
   # Sets the attribute buffer
   #
   # @param value the value to set the attribute buffer to.
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages.rb:6
   def buffer=(_arg0); end
 
-  # source://docker-api-2.2.0/lib/docker/messages.rb:51
+  # source://docker-api-2.4.0/lib/docker/messages.rb:53
   def clear; end
 
   # Method to break apart application/vnd.docker.raw-stream headers
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:58
+  # source://docker-api-2.4.0/lib/docker/messages.rb:60
   def decipher_messages(body); end
 
-  # source://docker-api-2.2.0/lib/docker/messages.rb:26
+  # source://docker-api-2.4.0/lib/docker/messages.rb:28
   def get_message(raw_text); end
 
   # Returns the value of attribute stderr_messages.
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages.rb:6
   def stderr_messages; end
 
   # Sets the attribute stderr_messages
   #
   # @param value the value to set the attribute stderr_messages to.
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages.rb:6
   def stderr_messages=(_arg0); end
 
   # Returns the value of attribute stdout_messages.
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages.rb:6
   def stdout_messages; end
 
   # Sets the attribute stdout_messages
   #
   # @param value the value to set the attribute stdout_messages to.
   #
-  # source://docker-api-2.2.0/lib/docker/messages.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages.rb:6
   def stdout_messages=(_arg0); end
 end
 
 # This class represents a messages stack
 #
-# source://docker-api-2.2.0/lib/docker/messages_stack.rb:2
+# source://docker-api-2.4.0/lib/docker/messages_stack.rb:4
 class Docker::MessagesStack
   # Initialize stack with optional size
   #
   # @param size [Integer]
   # @return [MessagesStack] a new instance of MessagesStack
   #
-  # source://docker-api-2.2.0/lib/docker/messages_stack.rb:9
+  # source://docker-api-2.4.0/lib/docker/messages_stack.rb:11
   def initialize(size = T.unsafe(nil)); end
 
   # Append messages to stack
   #
   # @param messages [Docker::Messages]
   #
-  # source://docker-api-2.2.0/lib/docker/messages_stack.rb:17
+  # source://docker-api-2.4.0/lib/docker/messages_stack.rb:19
   def append(messages); end
 
   # Returns the value of attribute messages.
   #
-  # source://docker-api-2.2.0/lib/docker/messages_stack.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages_stack.rb:6
   def messages; end
 
   # Sets the attribute messages
   #
   # @param value the value to set the attribute messages to.
   #
-  # source://docker-api-2.2.0/lib/docker/messages_stack.rb:4
+  # source://docker-api-2.4.0/lib/docker/messages_stack.rb:6
   def messages=(_arg0); end
 end
 
 # This class represents a Docker Network.
 #
-# source://docker-api-2.2.0/lib/docker/network.rb:2
+# source://docker-api-2.4.0/lib/docker/network.rb:4
 class Docker::Network
   include ::Docker::Error
   include ::Docker::Base
 
-  # source://docker-api-2.2.0/lib/docker/network.rb:5
+  # source://docker-api-2.4.0/lib/docker/network.rb:7
   def connect(container, opts = T.unsafe(nil), body_opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/network.rb:21
+  # source://docker-api-2.4.0/lib/docker/network.rb:23
   def delete(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/network.rb:13
+  # source://docker-api-2.4.0/lib/docker/network.rb:15
   def disconnect(container, opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/network.rb:27
+  # source://docker-api-2.4.0/lib/docker/network.rb:29
   def json(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/network.rb:36
+  # source://docker-api-2.4.0/lib/docker/network.rb:38
   def reload; end
 
-  # source://docker-api-2.2.0/lib/docker/network.rb:21
+  # source://docker-api-2.4.0/lib/docker/network.rb:23
   def remove(opts = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/network.rb:31
+  # source://docker-api-2.4.0/lib/docker/network.rb:33
   def to_s; end
 
   private
 
   # Convenience method to return the path for a particular resource.
   #
-  # source://docker-api-2.2.0/lib/docker/network.rb:77
+  # source://docker-api-2.4.0/lib/docker/network.rb:79
   def path_for(resource = T.unsafe(nil)); end
 
   class << self
-    # source://docker-api-2.2.0/lib/docker/network.rb:59
+    # source://docker-api-2.4.0/lib/docker/network.rb:61
     def all(opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker/network.rb:43
+    # source://docker-api-2.4.0/lib/docker/network.rb:45
     def create(name, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker/network.rb:64
+    # source://docker-api-2.4.0/lib/docker/network.rb:66
     def delete(id, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker/network.rb:53
+    # source://docker-api-2.4.0/lib/docker/network.rb:55
     def get(id, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker/network.rb:70
+    # source://docker-api-2.4.0/lib/docker/network.rb:72
     def prune(conn = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker/network.rb:64
+    # source://docker-api-2.4.0/lib/docker/network.rb:66
     def remove(id, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
   end
 end
@@ -1193,13 +1193,13 @@ end
 # This module holds shared logic that doesn't really belong anywhere else in the
 # gem.
 #
-# source://docker-api-2.2.0/lib/docker/util.rb:5
+# source://docker-api-2.4.0/lib/docker/util.rb:7
 module Docker::Util
   include ::Docker::Error
 
   private
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:191
+  # source://docker-api-2.4.0/lib/docker/util.rb:193
   def add_file_to_tar(tar, name, mode, size, mtime); end
 
   # Attaches to a HTTP stream
@@ -1208,82 +1208,82 @@ module Docker::Util
   # @param msg_stack [Docker::Messages]
   # @param tty [boolean]
   #
-  # source://docker-api-2.2.0/lib/docker/util.rb:18
+  # source://docker-api-2.4.0/lib/docker/util.rb:20
   def attach_for(block, msg_stack, tty = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:38
+  # source://docker-api-2.4.0/lib/docker/util.rb:40
   def attach_for_multiplex(block, msg_stack); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:27
+  # source://docker-api-2.4.0/lib/docker/util.rb:29
   def attach_for_tty(block, msg_stack); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:261
+  # source://docker-api-2.4.0/lib/docker/util.rb:263
   def build_auth_header(credentials); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:269
+  # source://docker-api-2.4.0/lib/docker/util.rb:271
   def build_config_header(credentials); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:96
+  # source://docker-api-2.4.0/lib/docker/util.rb:98
   def close_write(socket); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:138
+  # source://docker-api-2.4.0/lib/docker/util.rb:140
   def create_dir_tar(directory); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:173
+  # source://docker-api-2.4.0/lib/docker/util.rb:175
   def create_relative_dir_tar(directory, output); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:124
+  # source://docker-api-2.4.0/lib/docker/util.rb:126
   def create_tar(hash = T.unsafe(nil)); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:216
+  # source://docker-api-2.4.0/lib/docker/util.rb:218
   def create_temp_file; end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:56
+  # source://docker-api-2.4.0/lib/docker/util.rb:58
   def debug(msg); end
 
   # return the set of files that form the docker context
   # implement this logic https://docs.docker.com/engine/reference/builder/#dockerignore-file
   #
-  # source://docker-api-2.2.0/lib/docker/util.rb:150
+  # source://docker-api-2.4.0/lib/docker/util.rb:152
   def docker_context(directory); end
 
   # do a directory glob that matches .dockerignore behavior
   # specifically: matched directories are considered a recursive match
   #
-  # source://docker-api-2.2.0/lib/docker/util.rb:291
+  # source://docker-api-2.4.0/lib/docker/util.rb:293
   def dockerignore_compatible_glob(pattern); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:221
+  # source://docker-api-2.4.0/lib/docker/util.rb:223
   def extract_id(body); end
 
   # Convenience method to get the file hash corresponding to an array of
   # local paths.
   #
-  # source://docker-api-2.2.0/lib/docker/util.rb:232
+  # source://docker-api-2.4.0/lib/docker/util.rb:234
   def file_hash_from_paths(local_paths); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:256
+  # source://docker-api-2.4.0/lib/docker/util.rb:258
   def filesystem_permissions(path); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:120
+  # source://docker-api-2.4.0/lib/docker/util.rb:122
   def fix_json(body); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:303
+  # source://docker-api-2.4.0/lib/docker/util.rb:305
   def glob_all_files(pattern); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:60
+  # source://docker-api-2.4.0/lib/docker/util.rb:62
   def hijack_for(stdin, block, msg_stack, tty); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:106
+  # source://docker-api-2.4.0/lib/docker/util.rb:108
   def parse_json(body); end
 
-  # source://docker-api-2.2.0/lib/docker/util.rb:112
+  # source://docker-api-2.4.0/lib/docker/util.rb:114
   def parse_repo_tag(str); end
 
   class << self
     # @yield [os]
     #
-    # source://docker-api-2.2.0/lib/docker/util.rb:191
+    # source://docker-api-2.4.0/lib/docker/util.rb:193
     def add_file_to_tar(tar, name, mode, size, mtime); end
 
     # Attaches to a HTTP stream
@@ -1292,280 +1292,344 @@ module Docker::Util
     # @param msg_stack [Docker::Messages]
     # @param tty [boolean]
     #
-    # source://docker-api-2.2.0/lib/docker/util.rb:18
+    # source://docker-api-2.4.0/lib/docker/util.rb:20
     def attach_for(block, msg_stack, tty = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:38
+    # source://docker-api-2.4.0/lib/docker/util.rb:40
     def attach_for_multiplex(block, msg_stack); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:27
+    # source://docker-api-2.4.0/lib/docker/util.rb:29
     def attach_for_tty(block, msg_stack); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:261
+    # source://docker-api-2.4.0/lib/docker/util.rb:263
     def build_auth_header(credentials); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:269
+    # source://docker-api-2.4.0/lib/docker/util.rb:271
     def build_config_header(credentials); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:96
+    # source://docker-api-2.4.0/lib/docker/util.rb:98
     def close_write(socket); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:138
+    # source://docker-api-2.4.0/lib/docker/util.rb:140
     def create_dir_tar(directory); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:173
+    # source://docker-api-2.4.0/lib/docker/util.rb:175
     def create_relative_dir_tar(directory, output); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:124
+    # source://docker-api-2.4.0/lib/docker/util.rb:126
     def create_tar(hash = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:216
+    # source://docker-api-2.4.0/lib/docker/util.rb:218
     def create_temp_file; end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:56
+    # source://docker-api-2.4.0/lib/docker/util.rb:58
     def debug(msg); end
 
     # return the set of files that form the docker context
     # implement this logic https://docs.docker.com/engine/reference/builder/#dockerignore-file
     #
-    # source://docker-api-2.2.0/lib/docker/util.rb:150
+    # source://docker-api-2.4.0/lib/docker/util.rb:152
     def docker_context(directory); end
 
     # do a directory glob that matches .dockerignore behavior
     # specifically: matched directories are considered a recursive match
     #
-    # source://docker-api-2.2.0/lib/docker/util.rb:291
+    # source://docker-api-2.4.0/lib/docker/util.rb:293
     def dockerignore_compatible_glob(pattern); end
 
     # @raise [UnexpectedResponseError]
     #
-    # source://docker-api-2.2.0/lib/docker/util.rb:221
+    # source://docker-api-2.4.0/lib/docker/util.rb:223
     def extract_id(body); end
 
     # Convenience method to get the file hash corresponding to an array of
     # local paths.
     #
-    # source://docker-api-2.2.0/lib/docker/util.rb:232
+    # source://docker-api-2.4.0/lib/docker/util.rb:234
     def file_hash_from_paths(local_paths); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:256
+    # source://docker-api-2.4.0/lib/docker/util.rb:258
     def filesystem_permissions(path); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:120
+    # source://docker-api-2.4.0/lib/docker/util.rb:122
     def fix_json(body); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:303
+    # source://docker-api-2.4.0/lib/docker/util.rb:305
     def glob_all_files(pattern); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:60
+    # source://docker-api-2.4.0/lib/docker/util.rb:62
     def hijack_for(stdin, block, msg_stack, tty); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:106
+    # source://docker-api-2.4.0/lib/docker/util.rb:108
     def parse_json(body); end
 
-    # source://docker-api-2.2.0/lib/docker/util.rb:112
+    # source://docker-api-2.4.0/lib/docker/util.rb:114
     def parse_repo_tag(str); end
   end
 end
 
 # http://www.tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm#STANDARD-WILDCARDS
 #
-# source://docker-api-2.2.0/lib/docker/util.rb:7
+# source://docker-api-2.4.0/lib/docker/util.rb:9
 Docker::Util::GLOB_WILDCARDS = T.let(T.unsafe(nil), Regexp)
 
 # The version of the docker-api gem.
 #
-# source://docker-api-2.2.0/lib/docker/version.rb:3
+# source://docker-api-2.4.0/lib/docker/version.rb:5
 Docker::VERSION = T.let(T.unsafe(nil), String)
 
 # class represents a Docker Volume
 #
-# source://docker-api-2.2.0/lib/docker/volume.rb:2
+# source://docker-api-2.4.0/lib/docker/volume.rb:4
 class Docker::Volume
   include ::Docker::Error
   include ::Docker::Base
 
-  # source://docker-api-2.2.0/lib/docker/volume.rb:10
+  # source://docker-api-2.4.0/lib/docker/volume.rb:12
   def normalize_hash(hash); end
 
   # /volumes/volume_name doesnt return anything
   #
-  # source://docker-api-2.2.0/lib/docker/volume.rb:6
+  # source://docker-api-2.4.0/lib/docker/volume.rb:8
   def remove(opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
   class << self
     # /volumes endpoint returns an array of hashes incapsulated in an Volumes tag
     #
-    # source://docker-api-2.2.0/lib/docker/volume.rb:24
+    # source://docker-api-2.4.0/lib/docker/volume.rb:26
     def all(opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # creates a volume with an arbitrary name
     #
-    # source://docker-api-2.2.0/lib/docker/volume.rb:32
+    # source://docker-api-2.4.0/lib/docker/volume.rb:34
     def create(name, opts = T.unsafe(nil), conn = T.unsafe(nil)); end
 
     # get details for a single volume
     #
-    # source://docker-api-2.2.0/lib/docker/volume.rb:17
+    # source://docker-api-2.4.0/lib/docker/volume.rb:19
     def get(name, conn = T.unsafe(nil)); end
 
-    # source://docker-api-2.2.0/lib/docker/volume.rb:39
+    # source://docker-api-2.4.0/lib/docker/volume.rb:41
     def prune(conn = T.unsafe(nil)); end
   end
 end
 
-# source://docker-api-2.2.0/lib/excon/middlewares/hijack.rb:1
+# Define defaults first so they will be available to other files
+#
+# source://docker-api-2.4.0/lib/excon/middlewares/hijack.rb:3
 module Excon
   class << self
-    # source://excon-0.92.4/lib/excon.rb:249
+    # source://excon-1.2.5/lib/excon.rb:251
     def connect(url, params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:49
+    # @return [Hash] defaults for Excon connections
+    #
+    # source://excon-1.2.5/lib/excon.rb:50
     def defaults; end
 
-    # source://excon-0.92.4/lib/excon.rb:55
-    def defaults=(new_defaults); end
+    # Change defaults for Excon connections
+    #
+    # @return [Hash] defaults for Excon connections
+    #
+    # source://excon-1.2.5/lib/excon.rb:56
+    def defaults=(_arg0); end
 
-    # source://excon-0.92.4/lib/excon.rb:249
+    # source://excon-1.2.5/lib/excon.rb:251
     def delete(url, params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:59
+    # @raise [Error::Warning]
+    #
+    # source://excon-1.2.5/lib/excon.rb:58
     def display_warning(warning); end
 
-    # source://excon-0.92.4/lib/excon.rb:249
+    # source://excon-1.2.5/lib/excon.rb:251
     def get(url, params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:249
+    # source://excon-1.2.5/lib/excon.rb:251
     def head(url, params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:75
+    # Status of mocking
+    #
+    # source://excon-1.2.5/lib/excon.rb:72
     def mock; end
 
-    # source://excon-0.92.4/lib/excon.rb:83
+    # Change the status of mocking
+    # false is the default and works as expected
+    # true returns a value from stubs or raises
+    #
+    # source://excon-1.2.5/lib/excon.rb:80
     def mock=(new_mock); end
 
-    # source://excon-0.92.4/lib/excon.rb:119
+    # Initializes a new keep-alive session for a given remote host
+    #
+    # @param url [String] The destination URL
+    # @param params [Hash<Symbol, >] One or more option params to set on the Connection instance
+    # @raise [ArgumentError]
+    # @return [Connection] A new Excon::Connection instance
+    # @see Connection#initialize
+    #
+    # source://excon-1.2.5/lib/excon.rb:116
     def new(url, params = T.unsafe(nil)); end
 
-    # source://excon-0.92.4/lib/excon.rb:249
+    # source://excon-1.2.5/lib/excon.rb:251
     def options(url, params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:249
+    # source://excon-1.2.5/lib/excon.rb:251
     def patch(url, params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:249
+    # source://excon-1.2.5/lib/excon.rb:251
     def post(url, params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:249
+    # source://excon-1.2.5/lib/excon.rb:251
     def put(url, params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:70
+    # source://excon-1.2.5/lib/excon.rb:67
     def set_raise_on_warnings!(should_raise); end
 
-    # source://excon-0.92.4/lib/excon.rb:89
+    # @return [String] The filesystem path to the SSL Certificate Authority
+    #
+    # source://excon-1.2.5/lib/excon.rb:86
     def ssl_ca_path; end
 
-    # source://excon-0.92.4/lib/excon.rb:96
+    # Change path to the SSL Certificate Authority
+    #
+    # @return [String] The filesystem path to the SSL Certificate Authority
+    #
+    # source://excon-1.2.5/lib/excon.rb:93
     def ssl_ca_path=(new_ssl_ca_path); end
 
-    # source://excon-0.92.4/lib/excon.rb:102
+    # @return [true, false] Whether or not to verify the peer's SSL certificate / chain
+    #
+    # source://excon-1.2.5/lib/excon.rb:99
     def ssl_verify_peer; end
 
-    # source://excon-0.92.4/lib/excon.rb:109
+    # Change the status of ssl peer verification
+    #
+    # @see Excon#ssl_verify_peer (attr_reader)
+    #
+    # source://excon-1.2.5/lib/excon.rb:106
     def ssl_verify_peer=(new_ssl_verify_peer); end
 
-    # source://excon-0.92.4/lib/excon.rb:148
+    # push an additional stub onto the list to check for mock requests
+    #
+    # @param request_params [Hash<Symbol, >] request params to match against, omitted params match all
+    # @param response_params [Hash<Symbol, >] response params to return or block to call with matched params
+    #
+    # source://excon-1.2.5/lib/excon.rb:138
     def stub(request_params = T.unsafe(nil), response_params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:192
+    # get a stub matching params or nil
+    #
+    # @param request_params [Hash<Symbol, >] request params to match against, omitted params match all
+    # @return [Hash<Symbol, >] response params to return from matched request or block to call with params
+    #
+    # source://excon-1.2.5/lib/excon.rb:182
     def stub_for(request_params = T.unsafe(nil)); end
 
-    # source://excon-0.92.4/lib/excon.rb:229
+    # get a list of defined stubs
+    #
+    # source://excon-1.2.5/lib/excon.rb:230
     def stubs; end
 
-    # source://excon-0.92.4/lib/excon.rb:249
+    # source://excon-1.2.5/lib/excon.rb:251
     def trace(url, params = T.unsafe(nil), &block); end
 
-    # source://excon-0.92.4/lib/excon.rb:241
+    # remove first/oldest stub matching request_params or nil if none match
+    #
+    # @param request_params [Hash<Symbol, >] request params to match against, omitted params match all
+    # @return [Hash<Symbol, >] response params from deleted stub
+    #
+    # source://excon-1.2.5/lib/excon.rb:242
     def unstub(request_params = T.unsafe(nil)); end
   end
 end
 
-# source://excon-0.92.4/lib/excon/constants.rb:12
+# avoid overwrite if somebody has redefined
+#
+# source://excon-1.2.5/lib/excon/constants.rb:10
 Excon::CHUNK_SIZE = T.let(T.unsafe(nil), Integer)
 
-# source://excon-0.92.4/lib/excon/constants.rb:4
+# source://excon-1.2.5/lib/excon/constants.rb:3
 Excon::CR_NL = T.let(T.unsafe(nil), String)
 
-# source://excon-0.92.4/lib/excon/constants.rb:134
+# these come last as they rely on the above
+#
+# source://excon-1.2.5/lib/excon/constants.rb:141
 Excon::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
-# source://excon-0.92.4/lib/excon/constants.rb:6
+# source://excon-1.2.5/lib/excon/constants.rb:5
 Excon::DEFAULT_CA_FILE = T.let(T.unsafe(nil), String)
 
-# source://excon-0.92.4/lib/excon/constants.rb:8
+# 1 megabyte
+#
+# source://excon-1.2.5/lib/excon/constants.rb:7
 Excon::DEFAULT_CHUNK_SIZE = T.let(T.unsafe(nil), Integer)
 
-# source://excon-0.92.4/lib/excon/constants.rb:15
+# source://excon-1.2.5/lib/excon/constants.rb:12
 Excon::DEFAULT_REDIRECT_LIMIT = T.let(T.unsafe(nil), Integer)
 
-# source://excon-0.92.4/lib/excon/constants.rb:19
+# source://excon-1.2.5/lib/excon/constants.rb:16
 Excon::DEFAULT_RETRY_ERRORS = T.let(T.unsafe(nil), Array)
 
-# source://excon-0.92.4/lib/excon/constants.rb:17
+# source://excon-1.2.5/lib/excon/constants.rb:14
 Excon::DEFAULT_RETRY_LIMIT = T.let(T.unsafe(nil), Integer)
 
-# source://excon-0.92.4/lib/excon/constants.rb:110
+# source://excon-1.2.5/lib/excon/constants.rb:116
 Excon::DEPRECATED_VALID_REQUEST_KEYS = T.let(T.unsafe(nil), Hash)
 
-# source://excon-0.92.4/lib/excon/constants.rb:25
+# source://excon-1.2.5/lib/excon/constants.rb:24
 Excon::FORCE_ENC = T.let(T.unsafe(nil), TrueClass)
 
-# source://excon-0.92.4/lib/excon/constants.rb:31
+# source://excon-1.2.5/lib/excon/constants.rb:30
 Excon::HTTPS = T.let(T.unsafe(nil), String)
 
-# source://excon-0.92.4/lib/excon/constants.rb:27
+# source://excon-1.2.5/lib/excon/constants.rb:26
 Excon::HTTP_1_1 = T.let(T.unsafe(nil), String)
 
-# source://excon-0.92.4/lib/excon/constants.rb:29
+# source://excon-1.2.5/lib/excon/constants.rb:28
 Excon::HTTP_VERBS = T.let(T.unsafe(nil), Array)
 
-# source://docker-api-2.2.0/lib/excon/middlewares/hijack.rb:4
+# source://docker-api-2.4.0/lib/excon/middlewares/hijack.rb:4
 module Excon::Middleware; end
 
 # Hijack is an Excon middleware which parses response headers and then
 # yields the underlying TCP socket for raw TCP communication (used to
 # attach to STDIN of containers).
 #
-# source://docker-api-2.2.0/lib/excon/middlewares/hijack.rb:8
+# source://docker-api-2.4.0/lib/excon/middlewares/hijack.rb:8
 class Excon::Middleware::Hijack < ::Excon::Middleware::Base
-  # source://docker-api-2.2.0/lib/excon/middlewares/hijack.rb:9
+  # source://docker-api-2.4.0/lib/excon/middlewares/hijack.rb:13
   def build_response(status, socket); end
 
-  # source://docker-api-2.2.0/lib/excon/middlewares/hijack.rb:28
+  # source://docker-api-2.4.0/lib/excon/middlewares/hijack.rb:32
   def response_call(datum); end
+
+  class << self
+    # source://docker-api-2.4.0/lib/excon/middlewares/hijack.rb:9
+    def valid_parameter_keys; end
+  end
 end
 
-# source://excon-0.92.4/lib/excon/constants.rb:33
+# source://excon-1.2.5/lib/excon/constants.rb:32
 Excon::NO_ENTITY = T.let(T.unsafe(nil), Array)
 
-# source://excon-0.92.4/lib/excon/constants.rb:35
+# source://excon-1.2.5/lib/excon/constants.rb:34
 Excon::REDACTED = T.let(T.unsafe(nil), String)
 
-# source://excon-0.92.4/lib/excon/constants.rb:37
+# source://excon-1.2.5/lib/excon/constants.rb:36
 Excon::UNIX = T.let(T.unsafe(nil), String)
 
-# source://excon-0.92.4/lib/excon/constants.rb:39
+# source://excon-1.2.5/lib/excon/constants.rb:38
 Excon::USER_AGENT = T.let(T.unsafe(nil), String)
 
-# source://excon-0.92.4/lib/excon/constants.rb:68
+# source://excon-1.2.5/lib/excon/constants.rb:70
 Excon::VALID_CONNECTION_KEYS = T.let(T.unsafe(nil), Array)
 
-# source://excon-0.92.4/lib/excon/constants.rb:43
+# source://excon-1.2.5/lib/excon/constants.rb:42
 Excon::VALID_REQUEST_KEYS = T.let(T.unsafe(nil), Array)
 
-# source://excon-0.92.4/lib/excon/version.rb:3
+# source://excon-1.2.5/lib/excon/version.rb:4
 Excon::VERSION = T.let(T.unsafe(nil), String)
 
-# source://excon-0.92.4/lib/excon/constants.rb:41
+# source://excon-1.2.5/lib/excon/constants.rb:40
 Excon::VERSIONS = T.let(T.unsafe(nil), String)
