@@ -24,7 +24,7 @@ class AlertMailer < ApplicationMailer
     return if user.email.nil?
 
     # Postal passes the tag back in its delivery webhooks, and PostalController only acts on this one
-    mail(to: "#{user.name} <#{user.email}>", subject: @subject, "X-Postal-Tag" => PostalController::ALERT_TAG)
+    mail(to: "#{user.name} <#{user.email}>", subject: @subject, "X-Postal-Tag" => PostalWebhook::ALERT_TAG)
     user.update(alerted_at: Time.current)
   end
 end

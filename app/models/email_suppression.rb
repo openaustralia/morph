@@ -5,8 +5,8 @@
 # Postal's own per-mail-server suppression list (see GLOSSARY.md).
 #
 # It belongs to the address, not to a User, so a person who changes their GitHub primary email is no longer affected,
-# and one who changes back is. Lifting keeps the row as a history of why alerts stopped. A later hard bounce suppresses
-# the same row again.
+# and one who changes back is. Lifting keeps the row, and a later hard bounce suppresses the same row again with the
+# new date and reply, so only the latest bounce is recorded.
 #
 # == Schema Information
 #
@@ -83,11 +83,10 @@ class EmailSuppression < ApplicationRecord
     T.must(find_by(address: normalise(address)))
   end
 
-  # Whether the address was lifted at or after the time, so a failure from before then (an old export, or a retry of a
-  # Postal event we had already acted on) says nothing about it now.
-  sig { params(address: String, time: ActiveSupport::TimeWithZone).returns(T::Boolean) }
-  def self.lifted_since?(address, time)
-    where(address: normalise(address)).exists?(lifted_at: time..)
+  # When staff last cleared the address, if they ever did. An old export mustn't suppress it again.
+  sig { params(address: String).returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def self.last_lifted_at(address)
+    where(address: normalise(address)).maximum(:lifted_at)
   end
 
   # Returns how many active suppressions were lifted (0 or 1).

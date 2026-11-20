@@ -95,7 +95,7 @@ class EmailSuppressionImport
   # date we can't tell whether the failure was before or after, so we leave it alone.
   sig { params(address: String, failed_at: T.nilable(ActiveSupport::TimeWithZone)).returns(T::Boolean) }
   def recovered_since?(address, failed_at)
-    lifted_at = EmailSuppression.where(address: EmailSuppression.normalise(address)).maximum(:lifted_at)
+    lifted_at = EmailSuppression.last_lifted_at(address)
     !lifted_at.nil? && (failed_at.nil? || failed_at <= lifted_at)
   end
 end

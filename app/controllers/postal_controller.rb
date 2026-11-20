@@ -10,21 +10,18 @@ class PostalController < ActionController::API
 
   HARD_FAILURE_EVENTS = T.let(%w[MessageDeliveryFailed MessageBounced].freeze, T::Array[String])
 
-  # The only mail we tag, set in AlertMailer. Discourse mail from the same mail server is untagged.
-  ALERT_TAG = "alert"
-
   sig { void }
   def event
     failure = signature_failure_status(request.raw_post)
     return head failure if failure
 
     body = T.cast(JSON.parse(request.raw_post), T::Hash[String, T.untyped])
-    event = body["event"]
+    event_name = body["event"]
     payload = body["payload"]
     # Delayed, held and every other event are accepted and ignored. Postal keeps retrying soft failures itself.
-    return head :ok unless HARD_FAILURE_EVENTS.include?(event) && payload.is_a?(Hash)
+    return head :ok unless HARD_FAILURE_EVENTS.include?(event_name) && payload.is_a?(Hash)
 
-    suppress_if_hard_bounce(event, payload)
+    suppress_if_hard_bounce(T.cast(event_name, String), payload)
     head :ok
   end
 
@@ -35,7 +32,7 @@ class PostalController < ActionController::API
   def suppress_if_hard_bounce(event, payload)
     message = payload[event == "MessageBounced" ? "original_message" : "message"]
     recipient = message["to"] if message.is_a?(Hash)
-    return log(event, "ignored: untagged") if recipient.blank? || message["tag"] != ALERT_TAG
+    return log(event, "ignored: untagged") if recipient.blank? || message["tag"] != PostalWebhook::ALERT_TAG
     return log(event, "ignored: not about the address") if event == "MessageDeliveryFailed" && !address_failed?(payload)
 
     EmailSuppression.suppress!(recipient, reason: :hard_bounce, postal_event: event, reply: payload["output"])
