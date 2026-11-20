@@ -90,6 +90,24 @@ RSpec.describe "Postal delivery webhook", :webmock, type: :request do
     end
   end
 
+  describe "a reply the database can't store as it is" do
+    it "still suppresses the address, replacing characters outside the Basic Multilingual Plane" do
+      post_event(status_event(output: "550 5.1.1 No such user \u{1F4A9}"))
+
+      expect(response).to have_http_status(:ok)
+      expect(EmailSuppression.active.first.reply_excerpt).to eq "550 5.1.1 No such user ?"
+    end
+  end
+
+  describe "a signed body we can't read" do
+    it "answers 200 so Postal doesn't retry it, and suppresses nothing" do
+      ["not json", "[1, 2]"].each { |body| post_event(body) }
+
+      expect(response).to have_http_status(:ok)
+      expect(EmailSuppression.count).to eq 0
+    end
+  end
+
   describe "failures that say nothing about the address" do
     it "ignores a 5.7.x refusal" do
       post_event(status_event(output: "550 5.7.1 Our system has detected that this message is suspicious"))

@@ -74,8 +74,8 @@ class User < Owner
 
   sig { void }
   def process_alerts
-    return if email_suppression
     return if watched_broken_scrapers_ordered_by_urgency.empty?
+    return if email_suppression
 
     AlertMailer.alert_email(
       self,

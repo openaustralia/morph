@@ -20,9 +20,11 @@ module PostalWebhook
     # Bump the version to expire every cached copy.
     CACHE_KEY = "postal_webhook/signing_keys/v1"
 
-    # Long enough that a burst of webhooks isn't a fetch each, short enough that a key rotation heals inside Postal's
-    # retries (about 36 minutes). Failures are cached too, deliberately: that is what stops an outage becoming one
-    # outbound request per inbound webhook on an endpoint anyone can post to.
+    # Long enough that a burst of webhooks isn't a fetch each, short enough that a key rotation heals within a
+    # quarter of an hour.
+    # Events signed with a new key in that window get 403 and are lost, as in Planning Alerts. Failures are cached
+    # too, deliberately: that is what stops an outage becoming one outbound request per inbound webhook on an endpoint
+    # anyone can post to.
     CACHE_TTL = T.let(15.minutes, ActiveSupport::Duration)
 
     # While one request refreshes an expired entry, others keep getting the stale copy instead of fetching.

@@ -78,6 +78,14 @@ RSpec.describe "app:email_suppressions tasks" do # rubocop:disable RSpec/Describ
       expect(EmailSuppression.suppressed?("gone@example.org")).to be false
     end
 
+    context "when the file starts with a byte order mark, as Excel's CSV UTF-8 does" do
+      let(:csv) { "\uFEFFaddress,output\ngone@example.org,550 5.1.1 No such user\n" }
+
+      it "reads the first column name correctly" do
+        expect { run_task(name, file.path) }.to output(/Suppressed: 1/).to_stdout
+      end
+    end
+
     context "when the file has no address or reply column" do
       let(:csv) { "email,notes\nsomeone@example.org,hello\n" }
 

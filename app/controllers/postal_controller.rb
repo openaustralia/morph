@@ -15,7 +15,10 @@ class PostalController < ActionController::API
     failure = signature_failure_status(request.raw_post)
     return head failure if failure
 
-    body = T.cast(JSON.parse(request.raw_post), T::Hash[String, T.untyped])
+    body = parse_body(request.raw_post)
+    # A signed body we can't read won't improve on a retry, so don't ask Postal to send it again
+    return head :ok if body.nil?
+
     event_name = body["event"]
     payload = body["payload"]
     # Delayed, held and every other event are accepted and ignored. Postal keeps retrying soft failures itself.
@@ -26,6 +29,14 @@ class PostalController < ActionController::API
   end
 
   private
+
+  sig { params(raw_post: String).returns(T.nilable(T::Hash[String, T.untyped])) }
+  def parse_body(raw_post)
+    parsed = JSON.parse(raw_post)
+    parsed if parsed.is_a?(Hash)
+  rescue JSON::ParserError
+    nil
+  end
 
   # A bounce report wraps the message that bounced in original_message.
   sig { params(event: String, payload: T::Hash[String, T.untyped]).void }

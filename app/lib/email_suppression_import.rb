@@ -43,7 +43,7 @@ class EmailSuppressionImport
   def call(path)
     check_columns!(path)
     counts = OUTCOMES.index_with { 0 }
-    CSV.foreach(path, headers: true, header_converters: ->(header) { normalise_header(header) }) do |row|
+    CSV.foreach(path, encoding: "bom|utf-8", headers: true, header_converters: ->(header) { normalise_header(header) }) do |row|
       outcome = outcome_for(row)
       counts[outcome] = T.must(counts[outcome]) + 1
     end
@@ -59,7 +59,7 @@ class EmailSuppressionImport
 
   sig { params(path: String).void }
   def check_columns!(path)
-    headers = (CSV.parse_line(File.open(path, &:gets).to_s) || []).map { |header| normalise_header(header) }
+    headers = (CSV.parse_line(File.open(path, encoding: "bom|utf-8", &:gets).to_s) || []).map { |header| normalise_header(header) }
     return if (headers & ADDRESS_COLUMNS).any? && (headers & REPLY_COLUMNS).any?
 
     raise MissingColumns, "The file needs a header row with a column named #{ADDRESS_COLUMNS.join(' or ')} " \

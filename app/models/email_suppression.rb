@@ -73,7 +73,7 @@ class EmailSuppression < ApplicationRecord
     suppression = find_or_initialize_by(address: normalise(address))
     return suppression if suppression.persisted? && suppression.lifted_at.nil?
 
-    suppression.update!(reason: reason, postal_event: postal_event, reply_excerpt: reply&.truncate(REPLY_EXCERPT_LENGTH),
+    suppression.update!(reason: reason, postal_event: postal_event, reply_excerpt: excerpt(reply),
                         suppressed_at: at, lifted_at: nil)
     suppression
   rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
@@ -81,6 +81,15 @@ class EmailSuppression < ApplicationRecord
     raise unless exists?(address: normalise(address))
 
     T.must(find_by(address: normalise(address)))
+  end
+
+  # The table is utf8 (3 bytes a character), so a character outside the Basic Multilingual Plane, such as an emoji in a
+  # remote server's reply, would make the write fail and the address would never be suppressed.
+  sig { params(reply: T.nilable(String)).returns(T.nilable(String)) }
+  def self.excerpt(reply)
+    return nil if reply.nil?
+
+    reply.scrub("?").gsub(/[^\u{0}-\u{FFFF}]/, "?").truncate(REPLY_EXCERPT_LENGTH)
   end
 
   # When staff last cleared the address, if they ever did. An old export mustn't suppress it again.
