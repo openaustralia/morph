@@ -30,6 +30,7 @@ describe AlertMailer do
 
       it { expect(email.from).to eq ["contact@morph.io"] }
       it { expect(email.to).to eq ["matthew@oaf.org.au"] }
+      it { expect(email["X-Postal-Tag"].to_s).to eq "alert" }
       it { expect(email.subject).to eq "1 scraper you are watching has errored in the last 48 hours" }
 
       context "when never alerted" do

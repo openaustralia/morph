@@ -1,0 +1,105 @@
+# typed: strict
+# frozen_string_literal: true
+
+# An email address that alert emails are no longer sent to, because it hard-bounced in Postal. Not the same thing as
+# Postal's own per-mail-server suppression list (see GLOSSARY.md).
+#
+# It belongs to the address, not to a User, so a person who changes their GitHub primary email is no longer affected,
+# and one who changes back is. Lifting keeps the row as a history of why alerts stopped. A later hard bounce suppresses
+# the same row again.
+#
+# == Schema Information
+#
+# Table name: email_suppressions
+#
+#  id            :bigint           not null, primary key
+#  address       :string(255)      not null
+#  lifted_at     :datetime
+#  postal_event  :string(255)
+#  reason        :string(255)      not null
+#  reply_excerpt :string(255)
+#  suppressed_at :datetime         not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+# Indexes
+#
+#  index_email_suppressions_on_address  (address) UNIQUE
+#
+class EmailSuppression < ApplicationRecord
+  extend T::Sig
+
+  REPLY_EXCERPT_LENGTH = 255
+
+  enum reason: { hard_bounce: "hard_bounce", imported_from_postal: "imported_from_postal" }
+
+  before_validation :normalise_address
+
+  validates :address, :suppressed_at, presence: true
+  validates :address, uniqueness: true
+
+  scope :active, -> { where(lifted_at: nil) }
+
+  # Lower-cased and trimmed, with any display name removed, so Alice@Example.org and "Alice <alice@example.org>" are one
+  # address.
+  sig { params(address: T.nilable(String)).returns(String) }
+  def self.normalise(address)
+    Mail::Address.new(address.to_s).address.to_s.strip.downcase
+  rescue Mail::Field::ParseError
+    address.to_s.strip.downcase
+  end
+
+  sig { params(address: T.nilable(String)).returns(T::Boolean) }
+  def self.suppressed?(address)
+    return false if address.blank?
+
+    active.exists?(address: normalise(address))
+  end
+
+  sig { params(address: T.nilable(String)).returns(T.nilable(EmailSuppression)) }
+  def self.active_for(address)
+    return nil if address.blank?
+
+    active.find_by(address: normalise(address))
+  end
+
+  # Suppresses the address, or suppresses it again if a lift had cleared it. Safe to repeat, so a retried or duplicate
+  # Postal event does no harm.
+  sig do
+    params(address: String, reason: Symbol, postal_event: T.nilable(String), reply: T.nilable(String),
+           at: ActiveSupport::TimeWithZone).returns(EmailSuppression)
+  end
+  def self.suppress!(address, reason:, postal_event: nil, reply: nil, at: Time.zone.now)
+    suppression = find_or_initialize_by(address: normalise(address))
+    return suppression if suppression.persisted? && suppression.lifted_at.nil?
+
+    suppression.update!(reason: reason, postal_event: postal_event, reply_excerpt: reply&.truncate(REPLY_EXCERPT_LENGTH),
+                        suppressed_at: at, lifted_at: nil)
+    suppression
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    # Two events for one address handled at once. The other one won, which is the outcome we wanted.
+    raise unless exists?(address: normalise(address))
+
+    T.must(find_by(address: normalise(address)))
+  end
+
+  # Whether the address was lifted at or after the time, so a failure from before then (an old export, or a retry of a
+  # Postal event we had already acted on) says nothing about it now.
+  sig { params(address: String, time: ActiveSupport::TimeWithZone).returns(T::Boolean) }
+  def self.lifted_since?(address, time)
+    where(address: normalise(address)).exists?(lifted_at: time..)
+  end
+
+  # Returns how many active suppressions were lifted (0 or 1).
+  sig { params(address: String).returns(Integer) }
+  def self.lift!(address)
+    active.where(address: normalise(address)).update_all(lifted_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
+  end
+
+  private
+
+  sig { void }
+  def normalise_address
+    self.address = self.class.normalise(address)
+  end
+end

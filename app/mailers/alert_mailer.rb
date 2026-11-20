@@ -23,7 +23,8 @@ class AlertMailer < ApplicationMailer
     attachments.inline["logo_75x75.png"] = File.read(path)
     return if user.email.nil?
 
-    mail(to: "#{user.name} <#{user.email}>", subject: @subject)
+    # Postal passes the tag back in its delivery webhooks, and PostalController only acts on this one
+    mail(to: "#{user.name} <#{user.email}>", subject: @subject, "X-Postal-Tag" => PostalController::ALERT_TAG)
     user.update(alerted_at: Time.current)
   end
 end
