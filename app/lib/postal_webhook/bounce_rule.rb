@@ -22,9 +22,11 @@ module PostalWebhook
       SENDER_SIDE_REFUSAL.match?(reply.to_s)
     end
 
-    # Whether a MessageDeliveryFailed event says the address itself is bad.
+    # Whether a MessageDeliveryFailed event says the address itself is bad. Only a reply from the receiving server can
+    # say that, so a failure with none (for example Postal's own outbound spam check) never does.
     sig { params(details: T.nilable(String), output: T.nilable(String)).returns(T::Boolean) }
     def self.address_failed?(details:, output:)
+      return false if output.blank?
       return false if RETRIES_EXHAUSTED.match?(details.to_s) || RAW_MESSAGE_REMOVED.match?(details.to_s)
 
       !blames_sender?(output)

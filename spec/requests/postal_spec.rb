@@ -80,6 +80,21 @@ RSpec.describe "Postal delivery webhook", :webmock, type: :request do
       expect(EmailSuppression.where(address: recipient).count).to eq 1
     end
 
+    it "records when Postal says the failure happened, so the notice says since when" do
+      post_event(status_event(timestamp: Time.zone.parse("2026-11-01 10:00").to_f))
+
+      expect(EmailSuppression.active.first.suppressed_at).to eq Time.zone.parse("2026-11-01 10:00")
+    end
+
+    it "doesn't suppress again on a retry of an event from before staff lifted the address" do
+      post_event(status_event(timestamp: 2.days.ago.to_f))
+      EmailSuppression.lift!(recipient)
+      post_event(status_event(timestamp: 2.days.ago.to_f))
+
+      expect(response).to have_http_status(:ok)
+      expect(EmailSuppression.suppressed?(recipient)).to be false
+    end
+
     it "suppresses again after a lift when the address hard-bounces again" do
       post_event(status_event)
       EmailSuppression.lift!(recipient)
@@ -134,6 +149,13 @@ RSpec.describe "Postal delivery webhook", :webmock, type: :request do
     it "ignores a hyphenated 5.7.x refusal" do
       post_event(status_event(output: "550-5.7.26 Unauthenticated sender"))
 
+      expect(EmailSuppression.count).to eq 0
+    end
+
+    it "ignores a failure with no reply from a receiving server, such as Postal's own spam check" do
+      post_event(status_event(output: nil, details: "Message was blocked by the outbound spam check"))
+
+      expect(response).to have_http_status(:ok)
       expect(EmailSuppression.count).to eq 0
     end
 
