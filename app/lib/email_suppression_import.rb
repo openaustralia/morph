@@ -70,7 +70,7 @@ class EmailSuppressionImport
   def outcome_for(row)
     address = row["address"] || row["rcpt_to"]
     reply = row["output"] || row["reply"]
-    return :skipped_no_address if address.blank?
+    return :skipped_no_address if EmailSuppression.normalise(address).blank?
     return :skipped_no_reply if reply.blank?
     return :skipped_refusal_blaming_our_server if PostalWebhook::BounceRule.blames_sender?(reply)
     return :already_suppressed if EmailSuppression.suppressed?(address)
@@ -86,7 +86,7 @@ class EmailSuppressionImport
   # Nil if the file has no usable date.
   sig { params(row: CSV::Row).returns(T.nilable(ActiveSupport::TimeWithZone)) }
   def failed_at(row)
-    Time.zone.parse(row.values_at(*DATE_COLUMNS).compact.first.to_s)
+    Time.zone.parse(row.values_at(*DATE_COLUMNS).find(&:present?).to_s)
   rescue ArgumentError
     nil
   end

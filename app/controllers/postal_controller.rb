@@ -43,7 +43,7 @@ class PostalController < ActionController::API
   def suppress_if_hard_bounce(event, payload)
     message = payload[event == "MessageBounced" ? "original_message" : "message"]
     recipient = message["to"] if message.is_a?(Hash)
-    return log(event, "ignored: untagged") if recipient.blank? || message["tag"] != PostalWebhook::ALERT_TAG
+    return log(event, "ignored: untagged") if EmailSuppression.normalise(recipient).blank? || message["tag"] != PostalWebhook::ALERT_TAG
     return log(event, "ignored: not about the address") if event == "MessageDeliveryFailed" && !address_failed?(payload)
 
     EmailSuppression.suppress!(recipient, reason: :hard_bounce, postal_event: event, reply: payload["output"])

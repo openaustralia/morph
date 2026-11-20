@@ -9,7 +9,7 @@ module PostalWebhook
 
     # The receiving server's reply starts with a 5.7.x enhanced status code when it has refused us for a policy or
     # reputation reason, such as a block on our sending IP address. https://www.rfc-editor.org/rfc/rfc3463
-    SENDER_SIDE_REFUSAL = T.let(/\A\d{3}[ -]5\.7\.\d+/, Regexp)
+    SENDER_SIDE_REFUSAL = T.let(/\A\s*\d{3}[ -]5\.7\.\d+/, Regexp)
 
     # Postal reports a hard fail with no reply when it runs out of retries after temporary failures.
     RETRIES_EXHAUSTED = T.let(/\AMaximum number of delivery attempts/, Regexp)

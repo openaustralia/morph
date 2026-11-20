@@ -15,6 +15,7 @@ RSpec.describe "app:email_suppressions tasks" do # rubocop:disable RSpec/Describ
       blocked-hyphen@example.org,2026-03-06,550-5.7.26 Unauthenticated sender
       silent@example.org,2026-03-07,
       ,2026-03-08,550 5.1.1 No such user
+      <>,2026-03-09,550 5.1.1 No such user
     CSV
   end
   let(:file) { Tempfile.new(["export", ".csv"]).tap { |f| f.write(csv) && f.close } }
@@ -58,7 +59,7 @@ RSpec.describe "app:email_suppressions tasks" do # rubocop:disable RSpec/Describ
       printed = capture_stdout { run_task(name, file.path) }
 
       expect(printed).to include("Suppressed: 2", "Already suppressed: 0", "Skipped refusal blaming our server: 2",
-                                 "Skipped no reply: 1", "Skipped no address: 1")
+                                 "Skipped no reply: 1", "Skipped no address: 2")
       expect(printed).not_to include("example.org")
     end
 

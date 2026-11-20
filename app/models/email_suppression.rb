@@ -41,12 +41,16 @@ class EmailSuppression < ApplicationRecord
   scope :active, -> { where(lifted_at: nil) }
 
   # Lower-cased and trimmed, with any display name removed, so Alice@Example.org and "Alice <alice@example.org>" are one
-  # address.
+  # address. Blank if the text isn't an address.
   sig { params(address: T.nilable(String)).returns(String) }
   def self.normalise(address)
-    Mail::Address.new(address.to_s).address.to_s.strip.downcase
-  rescue Mail::Field::ParseError
-    address.to_s.strip.downcase
+    normalised = begin
+      Mail::Address.new(address.to_s).address.to_s.strip.downcase
+    rescue Mail::Field::ParseError
+      address.to_s.strip.downcase
+    end
+    # Something with no @ isn't an address (for example "<>"), so there is nothing to suppress
+    normalised.include?("@") ? normalised : ""
   end
 
   sig { params(address: T.nilable(String)).returns(T::Boolean) }

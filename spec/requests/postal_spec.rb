@@ -99,6 +99,15 @@ RSpec.describe "Postal delivery webhook", :webmock, type: :request do
     end
   end
 
+  describe "a recipient that isn't an address" do
+    it "answers 200 and suppresses nothing" do
+      post_event(status_event(to: "<>"))
+
+      expect(response).to have_http_status(:ok)
+      expect(EmailSuppression.count).to eq 0
+    end
+  end
+
   describe "a signed body we can't read" do
     it "answers 200 so Postal doesn't retry it, and suppresses nothing" do
       ["not json", "[1, 2]"].each { |body| post_event(body) }
@@ -113,6 +122,12 @@ RSpec.describe "Postal delivery webhook", :webmock, type: :request do
       post_event(status_event(output: "550 5.7.1 Our system has detected that this message is suspicious"))
 
       expect(response).to have_http_status(:ok)
+      expect(EmailSuppression.count).to eq 0
+    end
+
+    it "ignores a 5.7.x refusal with leading whitespace" do
+      post_event(status_event(output: " 550 5.7.1 Service unavailable, client host blocked"))
+
       expect(EmailSuppression.count).to eq 0
     end
 
