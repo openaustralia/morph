@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_13_051602) do
+ActiveRecord::Schema.define(version: 2026_11_20_020000) do
 
   create_table "active_admin_comments", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "namespace"
@@ -102,6 +102,18 @@ ActiveRecord::Schema.define(version: 2022_10_13_051602) do
     t.datetime "updated_at"
     t.text "title"
     t.index ["name"], name: "index_domains_on_name", unique: true
+  end
+
+  create_table "email_suppressions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "address", null: false
+    t.string "reason", null: false
+    t.string "postal_event"
+    t.string "reply_excerpt"
+    t.datetime "suppressed_at", null: false
+    t.datetime "lifted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["address"], name: "index_email_suppressions_on_address", unique: true
   end
 
   create_table "log_lines", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|

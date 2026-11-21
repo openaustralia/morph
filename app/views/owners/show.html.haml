@@ -40,6 +40,11 @@
           .pull-right= button_link_to "Settings", settings_owner_path(@owner)
 
 .container
+  - if @email_suppression
+    .alert.alert-warning#email-suppression-notice
+      %p
+        Emails to this address have been returning as undeliverable since #{@email_suppression.suppressed_at.strftime('%-d %B %Y')}, so your alerts are paused.
+        To resume them, change your primary email on GitHub and sign in to morph.io again.
   - unless @owner.organization? || @owner.organizations.empty?
     %h3 Public Organizations
     %p
