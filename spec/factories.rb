@@ -218,6 +218,20 @@ FactoryBot.define do
     end
   end
 
+  factory :email_suppression do
+    sequence(:address) { |n| "bounced#{n}@example.org" }
+    reason { "hard_bounce" }
+    suppressed_at { Time.zone.now }
+
+    trait :maximal do
+      address { FactoryHelpers.max_name("bounced@example.org", 255) }
+      reason { "imported_from_postal" }
+      postal_event { "MessageDeliveryFailed" }
+      reply_excerpt { FactoryHelpers.max_string("550 5.1.1 No such user", 255) }
+      lifted_at { 1.hour.ago }
+    end
+  end
+
   factory :webhook do
     scraper
     sequence(:url) { |n| "https://example.com/hook#{n}" }

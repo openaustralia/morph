@@ -128,6 +128,24 @@ The email sent to a Watcher covering the Broken scrapers they watch, and the
 ones that have recovered.
 _Avoid_: notification, digest, warning
 
+**Hard bounce**:
+A permanent delivery failure that Postal reports for an Alert and that says the
+email address itself is bad. Postal's reports of a refusal that blames
+morph.io's sending server (a reply starting 5.7.x), of retries running out, or
+of a message it no longer held are not hard bounces. Soft bounces are not
+tracked, because Postal's own retries are the threshold.
+_Avoid_: bounce, failure
+
+**Email suppression**:
+The record that Alerts are no longer sent to an email address because it hard
+bounced. It belongs to the address, not to a User, so a User who changes their
+GitHub primary email is no longer affected and their Watches are untouched.
+Staff lift a suppression by hand, and a later hard bounce suppresses the address
+again. Not Postal's own per-mail-server "Suppression list", which the
+infrastructure repository's glossary defines and morph.io neither reads nor
+writes.
+_Avoid_: bounce list, blocklist, unsubscribe
+
 ### Traffic
 
 **Domain**:

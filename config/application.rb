@@ -32,5 +32,8 @@ module Morph
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+
+    # Where Postal publishes the public key it signs webhooks with (see PostalWebhook::SigningKeys)
+    config.x.postal_jwks_url = "https://postal.oaf.org.au/.well-known/jwks.json"
   end
 end

@@ -16,6 +16,10 @@ class OwnersController < ApplicationController
     # Only do this once
     session[:new_supporter] = false if @new_supporter
 
+    # Only the person themself sees this, because it says something about their email address
+    suppression = T.must(current_user).email_suppression if @owner == current_user
+    @email_suppression = T.let(suppression, T.nilable(EmailSuppression))
+
     scrapers = Scraper.accessible_by(current_ability).where(owner: @owner)
     @scrapers = T.let(scrapers, T.nilable(ActiveRecord::Relation))
 
