@@ -1,9 +1,10 @@
 services:
-  # Production has elasticsearch: 7.17.6
+  # The new server runs Elasticsearch 8.19 single-node with security off. main still has 7.17 in production.
   elasticsearch:
-    image: elasticsearch:7.17.7
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.24
     environment:
       - "discovery.type=single-node"
+      - "xpack.security.enabled=false"
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
       - network

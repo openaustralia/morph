@@ -94,9 +94,10 @@ services:
     networks: [net]
 
   elasticsearch:
-    image: elasticsearch:7.17.7
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.24
     environment:
       - discovery.type=single-node
+      - xpack.security.enabled=false
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
