@@ -1,0 +1,12 @@
+- if SiteSetting.read_only_mode
+  .alert.alert-warning.read-only-mode
+    .container
+      %i.fa.fa-bell-o.fa-lg.pull-left
+      The site is currently <strong>read-only</strong> because we're doing some essential maintenance.
+      Scrapers can not be created or run. The good news is you can continue to browse the site.
+- if SiteSetting.maintenance_mode
+  .alert.alert-warning.maintenance-mode
+    .container
+      %i.fa.fa-bell-o.fa-lg.pull-left
+      morph.io is currently undergoing <strong>maintenance</strong>.
+      Some things may not work as expected, and scrapers may not run. Please check back soon.

@@ -39,6 +39,36 @@ describe SiteSetting do
     end
   end
 
+  describe ".maintenance_mode" do
+    it "is false by default" do
+      expect(described_class.maintenance_mode).to be false
+    end
+
+    it "persists a setting" do
+      described_class.maintenance_mode = true
+      expect(described_class.maintenance_mode).to be true
+    end
+
+    it "does not change read-only mode" do
+      described_class.maintenance_mode = true
+      expect(described_class.read_only_mode).to be false
+    end
+  end
+
+  describe ".toggle_maintenance_mode!" do
+    it "toggles false to true" do
+      described_class.maintenance_mode = false
+      described_class.toggle_maintenance_mode!
+      expect(described_class.maintenance_mode).to be true
+    end
+
+    it "toggles true to false" do
+      described_class.maintenance_mode = true
+      described_class.toggle_maintenance_mode!
+      expect(described_class.maintenance_mode).to be false
+    end
+  end
+
   describe ".maximum_concurrent_scrapers" do
     it "is 20 by default" do
       expect(described_class.maximum_concurrent_scrapers).to eq 20
