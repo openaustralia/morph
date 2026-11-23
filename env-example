@@ -57,6 +57,8 @@ MYSQL_ROOT_PASSWORD=password
 # If elasticsearch isn't reachable on the default url, point ELASTICSEARCH_URL
 # at the right place
 #ELASTICSEARCH_URL=http://localhost:9200
+# Elasticsearch 8 (what make services-up runs) rejects the 7.17 client without this
+ELASTIC_CLIENT_APIVERSIONING=true
 
 # This secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!

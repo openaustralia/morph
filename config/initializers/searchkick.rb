@@ -6,9 +6,9 @@
 # 400 `media_type_header_exception`. Send the matching vendor Content-Type.
 # The gem only turns versioning on for "1" or "true", so match it exactly.
 if %w[1 true].include?(ENV.fetch("ELASTIC_CLIENT_APIVERSIONING", nil))
-  Searchkick.client_options = {
+  Searchkick.client_options = Searchkick.client_options.deep_merge(
     transport_options: {
       headers: { content_type: "application/vnd.elasticsearch+json; compatible-with=7" }
     }
-  }
+  )
 end

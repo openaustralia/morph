@@ -23,6 +23,7 @@ x-ruby-service: &ruby-service
   environment:
     DISABLE_SPRING: "1"
     ELASTICSEARCH_URL: "http://elasticsearch:9288"
+    ELASTIC_CLIENT_APIVERSIONING: "true"
     # FIXME: Pass url for mitmdump2
     MYSQL_HOST: "mysql"
     MYSQL_USER: "root"
