@@ -100,7 +100,12 @@ module Morph
         # Bump up the default shared memory size to 256 MB from the default (64 MB)
         # as an attempt to make headless browsing work properly. See
         # https://medium.com/the-curve-tech-blog/dealing-with-cryptic-selenium-webdriver-error-invalidsessioniderror-errors-9c15abc68fdf
-        "ShmSize" => 256 * 1024 * 1024
+        "ShmSize" => 256 * 1024 * 1024,
+        # Limits belong in HostConfig. Top level Memory and CpuShares are
+        # deprecated in the Docker API and are ignored from Docker 27.
+        # See explanation of CpuShares in https://github.com/openaustralia/morph/issues/242
+        "CpuShares" => 307,
+        "Memory" => memory
       }
       # Attach this container to our special network morph
       # But we can optionally disable that if we want to bypass the transparent
@@ -110,9 +115,6 @@ module Morph
       container_options = {
         "Cmd" => command,
         "Image" => i3.id,
-        # See explanation in https://github.com/openaustralia/morph/issues/242
-        "CpuShares" => 307,
-        "Memory" => memory,
         "Env" =>
           {
             "REQUESTS_CA_BUNDLE" => "/etc/ssl/certs/ca-certificates.crt"

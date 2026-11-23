@@ -185,6 +185,20 @@ describe Morph::DockerRunner do
       expect(logs).to eq [[:stdout, "Hello world!\n"]]
     end
 
+    it "applies the memory and cpu limits to the container" do
+      copy_test_scraper("hello_world_js_24")
+
+      memory = 300 * 1024 * 1024
+      c = described_class.compile_and_start_run(repo_path: dir, platform: platform, memory: memory) do |_timestamp, stream, text|
+        docker_output << [stream, text]
+      end
+      host_config = c.json["HostConfig"]
+      expect(host_config["Memory"]).to eq(memory)
+      expect(host_config["CpuShares"]).to eq(307)
+      described_class.attach_to_run(c)
+      described_class.finish(c, [])
+    end
+
     def with_smaller_chunk_size
       chunk_size = Excon.defaults[:chunk_size]
       Excon.defaults[:chunk_size] = 1024
@@ -572,6 +586,44 @@ describe Morph::DockerRunner do
           expect(File.read(File.join(dir, "scraper.rb"))).to eq ""
         end
       end
+    end
+  end
+
+  # Docker 27 and later ignore top level Memory and CpuShares, so they have to
+  # be in HostConfig. The :docker spec above checks a real daemon, but CI
+  # excludes it, so this checks the create request itself.
+  describe ".compile_and_start_run container limits" do
+    let(:create_body) { {} }
+
+    before do
+      container = instance_double(Docker::Container, start: nil)
+      allow(described_class).to receive_messages(
+        buildstep_image: instance_double(Docker::Image),
+        compile: instance_double(Docker::Image, id: "sha256:abc"),
+        create_morph_network: nil
+      )
+      allow(Docker::Container).to receive(:create) do |body|
+        create_body.replace(body)
+        container
+      end
+      allow(Morph::DockerUtils).to receive_messages(insert_contents_of_directory: nil, insert_file: nil)
+    end
+
+    it "puts the memory and cpu limits in HostConfig" do
+      Dir.mktmpdir do |dir|
+        described_class.compile_and_start_run(repo_path: dir, memory: 300 * 1024 * 1024)
+      end
+      expect(create_body["HostConfig"]).to include("Memory" => 300 * 1024 * 1024, "CpuShares" => 307)
+    end
+
+    it "does not set them at the top level of the create request" do
+      Dir.mktmpdir { |dir| described_class.compile_and_start_run(repo_path: dir) }
+      expect(create_body.keys).not_to include("Memory", "CpuShares")
+    end
+
+    it "uses the default memory limit when none is given" do
+      Dir.mktmpdir { |dir| described_class.compile_and_start_run(repo_path: dir) }
+      expect(create_body["HostConfig"]["Memory"]).to eq described_class.default_memory_limit
     end
   end
 end
