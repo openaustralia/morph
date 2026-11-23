@@ -8,12 +8,17 @@ module Morph
     RUN_WORKER_CLASS_NAME = "RunWorker"
     SCRAPER_QUEUE = "scraper"
 
-    # Returns the ids for all the runs currently on the queue (including retries)
+    # Returns the ids for all the runs currently on the queue (including retries
+    # and runs scheduled to try again because every slot was taken)
     sig { returns(T::Array[Integer]) }
     def self.find_all_runs_on_the_queue
       queue = []
       # Runs on the retry queue
       Sidekiq::RetrySet.new.each do |job|
+        queue << job.args.first if job.klass == RUN_WORKER_CLASS_NAME
+      end
+      # Runs waiting for a free slot. RunWorker puts itself back on the schedule
+      Sidekiq::ScheduledSet.new.each do |job|
         queue << job.args.first if job.klass == RUN_WORKER_CLASS_NAME
       end
       # Runs on the queue

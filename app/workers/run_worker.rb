@@ -4,8 +4,8 @@
 class RunWorker
   extend T::Sig
 
-  class NoRemainingSlotsError < StandardError
-  end
+  # How long to wait before trying again when every slot is taken
+  RETRY_DELAY = T.let(30, Integer)
 
   include Sidekiq::Worker
   # TODO: Make backtrace: true to be a default option for all workers
@@ -17,10 +17,24 @@ class RunWorker
     # If the run has been deleted (the scraper has been deleted) then just
     # skip over this and don't do anything
     return if run.nil?
+    # A run that was stopped while waiting for a slot still has its scheduled
+    # job. Nothing will run it, so don't keep polling Docker and Redis for it.
+    return if run.finished?
 
     runner = Morph::Runner.new(run)
-    raise NoRemainingSlotsError if Morph::Runner.available_slots.zero? && runner.container_for_run.nil?
+    # The container count is the only enforcement of the concurrency cap, and
+    # SlotClaims covers the gap before a run's container exists. When there's no
+    # free slot, try again later rather than raising, so the retry and dead
+    # sets don't fill.
+    unless Morph::SlotClaims.claim(run_id, has_container: !runner.container_for_run.nil?)
+      self.class.perform_in(RETRY_DELAY, run_id)
+      return
+    end
 
-    runner.synch_and_go_with_logging!
+    begin
+      runner.synch_and_go_with_logging!
+    ensure
+      Morph::SlotClaims.release(run_id)
+    end
   end
 end

@@ -986,7 +986,7 @@ class Sidekiq::Manager
   # @raise [ArgumentError]
   # @return [Manager] a new instance of Manager
   #
-  # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/manager.rb:3
+  # source://sidekiq-5.2.10/lib/sidekiq/manager.rb:30
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute options.
@@ -1003,7 +1003,7 @@ class Sidekiq::Manager
   # source://sidekiq-5.2.10/lib/sidekiq/manager.rb:50
   def quiet; end
 
-  # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/manager.rb:8
+  # source://sidekiq-5.2.10/lib/sidekiq/manager.rb:44
   def start; end
 
   # source://sidekiq-5.2.10/lib/sidekiq/manager.rb:62
@@ -1427,32 +1427,11 @@ class Sidekiq::Queue
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:238
   def initialize(name = T.unsafe(nil)); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def acquire(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def block(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def block_except(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def blocking?(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def busy(*args, &block); end
-
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:298
   def clear; end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def decrease_busy(*args, &block); end
-
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:268
   def each; end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def explain(*args, &block); end
 
   # Find the job with the given JID within this queue.
   #
@@ -1462,9 +1441,6 @@ class Sidekiq::Queue
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:294
   def find_job(jid); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def increase_busy(*args, &block); end
-
   # Calculates this queue's latency, the difference in seconds since the oldest
   # job in the queue was enqueued.
   #
@@ -1473,70 +1449,20 @@ class Sidekiq::Queue
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:257
   def latency; end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def limit(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def limit=(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def limit_changed?(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def local_busy?(*args, &block); end
-
-  # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/queue.rb:19
-  def lock; end
-
   # Returns the value of attribute name.
   #
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:236
   def name; end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def pause(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def pause_for_ms(*args, &block); end
-
   # Sidekiq Pro overrides this
   #
   # @return [Boolean]
   #
-  # source://RUBY_ROOT/forwardable.rb:226
-  def paused?(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def probed(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def process_limit(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def process_limit=(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def release(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def remove_locks_except!(*args, &block); end
-
-  # Returns the value of attribute rname.
-  #
-  # source://sidekiq-limit_fetch-3.4.0/lib/sidekiq/extensions/queue.rb:4
-  def rname; end
+  # source://sidekiq-5.2.10/lib/sidekiq/api.rb:248
+  def paused?; end
 
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:243
   def size; end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def unblock(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def unblocked(*args, &block); end
-
-  # source://RUBY_ROOT/forwardable.rb:226
-  def unpause(*args, &block); end
 
   # source://sidekiq-5.2.10/lib/sidekiq/api.rb:298
   def 💣; end

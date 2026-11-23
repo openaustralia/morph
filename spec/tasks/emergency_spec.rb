@@ -49,7 +49,7 @@ RSpec.describe "tasks" do # rubocop:disable RSpec/DescribeClass
         job3 = instance_double(Sidekiq::Job, item: { "args" => [2] })
         queue = [job1, job2, job3]
 
-        allow(Sidekiq::Queue).to receive(:[]).with("scraper").and_return(queue)
+        allow(Sidekiq::Queue).to receive(:new).with("scraper").and_return(queue)
         allow(job1).to receive(:delete)
         allow(job2).to receive(:delete)
         allow(job3).to receive(:delete)
