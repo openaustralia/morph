@@ -75,6 +75,7 @@ class User < Owner
   sig { void }
   def process_alerts
     return if watched_broken_scrapers_ordered_by_urgency.empty?
+    return if email_suppression
 
     AlertMailer.alert_email(
       self,
@@ -84,6 +85,14 @@ class User < Owner
   rescue Net::SMTPSyntaxError
     Rails.logger.warn "Warning: user #{nickname} has invalid email address #{email} " \
                       "(tried to send alert)"
+  end
+
+  # The active suppression on this person's current email address, if Postal has reported it as undeliverable. Alerts
+  # are paused while there is one. A new GitHub primary email isn't in the table, so alerts resume without anyone
+  # clearing anything, and the person's Alert rows are untouched throughout.
+  sig { returns(T.nilable(EmailSuppression)) }
+  def email_suppression
+    EmailSuppression.active_for(email)
   end
 
   sig { override.returns(T::Boolean) }

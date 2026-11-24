@@ -44,9 +44,9 @@ RSpec.describe "tasks" do # rubocop:disable RSpec/DescribeClass
       let(:task) { "app:emergency:delete_duplicate_scraper_jobs" }
 
       it "deletes duplicate scraper jobs" do
-        job1 = instance_double(Sidekiq::Job, item: { "args" => [1] })
-        job2 = instance_double(Sidekiq::Job, item: { "args" => [1] })
-        job3 = instance_double(Sidekiq::Job, item: { "args" => [2] })
+        job1 = instance_double(Sidekiq::JobRecord, item: { "args" => [1] })
+        job2 = instance_double(Sidekiq::JobRecord, item: { "args" => [1] })
+        job3 = instance_double(Sidekiq::JobRecord, item: { "args" => [2] })
         queue = [job1, job2, job3]
 
         allow(Sidekiq::Queue).to receive(:new).with("scraper").and_return(queue)

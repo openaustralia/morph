@@ -257,7 +257,9 @@ arguments). Several gems are pinned for reasons recorded in `Gemfile` comments,
 and bumping them without dealing with the underlying cause will break
 production:
 
-- `sidekiq "~> 5"`, because production is still on redis 3.x.
+- `sidekiq "~> 7.3"` needs Redis 6 or later, so the CI and development Redis in
+  `docker_images/services.yaml` is 8.0 on this branch. `main` stays on Sidekiq 5
+  and `redis:3.2` until cutover, because production is still on Redis 3.x.
 - `foreman "0.63.0"`, to match the system foreman package on production.
 - `jquery-ui-rails "~> 5"`, because newer versions raise
   `Sprockets::FileNotFound`.

@@ -1,0 +1,114 @@
+# Self-contained, throwaway stack for the Ruby 3.4 / Rails 7.0 hop (issue #1584).
+# It has its own MySQL, Redis and Elasticsearch on a private network and
+# publishes no host ports and does not mount the Docker socket, so it cannot
+# touch the services of the main checkout (specs call flushdb).
+#
+#   docker compose -p morph1584 -f docker-compose.ruby34.yml run --rm app bash
+name: morph1584
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.ruby34
+    platform: linux/amd64
+    depends_on:
+      mysql: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      elasticsearch: { condition: service_healthy }
+      docker: { condition: service_healthy }
+    volumes:
+      - .:/app
+      - gems34:/usr/local/bundle
+      - dockersock:/var/run
+    environment:
+      RAILS_ENV: test
+      DISABLE_SPRING: "1"
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: testrootpass
+      REDIS_URL: redis://redis:6379
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTIC_CLIENT_APIVERSIONING: "true"
+      GITHUB_APP_ID: xxxxxx
+      GITHUB_APP_NAME: xxxxxxxxxx
+      GITHUB_APP_CLIENT_ID: xxxxxxxxxxxxxxxxxxxx
+      GITHUB_APP_CLIENT_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      SECRET_KEY_BASE: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a
+      DIGITAL_OCEAN_CLIENT_ID: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      DIGITAL_OCEAN_API_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      SYNC_AUTH_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      DISCOURSE_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxx
+      DISCOURSE_URL: http://discuss.dev.morph.io
+      MITMPROXY_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxx
+      MORPH_URL: http://localhost:5100
+      HONEYBADGER_API_KEY: xxxxxxxx
+      SMTP_USERNAME: xxxxxxx
+      SMTP_PASSWORD: xxxxxxxxxxxxxxxxxxxx
+      STRIPE_PUBLISHABLE_KEY: pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+      STRIPE_SECRET_KEY: sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+      DONT_RUN_DOCKER_TESTS: "1"
+      RUN_SLOW_TESTS: "1"
+      DONT_RUN_GITHUB_TESTS: "1"
+    networks: [net]
+
+  # A private Docker daemon (Docker-in-Docker), so specs that talk to Docker
+  # never reach the host's daemon. Its socket is shared at /var/run/docker.sock.
+  docker:
+    image: docker:dind
+    platform: linux/amd64
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    command: ["dockerd", "-H", "unix:///var/run/docker.sock", "--group", "1000"]
+    volumes:
+      - dockersock:/var/run
+    healthcheck:
+      test: ["CMD", "docker", "info"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+    networks: [net]
+
+  mysql:
+    image: mysql:5.7.33
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: testrootpass
+      MYSQL_ROOT_HOST: "%"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$$MYSQL_ROOT_PASSWORD\""]
+      start_period: 5s
+      interval: 5s
+      timeout: 10s
+      retries: 30
+    networks: [net]
+
+  redis:
+    image: redis:8
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [net]
+
+  elasticsearch:
+    image: elasticsearch:7.17.7
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
+      start_period: 10s
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    networks: [net]
+
+volumes:
+  gems34: {}
+  dockersock: {}
+
+networks:
+  net: {}

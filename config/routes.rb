@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   get "/discourse/sso", to: "discourse_sso#sso"
 
+  post "/postal/event", to: "postal#event"
+
   # The sync refetch route is being added after this stuff. We need it added before so repeating
   get 'sync/refetch', controller: 'render_sync/refetches', action: 'show'
 

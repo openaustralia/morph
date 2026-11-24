@@ -16,9 +16,10 @@ services:
       timeout: 10s
       retries: 12
 
-  # Production has redis:3.0.6, but 3.2 is the earliest tag available
+  # The new server runs Redis 8.0 (Ubuntu 26.04), and Sidekiq 7 needs Redis 6 or later.
+  # main stays on redis:3.2 until cutover because production still runs Redis 3.x.
   redis:
-    image: redis:3.2
+    image: redis:8.0
     networks:
       - network
     ports:

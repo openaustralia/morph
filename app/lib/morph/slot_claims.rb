@@ -53,7 +53,7 @@ module Morph
         next false unless (Morph::Runner.available_slots - pending).positive?
 
         # Losing the lock means a refusal here, so the run tries again shortly
-        redis.eval(CLAIM_SCRIPT, keys: [LOCK_KEY, KEY], argv: [token, now + CLAIM_TTL, run_id.to_s]) == 1
+        redis.call("EVAL", CLAIM_SCRIPT, 2, LOCK_KEY, KEY, token, now + CLAIM_TTL, run_id.to_s) == 1
       end
     end
 
@@ -75,7 +75,8 @@ module Morph
         begin
           block.call(redis, token)
         ensure
-          redis.eval(UNLOCK_SCRIPT, keys: [LOCK_KEY], argv: [token])
+          # Sidekiq 7 hands out a redis-client connection, which takes EVAL as a raw command
+          redis.call("EVAL", UNLOCK_SCRIPT, 1, LOCK_KEY, token)
         end
       end
     end
