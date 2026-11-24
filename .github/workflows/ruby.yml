@@ -8,7 +8,8 @@ on:
 
 jobs:
   rspec:
-    runs-on: ubuntu-latest
+    # Pinned until the move to the new server; revisit then (#1610)
+    runs-on: ubuntu-24.04
     env:
       GITHUB_APP_ID: xxxxxx
       GITHUB_APP_NAME: xxxxxxxxxx
@@ -86,7 +87,8 @@ jobs:
           files: coverage/coverage.json
           
   lint:
-    runs-on: ubuntu-latest
+    # Pinned until the move to the new server; revisit then (#1610)
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v4

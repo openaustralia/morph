@@ -39,6 +39,8 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  config.x.postal_jwks_url = "https://postal.example.com/.well-known/jwks.json"
+
   # Raise on deprecation notices so new deprecations fail CI. This keeps
   # each step of the staged Rails upgrade honest: a Rails version bump can
   # only merge once the deprecations it introduces are fixed.

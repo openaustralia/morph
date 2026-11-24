@@ -70,6 +70,28 @@ class AppRake
       puts "Put jobs on to the background queue to refresh all organization info from GitHub"
     end
 
+    namespace :email_suppressions do
+      desc "Lift the active suppression on an email address, so alert emails go to it again"
+      task :lift, [:address] => :environment do |_task, args|
+        abort "Usage: rake app:email_suppressions:lift[address]" if args[:address].blank?
+
+        puts "Lifted #{EmailSuppression.lift!(args[:address])} suppression(s)"
+      end
+
+      desc "Suppress addresses that Postal already hard-failed, from a CSV export. Prints counts only"
+      task :import, [:path] => :environment do |_task, args|
+        path = args[:path]
+        abort "Usage: rake app:email_suppressions:import[path/to/export.csv]" unless path && File.exist?(path)
+
+        begin
+          counts = EmailSuppressionImport.call(path)
+        rescue EmailSuppressionImport::MissingColumns => e
+          abort e.message
+        end
+        counts.each { |outcome, count| puts "#{outcome.to_s.humanize}: #{count}" }
+      end
+    end
+
     desc "Downloads latest docker images"
     task update_docker_images: :environment do
       Morph::DockerRunner.update_docker_images!
