@@ -50,6 +50,7 @@ x-ruby-service: &ruby-service
     # (make devcontainer-shell) get it too, not just the container's main process.
     SSH_AUTH_SOCK: "/tmp/ssh-agent.sock"
     ELASTICSEARCH_URL: "http://elasticsearch:9200"
+    ELASTIC_CLIENT_APIVERSIONING: "true"
     # FIXME: Pass url for mitmdump2
     MYSQL_HOST: "mysql"
     MYSQL_USER: "root"

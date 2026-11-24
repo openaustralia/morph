@@ -1,6 +1,6 @@
 # Throwaway image for the Ruby 3.4 / Rails 7.0 hop (issue #1584).
 # Not used by docker-compose.yml. See docker-compose.ruby34.yml.
-FROM ruby:3.4
+FROM ruby:3.4.12
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
