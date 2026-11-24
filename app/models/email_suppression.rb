@@ -31,7 +31,7 @@ class EmailSuppression < ApplicationRecord
 
   REPLY_EXCERPT_LENGTH = 255
 
-  enum reason: { hard_bounce: "hard_bounce", imported_from_postal: "imported_from_postal" }
+  enum :reason, { hard_bounce: "hard_bounce", imported_from_postal: "imported_from_postal" }
 
   before_validation :normalise_address
 

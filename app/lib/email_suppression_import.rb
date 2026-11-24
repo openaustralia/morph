@@ -60,7 +60,7 @@ class EmailSuppressionImport
   sig { params(path: String).void }
   def check_columns!(path)
     headers = (CSV.parse_line(File.open(path, encoding: "bom|utf-8", &:gets).to_s) || []).map { |header| normalise_header(header) }
-    return if (headers & ADDRESS_COLUMNS).any? && (headers & REPLY_COLUMNS).any?
+    return if headers.intersect?(ADDRESS_COLUMNS) && headers.intersect?(REPLY_COLUMNS)
 
     raise MissingColumns, "The file needs a header row with a column named #{ADDRESS_COLUMNS.join(' or ')} " \
                           "and a column named #{REPLY_COLUMNS.join(' or ')}"
