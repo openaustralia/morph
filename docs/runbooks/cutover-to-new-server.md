@@ -21,7 +21,7 @@ Public repository rules apply. Do not put credentials, IP addresses, the announc
 - **Window**: the announced maintenance period. It starts after the 10:00 AEDT cron and runs for the second dry run's measured time plus 50% ([#1576](https://github.com/openaustralia/morph/issues/1576)).
 - **Read-only mode**: `SiteSetting.read_only_mode`. It blocks people from creating, editing or deleting scrapers and from resetting API keys. It does **not** stop scraper runs that are already queued or running, which is why the freeze also turns cron off and drains the queue ([#1569](https://github.com/openaustralia/morph/issues/1569)). Verified in [`app/models/site_setting.rb`](../../app/models/site_setting.rb), `app/abilities/` and [`app/workers/scraper_auto_run_worker.rb`](../../app/workers/scraper_auto_run_worker.rb).
 - **Smoke test**: the end-to-end checklist in [#1579](https://github.com/openaustralia/morph/issues/1579) (sign in through the GitHub App, run a test scraper, watch live log streaming, fetch data through the API, search, check the admin area), plus Discourse and a real email ([#1573](https://github.com/openaustralia/morph/issues/1573)).
-- **New server** means the rehearsal server in [GLOSSARY.md](../../GLOSSARY.md). It is the same machine that becomes production at the stage rename in step 2, which is why the decision tickets and this runbook say "new server" throughout.
+- **New server** is the glossary's **Rehearsal server** ([GLOSSARY.md](../../GLOSSARY.md), which lists "new server" under _Avoid_). This runbook keeps "new server" because the decision tickets and the spec use it for the cutover target. It is the same machine that becomes production at the stage rename in step 2, which is why the decision tickets and this runbook say "new server" throughout.
 
 ## Go and no-go gates before the window
 
@@ -56,7 +56,7 @@ Do not announce a date until the first group is true, and do not start the windo
 | --- | --- | --- |
 | P1 | Merge `feature/1579-new-server` to `main` | R0 |
 | 1 | Window opens after the 10:00 AEDT cron; read-only mode on, old cron off, queue drained | R1 |
-| 2 | Services stopped on both servers; stage rename on the new server | R1 |
+| 2 | Services stopped on the new server; stage rename and redeploy on the new server | R1 |
 | 3 | Final SQLite delta, filtered MySQL dump and load, Discourse restore, reindex, production-only secrets | R1 |
 | 4 | Smoke test the new server through a hosts override | R1 |
 | 5 | Terraform DNS flip, still read-only | R2 |
@@ -89,7 +89,7 @@ Action, in this order:
 
 1. Turn on read-only mode, from the **Go into site-wide read-only mode** button on the admin dashboard ([`app/admin/dashboard.rb`](../../app/admin/dashboard.rb), verified), or `SiteSetting.toggle_read_only_mode!` in a Rails console (verified to exist).
 2. Turn `cron_enabled` off on the old server and re-run its provisioning, or otherwise disable its cron entries (from #1567; the exact mechanism on the old server is not in this repository). This stops `auto_run_scrapers`, `send_alerts` and `stop_long_running_scrapers`.
-3. Drain the `scraper` queue: wait for queued and running jobs to finish. Queues are `default` and `scraper` (verified in [`config/sidekiq.yml`](../../config/sidekiq.yml)), and the [Sidekiq](https://sidekiq.org) dashboard is mounted at `/admin/jobs` (verified in [`config/routes.rb`](../../config/routes.rb)).
+3. Drain the `scraper` queue: wait for queued and running jobs to finish. `ScraperAutoRunWorker` runs on the `default` queue and is scheduled up to 24 hours ahead, so also expect scheduled jobs. Under read-only mode they raise and land in the retry set, which is discarded and not carried across (from #1573), and which may show as Sentry or Sidekiq errors during the window. Queues are `default` and `scraper` (verified in [`config/sidekiq.yml`](../../config/sidekiq.yml)), and the [Sidekiq](https://sidekiq.org) dashboard is mounted at `/admin/jobs` (verified in [`config/routes.rb`](../../config/routes.rb)).
 4. Let running containers finish, or stop them. List them with `Morph::DockerUtils.running_containers` in a console (verified) or `docker ps`.
 5. Stop the workers.
 6. Post the pinned forum topic's "started" update, using the approved text, before the forum restore in step 3 ([#1576](https://github.com/openaustralia/morph/issues/1576)).
@@ -107,7 +107,7 @@ Action:
 1. Stop app services on the new server so nothing writes while data moves.
 2. On the new server, rename `/srv/www/rehearsal` to `/srv/www/production` on the same disk, so the pre-synced SQLite files are never copied again ([#1595](https://github.com/openaustralia/morph/issues/1595)).
 3. Set `morph_stage` to `production` and re-run the roles from `openaustralia/infrastructure`, so the nginx root, the systemd units, cron lines and restic sources follow the new path ([#1595](https://github.com/openaustralia/morph/issues/1595)). The rename was rehearsed in both dry runs.
-4. Redeploy the release to the `production` stage on the new server, so Capistrano rewrites its symlinks. Capistrano's `current` link and the links for `linked_dirs` (`db/scrapers`, `public/sitemaps`, `tmp/pids`, `log`) and `linked_files` (verified in [`config/deploy.rb`](../../config/deploy.rb)) are normally absolute paths built from `deploy_to`, so the rename leaves them pointing at `/srv/www/rehearsal` (inferred from how Capistrano works, not tested here; confirm in the dry run). The deploy must reach the new server before DNS flips, so it needs a hosts or ssh override or a server-specific name, not `morph.io` (inferred).
+4. Redeploy the release to the `production` stage on the new server, so Capistrano rewrites its symlinks. On this branch `deploy_to` is still `/var/www` in [`config/deploy.rb`](../../config/deploy.rb) (verified), because the lazy per-stage `deploy_to` from [#1595](https://github.com/openaustralia/morph/issues/1595) has not landed, so that change must be in place before this redeploy. Capistrano's `current` link and the links for `linked_dirs` (`db/scrapers`, `public/sitemaps`, `tmp/pids`, `log`) and `linked_files` (verified in [`config/deploy.rb`](../../config/deploy.rb)) are normally absolute paths built from `deploy_to`, so the rename leaves them pointing at `/srv/www/rehearsal` (inferred from how Capistrano works, not tested here; confirm in the dry run). The deploy must reach the new server before DNS flips, so it needs a hosts or ssh override or a server-specific name, not `morph.io` (inferred).
 5. Keep the new server's `cron_enabled` off for now.
 
 Check: `current`, `releases` and `shared` exist under `/srv/www/production`; no path under `/srv/www/rehearsal` remains; every symlink under the release resolves to `/srv/www/production`; `db/scrapers` is the pre-synced data, not an empty directory. #1595 flags as unverified whether any process stores an absolute host path under `shared`, such as scraper container mounts, so check that explicitly.
@@ -120,7 +120,7 @@ Action:
 
 1. Run the final SQLite and scraper repository delta from the old server into `/srv/www/production/shared/db/scrapers` ([#1569](https://github.com/openaustralia/morph/issues/1569)). It should be short, because few `data.sqlite` files change in a week (from #1569).
 2. Take the filtered MySQL dump of the retained `log_lines` plus all other tables, load it into MySQL 8.4 with `utf8mb4_unicode_ci` ([#1569](https://github.com/openaustralia/morph/issues/1569), [#1571](https://github.com/openaustralia/morph/issues/1571)). Production's `log_lines` is never modified, so the old server stays a complete fallback.
-3. Take a fresh Discourse backup and restore it on the new server. The hostname must be `help.morph.io` and the DiscourseConnect URL and secret must point at `morph.io`, not at the rehearsal names (inferred from #1567, which described the remap the other way for rehearsal and flagged it as unverified).
+3. Take a fresh Discourse backup and restore it on the new server. Whether the old forum is frozen between this backup and the flip is not settled, see open question 6. The hostname must be `help.morph.io` and the DiscourseConnect URL and secret must point at `morph.io`, not at the rehearsal names (inferred from #1567, which described the remap the other way for rehearsal and flagged it as unverified).
 4. Reindex Elasticsearch from the loaded database. The index is rebuilt, never migrated ([#1569](https://github.com/openaustralia/morph/issues/1569), [#1572](https://github.com/openaustralia/morph/issues/1572)). [Searchkick](https://github.com/ankane/searchkick) is used, and the cron entry `searchkick:reindex:all` is named in #1567. The reindex command itself is not defined in this repository's rake files, so copy it from the dry-run log.
 5. Install the production-only secrets that the rehearsal server never held: Postal credentials ([#1573](https://github.com/openaustralia/morph/issues/1573)), the Sentry production DSN ([#1574](https://github.com/openaustralia/morph/issues/1574)), and the restic credentials (inferred: #1567 says the rehearsal never gets backup credentials, and no ticket says when they arrive, so confirm this is the moment).
 6. Do **not** start Redis state from the old server. The new server starts with empty Redis ([#1569](https://github.com/openaustralia/morph/issues/1569)).
@@ -146,7 +146,7 @@ Action: point `morph.io` at the new server from the tester's own machine only, w
 
 Starting a run may be refused while read-only mode is on: the API run endpoint returns "You currently can't start a scraper run" in that mode (verified in [`app/controllers/api_controller.rb`](../../app/controllers/api_controller.rb), `can_run`). The restore carries the frozen production setting across, so the new server starts read-only. Only the tester's hosts override reaches the new server at this point, so read-only mode can be switched off on the new server for the test run and **must be switched back on before step 5** (inferred; whether a run can start under read-only on the new server is untested, so settle it in a dry run). Cron stays off on the new server throughout.
 
-Check: every item above passes, and read-only mode is back on for the new server. Any failure is a no-go.
+Check: every item above passes, and read-only mode is back on for the new server, confirmed by the banner on a signed-out request through the same hosts override. Any failure is a no-go.
 
 Rollback point R1: this is the last cheap exit. Nothing public has changed. Delete the test scraper and its sign-in leftovers afterwards ([#1573](https://github.com/openaustralia/morph/issues/1573)).
 
@@ -157,10 +157,11 @@ Action: apply the reviewed `morph.io` A record merge request in `openaustralia/i
 Check:
 
 - `dig` against a public resolver returns the new address for `morph.io`, and the names that are CNAMEs follow it. TTL is 300 seconds, so allow a few minutes (from #1573).
+- Read-only mode is on at the new server before and after the flip (the banner shows to a signed-out visitor).
 - Public checks: `https://morph.io` loads and serves the read-only banner, `https://api.morph.io` responds, `https://help.morph.io` loads, live log streaming through `faye.morph.io` connects.
 - The old server stops receiving new page requests (check its nginx log).
 
-Rollback point R2: apply the revert merge request. DNS flips back within the TTL, then turn read-only mode off and the old server's `cron_enabled` back on, restart workers there. Nothing that people could see was written on the new server, so no data is lost ([#1573](https://github.com/openaustralia/morph/issues/1573)). The old server's Redis still holds its schedule. Delete smoke-test leftovers on the new server afterwards. Post a "change of plan" note on the forum.
+Rollback point R2: apply the revert merge request. DNS flips back within the TTL, then turn read-only mode off and the old server's `cron_enabled` back on, restart workers there. No scraper, account or API-key change can have been written on the new server, because read-only mode blocks them, so none is lost; forum writes are a separate, unresolved question (open question 6) ([#1573](https://github.com/openaustralia/morph/issues/1573)). The old server's Redis still holds its schedule. Delete smoke-test leftovers on the new server afterwards. Post a "change of plan" note on the forum.
 
 ### 6. Open the site
 
@@ -291,3 +292,4 @@ These need a decision before the runbook is final.
 3. **Keep the pre-reviewed revert merge request?** This runbook adds one so rollback at R2 is a single action. No ticket asks for it. Keep it, or revert by hand if needed?
 4. **Smoke test while read-only is on.** This runbook turns read-only off on the new server only for the test run, then back on before the flip. Is that acceptable, or should the test run happen another way?
 5. **Restic credentials timing.** Confirm they are installed in step 3 and not earlier or later.
+6. **Is the old forum frozen during the window?** Read-only mode covers the morph.io app, not Discourse. #1573 restores a fresh Discourse backup in step 3 and #1576 says the forum is unavailable for part of the window, but no ticket says the old forum is put in read-only or maintenance mode. Without that, posts and sign-ups on the old forum after the backup, or on the new one after the flip, are lost on rollback (R2) or never arrive. Options: freeze the old forum from the step 3 backup until the flip, or take the backup as late as possible and accept a small gap. Which?
