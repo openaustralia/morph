@@ -25,8 +25,15 @@ install_plugin Capistrano::SCM::Git
 #   https://github.com/capistrano/rails/tree/master/assets
 #   https://github.com/capistrano/rails/tree/master/migrations
 #
-require "capistrano/rbenv"
-# require 'capistrano/rvm'
+# capistrano-rvm and capistrano-rbenv each hook every stage once loaded, so load
+# only the one the stage in use needs. The rehearsal stage, and a later production
+# stage, use rbenv. staging and local keep rvm until the old provisioning is retired.
+RBENV_STAGES = %w[rehearsal production].freeze
+if ARGV.intersect?(RBENV_STAGES)
+  require "capistrano/rbenv"
+else
+  require "capistrano/rvm"
+end
 # require 'capistrano/chruby'
 require "capistrano/bundler"
 require "capistrano/rails/assets"

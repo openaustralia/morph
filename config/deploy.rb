@@ -7,10 +7,9 @@ expected_repos = %w[git@github.com:openaustralia/morph.git https://github.com/op
 current_repo = `git config --get remote.origin.url`.strip
 raise "Deploy from the openaustralia repo (#{expected_repos.join(', ')}) instead of a fork (#{current_repo})" unless expected_repos.include?(current_repo)
 
-# This branch deploys to the rbenv based server (#1575). Whether :user fits the
-# rbenv role in the infrastructure repository is still to be confirmed (#1585).
-set :rbenv_type, :user
-set :rbenv_ruby, File.read(File.expand_path("../.ruby-version", __dir__)).strip
+# staging and local keep rvm and /var/www. The rehearsal stage (and a later production
+# stage) override these with rbenv and /srv/www/<stage> in their own stage files (#1595).
+set :rvm_ruby_version, "ruby-3.0.7"
 
 set :tagging3_format, ':stage_:release'
 
@@ -47,12 +46,7 @@ set :branch, lambda {
   branch
 }
 
-# One directory per stage, so the rehearsal stage is renamed to production on the
-# same disk at cutover (#1595). Capistrano's absolute symlinks would not survive
-# that rename, so lib/capistrano/tasks/relative_symlinks.cap rewrites them as
-# relative links after every deploy. The absolute shared/bundle path that
-# capistrano-bundler writes into .bundle/config is not covered by that task.
-set :deploy_to, -> { "/srv/www/#{fetch(:stage)}" }
+set :deploy_to, "/var/www"
 # set :scm, :git
 
 # set :format, :pretty

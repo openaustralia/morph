@@ -292,14 +292,15 @@ set Environment variable: DISABLE_SPRING=1
 This section will not be relevant to most people. It will however be relevant if you're deploying to a production
 server.
 
-To deploy morph.io to production, normally you'll just want to deploy using Capistrano:
+**On the `feature/1579-new-server` branch there is no `production` stage, so `cap production deploy` does not work there.**
+That branch deploys to the rehearsal server at new.morph.io with `cap rehearsal deploy`.
+The rehearsal stage is retired at cutover, when the cutover merge adds a `production` stage and the first production deploy goes straight to `/srv/www/production`.
+See `env-rehearsal-example` for the settings that stop the rehearsal server acting as production,
+and `docs/rehearsal-smoke-test.md` for the smoke test to run after a deploy.
+
+On `main`, to deploy morph.io to production, normally you'll just want to deploy using Capistrano:
 
     cap production deploy
-
-The `feature/1579-new-server` branch has no `production` stage until the cutover merge.
-Deploy it to the rehearsal server at new.morph.io with `cap rehearsal deploy`.
-See `env-rehearsal-example` for the settings that stop that server acting as production,
-and `docs/rehearsal-smoke-test.md` for the smoke test to run afterwards.
 
 Read the [provisioning README](provisioning/README.md) for details of how to provision from updated ansible playbooks.
 
