@@ -46,9 +46,9 @@ Do not announce a date until the first group is true, and do not start the windo
 
 **Before announcing**
 
-- [ ] The second full dry run finished every in-window step in 4 hours or less ([#1569](https://github.com/openaustralia/morph/issues/1569)). The dry runs include the first deploy into an empty stage directory and time it (see step 3).
+- [ ] The second full dry run finished every in-window step in 4 hours or less ([#1569](https://github.com/openaustralia/morph/issues/1569)). The dry runs include the first deploy into an empty stage directory and time it (see step 2).
 - [ ] A restic restore drill passed on the rehearsal stage against a **throwaway** restic repository, with its own repository and password. Restore a sample of SQLite files and the latest MySQL dump, load the dump into MySQL, and check row counts ([#1574](https://github.com/openaustralia/morph/issues/1574), as amended in [#1579](https://github.com/openaustralia/morph/issues/1579)). Never use the production repository or credentials for this. They do not exist on the rehearsal stage and are used only from cutover night. The throwaway repository's location is not specified, so keep it clearly separate from the production backup bucket and delete it after the drill (inferred).
-- [ ] Each dry-run restore was followed by the scrub, and the scrub has the widened scope in [step 2](#2-final-data-move). It is never run at cutover.
+- [ ] Each dry-run restore was followed by the scrub, and the scrub has the widened scope in [step 3](#3-final-data-move-and-production-settings). It is never run at cutover.
 - [ ] The Discourse trial restore passed ([#1563](https://github.com/openaustralia/morph/issues/1563), [#1569](https://github.com/openaustralia/morph/issues/1569)).
 - [ ] The full `log_lines` archive restored on the rehearsal stage and a re-run of the load changed nothing ([#1601](https://github.com/openaustralia/morph/issues/1601)).
 - [ ] The rehearsal checks in [#1600](https://github.com/openaustralia/morph/issues/1600) passed, including the container-to-host exposure check that decision left open.
@@ -67,36 +67,20 @@ Do not announce a date until the first group is true, and do not start the windo
 - [ ] Elastic's support matrix has been rechecked for Ubuntu 26.04, with the Docker fallback ready if it still does not list it ([#1569](https://github.com/openaustralia/morph/issues/1569), third comment).
 - [ ] The human-only access is in place: Linode and its API token, the Cloudflare token for certificates, the GitHub App callback URL, Sentry production DSN, restic storage credentials ([#1577](https://github.com/openaustralia/morph/issues/1577)). Credentials stay in the vault. The production restic repository and credentials are used only from cutover night and are not installed on the rehearsal stage.
 - [ ] A test GitHub account and test scrapers exist for the smoke test ([#1567](https://github.com/openaustralia/morph/issues/1567)).
-- [ ] The Honeybadger removal and the cutover changes to deploy configuration are ready to merge ([step P1](#p1-merge-the-new-stack-to-main)).
+- [ ] The cutover merge is prepared and **not merged**: a branch cut from `feature/1579-new-server` that removes Honeybadger and adds `config/deploy/production.rb` naming the new Linode by its own fixed hostname (never `morph.io`), as a pull request into `main` with CI green ([step 2](#2-cutover-merge-and-first-production-deploy)). Neither `main` nor the branch has a production stage before it merges. How the stage file travels with the merge is inferred from that rule.
 
 ## Sequence at a glance
 
 | Step | What happens | Rollback point |
 | --- | --- | --- |
-| P1 | Merge `feature/1579-new-server` to `main` | R0 |
 | 1 | Window opens after the 10:00 AEDT cron; read-only mode on, old cron off, queue drained | R1 |
-| 2 | Discourse read-only; final SQLite delta, filtered MySQL dump and load, Discourse restore, reindex | R1 |
-| 3 | Provision the production stage; first `production` deploy to `/srv/www/production`; production settings | R1 |
+| 2 | Cutover merge, then the first `production` deploy to `/srv/www/production` | R0 |
+| 3 | Discourse read-only; final SQLite delta, filtered MySQL dump and load, Discourse restore, reindex, migrations, production settings | R1 |
 | 4 | Smoke test the new server through a hosts override | R1 |
 | 5 | Terraform DNS flip, still read-only | R2 |
 | 6 | Open the site, turn cron on at the new server, run `auto_run_scrapers` once, Discourse out of read-only mode | R3 (point of no return) |
 | 7 | Retire the rehearsal stage once the site is open and stable | none |
 | 8 | After the window: power off the old server, backfill, backups, decommission | none |
-
-## Before the window
-
-### P1. Merge the new stack to main
-
-The placement of this step is inferred. See [open question 1](#open-questions).
-
-Action: merge `feature/1579-new-server` to `main` once the rehearsal stage has validated it. In the same merge or the commit straight after it:
-
-- Remove Honeybadger ([#1574](https://github.com/openaustralia/morph/issues/1574), [#1575](https://github.com/openaustralia/morph/issues/1575)). Verified leftovers on the branch when this runbook was written: the `honeybadger` gem and its comments in the `Gemfile` (and so `Gemfile.lock`), `require "capistrano/honeybadger"` in the `Capfile`, the `HONEYBADGER_API_KEY` lines in `env-example` and `docker-compose.ruby34.yml`, and a comment in `config/initializers/sentry.rb`. There is no Honeybadger initializer or `config/honeybadger.yml`, although #1574 mentions one. Search for `honeybadger` again before merging, because Sentry must be the only error tracker from the first day ([#1474](https://github.com/openaustralia/morph/issues/1474)).
-- Make sure a `production` stage exists that points at `morph.io` by hostname, not an IP address ([#1575](https://github.com/openaustralia/morph/issues/1575)). Verified on this branch: [`config/deploy/production.rb`](../../config/deploy/production.rb) exists and hard-codes the old server's IP address. [PR #1615](https://github.com/openaustralia/morph/pull/1615) removes that file from the branch and adds the `rehearsal` stage, so the cutover merge adds the production stage back. Until DNS flips in step 5, `morph.io` still resolves to the **old** server, which matters for the first deploy in step 3.
-
-Check: CI passes on the merge commit, run as CI runs it, with all three skip variables set as in [`.github/workflows/ruby.yml`](../../.github/workflows/ruby.yml) (see [AGENTS.md](../../AGENTS.md)). `bundle exec cap -T` and a search for `honeybadger` show no leftovers.
-
-Rollback point R0: nothing public has changed. Revert the merge if a problem appears. After this merge `main` can no longer be deployed to the old server, because its ceiling is Ruby 3.0.7 ([ADR 0005](../adr/0005-ruby-3-4-only-on-the-new-server.md)). The old server keeps running the code it already has, so rollback does not need a redeploy, but a hotfix to the old server after this point needs a separate path.
 
 ## In the window
 
@@ -109,9 +93,9 @@ Action, in this order:
 1. Turn on read-only mode, from the **Go into site-wide read-only mode** button on the admin dashboard ([`app/admin/dashboard.rb`](../../app/admin/dashboard.rb), verified), or `SiteSetting.toggle_read_only_mode!` in a Rails console (verified to exist).
 2. Turn `cron_enabled` off on the old server and re-run its provisioning, or otherwise disable its cron entries (from #1567; the exact mechanism on the old server is not in this repository). This stops `auto_run_scrapers`, `send_alerts` and `stop_long_running_scrapers`.
 3. Drain the `scraper` queue: wait for queued and running jobs to finish. `ScraperAutoRunWorker` runs on the `default` queue and is scheduled up to 24 hours ahead, so also expect scheduled jobs. Under read-only mode they raise and land in the retry set, which is discarded and not carried across (from #1573), and which may show as Sentry or Sidekiq errors during the window. Queues are `default` and `scraper` (verified in [`config/sidekiq.yml`](../../config/sidekiq.yml)), and the [Sidekiq](https://sidekiq.org) dashboard is mounted at `/admin/jobs` (verified in [`config/routes.rb`](../../config/routes.rb)).
-4. Let running containers finish, or stop them, and resolve any Run whose job is in the scheduled or retry set. Redis is not carried across but the Run rows are, and `Scraper#runnable?` is false while a scraper's last Run is unfinished (verified in [`app/models/scraper.rb`](../../app/models/scraper.rb)), so a leftover unfinished Run would block that scraper's manual and automatic runs on the new server (inferred from the code, not tested). Do this before the final dump in step 2. List containers with `Morph::DockerUtils.running_containers` in a console (verified) or `docker ps`.
+4. Let running containers finish, or stop them, and resolve any Run whose job is in the scheduled or retry set. Redis is not carried across but the Run rows are, and `Scraper#runnable?` is false while a scraper's last Run is unfinished (verified in [`app/models/scraper.rb`](../../app/models/scraper.rb)), so a leftover unfinished Run would block that scraper's manual and automatic runs on the new server (inferred from the code, not tested). Do this before the final dump in step 3. List containers with `Morph::DockerUtils.running_containers` in a console (verified) or `docker ps`.
 5. Stop the workers.
-6. Post the pinned forum topic's "started" update, using the approved text, before the forum restore in step 2 ([#1576](https://github.com/openaustralia/morph/issues/1576)).
+6. Post the pinned forum topic's "started" update, using the approved text, before the forum restore in step 3 ([#1576](https://github.com/openaustralia/morph/issues/1576)).
 
 Do **not** touch or flush the old server's Redis. It holds the schedule that rollback restores ([#1573](https://github.com/openaustralia/morph/issues/1573)).
 
@@ -119,7 +103,35 @@ Check: the banner shows to a signed-out visitor (this depends on the layout chan
 
 Rollback point R1: turn read-only mode off, turn the old server's `cron_enabled` back on, restart workers. No DNS change is needed because DNS has not moved. Post a "change of plan" note on the forum.
 
-### 2. Final data move
+### 2. Cutover merge and first production deploy
+
+Settled in review: the cutover merge lands at the **start of the window**, after the 10:00 AEDT cron, and the first `production` deploy runs straight after it. No `production` stage exists on `main` or on the branch before that merge ([decision](#decisions-settled-while-writing-this-runbook)).
+
+Start this step as soon as read-only mode is on (step 1, action 1). The deploy does not touch the old server, so step 1's drain and this step's deploy run side by side, and step 3 starts when both are finished (inferred, to save window time).
+
+There is no rename of the rehearsal stage. The first `production` deploy goes straight to `/srv/www/production` on the new server ([#1579](https://github.com/openaustralia/morph/issues/1579), [#1595](https://github.com/openaustralia/morph/issues/1595) as amended).
+
+**The production stage file.** `config/deploy/production.rb` names the new Linode by its own fixed hostname, the one that [merge request 922](https://gitlab.com/openaustralia/infrastructure/-/merge_requests/922) in the infrastructure repository creates. It never names `morph.io`, the old server's name or its IP address, so the old server can never receive a production deploy of the Ruby 3.4 code. Merge request 922 and the hostname are not verified here, and the hostname is not written in this public file. Verified on this branch: [`config/deploy/production.rb`](../../config/deploy/production.rb) exists today and hard-codes the old server's IP address. [PR #1615](https://github.com/openaustralia/morph/pull/1615) removes that file from the branch and adds the `rehearsal` stage, so after it merges the file is gone until this step.
+
+**Cost.** A first deploy into an empty stage directory has no cached bundle or compiled assets, so it runs a full `bundle install` and a full asset precompile inside the window. The Capfile requires `capistrano/bundler` and `capistrano/rails/assets` (verified in the `Capfile`), and the deploy also runs `app:update_docker_images` through `deploy:docker` (verified in [`config/deploy.rb`](../../config/deploy.rb)). That time is not measured yet. The dry runs time it, by deploying into an empty stage directory each time (inferred), and it counts against the 4-hour bar.
+
+Action:
+
+1. Merge the prepared cutover branch to `main` (see the gates). It removes Honeybadger and adds the `production` stage file above ([#1574](https://github.com/openaustralia/morph/issues/1574), [#1575](https://github.com/openaustralia/morph/issues/1575)). Verified leftovers on the branch when this runbook was written: the `honeybadger` gem and its comments in the `Gemfile` (and so `Gemfile.lock`), `require "capistrano/honeybadger"` in the `Capfile`, the `HONEYBADGER_API_KEY` lines in `env-example` and `docker-compose.ruby34.yml`, and a comment in `config/initializers/sentry.rb`. There is no Honeybadger initializer or `config/honeybadger.yml`, although #1574 mentions one. Sentry must be the only error tracker from the first day ([#1474](https://github.com/openaustralia/morph/issues/1474)).
+2. Provision the production stage: re-run the roles from `openaustralia/infrastructure` with `morph_stage` set to `production`, so the nginx root, systemd units, cron lines (still off) and the `shared` directory point at `/srv/www/production` (from #1595), and `shared/db/scrapers` links to the [data directory](#terms). The restic source for the SQLite data should be the data directory itself, not a stage path, so retiring a stage cannot drop it from backups (inferred). Whether this replaces or sits beside the rehearsal stage's units is not checkable here.
+3. Run the first deploy: `cap production deploy`, which writes to `/srv/www/production`. Capistrano's `deploy_to` is set to `/var/www` in `config/deploy.rb` on this branch (verified), so the per-stage `deploy_to` from [#1595](https://github.com/openaustralia/morph/issues/1595) must be in the merged code, or the release lands in the wrong directory. The deploy also runs migrations (`capistrano/rails/migrations`, verified in the `Capfile`), restarts `morph.target` (`foreman:restart`) and then runs `app:emergency:fix_queue_run_inconsistencies`, which re-queues unfinished Runs (verified in `config/deploy.rb`). At this point the new server's database holds whatever the last dry run left, not the final data.
+4. Stop services on the new server again straight after the deploy, and clear its Redis, so nothing the deploy queued runs against the old data (inferred). Services stay stopped until the end of step 3.
+
+Check:
+
+- The stage file names the new Linode's own hostname and does **not** name `morph.io`, the old server or an IP address: its `role` lines contain none of those. Check this **before** the deploy runs, for example by reading the file after the merge and searching it for `morph.io` and for any dotted-number address (nothing should match).
+- `cap production deploy` connected to the new Linode, not the old server: the deploy's host line shows the new hostname, and the old server's release directory is unchanged.
+- `current`, `releases` and `shared` exist under `/srv/www/production`; `shared/db/scrapers` is a link to the data directory (`readlink` shows it) and the deploy did not replace it with an empty directory (Capistrano only creates the shared directory if it is missing, which is inferred and not tested, so confirm it in a dry run); the app starts under the production stage and then services are stopped again. Record the elapsed time of the deploy separately.
+- CI passed on the cutover branch, run as CI runs it, with all three skip variables set as in [`.github/workflows/ruby.yml`](../../.github/workflows/ruby.yml) (see [AGENTS.md](../../AGENTS.md)), and a search for `honeybadger` shows no leftovers.
+
+Rollback point R0: revert the merge on `main`, and abandon the new server's production release. The old server is untouched and keeps the code it already has. After the merge `main` can no longer be deployed to the old server, because its ceiling is Ruby 3.0.7 ([ADR 0005](../adr/0005-ruby-3-4-only-on-the-new-server.md)), so a hotfix to the old server after this point needs a separate path.
+
+### 3. Final data move and production settings
 
 Action:
 
@@ -131,29 +143,16 @@ Action:
 6. Reindex Elasticsearch from the loaded database. The index is rebuilt, never migrated ([#1569](https://github.com/openaustralia/morph/issues/1569), [#1572](https://github.com/openaustralia/morph/issues/1572)). [Searchkick](https://github.com/ankane/searchkick) is used, and the cron entry `searchkick:reindex:all` is named in #1567. The reindex command itself is not defined in this repository's rake files, so copy it from the dry-run log.
 7. Do **not** start Redis state from the old server. The new server starts with empty Redis ([#1569](https://github.com/openaustralia/morph/issues/1569)). Clear the new server's Redis if the rehearsal stage left anything in it (inferred).
 
-Check, recorded against the dry-run numbers ([#1579](https://github.com/openaustralia/morph/issues/1579), data-migration verification): MySQL row counts and checksums, SQLite file counts and sizes, Elasticsearch document counts. Discourse is in read-only mode on both servers. Record the elapsed time of this whole step.
+8. Run the pending migrations on the loaded data, because the load brings in the old schema, for example `cap production deploy:migrate` (a task from `capistrano/rails/migrations`, which the Capfile requires, verified) or `bundle exec rake db:migrate` in the release (inferred). It does nothing if the schema already matches.
+9. Install the production-only settings that the rehearsal stage never held: Postal credentials ([#1573](https://github.com/openaustralia/morph/issues/1573)), the Sentry production DSN ([#1574](https://github.com/openaustralia/morph/issues/1574)), and the production restic credentials ([#1579](https://github.com/openaustralia/morph/issues/1579)). The production restic repository and credentials exist only from cutover night, so the pre-cutover drill never touched them. The restic job and the other scheduled jobs stay off until step 6, because `cron_enabled` is still off (inferred ordering).
+10. Remove the help.morph.io redirect: delete `discourse_maintenance_redirect_url` from the infrastructure repository's production `group_vars` and re-run the roles, so `help.morph.io` serves Discourse again ([#1579](https://github.com/openaustralia/morph/issues/1579)). The variable lives outside this repository, so it is not verified here.
+11. Start services on the new server, now with the production settings installed, so the smoke test in step 4 runs against the final configuration (inferred ordering). Cron stays off.
+
+Check, recorded against the dry-run numbers ([#1579](https://github.com/openaustralia/morph/issues/1579), data-migration verification): MySQL row counts and checksums, SQLite file counts and sizes, Elasticsearch document counts. Discourse is in read-only mode on both servers; no migration is pending; `help.morph.io`, when overridden to the new server, serves Discourse and not a redirect; the restic and other scheduled jobs have not run. Record the elapsed time of this whole step.
 
 Go/no-go checkpoint (inferred): if the elapsed time is on course to overrun the announced window, stop here and use R1.
 
-Rollback point R1: wipe nothing on the old server. Take Discourse on the old server out of read-only mode as part of R1. Abandon the new server's loaded data, because it can be re-synced for another attempt.
-
-### 3. First production deploy and production settings
-
-There is no rename of the rehearsal stage. The first `production` deploy goes straight to `/srv/www/production` on the new server, in the window, while the site is read-only ([#1579](https://github.com/openaustralia/morph/issues/1579), [#1595](https://github.com/openaustralia/morph/issues/1595) as amended).
-
-**Cost.** A first deploy into an empty stage directory has no cached bundle or compiled assets, so it runs a full `bundle install` and a full asset precompile inside the window. The Capfile requires `capistrano/bundler` and `capistrano/rails/assets` (verified in the `Capfile`), and the deploy also runs `app:update_docker_images` through `deploy:docker` (verified in [`config/deploy.rb`](../../config/deploy.rb)). That time is not measured yet. The dry runs time it, by deploying into an empty stage directory each time (inferred), and it counts against the 4-hour bar.
-
-Action:
-
-1. Provision the production stage: re-run the roles from `openaustralia/infrastructure` with `morph_stage` set to `production`, so the nginx root, systemd units, cron lines (still off) and the `shared` directory point at `/srv/www/production` (from #1595), and `shared/db/scrapers` links to the [data directory](#terms). The restic source for the SQLite data should be the data directory itself, not a stage path, so retiring a stage cannot drop it from backups (inferred). Whether this replaces or sits beside the rehearsal stage's units is not checkable here.
-2. Install the production-only settings that the rehearsal stage never held: Postal credentials ([#1573](https://github.com/openaustralia/morph/issues/1573)), the Sentry production DSN ([#1574](https://github.com/openaustralia/morph/issues/1574)), and the production restic credentials ([#1579](https://github.com/openaustralia/morph/issues/1579)). The production restic repository and credentials exist only from cutover night, so the pre-cutover drill never touched them. The restic job and the other scheduled jobs stay off until step 6, because `cron_enabled` is still off (inferred ordering).
-3. Remove the help.morph.io redirect: delete `discourse_maintenance_redirect_url` from the infrastructure repository's production `group_vars` and re-run the roles, so `help.morph.io` serves Discourse again ([#1579](https://github.com/openaustralia/morph/issues/1579)). The variable lives outside this repository, so it is not verified here.
-4. Run the first deploy: `cap production deploy`, which writes to `/srv/www/production`. Capistrano's `deploy_to` is set to `/var/www` in `config/deploy.rb` on this branch (verified), so the per-stage `deploy_to` from [#1595](https://github.com/openaustralia/morph/issues/1595) must be in place first, or the release lands in the wrong directory. The deploy also runs migrations (`capistrano/rails/migrations`, verified in the `Capfile`) against the data loaded in step 2, restarts `morph.target` (`foreman:restart`) and then runs `app:emergency:fix_queue_run_inconsistencies`, which re-queues unfinished Runs (verified in `config/deploy.rb`). Step 1 left none, so nothing should be queued.
-5. The deploy must reach the new server while `morph.io` still resolves to the old one, so it needs a host or ssh override on the deploying machine, not the public name (inferred, see [open question 1](#open-questions)).
-
-Check: `current`, `releases` and `shared` exist under `/srv/www/production`; `shared/db/scrapers` is a link to the data directory (`readlink` shows it) and the deploy did not replace it with an empty directory (Capistrano only creates the shared directory if it is missing, which is inferred and not tested, so confirm it in a dry run); the SQLite file count in the data directory matches the count recorded in step 2; the deploy log shows the migrations ran on the loaded database; the app starts under the production stage; `help.morph.io`, when overridden to the new server, serves Discourse and not a redirect; the restic and other scheduled jobs have not run. Record the elapsed time of the deploy separately.
-
-Rollback point R1: nothing on the old server changed in this step. Restore the redirect variable and re-run the roles if you reach R2 after removing it.
+Rollback point R1: wipe nothing on the old server. Restore the redirect variable and re-run the roles if you reach R2 after removing it. Take Discourse on the old server out of read-only mode as part of R1. Abandon the new server's loaded data, because it can be re-synced for another attempt.
 
 ### 4. Smoke test the new server
 
@@ -293,8 +292,8 @@ Rollback is a Terraform revert once DNS has moved (R2), and an undo of the freez
 
 | Point | Reached at | How to roll back | What it costs |
 | --- | --- | --- | --- |
-| R0 | Before the window | Revert the merge to `main` | Nothing public changed |
-| R1 | Steps 1 to 4 | Read-only mode off; old `cron_enabled` on; restart workers on the old server; Discourse on the old server out of read-only mode. No DNS change | Time lost; announce a change of plan |
+| R0 | Step 2 | Revert the merge on `main`; abandon the new server's production release | Nothing public changed |
+| R1 | Steps 1, 3 and 4 | Read-only mode off; old `cron_enabled` on; restart workers on the old server; Discourse on the old server out of read-only mode. No DNS change | Time lost; announce a change of plan |
 | R2 | Step 5, before opening | Merge and apply the prepared revert merge request; then as R1, and restore the help.morph.io redirect if step 3 removed it | DNS propagation within the TTL |
 | R3 | Step 6 onward | None. Fix forward on the new server | Writes made on the new server since opening exist only there; no reverse sync |
 
@@ -324,10 +323,12 @@ Read on 2026-11-27 against `feature/1579-new-server` and the branch of PR #1615 
 
 **Inferred by this runbook**
 
-- The placement of the cutover merge, the order of the steps inside steps 2 and 3, the go/no-go checkpoints, restic credentials installed before `cron_enabled`, the Discourse hostname at cutover, when the old server is powered off, what "stable" means for retiring the rehearsal stage, the reading of "before Linode Backups is dropped", how the dry runs time the first deploy, the throwaway restic repository's location and clean-up, the restic source being the data directory, and how the rehearsal directory is removed without touching the data directory.
+- How the production stage file travels with the cutover merge, running the deploy beside step 1's drain, the order of the steps inside step 3, the go/no-go checkpoints, restic credentials installed before `cron_enabled`, the Discourse hostname at cutover, when the old server is powered off, what "stable" means for retiring the rehearsal stage, the reading of "before Linode Backups is dropped", how the dry runs time the first deploy, the throwaway restic repository's location and clean-up, the restic source being the data directory, and how the rehearsal directory is removed without touching the data directory.
 
-## Open questions
+## Decisions settled while writing this runbook
 
-These need a decision before the runbook is final.
+- **Production stage file and merge timing.** The `production` Capistrano stage file names the new Linode by its own fixed hostname, the one [merge request 922](https://gitlab.com/openaustralia/infrastructure/-/merge_requests/922) in the infrastructure repository creates, and never names `morph.io`, so the old server can never receive a production deploy of the Ruby 3.4 code. The cutover merge lands at the start of the window, after the 10:00 AEDT cron, and the first production deploy runs straight after it. No production stage exists before that merge. Settled in review of this runbook, to be recorded in the spec [#1579](https://github.com/openaustralia/morph/issues/1579).
 
-1. **What host does the first `production` deploy name, and when does the cutover merge land?** After the merge, `production.rb` names `morph.io`, which still resolves to the old server until step 5, so a stray `cap production deploy` between the merge and the flip would push Ruby 3.4 code onto the old server. The runbook assumes a host or ssh override for the in-window deploy and puts the merge before the window (P1). Options: keep that, merge inside the window just before step 3, or give `production.rb` the new Linode's own hostname for the first deploy.
+The other decisions that shape this runbook are in the amendments to [#1579](https://github.com/openaustralia/morph/issues/1579) and [#1573](https://github.com/openaustralia/morph/issues/1573) dated 2026-11-27.
+
+There are no open questions left.
