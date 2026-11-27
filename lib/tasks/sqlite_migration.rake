@@ -15,8 +15,8 @@ class SqliteMigrationRake
       destination: ENV.fetch("SQLITE_DESTINATION", ""),
       mode: mode,
       delete: ENV["DELETE"] == "1",
-      max_delete: ENV["MAX_DELETE"]&.to_i,
-      bwlimit: ENV["BWLIMIT_KBPS"]&.to_i,
+      max_delete: Morph::SqliteMigration::Sync.positive_integer("MAX_DELETE", ENV.fetch("MAX_DELETE", nil)),
+      bwlimit: Morph::SqliteMigration::Sync.positive_integer("BWLIMIT_KBPS", ENV.fetch("BWLIMIT_KBPS", nil)),
       ssh_command: ENV.fetch("SSH_COMMAND", nil),
       dry_run: ENV["DRY_RUN"] == "1"
     )
@@ -65,8 +65,8 @@ class SqliteMigrationRake
 
       desc "Compare SOURCE_MANIFEST with DESTINATION_MANIFEST (file counts and sizes). Exits 1 on any difference."
       task verify: :environment do
-        load = ->(var) { Morph::SqliteMigration::Manifest.parse(File.read(ENV.fetch(var))) }
-        comparison = Morph::SqliteMigration::Manifest.compare(load.call("SOURCE_MANIFEST"), load.call("DESTINATION_MANIFEST"))
+        read_manifest = ->(var) { Morph::SqliteMigration::Manifest.parse(File.read(ENV.fetch(var))) }
+        comparison = Morph::SqliteMigration::Manifest.compare(read_manifest.call("SOURCE_MANIFEST"), read_manifest.call("DESTINATION_MANIFEST"))
         print Morph::SqliteMigration::ComparisonReport.new(comparison)
         exit(1) unless comparison.match?
       end

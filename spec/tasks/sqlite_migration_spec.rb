@@ -26,7 +26,7 @@ RSpec.describe "tasks" do # rubocop:disable RSpec/DescribeClass
       let(:result) do
         Morph::SqliteMigration::Sync::Result.new(
           mode: :bulk, source: "old.example.org:/x/", destination: "/y/", exit_status: 0, elapsed_seconds: 2.0,
-          files_transferred: 3, file_bytes: 10, wire_bytes: 4_000_000, total_file_bytes: 99, warning: "careful"
+          files_transferred: 3, file_bytes: 10, wire_bytes: 4_000_000, total_file_bytes: 99, warning: "careful", dry_run: false
         )
       end
       let(:sync) { instance_double(Morph::SqliteMigration::Sync, command: ["rsync"], display_command: "rsync a b", run: result) }

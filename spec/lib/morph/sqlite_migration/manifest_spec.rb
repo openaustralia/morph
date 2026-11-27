@@ -27,6 +27,26 @@ RSpec.describe Morph::SqliteMigration::Manifest do
       end
     end
 
+    it "follows a root that is itself a symlink, as db/scrapers is on a deployed server" do
+      Dir.mktmpdir do |dir|
+        write(dir, "shared/data/jane/one/data.sqlite", "12345")
+        File.symlink(File.join(dir, "shared"), File.join(dir, "scrapers"))
+
+        expect(described_class.scan(File.join(dir, "scrapers")).sizes).to eq("data/jane/one/data.sqlite" => 5)
+      end
+    end
+
+    it "skips a file that vanishes between listing and reading it" do
+      Dir.mktmpdir do |root|
+        write(root, "a", "1")
+        write(root, "b", "22")
+        allow(File).to receive(:lstat).and_call_original
+        allow(File).to receive(:lstat).with(File.join(File.realpath(root), "a")).and_raise(Errno::ENOENT)
+
+        expect(described_class.scan(root).sizes).to eq("b" => 2)
+      end
+    end
+
     it "does not change the directory it reads" do
       Dir.mktmpdir do |root|
         write(root, "data/a/b/data.sqlite", "x")
@@ -54,6 +74,10 @@ RSpec.describe Morph::SqliteMigration::Manifest do
       manifest = described_class.parse("data/jane/x/data.sqlite\t10\n\n")
 
       expect(manifest.sizes).to eq("data/jane/x/data.sqlite" => 10)
+    end
+
+    it "keeps tabs that are part of a file name" do
+      expect(described_class.parse("odd\tname.rb\t7\n").sizes).to eq("odd\tname.rb" => 7)
     end
 
     it "rejects a line that is not path and size" do

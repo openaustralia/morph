@@ -114,9 +114,33 @@ RSpec.describe Morph::SqliteMigration::Sync do
     context "when rsync fails" do
       let(:status) { 23 }
 
-      it "raises" do
-        expect { build.run }.to raise_error(described_class::Error, /status 23/)
+      it "raises, with a hint and the last output" do
+        expect { build.run }.to raise_error(described_class::Error, /status 23 \(some files could not be copied\)\. Last output: .*Total bytes received/m)
       end
+    end
+
+    context "when max_delete stops the deletes" do
+      let(:status) { 25 }
+
+      it "says so" do
+        expect { build(mode: :delta, delete: true, max_delete: 1).run }.to raise_error(described_class::Error, /stopped by max_delete/)
+      end
+    end
+
+    context "when rsync is not installed" do
+      let(:runner) { ->(_argv, _on_line) { raise Errno::ENOENT, "rsync" } }
+
+      it "raises a tidy error rather than a system error" do
+        expect { build.run }.to raise_error(described_class::Error, /could not run rsync/)
+      end
+    end
+
+    it "marks a dry run in the record and the summary" do
+      result = build(dry_run: true).run
+
+      expect(result.to_record[:dry_run]).to be true
+      expect(result.summary).to include("dry run, nothing copied")
+      expect(build.run.to_record[:dry_run]).to be false
     end
 
     context "with no stats in the output" do
@@ -127,6 +151,20 @@ RSpec.describe Morph::SqliteMigration::Sync do
 
         expect(result.wire_bytes).to be_nil
         expect(result.bytes_per_second).to be_nil
+      end
+    end
+  end
+
+  describe ".positive_integer" do
+    it "reads whole numbers and treats blank as unset" do
+      expect(described_class.positive_integer("X", "50")).to eq(50)
+      expect(described_class.positive_integer("X", nil)).to be_nil
+      expect(described_class.positive_integer("X", " ")).to be_nil
+    end
+
+    it "refuses anything else, so a typo cannot become 0" do
+      ["abc", "two00", "0", "-5", "1.5"].each do |value|
+        expect { described_class.positive_integer("MAX_DELETE", value) }.to raise_error(described_class::Error, /MAX_DELETE/)
       end
     end
   end

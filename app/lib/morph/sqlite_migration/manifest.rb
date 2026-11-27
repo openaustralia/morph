@@ -46,10 +46,18 @@ module Morph
       def self.scan(root)
         raise ArgumentError, "#{root} is not a directory" unless File.directory?(root)
 
-        prefix = File.join(File.expand_path(root), "")
+        # db/scrapers is a Capistrano linked_dir, so the root is usually a
+        # symlink, and Find does not enter a symlink.
+        real_root = File.realpath(root)
+        prefix = File.join(real_root, "")
         sizes = T.let({}, T::Hash[String, Integer])
-        Find.find(File.expand_path(root)) do |path|
-          stat = File.lstat(path)
+        Find.find(real_root) do |path|
+          # Scrapers are running, so a file can vanish between listing and stat
+          stat = begin
+            File.lstat(path)
+          rescue Errno::ENOENT, Errno::ENOTDIR
+            next
+          end
           next unless stat.file?
 
           sizes[path.delete_prefix(prefix)] = stat.size
@@ -64,8 +72,9 @@ module Morph
           line = line.chomp
           next if line.empty?
 
-          path, size = line.split("\t", 2)
-          raise ArgumentError, "line #{number} is not path<TAB>size" unless path && size&.match?(/\A\d+\z/)
+          # Split on the last tab, because a file name can contain tabs
+          path, _tab, size = line.rpartition("\t")
+          raise ArgumentError, "line #{number} is not path<TAB>size" if path.empty? || !size.match?(/\A\d+\z/)
 
           sizes[path] = size.to_i
         end

@@ -68,8 +68,10 @@ runs main on Ruby 3.0.7 and cannot run this branch, but it can make the same
 listing with the shell:
 
 ```sh
-find db/scrapers -type f -printf '%P\t%s\n' | sort > source.tsv
+find db/scrapers/ -type f -printf '%P\t%s\n' | sort > source.tsv
 ```
+
+Keep the trailing slash: `db/scrapers` is a symlink into `shared/` on a deployed server, and `find` only follows it with the slash. File names containing tabs are handled; file names containing newlines are not, and would need a `-print0` format.
 
 On the new server, either use the same `find` or
 `DIR=/srv/www/rehearsal/shared/db/scrapers OUTPUT=destination.tsv bundle exec rake app:sqlite_migration:manifest`.
@@ -100,7 +102,7 @@ It rebuilds the `Scraper` and `Owner` indexes with Searchkick's `reindex`, which
 builds a fresh index, fills it and then swaps the alias, so nothing from the old
 index carries over. It prints the Elasticsearch version, a progress line every
 15 seconds, the time taken and the document counts against the database, and
-exits 1 if they differ. The `Owner` index covers users and organisations, which
+exits 1 if they differ. The `Owner` index covers people and organisations, which
 share one table.
 
 ```sh

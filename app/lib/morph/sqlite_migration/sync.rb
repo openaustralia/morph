@@ -25,6 +25,22 @@ module Morph
 
       class Error < StandardError; end
 
+      FAILURE_HINTS = T.let(
+        { 23 => " (some files could not be copied)", 25 => " (stopped by max_delete, so more files were due for deletion than allowed)" }.freeze,
+        T::Hash[Integer, String]
+      )
+
+      # Whole numbers only, so a typo cannot silently become 0, which rsync reads as "no limit"
+      sig { params(name: String, value: T.nilable(String)).returns(T.nilable(Integer)) }
+      def self.positive_integer(name, value)
+        return nil if value.nil? || value.strip.empty?
+
+        number = T.let(Integer(value, exception: false), T.nilable(Integer))
+        raise Error, "#{name} must be a whole number above 0" if number.nil? || number < 1
+
+        number
+      end
+
       class Result < T::Struct
         extend T::Sig
 
@@ -38,6 +54,7 @@ module Morph
         const :wire_bytes, T.nilable(Integer)
         const :total_file_bytes, T.nilable(Integer)
         const :warning, T.nilable(String)
+        const :dry_run, T::Boolean
 
         sig { returns(T.nilable(Float)) }
         def bytes_per_second
@@ -51,7 +68,7 @@ module Morph
         def summary
           speed = bytes_per_second
           [
-            "Mode:            #{mode}",
+            "Mode:            #{mode}#{' (dry run, nothing copied)' if dry_run}",
             "Elapsed:         #{elapsed_seconds.round(1)} s",
             "Files copied:    #{files_transferred || 'unknown'}",
             "Bytes on wire:   #{wire_bytes || 'unknown'}",
@@ -63,7 +80,7 @@ module Morph
         sig { returns(T::Hash[Symbol, T.untyped]) }
         def to_record
           {
-            recorded_at: Time.now.utc.iso8601, mode: mode, source: source, destination: destination,
+            recorded_at: Time.now.utc.iso8601, mode: mode, dry_run: dry_run, source: source, destination: destination,
             exit_status: exit_status, elapsed_seconds: elapsed_seconds.round(1),
             files_transferred: files_transferred, file_bytes: file_bytes, wire_bytes: wire_bytes,
             total_file_bytes: total_file_bytes, bytes_per_second: bytes_per_second&.round, warning: warning
@@ -135,10 +152,14 @@ module Morph
       def run(&on_line)
         output = T.let([], T::Array[String])
         started = Process.clock_gettime(Process::CLOCK_MONOTONIC).to_f
-        status = @runner.call(command, lambda do |line|
-          output << line
-          on_line&.call(line)
-        end)
+        status = begin
+          @runner.call(command, lambda do |line|
+            output << line
+            on_line&.call(line)
+          end)
+        rescue SystemCallError => e
+          raise Error, "could not run rsync (is it installed?): #{e.message}"
+        end
         elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC).to_f - started
         build_result(status, elapsed, output.join)
       end
@@ -179,7 +200,7 @@ module Morph
         if status == VANISHED && @mode == :bulk
           warning = "some files vanished during the copy, which is normal while scrapers run; the delta pass picks up the rest"
         elsif status != 0
-          raise Error, "rsync exited with status #{status}"
+          raise Error, "rsync exited with status #{status}#{FAILURE_HINTS.fetch(status, '')}. Last output: #{output.lines.last(3).join.strip}"
         end
 
         stats = self.class.parse_stats(output)
@@ -190,7 +211,7 @@ module Morph
           mode: @mode, source: self.class.scrub(@source), destination: self.class.scrub(@destination),
           exit_status: status, elapsed_seconds: elapsed, files_transferred: stats[:files_transferred],
           file_bytes: stats[:file_bytes], wire_bytes: wire, total_file_bytes: stats[:total_file_bytes],
-          warning: warning
+          warning: warning, dry_run: @dry_run
         )
       end
     end
