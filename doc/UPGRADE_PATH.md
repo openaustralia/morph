@@ -343,14 +343,12 @@ morph is the last OAF service provisioned from its own repo. Port
   the 24.04 archive (#1361: verify the distro version suffices before
   reaching for 7.2 from redis.io), Node.js LTS, Python 3 only (drop the
   python2 Ansible bootstrap), `/srv/www` layout consistently (#1382).
-- Ruby: **keep rvm**, installed current via the infrastructure repo's
-  existing external `rvm.ruby` role, exactly as `theyvoteforyou` (Ruby
-  3.4.4) and `planningalerts` (Ruby 3.3.4) already run it. The fleet has
-  not converged on a replacement: `openaustralia` uses rbenv, and mise
-  support is half-built (its install role is commented out in `site.yml`
-  and a `remove_mise` role exists to purge it). morph's pain was a frozen
-  2017 rvm on Xenial, not rvm itself. `capistrano-rvm` stays; install
-  Ruby 3.4 only
+- Ruby: the new server uses **rbenv**, not rvm, as in the They Vote for You
+  2026 build (decided in #1566 and #1575, which replace the earlier decision
+  here to keep rvm). The branch loads `capistrano-rbenv` for the `rehearsal`
+  stage (and a later `production` stage). `capistrano-rvm` stays only for the
+  `staging` and `local` stages, which keep rvm and `/var/www` until the old
+  provisioning is retired. Install Ruby 3.4 only
   ([ADR 0005](../docs/adr/0005-ruby-3-4-only-on-the-new-server.md)).
 - Secrets move into the shared infrastructure Ansible Vault (morph's
   `ansible.cfg` already uses the same vault password file).
@@ -666,7 +664,7 @@ resolved in the 20 August 2026 revision and are marked **Decided**:
 | Postgres (#1058) | Stay MySQL vs migrate | Not in this plan | Explicitly out of scope; utf8mb4 MySQL 8 is the target. Revisit after Rails 8.1. |
 | Search | ES 7.17 vs ES 8.x vs OpenSearch | After Phase 6 | searchkick 5 supports all three; 7.17 is safe through this plan. |
 | PHP / Node.js / Perl support | Fix on heroku-24 vs deprecate | Phase 7 step 5 | Usage data in #1476. |
-| Ruby version manager on servers | **Decided (20 Aug 2026): keep rvm**, installed current via the infrastructure repo's `rvm.ruby` role | Phase 4a | Fleet majority (theyvoteforyou, planningalerts); no OAF convergence exists to follow — mise is half-built and only openaustralia uses rbenv. morph's pain was a frozen 2017 rvm on Xenial, not rvm itself. |
+| Ruby version manager on servers | **Superseded: rbenv on the new server** (#1566, #1575). The 20 Aug 2026 decision to keep rvm no longer applies. | Phase 4a | The new roles follow the They Vote for You 2026 pattern. `capistrano-rvm` stays only for the `staging` and `local` stages. |
 | Live-updates stack | Keep Faye/render_sync vs Turbo Streams/ActionCable | Phase 6 step 5 | render_sync fork is unmaintained; scope carefully — it touches core UX. |
 | Cron/APM monitoring scope in Sentry | Errors only vs cron vs APM | Phase 8 | Depends on sponsored plan quotas (#1474 discussion). The Sentry gems themselves land in Phase 1. |
 

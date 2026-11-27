@@ -1,5 +1,5 @@
 .PHONY: all clean help lint \
-        production-check production-deploy production-provision \
+        production-check rehearsal-deploy production-provision \
         roles services-down services-up \
 	staging-deploy staging-provision \
         share-web test vagrant-plugins venv \
@@ -99,8 +99,8 @@ vagrant-deploy: ## Deploy app to local vagrant VM
 staging-deploy: ## Deploy app to staging
 	bundle exec cap staging deploy
 
-production-deploy: ## Deploy app to production
-	bundle exec cap production deploy
+rehearsal-deploy: ## Deploy app to the rehearsal stage (new.morph.io)
+	bundle exec cap rehearsal deploy
 
 # The ruby containers bind-mount this file, and compose is told not to invent a
 # missing source (see docker-compose.yml), so a host that has never used ssh

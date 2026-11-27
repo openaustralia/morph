@@ -128,6 +128,10 @@ group :development do
 
   gem "bcrypt_pbkdf", "~> 1.1"
   gem "capistrano-rails", require: false
+  # rbenv for the rehearsal stage and later production, rvm for the staging and
+  # local stages until the old provisioning is retired (#1579). The Capfile loads
+  # only the one a stage uses, because both hook every stage when loaded.
+  gem "capistrano-rbenv", require: false
   gem "capistrano-rvm", require: false
   gem "capistrano-tagging3", require: false
   gem "ed25519", "~> 1.3"

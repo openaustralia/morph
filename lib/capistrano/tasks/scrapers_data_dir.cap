@@ -1,0 +1,41 @@
+# frozen_string_literal: true
+
+# The SQLite scraper data lives in one data directory outside every stage, for
+# example /srv/www/data/scrapers, and each stage's shared/db/scrapers is a link
+# to it. The rehearsal stage is retired at cutover and the first production
+# deploy goes straight to /srv/www/production, so the data is never copied or
+# renamed between stages. Stages opt in with `set :scrapers_data_dir, "<path>"`.
+# Stages that do not set it keep a plain shared/db/scrapers directory.
+#
+# db/scrapers is live data. This task only ever creates a link where there is
+# nothing, and stops with a message rather than moving, replacing or deleting
+# anything. The directory itself is created by the provisioning roles.
+#
+# :nocov: Runs over ssh on the server, so it is covered by the manual test in TESTING.md.
+namespace :deploy do
+  desc "Link shared/db/scrapers to the single scrapers data directory (stages that set scrapers_data_dir)"
+  task :link_scrapers_data_dir do
+    data_dir = fetch(:scrapers_data_dir, nil)
+    next if data_dir.nil?
+
+    on release_roles(:all) do
+      link = shared_path.join("db", "scrapers")
+      execute :mkdir, "-p", shared_path.join("db").to_s
+
+      raise "#{data_dir} does not exist on #{host}. The provisioning roles create it." unless test("[ -d #{data_dir} ]")
+
+      if test("[ -L #{link} ]")
+        current = capture(:readlink, link.to_s).strip
+        raise "#{link} already links to #{current}, not #{data_dir}. Not changing it." unless current == data_dir
+      elsif test("[ -e #{link} ]")
+        raise "#{link} is a real directory or file on #{host}. Move its contents to #{data_dir} by hand, then remove it. " \
+              "Not touching live data."
+      else
+        execute :ln, "-s", data_dir, link.to_s
+      end
+    end
+  end
+
+  before "deploy:check:make_linked_dirs", "deploy:link_scrapers_data_dir"
+end
+# :nocov:

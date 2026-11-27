@@ -7,6 +7,8 @@ expected_repos = %w[git@github.com:openaustralia/morph.git https://github.com/op
 current_repo = `git config --get remote.origin.url`.strip
 raise "Deploy from the openaustralia repo (#{expected_repos.join(', ')}) instead of a fork (#{current_repo})" unless expected_repos.include?(current_repo)
 
+# staging and local keep rvm and /var/www. The rehearsal stage (and a later production
+# stage) override these with rbenv and /srv/www/<stage> in their own stage files (#1595).
 set :rvm_ruby_version, "ruby-3.0.7"
 
 set :tagging3_format, ':stage_:release'
@@ -89,6 +91,10 @@ namespace :deploy do
 
   desc "Fix queue run inconsistencies"
   task :fix_queue_run_inconsistencies do
+    # It re-enqueues every unfinished run in the database. On the rehearsal server
+    # that database is a restore of production, so it would start real scrapers (#1567).
+    next unless fetch(:fix_queue_run_inconsistencies, true)
+
     on roles(:app) do
       within release_path do
         # Wait one minute so that everything has plenty of time to get started before we run this check (and workaround)

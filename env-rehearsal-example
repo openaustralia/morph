@@ -1,0 +1,37 @@
+# Settings for the rehearsal server at new.morph.io (#1587)
+
+# This is a reference for the .env that provisioning writes to
+# /srv/www/rehearsal/shared/.env. It follows the variables the infrastructure
+# repository's morph role templates (merge request 997). Nothing here is a real
+# value. Keep the real secrets in the vault and reference them with op:// paths,
+# not in git.
+# The rehearsal server runs RAILS_ENV=production, so there is no
+# config/environments/rehearsal.rb. These variables are the whole difference.
+
+# The host used in links in email and in the admin area
+SERVER_NAME=new.morph.io
+
+# There is no app-side switch for scheduled jobs. The cron entries that run
+# auto_run_scrapers, send_alerts, stop_long_running_scrapers, docker_tidy_up and
+# the rest are installed only when the host variable cron_enabled is on, and it
+# is off for the rehearsal host in the infrastructure repository (#1567).
+
+# Catch all mail in Mailpit on the server, never in Postal. Mailpit listens on
+# 1025 by default, needs no username or password, and its web page sits behind
+# the same nginx basic auth as the site. Leave SMTP_USERNAME and SMTP_PASSWORD
+# unset so no Postal credentials are installed until cutover.
+SMTP_SERVER=127.0.0.1
+SMTP_PORT=1025
+
+# Production's GitHub App is reused, with the rehearsal callback URL added to it.
+# Take the values from the vault: op://<vault>/<item>/<field>
+GITHUB_APP_ID=xxxxxx
+GITHUB_APP_NAME=xxxxxxxxxx
+GITHUB_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
+GITHUB_APP_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Secret for authenticating sync / faye
+SYNC_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Deliberately not set on the rehearsal server: Stripe, Google Analytics, Heap and
+# Honeybadger keys, and the backup S3 credentials.

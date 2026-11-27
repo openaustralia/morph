@@ -48,6 +48,14 @@ This includes:
 
 Testing restore is too hard to automate. 
 
+### Rehearsal deploy and smoke test (new.morph.io)
+
+The `rehearsal` Capistrano stage deploys over ssh to a real server, so no automated test covers the deploy itself.
+After each `cap rehearsal deploy`, work through `docs/rehearsal-smoke-test.md`, which runs with read-only mode on apart from one documented exception for the throwaway test scraper.
+The rehearsal stage skips `deploy:fix_queue_run_inconsistencies` and pushes no deploy tags, so check after a deploy that no scraper run started and no `rehearsal_*` tag appeared on origin.
+The `lib/capistrano/tasks/scrapers_data_dir.cap` task links `shared/db/scrapers` to the single data directory (`/srv/www/data/scrapers`) and has to be tried on the server: on the first deploy `readlink /srv/www/rehearsal/shared/db/scrapers` prints that path; a second deploy changes nothing; and it stops with a message, touching nothing, if `shared/db/scrapers` is already a real directory or the data directory is missing.
+The stage is retired at cutover.
+
 ### Error reporting to Sentry
 
 Automated tests only cover the SDK staying quiet when `SENTRY_DSN` is unset.
