@@ -161,8 +161,9 @@ _Avoid_: request log, access log
 
 ### Environments
 
-**Rehearsal server**:
-The server built ahead of the production migration to rehearse provisioning,
-the data move and cutover before anything depends on it. Becomes the staging
-environment once it exists; morph.io has none until then.
-_Avoid_: staging box, new server, dev.morph.io, which no longer exists
+**Rehearsal stage**:
+A stage on the new server used for the dry runs before cutover, to rehearse
+the data move and cutover before anything depends on it. Retired at cutover.
+morph.io has no staging environment.
+_Avoid_: rehearsal server, which is not a separate machine, staging, staging
+box, dev.morph.io, which no longer exists
