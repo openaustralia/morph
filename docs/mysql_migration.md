@@ -132,15 +132,23 @@ these. The tasks expect exactly this:
    - every `variables.value`, which may hold a scraper's secret, becomes the one
      placeholder `scrubbed-for-rehearsal`, so a rehearsal scraper can never present a
      real secret to a third-party service
-   - each `email_suppressions.address` becomes `suppressed-<id>@example.invalid`
+   - each `email_suppressions.address` becomes `suppressed-<id>@example.invalid`, and each
+     `email_suppressions.reply_excerpt` becomes the fixed text `Reply text removed for rehearsal`
+   - every IP address column becomes `192.0.2.1`, from the documentation range
+     (RFC 5737). Empty values stay empty. From `db/schema.rb`, the columns are
+     `owners.current_sign_in_ip`, `owners.last_sign_in_ip` and `runs.ip_address`.
+     A spec fails if a migration adds a column with `ip` in its name that the
+     scrub does not cover
 
    It refuses unless `MORPH_REHEARSAL` is `true`, and refuses when `SERVER_NAME` is
    `morph.io`. It then checks that no real value remains and fails if one does.
    `rake mysql_migration:verify_scrub` runs the same check on its own and changes
    nothing. API keys are random after the scrub, so that check can only report a
    missing key. The scrub is not part of the cutover and is outside the 4-hour timing.
-   Columns it does not cover, such as `email_suppressions.reply_excerpt` and the
-   IP addresses on `owners` and `runs`, are left as they are.
+   Free-text columns can still hold addresses or secrets, and are not scrubbed:
+   `log_lines.text`, `api_queries.query`, `domains.meta` and `domains.title`,
+   `active_admin_comments.body` and the `owners` profile fields (`name`, `nickname`,
+   `blog`, `company`, `gravatar_url`). Decide on those before the first dry run.
 7. After cutover: `rake mysql_migration:backfill_log_lines` loads the archive
    into the existing table, one slice at a time. Run it in off-peak slots and stop
    it in the morning: progress files let it resume, and re-loading a slice is
