@@ -58,3 +58,19 @@ and check the event appears in the Sentry project.
 
 
 
+
+### SQLite copy and Elasticsearch reindex (#1589)
+
+The specs drive the rsync runner and Elasticsearch with doubles, plus one real
+copy between temporary directories. These need real servers, so they run on the
+rehearsal server and are recorded with each dry run. The commands are in
+`docs/sqlite_and_search_migration.md`.
+
+- Run `app:sqlite_migration:bulk` from the old server to the rehearsal
+  server's shared data directory (for example `/srv/www/data/scrapers`), and record the elapsed time and transfer speed it prints.
+  Run it again and check it only transfers what changed.
+- Run `app:sqlite_migration:delta` with `DELETE=1 MAX_DELETE=N` after a change and a
+  deletion on the source, then compare the two file listings with
+  `app:sqlite_migration:verify`.
+- Run `app:search_migration:reindex` against Elasticsearch 8.19 and check the
+  counts match, then search for a scraper and a person on the site.
