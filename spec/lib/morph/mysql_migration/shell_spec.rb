@@ -60,6 +60,12 @@ describe Morph::MysqlMigration::Shell do
       )
     end
 
+    it "can reset stale progress, for a restore into a fresh database" do
+      script = shell.load_script(input_url: "/srv/dump", target_schema: "db", threads: 1, progress_file: "/srv/p.json", load_ddl: true, load_data: false, reset_progress: true)
+
+      expect(options_of(script, "util.loadDump")).to include("resetProgress" => true)
+    end
+
     it "loads the archive into the existing table without DDL" do
       script = shell.load_script(
         input_url: "archive/ids-1-10", target_schema: "scraping_production", threads: 1, progress_file: "/srv/p.json",

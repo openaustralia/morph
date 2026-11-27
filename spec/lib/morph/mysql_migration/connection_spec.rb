@@ -13,6 +13,13 @@ describe Morph::MysqlMigration::Connection do
       )
     end
 
+    it "keeps a literal plus sign in the password and decodes percent escapes" do
+      connection = described_class.from_url("mysql2://scr%20aping:a+b%2Bc@localhost/db")
+
+      expect(connection).to have_attributes(username: "scr aping", password: "a+b+c")
+      expect(connection.shell_uri).to eq "scr%20aping@localhost:3306"
+    end
+
     it "defaults the port" do
       expect(described_class.from_url("mysql2://u:p@localhost/db").port).to eq 3306
     end

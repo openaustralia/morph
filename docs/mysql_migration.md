@@ -84,7 +84,7 @@ archive needs.
    difference. A live source keeps changing, so only a source that is frozen
    (the cutover window) can match exactly.
 6. Rehearsal only: `rake mysql_migration:scrub` replaces emails with
-   `owner-<id>@example.invalid`, clears the three owner token columns, and gives
+   `owner-<id>@example.invalid`, clears the owner access and remember tokens, replaces each API key with a random one (a NULL key would match a request that sends no key), and gives
    each webhook a distinct placeholder URL. It refuses unless `MORPH_REHEARSAL`
    is `true`, and refuses when `SERVER_NAME` is `morph.io`. It is not part of the
    cutover and is outside the 4-hour timing.

@@ -53,10 +53,11 @@ module Morph
       sig do
         params(
           input_url: String, target_schema: String, threads: Integer, progress_file: String,
-          load_ddl: T::Boolean, load_data: T::Boolean, s3_options: T::Hash[String, String], dry_run: T::Boolean
+          load_ddl: T::Boolean, load_data: T::Boolean, s3_options: T::Hash[String, String], dry_run: T::Boolean,
+          reset_progress: T::Boolean
         ).returns(String)
       end
-      def load_script(input_url:, target_schema:, threads:, progress_file:, load_ddl:, load_data:, s3_options: {}, dry_run: false)
+      def load_script(input_url:, target_schema:, threads:, progress_file:, load_ddl:, load_data:, s3_options: {}, dry_run: false, reset_progress: false)
         options = {
           "schema" => target_schema,
           "threads" => threads,
@@ -65,7 +66,8 @@ module Morph
           "loadData" => load_data,
           # Non-consecutive major versions (5.7 to 8.4) are refused without this, after the upgrade check passes
           "ignoreVersion" => true,
-          "dryRun" => dry_run
+          "dryRun" => dry_run,
+          "resetProgress" => reset_progress
         }.merge(s3_options)
         script(["util.loadDump(#{JSON.generate(input_url)}, #{JSON.generate(options)});"])
       end

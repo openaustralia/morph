@@ -6,7 +6,8 @@ module Morph
     class ScrubRefused < StandardError; end
 
     # Makes a restored copy of production data unable to contact real people or services (#1567):
-    # emails become distinct placeholders at an invalid domain, access and API tokens are cleared, and each webhook
+    # emails become distinct placeholders at an invalid domain, access and remember tokens are cleared, API keys are
+    # replaced by random ones (a NULL key would match a request that sends no key at all), and each webhook
     # URL becomes a distinct placeholder, because webhooks has a unique index on (scraper_id, url).
     #
     # It fails closed. It runs only when the environment says outright that it is a rehearsal one, and never when
@@ -48,7 +49,8 @@ module Morph
         client.query(<<~SQL.squish)
           UPDATE owners
           SET email = CONCAT('owner-', id, '@example.invalid'),
-              access_token = NULL, api_key = NULL, remember_token = NULL
+              access_token = NULL, remember_token = NULL,
+              api_key = SHA2(CONCAT('scrubbed-', id, '-', UUID()), 256)
         SQL
         client.affected_rows
       end

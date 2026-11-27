@@ -50,7 +50,16 @@ describe Morph::MysqlMigration::Scrub do
 
       expect(first.reload.email).to eq "owner-#{first.id}@example.invalid"
       expect(second.reload.email).to eq "owner-#{second.id}@example.invalid"
-      expect([first, second].flat_map { |o| [o.access_token, o.api_key, o.remember_token] }).to all(be_nil)
+      expect([first, second].flat_map { |o| [o.access_token, o.remember_token] }).to all(be_nil)
+    end
+
+    it "gives every owner a distinct random API key, never NULL, which would match a request with no key" do
+      scrub.run!(client)
+
+      keys = [first, second].map { |o| o.reload.api_key }
+      expect(keys).to all(match(/\A\h{64}\z/))
+      expect(keys.uniq.size).to eq 2
+      expect(keys).not_to include("key-one", "key-two")
     end
 
     it "gives each webhook a distinct placeholder so the unique index holds" do

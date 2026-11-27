@@ -206,7 +206,7 @@ describe Morph::MysqlMigration::Steps do
       steps.restore(dry_run: true)
 
       ddl, data = shell.scripts
-      expect(ddl).to include('"loadDdl":true', '"loadData":false', '"ignoreVersion":true', "\"schema\":\"#{database}\"")
+      expect(ddl).to include('"resetProgress":true', '"loadDdl":true', '"loadData":false', '"ignoreVersion":true', "\"schema\":\"#{database}\"")
       expect(data).to include('"loadDdl":false', '"loadData":true', '"dryRun":true')
       expect(report("restore")).to include("outcome" => "succeeded")
     end
@@ -224,7 +224,7 @@ describe Morph::MysqlMigration::Steps do
       steps.backfill_log_lines
 
       expect(shell.scripts.size).to eq 2
-      expect(shell.scripts.first).to include('"loadDdl":false', '"threads":1', "archive/log_lines/ids-000000000001-000000000002", "load-progress-backfill-ids-000000000001")
+      expect(shell.scripts.first).to include('"resetProgress":false', '"loadDdl":false', '"threads":1', "archive/log_lines/ids-000000000001-000000000002", "load-progress-backfill-ids-000000000001")
     end
   end
 

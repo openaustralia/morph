@@ -263,7 +263,9 @@ module Morph
         shell.load_script(
           input_url: File.expand_path(@config.dump_dir), target_schema: target.database, threads: @config.threads,
           progress_file: progress_file(load_ddl ? "restore-ddl" : "restore-data"),
-          load_ddl: load_ddl, load_data: load_data, dry_run: dry_run
+          load_ddl: load_ddl, load_data: load_data, dry_run: dry_run,
+          # restore only loads into an empty database, so progress left by an earlier restore is always stale
+          reset_progress: true
         )
       end
 

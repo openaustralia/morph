@@ -1,6 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "cgi"
 require "uri"
 
 module Morph
@@ -42,8 +43,8 @@ module Morph
         new(
           host: T.must(uri.host),
           port: uri.port || 3306,
-          username: URI.decode_www_form_component(T.must(uri.user)),
-          password: URI.decode_www_form_component(uri.password.to_s),
+          username: CGI.unescapeURIComponent(T.must(uri.user)),
+          password: CGI.unescapeURIComponent(uri.password.to_s),
           database: T.must(uri.path)[1..].to_s
         )
       end
@@ -56,7 +57,7 @@ module Morph
       # mysqlsh connection URI without the password
       sig { returns(String) }
       def shell_uri
-        "#{URI.encode_www_form_component(username)}@#{host}:#{port}"
+        "#{CGI.escapeURIComponent(username)}@#{host}:#{port}"
       end
 
       sig { params(other: Connection).returns(T::Boolean) }
