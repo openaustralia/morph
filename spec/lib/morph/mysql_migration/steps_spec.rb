@@ -26,7 +26,7 @@ describe Morph::MysqlMigration::Steps do
 
       def run(script_body)
         (@scripts ||= []) << script_body
-        output || "#{Morph::MysqlMigration::Shell::OK_MARKER}\n"
+        output || "Rows written: 1\n#{Morph::MysqlMigration::Shell::OK_MARKER}\n"
       end
     end
   end
@@ -105,13 +105,25 @@ describe Morph::MysqlMigration::Steps do
       expect(report("dump")).to include("outcome" => "succeeded")
       expect(report("dump")["retention"]).to include("expected_row_count" => 1)
       expect(File.read(config.where_clause_path)).to start_with("run_id IS NULL")
-      expect(report("dump")["where_clause_file"]).to eq config.where_clause_path
+      expect(File.read(report("dump")["where_clause_file"])).to eq File.read(config.where_clause_path)
     end
 
     it "passes a dry run through to mysqlsh" do
       steps.dump(dry_run: true)
 
       expect(shell.scripts.first).to include('"dryRun":true')
+    end
+
+    it "leaves the active filter alone on a dry run or a failed dump" do
+      FileUtils.mkdir_p(File.dirname(config.where_clause_path))
+      File.write(config.where_clause_path, "run_id >= 1\n")
+
+      steps.dump(dry_run: true)
+      allow(shell).to receive(:run).and_raise("mysqlsh failed")
+      expect { steps.dump }.to raise_error("mysqlsh failed")
+
+      expect(File.read(config.where_clause_path)).to eq "run_id >= 1\n"
+      expect(Dir[File.join(File.dirname(config.where_clause_path), "log_lines_where-*.sql")]).not_to be_empty
     end
 
     it "records the elapsed time even when mysqlsh fails" do
@@ -144,7 +156,7 @@ describe Morph::MysqlMigration::Steps do
         calls += 1
         raise "connection lost" if calls == 2
 
-        "#{Morph::MysqlMigration::Shell::OK_MARKER}\n"
+        "Rows written: 1\n#{Morph::MysqlMigration::Shell::OK_MARKER}\n"
       end
 
       expect { steps.archive_log_lines }.to raise_error("connection lost")
@@ -157,11 +169,20 @@ describe Morph::MysqlMigration::Steps do
       expect(report("archive_log_lines")).to include("slices_already_done" => 1, "slices_pending" => 2)
     end
 
-    it "records each slice's row count for checking the backfill" do
+    it "records each slice's row count from the dump's own output, not from a later count" do
+      shell.output = "Rows written: 1,234\n#{Morph::MysqlMigration::Shell::OK_MARKER}"
+
       steps.archive_log_lines
 
       slices = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"]).slices
-      expect(slices.sum(&:rows)).to eq 5
+      expect(slices.map(&:rows)).to all(eq(1234))
+    end
+
+    it "refuses to record a slice whose dump output has no row count" do
+      shell.output = Morph::MysqlMigration::Shell::OK_MARKER
+
+      expect { steps.archive_log_lines }.to raise_error(/could not read the row count/)
+      expect(File.exist?(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])).to be false
     end
 
     it "does not record slices from a dry run" do

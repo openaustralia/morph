@@ -74,6 +74,8 @@ module Morph
                       output_url: File.expand_path(@config.dump_dir), where: { "log_lines" => retained.where_clause },
                       threads: @config.threads, consistent: true, dry_run: dry_run
                     ))
+          # Verification reads the active filter, so a dry run or a failed dump must not replace it
+          promote_where_clause(retained.where_clause) unless dry_run
         end
       end
 
@@ -95,15 +97,19 @@ module Morph
           # MySQL Shell creates one directory level, so a local archive needs its parent first. S3 has no directories.
           FileUtils.mkdir_p(@config.archive_base_url) if @config.local_archive?
           pending.each do |slice|
-            shell.run(shell.dump_script(
-                        schema: source.database, tables: ["log_lines"], output_url: "#{@config.archive_base_url}/#{slice.name}",
-                        where: { "log_lines" => "id BETWEEN #{slice.from_id} AND #{slice.to_id}" },
-                        threads: @config.threads, consistent: false, s3_options: @config.s3_options, dry_run: dry_run
-                      ))
+            output = shell.run(shell.dump_script(
+                                 schema: source.database, tables: ["log_lines"], output_url: "#{@config.archive_base_url}/#{slice.name}",
+                                 where: { "log_lines" => "id BETWEEN #{slice.from_id} AND #{slice.to_id}" },
+                                 threads: @config.threads, consistent: false, s3_options: @config.s3_options, dry_run: dry_run
+                               ))
             next if dry_run
 
-            rows = source.client.query("SELECT COUNT(*) FROM log_lines WHERE id BETWEEN #{slice.from_id} AND #{slice.to_id}", as: :array).first.first.to_i
-            manifest.complete(slice, rows: rows)
+            # The archive is taken without a consistent snapshot, so the count comes from the dump itself:
+            # a count made afterwards could differ if rows were deleted in between
+            rows = output[/Rows written:\s*([\d,]+)/, 1]&.delete(",")
+            raise "could not read the row count of #{slice.name} from the dump output" if rows.nil?
+
+            manifest.complete(slice, rows: rows.to_i)
           end
         end
       end
@@ -273,15 +279,20 @@ module Morph
                      as: :array).map(&:first)
       end
 
-      # The filter can run to hundreds of kilobytes, so it goes to a file rather than into the report. Verification
-      # reads the same file, and it is kept with a timestamp as well for the record.
+      # The filter can run to hundreds of kilobytes, so it goes to a timestamped file rather than into the report.
+      # A successful dump then makes it the active filter, which verification reads.
       sig { params(clause: String).returns(String) }
       def save_where_clause(clause)
         FileUtils.mkdir_p(@config.report_dir)
+        path = @config.where_clause_path.sub(/\.sql\z/, "-#{Time.now.utc.strftime('%Y%m%dT%H%M%SZ')}.sql")
+        File.write(path, "#{clause}\n")
+        path
+      end
+
+      sig { params(clause: String).void }
+      def promote_where_clause(clause)
         File.write("#{@config.where_clause_path}.tmp", "#{clause}\n")
         File.rename("#{@config.where_clause_path}.tmp", @config.where_clause_path)
-        FileUtils.cp(@config.where_clause_path, @config.where_clause_path.sub(/\.sql\z/, "-#{Time.now.utc.strftime('%Y%m%dT%H%M%SZ')}.sql"))
-        @config.where_clause_path
       end
 
       sig { returns(String) }

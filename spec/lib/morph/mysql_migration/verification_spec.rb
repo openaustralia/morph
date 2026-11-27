@@ -77,6 +77,25 @@ describe Morph::MysqlMigration::Verification do
     end
   end
 
+  describe "sampling a large scoped table" do
+    it "applies the sample to the whole filter, so both sides hash the same rows" do
+      stub_const("#{described_class}::FULL_HASH_LIMIT", 1)
+      stub_const("#{described_class}::SAMPLE_MODULUS", 2)
+      run = create(:run)
+      lines = Array.new(6) { create(:log_line, run: run) }
+      filter = "run_id IS NULL OR run_id = #{run.id} OR id > #{lines.last.id}"
+      source = described_class.new(client, database: database, log_lines_where: filter).snapshot
+      client.query("UPDATE log_lines SET text = 'changed' WHERE MOD(id, 2) = 1")
+
+      target = described_class.new(client, database: database, log_lines_where: nil).snapshot
+      sampled_rows = LogLine.where("MOD(id, 2) = 0").count
+
+      expect(source["tables"]["log_lines"]).to include("sampled" => true)
+      expect(target["tables"]["log_lines"]["hash"]).to eq source["tables"]["log_lines"]["hash"]
+      expect(sampled_rows).to be_positive
+    end
+  end
+
   describe "#auto_increment_problems" do
     it "is empty when the next id is above the source's highest" do
       create(:user)

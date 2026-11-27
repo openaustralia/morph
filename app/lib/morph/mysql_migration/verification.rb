@@ -89,8 +89,14 @@ module Morph
         scope = scope_for(table)
         rows = @client.query("SELECT COUNT(*) FROM #{quote(table)} #{scope}", as: :array).first.first.to_i
         sampled = columns.key?("id") && rows > FULL_HASH_LIMIT
-        where = sampled ? [scope.sub(/\AWHERE /, ""), "MOD(id, #{SAMPLE_MODULUS}) = 0"].reject(&:empty?).join(" AND ") : scope.sub(/\AWHERE /, "")
-        where = "WHERE #{where}" unless where.empty?
+        # The filter is a chain of ORs, so it needs its own brackets before the sample condition is ANDed on
+        filter = scope.sub(/\AWHERE /, "")
+        conditions = if sampled
+                       [filter.empty? ? nil : "(#{filter})", "MOD(id, #{SAMPLE_MODULUS}) = 0"].compact
+                     else
+                       [filter].reject(&:empty?)
+                     end
+        where = conditions.empty? ? "" : "WHERE #{conditions.join(' AND ')}"
         hash = @client.query("SELECT COALESCE(SUM(#{row_hash(columns)}), 0) FROM #{quote(table)} #{where}", as: :array).first.first.to_s
         { "rows" => rows, "sampled" => sampled, "hash" => hash, "columns" => columns.keys }
       end
