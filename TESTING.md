@@ -48,6 +48,19 @@ This includes:
 
 Testing restore is too hard to automate. 
 
+### MySQL migration tasks (`mysql_migration:*`)
+
+The specs cover everything except running MySQL Shell (`Morph::MysqlMigration::Shell#run`, marked
+`# :nocov:`), because it needs `mysqlsh` 8.4 and two servers. Test it on the rehearsal server, following
+`docs/mysql_migration.md`, with `DRY_RUN=1` first:
+
+- `check_source`: reports no errors for 8.4 against a copy of production
+- `dump`: the `where` filter on `log_lines` is accepted and the dump holds only the retained rows
+- `archive_log_lines`: slices appear under the S3 prefix and a second run skips them
+- `restore`: the database ends up `utf8mb4_unicode_ci` throughout, including the four-byte rows
+- `backfill_log_lines`: archived rows load into the populated table, and a re-run changes nothing
+- `verify`: passes on a frozen source, and records the elapsed time against the 4-hour bar
+
 ### Error reporting to Sentry
 
 Automated tests only cover the SDK staying quiet when `SENTRY_DSN` is unset.

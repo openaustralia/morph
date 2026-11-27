@@ -1,0 +1,360 @@
+# typed: false
+# frozen_string_literal: true
+
+require "spec_helper"
+require "tmpdir"
+
+# Each step needs the same stand-ins for the two servers, mysqlsh and the filesystem
+# rubocop:disable RSpec/MultipleMemoizedHelpers
+describe Morph::MysqlMigration::Steps do
+  include ActiveSupport::Testing::TimeHelpers
+
+  # Stands in for a server: the specs run in a transaction, so every client is the one test connection
+  let(:connection_class) do
+    Class.new(Morph::MysqlMigration::Connection) do
+      def client(database: nil) # rubocop:disable Lint/UnusedMethodArgument
+        ActiveRecord::Base.connection.raw_connection
+      end
+    end
+  end
+
+  # Records the scripts it is given instead of running mysqlsh
+  let(:recording_shell_class) do
+    Class.new(Morph::MysqlMigration::Shell) do
+      attr_reader :scripts
+      attr_accessor :output
+
+      def run(script_body)
+        (@scripts ||= []) << script_body
+        output || "Rows written: 1\n#{Morph::MysqlMigration::Shell::OK_MARKER}\n"
+      end
+    end
+  end
+
+  let(:dir) { Dir.mktmpdir }
+  let(:database) { ActiveRecord::Base.connection.current_database }
+  let(:env) do
+    {
+      "MYSQL_MIGRATION_SOURCE_URL" => "mysql2://u:p@old.example.invalid:3306/#{database}",
+      "MYSQL_MIGRATION_TARGET_URL" => "mysql2://u:p@new.example.invalid:3306/#{database}",
+      "MYSQL_MIGRATION_DUMP_DIR" => File.join(dir, "dump"),
+      "MYSQL_MIGRATION_REPORT_DIR" => File.join(dir, "reports"),
+      "MYSQL_MIGRATION_ARCHIVE_MANIFEST" => File.join(dir, "manifest.json"),
+      "MYSQL_MIGRATION_S3_BUCKET" => "example-archive",
+      "MYSQL_MIGRATION_S3_PREFIX" => "archive/log_lines",
+      "MYSQL_MIGRATION_ARCHIVE_SLICE_ROWS" => "2"
+    }
+  end
+  let(:config) { Morph::MysqlMigration::Config.new(env) }
+  let(:shell) { recording_shell_class.new(Morph::MysqlMigration::Connection.from_url(env["MYSQL_MIGRATION_SOURCE_URL"])) }
+  let(:steps) { described_class.new(config: config, shell_factory: ->(_connection) { shell }) }
+
+  def report(name)
+    path = Dir[File.join(dir, "reports", "#{name}-*.json")].first
+    path && JSON.parse(File.read(path))
+  end
+
+  before do
+    allow(config).to receive_messages(source: connection_class.from_url(env["MYSQL_MIGRATION_SOURCE_URL"]), target: connection_class.from_url(env["MYSQL_MIGRATION_TARGET_URL"]))
+    allow($stdout).to receive(:puts)
+  end
+
+  after { FileUtils.remove_entry(dir) }
+
+  describe "#check_source" do
+    def checker_output(*checks)
+      "#{JSON.generate({ 'errorCount' => 9, 'checksPerformed' => checks })}\n#{Morph::MysqlMigration::Shell::OK_MARKER}"
+    end
+
+    let(:variable_error) do
+      { "id" => "authMethodUsage", "status" => "OK",
+        "detectedProblems" => [{ "level" => "Error", "dbObjectType" => "SystemVariable", "dbObject" => "default_authentication_plugin" }] }
+    end
+    let(:not_run) { { "id" => "sysvarAllowedValues", "status" => "CONFIGURATION_ERROR" } }
+
+    it "passes, recording rather than failing on errors in the source server's own variables" do
+      shell.output = checker_output(variable_error, not_run,
+                                    { "id" => "reservedKeywords", "detectedProblems" => [{ "level" => "Warning", "dbObjectType" => "Column" }] })
+
+      expect { steps.check_source }.not_to raise_error
+      expect(report("check_source")).to include("outcome" => "succeeded", "warning_count" => 1, "checks_not_run" => ["sysvarAllowedValues"])
+      expect(report("check_source")["errors_in_server_variables"].size).to eq 1
+    end
+
+    it "fails when it finds an error in the data" do
+      table_error = { "id" => "oldTemporal", "detectedProblems" => [{ "level" => "Error", "dbObjectType" => "Column", "dbObject" => "db.t.c" }] }
+      shell.output = checker_output(variable_error, table_error)
+
+      expect { steps.check_source }.to raise_error(/1 error\(s\) in the data/)
+      expect(report("check_source")).to include("outcome" => "failed")
+    end
+  end
+
+  describe "#dump" do
+    before do
+      run = create(:run, created_at: 1.day.ago)
+      create(:log_line, run: run)
+    end
+
+    it "dumps every table with the retained filter on log_lines, and records it" do
+      steps.dump
+
+      script = shell.scripts.first
+      expect(script).to include("util.dumpTables", '"consistent":true', "owners", "log_lines")
+      expect(script).to match(/"#{database}\.log_lines":"run_id IS NULL OR run_id >= \d+"/)
+      expect(report("dump")).to include("outcome" => "succeeded")
+      expect(report("dump")["retention"]).to include("expected_row_count" => 1)
+      expect(File.read(config.where_clause_path)).to start_with("run_id IS NULL")
+      expect(File.read(report("dump")["where_clause_file"])).to eq File.read(config.where_clause_path)
+    end
+
+    it "passes a dry run through to mysqlsh" do
+      steps.dump(dry_run: true)
+
+      expect(shell.scripts.first).to include('"dryRun":true')
+    end
+
+    it "leaves the active filter alone on a dry run or a failed dump" do
+      FileUtils.mkdir_p(File.dirname(config.where_clause_path))
+      File.write(config.where_clause_path, "run_id >= 1\n")
+
+      steps.dump(dry_run: true)
+      allow(shell).to receive(:run).and_raise("mysqlsh failed")
+      expect { steps.dump }.to raise_error("mysqlsh failed")
+
+      expect(File.read(config.where_clause_path)).to eq "run_id >= 1\n"
+      expect(Dir[File.join(File.dirname(config.where_clause_path), "log_lines_where-*.sql")]).not_to be_empty
+    end
+
+    it "records the elapsed time even when mysqlsh fails" do
+      allow(shell).to receive(:run).and_raise("mysqlsh failed")
+
+      expect { steps.dump }.to raise_error("mysqlsh failed")
+      expect(report("dump")).to include("outcome" => "failed", "error" => "mysqlsh failed")
+      expect(report("dump")["elapsed_seconds"]).to be_a(Numeric)
+    end
+  end
+
+  describe "#archive_log_lines" do
+    before do
+      run = create(:run)
+      5.times { create(:log_line, run: run) }
+    end
+
+    it "dumps each id slice to its own S3 prefix without the global read lock, and records the slices" do
+      steps.archive_log_lines
+
+      expect(shell.scripts.size).to eq 3
+      expect(shell.scripts.first).to include('"archive/log_lines/ids-', '"consistent":false', '"s3BucketName":"example-archive"')
+      manifest = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])
+      expect(manifest.covered_up_to_id).to eq LogLine.maximum(:id)
+    end
+
+    it "resumes after an interruption, dumping only the slices not yet complete" do
+      calls = 0
+      allow(shell).to receive(:run) do
+        calls += 1
+        raise "connection lost" if calls == 2
+
+        "Rows written: 1\n#{Morph::MysqlMigration::Shell::OK_MARKER}\n"
+      end
+
+      expect { steps.archive_log_lines }.to raise_error("connection lost")
+      expect(Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"]).slices.size).to eq 1
+
+      calls = 100
+      steps.archive_log_lines
+
+      expect(Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"]).slices.size).to eq 3
+      expect(report("archive_log_lines")).to include("slices_already_done" => 1, "slices_pending" => 2)
+    end
+
+    it "records each slice's row count from the dump's own output, not from a later count" do
+      shell.output = "Rows written: 1,234\n#{Morph::MysqlMigration::Shell::OK_MARKER}"
+
+      steps.archive_log_lines
+
+      slices = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"]).slices
+      expect(slices.map(&:rows)).to all(eq(1234))
+    end
+
+    it "refuses to record a slice whose dump output has no row count" do
+      shell.output = Morph::MysqlMigration::Shell::OK_MARKER
+
+      expect { steps.archive_log_lines }.to raise_error(/could not read the row count/)
+      expect(File.exist?(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])).to be false
+    end
+
+    it "does not record slices from a dry run" do
+      steps.archive_log_lines(dry_run: true)
+
+      expect(File.exist?(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])).to be false
+    end
+
+    it "does nothing when everything is already archived" do
+      steps.archive_log_lines
+      shell.scripts.clear
+
+      steps.archive_log_lines
+
+      expect(shell.scripts).to be_empty
+    end
+  end
+
+  describe "#restore" do
+    it "loads the DDL, then the data, into the target schema on a dry run" do
+      steps.restore(dry_run: true)
+
+      ddl, data = shell.scripts
+      expect(ddl).to include('"resetProgress":true', '"loadDdl":true', '"loadData":false', '"ignoreVersion":true', "\"schema\":\"#{database}\"")
+      expect(data).to include('"loadDdl":false', '"loadData":true', '"dryRun":true')
+      expect(report("restore")).to include("outcome" => "succeeded")
+    end
+  end
+
+  describe "#backfill_log_lines" do
+    it "refuses without a manifest" do
+      expect { steps.backfill_log_lines }.to raise_error(/no archive manifest/)
+    end
+
+    it "loads each archived slice without DDL, with few threads, through a progress file" do
+      manifest = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])
+      manifest.pending_slices(min_id: 1, max_id: 4, slice_rows: 2).each { |s| manifest.complete(s, rows: 1) }
+
+      steps.backfill_log_lines
+
+      expect(shell.scripts.size).to eq 2
+      expect(shell.scripts.first).to include('"resetProgress":false', '"loadDdl":false', '"threads":1', "archive/log_lines/ids-000000000001-000000000002", "load-progress-backfill-ids-000000000001")
+    end
+  end
+
+  describe "#scrub" do
+    let!(:owner) { create(:user, email: "someone@example.com", access_token: "token-placeholder") }
+
+    it "refuses outside a rehearsal environment and says so in the report" do
+      expect { steps.scrub }.to raise_error(Morph::MysqlMigration::ScrubRefused)
+
+      expect(report("scrub")).to include("outcome" => "failed")
+      expect(owner.reload.access_token).to eq "token-placeholder"
+    end
+
+    context "when the environment is a rehearsal one" do
+      let(:env) { super().merge("MORPH_REHEARSAL" => "true") }
+
+      it "scrubs variables and suppressed addresses too, and confirms nothing real remains" do
+        create(:variable, value: "real-secret")
+        create(:email_suppression, address: "real.person@example.com")
+
+        steps.scrub
+
+        expect(report("scrub")["remaining_real_values"]).to be_empty
+        expect(Variable.pluck(:value)).to all(eq("scrubbed-for-rehearsal"))
+        expect(EmailSuppression.pluck(:address)).to all(end_with("@example.invalid"))
+      end
+
+      it "fails if real values remain after the scrub" do
+        scrubber = instance_double(Morph::MysqlMigration::Scrub, check_allowed!: nil, run!: {}, remaining_real_values: ["1 variables with a value that is not the placeholder"])
+        allow(Morph::MysqlMigration::Scrub).to receive(:new).and_return(scrubber)
+
+        expect { steps.scrub }.to raise_error(/left real values behind/)
+      end
+
+      it "scrubs and records what it changed" do
+        steps.scrub
+
+        expect(owner.reload.email).to eq "owner-#{owner.id}@example.invalid"
+        expect(report("scrub")["rows_changed"]).to include("owners" => 1)
+      end
+    end
+  end
+
+  describe "#verify_scrub" do
+    it "passes on scrubbed data and names real values on unscrubbed data" do
+      create(:variable, value: "real-secret")
+      expect { steps.verify_scrub }.to raise_error(/real values remain: .*variables with a value/)
+
+      Morph::MysqlMigration::Scrub.new(config: Morph::MysqlMigration::Config.new("MORPH_REHEARSAL" => "true")).run!(ActiveRecord::Base.connection.raw_connection)
+
+      expect(steps.verify_scrub).to be_empty
+    end
+  end
+
+  describe "#verify" do
+    before { create(:user) }
+
+    it "needs the dump's filter for the retained scope" do
+      expect { steps.verify }.to raise_error(/run mysql_migration:dump first/)
+    end
+
+    it "records elapsed time, and fails because the test database is not utf8mb4_unicode_ci" do
+      steps.dump
+
+      expect { steps.verify }.to raise_error(Morph::MysqlMigration::VerificationFailed) { |error|
+        expect(error.differences).to all(include("is utf8"))
+      }
+
+      recorded = report("verify")
+      expect(recorded["elapsed_seconds"]).to be_a(Numeric)
+      expect(recorded["differences"]).not_to be_empty
+    end
+
+    it "uses the filter the dump recorded, even when the 30-day cutoff has moved on since" do
+      scraper = create(:scraper)
+      aging = create(:run, scraper: scraper, status_code: 0, created_at: 30.days.ago + 1.hour)
+      create(:log_line, run: aging)
+      3.times { create(:log_line, run: create(:run, scraper: scraper, status_code: 0, created_at: 1.day.ago)) }
+      steps.dump
+
+      travel_to(3.hours.from_now) do
+        expect { steps.verify }.to raise_error(Morph::MysqlMigration::VerificationFailed) { |error|
+          expect(error.differences.grep(/\Alog_lines: /)).to be_empty
+        }
+      end
+    end
+
+    it "compares the whole of log_lines after the backfill, without needing the dump's filter" do
+      expect { steps.verify(scope: "full") }.to raise_error(Morph::MysqlMigration::VerificationFailed)
+
+      expect(report("verify")["scope"]).to eq "full"
+    end
+
+    context "with the backfill scope" do
+      before do
+        run = create(:run)
+        3.times { create(:log_line, run: run) }
+      end
+
+      it "passes when each archived id range holds the rows archived" do
+        manifest = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])
+        manifest.pending_slices(min_id: LogLine.minimum(:id), max_id: LogLine.maximum(:id), slice_rows: 100).each { |s| manifest.complete(s, rows: 3) }
+
+        expect(steps.verify(scope: "backfill")).to be_empty
+        expect(report("verify")).to include("scope" => "backfill", "slices_checked" => 1)
+      end
+
+      it "names a slice that is short of rows" do
+        manifest = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])
+        manifest.pending_slices(min_id: LogLine.minimum(:id), max_id: LogLine.maximum(:id), slice_rows: 100).each { |s| manifest.complete(s, rows: 4) }
+
+        expect { steps.verify(scope: "backfill") }.to raise_error(Morph::MysqlMigration::VerificationFailed, /1 difference/) { |e|
+          expect(e.differences.first).to include("3 rows on the target, 4 archived")
+        }
+      end
+    end
+
+    it "rejects an unknown scope" do
+      expect { steps.verify(scope: "some") }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe "#checksums" do
+    it "lists tables that changed since a baseline" do
+      steps.checksums
+      baseline = Dir[File.join(dir, "reports", "checksums-*.json")].first
+      create(:user)
+
+      expect(steps.checksums(baseline_path: baseline)).to include("owners")
+    end
+  end
+end
+# rubocop:enable RSpec/MultipleMemoizedHelpers
