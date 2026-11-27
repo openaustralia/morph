@@ -22,6 +22,8 @@ Decisions behind this: [#1567](https://github.com/openaustralia/morph/issues/156
 
 ## The checklist
 
+Commands run on the server need the `deploy` user's rbenv shims on the `PATH`. Use a login shell (`ssh -t deploy@new.morph.io bash -l`). If `bundle` is not found or the Ruby version is wrong, that is a setup problem to record, not a failure of the step.
+
 ### 1. Sign in through the GitHub App
 
 Open https://new.morph.io, pass basic auth, then choose "Sign in with GitHub" as the test account.
@@ -65,9 +67,9 @@ If it is not, check that Elasticsearch is up and run `searchkick:reindex:all` on
 
 ### 6. Admin area
 
-On the server, as the `deploy` user in the `current` directory, run `RAILS_ENV=production bundle exec rake app:promote_to_admin` to promote the test account's nickname. Then open `/admin` and `/admin/jobs`.
+On the server, as the `deploy` user in the `current` directory, run `RAILS_ENV=production bundle exec rake app:promote_to_admin` to promote the test account's nickname (the task prompts for the nickname on stdin, so type it when asked). Then open `/admin` and `/admin/jobs`.
 
-Expected: the dashboard lists users and scrapers, and the Sidekiq page loads and shows the `default` and `scraper` queues.
+Expected: the dashboard lists accounts and scrapers, and the Sidekiq page loads and shows the `default` and `scraper` queues.
 
 ### 7. Mail goes to the sink
 

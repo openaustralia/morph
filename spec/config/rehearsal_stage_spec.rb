@@ -5,7 +5,9 @@ require "spec_helper"
 
 # Guards for the rehearsal stage (#1587). The deploy itself needs a real server,
 # so these only check that the files cannot drift into the risks flagged in the
-# cutover runbook.
+# cutover runbook. The cutover merge must change three examples on purpose: the
+# no production stage one (it adds production.rb), the Honeybadger one (the gem
+# goes at cutover, #1574) and the queue fix one if production should run it.
 describe "rehearsal stage" do # rubocop:disable RSpec/DescribeClass
   let(:root) { Rails.root }
 

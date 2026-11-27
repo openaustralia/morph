@@ -19,8 +19,9 @@ namespace :deploy do
 
       # Same ln -s then mv -T swap Capistrano uses, so current is never missing
       current_target = Pathname.new(release_path.to_s).relative_path_from(root)
-      execute :ln, "-sfn", current_target.to_s, root.join("current_relative").to_s
-      execute :mv, "-T", root.join("current_relative").to_s, root.join("current").to_s
+      swap = root.join("current_relative").to_s
+      execute :ln, "-sfn", current_target.to_s, swap
+      execute :mv, "-T", swap, root.join("current").to_s
 
       links = capture(:find, release_path.to_s, "-lname", Shellwords.escape("#{shared_path}/*")).split("\n")
       links.each do |link|
