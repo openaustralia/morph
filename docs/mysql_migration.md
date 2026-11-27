@@ -31,12 +31,13 @@ servers, and the tasks refuse to run if the target is the source.
 | `MYSQL_MIGRATION_DUMP_DIR` | Local directory for the cutover dump. It must not exist yet |
 | `MYSQL_MIGRATION_THREADS` | Dump and load threads (default 4) |
 | `MYSQL_MIGRATION_BACKFILL_THREADS` | Threads for the backfill, the only throttle it has (default 1) |
-| `MYSQL_MIGRATION_S3_BUCKET`, `_S3_PREFIX` | Archive location. Use a bucket or prefix of its own, never the backup chains |
+| `MYSQL_MIGRATION_S3_BUCKET` | The archive bucket, such as `example-morph-migration-archive`. Required, no default. See "The archive bucket" below |
+| `MYSQL_MIGRATION_S3_PREFIX` | Key prefix for the archive, such as `log_lines`. Required, no default |
 | `MYSQL_MIGRATION_ARCHIVE_DIR` | Practice only: a local directory used instead of S3 |
-| `MYSQL_MIGRATION_S3_REGION`, `_S3_PROFILE`, `_S3_ENDPOINT` | Optional. Credentials come from the standard AWS environment or the named profile, and are never read by this code |
+| `MYSQL_MIGRATION_S3_REGION`, `_S3_PROFILE`, `_S3_ENDPOINT` | Optional: region such as `ap-southeast-2`, a named AWS profile that holds the archive's own credentials, and an endpoint override |
 | `MYSQL_MIGRATION_ARCHIVE_SLICE_ROWS` | Log line ids per archive slice (default 5,000,000) |
 | `MYSQL_MIGRATION_ARCHIVE_MANIFEST` | Where the archive manifest is kept (default in the report directory) |
-| `MORPH_REHEARSAL` | Must be exactly `true` for the scrub to run. Provisioning for the rehearsal server has to set it |
+| `MORPH_REHEARSAL` | Must be exactly `true` for the scrub to run. See "What the infrastructure repository must provide" below |
 
 The tasks load the Rails app, so the app must boot with its own database
 settings. This was checked with the database missing in the test environment
@@ -44,9 +45,47 @@ only. If production mode objects to a database that does not exist yet, run
 `rails db:create` first: `restore` then fixes its charset and collation.
 
 Passwords reach MySQL Shell on stdin and the options go in a generated script
-file, so no credential or long filter appears in a process list. The rehearsal
-server holds no backup credentials (#1567), so give it only the S3 access the
-archive needs.
+file, so no credential or long filter appears in a process list.
+
+## The archive bucket
+
+The archive goes to a separate bucket made for it, with its own credentials. It is
+never the backup bucket, and the rehearsal server must not hold backup
+credentials (#1567), because a rehearsal that wrote into the backup chains would
+corrupt them.
+
+- The bucket and prefix come from `MYSQL_MIGRATION_S3_BUCKET` and
+  `MYSQL_MIGRATION_S3_PREFIX`. Neither has a default, and a task that needs them
+  refuses to start without them.
+- The credentials are the archive bucket's own. MySQL Shell reads them from the
+  standard AWS environment variables (`AWS_ACCESS_KEY_ID` and
+  `AWS_SECRET_ACCESS_KEY`, shown here as placeholders only) or from the profile
+  named in `MYSQL_MIGRATION_S3_PROFILE`. This code never reads or stores them.
+  Do not put them in the repository, in a report or in a command line.
+- The rehearsal server's role may write and read only that bucket. In IAM terms
+  that is `s3:ListBucket` on the bucket and `s3:GetObject`, `s3:PutObject` and
+  `s3:AbortMultipartUpload` on its objects, and nothing else. This list has not
+  been checked against MySQL Shell: confirm it on the first rehearsal dump.
+- Delete the archive after the old Linode is deleted (#1601).
+
+## What the infrastructure repository must provide
+
+The roles and Terraform in the infrastructure repository (GitLab) need to match
+these. The tasks expect exactly this:
+
+- `MORPH_REHEARSAL=true` in the rehearsal host's `.env`. The name is exactly
+  `MORPH_REHEARSAL` and the value exactly `true`: anything else, or the variable
+  being absent, makes the scrub refuse. It must be removed at cutover together
+  with `cron_enabled`, because the rehearsal server becomes production on the
+  same disk (#1595). `SERVER_NAME` must be the rehearsal host name, such as
+  `new.morph.io`: the scrub also refuses when it is `morph.io` or `www.morph.io`.
+- The `mysql-shell` package, giving the `mysqlsh` command on the `PATH`. Ubuntu
+  26.04 packages MySQL Shell 8.4.8 in universe (#1562), and the tasks were tried
+  with 8.4.8, so install 8.4.x from that package and check the version with
+  `mysqlsh --version`. The package name and version on 26.04 come from #1562 and
+  have not been checked on a 26.04 host.
+- `local_infile` switched on in MySQL 8.4, which `loadDump` needs on the target.
+- The archive bucket and its credentials, as above, and nothing for the backup bucket.
 
 ## Order of work
 
@@ -83,11 +122,25 @@ archive needs.
    `AUTO_INCREMENT` is above the source's highest id. It exits non-zero on any
    difference. A live source keeps changing, so only a source that is frozen
    (the cutover window) can match exactly.
-6. Rehearsal only: `rake mysql_migration:scrub` replaces emails with
-   `owner-<id>@example.invalid`, clears the owner access and remember tokens, replaces each API key with a random one (a NULL key would match a request that sends no key), and gives
-   each webhook a distinct placeholder URL. It refuses unless `MORPH_REHEARSAL`
-   is `true`, and refuses when `SERVER_NAME` is `morph.io`. It is not part of the
-   cutover and is outside the 4-hour timing.
+6. Rehearsal only: `rake mysql_migration:scrub` makes the restored copy unable
+   to contact real people or services:
+   - `owners.email` becomes `owner-<id>@example.invalid`
+   - `owners.access_token` and `owners.remember_token` are cleared, and each
+     `owners.api_key` becomes a distinct random key (a NULL key would match an API
+     request that sends no key)
+   - each `webhooks.url` becomes a distinct placeholder URL
+   - every `variables.value`, which may hold a scraper's secret, becomes the one
+     placeholder `scrubbed-for-rehearsal`, so a rehearsal scraper can never present a
+     real secret to a third-party service
+   - each `email_suppressions.address` becomes `suppressed-<id>@example.invalid`
+
+   It refuses unless `MORPH_REHEARSAL` is `true`, and refuses when `SERVER_NAME` is
+   `morph.io`. It then checks that no real value remains and fails if one does.
+   `rake mysql_migration:verify_scrub` runs the same check on its own and changes
+   nothing. API keys are random after the scrub, so that check can only report a
+   missing key. The scrub is not part of the cutover and is outside the 4-hour timing.
+   Columns it does not cover, such as `email_suppressions.reply_excerpt` and the
+   IP addresses on `owners` and `runs`, are left as they are.
 7. After cutover: `rake mysql_migration:backfill_log_lines` loads the archive
    into the existing table, one slice at a time. Run it in off-peak slots and stop
    it in the morning: progress files let it resume, and re-loading a slice is

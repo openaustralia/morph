@@ -32,10 +32,18 @@ namespace :mysql_migration do
     steps.call.backfill_log_lines(dry_run: dry_run.call)
   end
 
-  desc "Scrub emails, tokens and webhook URLs from the restored copy. Refuses unless MORPH_REHEARSAL=true"
+  desc "Scrub emails, tokens, webhook URLs, variable values and suppressed addresses from the restored copy. Refuses unless MORPH_REHEARSAL=true"
   task scrub: :environment do
     steps.call.scrub
   rescue Morph::MysqlMigration::ScrubRefused => e
+    abort e.message
+  end
+
+  desc "Check that the scrub left no real emails, tokens, webhook URLs, variable values or suppressed addresses"
+  task verify_scrub: :environment do
+    steps.call.verify_scrub
+    puts "No real values remain"
+  rescue RuntimeError => e
     abort e.message
   end
 

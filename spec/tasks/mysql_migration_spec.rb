@@ -46,6 +46,13 @@ RSpec.describe "tasks" do # rubocop:disable RSpec/DescribeClass
         .to raise_error(SystemExit).and output(/1 difference.*owners: value hash differs/m).to_stderr
     end
 
+    it "stops the scrub check with what remains" do
+      allow(steps).to receive(:verify_scrub).and_raise("real values remain: 1 variables")
+
+      expect { Rake::Task["mysql_migration:verify_scrub"].execute }
+        .to raise_error(SystemExit).and output(/real values remain/).to_stderr
+    end
+
     it "verifies the retained scope unless told otherwise" do
       allow(steps).to receive(:verify).and_return([])
 

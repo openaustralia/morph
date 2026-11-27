@@ -241,12 +241,41 @@ describe Morph::MysqlMigration::Steps do
     context "when the environment is a rehearsal one" do
       let(:env) { super().merge("MORPH_REHEARSAL" => "true") }
 
+      it "scrubs variables and suppressed addresses too, and confirms nothing real remains" do
+        create(:variable, value: "real-secret")
+        create(:email_suppression, address: "real.person@example.com")
+
+        steps.scrub
+
+        expect(report("scrub")["remaining_real_values"]).to be_empty
+        expect(Variable.pluck(:value)).to all(eq("scrubbed-for-rehearsal"))
+        expect(EmailSuppression.pluck(:address)).to all(end_with("@example.invalid"))
+      end
+
+      it "fails if real values remain after the scrub" do
+        scrubber = instance_double(Morph::MysqlMigration::Scrub, check_allowed!: nil, run!: {}, remaining_real_values: ["1 variables with a value that is not the placeholder"])
+        allow(Morph::MysqlMigration::Scrub).to receive(:new).and_return(scrubber)
+
+        expect { steps.scrub }.to raise_error(/left real values behind/)
+      end
+
       it "scrubs and records what it changed" do
         steps.scrub
 
         expect(owner.reload.email).to eq "owner-#{owner.id}@example.invalid"
         expect(report("scrub")["rows_changed"]).to include("owners" => 1)
       end
+    end
+  end
+
+  describe "#verify_scrub" do
+    it "passes on scrubbed data and names real values on unscrubbed data" do
+      create(:variable, value: "real-secret")
+      expect { steps.verify_scrub }.to raise_error(/real values remain: .*variables with a value/)
+
+      Morph::MysqlMigration::Scrub.new(config: Morph::MysqlMigration::Config.new("MORPH_REHEARSAL" => "true")).run!(ActiveRecord::Base.connection.raw_connection)
+
+      expect(steps.verify_scrub).to be_empty
     end
   end
 

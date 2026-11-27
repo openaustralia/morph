@@ -74,6 +74,51 @@ describe Morph::MysqlMigration::Scrub do
       expect(result).to include("webhooks" => 3)
     end
 
+    it "replaces every variable value, which may hold a secret, with one fixed placeholder" do
+      scraper = create(:scraper)
+      variables = [create(:variable, scraper: scraper, value: "real-secret-1"), create(:variable, scraper: scraper, value: "real-secret-2")]
+
+      result = scrub.run!(client)
+
+      expect(variables.map { |v| v.reload.value }).to all(eq("scrubbed-for-rehearsal"))
+      expect(result).to include("variables" => 2)
+    end
+
+    it "gives each suppressed address a distinct fictional one that cannot deliver" do
+      suppressions = [create(:email_suppression, address: "real.person@example.com"), create(:email_suppression, address: "other@example.net")]
+
+      result = scrub.run!(client)
+
+      addresses = suppressions.map { |e| e.reload.address }
+      expect(addresses).to eq(suppressions.map { |e| "suppressed-#{e.id}@example.invalid" })
+      expect(addresses.uniq.size).to eq 2
+      expect(result).to include("email_suppressions" => 2)
+    end
+
+    describe "#remaining_real_values" do
+      before do
+        create(:webhook)
+        create(:variable, value: "real-secret")
+        create(:email_suppression, address: "real.person@example.com")
+      end
+
+      it "reports what has not been scrubbed" do
+        problems = scrub.remaining_real_values(client)
+
+        expect(problems).to include(a_string_matching(/owners with an email that is not a placeholder/),
+                                    a_string_matching(/owners with an access or remember token/),
+                                    a_string_matching(/webhooks with a URL/),
+                                    a_string_matching(/variables with a value/),
+                                    a_string_matching(/suppressed addresses/))
+      end
+
+      it "reports nothing once the scrub has run" do
+        scrub.run!(client)
+
+        expect(scrub.remaining_real_values(client)).to be_empty
+      end
+    end
+
     it "reports how many owners it changed" do
       expect(scrub.run!(client)).to include("owners" => Owner.count)
     end

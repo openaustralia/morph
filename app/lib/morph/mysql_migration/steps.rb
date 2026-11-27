@@ -167,8 +167,25 @@ module Morph
         report.measure do
           scrubber = Scrub.new(config: @config)
           scrubber.check_allowed!
-          report["rows_changed"] = scrubber.run!(@config.target.client)
+          client = @config.target.client
+          report["rows_changed"] = scrubber.run!(client)
+          remaining = scrubber.remaining_real_values(client)
+          report["remaining_real_values"] = remaining
+          raise "the scrub left real values behind: #{remaining.join('; ')}" if remaining.any?
         end
+      end
+
+      # Reports anything the scrub should have replaced, without changing data. Safe to run anywhere.
+      sig { returns(T::Array[String]) }
+      def verify_scrub
+        report = new_report("verify_scrub")
+        remaining = T.let([], T::Array[String])
+        report.measure do
+          remaining.concat(Scrub.new(config: @config).remaining_real_values(@config.target.client))
+          report["remaining_real_values"] = remaining
+          raise "real values remain: #{remaining.join('; ')}" if remaining.any?
+        end
+        remaining
       end
 
       # Compares source and target, then records the elapsed time. VERIFY_SCOPE=full compares the whole of log_lines
