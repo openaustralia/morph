@@ -38,6 +38,11 @@ servers, and the tasks refuse to run if the target is the source.
 | `MYSQL_MIGRATION_ARCHIVE_MANIFEST` | Where the archive manifest is kept (default in the report directory) |
 | `MORPH_REHEARSAL` | Must be exactly `true` for the scrub to run. Provisioning for the rehearsal server has to set it |
 
+The tasks load the Rails app, so the app must boot with its own database
+settings. This was checked with the database missing in the test environment
+only. If production mode objects to a database that does not exist yet, run
+`rails db:create` first: `restore` then fixes its charset and collation.
+
 Passwords reach MySQL Shell on stdin and the options go in a generated script
 file, so no credential or long filter appears in a process list. The rehearsal
 server holds no backup credentials (#1567), so give it only the S3 access the
@@ -70,7 +75,9 @@ archive needs.
    data. It refuses a database that already has tables, and `local_infile` must
    be on for the target.
 5. `rake mysql_migration:verify` compares source and target and records the
-   time. Run it before the scrub. It reports row counts, a value hash per table
+   time. Run it before the scrub. It reads the `log_lines` filter the dump
+   recorded (`log_lines_where.sql` in the report directory) rather than working
+   it out again, because the 30-day cutoff moves on while the restore runs. It reports row counts, a value hash per table
    (whole for tables up to 500,000 rows, a fixed sample of ids above that),
    whether every collation is `utf8mb4_unicode_ci`, and whether the target's
    `AUTO_INCREMENT` is above the source's highest id. It exits non-zero on any

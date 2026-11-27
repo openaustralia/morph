@@ -79,13 +79,22 @@ module Morph
           file.write(script_body)
           file.flush
           argv = [@executable, "--passwords-from-stdin", "--js", "--uri", @connection.shell_uri, "--file", file.path]
-          stdout, stderr, status = Open3.capture3(*argv, stdin_data: "#{@connection.password}\n" * PASSWORD_PROMPTS)
-          $stdout.puts stdout
-          warn stderr unless stderr.empty?
-          raise "mysqlsh failed (exit #{status.exitstatus}) against #{@connection}" unless status.success?
-          raise "mysqlsh did not reach the end of the script against #{@connection}" unless stdout.include?(OK_MARKER)
+          output = +""
+          status = T.let(nil, T.nilable(Process::Status))
+          Open3.popen2e(*argv) do |stdin, out, wait|
+            stdin.write("#{@connection.password}\n" * PASSWORD_PROMPTS)
+            stdin.close
+            # Printed as it arrives, so an hour-long load shows progress
+            out.each_line do |line|
+              $stdout.print line
+              output << line
+            end
+            status = wait.value
+          end
+          raise "mysqlsh failed (exit #{status&.exitstatus.inspect}) against #{@connection}" unless status&.success?
+          raise "mysqlsh did not reach the end of the script against #{@connection}" unless output.include?(OK_MARKER)
 
-          stdout
+          output
         end
       end
       # :nocov:

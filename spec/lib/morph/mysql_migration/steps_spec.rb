@@ -7,6 +7,8 @@ require "tmpdir"
 # Each step needs the same stand-ins for the two servers, mysqlsh and the filesystem
 # rubocop:disable RSpec/MultipleMemoizedHelpers
 describe Morph::MysqlMigration::Steps do
+  include ActiveSupport::Testing::TimeHelpers
+
   # Stands in for a server: the specs run in a transaction, so every client is the one test connection
   let(:connection_class) do
     Class.new(Morph::MysqlMigration::Connection) do
@@ -102,7 +104,8 @@ describe Morph::MysqlMigration::Steps do
       expect(script).to match(/"#{database}\.log_lines":"run_id IS NULL OR run_id >= \d+"/)
       expect(report("dump")).to include("outcome" => "succeeded")
       expect(report("dump")["retention"]).to include("expected_row_count" => 1)
-      expect(File.read(report("dump")["where_clause_file"])).to start_with("run_id IS NULL")
+      expect(File.read(config.where_clause_path)).to start_with("run_id IS NULL")
+      expect(report("dump")["where_clause_file"]).to eq config.where_clause_path
     end
 
     it "passes a dry run through to mysqlsh" do
@@ -222,7 +225,13 @@ describe Morph::MysqlMigration::Steps do
   describe "#verify" do
     before { create(:user) }
 
+    it "needs the dump's filter for the retained scope" do
+      expect { steps.verify }.to raise_error(/run mysql_migration:dump first/)
+    end
+
     it "records elapsed time, and fails because the test database is not utf8mb4_unicode_ci" do
+      steps.dump
+
       expect { steps.verify }.to raise_error(Morph::MysqlMigration::VerificationFailed) { |error|
         expect(error.differences).to all(include("is utf8"))
       }
@@ -232,7 +241,21 @@ describe Morph::MysqlMigration::Steps do
       expect(recorded["differences"]).not_to be_empty
     end
 
-    it "compares the whole of log_lines after the backfill" do
+    it "uses the filter the dump recorded, even when the 30-day cutoff has moved on since" do
+      scraper = create(:scraper)
+      aging = create(:run, scraper: scraper, status_code: 0, created_at: 30.days.ago + 1.hour)
+      create(:log_line, run: aging)
+      3.times { create(:log_line, run: create(:run, scraper: scraper, status_code: 0, created_at: 1.day.ago)) }
+      steps.dump
+
+      travel_to(3.hours.from_now) do
+        expect { steps.verify }.to raise_error(Morph::MysqlMigration::VerificationFailed) { |error|
+          expect(error.differences.grep(/\Alog_lines: /)).to be_empty
+        }
+      end
+    end
+
+    it "compares the whole of log_lines after the backfill, without needing the dump's filter" do
       expect { steps.verify(scope: "full") }.to raise_error(Morph::MysqlMigration::VerificationFailed)
 
       expect(report("verify")["scope"]).to eq "full"

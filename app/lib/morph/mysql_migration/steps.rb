@@ -163,7 +163,8 @@ module Morph
       end
 
       # Compares source and target, then records the elapsed time. VERIFY_SCOPE=full compares the whole of log_lines
-      # (after the backfill); the default compares the retained rows (after the cutover load). Run it before the scrub.
+      # (after the backfill); the default compares the retained rows, using the filter the dump recorded, after the cutover
+      # load. Run it before the scrub.
       sig { params(scope: String).returns(T::Array[String]) }
       def verify(scope: "retained")
         report = new_report("verify")
@@ -175,7 +176,7 @@ module Morph
           target = @config.target
           source_client = source.client
           target_client = target.client
-          where = scope == "retained" ? RetainedLogLines.new(source_client).where_clause : nil
+          where = scope == "retained" ? saved_where_clause : nil
           source_snapshot = Verification.new(source_client, database: source.database, log_lines_where: where).snapshot
           target_verification = Verification.new(target_client, database: target.database)
           target_snapshot = target_verification.snapshot
@@ -243,13 +244,23 @@ module Morph
                      as: :array).map(&:first)
       end
 
-      # The filter can run to hundreds of kilobytes, so it goes to a file for the record rather than into the report
+      # The filter can run to hundreds of kilobytes, so it goes to a file rather than into the report. Verification
+      # reads the same file, and it is kept with a timestamp as well for the record.
       sig { params(clause: String).returns(String) }
       def save_where_clause(clause)
         FileUtils.mkdir_p(@config.report_dir)
-        path = File.join(@config.report_dir, "log_lines_where-#{Time.now.utc.strftime('%Y%m%dT%H%M%SZ')}.sql")
-        File.write(path, "#{clause}\n")
-        path
+        File.write("#{@config.where_clause_path}.tmp", "#{clause}\n")
+        File.rename("#{@config.where_clause_path}.tmp", @config.where_clause_path)
+        FileUtils.cp(@config.where_clause_path, @config.where_clause_path.sub(/\.sql\z/, "-#{Time.now.utc.strftime('%Y%m%dT%H%M%SZ')}.sql"))
+        @config.where_clause_path
+      end
+
+      sig { returns(String) }
+      def saved_where_clause
+        path = @config.where_clause_path
+        raise "no #{path}: run mysql_migration:dump first, or verify with VERIFY_SCOPE=full" unless File.exist?(path)
+
+        File.read(path).strip
       end
     end
   end

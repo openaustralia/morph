@@ -21,11 +21,20 @@ module Morph
         Connection.from_url(required("MYSQL_MIGRATION_SOURCE_URL"))
       end
 
+      # The source is not needed once the old server is stopped, so a task that only touches the target (the backfill,
+      # the scrub) works without it. The check that they differ applies whenever a source is named.
       sig { returns(Connection) }
       def target
         Connection.from_url(required("MYSQL_MIGRATION_TARGET_URL")).tap do |target|
-          raise "MYSQL_MIGRATION_SOURCE_URL and MYSQL_MIGRATION_TARGET_URL point at the same database" if target.same_server_and_database?(source)
+          raise "MYSQL_MIGRATION_SOURCE_URL and MYSQL_MIGRATION_TARGET_URL point at the same database" if @env.fetch("MYSQL_MIGRATION_SOURCE_URL", nil).present? && target.same_server_and_database?(source)
         end
+      end
+
+      # The filter the last dump used. Verification reads this rather than working the filter out again, because the
+      # 30-day cutoff moves on while a dump, a restore and a verification run.
+      sig { returns(String) }
+      def where_clause_path
+        File.join(report_dir, "log_lines_where.sql")
       end
 
       # Local directory for the filtered cutover dump

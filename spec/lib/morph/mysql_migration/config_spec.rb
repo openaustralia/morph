@@ -22,6 +22,10 @@ describe Morph::MysqlMigration::Config do
     expect { described_class.new(same).target }.to raise_error(/same database/)
   end
 
+  it "does not need the source once the old server has been stopped" do
+    expect(described_class.new(env.except("MYSQL_MIGRATION_SOURCE_URL")).target.host).to eq "localhost"
+  end
+
   it "reads integers and rejects bad ones" do
     expect(described_class.new(env).threads).to eq 4
     expect(described_class.new(env.merge("MYSQL_MIGRATION_THREADS" => "8")).threads).to eq 8
