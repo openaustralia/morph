@@ -11,7 +11,7 @@ Every step has an **Action** (what to do, with no one named) and a **Check** (wh
 Claims are marked so nobody mistakes a guess for a fact:
 
 - **Verified** means checked against this repository on the date in the [status section](#status-of-claims-in-this-runbook).
-- **From #NNNN** means taken from a closed decision ticket and not checkable from this repository, because it lives in the `openaustralia/infrastructure` repository (on GitLab), in Terraform or in a person's account.
+- **From #NNNN** means taken from a closed decision ticket and not checkable from this repository, because it lives in the `openaustralia/infrastructure` repository (on GitLab), in [Terraform](https://developer.hashicorp.com/terraform) or in a person's account.
 - **Inferred** means this runbook joined the dots and no ticket says it. Confirm it in a dry run.
 
 Public repository rules apply. Do not put credentials, IP addresses, the announcement text or anyone's name or availability in this file. The new scraper IP address goes in the announcement, which is approved separately and is not committed ([#1576](https://github.com/openaustralia/morph/issues/1576)).
@@ -19,9 +19,9 @@ Public repository rules apply. Do not put credentials, IP addresses, the announc
 ## Terms
 
 - **Window**: the announced maintenance period. It starts after the 10:00 AEDT cron and runs for the second dry run's measured time plus 50% ([#1576](https://github.com/openaustralia/morph/issues/1576)).
-- **Read-only mode**: `SiteSetting.read_only_mode`. It blocks people from creating, editing or deleting scrapers and from resetting API keys. It does **not** stop scraper runs that are already queued or running, which is why the freeze also turns cron off and drains the queue ([#1569](https://github.com/openaustralia/morph/issues/1569)). Verified in `app/models/site_setting.rb`, `app/abilities/` and `app/workers/scraper_auto_run_worker.rb`.
+- **Read-only mode**: `SiteSetting.read_only_mode`. It blocks people from creating, editing or deleting scrapers and from resetting API keys. It does **not** stop scraper runs that are already queued or running, which is why the freeze also turns cron off and drains the queue ([#1569](https://github.com/openaustralia/morph/issues/1569)). Verified in [`app/models/site_setting.rb`](../../app/models/site_setting.rb), `app/abilities/` and [`app/workers/scraper_auto_run_worker.rb`](../../app/workers/scraper_auto_run_worker.rb).
 - **Smoke test**: the end-to-end checklist in [#1579](https://github.com/openaustralia/morph/issues/1579) (sign in through the GitHub App, run a test scraper, watch live log streaming, fetch data through the API, search, check the admin area), plus Discourse and a real email ([#1573](https://github.com/openaustralia/morph/issues/1573)).
-- **Platform** means a buildstep image tag, never a CPU architecture ([GLOSSARY.md](../../GLOSSARY.md)).
+- **New server** means the rehearsal server in [GLOSSARY.md](../../GLOSSARY.md). It is the same machine that becomes production at the stage rename in step 2, which is why the decision tickets and this runbook say "new server" throughout.
 
 ## Go and no-go gates before the window
 
@@ -30,18 +30,18 @@ Do not announce a date until the first group is true, and do not start the windo
 **Before announcing**
 
 - [ ] The second full dry run finished every in-window step in 4 hours or less ([#1569](https://github.com/openaustralia/morph/issues/1569)).
-- [ ] The restic restore drill passed on the rehearsal server: a sample of SQLite files and the latest MySQL dump restored, the dump loaded, row counts checked ([#1574](https://github.com/openaustralia/morph/issues/1574)).
+- [ ] The [restic](https://restic.net) restore drill passed on the rehearsal server: a sample of SQLite files and the latest MySQL dump restored, the dump loaded, row counts checked ([#1574](https://github.com/openaustralia/morph/issues/1574)).
 - [ ] The Discourse trial restore passed ([#1563](https://github.com/openaustralia/morph/issues/1563), [#1569](https://github.com/openaustralia/morph/issues/1569)).
 - [ ] The full `log_lines` archive restored on the rehearsal server and a re-run of the load changed nothing ([#1601](https://github.com/openaustralia/morph/issues/1601)).
 - [ ] The rehearsal checks in [#1600](https://github.com/openaustralia/morph/issues/1600) passed, including the container-to-host exposure check that decision left open.
-- [ ] The layout change on `main` that shows the read-only notice to **all** visitors has landed ([#1576](https://github.com/openaustralia/morph/issues/1576)). Verified as still outstanding when this runbook was written: `app/views/layouts/application.html.haml` shows the notice only when `signed_in? && SiteSetting.read_only_mode`.
+- [ ] The layout change on `main` that shows the read-only notice to **all** visitors has landed ([#1576](https://github.com/openaustralia/morph/issues/1576)). Verified as still outstanding when this runbook was written: [`app/views/layouts/application.html.haml`](../../app/views/layouts/application.html.haml) shows the notice only when `signed_in? && SiteSetting.read_only_mode`.
 - [ ] The announcement text is approved, with the date, window length and new scraper address in it ([#1576](https://github.com/openaustralia/morph/issues/1576)). Not committed here.
 
 **Before the window**
 
 - [ ] The announcement went out about two weeks ahead, with a reminder the day before ([#1576](https://github.com/openaustralia/morph/issues/1576)). Window day is Tuesday to Thursday.
-- [ ] The people who run the cutover and a second person to review rollback are free for the whole window. (Availability is held outside this repository.)
-- [ ] Bulk rsync of the SQLite files and scraper repositories has been repeated recently, and the `log_lines` archive is in S3 ([#1569](https://github.com/openaustralia/morph/issues/1569)).
+- [ ] The people who run the cutover and a second person to review rollback (inferred, no ticket asks for this) are free for the whole window. (Availability is held outside this repository.)
+- [ ] Bulk [rsync](https://rsync.samba.org) of the SQLite files and scraper repositories has been repeated recently, and the `log_lines` archive is in S3 ([#1569](https://github.com/openaustralia/morph/issues/1569)).
 - [ ] Certificates are issued on the new server for `morph.io`, `www`, `api`, `faye`, `help` and `discuss` ([#1573](https://github.com/openaustralia/morph/issues/1573)).
 - [ ] The Terraform merge request that points the `morph.io` A record at the new instance is written and reviewed, not applied ([#1573](https://github.com/openaustralia/morph/issues/1573)). Every other name is a CNAME to `morph.io` and the TTL is already 300 seconds, so no TTL lowering is needed (from #1573, read 2026-10-20). Re-check the TTL on the day.
 - [ ] A second Terraform merge request that reverts that change is written and reviewed, so rollback is one action (inferred).
@@ -68,26 +68,28 @@ Do not announce a date until the first group is true, and do not start the windo
 
 ### P1. Merge the new stack to main
 
+The placement of this step is inferred. See [open question 2](#open-questions).
+
 Action: merge `feature/1579-new-server` to `main` once the rehearsal server has validated it. In the same merge or the commit straight after it:
 
-- Remove Honeybadger: the `honeybadger` gem in the `Gemfile`, `require "capistrano/honeybadger"` in the `Capfile`, and any initializer or `HONEYBADGER_API_KEY` reference ([#1574](https://github.com/openaustralia/morph/issues/1574), [#1575](https://github.com/openaustralia/morph/issues/1575)). Verified that the gem and the Capfile line exist today. Search for any other mention before merging, because Sentry must be the only error tracker from the first day ([#1474](https://github.com/openaustralia/morph/issues/1474)).
+- Remove Honeybadger ([#1574](https://github.com/openaustralia/morph/issues/1574), [#1575](https://github.com/openaustralia/morph/issues/1575)). Verified leftovers on the branch when this runbook was written: the `honeybadger` gem and its comments in the `Gemfile` (and so `Gemfile.lock`), `require "capistrano/honeybadger"` in the `Capfile`, the `HONEYBADGER_API_KEY` lines in `env-example` and `docker-compose.ruby34.yml`, and a comment in `config/initializers/sentry.rb`. There is no Honeybadger initializer or `config/honeybadger.yml`, although #1574 mentions one. Search for `honeybadger` again before merging, because Sentry must be the only error tracker from the first day ([#1474](https://github.com/openaustralia/morph/issues/1474)).
 - Replace the contents of `config/deploy/production.rb` so it points at `morph.io` by hostname, not an IP address ([#1575](https://github.com/openaustralia/morph/issues/1575)). Verified that the file exists on the branch and hard-codes the old server's IP address. Until DNS flips in step 5, `morph.io` still resolves to the **old** server, so a stray `cap production deploy` between this merge and step 5 would push Ruby 3.4 code onto it. #1575 removed the production stage from the branch to prevent exactly that, so see [open question 2](#open-questions) before deciding when this lands.
 
-Check: CI passes on the merge commit, run as CI runs it, with all three skip variables set as in `.github/workflows/ruby.yml` (see [AGENTS.md](../../AGENTS.md)). `bundle exec cap -T` and a search for `honeybadger` show no leftovers.
+Check: CI passes on the merge commit, run as CI runs it, with all three skip variables set as in [`.github/workflows/ruby.yml`](../../.github/workflows/ruby.yml) (see [AGENTS.md](../../AGENTS.md)). `bundle exec cap -T` and a search for `honeybadger` show no leftovers.
 
 Rollback point R0: nothing public has changed. Revert the merge if a problem appears. Be aware that after this merge `main` can no longer be deployed to the old server, because its ceiling is Ruby 3.0.7 ([ADR 0005](../adr/0005-ruby-3-4-only-on-the-new-server.md)). The old server keeps running the code it already has, so rollback does not need a redeploy, but a hotfix to the old server after this point needs a separate path. When the merge lands, and what the production stage targets before the flip, are not settled, see [open questions](#open-questions).
 
 ## In the window
 
-The window starts after the 10:00 AEDT cron has run ([#1573](https://github.com/openaustralia/morph/issues/1573)). Keep a written log with a time against each step. The log feeds the next retrospective and the "finished" post.
+The window starts after the 10:00 AEDT cron has run ([#1573](https://github.com/openaustralia/morph/issues/1573)). Keep a written log with a time against each step (inferred, no ticket asks for this). The log feeds the next retrospective and the "finished" post.
 
 ### 1. Freeze the old server
 
 Action, in this order:
 
-1. Turn on read-only mode, from the **Go into site-wide read-only mode** button on the admin dashboard (`app/admin/dashboard.rb`, verified), or `SiteSetting.toggle_read_only_mode!` in a Rails console (verified to exist).
+1. Turn on read-only mode, from the **Go into site-wide read-only mode** button on the admin dashboard ([`app/admin/dashboard.rb`](../../app/admin/dashboard.rb), verified), or `SiteSetting.toggle_read_only_mode!` in a Rails console (verified to exist).
 2. Turn `cron_enabled` off on the old server and re-run its provisioning, or otherwise disable its cron entries (from #1567; the exact mechanism on the old server is not in this repository). This stops `auto_run_scrapers`, `send_alerts` and `stop_long_running_scrapers`.
-3. Drain the `scraper` queue: wait for queued and running jobs to finish. Queues are `default` and `scraper` (verified in `config/sidekiq.yml`), and the Sidekiq dashboard is mounted at `/admin/jobs` (verified in `config/routes.rb`).
+3. Drain the `scraper` queue: wait for queued and running jobs to finish. Queues are `default` and `scraper` (verified in [`config/sidekiq.yml`](../../config/sidekiq.yml)), and the [Sidekiq](https://sidekiq.org) dashboard is mounted at `/admin/jobs` (verified in [`config/routes.rb`](../../config/routes.rb)).
 4. Let running containers finish, or stop them. List them with `Morph::DockerUtils.running_containers` in a console (verified) or `docker ps`.
 5. Stop the workers.
 6. Post the pinned forum topic's "started" update, using the approved text, before the forum restore in step 3 ([#1576](https://github.com/openaustralia/morph/issues/1576)).
@@ -105,7 +107,7 @@ Action:
 1. Stop app services on the new server so nothing writes while data moves.
 2. On the new server, rename `/srv/www/rehearsal` to `/srv/www/production` on the same disk, so the pre-synced SQLite files are never copied again ([#1595](https://github.com/openaustralia/morph/issues/1595)).
 3. Set `morph_stage` to `production` and re-run the roles from `openaustralia/infrastructure`, so the nginx root, the systemd units, cron lines and restic sources follow the new path ([#1595](https://github.com/openaustralia/morph/issues/1595)). The rename was rehearsed in both dry runs.
-4. Redeploy the release to the `production` stage on the new server, so Capistrano rewrites its symlinks. Capistrano's `current` link and the links for `linked_dirs` (`db/scrapers`, `public/sitemaps`, `tmp/pids`, `log`) and `linked_files` (verified in `config/deploy.rb`) are normally absolute paths built from `deploy_to`, so the rename leaves them pointing at `/srv/www/rehearsal` (inferred from how Capistrano works, not tested here; confirm in the dry run). The deploy must reach the new server before DNS flips, so it needs a hosts or ssh override or a server-specific name, not `morph.io` (inferred).
+4. Redeploy the release to the `production` stage on the new server, so Capistrano rewrites its symlinks. Capistrano's `current` link and the links for `linked_dirs` (`db/scrapers`, `public/sitemaps`, `tmp/pids`, `log`) and `linked_files` (verified in [`config/deploy.rb`](../../config/deploy.rb)) are normally absolute paths built from `deploy_to`, so the rename leaves them pointing at `/srv/www/rehearsal` (inferred from how Capistrano works, not tested here; confirm in the dry run). The deploy must reach the new server before DNS flips, so it needs a hosts or ssh override or a server-specific name, not `morph.io` (inferred).
 5. Keep the new server's `cron_enabled` off for now.
 
 Check: `current`, `releases` and `shared` exist under `/srv/www/production`; no path under `/srv/www/rehearsal` remains; every symlink under the release resolves to `/srv/www/production`; `db/scrapers` is the pre-synced data, not an empty directory. #1595 flags as unverified whether any process stores an absolute host path under `shared`, such as scraper container mounts, so check that explicitly.
@@ -116,10 +118,10 @@ Rollback point R1: nothing on the old server changed in this step. Undo by renam
 
 Action:
 
-1. Run the final SQLite and scraper repository delta from the old server into `/srv/www/production/shared/db/scrapers` ([#1569](https://github.com/openaustralia/morph/issues/1569)). Only about 84 of 6,990 `data.sqlite` files changed in a week (from #1569), so this should be short.
+1. Run the final SQLite and scraper repository delta from the old server into `/srv/www/production/shared/db/scrapers` ([#1569](https://github.com/openaustralia/morph/issues/1569)). It should be short, because few `data.sqlite` files change in a week (from #1569).
 2. Take the filtered MySQL dump of the retained `log_lines` plus all other tables, load it into MySQL 8.4 with `utf8mb4_unicode_ci` ([#1569](https://github.com/openaustralia/morph/issues/1569), [#1571](https://github.com/openaustralia/morph/issues/1571)). Production's `log_lines` is never modified, so the old server stays a complete fallback.
 3. Take a fresh Discourse backup and restore it on the new server. The hostname must be `help.morph.io` and the DiscourseConnect URL and secret must point at `morph.io`, not at the rehearsal names (inferred from #1567, which described the remap the other way for rehearsal and flagged it as unverified).
-4. Reindex Elasticsearch from the loaded database. The index is rebuilt, never migrated ([#1569](https://github.com/openaustralia/morph/issues/1569), [#1572](https://github.com/openaustralia/morph/issues/1572)). Searchkick is used, and the cron entry `searchkick:reindex:all` is named in #1567. The reindex command itself is not defined in this repository's rake files, so copy it from the dry-run log.
+4. Reindex Elasticsearch from the loaded database. The index is rebuilt, never migrated ([#1569](https://github.com/openaustralia/morph/issues/1569), [#1572](https://github.com/openaustralia/morph/issues/1572)). [Searchkick](https://github.com/ankane/searchkick) is used, and the cron entry `searchkick:reindex:all` is named in #1567. The reindex command itself is not defined in this repository's rake files, so copy it from the dry-run log.
 5. Install the production-only secrets that the rehearsal server never held: Postal credentials ([#1573](https://github.com/openaustralia/morph/issues/1573)), the Sentry production DSN ([#1574](https://github.com/openaustralia/morph/issues/1574)), and the restic credentials (inferred: #1567 says the rehearsal never gets backup credentials, and no ticket says when they arrive, so confirm this is the moment).
 6. Do **not** start Redis state from the old server. The new server starts with empty Redis ([#1569](https://github.com/openaustralia/morph/issues/1569)).
 
@@ -142,7 +144,7 @@ Action: point `morph.io` at the new server from the tester's own machine only, w
 7. Send one real email through Postal to a maintainer.
 8. Open Discourse and check topics and accounts, and that signing in through DiscourseConnect lands on `morph.io`.
 
-Starting a run may be refused while read-only mode is on: the API run endpoint returns "You currently can't start a scraper run" in that mode (verified in `app/controllers/api_controller.rb`, `can_run`). The restore carries the frozen production setting across, so the new server starts read-only. Only the tester's hosts override reaches the new server at this point, so read-only mode can be switched off on the new server for the test run and **must be switched back on before step 5** (inferred; whether a run can start under read-only on the new server is untested, so settle it in a dry run). Cron stays off on the new server throughout.
+Starting a run may be refused while read-only mode is on: the API run endpoint returns "You currently can't start a scraper run" in that mode (verified in [`app/controllers/api_controller.rb`](../../app/controllers/api_controller.rb), `can_run`). The restore carries the frozen production setting across, so the new server starts read-only. Only the tester's hosts override reaches the new server at this point, so read-only mode can be switched off on the new server for the test run and **must be switched back on before step 5** (inferred; whether a run can start under read-only on the new server is untested, so settle it in a dry run). Cron stays off on the new server throughout.
 
 Check: every item above passes, and read-only mode is back on for the new server. Any failure is a no-go.
 
@@ -166,7 +168,7 @@ Action, in this order:
 
 1. Turn read-only mode off on the new server.
 2. Turn `cron_enabled` on for the **new** server only. The check in `site.yml` refuses to run if more than one morph host has it on ([#1567](https://github.com/openaustralia/morph/issues/1567)), so the old server's flag must already be off.
-3. Run `auto_run_scrapers` once on the new server as the application user, in the production Rails environment. The task is `app:auto_run_scrapers`, defined in `lib/tasks/app.rake` (verified). It queues every scraper with `auto_run` set, spread over the next 24 hours, and prints `Queued N scrapers to run over the next 24 hours`. Copy the exact invocation from the cron line the roles install, because that is not in this repository.
+3. Run `auto_run_scrapers` once on the new server as the application user, in the production Rails environment. The task is `app:auto_run_scrapers`, defined in [`lib/tasks/app.rake`](../../lib/tasks/app.rake) (verified). It queues every scraper with `auto_run` set, spread over the next 24 hours, and prints `Queued N scrapers to run over the next 24 hours`. Copy the exact invocation from the cron line the roles install, because that is not in this repository.
 4. Post the "finished" follow-up on the forum ([#1576](https://github.com/openaustralia/morph/issues/1576)).
 
 Check:
@@ -207,10 +209,10 @@ No rollback point: these are clean-ups and each is reversible by redoing it, but
 Action:
 
 1. Before loading, check that the new server's `log_lines` auto-increment value starts above production's highest id at dump time, so new rows cannot collide with archived rows ([map](https://github.com/openaustralia/morph/issues/1557), "Not yet specified"). If it does not, raise it first.
-2. Run the archive load with `loadDdl: false` at a low thread count in nightly off-peak slots, stopped by morning (from #1601; the option names come from MySQL Shell docs, not a run).
+2. Run the archive load with `loadDdl: false` at a low thread count in nightly off-peak slots, stopped by morning (from #1601; the option names come from [MySQL Shell](https://dev.mysql.com/doc/mysql-shell/8.4/en/) docs, not a run).
 3. Raise the throttle if it is not done within 3 weeks.
 
-Check: the loaded row count equals the archive's recorded count with overlap counted once; a sample of old runs shows console output; a re-run changes nothing. Until then, old runs show no console output, which the announcement says.
+Check: the loaded row count equals the archive's recorded count with overlap counted once; a sample of old runs shows their log lines; a re-run changes nothing. Until then, old runs show no log lines, which the announcement says.
 
 **First nightly jobs on the new server** ([#1574](https://github.com/openaustralia/morph/issues/1574))
 
@@ -243,11 +245,11 @@ Action for stage C, through a GitLab merge request in `openaustralia/infrastruct
 
 Check: the Terraform plan shows only the old instance, its rDNS record and its backups being destroyed, and nothing for the new instance.
 
-No rollback after stage C. The month of overlap costs about $190 on top of the new server (from #1573).
+No rollback after stage C.
 
 ## Rollback
 
-Rollback is a DNS flip back **until the site opens**. After that it is roll-forward only.
+Rollback is a DNS flip back once DNS has moved (R2), and an undo of the freeze before that (R1), and it is possible **only until the site opens**. After that it is roll-forward only.
 
 | Point | Reached at | How to roll back | What it costs |
 | --- | --- | --- | --- |
