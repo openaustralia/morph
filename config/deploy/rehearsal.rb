@@ -24,6 +24,12 @@ set :rbenv_type, :user
 set :rbenv_ruby, File.read(File.expand_path("../../.ruby-version", __dir__)).strip
 set :deploy_to, "/srv/www/rehearsal"
 
+# The SQLite scraper data lives in one directory outside both stages, linked into
+# shared/db/scrapers, so retiring this stage never copies it (lib/capistrano/tasks/
+# scrapers_data_dir.cap). The path must match the infrastructure repository's morph role.
+# The production stage sets the same path.
+set :scrapers_data_dir, "/srv/www/data/scrapers"
+
 # The post-deploy queue fix would re-enqueue the restored production database's
 # unfinished runs, which means running real scrapers (#1567). Skip it here.
 set :fix_queue_run_inconsistencies, false

@@ -66,6 +66,12 @@ describe "Capistrano stages" do # rubocop:disable RSpec/DescribeClass
       expect(settings[:rbenv_ruby]).to eq(Rails.root.join(".ruby-version").read.strip)
     end
 
+    it "links shared/db/scrapers to the single data directory outside the stage" do
+      data_dir = stage_settings("rehearsal").settings[:scrapers_data_dir]
+      expect(data_dir).to eq("/srv/www/data/scrapers")
+      expect(data_dir).not_to start_with("/srv/www/rehearsal")
+    end
+
     it "skips the post-deploy queue fix, which would run real scrapers from a restored database" do
       expect(stage_settings("rehearsal").settings).to include(fix_queue_run_inconsistencies: false)
       expect(Rails.root.join("config/deploy.rb").read).to include("next unless fetch(:fix_queue_run_inconsistencies, true)")
@@ -82,7 +88,7 @@ describe "Capistrano stages" do # rubocop:disable RSpec/DescribeClass
     describe name do
       it "does not override the rvm and /var/www defaults" do
         keys = stage_settings(name).settings.keys
-        expect(keys).not_to include(:deploy_to, :rbenv_type, :rbenv_ruby)
+        expect(keys).not_to include(:deploy_to, :rbenv_type, :rbenv_ruby, :scrapers_data_dir)
       end
     end
   end
@@ -93,6 +99,11 @@ describe "Capistrano stages" do # rubocop:disable RSpec/DescribeClass
     it "keeps rvm and /var/www for the stages that do not override them" do
       expect(deploy_rb).to include('set :rvm_ruby_version, "ruby-3.0.7"')
       expect(deploy_rb).to include('set :deploy_to, "/var/www"')
+    end
+
+    it "keeps shared/db/scrapers a plain directory unless a stage sets scrapers_data_dir" do
+      expect(deploy_rb).not_to include("scrapers_data_dir")
+      expect(deploy_rb).to include("db/scrapers")
     end
 
     it "does not set rbenv for every stage" do

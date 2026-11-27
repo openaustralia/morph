@@ -38,6 +38,12 @@ Sign in as an admin (step A3 explains how) and open `/admin`.
 
 Expected: the dashboard offers "Switch off site-wide read-only mode", which means read-only mode is on. If it offers "Go into site-wide read-only mode", press it. A restored database carries production's setting, so do not assume.
 
+### A1b. The scraper data directory is linked
+
+On the server, run `readlink /srv/www/rehearsal/shared/db/scrapers`.
+
+Expected: it prints `/srv/www/data/scrapers`, a real directory outside both stages. If it is a real directory under `/srv/www/rehearsal/shared`, the deploy stopped before linking it, and nothing was moved or deleted. In the cutover window the same check runs on `/srv/www/production/shared/db/scrapers` and must print the same path.
+
 ### A2. Sign in through the GitHub App
 
 Open https://new.morph.io, pass basic auth, then choose "Sign in with GitHub" as the existing test account.
@@ -102,7 +108,7 @@ Expected: the flash message says "Read-only mode is now off".
 
 As the test account, add the test scraper from your list of repositories (skip if it already exists), then press "Run scraper".
 
-Expected: the run goes from queued to running to finished, the scraper's page shows its records, and the SQLite file appears under `/srv/www/rehearsal/shared/db/scrapers` on the server.
+Expected: the run goes from queued to running to finished, the scraper's page shows its records, and the SQLite file appears under `/srv/www/data/scrapers` on the server. `shared/db/scrapers` in each stage is a link to that one data directory, so the data is not copied again when the rehearsal stage is retired.
 
 ### B3. Live log streaming
 
