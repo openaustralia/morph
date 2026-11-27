@@ -67,7 +67,7 @@ rehearsal server and are recorded with each dry run. The commands are in
 `docs/sqlite_and_search_migration.md`.
 
 - Run `app:sqlite_migration:bulk` from the old server to the rehearsal
-  `shared/db/scrapers`, and record the elapsed time and transfer speed it prints.
+  server's shared data directory (for example `/srv/www/data/scrapers`), and record the elapsed time and transfer speed it prints.
   Run it again and check it only transfers what changed.
 - Run `app:sqlite_migration:delta` with `DELETE=1 MAX_DELETE=N` after a change and a
   deletion on the source, then compare the two file listings with

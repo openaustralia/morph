@@ -35,7 +35,7 @@ takes a password, and a location with one in it is refused.
 | Variable | Meaning |
 | --- | --- |
 | `SQLITE_SOURCE` | Required. `user@old-host:/path/to/db/scrapers` or a local path |
-| `SQLITE_DESTINATION` | Required. For rehearsal, `/srv/www/rehearsal/shared/db/scrapers` (#1595) |
+| `SQLITE_DESTINATION` | Required. The one shared data directory, for example `/srv/www/data/scrapers` (see below) |
 | `SSH_COMMAND` | Optional. For example `ssh -i ~/.ssh/<key> -o BatchMode=yes` |
 | `BWLIMIT_KBPS` | Optional. Caps the speed so the bulk copy does not starve the live server |
 | `DRY_RUN` | `1` lists what would be copied and changes nothing |
@@ -58,8 +58,14 @@ takes a password, and a location with one in it is refused.
    bulk copy, vanished files fail the delta.
 3. **Verify.** Make a listing on each side and compare them (below).
 
-The destination path is renamed from `rehearsal` to `production` on the same disk
-at cutover (#1595), so the bulk copy never moves again.
+The destination is one data directory outside both stages, for example
+`/srv/www/data/scrapers`, which the roles link into each stage's
+`shared/db/scrapers`. The rehearsal stage is retired at cutover, but the data is
+not copied twice, and there is no second copy under `/srv/www/production/shared`.
+The bulk copy never moves again and only the final delta is synced. This replaces
+the earlier plan to rename the stage directory (#1595); spec #1579 is being
+amended to match. The path is an example, so use the one the roles set, which the
+infrastructure repository owns.
 
 ### Verifying file counts and sizes
 
@@ -74,7 +80,7 @@ find db/scrapers/ -type f -printf '%P\t%s\n' | sort > source.tsv
 Keep the trailing slash: `db/scrapers` is a symlink into `shared/` on a deployed server, and `find` only follows it with the slash. File names containing tabs are handled; file names containing newlines are not, and would need a `-print0` format.
 
 On the new server, either use the same `find` or
-`DIR=/srv/www/rehearsal/shared/db/scrapers OUTPUT=destination.tsv bundle exec rake app:sqlite_migration:manifest`.
+`DIR=/srv/www/data/scrapers OUTPUT=destination.tsv bundle exec rake app:sqlite_migration:manifest`.
 Then, with both files in one place:
 
 ```sh

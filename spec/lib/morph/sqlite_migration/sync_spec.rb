@@ -27,14 +27,14 @@ RSpec.describe Morph::SqliteMigration::Sync do
   end
 
   def build(**options)
-    described_class.new(source: "olduser@old.example.org:/srv/scrapers", destination: "/srv/www/rehearsal/shared/db/scrapers",
+    described_class.new(source: "olduser@old.example.org:/srv/scrapers", destination: "/srv/www/data/scrapers",
                         mode: :bulk, runner: runner, **options)
   end
 
   describe "#command" do
     it "copies the contents of the source into the destination, resumably, with stats" do
       expect(build.command).to eq(
-        %w[rsync -a --inplace --stats olduser@old.example.org:/srv/scrapers/ /srv/www/rehearsal/shared/db/scrapers/]
+        %w[rsync -a --inplace --stats olduser@old.example.org:/srv/scrapers/ /srv/www/data/scrapers/]
       )
     end
 
