@@ -51,6 +51,19 @@ describe Morph::MysqlMigration::RetainedLogLines do
     end
   end
 
+  it "keeps lines of runs that have no scraper, as trim_log_lines does" do
+    scraper = create(:scraper)
+    scraperless = run_with_line(scraper, status_code: 0, created_at: 90.days.ago)
+    scraperless.update_column(:scraper_id, nil) # rubocop:disable Rails/SkipsModelValidations
+    run_with_line(scraper, status_code: 0, created_at: 1.day.ago)
+    selected = retained_log_line_ids
+
+    Scraper.find_each(&:trim_log_lines)
+
+    expect(selected).to eq LogLine.pluck(:id).sort
+    expect(LogLine.where(run_id: scraperless.id)).to exist
+  end
+
   it "selects every line when all runs are recent" do
     scraper = create(:scraper)
     3.times { run_with_line(scraper, status_code: 0, created_at: 1.day.ago) }

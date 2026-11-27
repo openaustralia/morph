@@ -99,6 +99,9 @@ module Morph
 
           kept << id if keep && (boundary.nil? || id < boundary)
         end
+        # trim_log_lines works scraper by scraper, so it never deletes lines of runs that have no scraper
+        rows = @client.query("SELECT id FROM runs WHERE scraper_id IS NULL", as: :array)
+        rows.each { |(id)| kept << id if boundary.nil? || id < boundary }
         kept.sort
       end
     end

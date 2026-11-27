@@ -92,8 +92,9 @@ archive needs.
    into the existing table, one slice at a time. Run it in off-peak slots and stop
    it in the morning: progress files let it resume, and re-loading a slice is
    harmless. Copy the manifest from the machine that made the archive first. When
-   it is done, `VERIFY_SCOPE=full rake mysql_migration:verify` checks the whole
-   of `log_lines`, and `rake mysql_migration:checksums` before and after a re-run
+   it is done, `VERIFY_SCOPE=backfill rake mysql_migration:verify` checks each archived
+   id range holds the row count recorded when it was archived (the old server is
+   stopped by then, so it needs only the target), and `rake mysql_migration:checksums` before and after a re-run
    (`BASELINE=` the earlier report) shows that a re-run changes nothing.
 
 `DRY_RUN=1` on the dump, archive, restore and backfill tasks passes MySQL Shell's

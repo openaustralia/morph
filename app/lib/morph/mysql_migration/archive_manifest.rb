@@ -16,7 +16,7 @@ module Morph
     class ArchiveManifest
       extend T::Sig
 
-      Slice = Struct.new(:name, :from_id, :to_id, :completed_at, keyword_init: true)
+      Slice = Struct.new(:name, :from_id, :to_id, :rows, :completed_at, keyword_init: true)
 
       sig { returns(String) }
       attr_reader :path
@@ -51,8 +51,10 @@ module Morph
         pending
       end
 
-      sig { params(slice: Slice).void }
-      def complete(slice)
+      # rows is how many log_lines the source held in the slice's id range, for checking the backfill against
+      sig { params(slice: Slice, rows: Integer).void }
+      def complete(slice, rows:)
+        slice.rows = rows
         slice.completed_at = Time.now.utc.iso8601
         @slices << slice
         save
@@ -76,7 +78,7 @@ module Morph
 
         parsed = JSON.parse(File.read(path))
         @slices = parsed.fetch("slices").map do |s|
-          Slice.new(name: s.fetch("name"), from_id: s.fetch("from_id"), to_id: s.fetch("to_id"), completed_at: s["completed_at"])
+          Slice.new(name: s.fetch("name"), from_id: s.fetch("from_id"), to_id: s.fetch("to_id"), rows: s["rows"], completed_at: s["completed_at"])
         end
       end
 

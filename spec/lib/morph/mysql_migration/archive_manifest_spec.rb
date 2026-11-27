@@ -30,18 +30,19 @@ describe Morph::MysqlMigration::ArchiveManifest do
   it "resumes after the completed slices, even in a new process" do
     manifest = described_class.new(path)
     slices = manifest.pending_slices(min_id: 1, max_id: 25, slice_rows: 10)
-    manifest.complete(slices.first)
+    manifest.complete(slices.first, rows: 7)
 
     resumed = described_class.new(path)
 
     expect(resumed.slices.map(&:name)).to eq [slices.first.name]
+    expect(resumed.slices.first.rows).to eq 7
     expect(resumed.covered_up_to_id).to eq 10
     expect(resumed.pending_slices(min_id: 1, max_id: 25, slice_rows: 10).map(&:from_id)).to eq [11, 21]
   end
 
   it "tops up from where the archive stopped without touching earlier slices" do
     manifest = described_class.new(path)
-    manifest.pending_slices(min_id: 1, max_id: 20, slice_rows: 10).each { |s| manifest.complete(s) }
+    manifest.pending_slices(min_id: 1, max_id: 20, slice_rows: 10).each { |s| manifest.complete(s, rows: 1) }
 
     top_up = manifest.pending_slices(min_id: 1, max_id: 27, slice_rows: 10)
 

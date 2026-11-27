@@ -157,6 +157,13 @@ describe Morph::MysqlMigration::Steps do
       expect(report("archive_log_lines")).to include("slices_already_done" => 1, "slices_pending" => 2)
     end
 
+    it "records each slice's row count for checking the backfill" do
+      steps.archive_log_lines
+
+      slices = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"]).slices
+      expect(slices.sum(&:rows)).to eq 5
+    end
+
     it "does not record slices from a dry run" do
       steps.archive_log_lines(dry_run: true)
 
@@ -191,7 +198,7 @@ describe Morph::MysqlMigration::Steps do
 
     it "loads each archived slice without DDL, with few threads, through a progress file" do
       manifest = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])
-      manifest.pending_slices(min_id: 1, max_id: 4, slice_rows: 2).each { |s| manifest.complete(s) }
+      manifest.pending_slices(min_id: 1, max_id: 4, slice_rows: 2).each { |s| manifest.complete(s, rows: 1) }
 
       steps.backfill_log_lines
 
@@ -259,6 +266,30 @@ describe Morph::MysqlMigration::Steps do
       expect { steps.verify(scope: "full") }.to raise_error(Morph::MysqlMigration::VerificationFailed)
 
       expect(report("verify")["scope"]).to eq "full"
+    end
+
+    context "with the backfill scope" do
+      before do
+        run = create(:run)
+        3.times { create(:log_line, run: run) }
+      end
+
+      it "passes when each archived id range holds the rows archived" do
+        manifest = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])
+        manifest.pending_slices(min_id: LogLine.minimum(:id), max_id: LogLine.maximum(:id), slice_rows: 100).each { |s| manifest.complete(s, rows: 3) }
+
+        expect(steps.verify(scope: "backfill")).to be_empty
+        expect(report("verify")).to include("scope" => "backfill", "slices_checked" => 1)
+      end
+
+      it "names a slice that is short of rows" do
+        manifest = Morph::MysqlMigration::ArchiveManifest.new(env["MYSQL_MIGRATION_ARCHIVE_MANIFEST"])
+        manifest.pending_slices(min_id: LogLine.minimum(:id), max_id: LogLine.maximum(:id), slice_rows: 100).each { |s| manifest.complete(s, rows: 4) }
+
+        expect { steps.verify(scope: "backfill") }.to raise_error(Morph::MysqlMigration::VerificationFailed, /1 difference/) { |e|
+          expect(e.differences.first).to include("3 rows on the target, 4 archived")
+        }
+      end
     end
 
     it "rejects an unknown scope" do

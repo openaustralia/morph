@@ -39,7 +39,7 @@ namespace :mysql_migration do
     abort e.message
   end
 
-  desc "Compare source and target row counts and value hashes and record the elapsed time (VERIFY_SCOPE=full after the backfill)"
+  desc "Compare source and target row counts and value hashes and record the elapsed time (VERIFY_SCOPE=backfill after the backfill, which needs no source)"
   task verify: :environment do
     steps.call.verify(scope: ENV.fetch("VERIFY_SCOPE", "retained"))
     puts "Verification passed: source and target match"

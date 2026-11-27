@@ -100,7 +100,10 @@ module Morph
                         where: { "log_lines" => "id BETWEEN #{slice.from_id} AND #{slice.to_id}" },
                         threads: @config.threads, consistent: false, s3_options: @config.s3_options, dry_run: dry_run
                       ))
-            manifest.complete(slice) unless dry_run
+            next if dry_run
+
+            rows = source.client.query("SELECT COUNT(*) FROM log_lines WHERE id BETWEEN #{slice.from_id} AND #{slice.to_id}", as: :array).first.first.to_i
+            manifest.complete(slice, rows: rows)
           end
         end
       end
@@ -167,6 +170,8 @@ module Morph
       # load. Run it before the scrub.
       sig { params(scope: String).returns(T::Array[String]) }
       def verify(scope: "retained")
+        return verify_backfill if scope == "backfill"
+
         report = new_report("verify")
         differences = T.let([], T::Array[String])
         report.measure do
@@ -186,6 +191,30 @@ module Morph
           differences.concat(Verification.differences(source_snapshot, target_snapshot))
           differences.concat(target_verification.auto_increment_problems(source_snapshot))
           differences.concat(Restore.new(target_client, database: target.database).collation_problems)
+          report["differences"] = differences
+          raise VerificationFailed, differences if differences.any?
+        end
+        differences
+      end
+
+      # After the backfill the old server is stopped and the target has new rows, so it cannot be compared with the
+      # source. Each archived id range must instead hold exactly as many rows as the archive recorded (#1601).
+      sig { returns(T::Array[String]) }
+      def verify_backfill
+        report = new_report("verify")
+        differences = T.let([], T::Array[String])
+        report.measure do
+          slices = ArchiveManifest.new(@config.archive_manifest_path).slices
+          raise "no archive manifest at #{@config.archive_manifest_path}" if slices.empty?
+
+          client = @config.target.client
+          slices.each do |slice|
+            expected = slice.rows
+            actual = client.query("SELECT COUNT(*) FROM log_lines WHERE id BETWEEN #{slice.from_id} AND #{slice.to_id}", as: :array).first.first.to_i
+            differences << "#{slice.name}: #{actual} rows on the target, #{expected.inspect} archived" if actual != expected
+          end
+          report["scope"] = "backfill"
+          report["slices_checked"] = slices.size
           report["differences"] = differences
           raise VerificationFailed, differences if differences.any?
         end
