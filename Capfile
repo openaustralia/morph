@@ -25,13 +25,12 @@ install_plugin Capistrano::SCM::Git
 #   https://github.com/capistrano/rails/tree/master/assets
 #   https://github.com/capistrano/rails/tree/master/migrations
 #
-require "capistrano/rvm"
-# require 'capistrano/rbenv'
+require "capistrano/rbenv"
+# require 'capistrano/rvm'
 # require 'capistrano/chruby'
 require "capistrano/bundler"
 require "capistrano/rails/assets"
 require "capistrano/rails/migrations"
-require "capistrano/honeybadger"
 require "capistrano/tagging3"
 
 # Loads custom tasks from `lib/capistrano/tasks' if you have any defined.

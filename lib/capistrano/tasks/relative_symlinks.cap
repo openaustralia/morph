@@ -1,0 +1,36 @@
+# frozen_string_literal: true
+
+# Capistrano writes `current` and the links to shared files and directories as
+# absolute paths built from deploy_to. At cutover /srv/www/rehearsal is renamed to
+# /srv/www/production on the same disk (#1595), which would leave every one of
+# those links pointing at a directory that no longer exists. Rewriting them as
+# relative links means the rename keeps those links valid. It does not cover every
+# absolute path: capistrano-bundler writes the absolute shared/bundle path into each
+# release's .bundle/config, which this task leaves alone (see docs/rehearsal-smoke-test.md).
+#
+# :nocov: Runs over ssh on the server, so it is covered by the manual test in TESTING.md.
+require "shellwords"
+
+namespace :deploy do
+  desc "Rewrite current and the shared links as relative links so a rename of deploy_to keeps them valid"
+  task :relative_symlinks do
+    on release_roles(:all) do
+      root = Pathname.new(fetch(:deploy_to))
+
+      # Same ln -s then mv -T swap Capistrano uses, so current is never missing
+      current_target = Pathname.new(release_path.to_s).relative_path_from(root)
+      execute :ln, "-sfn", current_target.to_s, root.join("current_relative").to_s
+      execute :mv, "-T", root.join("current_relative").to_s, root.join("current").to_s
+
+      links = capture(:find, release_path.to_s, "-lname", Shellwords.escape("#{shared_path}/*")).split("\n")
+      links.each do |link|
+        target = Pathname.new(capture(:readlink, link).strip)
+        relative = target.relative_path_from(Pathname.new(link).dirname)
+        execute :ln, "-sfn", relative.to_s, link
+      end
+    end
+  end
+
+  after "deploy:symlink:release", "deploy:relative_symlinks"
+end
+# :nocov:

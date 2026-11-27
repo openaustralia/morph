@@ -48,6 +48,13 @@ This includes:
 
 Testing restore is too hard to automate. 
 
+### Rehearsal deploy and smoke test (new.morph.io)
+
+The `rehearsal` Capistrano stage and `lib/capistrano/tasks/relative_symlinks.cap` run over ssh against a real server, so no automated test covers them.
+After each `cap rehearsal deploy`, work through `docs/rehearsal-smoke-test.md`.
+Step 9 there checks that the links survive the cutover rename of `/srv/www/rehearsal` to `/srv/www/production`, and flags the `.bundle/config` path the relative links do not cover.
+The rehearsal stage also skips `deploy:fix_queue_run_inconsistencies`, so check after a deploy that no scraper run started.
+
 ### Error reporting to Sentry
 
 Automated tests only cover the SDK staying quiet when `SENTRY_DSN` is unset.

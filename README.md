@@ -296,6 +296,11 @@ To deploy morph.io to production, normally you'll just want to deploy using Capi
 
     cap production deploy
 
+The `feature/1579-new-server` branch has no `production` stage until the cutover merge.
+Deploy it to the rehearsal server at new.morph.io with `cap rehearsal deploy`.
+See `env-rehearsal-example` for the settings that stop that server acting as production,
+and `docs/rehearsal-smoke-test.md` for the smoke test to run afterwards.
+
 Read the [provisioning README](provisioning/README.md) for details of how to provision from updated ansible playbooks.
 
 # Copyright & License

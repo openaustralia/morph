@@ -7,7 +7,10 @@ expected_repos = %w[git@github.com:openaustralia/morph.git https://github.com/op
 current_repo = `git config --get remote.origin.url`.strip
 raise "Deploy from the openaustralia repo (#{expected_repos.join(', ')}) instead of a fork (#{current_repo})" unless expected_repos.include?(current_repo)
 
-set :rvm_ruby_version, "ruby-3.0.7"
+# This branch deploys to the rbenv based server (#1575). Whether :user fits the
+# rbenv role in the infrastructure repository is still to be confirmed (#1585).
+set :rbenv_type, :user
+set :rbenv_ruby, File.read(File.expand_path("../.ruby-version", __dir__)).strip
 
 set :tagging3_format, ':stage_:release'
 
@@ -44,7 +47,12 @@ set :branch, lambda {
   branch
 }
 
-set :deploy_to, "/var/www"
+# One directory per stage, so the rehearsal stage is renamed to production on the
+# same disk at cutover (#1595). Capistrano's absolute symlinks would not survive
+# that rename, so lib/capistrano/tasks/relative_symlinks.cap rewrites them as
+# relative links after every deploy. The absolute shared/bundle path that
+# capistrano-bundler writes into .bundle/config is not covered by that task.
+set :deploy_to, -> { "/srv/www/#{fetch(:stage)}" }
 # set :scm, :git
 
 # set :format, :pretty
@@ -89,6 +97,10 @@ namespace :deploy do
 
   desc "Fix queue run inconsistencies"
   task :fix_queue_run_inconsistencies do
+    # It re-enqueues every unfinished run in the database. On the rehearsal server
+    # that database is a restore of production, so it would start real scrapers (#1567).
+    next unless fetch(:fix_queue_run_inconsistencies, true)
+
     on roles(:app) do
       within release_path do
         # Wait one minute so that everything has plenty of time to get started before we run this check (and workaround)

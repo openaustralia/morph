@@ -128,7 +128,7 @@ group :development do
 
   gem "bcrypt_pbkdf", "~> 1.1"
   gem "capistrano-rails", require: false
-  gem "capistrano-rvm", require: false
+  gem "capistrano-rbenv", require: false
   gem "capistrano-tagging3", require: false
   gem "ed25519", "~> 1.3"
 
